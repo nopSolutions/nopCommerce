@@ -109,6 +109,7 @@ namespace Nop.Services.News
                 query = query.Where(n => !n.StartDateUtc.HasValue || n.StartDateUtc <= utcNow);
                 query = query.Where(n => !n.EndDateUtc.HasValue || n.EndDateUtc >= utcNow);
             }
+
             query = query.OrderByDescending(n => n.StartDateUtc ?? n.CreatedOnUtc);
 
             //Store mapping
@@ -258,6 +259,7 @@ namespace Nop.Services.News
                 if (comment != null)
                     sortedComments.Add(comment);
             }
+
             return sortedComments;
         }
 

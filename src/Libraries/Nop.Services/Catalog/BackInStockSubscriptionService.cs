@@ -182,16 +182,18 @@ namespace Nop.Services.Catalog
             foreach (var subscription in subscriptions)
             {
                 //ensure that customer is registered (simple and fast way)
-                if (CommonHelper.IsValidEmail(subscription.Customer.Email))
-                {
-                    var customer = subscription.Customer;
-                    var customerLanguageId = _genericAttributeService.GetAttribute<int>(customer, NopCustomerDefaults.LanguageIdAttribute, subscription.StoreId);
-                    _workflowMessageService.SendBackInStockNotification(subscription, customerLanguageId);
-                    result++;
-                }
+                if (!CommonHelper.IsValidEmail(subscription.Customer.Email)) 
+                    continue;
+
+                var customer = subscription.Customer;
+                var customerLanguageId = _genericAttributeService.GetAttribute<int>(customer, NopCustomerDefaults.LanguageIdAttribute, subscription.StoreId);
+                _workflowMessageService.SendBackInStockNotification(subscription, customerLanguageId);
+                result++;
             }
+
             for (var i = 0; i <= subscriptions.Count - 1; i++)
                 DeleteSubscription(subscriptions[i]);
+
             return result;
         }
 

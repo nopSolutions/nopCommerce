@@ -46,14 +46,8 @@ namespace Nop.Services.ExportImport.Help
         /// </summary>
         public object PropertyValue
         {
-            get
-            {
-                return IsDropDownCell ? GetItemId(_propertyValue) : _propertyValue;
-            }
-            set
-            {
-                _propertyValue = value;
-            }
+            get => IsDropDownCell ? GetItemId(_propertyValue) : _propertyValue;
+            set => _propertyValue = value;
         }
 
         /// <summary>
@@ -63,20 +57,20 @@ namespace Nop.Services.ExportImport.Help
         {
             get
             {
-                if (PropertyValue == null || !int.TryParse(PropertyValue.ToString(), out int rez))
+                if (PropertyValue == null || !int.TryParse(PropertyValue.ToString(), out var rez))
                     return default(int);
                 return rez;
             }
         }
 
         /// <summary>
-        /// Converted property value to bool
+        /// Converted property value to boolean
         /// </summary>
         public bool BooleanValue
         {
             get
             {
-                if (PropertyValue == null || !bool.TryParse(PropertyValue.ToString(), out bool rez))
+                if (PropertyValue == null || !bool.TryParse(PropertyValue.ToString(), out var rez))
                     return default(bool);
                 return rez;
             }
@@ -85,13 +79,7 @@ namespace Nop.Services.ExportImport.Help
         /// <summary>
         /// Converted property value to string
         /// </summary>
-        public string StringValue
-        {
-            get
-            {
-                return PropertyValue == null ? string.Empty : Convert.ToString(PropertyValue);
-            }
-        }
+        public string StringValue => PropertyValue == null ? string.Empty : Convert.ToString(PropertyValue);
 
         /// <summary>
         /// Converted property value to decimal
@@ -100,7 +88,7 @@ namespace Nop.Services.ExportImport.Help
         {
             get
             {
-                if (PropertyValue == null || !decimal.TryParse(PropertyValue.ToString(), out decimal rez))
+                if (PropertyValue == null || !decimal.TryParse(PropertyValue.ToString(), out var rez))
                     return default(decimal);
                 return rez;
             }
@@ -113,7 +101,7 @@ namespace Nop.Services.ExportImport.Help
         {
             get
             {
-                if (PropertyValue == null || !decimal.TryParse(PropertyValue.ToString(), out decimal rez))
+                if (PropertyValue == null || !decimal.TryParse(PropertyValue.ToString(), out var rez))
                     return null;
                 return rez;
             }
@@ -126,7 +114,7 @@ namespace Nop.Services.ExportImport.Help
         {
             get
             {
-                if (PropertyValue == null || !double.TryParse(PropertyValue.ToString(), out double rez))
+                if (PropertyValue == null || !double.TryParse(PropertyValue.ToString(), out var rez))
                     return default(double);
                 return rez;
             }
@@ -135,13 +123,7 @@ namespace Nop.Services.ExportImport.Help
         /// <summary>
         /// Converted property value to DateTime?
         /// </summary>
-        public DateTime? DateTimeNullable
-        {
-            get
-            {
-                return PropertyValue == null ? null : DateTime.FromOADate(DoubleValue) as DateTime?;
-            }
-        }
+        public DateTime? DateTimeNullable => PropertyValue == null ? null : DateTime.FromOADate(DoubleValue) as DateTime?;
 
         /// <summary>
         /// To string
@@ -160,11 +142,7 @@ namespace Nop.Services.ExportImport.Help
         /// <summary>
         /// Is drop down cell
         /// </summary>
-        public bool IsDropDownCell
-        {
-            get { return DropDownElements != null; }
-
-        }
+        public bool IsDropDownCell => DropDownElements != null;
 
         /// <summary>
         /// Get DropDown elements
@@ -172,7 +150,7 @@ namespace Nop.Services.ExportImport.Help
         /// <returns>Result</returns>
         public string[] GetDropDownElements()
         {
-            return  IsDropDownCell ? DropDownElements.Select(ev => ev.Text).ToArray() : new string[0];
+            return IsDropDownCell ? DropDownElements.Select(ev => ev.Text).ToArray() : new string[0];
         }
 
         /// <summary>
@@ -216,9 +194,6 @@ namespace Nop.Services.ExportImport.Help
         /// <summary>
         /// Is caption
         /// </summary>
-        public bool IsCaption
-        {
-            get { return PropertyName == StringValue || PropertyName == _propertyValue.ToString(); }
-        }
+        public bool IsCaption => PropertyName == StringValue || PropertyName == _propertyValue.ToString();
     }
 }

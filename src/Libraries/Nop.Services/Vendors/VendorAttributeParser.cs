@@ -50,13 +50,13 @@ namespace Nop.Services.Vendors
 
                 foreach (XmlNode node in xmlDoc.SelectNodes(@"//Attributes/VendorAttribute"))
                 {
-                    if (node.Attributes != null && node.Attributes["ID"] != null)
+                    if (node.Attributes?["ID"] == null) 
+                        continue;
+
+                    var str1 = node.Attributes["ID"].InnerText.Trim();
+                    if (int.TryParse(str1, out var id))
                     {
-                        var str1 = node.Attributes["ID"].InnerText.Trim();
-                        if (int.TryParse(str1, out int id))
-                        {
-                            ids.Add(id);
-                        }
+                        ids.Add(id);
                     }
                 }
             }
@@ -64,6 +64,7 @@ namespace Nop.Services.Vendors
             {
                 Debug.Write(exc.ToString());
             }
+
             return ids;
         }
 
@@ -91,6 +92,7 @@ namespace Nop.Services.Vendors
                     result.Add(attribute);
                 }
             }
+
             return result;
         }
 
@@ -114,17 +116,18 @@ namespace Nop.Services.Vendors
                 var valuesStr = ParseValues(attributesXml, attribute.Id);
                 foreach (var valueStr in valuesStr)
                 {
-                    if (!string.IsNullOrEmpty(valueStr))
-                    {
-                        if (int.TryParse(valueStr, out int id))
-                        {
-                            var value = _vendorAttributeService.GetVendorAttributeValueById(id);
-                            if (value != null)
-                                values.Add(value);
-                        }
-                    }
+                    if (string.IsNullOrEmpty(valueStr)) 
+                        continue;
+
+                    if (!int.TryParse(valueStr, out var id)) 
+                        continue;
+
+                    var value = _vendorAttributeService.GetVendorAttributeValueById(id);
+                    if (value != null)
+                        values.Add(value);
                 }
             }
+
             return values;
         }
 
@@ -148,21 +151,21 @@ namespace Nop.Services.Vendors
                 var nodeList1 = xmlDoc.SelectNodes(@"//Attributes/VendorAttribute");
                 foreach (XmlNode node1 in nodeList1)
                 {
-                    if (node1.Attributes != null && node1.Attributes["ID"] != null)
+                    if (node1.Attributes?["ID"] == null) 
+                        continue;
+
+                    var str1 = node1.Attributes["ID"].InnerText.Trim();
+                    if (!int.TryParse(str1, out var id)) 
+                        continue;
+
+                    if (id != vendorAttributeId) 
+                        continue;
+
+                    var nodeList2 = node1.SelectNodes(@"VendorAttributeValue/Value");
+                    foreach (XmlNode node2 in nodeList2)
                     {
-                        var str1 = node1.Attributes["ID"].InnerText.Trim();
-                        if (int.TryParse(str1, out int id))
-                        {
-                            if (id == vendorAttributeId)
-                            {
-                                var nodeList2 = node1.SelectNodes(@"VendorAttributeValue/Value");
-                                foreach (XmlNode node2 in nodeList2)
-                                {
-                                    var value = node2.InnerText.Trim();
-                                    selectedVendorAttributeValues.Add(value);
-                                }
-                            }
-                        }
+                        var value = node2.InnerText.Trim();
+                        selectedVendorAttributeValues.Add(value);
                     }
                 }
             }
@@ -170,6 +173,7 @@ namespace Nop.Services.Vendors
             {
                 Debug.Write(exc.ToString());
             }
+
             return selectedVendorAttributeValues;
         }
 
@@ -195,6 +199,7 @@ namespace Nop.Services.Vendors
                 {
                     xmlDoc.LoadXml(attributesXml);
                 }
+
                 var rootElement = (XmlElement)xmlDoc.SelectSingleNode(@"//Attributes");
 
                 XmlElement attributeElement = null;
@@ -202,18 +207,18 @@ namespace Nop.Services.Vendors
                 var nodeList1 = xmlDoc.SelectNodes(@"//Attributes/VendorAttribute");
                 foreach (XmlNode node1 in nodeList1)
                 {
-                    if (node1.Attributes != null && node1.Attributes["ID"] != null)
-                    {
-                        var str1 = node1.Attributes["ID"].InnerText.Trim();
-                        if (int.TryParse(str1, out int id))
-                        {
-                            if (id == vendorAttribute.Id)
-                            {
-                                attributeElement = (XmlElement)node1;
-                                break;
-                            }
-                        }
-                    }
+                    if (node1.Attributes?["ID"] == null) 
+                        continue;
+
+                    var str1 = node1.Attributes["ID"].InnerText.Trim();
+                    if (!int.TryParse(str1, out var id)) 
+                        continue;
+
+                    if (id != vendorAttribute.Id) 
+                        continue;
+
+                    attributeElement = (XmlElement)node1;
+                    break;
                 }
 
                 //create new one if not found
@@ -237,6 +242,7 @@ namespace Nop.Services.Vendors
             {
                 Debug.Write(exc.ToString());
             }
+
             return result;
         }
 
@@ -256,34 +262,34 @@ namespace Nop.Services.Vendors
             var attributes2 = _vendorAttributeService.GetAllVendorAttributes();
             foreach (var a2 in attributes2)
             {
-                if (a2.IsRequired)
+                if (!a2.IsRequired) 
+                    continue;
+
+                var found = false;
+                //selected vendor attributes
+                foreach (var a1 in attributes1)
                 {
-                    var found = false;
-                    //selected vendor attributes
-                    foreach (var a1 in attributes1)
-                    {
-                        if (a1.Id == a2.Id)
-                        {
-                            var valuesStr = ParseValues(attributesXml, a1.Id);
-                            foreach (var str1 in valuesStr)
-                            {
-                                if (!string.IsNullOrEmpty(str1.Trim()))
-                                {
-                                    found = true;
-                                    break;
-                                }
-                            }
-                        }
-                    }
+                    if (a1.Id != a2.Id) 
+                        continue;
 
-                    //if not found
-                    if (!found)
+                    var valuesStr = ParseValues(attributesXml, a1.Id);
+                    foreach (var str1 in valuesStr)
                     {
-                        var notFoundWarning = string.Format(_localizationService.GetResource("ShoppingCart.SelectAttribute"), _localizationService.GetLocalized(a2, a => a.Name));
+                        if (string.IsNullOrEmpty(str1.Trim())) 
+                            continue;
 
-                        warnings.Add(notFoundWarning);
+                        found = true;
+                        break;
                     }
                 }
+                
+                if (found) 
+                    continue;
+
+                //if not found
+                var notFoundWarning = string.Format(_localizationService.GetResource("ShoppingCart.SelectAttribute"), _localizationService.GetLocalized(a2, a => a.Name));
+
+                warnings.Add(notFoundWarning);
             }
 
             return warnings;

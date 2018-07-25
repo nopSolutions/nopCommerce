@@ -4,7 +4,7 @@ using Nop.Core.Domain.Common;
 namespace Nop.Services.Common
 {
     /// <summary>
-    /// Search term service interafce
+    /// Search term service interface
     /// </summary>
     public partial interface ISearchTermService
     {

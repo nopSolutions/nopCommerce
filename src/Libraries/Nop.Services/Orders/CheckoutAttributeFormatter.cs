@@ -97,7 +97,7 @@ namespace Nop.Services.Orders
                 for (var j = 0; j < valuesStr.Count; j++)
                 {
                     var valueStr = valuesStr[j];
-                    var formattedAttribute = "";
+                    var formattedAttribute = string.Empty;
                     if (!attribute.ShouldHaveValues())
                     {
                         //no values
@@ -114,7 +114,7 @@ namespace Nop.Services.Orders
                         else if (attribute.AttributeControlType == AttributeControlType.FileUpload)
                         {
                             //file upload
-                            Guid.TryParse(valueStr, out Guid downloadGuid);
+                            Guid.TryParse(valueStr, out var downloadGuid);
                             var download = _downloadService.GetDownloadByGuid(downloadGuid);
                             if (download != null)
                             {
@@ -135,6 +135,7 @@ namespace Nop.Services.Orders
                                     //hyperlinks aren't allowed
                                     attributeText = fileName;
                                 }
+
                                 var attributeName = _localizationService.GetLocalized(attribute, a => a.Name, _workContext.WorkingLanguage.Id);
                                 //encode (if required)
                                 if (htmlEncode)
@@ -153,7 +154,7 @@ namespace Nop.Services.Orders
                     }
                     else
                     {
-                        if (int.TryParse(valueStr, out int attributeValueId))
+                        if (int.TryParse(valueStr, out var attributeValueId))
                         {
                             var attributeValue = _checkoutAttributeService.GetCheckoutAttributeValueById(attributeValueId);
                             if (attributeValue != null)
@@ -176,12 +177,12 @@ namespace Nop.Services.Orders
                         }
                     }
 
-                    if (!string.IsNullOrEmpty(formattedAttribute))
-                    {
-                        if (i != 0 || j != 0)
-                            result.Append(separator);
-                        result.Append(formattedAttribute);
-                    }
+                    if (string.IsNullOrEmpty(formattedAttribute)) 
+                        continue;
+
+                    if (i != 0 || j != 0)
+                        result.Append(separator);
+                    result.Append(formattedAttribute);
                 }
             }
 

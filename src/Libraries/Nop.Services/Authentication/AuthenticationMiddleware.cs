@@ -60,7 +60,10 @@ namespace Nop.Services.Authentication
                     if (await handlers.GetHandlerAsync(context, scheme.Name) is IAuthenticationRequestHandler handler && await handler.HandleRequestAsync())
                         return;
                 }
-                catch { continue; }
+                catch
+                {
+                    // ignored
+                }
             }
 
             var defaultAuthenticate = await Schemes.GetDefaultAuthenticateSchemeAsync();

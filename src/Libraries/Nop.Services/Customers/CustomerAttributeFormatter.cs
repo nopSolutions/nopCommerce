@@ -57,7 +57,7 @@ namespace Nop.Services.Customers
                 for (var j = 0; j < valuesStr.Count; j++)
                 {
                     var valueStr = valuesStr[j];
-                    var formattedAttribute = "";
+                    var formattedAttribute = string.Empty;
                     if (!attribute.ShouldHaveValues())
                     {
                         //no values
@@ -87,7 +87,7 @@ namespace Nop.Services.Customers
                     }
                     else
                     {
-                        if (int.TryParse(valueStr, out int attributeValueId))
+                        if (int.TryParse(valueStr, out var attributeValueId))
                         {
                             var attributeValue = _customerAttributeService.GetCustomerAttributeValueById(attributeValueId);
                             if (attributeValue != null)
@@ -100,12 +100,13 @@ namespace Nop.Services.Customers
                         }
                     }
 
-                    if (!string.IsNullOrEmpty(formattedAttribute))
-                    {
-                        if (i != 0 || j != 0)
-                            result.Append(separator);
-                        result.Append(formattedAttribute);
-                    }
+                    if (string.IsNullOrEmpty(formattedAttribute)) 
+                        continue;
+
+                    if (i != 0 || j != 0)
+                        result.Append(separator);
+
+                    result.Append(formattedAttribute);
                 }
             }
 

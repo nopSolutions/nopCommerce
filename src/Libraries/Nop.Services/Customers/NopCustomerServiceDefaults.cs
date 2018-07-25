@@ -1,5 +1,4 @@
-﻿
-namespace Nop.Services.Customers
+﻿namespace Nop.Services.Customers
 {
     /// <summary>
     /// Represents default values related to customer services

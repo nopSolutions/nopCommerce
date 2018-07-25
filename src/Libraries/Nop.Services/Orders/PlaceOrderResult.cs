@@ -11,16 +11,13 @@ namespace Nop.Services.Orders
     {
         public PlaceOrderResult()
         {
-            this.Errors = new List<string>();
+            Errors = new List<string>();
         }
 
         /// <summary>
         /// Gets a value indicating whether request has been completed successfully
         /// </summary>
-        public bool Success
-        {
-            get { return (!Errors.Any()); }
-        }
+        public bool Success => !Errors.Any();
 
         /// <summary>
         /// Add error

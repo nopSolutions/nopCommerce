@@ -139,6 +139,7 @@ namespace Nop.Services.Customers
                     //reset the counter
                     customer.FailedLoginAttempts = 0;
                 }
+
                 _customerService.UpdateCustomer(customer);
 
                 return CustomerLoginResults.WrongPassword;
@@ -173,38 +174,41 @@ namespace Nop.Services.Customers
                 result.AddError("Search engine can't be registered");
                 return result;
             }
+
             if (request.Customer.IsBackgroundTaskAccount())
             {
                 result.AddError("Background task account can't be registered");
                 return result;
             }
+
             if (request.Customer.IsRegistered())
             {
                 result.AddError("Current customer is already registered");
                 return result;
             }
+
             if (string.IsNullOrEmpty(request.Email))
             {
                 result.AddError(_localizationService.GetResource("Account.Register.Errors.EmailIsNotProvided"));
                 return result;
             }
+
             if (!CommonHelper.IsValidEmail(request.Email))
             {
                 result.AddError(_localizationService.GetResource("Common.WrongEmail"));
                 return result;
             }
+
             if (string.IsNullOrWhiteSpace(request.Password))
             {
                 result.AddError(_localizationService.GetResource("Account.Register.Errors.PasswordIsNotProvided"));
                 return result;
             }
-            if (_customerSettings.UsernamesEnabled)
+
+            if (_customerSettings.UsernamesEnabled && string.IsNullOrEmpty(request.Username))
             {
-                if (string.IsNullOrEmpty(request.Username))
-                {
-                    result.AddError(_localizationService.GetResource("Account.Register.Errors.UsernameIsNotProvided"));
-                    return result;
-                }
+                result.AddError(_localizationService.GetResource("Account.Register.Errors.UsernameIsNotProvided"));
+                return result;
             }
 
             //validate unique user
@@ -213,13 +217,11 @@ namespace Nop.Services.Customers
                 result.AddError(_localizationService.GetResource("Account.Register.Errors.EmailAlreadyExists"));
                 return result;
             }
-            if (_customerSettings.UsernamesEnabled)
+
+            if (_customerSettings.UsernamesEnabled && _customerService.GetCustomerByUsername(request.Username) != null)
             {
-                if (_customerService.GetCustomerByUsername(request.Username) != null)
-                {
-                    result.AddError(_localizationService.GetResource("Account.Register.Errors.UsernameAlreadyExists"));
-                    return result;
-                }
+                result.AddError(_localizationService.GetResource("Account.Register.Errors.UsernameAlreadyExists"));
+                return result;
             }
 
             //at this point request is valid
@@ -241,13 +243,12 @@ namespace Nop.Services.Customers
                     customerPassword.Password = _encryptionService.EncryptText(request.Password);
                     break;
                 case PasswordFormat.Hashed:
-                    {
-                        var saltKey = _encryptionService.CreateSaltKey(NopCustomerServiceDefaults.PasswordSaltKeySize);
-                        customerPassword.PasswordSalt = saltKey;
-                        customerPassword.Password = _encryptionService.CreatePasswordHash(request.Password, saltKey, _customerSettings.HashedPasswordFormat);
-                    }
+                    var saltKey = _encryptionService.CreateSaltKey(NopCustomerServiceDefaults.PasswordSaltKeySize);
+                    customerPassword.PasswordSalt = saltKey;
+                    customerPassword.Password = _encryptionService.CreatePasswordHash(request.Password, saltKey, _customerSettings.HashedPasswordFormat);
                     break;
             }
+
             _customerService.InsertCustomerPassword(customerPassword);
 
             request.Customer.Active = request.IsApproved;
@@ -297,6 +298,7 @@ namespace Nop.Services.Customers
                 result.AddError(_localizationService.GetResource("Account.ChangePassword.Errors.EmailIsNotProvided"));
                 return result;
             }
+
             if (string.IsNullOrWhiteSpace(request.NewPassword))
             {
                 result.AddError(_localizationService.GetResource("Account.ChangePassword.Errors.PasswordIsNotProvided"));
@@ -309,15 +311,12 @@ namespace Nop.Services.Customers
                 result.AddError(_localizationService.GetResource("Account.ChangePassword.Errors.EmailNotFound"));
                 return result;
             }
-
-            if (request.ValidateRequest)
+          
+            //request isn't valid
+            if (request.ValidateRequest && !PasswordsMatch(_customerService.GetCurrentPassword(customer.Id), request.OldPassword))
             {
-                //request isn't valid
-                if (!PasswordsMatch(_customerService.GetCurrentPassword(customer.Id), request.OldPassword))
-                {
-                    result.AddError(_localizationService.GetResource("Account.ChangePassword.Errors.OldPasswordDoesntMatch"));
-                    return result;
-                }
+                result.AddError(_localizationService.GetResource("Account.ChangePassword.Errors.OldPasswordDoesntMatch"));
+                return result;
             }
 
             //check for duplicates
@@ -350,13 +349,12 @@ namespace Nop.Services.Customers
                     customerPassword.Password = _encryptionService.EncryptText(request.NewPassword);
                     break;
                 case PasswordFormat.Hashed:
-                    {
-                        var saltKey = _encryptionService.CreateSaltKey(NopCustomerServiceDefaults.PasswordSaltKeySize);
-                        customerPassword.PasswordSalt = saltKey;
-                        customerPassword.Password = _encryptionService.CreatePasswordHash(request.NewPassword, saltKey, _customerSettings.HashedPasswordFormat);
-                    }
+                    var saltKey = _encryptionService.CreateSaltKey(NopCustomerServiceDefaults.PasswordSaltKeySize);
+                    customerPassword.PasswordSalt = saltKey;
+                    customerPassword.Password = _encryptionService.CreatePasswordHash(request.NewPassword, saltKey, _customerSettings.HashedPasswordFormat);
                     break;
             }
+
             _customerService.InsertCustomerPassword(customerPassword);
 
             //publish event
@@ -406,19 +404,20 @@ namespace Nop.Services.Customers
             {
                 customer.Email = newEmail;
                 _customerService.UpdateCustomer(customer);
+                
+                if (string.IsNullOrEmpty(oldEmail) || oldEmail.Equals(newEmail, StringComparison.InvariantCultureIgnoreCase)) 
+                    return;
 
                 //update newsletter subscription (if required)
-                if (!string.IsNullOrEmpty(oldEmail) && !oldEmail.Equals(newEmail, StringComparison.InvariantCultureIgnoreCase))
+                foreach (var store in _storeService.GetAllStores())
                 {
-                    foreach (var store in _storeService.GetAllStores())
-                    {
-                        var subscriptionOld = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreId(oldEmail, store.Id);
-                        if (subscriptionOld != null)
-                        {
-                            subscriptionOld.Email = newEmail;
-                            _newsLetterSubscriptionService.UpdateNewsLetterSubscription(subscriptionOld);
-                        }
-                    }
+                    var subscriptionOld = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreId(oldEmail, store.Id);
+                    
+                    if (subscriptionOld == null) 
+                        continue;
+
+                    subscriptionOld.Email = newEmail;
+                    _newsLetterSubscriptionService.UpdateNewsLetterSubscription(subscriptionOld);
                 }
             }
         }

@@ -160,30 +160,26 @@ namespace Nop.Services.Helpers
         /// <returns>Customer time zone; if customer is null, then default store time zone</returns>
         public virtual TimeZoneInfo GetCustomerTimeZone(Customer customer)
         {
-            //registered user
-            TimeZoneInfo timeZoneInfo = null;
-            if (_dateTimeSettings.AllowCustomersToSetTimeZone)
-            {
-                var timeZoneId = string.Empty;
-                if (customer != null)
-                    timeZoneId = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.TimeZoneIdAttribute);
+            if (!_dateTimeSettings.AllowCustomersToSetTimeZone) 
+                return DefaultStoreTimeZone;
 
-                try
-                {
-                    if (!string.IsNullOrEmpty(timeZoneId))
-                        timeZoneInfo = FindTimeZoneById(timeZoneId);
-                }
-                catch (Exception exc)
-                {
-                    Debug.Write(exc.ToString());
-                }
+            TimeZoneInfo timeZoneInfo = null;
+
+            var timeZoneId = string.Empty;
+            if (customer != null)
+                timeZoneId = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.TimeZoneIdAttribute);
+
+            try
+            {
+                if (!string.IsNullOrEmpty(timeZoneId))
+                    timeZoneInfo = FindTimeZoneById(timeZoneId);
+            }
+            catch (Exception exc)
+            {
+                Debug.Write(exc.ToString());
             }
 
-            //default timezone
-            if (timeZoneInfo == null)
-                timeZoneInfo = DefaultStoreTimeZone;
-
-            return timeZoneInfo;
+            return timeZoneInfo ?? DefaultStoreTimeZone;
         }
 
         /// <summary>
@@ -204,11 +200,9 @@ namespace Nop.Services.Helpers
                     Debug.Write(exc.ToString());
                 }
 
-                if (timeZoneInfo == null)
-                    timeZoneInfo = TimeZoneInfo.Local;
-
-                return timeZoneInfo;
+                return timeZoneInfo ?? TimeZoneInfo.Local;
             }
+
             set
             {
                 var defaultTimeZoneId = string.Empty;
@@ -227,10 +221,7 @@ namespace Nop.Services.Helpers
         /// </summary>
         public virtual TimeZoneInfo CurrentTimeZone
         {
-            get
-            {
-                return GetCustomerTimeZone(_workContext.CurrentCustomer);
-            }
+            get => GetCustomerTimeZone(_workContext.CurrentCustomer);
             set
             {
                 if (!_dateTimeSettings.AllowCustomersToSetTimeZone)

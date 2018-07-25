@@ -509,6 +509,7 @@ namespace Nop.Services.Messages
                         sb.AppendLine(string.Format(_localizationService.GetResource("Messages.Order.Product(s).SKU", languageId), WebUtility.HtmlEncode(sku)));
                     }
                 }
+
                 sb.AppendLine("</td>");
 
                 string unitPriceStr;
@@ -524,6 +525,7 @@ namespace Nop.Services.Messages
                     var unitPriceExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderItem.UnitPriceExclTax, order.CurrencyRate);
                     unitPriceStr = _priceFormatter.FormatPrice(unitPriceExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, language, false);
                 }
+
                 sb.AppendLine($"<td style=\"padding: 0.6em 0.4em;text-align: right;\">{unitPriceStr}</td>");
 
                 sb.AppendLine($"<td style=\"padding: 0.6em 0.4em;text-align: center;\">{orderItem.Quantity}</td>");
@@ -541,6 +543,7 @@ namespace Nop.Services.Messages
                     var priceExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderItem.PriceExclTax, order.CurrencyRate);
                     priceStr = _priceFormatter.FormatPrice(priceExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, language, false);
                 }
+
                 sb.AppendLine($"<td style=\"padding: 0.6em 0.4em;text-align: right;\">{priceStr}</td>");
 
                 sb.AppendLine("</tr>");
@@ -615,7 +618,6 @@ namespace Nop.Services.Messages
             var taxRates = new SortedDictionary<decimal, decimal>();
             var cusTaxTotal = string.Empty;
             var cusDiscount = string.Empty;
-            string cusTotal;
             if (order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax)
             {
                 //including tax
@@ -687,7 +689,7 @@ namespace Nop.Services.Messages
 
             //total
             var orderTotalInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderTotal, order.CurrencyRate);
-            cusTotal = _priceFormatter.FormatPrice(orderTotalInCustomerCurrency, true, order.CustomerCurrencyCode, false, language);
+            var cusTotal = _priceFormatter.FormatPrice(orderTotalInCustomerCurrency, true, order.CustomerCurrencyCode, false, language);
 
             var languageId = language.Id;
 
@@ -718,6 +720,7 @@ namespace Nop.Services.Messages
             {
                 sb.AppendLine($"<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {_templatesSettings.Color3};padding:0.6em 0.4 em;\"><strong>{_localizationService.GetResource("Messages.Order.Tax", languageId)}</strong></td> <td style=\"background-color: {_templatesSettings.Color3};padding:0.6em 0.4 em;\"><strong>{cusTaxTotal}</strong></td></tr>");
             }
+
             if (displayTaxRates)
             {
                 foreach (var item in taxRates)
@@ -741,7 +744,7 @@ namespace Nop.Services.Messages
             {
                 var giftCardText = string.Format(_localizationService.GetResource("Messages.Order.GiftCardInfo", languageId),
                     WebUtility.HtmlEncode(gcuh.GiftCard.GiftCardCouponCode));
-                var giftCardAmount = _priceFormatter.FormatPrice(-(_currencyService.ConvertCurrency(gcuh.UsedValue, order.CurrencyRate)), true, order.CustomerCurrencyCode,
+                var giftCardAmount = _priceFormatter.FormatPrice(-_currencyService.ConvertCurrency(gcuh.UsedValue, order.CurrencyRate), true, order.CustomerCurrencyCode,
                     false, language);
                 sb.AppendLine($"<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {_templatesSettings.Color3};padding:0.6em 0.4 em;\"><strong>{giftCardText}</strong></td> <td style=\"background-color: {_templatesSettings.Color3};padding:0.6em 0.4 em;\"><strong>{giftCardAmount}</strong></td></tr>");
             }
@@ -751,7 +754,7 @@ namespace Nop.Services.Messages
             {
                 var rpTitle = string.Format(_localizationService.GetResource("Messages.Order.RewardPoints", languageId),
                     -order.RedeemedRewardPointsEntry.Points);
-                var rpAmount = _priceFormatter.FormatPrice(-(_currencyService.ConvertCurrency(order.RedeemedRewardPointsEntry.UsedAmount, order.CurrencyRate)), true,
+                var rpAmount = _priceFormatter.FormatPrice(-_currencyService.ConvertCurrency(order.RedeemedRewardPointsEntry.UsedAmount, order.CurrencyRate), true,
                     order.CustomerCurrencyCode, false, language);
                 sb.AppendLine($"<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {_templatesSettings.Color3};padding:0.6em 0.4 em;\"><strong>{rpTitle}</strong></td> <td style=\"background-color: {_templatesSettings.Color3};padding:0.6em 0.4 em;\"><strong>{rpAmount}</strong></td></tr>");
             }
@@ -782,10 +785,8 @@ namespace Nop.Services.Messages
             {
                 var si = table[i];
                 var orderItem = _orderService.GetOrderItemById(si.OrderItemId);
-                if (orderItem == null)
-                    continue;
 
-                var product = orderItem.Product;
+                var product = orderItem?.Product;
                 if (product == null)
                     continue;
 
@@ -801,6 +802,7 @@ namespace Nop.Services.Messages
                     sb.AppendLine("<br />");
                     sb.AppendLine(orderItem.AttributeDescription);
                 }
+
                 //rental info
                 if (orderItem.Product.IsRental)
                 {
@@ -813,6 +815,7 @@ namespace Nop.Services.Messages
                     sb.AppendLine("<br />");
                     sb.AppendLine(rentalInfo);
                 }
+
                 //SKU
                 if (_catalogSettings.ShowSkuOnProductDetailsPage)
                 {
@@ -823,6 +826,7 @@ namespace Nop.Services.Messages
                         sb.AppendLine(string.Format(_localizationService.GetResource("Messages.Order.Product(s).SKU", languageId), WebUtility.HtmlEncode(sku)));
                     }
                 }
+
                 sb.AppendLine("</td>");
 
                 sb.AppendLine($"<td style=\"padding: 0.6em 0.4em;text-align: center;\">{si.Quantity}</td>");
@@ -937,7 +941,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Order.ShippingAddress2", order.ShippingAddress != null ? order.ShippingAddress.Address2 : string.Empty));
             tokens.Add(new Token("Order.ShippingCity", order.ShippingAddress != null ? order.ShippingAddress.City : string.Empty));
             tokens.Add(new Token("Order.ShippingCounty", order.ShippingAddress != null ? order.ShippingAddress.County : string.Empty));
-            tokens.Add(new Token("Order.ShippingStateProvince", order.ShippingAddress != null && order.ShippingAddress.StateProvince != null ? _localizationService.GetLocalized(order.ShippingAddress.StateProvince, x => x.Name) : string.Empty));
+            tokens.Add(new Token("Order.ShippingStateProvince", order.ShippingAddress?.StateProvince != null ? _localizationService.GetLocalized(order.ShippingAddress.StateProvince, x => x.Name) : string.Empty));
             tokens.Add(new Token("Order.ShippingZipPostalCode", order.ShippingAddress != null ? order.ShippingAddress.ZipPostalCode : string.Empty));
             tokens.Add(new Token("Order.ShippingCountry", order.ShippingAddress != null && order.ShippingAddress.Country != null ? _localizationService.GetLocalized(order.ShippingAddress.Country, x => x.Name) : string.Empty));
             tokens.Add(new Token("Order.ShippingCustomAttributes", _addressAttributeFormatter.FormatAttributes(order.ShippingAddress != null ? order.ShippingAddress.CustomAttributes : string.Empty), true));
@@ -956,6 +960,7 @@ namespace Nop.Services.Messages
                     sbCustomValues.Append("<br />");
                 }
             }
+
             tokens.Add(new Token("Order.CustomValues", sbCustomValues.ToString(), true));
 
             tokens.Add(new Token("Order.Product(s)", ProductListToHtmlTable(order, languageId, vendorId), true));
@@ -1018,6 +1023,7 @@ namespace Nop.Services.Messages
                 if (shipmentTracker != null)
                     trackingNumberUrl = shipmentTracker.GetUrl(shipment.TrackingNumber);
             }
+
             tokens.Add(new Token("Shipment.TrackingNumberURL", trackingNumberUrl, true));
             tokens.Add(new Token("Shipment.Product(s)", ProductListToHtmlTable(shipment, languageId), true));
             var shipmentUrl = RouteUrl(shipment.Order.StoreId, "ShipmentDetails", new { shipmentId = shipment.Id });

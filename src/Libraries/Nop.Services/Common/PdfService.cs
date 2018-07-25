@@ -128,11 +128,12 @@ namespace Nop.Services.Common
         /// <returns>Font</returns>
         protected virtual Font GetFont()
         {
-            //nopCommerce supports unicode characters
+            //nopCommerce supports Unicode characters
             //nopCommerce uses Free Serif font by default (~/App_Data/Pdf/FreeSerif.ttf file)
             //It was downloaded from http://savannah.gnu.org/projects/freefont
             return GetFont(_pdfSettings.FontFileName);
         }
+
         /// <summary>
         /// Get font
         /// </summary>
@@ -283,6 +284,7 @@ namespace Nop.Services.Common
                     column1.Phrase.Add(new Phrase(footerLine, font));
                     column1.Phrase.Add(new Phrase(Environment.NewLine));
                 }
+
                 footerTable.AddCell(column1);
             }
             else
@@ -305,6 +307,7 @@ namespace Nop.Services.Common
                     column2.Phrase.Add(new Phrase(footerLine, font));
                     column2.Phrase.Add(new Phrase(Environment.NewLine));
                 }
+
                 footerTable.AddCell(column2);
             }
             else
@@ -380,7 +383,7 @@ namespace Nop.Services.Common
                 notesTable.AddCell(cellOrderNote);
 
                 //should we display a link to downloadable files here?
-                //I think, no. Onyway, PDFs are printable documents and links (files) are useful here
+                //I think, no. Anyway, PDFs are printable documents and links (files) are useful here
             }
 
             doc.Add(notesTable);
@@ -565,6 +568,7 @@ namespace Nop.Services.Common
                         false, lang);
                 }
             }
+
             if (displayTax)
             {
                 var p = GetPdfCell($"{_localizationService.GetResource("PDFInvoice.Tax", lang.Id)} {taxStr}", font);
@@ -572,6 +576,7 @@ namespace Nop.Services.Common
                 p.Border = Rectangle.NO_BORDER;
                 totalsTable.AddCell(p);
             }
+
             if (displayTaxRates)
             {
                 foreach (var item in taxRates)
@@ -609,7 +614,7 @@ namespace Nop.Services.Common
                 var gcTitle = string.Format(_localizationService.GetResource("PDFInvoice.GiftCardInfo", lang.Id),
                     gcuh.GiftCard.GiftCardCouponCode);
                 var gcAmountStr = _priceFormatter.FormatPrice(
-                    -(_currencyService.ConvertCurrency(gcuh.UsedValue, order.CurrencyRate)), true,
+                    -_currencyService.ConvertCurrency(gcuh.UsedValue, order.CurrencyRate), true,
                     order.CustomerCurrencyCode, false, lang);
 
                 var p = GetPdfCell($"{gcTitle} {gcAmountStr}", font);
@@ -624,7 +629,7 @@ namespace Nop.Services.Common
                 var rpTitle = string.Format(_localizationService.GetResource("PDFInvoice.RewardPoints", lang.Id),
                     -order.RedeemedRewardPointsEntry.Points);
                 var rpAmount = _priceFormatter.FormatPrice(
-                    -(_currencyService.ConvertCurrency(order.RedeemedRewardPointsEntry.UsedAmount, order.CurrencyRate)),
+                    -_currencyService.ConvertCurrency(order.RedeemedRewardPointsEntry.UsedAmount, order.CurrencyRate),
                     true, order.CustomerCurrencyCode, false, lang);
 
                 var p = GetPdfCell($"{rpTitle} {rpAmount}", font);
@@ -701,7 +706,6 @@ namespace Nop.Services.Common
             var count = 4 + (_catalogSettings.ShowSkuOnProductDetailsPage ? 1 : 0)
                         + (_vendorSettings.ShowVendorOnOrderDetailsPage ? 1 : 0);
 
-
             var productsTable = new PdfPTable(count)
             {
                 RunDirection = GetDirection(lang),
@@ -710,9 +714,9 @@ namespace Nop.Services.Common
 
             var widths = new Dictionary<int, int[]>
             {
-                {4, new[] {50, 20, 10, 20}},
-                {5, new[] {45, 15, 15, 10, 15}},
-                {6, new[] {40, 13, 13, 12, 10, 12}}
+                { 4, new[] { 50, 20, 10, 20 } },
+                { 5, new[] { 45, 15, 15, 10, 15 } },
+                { 6, new[] { 40, 13, 13, 12, 10, 12 } }
             };
 
             productsTable.SetWidths(lang.Rtl ? widths[count].Reverse().ToArray() : widths[count]);
@@ -784,21 +788,23 @@ namespace Nop.Services.Common
                             attributesFont);
                     pAttribTable.AddCell(attributesParagraph);
                 }
+
                 //rental info
                 if (orderItem.Product.IsRental)
                 {
                     var rentalStartDate = orderItem.RentalStartDateUtc.HasValue
                         ? _productService.FormatRentalDate(orderItem.Product, orderItem.RentalStartDateUtc.Value)
-                        : "";
+                        : string.Empty;
                     var rentalEndDate = orderItem.RentalEndDateUtc.HasValue
                         ? _productService.FormatRentalDate(orderItem.Product, orderItem.RentalEndDateUtc.Value)
-                        : "";
+                        : string.Empty;
                     var rentalInfo = string.Format(_localizationService.GetResource("Order.Rental.FormattedDate"),
                         rentalStartDate, rentalEndDate);
 
                     var rentalInfoParagraph = new Paragraph(rentalInfo, attributesFont);
                     pAttribTable.AddCell(rentalInfoParagraph);
                 }
+
                 productsTable.AddCell(pAttribTable);
 
                 //SKU
@@ -837,6 +843,7 @@ namespace Nop.Services.Common
                     unitPrice = _priceFormatter.FormatPrice(unitPriceExclTaxInCustomerCurrency, true,
                         order.CustomerCurrencyCode, lang, false);
                 }
+
                 cellProductItem = GetPdfCell(unitPrice, font);
                 cellProductItem.HorizontalAlignment = Element.ALIGN_LEFT;
                 productsTable.AddCell(cellProductItem);
@@ -864,10 +871,12 @@ namespace Nop.Services.Common
                     subTotal = _priceFormatter.FormatPrice(priceExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode,
                         lang, false);
                 }
+
                 cellProductItem = GetPdfCell(subTotal, font);
                 cellProductItem.HorizontalAlignment = Element.ALIGN_LEFT;
                 productsTable.AddCell(cellProductItem);
             }
+
             doc.Add(productsTable);
         }
 
@@ -945,6 +954,7 @@ namespace Nop.Services.Common
                             $"{order.ShippingAddress.ZipPostalCode}";
                         shippingAddress.AddCell(new Paragraph(addressLine, font));
                     }
+
                     if (_addressSettings.CountryEnabled && order.ShippingAddress.Country != null)
                         shippingAddress.AddCell(
                             new Paragraph(indent + _localizationService.GetLocalized(order.ShippingAddress.Country, x => x.Name, lang.Id), font));
@@ -957,6 +967,7 @@ namespace Nop.Services.Common
                         shippingAddress.AddCell(new Paragraph(
                             indent + HtmlHelper.ConvertHtmlToPlainText(customShippingAddressAttributes, true, true), font));
                     }
+
                     shippingAddress.AddCell(new Paragraph(" "));
                 }
                 else if (order.PickupAddress != null)
@@ -977,6 +988,7 @@ namespace Nop.Services.Common
                         shippingAddress.AddCell(new Paragraph($"{indent}{order.PickupAddress.ZipPostalCode}", font));
                     shippingAddress.AddCell(new Paragraph(" "));
                 }
+
                 shippingAddress.AddCell(GetParagraph("PDFInvoice.ShippingMethod", indent, lang, font, order.ShippingMethod));
                 shippingAddress.AddCell(new Paragraph());
 
@@ -1027,6 +1039,7 @@ namespace Nop.Services.Common
                     $"{order.BillingAddress.ZipPostalCode}";
                 billingAddress.AddCell(new Paragraph(addressLine, font));
             }
+
             if (_addressSettings.CountryEnabled && order.BillingAddress.Country != null)
                 billingAddress.AddCell(new Paragraph(indent + _localizationService.GetLocalized(order.BillingAddress.Country, x => x.Name, lang.Id),
                     font));
@@ -1072,6 +1085,7 @@ namespace Nop.Services.Common
                     }
                 }
             }
+
             addressTable.AddCell(billingAddress);
         }
 
@@ -1132,6 +1146,7 @@ namespace Nop.Services.Common
                 cellLogo.AddElement(logo);
                 headerTable.AddCell(cellLogo);
             }
+
             doc.Add(headerTable);
         }
 
@@ -1144,7 +1159,7 @@ namespace Nop.Services.Common
         /// </summary>
         /// <param name="order">Order</param>
         /// <param name="languageId">Language identifier; 0 to use a language used when placing an order</param>
-        /// <param name="vendorId">Vendor identifier to limit products; 0 to to print all products. If specified, then totals won't be printed</param>
+        /// <param name="vendorId">Vendor identifier to limit products; 0 to print all products. If specified, then totals won't be printed</param>
         /// <returns>A path of generated file</returns>
         public virtual string PrintOrderToPdf(Order order, int languageId = 0, int vendorId = 0)
         {
@@ -1158,6 +1173,7 @@ namespace Nop.Services.Common
                 var orders = new List<Order> { order };
                 PrintOrdersToPdf(fileStream, orders, languageId, vendorId);
             }
+
             return filePath;
         }
 
@@ -1167,7 +1183,7 @@ namespace Nop.Services.Common
         /// <param name="stream">Stream</param>
         /// <param name="orders">Orders</param>
         /// <param name="languageId">Language identifier; 0 to use a language used when placing an order</param>
-        /// <param name="vendorId">Vendor identifier to limit products; 0 to to print all products. If specified, then totals won't be printed</param>
+        /// <param name="vendorId">Vendor identifier to limit products; 0 to print all products. If specified, then totals won't be printed</param>
         public virtual void PrintOrdersToPdf(Stream stream, IList<Order> orders, int languageId = 0, int vendorId = 0)
         {
             if (stream == null)
@@ -1236,6 +1252,7 @@ namespace Nop.Services.Common
                     doc.NewPage();
                 }
             }
+
             doc.Close();
         }
 
@@ -1402,19 +1419,21 @@ namespace Nop.Services.Common
                         var attributesParagraph = new Paragraph(HtmlHelper.ConvertHtmlToPlainText(orderItem.AttributeDescription, true, true), attributesFont);
                         productAttribTable.AddCell(attributesParagraph);
                     }
+
                     //rental info
                     if (orderItem.Product.IsRental)
                     {
                         var rentalStartDate = orderItem.RentalStartDateUtc.HasValue
-                            ? _productService.FormatRentalDate(orderItem.Product, orderItem.RentalStartDateUtc.Value) : "";
+                            ? _productService.FormatRentalDate(orderItem.Product, orderItem.RentalStartDateUtc.Value) : string.Empty;
                         var rentalEndDate = orderItem.RentalEndDateUtc.HasValue
-                            ? _productService.FormatRentalDate(orderItem.Product, orderItem.RentalEndDateUtc.Value) : "";
+                            ? _productService.FormatRentalDate(orderItem.Product, orderItem.RentalEndDateUtc.Value) : string.Empty;
                         var rentalInfo = string.Format(_localizationService.GetResource("Order.Rental.FormattedDate"),
                             rentalStartDate, rentalEndDate);
 
                         var rentalInfoParagraph = new Paragraph(rentalInfo, attributesFont);
                         productAttribTable.AddCell(rentalInfoParagraph);
                     }
+
                     productsTable.AddCell(productAttribTable);
 
                     //SKU
@@ -1428,6 +1447,7 @@ namespace Nop.Services.Common
                     cell.HorizontalAlignment = Element.ALIGN_CENTER;
                     productsTable.AddCell(cell);
                 }
+
                 doc.Add(productsTable);
 
                 shipmentNum++;
@@ -1510,6 +1530,7 @@ namespace Nop.Services.Common
 
                     productTable.AddCell(new Paragraph(" "));
                 }
+
                 var pictures = _pictureService.GetPicturesByProductId(product.Id);
                 if (pictures.Any())
                 {

@@ -15,11 +15,11 @@ namespace Nop.Services.Helpers
     {
         #region Fields
 
+        private static readonly object _locker = new object();
+
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly INopFileProvider _fileProvider;
         private readonly NopConfig _nopConfig;
-
-        private static readonly object _locker = new object();
 
         #endregion
 
@@ -81,7 +81,7 @@ namespace Nop.Services.Helpers
         /// <returns>Result</returns>
         public virtual bool IsSearchEngine()
         {
-            if (_httpContextAccessor == null || _httpContextAccessor.HttpContext == null)
+            if (_httpContextAccessor?.HttpContext == null)
                 return false;
 
             //we put required logic in try-catch block
@@ -99,6 +99,7 @@ namespace Nop.Services.Helpers
             }
             catch
             {
+                // ignored
             }
 
             return false;
@@ -110,7 +111,7 @@ namespace Nop.Services.Helpers
         /// <returns></returns>
         public virtual bool IsMobileDevice()
         {
-            if (_httpContextAccessor == null || _httpContextAccessor.HttpContext == null)
+            if (_httpContextAccessor?.HttpContext == null)
                 return false;
 
             //we put required logic in try-catch block
@@ -128,6 +129,7 @@ namespace Nop.Services.Helpers
             }
             catch
             {
+                // ignored
             }
 
             return false;
@@ -139,7 +141,7 @@ namespace Nop.Services.Helpers
         /// <returns></returns>
         public virtual bool IsIe8()
         {
-            if (_httpContextAccessor == null || _httpContextAccessor.HttpContext == null)
+            if (_httpContextAccessor?.HttpContext == null)
                 return false;
 
             //https://blogs.msdn.microsoft.com/ie/2009/01/09/the-internet-explorer-8-user-agent-string-updated-edition/

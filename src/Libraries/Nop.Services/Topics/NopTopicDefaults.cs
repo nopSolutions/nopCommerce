@@ -1,5 +1,4 @@
-﻿
-namespace Nop.Services.Topics
+﻿namespace Nop.Services.Topics
 {
     /// <summary>
     /// Represents default values related to topic services

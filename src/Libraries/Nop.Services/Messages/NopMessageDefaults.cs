@@ -1,5 +1,4 @@
-﻿
-namespace Nop.Services.Messages
+﻿namespace Nop.Services.Messages
 {
     /// <summary>
     /// Represents default values related to messages services

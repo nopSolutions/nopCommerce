@@ -78,7 +78,7 @@ namespace Nop.Services.Tests.Logging
             _activityLogTypeRepository = new Mock<IRepository<ActivityLogType>>();
             _activityLogTypeRepository.Setup(x => x.Table).Returns(new List<ActivityLogType> { _activityType1, _activityType2 }.AsQueryable());
             _activityLogRepository.Setup(x => x.Table).Returns(new List<ActivityLog> { _activity1, _activity2 }.AsQueryable());
-            _customerActivityService = new CustomerActivityService(new CommonSettings(), null, null, _activityLogRepository.Object, _activityLogTypeRepository.Object, _cacheManager, _webHelper.Object, _workContext.Object);
+            _customerActivityService = new CustomerActivityService(null, _activityLogRepository.Object, _activityLogTypeRepository.Object, _cacheManager, _webHelper.Object, _workContext.Object);
         }
 
         [Test]

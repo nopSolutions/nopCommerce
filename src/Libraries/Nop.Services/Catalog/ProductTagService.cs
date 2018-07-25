@@ -65,7 +65,6 @@ namespace Nop.Services.Catalog
             {
                 return _dbContext.QueryFromSql<ProductTagWithCount>($"Exec ProductTagCountLoadAll {storeId}")
                     .ToDictionary(item => item.ProductTagId, item => item.ProductCount);
-
             });
         }
 
@@ -182,7 +181,7 @@ namespace Nop.Services.Catalog
 
             _productTagRepository.Update(productTag);
 
-            var seName = _urlRecordService.ValidateSeName(productTag, "", productTag.Name, true);
+            var seName = _urlRecordService.ValidateSeName(productTag, string.Empty, productTag.Name, true);
             _urlRecordService.SaveSlug(productTag, seName, 0);
 
             //cache
@@ -226,17 +225,19 @@ namespace Nop.Services.Catalog
                 var found = false;
                 foreach (var newProductTag in productTags)
                 {
-                    if (existingProductTag.Name.Equals(newProductTag, StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        found = true;
-                        break;
-                    }
+                    if (!existingProductTag.Name.Equals(newProductTag, StringComparison.InvariantCultureIgnoreCase))
+                        continue;
+
+                    found = true;
+                    break;
                 }
+
                 if (!found)
                 {
                     productTagsToRemove.Add(existingProductTag);
                 }
             }
+
             foreach (var productTag in productTagsToRemove)
             {
                 //product.ProductTags.Remove(productTag);
@@ -244,6 +245,7 @@ namespace Nop.Services.Catalog
                     .Remove(product.ProductProductTagMappings.FirstOrDefault(mapping => mapping.ProductTagId == productTag.Id));
                 _productService.UpdateProduct(product);
             }
+
             foreach (var productTagName in productTags)
             {
                 ProductTag productTag;
@@ -261,6 +263,7 @@ namespace Nop.Services.Catalog
                 {
                     productTag = productTag2;
                 }
+
                 if (!_productService.ProductTagExists(product, productTag.Id))
                 {
                     //product.ProductTags.Add(productTag);
@@ -268,9 +271,8 @@ namespace Nop.Services.Catalog
                     _productService.UpdateProduct(product);
                 }
 
-                var seName = _urlRecordService.ValidateSeName(productTag, "", productTag.Name, true);
+                var seName = _urlRecordService.ValidateSeName(productTag, string.Empty, productTag.Name, true);
                 _urlRecordService.SaveSlug(productTag, seName, 0);
-
             }
         }
 

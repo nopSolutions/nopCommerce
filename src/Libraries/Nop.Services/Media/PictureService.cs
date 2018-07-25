@@ -110,6 +110,7 @@ namespace Nop.Services.Media
                         width = targetSize;
                         height = originalSize.Height * (targetSize / (float)originalSize.Width);
                     }
+
                     break;
                 case ResizeType.Width:
                     width = targetSize;
@@ -123,13 +124,13 @@ namespace Nop.Services.Media
                     throw new Exception("Not supported ResizeType");
             }
 
-            if (ensureSizePositive)
-            {
-                if (width < 1)
-                    width = 1;
-                if (height < 1)
-                    height = 1;
-            }
+            if (!ensureSizePositive) 
+                return new Size((int)Math.Round(width), (int)Math.Round(height));
+
+            if (width < 1)
+                width = 1;
+            if (height < 1)
+                height = 1;
 
             //we invoke Math.Round to ensure that no white background is rendered - https://www.nopcommerce.com/boards/t/40616/image-resizing-bug.aspx
             return new Size((int)Math.Round(width), (int)Math.Round(height));
@@ -161,6 +162,7 @@ namespace Nop.Services.Media
                     lastPart = "ico";
                     break;
             }
+
             return lastPart;
         }
 
@@ -371,6 +373,7 @@ namespace Nop.Services.Media
                         imageEncoder.Encode(image, stream);
                         break;
                 }
+
                 return stream.ToArray();
             }
         }
@@ -452,12 +455,12 @@ namespace Nop.Services.Media
                     defaultImageFileName = _settingService.GetSettingByKey("Media.DefaultImageName", NopMediaDefaults.DefaultImageFileName);
                     break;
             }
+
             var filePath = GetPictureLocalPath(defaultImageFileName);
             if (!_fileProvider.FileExists(filePath))
             {
-                return "";
+                return string.Empty;
             }
-
 
             if (targetSize == 0)
             {
@@ -485,6 +488,7 @@ namespace Nop.Services.Media
                         SaveThumb(thumbFilePath, thumbFileName, imageFormat.DefaultMimeType, pictureBinary);
                     }
                 }
+
                 var url = GetThumbUrl(thumbFileName, storeLocation);
                 return url;
             }
@@ -534,6 +538,7 @@ namespace Nop.Services.Media
                 {
                     url = GetDefaultPictureUrl(targetSize, defaultPictureType, storeLocation);
                 }
+
                 return url;
             }
 
@@ -568,6 +573,7 @@ namespace Nop.Services.Media
                     ? $"{picture.Id:0000000}_{seoFileName}_{targetSize}.{lastPart}"
                     : $"{picture.Id:0000000}_{targetSize}.{lastPart}";
             }
+
             var thumbFilePath = GetThumbLocalPath(thumbFileName);
 
             //the named mutex helps to avoid creating the same files in different threads,
@@ -607,8 +613,8 @@ namespace Nop.Services.Media
 
                     mutex.ReleaseMutex();
                 }
-
             }
+
             url = GetThumbUrl(thumbFileName, storeLocation);
             return url;
         }
@@ -694,7 +700,6 @@ namespace Nop.Services.Media
         {
             if (productId == 0)
                 return new List<Picture>();
-
 
             var query = from p in _pictureRepository.Table
                         join pp in _productPictureRepository.Table on p.Id equals pp.PictureId
@@ -827,6 +832,7 @@ namespace Nop.Services.Media
                     true,
                     false);
             }
+
             return picture;
         }
 
@@ -868,7 +874,7 @@ namespace Nop.Services.Media
             const string strCommand = "SELECT [PictureId], HASHBYTES('sha1', substring([BinaryData], 0, {0})) as [Hash] FROM [PictureBinary] where [PictureId] in ({1})";
             return _dbContext
                 .QueryFromSql<PictureHashItem>(string.Format(strCommand, supportedLengthOfBinaryHash, picturesIds.Select(p => p.ToString()).Aggregate((all, current) => all + ", " + current))).Distinct()
-                .ToDictionary(p => p.PictureId, p => BitConverter.ToString(p.Hash).Replace("-", ""));
+                .ToDictionary(p => p.PictureId, p => BitConverter.ToString(p.Hash).Replace("-", string.Empty));
         }
 
         /// <summary>
@@ -884,31 +890,28 @@ namespace Nop.Services.Media
 
             //first, try to get product attribute combination picture
             var combination = _productAttributeParser.FindProductAttributeCombination(product, attributesXml);
-            var combinationPicture = this.GetPictureById(combination?.PictureId ?? 0);
+            var combinationPicture = GetPictureById(combination?.PictureId ?? 0);
             if (combinationPicture != null)
                 return combinationPicture;
 
             //then, let's see whether we have attribute values with pictures
             var attributePicture = _productAttributeParser.ParseProductAttributeValues(attributesXml)
-                .Select(attributeValue => this.GetPictureById(attributeValue?.PictureId ?? 0))
+                .Select(attributeValue => GetPictureById(attributeValue?.PictureId ?? 0))
                 .FirstOrDefault(picture => picture != null);
             if (attributePicture != null)
                 return attributePicture;
 
             //now let's load the default product picture
-            var productPicture = this.GetPicturesByProductId(product.Id, 1).FirstOrDefault();
+            var productPicture = GetPicturesByProductId(product.Id, 1).FirstOrDefault();
             if (productPicture != null)
                 return productPicture;
 
             //finally, let's check whether this product has some parent "grouped" product
-            if (!product.VisibleIndividually && product.ParentGroupedProductId > 0)
-            {
-                var parentGroupedProductPicture = this.GetPicturesByProductId(product.ParentGroupedProductId, 1).FirstOrDefault();
-                if (parentGroupedProductPicture != null)
-                    return parentGroupedProductPicture;
-            }
+            if (product.VisibleIndividually || product.ParentGroupedProductId <= 0) 
+                return null;
 
-            return null;
+            var parentGroupedProductPicture = GetPicturesByProductId(product.ParentGroupedProductId, 1).FirstOrDefault();
+            return parentGroupedProductPicture;
         }
 
         #endregion
@@ -920,14 +923,11 @@ namespace Nop.Services.Media
         /// </summary>
         public virtual bool StoreInDb
         {
-            get
-            {
-                return _settingService.GetSettingByKey("Media.Images.StoreInDB", true);
-            }
+            get => _settingService.GetSettingByKey("Media.Images.StoreInDB", true);
             set
             {
                 //check whether it's a new value
-                if (this.StoreInDb == value)
+                if (StoreInDb == value)
                     return;
 
                 //save the new setting value
@@ -972,6 +972,7 @@ namespace Nop.Services.Media
                             //raise event?
                             //_eventPublisher.EntityUpdated(picture);
                         }
+
                         //save all at once
                         _pictureRepository.Update(pictures);
                         //detach them in order to release memory
@@ -981,8 +982,9 @@ namespace Nop.Services.Media
                         }
                     }
                 }
-                finally
+                catch
                 {
+                    // ignored
                 }
             }
         }

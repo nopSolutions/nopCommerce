@@ -67,13 +67,11 @@ namespace Nop.Services.Stores
         /// <returns>Stores</returns>
         public virtual IList<Store> GetAllStores(bool loadCacheableCopy = true)
         {
-            Func<IList<Store>> loadStoresFunc = () =>
+            IList<Store> LoadStoresFunc()
             {
-                var query = from s in _storeRepository.Table
-                            orderby s.DisplayOrder, s.Id
-                            select s;
+                var query = from s in _storeRepository.Table orderby s.DisplayOrder, s.Id select s;
                 return query.ToList();
-            };
+            }
 
             if (loadCacheableCopy)
             {
@@ -81,13 +79,13 @@ namespace Nop.Services.Stores
                 return _cacheManager.Get(NopStoreDefaults.StoresAllCacheKey, () =>
                 {
                     var result = new List<Store>();
-                    foreach (var store in loadStoresFunc())
+                    foreach (var store in LoadStoresFunc())
                         result.Add(new StoreForCaching(store));
                     return result;
                 });
             }
 
-            return loadStoresFunc();
+            return LoadStoresFunc();
         }
 
         /// <summary>
@@ -101,25 +99,23 @@ namespace Nop.Services.Stores
             if (storeId == 0)
                 return null;
 
-            Func<Store> loadStoreFunc = () =>
+            Store LoadStoreFunc()
             {
                 return _storeRepository.GetById(storeId);
-            };
-
-            if (loadCacheableCopy)
-            {
-                //cacheable copy
-                var key = string.Format(NopStoreDefaults.StoresByIdCacheKey, storeId);
-                return _cacheManager.Get(key, () =>
-                {
-                    var store = loadStoreFunc();
-                    if (store == null)
-                        return null;
-                    return new StoreForCaching(store);
-                });
             }
 
-            return loadStoreFunc();
+            if (!loadCacheableCopy) 
+                return LoadStoreFunc();
+
+            //cacheable copy
+            var key = string.Format(NopStoreDefaults.StoresByIdCacheKey, storeId);
+            return _cacheManager.Get(key, () =>
+            {
+                var store = LoadStoreFunc();
+                if (store == null)
+                    return null;
+                return new StoreForCaching(store);
+            });
         }
 
         /// <summary>

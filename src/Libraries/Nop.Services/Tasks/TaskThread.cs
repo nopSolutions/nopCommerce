@@ -18,10 +18,10 @@ namespace Nop.Services.Tasks
     {
         #region Fields
 
+        private static readonly string _scheduleTaskUrl;
+        private readonly Dictionary<string, string> _tasks;
         private Timer _timer;
         private bool _disposed;
-        private readonly Dictionary<string, string> _tasks;
-        private static readonly string _scheduleTaskUrl;
 
         #endregion
 
@@ -55,7 +55,7 @@ namespace Nop.Services.Tasks
                 //create and send post data
                 var postData = new NameValueCollection
                 {
-                    {"taskType", taskType}
+                    { "taskType", taskType }
                 };
 
                 try
@@ -77,6 +77,7 @@ namespace Nop.Services.Tasks
                     }
                 }
             }
+
             IsRunning = false;
         }
 
@@ -103,14 +104,14 @@ namespace Nop.Services.Tasks
         /// </summary>
         public void Dispose()
         {
-            if (_timer != null && !_disposed)
+            if (_timer == null || _disposed) 
+                return;
+
+            lock (this)
             {
-                lock (this)
-                {
-                    _timer.Dispose();
-                    _timer = null;
-                    _disposed = true;
-                }
+                _timer.Dispose();
+                _timer = null;
+                _disposed = true;
             }
         }
 
@@ -145,10 +146,12 @@ namespace Nop.Services.Tasks
         /// Gets or sets the interval in seconds at which to run the tasks
         /// </summary>
         public int Seconds { get; set; }
+
         /// <summary>
         /// Get or set the interval before timer first start 
         /// </summary>
         public int InitSeconds { get; set; }
+
         /// <summary>
         /// Get or sets a datetime when thread has been started
         /// </summary>
@@ -173,6 +176,7 @@ namespace Nop.Services.Tasks
                 return interval;
             }
         }
+
         /// <summary>
         /// Gets the due time interval (in milliseconds) at which to begin start the task
         /// </summary>

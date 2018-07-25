@@ -98,7 +98,7 @@ namespace Nop.Services.Customers
         /// <param name="zipPostalCode">Phone; null to load all customers</param>
         /// <param name="ipAddress">IP address; null to load all customers</param>
         /// <param name="loadOnlyWithShoppingCart">Value indicating whether to load customers only with shopping cart</param>
-        /// <param name="sct">Value indicating what shopping cart type to filter; userd when 'loadOnlyWithShoppingCart' param is 'true'</param>
+        /// <param name="sct">Value indicating what shopping cart type to filter; used when 'loadOnlyWithShoppingCart' parameter is 'true'</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="getOnlyTotalCount">A value in indicating whether you want to load only total number of records. Set to "true" if you don't want to load data from database</param>
@@ -140,20 +140,22 @@ namespace Nop.Services.Customers
             {
                 query = query
                     .Join(_gaRepository.Table, x => x.Id, y => y.EntityId, (x, y) => new { Customer = x, Attribute = y })
-                    .Where((z => z.Attribute.KeyGroup == _entityName &&
-                        z.Attribute.Key == NopCustomerDefaults.FirstNameAttribute &&
-                        z.Attribute.Value.Contains(firstName)))
+                    .Where(z => z.Attribute.KeyGroup == _entityName &&
+                                z.Attribute.Key == NopCustomerDefaults.FirstNameAttribute &&
+                                z.Attribute.Value.Contains(firstName))
                     .Select(z => z.Customer);
             }
+
             if (!string.IsNullOrWhiteSpace(lastName))
             {
                 query = query
                     .Join(_gaRepository.Table, x => x.Id, y => y.EntityId, (x, y) => new { Customer = x, Attribute = y })
-                    .Where((z => z.Attribute.KeyGroup == _entityName &&
-                        z.Attribute.Key == NopCustomerDefaults.LastNameAttribute &&
-                        z.Attribute.Value.Contains(lastName)))
+                    .Where(z => z.Attribute.KeyGroup == _entityName &&
+                                z.Attribute.Key == NopCustomerDefaults.LastNameAttribute &&
+                                z.Attribute.Value.Contains(lastName))
                     .Select(z => z.Customer);
             }
+
             //date of birth is stored as a string into database.
             //we also know that date of birth is stored in the following format YYYY-MM-DD (for example, 1983-02-18).
             //so let's search it as a string
@@ -166,9 +168,9 @@ namespace Nop.Services.Customers
                 //dateOfBirthStr.Length = 5
                 query = query
                     .Join(_gaRepository.Table, x => x.Id, y => y.EntityId, (x, y) => new { Customer = x, Attribute = y })
-                    .Where((z => z.Attribute.KeyGroup == _entityName &&
-                        z.Attribute.Key == NopCustomerDefaults.DateOfBirthAttribute &&
-                        z.Attribute.Value.Substring(5, 5) == dateOfBirthStr))
+                    .Where(z => z.Attribute.KeyGroup == _entityName &&
+                                z.Attribute.Key == NopCustomerDefaults.DateOfBirthAttribute &&
+                                z.Attribute.Value.Substring(5, 5) == dateOfBirthStr)
                     .Select(z => z.Customer);
             }
             else if (dayOfBirth > 0)
@@ -180,9 +182,9 @@ namespace Nop.Services.Customers
                 //dateOfBirthStr.Length = 2
                 query = query
                     .Join(_gaRepository.Table, x => x.Id, y => y.EntityId, (x, y) => new { Customer = x, Attribute = y })
-                    .Where((z => z.Attribute.KeyGroup == _entityName &&
-                        z.Attribute.Key == NopCustomerDefaults.DateOfBirthAttribute &&
-                        z.Attribute.Value.Substring(8, 2) == dateOfBirthStr))
+                    .Where(z => z.Attribute.KeyGroup == _entityName &&
+                                z.Attribute.Key == NopCustomerDefaults.DateOfBirthAttribute &&
+                                z.Attribute.Value.Substring(8, 2) == dateOfBirthStr)
                     .Select(z => z.Customer);
             }
             else if (monthOfBirth > 0)
@@ -191,9 +193,9 @@ namespace Nop.Services.Customers
                 var dateOfBirthStr = "-" + monthOfBirth.ToString("00", CultureInfo.InvariantCulture) + "-";
                 query = query
                     .Join(_gaRepository.Table, x => x.Id, y => y.EntityId, (x, y) => new { Customer = x, Attribute = y })
-                    .Where((z => z.Attribute.KeyGroup == _entityName &&
-                        z.Attribute.Key == NopCustomerDefaults.DateOfBirthAttribute &&
-                        z.Attribute.Value.Contains(dateOfBirthStr)))
+                    .Where(z => z.Attribute.KeyGroup == _entityName &&
+                                z.Attribute.Key == NopCustomerDefaults.DateOfBirthAttribute &&
+                                z.Attribute.Value.Contains(dateOfBirthStr))
                     .Select(z => z.Customer);
             }
             //search by company
@@ -201,9 +203,9 @@ namespace Nop.Services.Customers
             {
                 query = query
                     .Join(_gaRepository.Table, x => x.Id, y => y.EntityId, (x, y) => new { Customer = x, Attribute = y })
-                    .Where((z => z.Attribute.KeyGroup == _entityName &&
-                        z.Attribute.Key == NopCustomerDefaults.CompanyAttribute &&
-                        z.Attribute.Value.Contains(company)))
+                    .Where(z => z.Attribute.KeyGroup == _entityName &&
+                                z.Attribute.Key == NopCustomerDefaults.CompanyAttribute &&
+                                z.Attribute.Value.Contains(company))
                     .Select(z => z.Customer);
             }
             //search by phone
@@ -211,9 +213,9 @@ namespace Nop.Services.Customers
             {
                 query = query
                     .Join(_gaRepository.Table, x => x.Id, y => y.EntityId, (x, y) => new { Customer = x, Attribute = y })
-                    .Where((z => z.Attribute.KeyGroup == _entityName &&
-                        z.Attribute.Key == NopCustomerDefaults.PhoneAttribute &&
-                        z.Attribute.Value.Contains(phone)))
+                    .Where(z => z.Attribute.KeyGroup == _entityName &&
+                                z.Attribute.Key == NopCustomerDefaults.PhoneAttribute &&
+                                z.Attribute.Value.Contains(phone))
                     .Select(z => z.Customer);
             }
             //search by zip
@@ -221,9 +223,9 @@ namespace Nop.Services.Customers
             {
                 query = query
                     .Join(_gaRepository.Table, x => x.Id, y => y.EntityId, (x, y) => new { Customer = x, Attribute = y })
-                    .Where((z => z.Attribute.KeyGroup == _entityName &&
-                        z.Attribute.Key == NopCustomerDefaults.ZipPostalCodeAttribute &&
-                        z.Attribute.Value.Contains(zipPostalCode)))
+                    .Where(z => z.Attribute.KeyGroup == _entityName &&
+                                z.Attribute.Key == NopCustomerDefaults.ZipPostalCodeAttribute &&
+                                z.Attribute.Value.Contains(zipPostalCode))
                     .Select(z => z.Customer);
             }
 
@@ -335,6 +337,7 @@ namespace Nop.Services.Customers
                 if (customer != null)
                     sortedCustomers.Add(customer);
             }
+
             return sortedCustomers;
         }
 
@@ -421,7 +424,7 @@ namespace Nop.Services.Customers
                 CustomerGuid = Guid.NewGuid(),
                 Active = true,
                 CreatedOnUtc = DateTime.UtcNow,
-                LastActivityDateUtc = DateTime.UtcNow,
+                LastActivityDateUtc = DateTime.UtcNow
             };
 
             //add to 'Guests' role
@@ -599,7 +602,7 @@ namespace Nop.Services.Customers
             var firstName = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.FirstNameAttribute);
             var lastName = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.LastNameAttribute);
 
-            var fullName = "";
+            var fullName = string.Empty;
             if (!string.IsNullOrWhiteSpace(firstName) && !string.IsNullOrWhiteSpace(lastName))
                 fullName = $"{firstName} {lastName}";
             else
@@ -610,6 +613,7 @@ namespace Nop.Services.Customers
                 if (!string.IsNullOrWhiteSpace(lastName))
                     fullName = lastName;
             }
+
             return fullName;
         }
 
@@ -677,14 +681,16 @@ namespace Nop.Services.Customers
                 var nodeList1 = xmlDoc.SelectNodes(@"//DiscountCouponCodes/CouponCode");
                 foreach (XmlNode node1 in nodeList1)
                 {
-                    if (node1.Attributes != null && node1.Attributes["Code"] != null)
-                    {
-                        var code = node1.Attributes["Code"].InnerText.Trim();
-                        couponCodes.Add(code);
-                    }
+                    if (node1.Attributes?["Code"] == null) 
+                        continue;
+                    var code = node1.Attributes["Code"].InnerText.Trim();
+                    couponCodes.Add(code);
                 }
             }
-            catch { }
+            catch
+            {
+                // ignored
+            }
 
             return couponCodes.ToArray();
         }
@@ -717,6 +723,7 @@ namespace Nop.Services.Customers
                 {
                     xmlDoc.LoadXml(existingCouponCodes);
                 }
+
                 var rootElement = (XmlElement)xmlDoc.SelectSingleNode(@"//DiscountCouponCodes");
 
                 XmlElement gcElement = null;
@@ -724,15 +731,16 @@ namespace Nop.Services.Customers
                 var nodeList1 = xmlDoc.SelectNodes(@"//DiscountCouponCodes/CouponCode");
                 foreach (XmlNode node1 in nodeList1)
                 {
-                    if (node1.Attributes != null && node1.Attributes["Code"] != null)
-                    {
-                        var couponCodeAttribute = node1.Attributes["Code"].InnerText.Trim();
-                        if (couponCodeAttribute.ToLower() == couponCode.ToLower())
-                        {
-                            gcElement = (XmlElement)node1;
-                            break;
-                        }
-                    }
+                    if (node1.Attributes?["Code"] == null) 
+                        continue;
+
+                    var couponCodeAttribute = node1.Attributes["Code"].InnerText.Trim();
+
+                    if (couponCodeAttribute.ToLower() != couponCode.ToLower()) 
+                        continue;
+
+                    gcElement = (XmlElement)node1;
+                    break;
                 }
 
                 //create new one if not found
@@ -745,7 +753,10 @@ namespace Nop.Services.Customers
 
                 result = xmlDoc.OuterXml;
             }
-            catch { }
+            catch
+            {
+                // ignored
+            }
 
             //apply new value
             _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.DiscountCouponCodeAttribute, result);
@@ -769,7 +780,7 @@ namespace Nop.Services.Customers
             _genericAttributeService.SaveAttribute<string>(customer, NopCustomerDefaults.DiscountCouponCodeAttribute, null);
 
             //save again except removed one
-            foreach (string existingCouponCode in existingCouponCodes)
+            foreach (var existingCouponCode in existingCouponCodes)
                 if (!existingCouponCode.Equals(couponCode, StringComparison.InvariantCultureIgnoreCase))
                     this.ApplyDiscountCouponCode(customer, existingCouponCode);
         }
@@ -798,14 +809,17 @@ namespace Nop.Services.Customers
                 var nodeList1 = xmlDoc.SelectNodes(@"//GiftCardCouponCodes/CouponCode");
                 foreach (XmlNode node1 in nodeList1)
                 {
-                    if (node1.Attributes != null && node1.Attributes["Code"] != null)
-                    {
-                        var code = node1.Attributes["Code"].InnerText.Trim();
-                        couponCodes.Add(code);
-                    }
+                    if (node1.Attributes?["Code"] == null) 
+                        continue;
+
+                    var code = node1.Attributes["Code"].InnerText.Trim();
+                    couponCodes.Add(code);
                 }
             }
-            catch { }
+            catch
+            {
+                // ignored
+            }
 
             return couponCodes.ToArray();
         }
@@ -838,6 +852,7 @@ namespace Nop.Services.Customers
                 {
                     xmlDoc.LoadXml(existingCouponCodes);
                 }
+
                 var rootElement = (XmlElement)xmlDoc.SelectSingleNode(@"//GiftCardCouponCodes");
 
                 XmlElement gcElement = null;
@@ -845,15 +860,15 @@ namespace Nop.Services.Customers
                 var nodeList1 = xmlDoc.SelectNodes(@"//GiftCardCouponCodes/CouponCode");
                 foreach (XmlNode node1 in nodeList1)
                 {
-                    if (node1.Attributes != null && node1.Attributes["Code"] != null)
-                    {
-                        var couponCodeAttribute = node1.Attributes["Code"].InnerText.Trim();
-                        if (couponCodeAttribute.ToLower() == couponCode.ToLower())
-                        {
-                            gcElement = (XmlElement)node1;
-                            break;
-                        }
-                    }
+                    if (node1.Attributes?["Code"] == null) 
+                        continue;
+
+                    var couponCodeAttribute = node1.Attributes["Code"].InnerText.Trim();
+                    if (couponCodeAttribute.ToLower() != couponCode.ToLower()) 
+                        continue;
+
+                    gcElement = (XmlElement)node1;
+                    break;
                 }
 
                 //create new one if not found
@@ -866,7 +881,10 @@ namespace Nop.Services.Customers
 
                 result = xmlDoc.OuterXml;
             }
-            catch { }
+            catch
+            {
+                // ignored
+            }
 
             //apply new value
             _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.GiftCardCouponCodesAttribute, result);
@@ -890,7 +908,7 @@ namespace Nop.Services.Customers
             _genericAttributeService.SaveAttribute<string>(customer, NopCustomerDefaults.GiftCardCouponCodesAttribute, null);
 
             //save again except removed one
-            foreach (string existingCouponCode in existingCouponCodes)
+            foreach (var existingCouponCode in existingCouponCodes)
                 if (!existingCouponCode.Equals(couponCode, StringComparison.InvariantCultureIgnoreCase))
                     this.ApplyGiftCardCouponCode(customer, existingCouponCode);
         }
@@ -1029,7 +1047,7 @@ namespace Nop.Services.Customers
 
             //filter by password format
             if (passwordFormat.HasValue)
-                query = query.Where(password => password.PasswordFormatId == (int)(passwordFormat.Value));
+                query = query.Where(password => password.PasswordFormatId == (int)passwordFormat.Value);
 
             //get the latest passwords
             if (passwordsToReturn.HasValue)

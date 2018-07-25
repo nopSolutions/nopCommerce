@@ -188,20 +188,20 @@ namespace Nop.Services.Common
             }
             else
             {
-                if (!string.IsNullOrWhiteSpace(valueStr))
-                {
-                    //insert
-                    prop = new GenericAttribute
-                    {
-                        EntityId = entity.Id,
-                        Key = key,
-                        KeyGroup = keyGroup,
-                        Value = valueStr,
-                        StoreId = storeId,
+                if (string.IsNullOrWhiteSpace(valueStr)) 
+                    return;
 
-                    };
-                    InsertAttribute(prop);
-                }
+                //insert
+                prop = new GenericAttribute
+                {
+                    EntityId = entity.Id,
+                    Key = key,
+                    KeyGroup = keyGroup,
+                    Value = valueStr,
+                    StoreId = storeId
+                };
+
+                InsertAttribute(prop);
             }
         }
 

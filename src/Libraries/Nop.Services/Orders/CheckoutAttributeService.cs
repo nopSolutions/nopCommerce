@@ -83,11 +83,13 @@ namespace Nop.Services.Orders
                     //store mapping
                     checkoutAttributes = checkoutAttributes.Where(ca => _storeMappingService.Authorize(ca)).ToList();
                 }
+
                 if (excludeShippableAttributes)
                 {
                     //remove attributes which require shippable products
                     checkoutAttributes = checkoutAttributes.Where(x => !x.ShippableProductRequired).ToList();
                 }
+
                 return checkoutAttributes;
             });
         }

@@ -87,9 +87,13 @@ namespace Nop.Services.Discounts
             }
 
             public int Id { get; set; }
+
             public string SystemName { get; set; }
+
             public bool IsGroup { get; set; }
+
             public RequirementGroupInteractionType? InteractionType { get; set; }
+
             public IList<DiscountRequirementForCaching> ChildRequirements { get; set; }
         }
 
@@ -134,8 +138,7 @@ namespace Nop.Services.Discounts
                 if (requirement.IsGroup)
                 {
                     //get child requirements for the group
-                    var interactionType = requirement.InteractionType.HasValue
-                        ? requirement.InteractionType.Value : RequirementGroupInteractionType.And;
+                    var interactionType = requirement.InteractionType ?? RequirementGroupInteractionType.And;
                     result = GetValidationResult(requirement.ChildRequirements, interactionType, customer, errors);
                 }
                 else
@@ -167,11 +170,11 @@ namespace Nop.Services.Discounts
 
                 //all requirements must be met, so return false
                 if (!result && groupInteractionType == RequirementGroupInteractionType.And)
-                    return result;
+                    return false;
 
                 //any of requirements must be met, so return true
                 if (result && groupInteractionType == RequirementGroupInteractionType.Or)
-                    return result;
+                    return true;
             }
 
             return result;
@@ -333,7 +336,6 @@ namespace Nop.Services.Discounts
             manufacturers = manufacturers.OrderBy(manufacturer => manufacturer.DisplayOrder).ThenBy(manufacturer => manufacturer.Id);
 
             return new PagedList<Manufacturer>(manufacturers, pageIndex, pageSize);
-
         }
 
         /// <summary>
@@ -384,11 +386,8 @@ namespace Nop.Services.Discounts
             //that's why let's access the database only once
             var cacheKey = string.Format(NopDiscountDefaults.DiscountAllCacheKey,
                 showHidden, couponCode ?? string.Empty, discountName ?? string.Empty);
-            var discounts = _cacheManager.Get(cacheKey, () =>
-            {
-                return GetAllDiscounts(couponCode: couponCode, discountName: discountName, showHidden: showHidden)
-                    .Select(discount => this.MapDiscount(discount)).ToList();
-            });
+            var discounts = _cacheManager.Get(cacheKey, () => GetAllDiscounts(couponCode: couponCode, discountName: discountName, showHidden: showHidden)
+                .Select(MapDiscount).ToList());
 
             //we know that this method is usually invoked multiple times
             //that's why we filter discounts by type on the application layer
@@ -424,16 +423,18 @@ namespace Nop.Services.Discounts
                 {
                     if (!ids.Contains(categoryId))
                         ids.Add(categoryId);
-                    if (discount.AppliedToSubCategories)
+
+                    if (!discount.AppliedToSubCategories)
+                        continue;
+
+                    //include subcategories
+                    foreach (var childCategoryId in _categoryService.GetChildCategoryIds(categoryId, _storeContext.CurrentStore.Id))
                     {
-                        //include subcategories
-                        foreach (var childCategoryId in _categoryService.GetChildCategoryIds(categoryId, _storeContext.CurrentStore.Id))
-                        {
-                            if (!ids.Contains(childCategoryId))
-                                ids.Add(childCategoryId);
-                        }
+                        if (!ids.Contains(childCategoryId))
+                            ids.Add(childCategoryId);
                     }
                 }
+
                 return ids;
             });
 
@@ -511,7 +512,7 @@ namespace Nop.Services.Discounts
             //calculate discount amount
             decimal result;
             if (discount.UsePercentage)
-                result = (decimal)((((float)amount) * ((float)discount.DiscountPercentage)) / 100f);
+                result = (decimal)((float)amount * (float)discount.DiscountPercentage / 100f);
             else
                 result = discount.DiscountAmount;
 
@@ -548,30 +549,30 @@ namespace Nop.Services.Discounts
             //first we check simple discounts
             foreach (var discount in discounts)
             {
-                var currentDiscountValue = this.GetDiscountAmount(discount, amount);
-                if (currentDiscountValue > discountAmount)
-                {
-                    discountAmount = currentDiscountValue;
+                var currentDiscountValue = GetDiscountAmount(discount, amount);
+                if (currentDiscountValue <= discountAmount) 
+                    continue;
 
-                    result.Clear();
-                    result.Add(discount);
-                }
+                discountAmount = currentDiscountValue;
+
+                result.Clear();
+                result.Add(discount);
             }
             //now let's check cumulative discounts
             //right now we calculate discount values based on the original amount value
             //please keep it in mind if you're going to use discounts with "percentage"
             var cumulativeDiscounts = discounts.Where(x => x.IsCumulative).OrderBy(x => x.Name).ToList();
-            if (cumulativeDiscounts.Count > 1)
-            {
-                var cumulativeDiscountAmount = cumulativeDiscounts.Sum(d => this.GetDiscountAmount(d, amount));
-                if (cumulativeDiscountAmount > discountAmount)
-                {
-                    discountAmount = cumulativeDiscountAmount;
+            if (cumulativeDiscounts.Count <= 1) 
+                return result;
 
-                    result.Clear();
-                    result.AddRange(cumulativeDiscounts);
-                }
-            }
+            var cumulativeDiscountAmount = cumulativeDiscounts.Sum(d => GetDiscountAmount(d, amount));
+            if (cumulativeDiscountAmount <= discountAmount) 
+                return result;
+
+            discountAmount = cumulativeDiscountAmount;
+
+            result.Clear();
+            result.AddRange(cumulativeDiscounts);
 
             return result;
         }
@@ -646,10 +647,7 @@ namespace Nop.Services.Discounts
         public virtual IDiscountRequirementRule LoadDiscountRequirementRuleBySystemName(string systemName)
         {
             var descriptor = _pluginFinder.GetPluginDescriptorBySystemName<IDiscountRequirementRule>(systemName);
-            if (descriptor != null)
-                return descriptor.Instance<IDiscountRequirementRule>();
-
-            return null;
+            return descriptor?.Instance<IDiscountRequirementRule>();
         }
 
         /// <summary>
@@ -773,6 +771,7 @@ namespace Nop.Services.Discounts
                     return result;
                 }
             }
+
             if (discount.EndDateUtc.HasValue)
             {
                 var endDate = DateTime.SpecifyKind(discount.EndDateUtc.Value, DateTimeKind.Utc);
@@ -791,7 +790,8 @@ namespace Nop.Services.Discounts
                         var usedTimes = GetAllDiscountUsageHistory(discount.Id, null, null, 0, 1).TotalCount;
                         if (usedTimes >= discount.LimitationTimes)
                             return result;
-                    }
+                    } 
+
                     break;
                 case DiscountLimitationType.NTimesPerCustomer:
                     {
@@ -804,7 +804,8 @@ namespace Nop.Services.Discounts
                                 return result;
                             }
                         }
-                    }
+                    } 
+
                     break;
                 case DiscountLimitationType.Unlimited:
                 default:

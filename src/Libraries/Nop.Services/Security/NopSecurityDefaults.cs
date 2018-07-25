@@ -1,5 +1,4 @@
-﻿
-namespace Nop.Services.Security
+﻿namespace Nop.Services.Security
 {
     /// <summary>
     /// Represents default values related to security services

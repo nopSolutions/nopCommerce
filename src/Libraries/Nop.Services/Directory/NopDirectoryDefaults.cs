@@ -1,5 +1,4 @@
-﻿
-namespace Nop.Services.Directory
+﻿namespace Nop.Services.Directory
 {
     /// <summary>
     /// Represents default values related to directory services

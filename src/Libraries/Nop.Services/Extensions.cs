@@ -26,7 +26,7 @@ namespace Nop.Services
            bool markCurrentAsSelected = true, int[] valuesToExclude = null, bool useLocalization = true) where TEnum : struct
         {
             if (!typeof(TEnum).IsEnum)
-                throw new ArgumentException("An Enumeration type is required.", "enumObj");
+                throw new ArgumentException("An Enumeration type is required.", nameof(enumObj));
 
             var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
             var values = from TEnum enumValue in Enum.GetValues(typeof(TEnum))

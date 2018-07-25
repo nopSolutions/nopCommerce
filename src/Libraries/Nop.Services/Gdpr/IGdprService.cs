@@ -42,8 +42,7 @@ namespace Nop.Services.Gdpr
         /// </summary>
         /// <param name="gdprConsent">GDPR consent</param>
         void DeleteConsent(GdprConsent gdprConsent);
-
-
+        
         /// <summary>
         /// Gets the latest selected value (a consent is accepted or not by a customer)
         /// </summary>

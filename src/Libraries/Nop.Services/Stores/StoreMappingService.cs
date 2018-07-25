@@ -128,7 +128,7 @@ namespace Nop.Services.Stores
                 throw new ArgumentNullException(nameof(entity));
 
             if (storeId == 0)
-                throw new ArgumentOutOfRangeException("storeId");
+                throw new ArgumentOutOfRangeException(nameof(storeId));
 
             var entityId = entity.Id;
             var entityName = entity.GetUnproxiedEntityType().Name;
