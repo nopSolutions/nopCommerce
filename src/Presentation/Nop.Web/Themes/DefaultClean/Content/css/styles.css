@@ -6918,6 +6918,9 @@ pre {
 .center-2 .inputs label {
 	width: 213px;
 }
+.inputs.accept-consent label {
+	width: auto;
+}
 
 
 /*** HEADER ***/
