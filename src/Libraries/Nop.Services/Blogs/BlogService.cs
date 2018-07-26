@@ -257,6 +257,9 @@ namespace Nop.Services.Blogs
             if (blogPost == null)
                 throw new ArgumentNullException(nameof(blogPost));
 
+            if (blogPost.Tags == null)
+                return new List<string>();
+
             var tags = blogPost.Tags.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                 .Select(tag => tag?.Trim())
                 .Where(tag => !string.IsNullOrEmpty(tag)).ToList();
