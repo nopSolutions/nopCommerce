@@ -652,7 +652,7 @@ namespace Nop.Web.Factories
         /// <param name="rootCategoryId">Root category identifier</param>
         /// <param name="loadSubCategories">A value indicating whether subcategories should be loaded</param>
         /// <returns>List of category (simple) models</returns>
-        protected virtual List<CategorySimpleModel> PrepareCategorySimpleModels(int rootCategoryId, bool loadSubCategories = true)
+        public virtual List<CategorySimpleModel> PrepareCategorySimpleModels(int rootCategoryId, bool loadSubCategories = true)
         {
             var result = new List<CategorySimpleModel>();
 
