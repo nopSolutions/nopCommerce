@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Routing.Template;
@@ -114,7 +115,7 @@ namespace Nop.Web.Framework.Seo
                 var redirectionRouteData = new RouteData(context.RouteData);
                 redirectionRouteData.Values["controller"] = "Common";
                 redirectionRouteData.Values["action"] = "InternalRedirect";
-                redirectionRouteData.Values["url"] = $"{pathBase}/{activeSlug}{context.HttpContext.Request.QueryString}";
+                redirectionRouteData.Values["url"] = $"{pathBase}/{WebUtility.UrlEncode(activeSlug)}{context.HttpContext.Request.QueryString}";
                 redirectionRouteData.Values["permanentRedirect"] = true;
                 context.HttpContext.Items["nop.RedirectFromGenericPathRoute"] = true;
                 context.RouteData = redirectionRouteData;
@@ -132,7 +133,7 @@ namespace Nop.Web.Framework.Seo
                 var redirectionRouteData = new RouteData(context.RouteData);
                 redirectionRouteData.Values["controller"] = "Common";
                 redirectionRouteData.Values["action"] = "InternalRedirect";
-                redirectionRouteData.Values["url"] = $"{pathBase}/{slugForCurrentLanguage}{context.HttpContext.Request.QueryString}";
+                redirectionRouteData.Values["url"] = $"{pathBase}/{WebUtility.UrlEncode(slugForCurrentLanguage)}{context.HttpContext.Request.QueryString}";
                 redirectionRouteData.Values["permanentRedirect"] = false;
                 context.HttpContext.Items["nop.RedirectFromGenericPathRoute"] = true;
                 context.RouteData = redirectionRouteData;
