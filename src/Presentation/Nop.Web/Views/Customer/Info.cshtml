@@ -184,11 +184,11 @@
                 </div>
             }
             @if (Model.StreetAddressEnabled ||
-         Model.StreetAddress2Enabled ||
-         Model.ZipPostalCodeEnabled ||
-         Model.CityEnabled ||
-         Model.CountyEnabled ||
-         Model.CountryEnabled)
+        Model.StreetAddress2Enabled ||
+        Model.ZipPostalCodeEnabled ||
+        Model.CityEnabled ||
+        Model.CountyEnabled ||
+        Model.CountryEnabled)
             {
                 <div class="fieldset">
                     <div class="title">
@@ -439,6 +439,9 @@
             @if (Model.GdprConsents.Count > 0)
             {
                 <div class="fieldset">
+                    <div class="title">
+                        <strong>@T("Account.UserAgreement")</strong>
+                    </div>
                     <div class="form-fields">
                         @foreach (var consent in Model.GdprConsents)
                         {

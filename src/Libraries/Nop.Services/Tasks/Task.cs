@@ -60,6 +60,7 @@ namespace Nop.Services.Tasks
             {
                 //try resolve
             }
+
             if (instance == null)
             {
                 //not resolved
@@ -176,6 +177,7 @@ namespace Nop.Services.Tasks
 
                     return _enabled.HasValue && _enabled.Value;
             }
+
             set => _enabled = value;
         }
 

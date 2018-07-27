@@ -186,7 +186,7 @@ set @resources='
     <Value></Value>
   </LocaleResource>  
   <LocaleResource Name="Admin.Customers.Customers.ShoppingCartAndWishlist">
-    <Value>Shopping cart and wishlist</Value>
+    <Value>Current shopping cart and wishlist</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.CurrentWishlist">
     <Value></Value>
@@ -2005,6 +2005,21 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.ShowCustomersLocation.Hint">
     <Value>A value indicating whether customer''s location is shown.</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Account.UserAgreement">
+    <Value>User agreement</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Orders.ShoppingCartType.ShoppingCart">
+    <Value>Shopping Cart</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Orders.ShoppingCartType.Wishlist">
+    <Value>Wishlist</Value>
+  </LocaleResource> 
+  <LocaleResource Name="Admin.SEO.SeName.MaxLengthValidation">
+    <Value>Max length of search name is {0} chars</Value>
+  </LocaleResource>   
+  <LocaleResource Name="Admin.Orders.OrderNotes.Fields.Note.Validation">
+    <Value>Order note can not be empty.</Value>
   </LocaleResource>  
 </Language>
 '
@@ -3895,11 +3910,34 @@ BEGIN
 END
 GO
 
-
 --new setting
 IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'commonsettings.jquerymigratescriptloggingactive')
 BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'commonsettings.jquerymigratescriptloggingactive', N'False', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'commonsettings.supportpreviousnopcommerceversions')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'commonsettings.supportpreviousnopcommerceversions', N'true', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'commonsettings.useresponsecompression')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'commonsettings.useresponsecompression', N'false', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'commonsettings.staticfilescachecontrol')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'commonsettings.staticfilescachecontrol', N'public,max-age=604800', 0)
 END
 GO

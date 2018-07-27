@@ -1,5 +1,4 @@
-﻿
-namespace Nop.Services.Shipping
+﻿namespace Nop.Services.Shipping
 {
     /// <summary>
     /// Represents default values related to shipping services
@@ -39,6 +38,5 @@ namespace Nop.Services.Shipping
         public static string WarehousesPatternCacheKey => "Nop.warehouse.";
 
         #endregion
-
     }
 }

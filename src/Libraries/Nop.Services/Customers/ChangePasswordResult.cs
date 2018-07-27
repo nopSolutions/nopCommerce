@@ -16,10 +16,7 @@ namespace Nop.Services.Customers
         /// <summary>
         /// Gets a value indicating whether request has been completed successfully
         /// </summary>
-        public bool Success
-        {
-            get { return (!Errors.Any()); }
-        }
+        public bool Success => !Errors.Any();
 
         /// <summary>
         /// Add error
@@ -27,7 +24,7 @@ namespace Nop.Services.Customers
         /// <param name="error">Error</param>
         public void AddError(string error)
         {
-            this.Errors.Add(error);
+            Errors.Add(error);
         }
 
         /// <summary>

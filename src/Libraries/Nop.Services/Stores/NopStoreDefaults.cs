@@ -1,5 +1,4 @@
-﻿
-namespace Nop.Services.Stores
+﻿namespace Nop.Services.Stores
 {
     /// <summary>
     /// Represents default values related to stores services

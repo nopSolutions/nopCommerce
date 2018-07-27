@@ -42,7 +42,8 @@ ul, ol {
 .field-validation-error, .validation-summary-errors {
     color: red;
 }
-.field-validation-valid.warning {
+.field-validation-valid.warning,
+.field-validation-custom.warning {
     color: #fff;
     background-color: #f39c12;
     margin: 5px 0;

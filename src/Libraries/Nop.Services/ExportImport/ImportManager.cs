@@ -188,6 +188,36 @@ namespace Nop.Services.ExportImport
             }
         }
 
+        private static void CopyDataToNewFile(ImportProductMetadata metadata, ExcelWorksheet worksheet, string filePath, int startRow, int endRow, int endCell)
+        {
+            using (var stream = new FileStream(filePath, FileMode.OpenOrCreate))
+            {
+                // ok, we can run the real code of the sample now
+                using (var xlPackage = new ExcelPackage(stream))
+                {
+                    // uncomment this line if you want the XML written out to the outputDir
+                    //xlPackage.DebugMode = true; 
+
+                    // get handles to the worksheets
+                    var outWorksheet = xlPackage.Workbook.Worksheets.Add(typeof(Product).Name);
+                    metadata.Manager.WriteCaption(outWorksheet);
+                    var outRow = 2;
+                    for (var row = startRow; row <= endRow; row++)
+                    {
+                        outWorksheet.Row(outRow).OutlineLevel = worksheet.Row(row).OutlineLevel;
+                        for (var cell = 1; cell <= endCell; cell++)
+                        {
+                            outWorksheet.Cells[outRow, cell].Value = worksheet.Cells[row, cell].Value;
+                        }
+
+                        outRow += 1;
+                    }
+
+                    xlPackage.Save();
+                }
+            }
+        }
+
         protected virtual int GetColumnIndex(string[] properties, string columnName)
         {
             if (properties == null)
@@ -202,22 +232,12 @@ namespace Nop.Services.ExportImport
             return 0;
         }
 
-        protected virtual string ConvertColumnToString(object columnValue)
-        {
-            if (columnValue == null)
-                return null;
-
-            return Convert.ToString(columnValue);
-        }
-
         protected virtual string GetMimeTypeFromFilePath(string filePath)
         {
-            //TODO test ne implementation
-            new FileExtensionContentTypeProvider().TryGetContentType(filePath, out string mimeType);
+            new FileExtensionContentTypeProvider().TryGetContentType(filePath, out var mimeType);
+            
             //set to jpeg in case mime type cannot be found
-            if (mimeType == null)
-                mimeType = MimeTypes.ImageJpeg;
-            return mimeType;
+            return mimeType ?? MimeTypes.ImageJpeg;
         }
 
         /// <summary>
@@ -310,7 +330,7 @@ namespace Nop.Services.ExportImport
                             //pictures are duplicated
                             //maybe because entity size is too large
                             PictureId = newPicture.Id,
-                            DisplayOrder = 1,
+                            DisplayOrder = 1
                         });
                         _productService.UpdateProduct(product.ProductItem);
                     }
@@ -367,7 +387,7 @@ namespace Nop.Services.ExportImport
                             //pictures are duplicated
                             //maybe because entity size is too large
                             PictureId = newPicture.Id,
-                            DisplayOrder = 1,
+                            DisplayOrder = 1
                         });
                         _productService.UpdateProduct(product.ProductItem);
                     }
@@ -417,6 +437,7 @@ namespace Nop.Services.ExportImport
 
                             category.ParentCategoryId = parentCategory?.Id ?? property.IntValue;
                         }
+
                         break;
                     case "ParentCategoryName":
                         if (_catalogSettings.ExportImportCategoriesUsingCategoryName && !isParentCategorySet)
@@ -441,6 +462,7 @@ namespace Nop.Services.ExportImport
                                 }
                             }
                         }
+
                         break;
                     case "Picture":
                         var picture = LoadPicture(manager.GetProperty("Picture").StringValue, category.Name, isNew ? null : (int?)category.PictureId);
@@ -670,7 +692,7 @@ namespace Nop.Services.ExportImport
                 _productAttributeService.UpdateProductAttributeValue(pav);
             }
         }
-
+        
         private void ImportSpecificationAttribute(PropertyManager<ExportSpecificationAttribute> specificationAttributeManager, Product lastLoadedProduct)
         {
             if (!_catalogSettings.ExportImportProductSpecificationAttributes || lastLoadedProduct == null || specificationAttributeManager.IsCaption)
@@ -769,6 +791,7 @@ namespace Nop.Services.ExportImport
                 {
                     fileData = client.DownloadData(urlString);
                 }
+
                 using (var fs = new FileStream(filePath, FileMode.OpenOrCreate))
                 {
                     fs.Write(fileData, 0, fileData.Length);
@@ -940,23 +963,20 @@ namespace Nop.Services.ExportImport
                         case ExportedAttributeType.ProductAttribute:
                             productAttributeManager.ReadFromXlsx(worksheet, endRow,
                                 ExportProductAttribute.ProducAttributeCellOffset);
-                            if (int.TryParse(
-                                (worksheet.Cells[endRow, attributeIdCellNum].Value ?? string.Empty).ToString(),
-                                out int aid))
+                            if (int.TryParse((worksheet.Cells[endRow, attributeIdCellNum].Value ?? string.Empty).ToString(), out var aid))
                             {
                                 allAttributeIds.Add(aid);
                             }
+
                             break;
                         case ExportedAttributeType.SpecificationAttribute:
-                            specificationAttributeManager.ReadFromXlsx(worksheet, endRow,
-                                ExportProductAttribute.ProducAttributeCellOffset);
+                            specificationAttributeManager.ReadFromXlsx(worksheet, endRow, ExportProductAttribute.ProducAttributeCellOffset);
 
-                            if (int.TryParse(
-                                (worksheet.Cells[endRow, specificationAttributeOptionIdCellNum].Value ?? string.Empty)
-                                .ToString(), out int saoid))
+                            if (int.TryParse((worksheet.Cells[endRow, specificationAttributeOptionIdCellNum].Value ?? string.Empty).ToString(), out var saoid))
                             {
                                 allSpecificationAttributeOptionIds.Add(saoid);
                             }
+
                             break;
                     }
 
@@ -1059,7 +1079,7 @@ namespace Nop.Services.ExportImport
                 }
                 catch
                 {
-
+                    // ignored
                 }
             }
         }
@@ -1094,36 +1114,6 @@ namespace Nop.Services.ExportImport
             }
 
             return filePaths;
-        }
-
-        private static void CopyDataToNewFile(ImportProductMetadata metadata, ExcelWorksheet worksheet, string filePath, int startRow, int endRow, int endCell)
-        {
-            using (var stream = new FileStream(filePath, FileMode.OpenOrCreate))
-            {
-                // ok, we can run the real code of the sample now
-                using (var xlPackage = new ExcelPackage(stream))
-                {
-                    // uncomment this line if you want the XML written out to the outputDir
-                    //xlPackage.DebugMode = true; 
-
-                    // get handles to the worksheets
-                    var outWorksheet = xlPackage.Workbook.Worksheets.Add(typeof(Product).Name);
-                    metadata.Manager.WriteCaption(outWorksheet);
-                    var outRow = 2;
-                    for (var row = startRow; row <= endRow; row++)
-                    {
-                        outWorksheet.Row(outRow).OutlineLevel = worksheet.Row(row).OutlineLevel;
-                        for (var cell = 1; cell <= endCell; cell++)
-                        {
-                            outWorksheet.Cells[outRow, cell].Value = worksheet.Cells[row, cell].Value;
-                        }
-
-                        outRow += 1;
-                    }
-
-                    xlPackage.Save();
-                }
-            }
         }
 
         #endregion
@@ -1621,7 +1611,7 @@ namespace Nop.Services.ExportImport
 
                         var importedCategories = categoryList.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
                             .Select(categoryName => new CategoryKey(categoryName))
-                            .Select(categoryKey => allCategories.ContainsKey(categoryKey) ? allCategories[categoryKey].Id : (allCategories.Values.FirstOrDefault(c => c.Name == categoryKey.Key)?.Id ?? int.Parse(categoryKey.Key))).ToList();
+                            .Select(categoryKey => allCategories.ContainsKey(categoryKey) ? allCategories[categoryKey].Id : allCategories.Values.FirstOrDefault(c => c.Name == categoryKey.Key)?.Id ?? int.Parse(categoryKey.Key)).ToList();
 
                         foreach (var categoryId in importedCategories)
                         {
@@ -1686,7 +1676,7 @@ namespace Nop.Services.ExportImport
                         var productTags = tempProperty.StringValue.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries).Select(s => s.Trim()).ToList();
 
                         //searching existing product tags by their id
-                        var productTagIds = productTags.Where(pt => int.TryParse(pt, out int _)).Select(int.Parse);
+                        var productTagIds = productTags.Where(pt => int.TryParse(pt, out var _)).Select(int.Parse);
                         var pruductTagsByIds = product.ProductProductTagMappings
                             .Select(mapping => mapping.ProductTag).Where(pt => productTagIds.Contains(pt.Id)).ToList();
                         productTags.AddRange(pruductTagsByIds.Select(pt => pt.Name));
@@ -1732,7 +1722,7 @@ namespace Nop.Services.ExportImport
                     }
                     catch
                     {
-
+                        // ignored
                     }
                 }
 
@@ -1864,7 +1854,7 @@ namespace Nop.Services.ExportImport
                             Name = name,
                             Abbreviation = abbreviation,
                             Published = published,
-                            DisplayOrder = displayOrder,
+                            DisplayOrder = displayOrder
                         };
                         _stateProvinceService.InsertStateProvince(state);
                     }
@@ -1905,7 +1895,7 @@ namespace Nop.Services.ExportImport
                 {
                     var allColumnsAreEmpty = manager.GetProperties
                         .Select(property => worksheet.Cells[iRow, property.PropertyOrderPosition])
-                        .All(cell => cell == null || cell.Value == null || string.IsNullOrEmpty(cell.Value.ToString()));
+                        .All(cell => cell?.Value == null || string.IsNullOrEmpty(cell.Value.ToString()));
 
                     if (allColumnsAreEmpty)
                         break;
@@ -2043,10 +2033,10 @@ namespace Nop.Services.ExportImport
                         break;
 
                     //get category by data in xlsx file if it possible, or create new category
-                    var category = GetCategoryFromXlsx(manager, worksheet, iRow, allCategories, out bool isNew, out string curentCategoryBreadCrumb);
+                    var category = GetCategoryFromXlsx(manager, worksheet, iRow, allCategories, out var isNew, out var curentCategoryBreadCrumb);
 
                     //update category by data in xlsx file
-                    var seName = UpdateCategoryByXlsx(category, manager, allCategories, isNew, out bool isParentCategoryExists);
+                    var seName = UpdateCategoryByXlsx(category, manager, allCategories, isNew, out var isParentCategoryExists);
 
                     if (isParentCategoryExists)
                     {
@@ -2072,9 +2062,9 @@ namespace Nop.Services.ExportImport
                     foreach (var rowId in saveNextTime)
                     {
                         //get category by data in xlsx file if it possible, or create new category
-                        var category = GetCategoryFromXlsx(manager, worksheet, rowId, allCategories, out bool isNew, out string curentCategoryBreadCrumb);
+                        var category = GetCategoryFromXlsx(manager, worksheet, rowId, allCategories, out var isNew, out var curentCategoryBreadCrumb);
                         //update category by data in xlsx file
-                        var seName = UpdateCategoryByXlsx(category, manager, allCategories, isNew, out bool isParentCategoryExists);
+                        var seName = UpdateCategoryByXlsx(category, manager, allCategories, isNew, out var isParentCategoryExists);
 
                         if (!isParentCategoryExists)
                             continue;
@@ -2141,7 +2131,9 @@ namespace Nop.Services.ExportImport
             }
 
             public List<int> StoresIds { get; }
+
             public Category Category { get; }
+
             public string Key { get; }
 
             public bool Equals(CategoryKey y)
@@ -2161,15 +2153,13 @@ namespace Nop.Services.ExportImport
 
             public override int GetHashCode()
             {
-                if (StoresIds.Any())
-                {
-                    var storesIds = StoresIds.Select(id => id.ToString())
-                        .Aggregate("", (all, current) => all + current);
+                if (!StoresIds.Any()) 
+                    return Key.GetHashCode();
 
-                    return $"{storesIds}_{Key}".GetHashCode();
-                }
+                var storesIds = StoresIds.Select(id => id.ToString())
+                    .Aggregate(string.Empty, (all, current) => all + current);
 
-                return Key.GetHashCode();
+                return $"{storesIds}_{Key}".GetHashCode();
             }
 
             public override bool Equals(object obj)

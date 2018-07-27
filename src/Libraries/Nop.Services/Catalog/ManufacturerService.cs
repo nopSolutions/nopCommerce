@@ -29,6 +29,7 @@ namespace Nop.Services.Catalog
         private readonly IRepository<StoreMapping> _storeMappingRepository;
         private readonly IStoreContext _storeContext;
         private readonly IWorkContext _workContext;
+        private readonly string _entityName;
 
         #endregion
 
@@ -55,6 +56,7 @@ namespace Nop.Services.Catalog
             this._storeMappingRepository = storeMappingRepository;
             this._storeContext = storeContext;
             this._workContext = workContext;
+            this._entityName = typeof(Manufacturer).Name;
         }
 
         #endregion
@@ -100,33 +102,34 @@ namespace Nop.Services.Catalog
             query = query.Where(m => !m.Deleted);
             query = query.OrderBy(m => m.DisplayOrder).ThenBy(m => m.Id);
 
-            if ((storeId > 0 && !_catalogSettings.IgnoreStoreLimitations) || (!showHidden && !_catalogSettings.IgnoreAcl))
+            if ((storeId <= 0 || _catalogSettings.IgnoreStoreLimitations) && (showHidden || _catalogSettings.IgnoreAcl))
+                return new PagedList<Manufacturer>(query, pageIndex, pageSize);
+            
+            if (!showHidden && !_catalogSettings.IgnoreAcl)
             {
-                if (!showHidden && !_catalogSettings.IgnoreAcl)
-                {
-                    //ACL (access control list)
-                    var allowedCustomerRolesIds = _workContext.CurrentCustomer.GetCustomerRoleIds();
-                    query = from m in query
-                            join acl in _aclRepository.Table
-                            on new { c1 = m.Id, c2 = "Manufacturer" } equals new { c1 = acl.EntityId, c2 = acl.EntityName } into m_acl
-                            from acl in m_acl.DefaultIfEmpty()
-                            where !m.SubjectToAcl || allowedCustomerRolesIds.Contains(acl.CustomerRoleId)
-                            select m;
-                }
-                if (storeId > 0 && !_catalogSettings.IgnoreStoreLimitations)
-                {
-                    //Store mapping
-                    query = from m in query
-                            join sm in _storeMappingRepository.Table
-                            on new { c1 = m.Id, c2 = "Manufacturer" } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into m_sm
-                            from sm in m_sm.DefaultIfEmpty()
-                            where !m.LimitedToStores || storeId == sm.StoreId
-                            select m;
-                }
-
-                query = query.Distinct().OrderBy(m => m.DisplayOrder).ThenBy(m => m.Id);
+                //ACL (access control list)
+                var allowedCustomerRolesIds = _workContext.CurrentCustomer.GetCustomerRoleIds();
+                query = from m in query
+                    join acl in _aclRepository.Table
+                        on new { c1 = m.Id, c2 = _entityName } equals new { c1 = acl.EntityId, c2 = acl.EntityName } into m_acl
+                    from acl in m_acl.DefaultIfEmpty()
+                    where !m.SubjectToAcl || allowedCustomerRolesIds.Contains(acl.CustomerRoleId)
+                    select m;
             }
 
+            if (storeId > 0 && !_catalogSettings.IgnoreStoreLimitations)
+            {
+                //Store mapping
+                query = from m in query
+                    join sm in _storeMappingRepository.Table
+                        on new { c1 = m.Id, c2 = _entityName } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into m_sm
+                    from sm in m_sm.DefaultIfEmpty()
+                    where !m.LimitedToStores || storeId == sm.StoreId
+                    select m;
+            }
+
+            query = query.Distinct().OrderBy(m => m.DisplayOrder).ThenBy(m => m.Id);
+            
             return new PagedList<Manufacturer>(query, pageIndex, pageSize);
         }
 
@@ -235,11 +238,12 @@ namespace Nop.Services.Catalog
                         query = from pm in query
                                 join m in _manufacturerRepository.Table on pm.ManufacturerId equals m.Id
                                 join acl in _aclRepository.Table
-                                on new { c1 = m.Id, c2 = "Manufacturer" } equals new { c1 = acl.EntityId, c2 = acl.EntityName } into m_acl
+                                on new { c1 = m.Id, c2 = _entityName } equals new { c1 = acl.EntityId, c2 = acl.EntityName } into m_acl
                                 from acl in m_acl.DefaultIfEmpty()
                                 where !m.SubjectToAcl || allowedCustomerRolesIds.Contains(acl.CustomerRoleId)
                                 select pm;
                     }
+
                     if (!_catalogSettings.IgnoreStoreLimitations)
                     {
                         //Store mapping
@@ -247,7 +251,7 @@ namespace Nop.Services.Catalog
                         query = from pm in query
                                 join m in _manufacturerRepository.Table on pm.ManufacturerId equals m.Id
                                 join sm in _storeMappingRepository.Table
-                                on new { c1 = m.Id, c2 = "Manufacturer" } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into m_sm
+                                on new { c1 = m.Id, c2 = _entityName } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into m_sm
                                 from sm in m_sm.DefaultIfEmpty()
                                 where !m.LimitedToStores || currentStoreId == sm.StoreId
                                 select pm;
@@ -283,7 +287,6 @@ namespace Nop.Services.Catalog
                             orderby pm.DisplayOrder, pm.Id
                             select pm;
 
-
                 if (!showHidden && (!_catalogSettings.IgnoreAcl || !_catalogSettings.IgnoreStoreLimitations))
                 {
                     if (!_catalogSettings.IgnoreAcl)
@@ -293,7 +296,7 @@ namespace Nop.Services.Catalog
                         query = from pm in query
                                 join m in _manufacturerRepository.Table on pm.ManufacturerId equals m.Id
                                 join acl in _aclRepository.Table
-                                on new { c1 = m.Id, c2 = "Manufacturer" } equals new { c1 = acl.EntityId, c2 = acl.EntityName } into m_acl
+                                on new { c1 = m.Id, c2 = _entityName } equals new { c1 = acl.EntityId, c2 = acl.EntityName } into m_acl
                                 from acl in m_acl.DefaultIfEmpty()
                                 where !m.SubjectToAcl || allowedCustomerRolesIds.Contains(acl.CustomerRoleId)
                                 select pm;
@@ -306,7 +309,7 @@ namespace Nop.Services.Catalog
                         query = from pm in query
                                 join m in _manufacturerRepository.Table on pm.ManufacturerId equals m.Id
                                 join sm in _storeMappingRepository.Table
-                                on new { c1 = m.Id, c2 = "Manufacturer" } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into m_sm
+                                on new { c1 = m.Id, c2 = _entityName } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into m_sm
                                 from sm in m_sm.DefaultIfEmpty()
                                 where !m.LimitedToStores || currentStoreId == sm.StoreId
                                 select pm;
@@ -370,8 +373,7 @@ namespace Nop.Services.Catalog
             //event notification
             _eventPublisher.EntityUpdated(productManufacturer);
         }
-
-
+        
         /// <summary>
         /// Get manufacturer IDs for products
         /// </summary>
@@ -404,12 +406,12 @@ namespace Nop.Services.Catalog
             queryFilter = queryFilter.Except(filter).ToArray();
 
             //if some names not found
-            if (queryFilter.Any())
-            {
-                //filtering by IDs
-                filter = query.Select(c => c.Id.ToString()).Where(c => queryFilter.Contains(c)).ToList();
-                queryFilter = queryFilter.Except(filter).ToArray();
-            }
+            if (!queryFilter.Any()) 
+                return queryFilter.ToArray();
+
+            //filtering by IDs
+            filter = query.Select(c => c.Id.ToString()).Where(c => queryFilter.Contains(c)).ToList();
+            queryFilter = queryFilter.Except(filter).ToArray();
 
             return queryFilter.ToArray();
         }

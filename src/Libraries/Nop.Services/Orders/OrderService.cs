@@ -102,6 +102,7 @@ namespace Nop.Services.Orders
                 if (order != null)
                     sortedOrders.Add(order);
             }
+
             return sortedOrders;
         }
 
@@ -175,15 +176,12 @@ namespace Nop.Services.Orders
             if (storeId > 0)
                 query = query.Where(o => o.StoreId == storeId);
             if (vendorId > 0)
-            {
                 query = query.Where(o => o.OrderItems.Any(orderItem => orderItem.Product.VendorId == vendorId));
-            }
             if (customerId > 0)
                 query = query.Where(o => o.CustomerId == customerId);
             if (productId > 0)
-            {
                 query = query.Where(o => o.OrderItems.Any(orderItem => orderItem.ProductId == productId));
-            }
+           
             if (warehouseId > 0)
             {
                 var manageStockInventoryMethodId = (int)ManageInventoryMethod.ManageStock;
@@ -200,9 +198,9 @@ namespace Nop.Services.Orders
                         //we use standard "warehouse" property
                         ((orderItem.Product.ManageInventoryMethodId != manageStockInventoryMethodId ||
                         !orderItem.Product.UseMultipleWarehouses) &&
-                        orderItem.Product.WarehouseId == warehouseId))
-                        );
+                        orderItem.Product.WarehouseId == warehouseId)));
             }
+
             if (billingCountryId > 0)
                 query = query.Where(o => o.BillingAddress != null && o.BillingAddress.CountryId == billingCountryId);
             if (!string.IsNullOrEmpty(paymentMethodSystemName))
@@ -314,7 +312,10 @@ namespace Nop.Services.Orders
                     var taxValue = decimal.Parse(taxes[1].Trim(), CultureInfo.InvariantCulture);
                     taxRatesDictionary.Add(taxRate, taxValue);
                 }
-                catch { }
+                catch
+                {
+                    // ignored
+                }
             }
 
             //add at least one tax rate (0%)
@@ -340,13 +341,14 @@ namespace Nop.Services.Orders
                 if (!orderItem.Product.IsShipEnabled)
                     continue;
 
-                var totalNumberOfItemsCanBeAddedToShipment = this.GetTotalNumberOfItemsCanBeAddedToShipment(orderItem);
+                var totalNumberOfItemsCanBeAddedToShipment = GetTotalNumberOfItemsCanBeAddedToShipment(orderItem);
                 if (totalNumberOfItemsCanBeAddedToShipment <= 0)
                     continue;
 
                 //yes, we have at least one item to create a new shipment
                 return true;
             }
+
             return false;
         }
 
@@ -366,13 +368,14 @@ namespace Nop.Services.Orders
                 if (!orderItem.Product.IsShipEnabled)
                     continue;
 
-                var totalNumberOfNotYetShippedItems = this.GetTotalNumberOfNotYetShippedItems(orderItem);
+                var totalNumberOfNotYetShippedItems = GetTotalNumberOfNotYetShippedItems(orderItem);
                 if (totalNumberOfNotYetShippedItems <= 0)
                     continue;
 
                 //yes, we have at least one item to ship
                 return true;
             }
+
             return false;
         }
 
@@ -392,14 +395,15 @@ namespace Nop.Services.Orders
                 if (!orderItem.Product.IsShipEnabled)
                     continue;
 
-                var totalNumberOfShippedItems = this.GetTotalNumberOfShippedItems(orderItem);
-                var totalNumberOfDeliveredItems = this.GetTotalNumberOfDeliveredItems(orderItem);
+                var totalNumberOfShippedItems = GetTotalNumberOfShippedItems(orderItem);
+                var totalNumberOfDeliveredItems = GetTotalNumberOfDeliveredItems(orderItem);
                 if (totalNumberOfShippedItems <= totalNumberOfDeliveredItems)
                     continue;
 
                 //yes, we have at least one item to deliver
                 return true;
             }
+
             return false;
         }
 
@@ -445,7 +449,7 @@ namespace Nop.Services.Orders
         public virtual IList<OrderItem> GetDownloadableOrderItems(int customerId)
         {
             if (customerId == 0)
-                throw new ArgumentOutOfRangeException("customerId");
+                throw new ArgumentOutOfRangeException(nameof(customerId));
 
             var query = from orderItem in _orderItemRepository.Table
                         join o in _orderRepository.Table on orderItem.OrderId equals o.Id
@@ -497,6 +501,7 @@ namespace Nop.Services.Orders
                     totalInShipments += si.Quantity;
                 }
             }
+
             return totalInShipments;
         }
 
@@ -510,7 +515,7 @@ namespace Nop.Services.Orders
             if (orderItem == null)
                 throw new ArgumentNullException(nameof(orderItem));
 
-            var totalInShipments = this.GetTotalNumberOfItemsInAllShipment(orderItem);
+            var totalInShipments = GetTotalNumberOfItemsInAllShipment(orderItem);
 
             var qtyOrdered = orderItem.Quantity;
             var qtyCanBeAddedToShipmentTotal = qtyOrdered - totalInShipments;
@@ -747,7 +752,7 @@ namespace Nop.Services.Orders
             var query1 = from rp in _recurringPaymentRepository.Table
                          join c in _customerRepository.Table on rp.InitialOrder.CustomerId equals c.Id
                          where
-                         (!rp.Deleted) &&
+                         !rp.Deleted &&
                          (showHidden || !rp.InitialOrder.Deleted) &&
                          (showHidden || !c.Deleted) &&
                          (showHidden || rp.IsActive) &&

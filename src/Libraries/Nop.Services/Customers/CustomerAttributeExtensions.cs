@@ -24,7 +24,7 @@ namespace Nop.Services.Customers
                 customerAttribute.AttributeControlType == AttributeControlType.FileUpload)
                 return false;
 
-            //other attribute controle types support values
+            //other attribute control types support values
             return true;
         }
     }

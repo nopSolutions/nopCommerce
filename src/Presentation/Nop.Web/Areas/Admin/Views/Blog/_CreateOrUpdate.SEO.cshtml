@@ -41,7 +41,7 @@
             </div>
             <script>
                 $(document).ready(function () {
-                    $('#@Html.IdFor(model => model.SeName)').on('input propertychange paste', function () {
+                    $('#@Html.IdFor(model => model.SeName)').on('input change', function () {
                         var parameters = {
                             entityId: '@Model.Id',
                             entityName: 'BlogPost',

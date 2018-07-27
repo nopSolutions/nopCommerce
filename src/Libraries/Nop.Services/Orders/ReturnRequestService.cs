@@ -95,6 +95,7 @@ namespace Nop.Services.Orders
                 var returnStatusId = (int)rs.Value;
                 query = query.Where(rr => rr.ReturnRequestStatusId == returnStatusId);
             }
+
             if (orderItemId > 0)
                 query = query.Where(rr => rr.OrderItemId == orderItemId);
 

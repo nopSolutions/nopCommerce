@@ -68,10 +68,7 @@ namespace Nop.Services.Cms
         public virtual IWidgetPlugin LoadWidgetBySystemName(string systemName)
         {
             var descriptor = _pluginFinder.GetPluginDescriptorBySystemName<IWidgetPlugin>(systemName);
-            if (descriptor != null)
-                return descriptor.Instance<IWidgetPlugin>();
-
-            return null;
+            return descriptor?.Instance<IWidgetPlugin>();
         }
 
         /// <summary>

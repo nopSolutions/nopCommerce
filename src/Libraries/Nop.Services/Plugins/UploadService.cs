@@ -78,15 +78,15 @@ namespace Nop.Services.Plugins
                 themesDirectory = _fileProvider.MapPath(NopPluginDefaults.ThemesPath);
 
             IDescriptor descriptor = null;
-            var uploadedItemDirectoryName = string.Empty;
+            string uploadedItemDirectoryName;
             using (var archive = ZipFile.OpenRead(archivePath))
             {
                 //the archive should contain only one root directory (the plugin one or the theme one)
                 var rootDirectories = archive.Entries.Where(entry => entry.FullName.Count(ch => ch == '/') == 1 && entry.FullName.EndsWith("/")).ToList();
                 if (rootDirectories.Count != 1)
                 {
-                    throw new Exception($"The archive should contain only one root plugin or theme directory. " +
-                        $"For example, Payments.PayPalDirect or DefaultClean. " +
+                    throw new Exception("The archive should contain only one root plugin or theme directory. " +
+                        "For example, Payments.PayPalDirect or DefaultClean. " +
                         $"To upload multiple items, the archive should have the '{NopPluginDefaults.UploadedItemsFileName}' file in the root");
                 }
 
@@ -117,7 +117,7 @@ namespace Nop.Services.Plugins
                                 descriptor = PluginManager.GetPluginDescriptorFromText(reader.ReadToEnd());
 
                                 //ensure that the plugin current version is supported
-                                if (!(descriptor as PluginDescriptor).SupportedVersions.Contains(NopVersion.CurrentVersion))
+                                if (!((PluginDescriptor)descriptor).SupportedVersions.Contains(NopVersion.CurrentVersion))
                                     throw new Exception($"This plugin doesn't support the current version - {NopVersion.CurrentVersion}");
                             }
 
@@ -213,6 +213,7 @@ namespace Nop.Services.Plugins
                                 descriptor = _themeProvider.GetThemeDescriptorFromText(reader.ReadToEnd());
                         }
                     }
+
                     if (descriptor == null)
                         continue;
 

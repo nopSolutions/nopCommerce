@@ -83,6 +83,7 @@ namespace Nop.Services.Tasks
             {
                 query = query.Where(t => t.Enabled);
             }
+
             query = query.OrderByDescending(t => t.Seconds);
 
             var tasks = query.ToList();

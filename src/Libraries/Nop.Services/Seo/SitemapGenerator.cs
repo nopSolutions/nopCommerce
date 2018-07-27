@@ -401,7 +401,6 @@ namespace Nop.Services.Seo
 
                 //otherwise write a certain numbered sitemap file into the stream
                 WriteSitemap(stream, sitemaps.ElementAt(id.Value - 1));
-
             }
             else
             {

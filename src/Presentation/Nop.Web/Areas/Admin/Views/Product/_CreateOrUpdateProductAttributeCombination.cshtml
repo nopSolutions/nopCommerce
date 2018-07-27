@@ -11,7 +11,7 @@
 
 <script>
     $(document).ready(function () {
-        $('#@Html.IdFor(model => model.Sku)').on('input propertychange paste', function () {
+        $('#@Html.IdFor(model => model.Sku)').on('input change', function () {
             warningValidation('@Url.Action("SkuReservedWarning")', '@Html.NameFor(model => model.Sku)', { productId: @Model.ProductId, sku: $(this).val() });
         });
     });

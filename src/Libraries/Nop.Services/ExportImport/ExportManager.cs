@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -544,7 +545,7 @@ namespace Nop.Services.ExportImport
                     ShowOnProductPage = psa.ShowOnProductPage,
                     DisplayOrder = psa.DisplayOrder,
                     SpecificationAttributeOptionId = psa.SpecificationAttributeOptionId,
-                    SpecificationAttributeId = psa.SpecificationAttributeOption.SpecificationAttribute.Id,
+                    SpecificationAttributeId = psa.SpecificationAttributeOption.SpecificationAttribute.Id
                 }).ToList();
 
             if (!attributes.Any())
@@ -693,16 +694,16 @@ namespace Nop.Services.ExportImport
                     foreach (var productManufacturer in productManufacturers)
                     {
                         var product = productManufacturer.Product;
-                        if (product != null && !product.Deleted)
-                        {
-                            xmlWriter.WriteStartElement("ProductManufacturer");
-                            xmlWriter.WriteString("ProductManufacturerId", productManufacturer.Id);
-                            xmlWriter.WriteString("ProductId", productManufacturer.ProductId);
-                            xmlWriter.WriteString("ProductName", product.Name);
-                            xmlWriter.WriteString("IsFeaturedProduct", productManufacturer.IsFeaturedProduct);
-                            xmlWriter.WriteString("DisplayOrder", productManufacturer.DisplayOrder);
-                            xmlWriter.WriteEndElement();
-                        }
+                        if (product == null || product.Deleted) 
+                            continue;
+
+                        xmlWriter.WriteStartElement("ProductManufacturer");
+                        xmlWriter.WriteString("ProductManufacturerId", productManufacturer.Id);
+                        xmlWriter.WriteString("ProductId", productManufacturer.ProductId);
+                        xmlWriter.WriteString("ProductName", product.Name);
+                        xmlWriter.WriteString("IsFeaturedProduct", productManufacturer.IsFeaturedProduct);
+                        xmlWriter.WriteString("DisplayOrder", productManufacturer.DisplayOrder);
+                        xmlWriter.WriteEndElement();
                     }
                 }
 
@@ -1153,14 +1154,14 @@ namespace Nop.Services.ExportImport
                 },
                 new PropertyByName<Product>("ProductTemplate", p => p.ProductTemplateId, IgnoreExportPoductProperty(p => p.ProductTemplate))
                 {
-                    DropDownElements = _productTemplateService.GetAllProductTemplates().Select(pt => pt as BaseEntity).ToSelectList(p => (p as ProductTemplate)?.Name ?? string.Empty),
+                    DropDownElements = _productTemplateService.GetAllProductTemplates().Select(pt => pt as BaseEntity).ToSelectList(p => (p as ProductTemplate)?.Name ?? string.Empty)
                 },
                 //vendor can't change this field
                 new PropertyByName<Product>("ShowOnHomePage", p => p.ShowOnHomePage, IgnoreExportPoductProperty(p => p.ShowOnHomePage) || _workContext.CurrentVendor != null),
                 new PropertyByName<Product>("MetaKeywords", p => p.MetaKeywords, IgnoreExportPoductProperty(p => p.Seo)),
                 new PropertyByName<Product>("MetaDescription", p => p.MetaDescription, IgnoreExportPoductProperty(p => p.Seo)),
                 new PropertyByName<Product>("MetaTitle", p => p.MetaTitle, IgnoreExportPoductProperty(p => p.Seo)),
-                new PropertyByName<Product>("SeName", p => _urlRecordService.GetSeName(p , 0), IgnoreExportPoductProperty(p => p.Seo)),
+                new PropertyByName<Product>("SeName", p => _urlRecordService.GetSeName(p, 0), IgnoreExportPoductProperty(p => p.Seo)),
                 new PropertyByName<Product>("AllowCustomerReviews", p => p.AllowCustomerReviews, IgnoreExportPoductProperty(p => p.AllowCustomerReviews)),
                 new PropertyByName<Product>("Published", p => p.Published, IgnoreExportPoductProperty(p => p.Published)),
                 new PropertyByName<Product>("SKU", p => p.Sku),
@@ -1298,11 +1299,11 @@ namespace Nop.Services.ExportImport
             {
             }
 
-            if (_catalogSettings.ExportImportProductAttributes || _catalogSettings.ExportImportProductSpecificationAttributes)
-            {
-                if (productAdvancedMode || _productEditorSettings.ProductAttributes)
-                    return ExportProductsToXlsxWithAttributes(properties, productList);
-            }
+            if (!_catalogSettings.ExportImportProductAttributes && !_catalogSettings.ExportImportProductSpecificationAttributes)
+                return new PropertyManager<Product>(properties, _catalogSettings).ExportToXlsx(productList);
+
+            if (productAdvancedMode || _productEditorSettings.ProductAttributes)
+                return ExportProductsToXlsxWithAttributes(properties, productList);
 
             return new PropertyManager<Product>(properties, _catalogSettings).ExportToXlsx(productList);
         }
@@ -1369,7 +1370,7 @@ namespace Nop.Services.ExportImport
                 xmlWriter.WriteString("CaptureTransactionId", order.CaptureTransactionId, ignore);
                 xmlWriter.WriteString("CaptureTransactionResult", order.CaptureTransactionResult, ignore);
                 xmlWriter.WriteString("SubscriptionTransactionId", order.SubscriptionTransactionId, ignore);
-                xmlWriter.WriteString("PaidDateUtc", order.PaidDateUtc == null ? string.Empty : order.PaidDateUtc.Value.ToString(), ignore);
+                xmlWriter.WriteString("PaidDateUtc", order.PaidDateUtc == null ? string.Empty : order.PaidDateUtc.Value.ToString(CultureInfo.InvariantCulture), ignore);
                 xmlWriter.WriteString("ShippingMethod", order.ShippingMethod);
                 xmlWriter.WriteString("ShippingRateComputationMethodSystemName", order.ShippingRateComputationMethodSystemName, ignore);
                 xmlWriter.WriteString("CustomValuesXml", order.CustomValuesXml, ignore);
@@ -1423,7 +1424,7 @@ namespace Nop.Services.ExportImport
                         xmlWriter.WriteElementString("TotalWeight", null, shipment.TotalWeight?.ToString() ?? string.Empty);
                         xmlWriter.WriteElementString("ShippedDateUtc", null, shipment.ShippedDateUtc.HasValue ? shipment.ShippedDateUtc.ToString() : string.Empty);
                         xmlWriter.WriteElementString("DeliveryDateUtc", null, shipment.DeliveryDateUtc?.ToString() ?? string.Empty);
-                        xmlWriter.WriteElementString("CreatedOnUtc", null, shipment.CreatedOnUtc.ToString());
+                        xmlWriter.WriteElementString("CreatedOnUtc", null, shipment.CreatedOnUtc.ToString(CultureInfo.InvariantCulture));
                         xmlWriter.WriteEndElement();
                     }
 
@@ -1601,7 +1602,7 @@ namespace Nop.Services.ExportImport
                 xmlWriter.WriteElementString("IsRegistered", null, customer.IsRegistered().ToString());
                 xmlWriter.WriteElementString("IsAdministrator", null, customer.IsAdmin().ToString());
                 xmlWriter.WriteElementString("IsForumModerator", null, customer.IsForumModerator().ToString());
-                xmlWriter.WriteElementString("CreatedOnUtc", null, customer.CreatedOnUtc.ToString());
+                xmlWriter.WriteElementString("CreatedOnUtc", null, customer.CreatedOnUtc.ToString(CultureInfo.InvariantCulture));
 
                 xmlWriter.WriteElementString("FirstName", null, _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.FirstNameAttribute));
                 xmlWriter.WriteElementString("LastName", null, _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.LastNameAttribute));
@@ -1742,7 +1743,7 @@ namespace Nop.Services.ExportImport
             var orderManager = new PropertyManager<Order>(new[]
             {
                 new PropertyByName<Order>("Order Number", p => p.CustomOrderNumber),
-                new PropertyByName<Order>("Order status", p => _localizationService.GetLocalizedEnum(p.OrderStatus )),
+                new PropertyByName<Order>("Order status", p => _localizationService.GetLocalizedEnum(p.OrderStatus)),
                 new PropertyByName<Order>("Order total", p => _priceFormatter.FormatPrice(_currencyService.ConvertCurrency(p.OrderTotal, p.CurrencyRate), true, p.CustomerCurrencyCode, false, _workContext.WorkingLanguage)),
                 new PropertyByName<Order>("Shipping method", p => p.ShippingMethod),
                 new PropertyByName<Order>("Created on", p => _dateTimeHelper.ConvertToUserTime(p.CreatedOnUtc, DateTimeKind.Utc).ToString("D")),
@@ -1782,7 +1783,6 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<OrderItem>("Price", oi => _priceFormatter.FormatPrice(_currencyService.ConvertCurrency(oi.Order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax ? oi.UnitPriceInclTax : oi.UnitPriceExclTax, oi.Order.CurrencyRate), true, oi.Order.CustomerCurrencyCode, false, _workContext.WorkingLanguage)),
                 new PropertyByName<OrderItem>("Quantity", oi => oi.Quantity),
                 new PropertyByName<OrderItem>("Total", oi => _priceFormatter.FormatPrice(oi.Order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax ? oi.PriceInclTax : oi.PriceExclTax))
-
             }, _catalogSettings);
 
             var orders = _orderService.SearchOrders(customerId: customer.Id);

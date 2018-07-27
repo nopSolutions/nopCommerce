@@ -1,5 +1,4 @@
-﻿
-namespace Nop.Services.Tax
+﻿namespace Nop.Services.Tax
 {
     /// <summary>
     /// Represents default values related to tax services

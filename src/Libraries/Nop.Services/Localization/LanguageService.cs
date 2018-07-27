@@ -65,12 +65,12 @@ namespace Nop.Services.Localization
             {
                 foreach (var activeLanguage in GetAllLanguages())
                 {
-                    if (activeLanguage.Id != language.Id)
-                    {
-                        _localizationSettings.DefaultAdminLanguageId = activeLanguage.Id;
-                        _settingService.SaveSetting(_localizationSettings);
-                        break;
-                    }
+                    if (activeLanguage.Id == language.Id) 
+                        continue;
+
+                    _localizationSettings.DefaultAdminLanguageId = activeLanguage.Id;
+                    _settingService.SaveSetting(_localizationSettings);
+                    break;
                 }
             }
 
@@ -92,14 +92,13 @@ namespace Nop.Services.Localization
         /// <returns>Languages</returns>
         public virtual IList<Language> GetAllLanguages(bool showHidden = false, int storeId = 0, bool loadCacheableCopy = true)
         {
-            Func<IList<Language>> loadLanguagesFunc = () =>
+            IList<Language> LoadLanguagesFunc()
             {
                 var query = _languageRepository.Table;
-                if (!showHidden)
-                    query = query.Where(l => l.Published);
+                if (!showHidden) query = query.Where(l => l.Published);
                 query = query.OrderBy(l => l.DisplayOrder).ThenBy(l => l.Id);
                 return query.ToList();
-            };
+            }
 
             IList<Language> languages;
             if (loadCacheableCopy)
@@ -109,14 +108,14 @@ namespace Nop.Services.Localization
                 languages = _cacheManager.Get(key, () =>
                 {
                     var result = new List<Language>();
-                    foreach (var language in loadLanguagesFunc())
+                    foreach (var language in LoadLanguagesFunc())
                         result.Add(new LanguageForCaching(language));
                     return result;
                 });
             }
             else
             {
-                languages = loadLanguagesFunc();
+                languages = LoadLanguagesFunc();
             }
 
             //store mapping
@@ -126,6 +125,7 @@ namespace Nop.Services.Localization
                     .Where(l => _storeMappingService.Authorize(l, storeId))
                     .ToList();
             }
+
             return languages;
         }
 
@@ -140,25 +140,21 @@ namespace Nop.Services.Localization
             if (languageId == 0)
                 return null;
 
-            Func<Language> loadLanguageFunc = () =>
+            Language LoadLanguageFunc()
             {
                 return _languageRepository.GetById(languageId);
-            };
-
-            if (loadCacheableCopy)
-            {
-                //cacheable copy
-                var key = string.Format(NopLocalizationDefaults.LanguagesByIdCacheKey, languageId);
-                return _cacheManager.Get(key, () =>
-                {
-                    var language = loadLanguageFunc();
-                    if (language == null)
-                        return null;
-                    return new LanguageForCaching(language);
-                });
             }
 
-            return loadLanguageFunc();
+            if (!loadCacheableCopy) 
+                return LoadLanguageFunc();
+
+            //cacheable copy
+            var key = string.Format(NopLocalizationDefaults.LanguagesByIdCacheKey, languageId);
+            return _cacheManager.Get(key, () =>
+            {
+                var language = LoadLanguageFunc();
+                return language == null ? null : new LanguageForCaching(language);
+            });
         }
 
         /// <summary>
@@ -219,10 +215,8 @@ namespace Nop.Services.Localization
 
             var culture = new CultureInfo(language.LanguageCulture);
             var code = culture.TwoLetterISOLanguageName;
-            if (String.IsNullOrEmpty(code))
-                return "en";
 
-            return code;
+            return string.IsNullOrEmpty(code) ? "en" : code;
         }
 
         #endregion

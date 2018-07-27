@@ -1,5 +1,4 @@
-﻿
-namespace Nop.Services.Forums
+﻿namespace Nop.Services.Forums
 {
     /// <summary>
     /// Represents default values related to forums services

@@ -193,6 +193,7 @@ namespace Nop.Services.Catalog
                     {
                         attributeValuePictureId = originalNewPictureIdentifiers[productAttributeValue.PictureId];
                     }
+
                     var attributeValueCopy = new ProductAttributeValue
                     {
                         ProductAttributeMappingId = productAttributeMappingCopy.Id,
@@ -281,49 +282,48 @@ namespace Nop.Services.Catalog
             foreach (var combination in _productAttributeService.GetAllProductAttributeCombinations(product.Id))
             {
                 //generate new AttributesXml according to new value IDs
-                var newAttributesXml = "";
+                var newAttributesXml = string.Empty;
                 var parsedProductAttributes = _productAttributeParser.ParseProductAttributeMappings(combination.AttributesXml);
                 foreach (var oldAttribute in parsedProductAttributes)
                 {
-                    if (associatedAttributes.ContainsKey(oldAttribute.Id))
+                    if (!associatedAttributes.ContainsKey(oldAttribute.Id)) 
+                        continue;
+
+                    var newAttribute = _productAttributeService.GetProductAttributeMappingById(associatedAttributes[oldAttribute.Id]);
+
+                    if (newAttribute == null) 
+                        continue;
+
+                    var oldAttributeValuesStr = _productAttributeParser.ParseValues(combination.AttributesXml, oldAttribute.Id);
+
+                    foreach (var oldAttributeValueStr in oldAttributeValuesStr)
                     {
-                        var newAttribute =
-                            _productAttributeService.GetProductAttributeMappingById(associatedAttributes[oldAttribute.Id]);
-                        if (newAttribute != null)
+                        if (newAttribute.ShouldHaveValues())
                         {
-                            var oldAttributeValuesStr =
-                                _productAttributeParser.ParseValues(combination.AttributesXml, oldAttribute.Id);
-                            foreach (var oldAttributeValueStr in oldAttributeValuesStr)
+                            //attribute values
+                            var oldAttributeValue = int.Parse(oldAttributeValueStr);
+                            if (!associatedAttributeValues.ContainsKey(oldAttributeValue)) 
+                                continue;
+
+                            var newAttributeValue = _productAttributeService.GetProductAttributeValueById(associatedAttributeValues[oldAttributeValue]);
+                            
+                            if (newAttributeValue != null)
                             {
-                                if (newAttribute.ShouldHaveValues())
-                                {
-                                    //attribute values
-                                    var oldAttributeValue = int.Parse(oldAttributeValueStr);
-                                    if (associatedAttributeValues.ContainsKey(oldAttributeValue))
-                                    {
-                                        var newAttributeValue =
-                                            _productAttributeService.GetProductAttributeValueById(
-                                                associatedAttributeValues[oldAttributeValue]);
-                                        if (newAttributeValue != null)
-                                        {
-                                            newAttributesXml = _productAttributeParser.AddProductAttribute(newAttributesXml,
-                                                newAttribute, newAttributeValue.Id.ToString());
-                                        }
-                                    }
-                                }
-                                else
-                                {
-                                    //just a text
-                                    newAttributesXml = _productAttributeParser.AddProductAttribute(newAttributesXml,
-                                        newAttribute, oldAttributeValueStr);
-                                }
+                                newAttributesXml = _productAttributeParser.AddProductAttribute(newAttributesXml,
+                                    newAttribute, newAttributeValue.Id.ToString());
                             }
+                        }
+                        else
+                        {
+                            //just a text
+                            newAttributesXml = _productAttributeParser.AddProductAttribute(newAttributesXml,
+                                newAttribute, oldAttributeValueStr);
                         }
                     }
                 }
 
                 //picture
-                originalNewPictureIdentifiers.TryGetValue(combination.PictureId, out int combinationPictureId);
+                originalNewPictureIdentifiers.TryGetValue(combination.PictureId, out var combinationPictureId);
 
                 var combinationCopy = new ProductAttributeCombination
                 {
@@ -341,7 +341,8 @@ namespace Nop.Services.Catalog
                 _productAttributeService.InsertProductAttributeCombination(combinationCopy);
 
                 //quantity change history
-                _productService.AddStockQuantityHistoryEntry(productCopy, combination.StockQuantity, combination.StockQuantity,
+                _productService.AddStockQuantityHistoryEntry(productCopy, combination.StockQuantity,
+                    combination.StockQuantity,
                     message: string.Format(_localizationService.GetResource("Admin.StockQuantityHistory.Messages.CopyProduct"),
                         product.Id), combinationId: combination.Id);
             }
@@ -383,7 +384,7 @@ namespace Nop.Services.Catalog
                     new CrossSellProduct
                     {
                         ProductId1 = productCopy.Id,
-                        ProductId2 = csProduct.ProductId2,
+                        ProductId2 = csProduct.ProductId2
                     });
             }
         }
@@ -427,6 +428,7 @@ namespace Nop.Services.Catalog
                 _manufacturerService.InsertProductManufacturer(productManufacturerCopy);
             }
         }
+
         /// <summary>
         /// Copy category mapping
         /// </summary>
@@ -462,7 +464,7 @@ namespace Nop.Services.Catalog
                     ProductId = productCopy.Id,
                     WarehouseId = pwi.WarehouseId,
                     StockQuantity = pwi.StockQuantity,
-                    ReservedQuantity = 0,
+                    ReservedQuantity = 0
                 };
 
                 productCopy.ProductWarehouseInventory.Add(pwiCopy);
@@ -471,6 +473,7 @@ namespace Nop.Services.Catalog
                 var message = $"{_localizationService.GetResource("Admin.StockQuantityHistory.Messages.MultipleWarehouses")} {string.Format(_localizationService.GetResource("Admin.StockQuantityHistory.Messages.CopyProduct"), product.Id)}";
                 _productService.AddStockQuantityHistoryEntry(productCopy, pwi.StockQuantity, pwi.StockQuantity, pwi.WarehouseId, message);
             }
+
             _productService.UpdateProduct(productCopy);
         }
 
@@ -486,26 +489,27 @@ namespace Nop.Services.Catalog
         {
             //variable to store original and new picture identifiers
             var originalNewPictureIdentifiers = new Dictionary<int, int>();
-            if (copyImages)
+            if (!copyImages) 
+                return originalNewPictureIdentifiers;
+
+            foreach (var productPicture in product.ProductPictures)
             {
-                foreach (var productPicture in product.ProductPictures)
+                var picture = productPicture.Picture;
+                var pictureCopy = _pictureService.InsertPicture(
+                    _pictureService.LoadPictureBinary(picture),
+                    picture.MimeType,
+                    _pictureService.GetPictureSeName(newName),
+                    picture.AltAttribute,
+                    picture.TitleAttribute);
+                _productService.InsertProductPicture(new ProductPicture
                 {
-                    var picture = productPicture.Picture;
-                    var pictureCopy = _pictureService.InsertPicture(
-                        _pictureService.LoadPictureBinary(picture),
-                        picture.MimeType,
-                        _pictureService.GetPictureSeName(newName),
-                        picture.AltAttribute,
-                        picture.TitleAttribute);
-                    _productService.InsertProductPicture(new ProductPicture
-                    {
-                        ProductId = productCopy.Id,
-                        PictureId = pictureCopy.Id,
-                        DisplayOrder = productPicture.DisplayOrder
-                    });
-                    originalNewPictureIdentifiers.Add(picture.Id, pictureCopy.Id);
-                }
+                    ProductId = productCopy.Id,
+                    PictureId = pictureCopy.Id,
+                    DisplayOrder = productPicture.DisplayOrder
+                });
+                originalNewPictureIdentifiers.Add(picture.Id, pictureCopy.Id);
             }
+
             return originalNewPictureIdentifiers;
         }
 
@@ -546,7 +550,7 @@ namespace Nop.Services.Catalog
                     _localizedEntityService.SaveLocalizedValue(productCopy, x => x.MetaTitle, metaTitle, lang.Id);
 
                 //search engine name
-                _urlRecordService.SaveSlug(productCopy, _urlRecordService.ValidateSeName(productCopy, "", name, false), lang.Id);
+                _urlRecordService.SaveSlug(productCopy, _urlRecordService.ValidateSeName(productCopy, string.Empty, name, false), lang.Id);
             }
         }
 
@@ -576,7 +580,7 @@ namespace Nop.Services.Catalog
                         ContentType = download.ContentType,
                         Filename = download.Filename,
                         Extension = download.Extension,
-                        IsNew = download.IsNew,
+                        IsNew = download.IsNew
                     };
                     _downloadService.InsertDownload(downloadCopy);
                     downloadId = downloadCopy.Id;
@@ -713,7 +717,7 @@ namespace Nop.Services.Catalog
             _productService.InsertProduct(productCopy);
 
             //search engine name
-            _urlRecordService.SaveSlug(productCopy, _urlRecordService.ValidateSeName(productCopy, "", productCopy.Name, true), 0);
+            _urlRecordService.SaveSlug(productCopy, _urlRecordService.ValidateSeName(productCopy, string.Empty, productCopy.Name, true), 0);
             return productCopy;
         }
 
@@ -749,6 +753,7 @@ namespace Nop.Services.Catalog
             {
                 productCopy.ProductProductTagMappings.Add(new ProductProductTagMapping { ProductTag = productProductTagMapping.ProductTag });
             }
+
             _productService.UpdateProduct(productCopy);
 
             //copy product pictures

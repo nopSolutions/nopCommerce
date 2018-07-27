@@ -9,17 +9,17 @@ namespace Nop.Services.Common
     public partial interface IMaintenanceService
     {
         /// <summary>
-        /// Get the current ident value
+        /// Get the current identity value
         /// </summary>
         /// <typeparam name="T">Entity</typeparam>
-        /// <returns>Integer ident; null if cannot get the result</returns>
+        /// <returns>Integer identity; null if cannot get the result</returns>
         int? GetTableIdent<T>() where T : BaseEntity;
 
         /// <summary>
-        /// Set table ident (is supported)
+        /// Set table identity (is supported)
         /// </summary>
         /// <typeparam name="T">Entity</typeparam>
-        /// <param name="ident">Ident value</param>
+        /// <param name="ident">Identity value</param>
         void SetTableIdent<T>(int ident) where T : BaseEntity;
 
         /// <summary>

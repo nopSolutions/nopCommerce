@@ -20,7 +20,6 @@ namespace Nop.Services.Common
     {
         #region Fields
 
-        private readonly CommonSettings _commonSettings;
         private readonly IDataProvider _dataProvider;
         private readonly IDbContext _dbContext;
         private readonly INopFileProvider _fileProvider;
@@ -29,12 +28,10 @@ namespace Nop.Services.Common
 
         #region Ctor
 
-        public MaintenanceService(CommonSettings commonSettings,
-            IDataProvider dataProvider,
+        public MaintenanceService(IDataProvider dataProvider,
             IDbContext dbContext,
             INopFileProvider fileProvider)
         {
-            this._commonSettings = commonSettings;
             this._dataProvider = dataProvider;
             this._dbContext = dbContext;
             this._fileProvider = fileProvider;
@@ -71,10 +68,10 @@ namespace Nop.Services.Common
         #region Methods
 
         /// <summary>
-        /// Get the current ident value
+        /// Get the current identity value
         /// </summary>
         /// <typeparam name="T">Entity</typeparam>
-        /// <returns>Integer ident; null if cannot get the result</returns>
+        /// <returns>Integer identity; null if cannot get the result</returns>
         public virtual int? GetTableIdent<T>() where T : BaseEntity
         {
             var tableName = _dbContext.GetTableName<T>();
@@ -85,18 +82,18 @@ namespace Nop.Services.Common
         }
 
         /// <summary>
-        /// Set table ident (is supported)
+        /// Set table identity (is supported)
         /// </summary>
         /// <typeparam name="T">Entity</typeparam>
-        /// <param name="ident">Ident value</param>
+        /// <param name="ident">Identity value</param>
         public virtual void SetTableIdent<T>(int ident) where T : BaseEntity
         {
             var currentIdent = GetTableIdent<T>();
-            if (currentIdent.HasValue && ident > currentIdent.Value)
-            {
-                var tableName = _dbContext.GetTableName<T>();
-                _dbContext.ExecuteSqlCommand($"DBCC CHECKIDENT([{tableName}], RESEED, {ident})");
-            }
+            if (!currentIdent.HasValue || ident <= currentIdent.Value) 
+                return;
+
+            var tableName = _dbContext.GetTableName<T>();
+            _dbContext.ExecuteSqlCommand($"DBCC CHECKIDENT([{tableName}], RESEED, {ident})");
         }
 
         /// <summary>

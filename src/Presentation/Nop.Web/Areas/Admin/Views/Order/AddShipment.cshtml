@@ -31,6 +31,8 @@
                 <i class="fa fa-floppy-o"></i>
                 @T("Admin.Common.SaveContinue")
             </button>
+            <nop-action-confirmation asp-button-id="shipment-save" asp-additional-confirm="Admin.Orders.Shipments.Products.Warehouse.QuantityNotEnough" />
+            <nop-action-confirmation asp-button-id="shipment-save-continue" asp-additional-confirm="Admin.Orders.Shipments.Products.Warehouse.QuantityNotEnough"/>
             @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.OrderShipmentAddButtons })
         </div>
     </div>
@@ -58,49 +60,71 @@
                             </div>
                         </div>
                     </div>
-                    @if (itemsFromMultipleWarehouses.Any())
-                    {
-                        <script>
-                            $(document).ready(function() {
-                                $('#shipment-save').click(function() {
-                                    return validateWarehouseAvailability();
-                                });
-                                $('#shipment-save-continue').click(function() {
-                                    return validateWarehouseAvailability();
-                                });
-                            });
+                    <script>
+                        $(document).ready(function () {
+                            $("#shipment-save").bind("focus", function () {
+                                if (validateWarehouseAvailability("save")) {
+                                    $("#shipment-save-action-confirmation").remove();
+                                    $(this).attr("name", "save").attr("type", "submit");
+                                }
+                            }).bind("click", function () {
+                                return validateWarehouseAvailability("save");
+                            });;
 
-                            function validateWarehouseAvailability() {
-                                @{
-                                    var sb = new StringBuilder();
-                                    for (var i = 0; i <= itemsFromMultipleWarehouses.Count - 1; i++)
+                            $("#shipment-save-continue").bind("focus", function () {
+                                if (validateWarehouseAvailability("continue")) {
+                                    $("#shipment-save-continue-action-confirmation").remove();
+                                    $(this).attr("name", "save-continue").attr("type", "submit");
+                                }
+                            }).bind("click", function () {
+                                return validateWarehouseAvailability("continue");
+                            });;
+                        });
+
+                        function validateWarehouseAvailability(action) {
+                            @{
+                                var sb = new StringBuilder();
+                                var count = itemsFromMultipleWarehouses.Count;
+                                if (count == 0)
+                                {
+                                    sb.Append("true");
+                                }
+                                else
+                                {
+                                    for (var i = 0; i <= count - 1; i++)
                                     {
                                         var item = itemsFromMultipleWarehouses[i];
                                         sb.AppendFormat("validateAvailableQuantity('{0}')", item.OrderItemId);
-                                        if (i != itemsFromMultipleWarehouses.Count - 1)
+                                        if (i != count - 1)
                                         {
                                             sb.Append(" && ");
                                         }
                                     }
                                 }
-                                var valid = @(Html.Raw(sb.ToString()));
-                                if (!valid) {
-                                    return confirm('@T("Admin.Orders.Shipments.Products.Warehouse.QuantityNotEnough")');
+                            }
+                            var valid = @(Html.Raw(sb.ToString()));
+                            if (!valid) {
+                                if (action === "save") {
+                                    $('#shipment-save-action-confirmation').modal('toggle');
                                 }
-                                return true;
+                                if (action === "continue") {
+                                    $('#shipment-save-continue-action-confirmation').modal('toggle');
+                                }
+                                return false;
                             }
+                            return true;
+                        }
 
-                            function validateAvailableQuantity(orderItemId) {
-                                var enteredValue = parseInt($('#qtyToAdd' + orderItemId).val(), 10);
-                                if (enteredValue <= 0)
-                                    return true;
-                                var reservedValue = parseInt($('#warehouse_' + orderItemId).find(':selected').data('reserved-qty'), 10);
-                                var plannedValue = parseInt($('#warehouse_' + orderItemId).find(':selected').data('planned-qty'), 10);
-                                var availableToAdd = reservedValue - plannedValue;
-                                return enteredValue <= availableToAdd;
-                            }
-                        </script>
-                    }
+                        function validateAvailableQuantity(orderItemId) {
+                            var enteredValue = parseInt($('#qtyToAdd' + orderItemId).val(), 10);
+                            if (enteredValue <= 0)
+                                return true;
+                            var reservedValue = parseInt($('#warehouse_' + orderItemId).find(':selected').data('reserved-qty'), 10);
+                            var plannedValue = parseInt($('#warehouse_' + orderItemId).find(':selected').data('planned-qty'), 10);
+                            var availableToAdd = reservedValue - plannedValue;
+                            return enteredValue <= availableToAdd;
+                        }
+                    </script>
                 </div>
 
                 <div class="panel panel-default">

@@ -3,6 +3,7 @@ using Nop.Web.Areas.Admin.Models.Vendors;
 using Nop.Core.Domain.Vendors;
 using Nop.Data;
 using Nop.Services.Localization;
+using Nop.Services.Seo;
 using Nop.Web.Framework.Validators;
 
 namespace Nop.Web.Areas.Admin.Validators.Vendors
@@ -23,6 +24,8 @@ namespace Nop.Web.Areas.Admin.Validators.Vendors
 
                 return true;
             }).WithMessage(localizationService.GetResource("Admin.Vendors.Fields.PageSize.Positive"));
+            RuleFor(x => x.SeName).Length(0, NopSeoDefaults.SearchEngineNameLength)
+                .WithMessage(string.Format(localizationService.GetResource("Admin.SEO.SeName.MaxLengthValidation"), NopSeoDefaults.SearchEngineNameLength));
 
             SetDatabaseValidationRules<Vendor>(dbContext);
         }

@@ -114,12 +114,14 @@ namespace Nop.Services.Shipping
                         where queryVendorOrderItems.Intersect(s.ShipmentItems.Select(si => si.OrderItemId)).Any()
                         select s;
             }
+
             if (warehouseId > 0)
             {
                 query = from s in query
                         where s.ShipmentItems.Any(si => si.WarehouseId == warehouseId)
                         select s;
             }
+
             query = query.OrderByDescending(s => s.CreatedOnUtc);
 
             var shipments = new PagedList<Shipment>(query, pageIndex, pageSize);
@@ -148,6 +150,7 @@ namespace Nop.Services.Shipping
                 if (shipment != null)
                     sortedOrders.Add(shipment);
             }
+
             return sortedOrders;
         }
 

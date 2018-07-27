@@ -1,5 +1,4 @@
-﻿
-namespace Nop.Services.Discounts
+﻿namespace Nop.Services.Discounts
 {
     /// <summary>
     /// Represents default values related to discounts services

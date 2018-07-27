@@ -216,17 +216,20 @@ namespace Nop.Services.Gdpr
             {
                 query = query.Where(log => log.CustomerId == customerId);
             }
+
             if (consentId > 0)
             {
                 query = query.Where(log => log.ConsentId == consentId);
             }
-            if (!String.IsNullOrEmpty(customerInfo))
+
+            if (!string.IsNullOrEmpty(customerInfo))
             {
                 query = query.Where(log => log.CustomerInfo == customerInfo);
             }
+
             if (requestType != null)
             {
-                int requestTypeId = (int)requestType;
+                var requestTypeId = (int)requestType;
                 query = query.Where(log => log.RequestTypeId == requestTypeId);
             }
 
@@ -344,7 +347,7 @@ namespace Nop.Services.Gdpr
                 _externalAuthenticationService.DeleteExternalAuthenticationRecord(ear);
 
             //forum subscriptions
-            var forumSubscriptions = _forumService.GetAllSubscriptions(customerId: customer.Id);
+            var forumSubscriptions = _forumService.GetAllSubscriptions(customer.Id);
             foreach (var forumSubscription in forumSubscriptions)
                 _forumService.DeleteSubscription(forumSubscription);
 
@@ -353,12 +356,11 @@ namespace Nop.Services.Gdpr
                 _shoppingCartService.DeleteShoppingCartItem(sci);
 
             //private messages (sent)
-            foreach (var pm in _forumService.GetAllPrivateMessages(storeId: 0, fromCustomerId: customer.Id, toCustomerId: 0,
-                isRead: null, isDeletedByAuthor: null, isDeletedByRecipient: null, keywords: null))
+            foreach (var pm in _forumService.GetAllPrivateMessages(0, customer.Id, 0, null, null, null, null))
                 _forumService.DeletePrivateMessage(pm);
+
             //private messages (received)
-            foreach (var pm in _forumService.GetAllPrivateMessages(storeId: 0, fromCustomerId: 0, toCustomerId: customer.Id,
-                isRead: null, isDeletedByAuthor: null, isDeletedByRecipient: null, keywords: null))
+            foreach (var pm in _forumService.GetAllPrivateMessages(0, 0, customer.Id, null, null, null, null))
                 _forumService.DeletePrivateMessage(pm);
 
             //newsletter
@@ -401,6 +403,7 @@ namespace Nop.Services.Gdpr
                 customer.CustomerCustomerRoleMappings
                     .Remove(customer.CustomerCustomerRoleMappings.FirstOrDefault(mapping => mapping.CustomerRoleId == registeredRole.Id));
             }
+
             if (!customer.IsGuest())
             {
                 var guestRole = _customerService.GetCustomerRoleBySystemName(NopCustomerDefaults.GuestsRoleName);
@@ -410,9 +413,9 @@ namespace Nop.Services.Gdpr
             var email = customer.Email;
 
             //clear other information
-            customer.Email = "";
-            customer.EmailToRevalidate = "";
-            customer.Username = "";
+            customer.Email = string.Empty;
+            customer.EmailToRevalidate = string.Empty;
+            customer.Username = string.Empty;
             customer.Active = false;
             customer.Deleted = true;
             _customerService.UpdateCustomer(customer);

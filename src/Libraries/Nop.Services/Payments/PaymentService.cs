@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml;
-using System.Xml.Schema;
 using System.Xml.Serialization;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
@@ -72,10 +71,7 @@ namespace Nop.Services.Payments
         public virtual IPaymentMethod LoadPaymentMethodBySystemName(string systemName)
         {
             var descriptor = _pluginFinder.GetPluginDescriptorBySystemName<IPaymentMethod>(systemName);
-            if (descriptor != null)
-                return descriptor.Instance<IPaymentMethod>();
-
-            return null;
+            return descriptor?.Instance<IPaymentMethod>();
         }
 
         /// <summary>
@@ -140,9 +136,7 @@ namespace Nop.Services.Payments
                 throw new ArgumentNullException(nameof(paymentMethod));
 
             var settingKey = $"PaymentMethodRestictions.{paymentMethod.PluginDescriptor.SystemName}";
-            var restictedCountryIds = _settingService.GetSettingByKey<List<int>>(settingKey);
-            if (restictedCountryIds == null)
-                restictedCountryIds = new List<int>();
+            var restictedCountryIds = _settingService.GetSettingByKey<List<int>>(settingKey) ?? new List<int>();
             return restictedCountryIds;
         }
 
@@ -184,12 +178,14 @@ namespace Nop.Services.Payments
             //We should strip out any white space or dash in the CC number entered.
             if (!string.IsNullOrWhiteSpace(processPaymentRequest.CreditCardNumber))
             {
-                processPaymentRequest.CreditCardNumber = processPaymentRequest.CreditCardNumber.Replace(" ", "");
-                processPaymentRequest.CreditCardNumber = processPaymentRequest.CreditCardNumber.Replace("-", "");
+                processPaymentRequest.CreditCardNumber = processPaymentRequest.CreditCardNumber.Replace(" ", string.Empty);
+                processPaymentRequest.CreditCardNumber = processPaymentRequest.CreditCardNumber.Replace("-", string.Empty);
             }
+
             var paymentMethod = LoadPaymentMethodBySystemName(processPaymentRequest.PaymentMethodSystemName);
             if (paymentMethod == null)
                 throw new NopException("Payment method couldn't be loaded");
+
             return paymentMethod.ProcessPayment(processPaymentRequest);
         }
 
@@ -206,6 +202,7 @@ namespace Nop.Services.Payments
             var paymentMethod = LoadPaymentMethodBySystemName(postProcessPaymentRequest.Order.PaymentMethodSystemName);
             if (paymentMethod == null)
                 throw new NopException("Payment method couldn't be loaded");
+
             paymentMethod.PostProcessPayment(postProcessPaymentRequest);
         }
 
@@ -260,11 +257,11 @@ namespace Nop.Services.Payments
             if (result < decimal.Zero)
                 result = decimal.Zero;
 
-            if (_shoppingCartSettings.RoundPricesDuringCalculation)
-            {
-                var priceCalculationService = EngineContext.Current.Resolve<IPriceCalculationService>();
-                result = priceCalculationService.RoundPrice(result);
-            }
+            if (!_shoppingCartSettings.RoundPricesDuringCalculation) 
+                return result;
+
+            var priceCalculationService = EngineContext.Current.Resolve<IPriceCalculationService>();
+            result = priceCalculationService.RoundPrice(result);
 
             return result;
         }
@@ -430,6 +427,7 @@ namespace Nop.Services.Payments
             {
                 maskedChars += "*";
             }
+
             return maskedChars + last4;
         }
 
@@ -489,6 +487,7 @@ namespace Nop.Services.Payments
                 {
                     xs.Serialize(xmlWriter, ds);
                 }
+
                 var result = textWriter.ToString();
                 return result;
             }
@@ -513,8 +512,7 @@ namespace Nop.Services.Payments
             {
                 using (var xmlReader = XmlReader.Create(textReader))
                 {
-                    var ds = serializer.Deserialize(xmlReader) as DictionarySerializer;
-                    if (ds != null)
+                    if (serializer.Deserialize(xmlReader) is DictionarySerializer ds)
                         return ds.Dictionary;
                     return new Dictionary<string, object>();
                 }
@@ -524,86 +522,5 @@ namespace Nop.Services.Payments
         #endregion
 
         #endregion
-    }
-
-    /// <summary>
-    /// Dictionary serializer
-    /// </summary>
-    public class DictionarySerializer : IXmlSerializable
-    {
-        public DictionarySerializer()
-        {
-            Dictionary = new Dictionary<string, object>();
-        }
-
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="dictionary">Dictionary</param>
-        public DictionarySerializer(Dictionary<string, object> dictionary)
-        {
-            Dictionary = dictionary;
-        }
-
-        /// <summary>
-        /// Write XML
-        /// </summary>
-        /// <param name="writer">Writer</param>
-        public void WriteXml(XmlWriter writer)
-        {
-            if (!Dictionary.Any())
-                return;
-
-            foreach (var key in Dictionary.Keys)
-            {
-                writer.WriteStartElement("item");
-                writer.WriteElementString("key", key);
-                var value = Dictionary[key];
-                //please note that we use ToString() for objects here
-                //of course, we can Serialize them
-                //but let's keep it simple and leave it for developers to handle it
-                //just put required serialization into ToString method of your object(s)
-                //because some objects don't implement ISerializable
-                //the question is how should we deserialize null values?
-                writer.WriteElementString("value", value?.ToString());
-                writer.WriteEndElement();
-            }
-        }
-
-        /// <summary>
-        /// Read XML
-        /// </summary>
-        /// <param name="reader">Reader</param>
-        public void ReadXml(XmlReader reader)
-        {
-            var wasEmpty = reader.IsEmptyElement;
-            reader.Read();
-            if (wasEmpty)
-                return;
-            while (reader.NodeType != XmlNodeType.EndElement)
-            {
-                reader.ReadStartElement("item");
-                var key = reader.ReadElementString("key");
-                var value = reader.ReadElementString("value");
-                Dictionary.Add(key, value);
-                reader.ReadEndElement();
-                reader.MoveToContent();
-            }
-            reader.ReadEndElement();
-        }
-
-        /// <summary>
-        /// Get schema
-        /// </summary>
-        /// <returns>XML schema</returns>
-        public XmlSchema GetSchema()
-        {
-            return null;
-        }
-
-        /// <summary>
-        /// Dictionary
-        /// </summary>
-        public Dictionary<string, object> Dictionary;
     }
 }

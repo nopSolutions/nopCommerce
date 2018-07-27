@@ -53,13 +53,13 @@ namespace Nop.Services.Catalog
                 var nodeList1 = xmlDoc.SelectNodes(@"//Attributes/ProductAttribute");
                 foreach (XmlNode node1 in nodeList1)
                 {
-                    if (node1.Attributes != null && node1.Attributes["ID"] != null)
+                    if (node1.Attributes?["ID"] == null) 
+                        continue;
+
+                    var str1 = node1.Attributes["ID"].InnerText.Trim();
+                    if (int.TryParse(str1, out var id))
                     {
-                        var str1 = node1.Attributes["ID"].InnerText.Trim();
-                        if (int.TryParse(str1, out int id))
-                        {
-                            ids.Add(id);
-                        }
+                        ids.Add(id);
                     }
                 }
             }
@@ -67,6 +67,7 @@ namespace Nop.Services.Catalog
             {
                 Debug.Write(exc.ToString());
             }
+
             return ids;
         }
 
@@ -89,21 +90,25 @@ namespace Nop.Services.Catalog
 
                 foreach (XmlNode attributeNode in xmlDoc.SelectNodes(@"//Attributes/ProductAttribute"))
                 {
-                    if (attributeNode.Attributes != null && attributeNode.Attributes["ID"] != null)
+                    if (attributeNode.Attributes?["ID"] == null) 
+                        continue;
+
+                    if (!int.TryParse(attributeNode.Attributes["ID"].InnerText.Trim(), out var attributeId) ||
+                        attributeId != productAttributeMappingId) 
+                        continue;
+
+                    foreach (XmlNode attributeValue in attributeNode.SelectNodes("ProductAttributeValue"))
                     {
-                        if (int.TryParse(attributeNode.Attributes["ID"].InnerText.Trim(), out int attributeId) && attributeId == productAttributeMappingId)
-                        {
-                            foreach (XmlNode attributeValue in attributeNode.SelectNodes("ProductAttributeValue"))
-                            {
-                                var value = attributeValue.SelectSingleNode("Value").InnerText.Trim();
-                                var quantityNode = attributeValue.SelectSingleNode("Quantity");
-                                selectedValues.Add(new Tuple<string, string>(value, quantityNode != null ? quantityNode.InnerText.Trim() : string.Empty));
-                            }
-                        }
+                        var value = attributeValue.SelectSingleNode("Value").InnerText.Trim();
+                        var quantityNode = attributeValue.SelectSingleNode("Quantity");
+                        selectedValues.Add(new Tuple<string, string>(value, quantityNode != null ? quantityNode.InnerText.Trim() : string.Empty));
                     }
                 }
             }
-            catch { }
+            catch
+            {
+                // ignored
+            }
 
             return selectedValues;
         }
@@ -128,6 +133,7 @@ namespace Nop.Services.Catalog
                     result.Add(attribute);
                 }
             }
+
             return result;
         }
 
@@ -156,25 +162,26 @@ namespace Nop.Services.Catalog
 
                 foreach (var attributeValue in ParseValuesWithQuantity(attributesXml, attribute.Id))
                 {
-                    if (!string.IsNullOrEmpty(attributeValue.Item1) && int.TryParse(attributeValue.Item1, out int attributeValueId))
+                    if (string.IsNullOrEmpty(attributeValue.Item1) || !int.TryParse(attributeValue.Item1, out var attributeValueId)) 
+                        continue;
+
+                    var value = _productAttributeService.GetProductAttributeValueById(attributeValueId);
+                    if (value == null) 
+                        continue;
+
+                    if (!string.IsNullOrEmpty(attributeValue.Item2) && int.TryParse(attributeValue.Item2, out var quantity) && quantity != value.Quantity)
                     {
-                        var value = _productAttributeService.GetProductAttributeValueById(attributeValueId);
-                        if (value != null)
-                        {
-                            if (!string.IsNullOrEmpty(attributeValue.Item2) && int.TryParse(attributeValue.Item2, out int quantity) && quantity != value.Quantity)
-                            {
-                                //if customer enters quantity, use new entity with new quantity
-                                var oldValue = _context.LoadOriginalCopy(value);
-                                oldValue.ProductAttributeMapping = attribute;
-                                oldValue.Quantity = quantity;
-                                values.Add(oldValue);
-                            }
-                            else
-                                values.Add(value);
-                        }
+                        //if customer enters quantity, use new entity with new quantity
+                        var oldValue = _context.LoadOriginalCopy(value);
+                        oldValue.ProductAttributeMapping = attribute;
+                        oldValue.Quantity = quantity;
+                        values.Add(oldValue);
                     }
+                    else
+                        values.Add(value);
                 }
             }
+
             return values;
         }
 
@@ -198,21 +205,21 @@ namespace Nop.Services.Catalog
                 var nodeList1 = xmlDoc.SelectNodes(@"//Attributes/ProductAttribute");
                 foreach (XmlNode node1 in nodeList1)
                 {
-                    if (node1.Attributes != null && node1.Attributes["ID"] != null)
+                    if (node1.Attributes?["ID"] == null) 
+                        continue;
+
+                    var str1 = node1.Attributes["ID"].InnerText.Trim();
+                    if (!int.TryParse(str1, out var id)) 
+                        continue;
+
+                    if (id != productAttributeMappingId) 
+                        continue;
+
+                    var nodeList2 = node1.SelectNodes(@"ProductAttributeValue/Value");
+                    foreach (XmlNode node2 in nodeList2)
                     {
-                        var str1 = node1.Attributes["ID"].InnerText.Trim();
-                        if (int.TryParse(str1, out int id))
-                        {
-                            if (id == productAttributeMappingId)
-                            {
-                                var nodeList2 = node1.SelectNodes(@"ProductAttributeValue/Value");
-                                foreach (XmlNode node2 in nodeList2)
-                                {
-                                    var value = node2.InnerText.Trim();
-                                    selectedValues.Add(value);
-                                }
-                            }
-                        }
+                        var value = node2.InnerText.Trim();
+                        selectedValues.Add(value);
                     }
                 }
             }
@@ -220,6 +227,7 @@ namespace Nop.Services.Catalog
             {
                 Debug.Write(exc.ToString());
             }
+
             return selectedValues;
         }
 
@@ -246,6 +254,7 @@ namespace Nop.Services.Catalog
                 {
                     xmlDoc.LoadXml(attributesXml);
                 }
+
                 var rootElement = (XmlElement)xmlDoc.SelectSingleNode(@"//Attributes");
 
                 XmlElement attributeElement = null;
@@ -253,18 +262,18 @@ namespace Nop.Services.Catalog
                 var nodeList1 = xmlDoc.SelectNodes(@"//Attributes/ProductAttribute");
                 foreach (XmlNode node1 in nodeList1)
                 {
-                    if (node1.Attributes != null && node1.Attributes["ID"] != null)
-                    {
-                        var str1 = node1.Attributes["ID"].InnerText.Trim();
-                        if (int.TryParse(str1, out int id))
-                        {
-                            if (id == productAttributeMapping.Id)
-                            {
-                                attributeElement = (XmlElement)node1;
-                                break;
-                            }
-                        }
-                    }
+                    if (node1.Attributes?["ID"] == null) 
+                        continue;
+
+                    var str1 = node1.Attributes["ID"].InnerText.Trim();
+                    if (!int.TryParse(str1, out var id)) 
+                        continue;
+
+                    if (id != productAttributeMapping.Id) 
+                        continue;
+
+                    attributeElement = (XmlElement)node1;
+                    break;
                 }
 
                 //create new one if not found
@@ -274,6 +283,7 @@ namespace Nop.Services.Catalog
                     attributeElement.SetAttribute("ID", productAttributeMapping.Id.ToString());
                     rootElement.AppendChild(attributeElement);
                 }
+
                 var attributeValueElement = xmlDoc.CreateElement("ProductAttributeValue");
                 attributeElement.AppendChild(attributeValueElement);
 
@@ -295,6 +305,7 @@ namespace Nop.Services.Catalog
             {
                 Debug.Write(exc.ToString());
             }
+
             return result;
         }
 
@@ -319,6 +330,7 @@ namespace Nop.Services.Catalog
                 {
                     xmlDoc.LoadXml(attributesXml);
                 }
+
                 var rootElement = (XmlElement)xmlDoc.SelectSingleNode(@"//Attributes");
 
                 XmlElement attributeElement = null;
@@ -326,18 +338,18 @@ namespace Nop.Services.Catalog
                 var nodeList1 = xmlDoc.SelectNodes(@"//Attributes/ProductAttribute");
                 foreach (XmlNode node1 in nodeList1)
                 {
-                    if (node1.Attributes != null && node1.Attributes["ID"] != null)
-                    {
-                        var str1 = node1.Attributes["ID"].InnerText.Trim();
-                        if (int.TryParse(str1, out int id))
-                        {
-                            if (id == productAttributeMapping.Id)
-                            {
-                                attributeElement = (XmlElement)node1;
-                                break;
-                            }
-                        }
-                    }
+                    if (node1.Attributes?["ID"] == null) 
+                        continue;
+
+                    var str1 = node1.Attributes["ID"].InnerText.Trim();
+                    if (!int.TryParse(str1, out var id)) 
+                        continue;
+
+                    if (id != productAttributeMapping.Id) 
+                        continue;
+
+                    attributeElement = (XmlElement)node1;
+                    break;
                 }
 
                 //found
@@ -352,6 +364,7 @@ namespace Nop.Services.Catalog
             {
                 Debug.Write(exc.ToString());
             }
+
             return result;
         }
 
@@ -370,11 +383,13 @@ namespace Nop.Services.Catalog
             {
                 attributes1 = attributes1.Where(x => !x.IsNonCombinable()).ToList();
             }
+
             var attributes2 = ParseProductAttributeMappings(attributesXml2);
             if (ignoreNonCombinableAttributes)
             {
                 attributes2 = attributes2.Where(x => !x.IsNonCombinable()).ToList();
             }
+
             if (attributes1.Count != attributes2.Count)
                 return false;
 
@@ -384,47 +399,47 @@ namespace Nop.Services.Catalog
                 var hasAttribute = false;
                 foreach (var a2 in attributes2)
                 {
-                    if (a1.Id == a2.Id)
-                    {
-                        hasAttribute = true;
-                        var values1Str = ParseValuesWithQuantity(attributesXml1, a1.Id);
-                        var values2Str = ParseValuesWithQuantity(attributesXml2, a2.Id);
-                        if (values1Str.Count == values2Str.Count)
-                        {
-                            foreach (var str1 in values1Str)
-                            {
-                                var hasValue = false;
-                                foreach (var str2 in values2Str)
-                                {
-                                    //case insensitive? 
-                                    //if (str1.Trim().ToLower() == str2.Trim().ToLower())
-                                    if (str1.Item1.Trim() == str2.Item1.Trim())
-                                    {
-                                        hasValue = ignoreQuantity ? true : str1.Item2.Trim() == str2.Item2.Trim();
-                                        break;
-                                    }
-                                }
+                    if (a1.Id != a2.Id) 
+                        continue;
 
-                                if (!hasValue)
-                                {
-                                    attributesEqual = false;
-                                    break;
-                                }
-                            }
-                        }
-                        else
+                    hasAttribute = true;
+                    var values1Str = ParseValuesWithQuantity(attributesXml1, a1.Id);
+                    var values2Str = ParseValuesWithQuantity(attributesXml2, a2.Id);
+                    if (values1Str.Count == values2Str.Count)
+                    {
+                        foreach (var str1 in values1Str)
                         {
+                            var hasValue = false;
+                            foreach (var str2 in values2Str)
+                            {
+                                //case insensitive? 
+                                //if (str1.Trim().ToLower() == str2.Trim().ToLower())
+                                if (str1.Item1.Trim() != str2.Item1.Trim()) 
+                                    continue;
+
+                                hasValue = ignoreQuantity || str1.Item2.Trim() == str2.Item2.Trim();
+                                break;
+                            }
+
+                            if (hasValue) 
+                                continue;
+
                             attributesEqual = false;
                             break;
                         }
                     }
+                    else
+                    {
+                        attributesEqual = false;
+                        break;
+                    }
                 }
 
-                if (hasAttribute == false)
-                {
-                    attributesEqual = false;
-                    break;
-                }
+                if (hasAttribute) 
+                    continue;
+
+                attributesEqual = false;
+                break;
             }
 
             return attributesEqual;
@@ -512,6 +527,7 @@ namespace Nop.Services.Catalog
             {
                 allProductAttributMappings = allProductAttributMappings.Where(x => !x.IsNonCombinable()).ToList();
             }
+
             var allPossibleAttributeCombinations = new List<List<ProductAttributeMapping>>();
             for (var counter = 0; counter < (1 << allProductAttributMappings.Count); ++counter)
             {
@@ -574,11 +590,12 @@ namespace Nop.Services.Catalog
                             //checkboxes could have several values ticked
                             foreach (var checkboxCombination in allPossibleCheckboxCombinations)
                             {
-                                var tmp1 = "";
+                                var tmp1 = string.Empty;
                                 foreach (var checkboxValue in checkboxCombination)
                                 {
                                     tmp1 = AddProductAttribute(tmp1, pam, checkboxValue.Id.ToString());
                                 }
+
                                 if (!string.IsNullOrEmpty(tmp1))
                                 {
                                     attributesXml.Add(tmp1);
@@ -590,7 +607,7 @@ namespace Nop.Services.Catalog
                             //other attribute types (dropdownlist, radiobutton, color squares)
                             foreach (var attributeValue in attributeValues)
                             {
-                                var tmp1 = AddProductAttribute("", pam, attributeValue.Id.ToString());
+                                var tmp1 = AddProductAttribute(string.Empty, pam, attributeValue.Id.ToString());
                                 attributesXml.Add(tmp1);
                             }
                         }
@@ -612,6 +629,7 @@ namespace Nop.Services.Catalog
                                     {
                                         tmp1 = AddProductAttribute(tmp1, pam, checkboxValue.Id.ToString());
                                     }
+
                                     if (!string.IsNullOrEmpty(tmp1))
                                     {
                                         attributesXmlTmp.Add(tmp1);
@@ -631,10 +649,12 @@ namespace Nop.Services.Catalog
                                 }
                             }
                         }
+
                         attributesXml.Clear();
                         attributesXml.AddRange(attributesXmlTmp);
                     }
                 }
+
                 allAttributesXml.AddRange(attributesXml);
             }
 
@@ -654,6 +674,7 @@ namespace Nop.Services.Catalog
                     }
                 }
             }
+
             return allAttributesXml;
         }
 
@@ -728,6 +749,7 @@ namespace Nop.Services.Catalog
             {
                 Debug.Write(exc.ToString());
             }
+
             return result;
         }
 

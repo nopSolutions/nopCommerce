@@ -43,7 +43,7 @@ namespace Nop.Services.Vendors
 
         #endregion
 
-        #region Vendor attribute vallues
+        #region Vendor attribute values
 
         /// <summary>
         /// Gets vendor attribute values by vendor attribute identifier

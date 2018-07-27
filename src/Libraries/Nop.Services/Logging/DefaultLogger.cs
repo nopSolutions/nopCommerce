@@ -142,6 +142,7 @@ namespace Nop.Services.Logging
                 var logLevelId = (int)logLevel.Value;
                 query = query.Where(l => logLevelId == l.LogLevelId);
             }
+
             if (!string.IsNullOrEmpty(message))
                 query = query.Where(l => l.ShortMessage.Contains(message) || l.FullMessage.Contains(message));
             query = query.OrderByDescending(l => l.CreatedOnUtc);
@@ -185,6 +186,7 @@ namespace Nop.Services.Logging
                 if (log != null)
                     sortedLogItems.Add(log);
             }
+
             return sortedLogItems;
         }
 
@@ -231,8 +233,8 @@ namespace Nop.Services.Logging
             if (exception is System.Threading.ThreadAbortException)
                 return;
 
-            if (this.IsEnabled(LogLevel.Information))
-                this.InsertLog(LogLevel.Information, message, exception?.ToString() ?? string.Empty, customer);
+            if (IsEnabled(LogLevel.Information))
+                InsertLog(LogLevel.Information, message, exception?.ToString() ?? string.Empty, customer);
         }
 
         /// <summary>
@@ -247,8 +249,8 @@ namespace Nop.Services.Logging
             if (exception is System.Threading.ThreadAbortException)
                 return;
 
-            if (this.IsEnabled(LogLevel.Warning))
-                this.InsertLog(LogLevel.Warning, message, exception?.ToString() ?? string.Empty, customer);
+            if (IsEnabled(LogLevel.Warning))
+                InsertLog(LogLevel.Warning, message, exception?.ToString() ?? string.Empty, customer);
         }
 
         /// <summary>
@@ -263,8 +265,8 @@ namespace Nop.Services.Logging
             if (exception is System.Threading.ThreadAbortException)
                 return;
 
-            if (this.IsEnabled(LogLevel.Error))
-                this.InsertLog(LogLevel.Error, message, exception?.ToString() ?? string.Empty, customer);
+            if (IsEnabled(LogLevel.Error))
+                InsertLog(LogLevel.Error, message, exception?.ToString() ?? string.Empty, customer);
         }
 
         #endregion

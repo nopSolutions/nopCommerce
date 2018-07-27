@@ -115,10 +115,7 @@ namespace Nop.Services.Media
         /// <returns>True if download is allowed; otherwise, false.</returns>
         public virtual bool IsDownloadAllowed(OrderItem orderItem)
         {
-            if (orderItem == null)
-                return false;
-
-            var order = orderItem.Order;
+            var order = orderItem?.Order;
             if (order == null || order.Deleted)
                 return false;
 
@@ -134,42 +131,40 @@ namespace Nop.Services.Media
             switch (product.DownloadActivationType)
             {
                 case DownloadActivationType.WhenOrderIsPaid:
+                    if (order.PaymentStatus == PaymentStatus.Paid && order.PaidDateUtc.HasValue)
                     {
-                        if (order.PaymentStatus == PaymentStatus.Paid && order.PaidDateUtc.HasValue)
+                        //expiration date
+                        if (product.DownloadExpirationDays.HasValue)
                         {
-                            //expiration date
-                            if (product.DownloadExpirationDays.HasValue)
-                            {
-                                if (order.PaidDateUtc.Value.AddDays(product.DownloadExpirationDays.Value) > DateTime.UtcNow)
-                                {
-                                    return true;
-                                }
-                            }
-                            else
+                            if (order.PaidDateUtc.Value.AddDays(product.DownloadExpirationDays.Value) > DateTime.UtcNow)
                             {
                                 return true;
                             }
                         }
+                        else
+                        {
+                            return true;
+                        }
                     }
+                    
                     break;
                 case DownloadActivationType.Manually:
+                    if (orderItem.IsDownloadActivated)
                     {
-                        if (orderItem.IsDownloadActivated)
+                        //expiration date
+                        if (product.DownloadExpirationDays.HasValue)
                         {
-                            //expiration date
-                            if (product.DownloadExpirationDays.HasValue)
-                            {
-                                if (order.CreatedOnUtc.AddDays(product.DownloadExpirationDays.Value) > DateTime.UtcNow)
-                                {
-                                    return true;
-                                }
-                            }
-                            else
+                            if (order.CreatedOnUtc.AddDays(product.DownloadExpirationDays.Value) > DateTime.UtcNow)
                             {
                                 return true;
                             }
                         }
+                        else
+                        {
+                            return true;
+                        }
                     }
+                   
                     break;
                 default:
                     break;

@@ -53,6 +53,7 @@ namespace Nop.Services.Catalog
 
         [JsonIgnore]
         public override ICollection<DiscountCategoryMapping> DiscountCategoryMappings => throw new Exception("Entity for caching doesn't support navigation properties");
+
         [JsonIgnore]
         public override IList<Discount> AppliedDiscounts => throw new Exception("Entity for caching doesn't support navigation properties");
     }

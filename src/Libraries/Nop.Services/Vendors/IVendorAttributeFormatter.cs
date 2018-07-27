@@ -1,4 +1,3 @@
-
 namespace Nop.Services.Vendors
 {
     /// <summary>

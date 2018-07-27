@@ -59,7 +59,7 @@ namespace Nop.Services.Common
                 for (var j = 0; j < valuesStr.Count; j++)
                 {
                     var valueStr = valuesStr[j];
-                    var formattedAttribute = "";
+                    var formattedAttribute = string.Empty;
                     if (!attribute.ShouldHaveValues())
                     {
                         //no values
@@ -89,7 +89,7 @@ namespace Nop.Services.Common
                     }
                     else
                     {
-                        if (int.TryParse(valueStr, out int attributeValueId))
+                        if (int.TryParse(valueStr, out var attributeValueId))
                         {
                             var attributeValue = _addressAttributeService.GetAddressAttributeValueById(attributeValueId);
                             if (attributeValue != null)
@@ -102,12 +102,13 @@ namespace Nop.Services.Common
                         }
                     }
 
-                    if (!string.IsNullOrEmpty(formattedAttribute))
-                    {
-                        if (i != 0 || j != 0)
-                            result.Append(separator);
-                        result.Append(formattedAttribute);
-                    }
+                    if (string.IsNullOrEmpty(formattedAttribute)) 
+                        continue;
+
+                    if (i != 0 || j != 0)
+                        result.Append(separator);
+
+                    result.Append(formattedAttribute);
                 }
             }
 

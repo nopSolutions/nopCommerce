@@ -2885,6 +2885,7 @@ label, label + * {
 .inputs.accept-consent label {
     width: auto;
     margin-left: 10px;
+    margin-bottom: 0;
 }
 .registration-page .button-1,
 .registration-result-page .button-1,
@@ -6177,6 +6178,9 @@ pre {
 .center-2 .inputs label {
 	width: 136px;
 }
+.inputs.accept-consent label {
+		width: auto;
+}
 .page-title a + h1 {
 	float: left;
 }
@@ -6913,6 +6917,9 @@ pre {
 }
 .center-2 .inputs label {
 	width: 213px;
+}
+.inputs.accept-consent label {
+	width: auto;
 }
 
 

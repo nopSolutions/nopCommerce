@@ -28,6 +28,7 @@ namespace Nop.Services.Messages
         private readonly IRepository<MessageTemplate> _messageTemplateRepository;
         private readonly IRepository<StoreMapping> _storeMappingRepository;
         private readonly IStoreMappingService _storeMappingService;
+        private readonly string _entityName;
 
         #endregion
 
@@ -52,6 +53,7 @@ namespace Nop.Services.Messages
             this._messageTemplateRepository = messageTemplateRepository;
             this._storeMappingRepository = storeMappingRepository;
             this._storeMappingService = storeMappingService;
+            this._entityName = typeof(MessageTemplate).Name;
         }
 
         #endregion
@@ -161,19 +163,19 @@ namespace Nop.Services.Messages
             {
                 var query = _messageTemplateRepository.Table;
                 query = query.OrderBy(t => t.Name);
+                
+                if (storeId <= 0 || _catalogSettings.IgnoreStoreLimitations) 
+                    return query.ToList();
+                
+                //store mapping
+                query = from t in query
+                    join sm in _storeMappingRepository.Table
+                        on new { c1 = t.Id, c2 = _entityName } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into tSm
+                    from sm in tSm.DefaultIfEmpty()
+                    where !t.LimitedToStores || storeId == sm.StoreId
+                    select t;
 
-                //Store mapping
-                if (storeId > 0 && !_catalogSettings.IgnoreStoreLimitations)
-                {
-                    query = from t in query
-                            join sm in _storeMappingRepository.Table
-                            on new { c1 = t.Id, c2 = "MessageTemplate" } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into tSm
-                            from sm in tSm.DefaultIfEmpty()
-                            where !t.LimitedToStores || storeId == sm.StoreId
-                            select t;
-
-                    query = query.Distinct().OrderBy(t => t.Name);
-                }
+                query = query.Distinct().OrderBy(t => t.Name);
 
                 return query.ToList();
             });

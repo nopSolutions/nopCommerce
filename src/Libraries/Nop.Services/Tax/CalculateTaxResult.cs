@@ -26,13 +26,7 @@ namespace Nop.Services.Tax
         /// <summary>
         /// Gets a value indicating whether request has been completed successfully
         /// </summary>
-        public bool Success
-        {
-            get
-            {
-                return !Errors.Any();
-            }
-        }
+        public bool Success => !Errors.Any();
 
         /// <summary>
         /// Add error

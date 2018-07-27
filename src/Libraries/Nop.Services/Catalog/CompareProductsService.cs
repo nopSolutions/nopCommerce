@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Http;
 
 namespace Nop.Services.Catalog
 {
@@ -45,14 +46,15 @@ namespace Nop.Services.Catalog
                 return new List<int>();
 
             //try to get cookie
-            if (!httpContext.Request.Cookies.TryGetValue(NopCatalogDefaults.CompareProductsCookieName, out string productIdsCookie) || string.IsNullOrEmpty(productIdsCookie))
+            var cookieName = $"{NopCookieDefaults.Prefix}{NopCookieDefaults.ComparedProductsCookie}";
+            if (!httpContext.Request.Cookies.TryGetValue(cookieName, out var productIdsCookie) || string.IsNullOrEmpty(productIdsCookie))
                 return new List<int>();
 
             //get array of string product identifiers from cookie
             var productIds = productIdsCookie.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
 
             //return list of int product identifiers
-            return productIds.Select(productId => int.Parse(productId)).Distinct().ToList();
+            return productIds.Select(int.Parse).Distinct().ToList();
         }
 
         /// <summary>
@@ -62,7 +64,8 @@ namespace Nop.Services.Catalog
         protected virtual void AddCompareProductsCookie(IEnumerable<int> comparedProductIds)
         {
             //delete current cookie if exists
-            _httpContextAccessor.HttpContext.Response.Cookies.Delete(NopCatalogDefaults.CompareProductsCookieName);
+            var cookieName = $"{NopCookieDefaults.Prefix}{NopCookieDefaults.ComparedProductsCookie}";
+            _httpContextAccessor.HttpContext.Response.Cookies.Delete(cookieName);
 
             //create cookie value
             var comparedProductIdsCookie = string.Join(",", comparedProductIds);
@@ -76,7 +79,7 @@ namespace Nop.Services.Catalog
             };
 
             //add cookie
-            _httpContextAccessor.HttpContext.Response.Cookies.Append(NopCatalogDefaults.CompareProductsCookieName, comparedProductIdsCookie, cookieOptions);
+            _httpContextAccessor.HttpContext.Response.Cookies.Append(cookieName, comparedProductIdsCookie, cookieOptions);
         }
 
         #endregion
@@ -88,11 +91,12 @@ namespace Nop.Services.Catalog
         /// </summary>
         public virtual void ClearCompareProducts()
         {
-            if (_httpContextAccessor.HttpContext == null || _httpContextAccessor.HttpContext.Response == null)
+            if (_httpContextAccessor.HttpContext?.Response == null)
                 return;
 
             //sets an expired cookie
-            _httpContextAccessor.HttpContext.Response.Cookies.Delete(NopCatalogDefaults.CompareProductsCookieName);
+            var cookieName = $"{NopCookieDefaults.Prefix}{NopCookieDefaults.ComparedProductsCookie}";
+            _httpContextAccessor.HttpContext.Response.Cookies.Delete(cookieName);
         }
 
         /// <summary>
@@ -115,7 +119,7 @@ namespace Nop.Services.Catalog
         /// <param name="productId">Product identifier</param>
         public virtual void RemoveProductFromCompareList(int productId)
         {
-            if (_httpContextAccessor.HttpContext == null || _httpContextAccessor.HttpContext.Response == null)
+            if (_httpContextAccessor.HttpContext?.Response == null)
                 return;
 
             //get list of compared product identifiers
@@ -138,7 +142,7 @@ namespace Nop.Services.Catalog
         /// <param name="productId">Product identifier</param>
         public virtual void AddProductToCompareList(int productId)
         {
-            if (_httpContextAccessor.HttpContext == null || _httpContextAccessor.HttpContext.Response == null)
+            if (_httpContextAccessor.HttpContext?.Response == null)
                 return;
 
             //get list of compared product identifiers

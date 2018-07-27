@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
 using Nop.Core.Data;
-using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Messages;
 using Nop.Data;
 using Nop.Data.Extensions;
@@ -18,8 +17,6 @@ namespace Nop.Services.Messages
     {
         #region Fields
 
-        private readonly CommonSettings _commonSettings;
-        private readonly IDataProvider _dataProvider;
         private readonly IDbContext _dbContext;
         private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<QueuedEmail> _queuedEmailRepository;
@@ -28,14 +25,10 @@ namespace Nop.Services.Messages
 
         #region Ctor
 
-        public QueuedEmailService(CommonSettings commonSettings,
-            IDataProvider dataProvider,
-            IDbContext dbContext,
+        public QueuedEmailService(IDbContext dbContext,
             IEventPublisher eventPublisher,
             IRepository<QueuedEmail> queuedEmailRepository)
         {
-            this._commonSettings = commonSettings;
-            this._dataProvider = dataProvider;
             this._dbContext = dbContext;
             this._eventPublisher = eventPublisher;
             this._queuedEmailRepository = queuedEmailRepository;
@@ -119,7 +112,6 @@ namespace Nop.Services.Messages
                 return null;
 
             return _queuedEmailRepository.GetById(queuedEmailId);
-
         }
 
         /// <summary>
@@ -144,6 +136,7 @@ namespace Nop.Services.Messages
                 if (queuedEmail != null)
                     sortedQueuedEmails.Add(queuedEmail);
             }
+
             return sortedQueuedEmails;
         }
 
@@ -185,6 +178,7 @@ namespace Nop.Services.Messages
                 var nowUtc = DateTime.UtcNow;
                 query = query.Where(qe => !qe.DontSendBeforeDateUtc.HasValue || qe.DontSendBeforeDateUtc.Value <= nowUtc);
             }
+
             query = query.Where(qe => qe.SentTries < maxSendTries);
             query = loadNewest ?
                 //load the newest records
@@ -208,7 +202,6 @@ namespace Nop.Services.Messages
             //var queuedEmails = _queuedEmailRepository.Table.ToList();
             //foreach (var qe in queuedEmails)
             //    _queuedEmailRepository.Delete(qe);
-
         }
 
         #endregion

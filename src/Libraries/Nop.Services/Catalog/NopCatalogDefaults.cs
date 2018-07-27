@@ -1,5 +1,4 @@
-﻿
-namespace Nop.Services.Catalog
+﻿namespace Nop.Services.Catalog
 {
     /// <summary>
     /// Represents default values related to catalog services
@@ -193,16 +192,6 @@ namespace Nop.Services.Catalog
         /// Gets a key pattern to clear cache
         /// </summary>
         public static string ProductManufacturerIdsPatternCacheKey => "Nop.totals.product.manufacturerids";
-
-        /// <summary>
-        /// Gets a name of cookie to store products to compare
-        /// </summary>
-        public static string CompareProductsCookieName => ".Nop.CompareProducts";
-
-        /// <summary>
-        /// Gets a name of cookie to store recently viewed products
-        /// </summary>
-        public static string RecentlyViewedProductsCookieName => ".Nop.RecentlyViewedProducts";
 
         /// <summary>
         /// Gets a template of product name on copying

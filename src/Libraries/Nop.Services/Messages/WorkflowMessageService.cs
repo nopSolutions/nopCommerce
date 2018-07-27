@@ -116,11 +116,8 @@ namespace Nop.Services.Messages
             if (emailAccountId == 0)
                 emailAccountId = messageTemplate.EmailAccountId;
 
-            var emailAccount = _emailAccountService.GetEmailAccountById(emailAccountId);
-            if (emailAccount == null)
-                emailAccount = _emailAccountService.GetEmailAccountById(_emailAccountSettings.DefaultEmailAccountId);
-            if (emailAccount == null)
-                emailAccount = _emailAccountService.GetAllEmailAccounts().FirstOrDefault();
+            var emailAccount = (_emailAccountService.GetEmailAccountById(emailAccountId) ?? _emailAccountService.GetEmailAccountById(_emailAccountSettings.DefaultEmailAccountId)) ??
+                               _emailAccountService.GetAllEmailAccounts().FirstOrDefault();
             return emailAccount;
         }
 
@@ -140,6 +137,7 @@ namespace Nop.Services.Messages
                 //load any language from the specified store
                 language = _languageService.GetAllLanguages(storeId: storeId).FirstOrDefault();
             }
+
             if (language == null || !language.Published)
             {
                 //load any language
@@ -148,6 +146,7 @@ namespace Nop.Services.Messages
 
             if (language == null)
                 throw new Exception("No active language could be loaded");
+
             return language.Id;
         }
 
@@ -1698,7 +1697,7 @@ namespace Nop.Services.Messages
             if (giftCard == null)
                 throw new ArgumentNullException(nameof(giftCard));
 
-            var order = giftCard.PurchasedWithOrderItem != null ? giftCard.PurchasedWithOrderItem.Order : null;
+            var order = giftCard.PurchasedWithOrderItem?.Order;
             var store = order != null ? _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore : _storeContext.CurrentStore;
 
             languageId = EnsureLanguageIsActive(languageId, store.Id);
@@ -2080,10 +2079,12 @@ namespace Nop.Services.Messages
                 return new List<int>();
 
             //tokens
-            var commonTokens = new List<Token>();
-            commonTokens.Add(new Token("ContactUs.SenderEmail", senderEmail));
-            commonTokens.Add(new Token("ContactUs.SenderName", senderName));
-            commonTokens.Add(new Token("ContactUs.Body", body, true));
+            var commonTokens = new List<Token>
+            {
+                new Token("ContactUs.SenderEmail", senderEmail),
+                new Token("ContactUs.SenderName", senderName),
+                new Token("ContactUs.Body", body, true)
+            };
 
             return messageTemplates.Select(messageTemplate =>
             {
@@ -2147,10 +2148,12 @@ namespace Nop.Services.Messages
                 return new List<int>();
 
             //tokens
-            var commonTokens = new List<Token>();
-            commonTokens.Add(new Token("ContactUs.SenderEmail", senderEmail));
-            commonTokens.Add(new Token("ContactUs.SenderName", senderName));
-            commonTokens.Add(new Token("ContactUs.Body", body, true));
+            var commonTokens = new List<Token>
+            {
+                new Token("ContactUs.SenderEmail", senderEmail),
+                new Token("ContactUs.SenderName", senderName),
+                new Token("ContactUs.Body", body, true)
+            };
 
             return messageTemplates.Select(messageTemplate =>
             {

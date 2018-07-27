@@ -96,6 +96,7 @@ namespace Nop.Services.Forums
             {
                 return;
             }
+
             var forum = GetForumById(forumId);
             if (forum == null)
             {
@@ -160,6 +161,7 @@ namespace Nop.Services.Forums
             {
                 return;
             }
+
             var forumTopic = GetTopicById(forumTopicId);
             if (forumTopic == null)
             {
@@ -225,15 +227,6 @@ namespace Nop.Services.Forums
             var numPosts = query.Count();
 
             _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.ForumPostCountAttribute, numPosts);
-        }
-
-        private bool IsForumModerator(Customer customer)
-        {
-            if (customer.IsForumModerator())
-            {
-                return true;
-            }
-            return false;
         }
 
         #endregion
@@ -515,11 +508,11 @@ namespace Nop.Services.Forums
             if (forumTopic == null)
                 return null;
 
-            if (increaseViews)
-            {
-                forumTopic.Views = ++forumTopic.Views;
-                UpdateTopic(forumTopic);
-            }
+            if (!increaseViews) 
+                return forumTopic;
+
+            forumTopic.Views = ++forumTopic.Views;
+            UpdateTopic(forumTopic);
 
             return forumTopic;
         }
@@ -544,6 +537,7 @@ namespace Nop.Services.Forums
             {
                 limitDate = DateTime.UtcNow.AddDays(-limitDays);
             }
+
             var searchKeywords = !string.IsNullOrEmpty(keywords);
             var searchTopicTitles = searchType == ForumSearchType.All || searchType == ForumSearchType.TopicTitlesOnly;
             var searchPostText = searchType == ForumSearchType.All || searchType == ForumSearchType.PostTextOnly;
@@ -552,8 +546,7 @@ namespace Nop.Services.Forums
                          where
                          (forumId == 0 || ft.ForumId == forumId) &&
                          (customerId == 0 || ft.CustomerId == customerId) &&
-                         (
-                            !searchKeywords ||
+                         (!searchKeywords ||
                             (searchTopicTitles && ft.Subject.Contains(keywords)) ||
                             (searchPostText && fp.Text.Contains(keywords))) &&
                          (!limitDate.HasValue || limitDate.Value <= ft.LastPostTime)
@@ -581,7 +574,7 @@ namespace Nop.Services.Forums
             var query1 = from ft in _forumTopicRepository.Table
                          where
                          (forumId == 0 || ft.ForumId == forumId) &&
-                         (ft.LastPostTime.HasValue)
+                         ft.LastPostTime.HasValue
                          select ft.Id;
 
             var query2 = from ft in _forumTopicRepository.Table
@@ -616,26 +609,26 @@ namespace Nop.Services.Forums
 
             //event notification
             _eventPublisher.EntityInserted(forumTopic);
+            
+            if (!sendNotifications) 
+                return;
 
             //send notifications
-            if (sendNotifications)
+            var forum = forumTopic.Forum;
+            var subscriptions = GetAllSubscriptions(forumId: forum.Id);
+            var languageId = _workContext.WorkingLanguage.Id;
+
+            foreach (var subscription in subscriptions)
             {
-                var forum = forumTopic.Forum;
-                var subscriptions = GetAllSubscriptions(forumId: forum.Id);
-                var languageId = _workContext.WorkingLanguage.Id;
-
-                foreach (var subscription in subscriptions)
+                if (subscription.CustomerId == forumTopic.CustomerId)
                 {
-                    if (subscription.CustomerId == forumTopic.CustomerId)
-                    {
-                        continue;
-                    }
+                    continue;
+                }
 
-                    if (!string.IsNullOrEmpty(subscription.Customer.Email))
-                    {
-                        _workflowMessageService.SendNewForumTopicMessage(subscription.Customer, forumTopic,
-                            forum, languageId);
-                    }
+                if (!string.IsNullOrEmpty(subscription.Customer.Email))
+                {
+                    _workflowMessageService.SendNewForumTopicMessage(subscription.Customer, forumTopic,
+                        forum, languageId);
                 }
             }
         }
@@ -732,6 +725,7 @@ namespace Nop.Services.Forums
             {
                 UpdateForumTopicStats(forumTopicId);
             }
+
             UpdateForumStats(forumId);
             UpdateCustomerStats(customerId);
 
@@ -741,7 +735,6 @@ namespace Nop.Services.Forums
 
             //event notification
             _eventPublisher.EntityDeleted(forumPost);
-
         }
 
         /// <summary>
@@ -793,10 +786,12 @@ namespace Nop.Services.Forums
             {
                 query = query.Where(fp => forumTopicId == fp.TopicId);
             }
+
             if (customerId > 0)
             {
                 query = query.Where(fp => customerId == fp.CustomerId);
             }
+
             if (!string.IsNullOrEmpty(keywords))
             {
                 query = query.Where(fp => fp.Text.Contains(keywords));
@@ -840,29 +835,29 @@ namespace Nop.Services.Forums
             _eventPublisher.EntityInserted(forumPost);
 
             //notifications
-            if (sendNotifications)
+            if (!sendNotifications) 
+                return;
+
+            var forum = forumTopic.Forum;
+            var subscriptions = GetAllSubscriptions(topicId: forumTopic.Id);
+
+            var languageId = _workContext.WorkingLanguage.Id;
+
+            var friendlyTopicPageIndex = CalculateTopicPageIndex(forumPost.TopicId,
+                                             _forumSettings.PostsPageSize > 0 ? _forumSettings.PostsPageSize : 10,
+                                             forumPost.Id) + 1;
+
+            foreach (var subscription in subscriptions)
             {
-                var forum = forumTopic.Forum;
-                var subscriptions = GetAllSubscriptions(topicId: forumTopic.Id);
-
-                var languageId = _workContext.WorkingLanguage.Id;
-
-                var friendlyTopicPageIndex = CalculateTopicPageIndex(forumPost.TopicId,
-                    _forumSettings.PostsPageSize > 0 ? _forumSettings.PostsPageSize : 10,
-                    forumPost.Id) + 1;
-
-                foreach (var subscription in subscriptions)
+                if (subscription.CustomerId == forumPost.CustomerId)
                 {
-                    if (subscription.CustomerId == forumPost.CustomerId)
-                    {
-                        continue;
-                    }
+                    continue;
+                }
 
-                    if (!string.IsNullOrEmpty(subscription.Customer.Email))
-                    {
-                        _workflowMessageService.SendNewForumPostMessage(subscription.Customer, forumPost,
-                            forumTopic, forum, friendlyTopicPageIndex, languageId);
-                    }
+                if (!string.IsNullOrEmpty(subscription.Customer.Email))
+                {
+                    _workflowMessageService.SendNewForumPostMessage(subscription.Customer, forumPost,
+                        forumTopic, forum, friendlyTopicPageIndex, languageId);
                 }
             }
         }
@@ -953,6 +948,7 @@ namespace Nop.Services.Forums
                 query = query.Where(pm => pm.Subject.Contains(keywords));
                 query = query.Where(pm => pm.Text.Contains(keywords));
             }
+
             query = query.OrderByDescending(pm => pm.CreatedOnUtc);
 
             var privateMessages = new PagedList<PrivateMessage>(query, pageIndex, pageSize);
@@ -1062,8 +1058,9 @@ namespace Nop.Services.Forums
                           where
                           (customerId == 0 || fs.CustomerId == customerId) &&
                           (forumId == 0 || fs.ForumId == forumId) &&
-                          (topicId == 0 || fs.TopicId == topicId) &&
-                          (c.Active && !c.Deleted)
+                          (topicId == 0 || fs.TopicId == topicId) && 
+                          c.Active && 
+                          !c.Deleted
                           select fs.SubscriptionGuid;
 
             var query = from fs in _forumSubscriptionRepository.Table
@@ -1132,11 +1129,6 @@ namespace Nop.Services.Forums
                 return false;
             }
 
-            if (IsForumModerator(customer))
-            {
-                return true;
-            }
-
             return true;
         }
 
@@ -1163,18 +1155,17 @@ namespace Nop.Services.Forums
                 return false;
             }
 
-            if (IsForumModerator(customer))
+            if (customer.IsForumModerator())
             {
                 return true;
             }
 
-            if (_forumSettings.AllowCustomersToEditPosts)
-            {
-                var ownTopic = customer.Id == topic.CustomerId;
-                return ownTopic;
-            }
+            if (!_forumSettings.AllowCustomersToEditPosts) 
+                return false;
 
-            return false;
+            var ownTopic = customer.Id == topic.CustomerId;
+
+            return ownTopic;
         }
 
         /// <summary>
@@ -1200,12 +1191,7 @@ namespace Nop.Services.Forums
                 return false;
             }
 
-            if (IsForumModerator(customer))
-            {
-                return true;
-            }
-
-            return false;
+            return customer.IsForumModerator();
         }
 
         /// <summary>
@@ -1231,18 +1217,17 @@ namespace Nop.Services.Forums
                 return false;
             }
 
-            if (IsForumModerator(customer))
+            if (customer.IsForumModerator())
             {
                 return true;
             }
 
-            if (_forumSettings.AllowCustomersToDeletePosts)
-            {
-                var ownTopic = customer.Id == topic.CustomerId;
-                return ownTopic;
-            }
+            if (!_forumSettings.AllowCustomersToDeletePosts) 
+                return false;
 
-            return false;
+            var ownTopic = customer.Id == topic.CustomerId;
+
+            return ownTopic;
         }
 
         /// <summary>
@@ -1294,18 +1279,17 @@ namespace Nop.Services.Forums
                 return false;
             }
 
-            if (IsForumModerator(customer))
+            if (customer.IsForumModerator())
             {
                 return true;
             }
 
-            if (_forumSettings.AllowCustomersToEditPosts)
-            {
-                var ownPost = customer.Id == post.CustomerId;
-                return ownPost;
-            }
+            if (!_forumSettings.AllowCustomersToEditPosts) 
+                return false;
 
-            return false;
+            var ownPost = customer.Id == post.CustomerId;
+
+            return ownPost;
         }
 
         /// <summary>
@@ -1331,18 +1315,16 @@ namespace Nop.Services.Forums
                 return false;
             }
 
-            if (IsForumModerator(customer))
+            if (customer.IsForumModerator())
             {
                 return true;
             }
 
-            if (_forumSettings.AllowCustomersToDeletePosts)
-            {
-                var ownPost = customer.Id == post.CustomerId;
-                return ownPost;
-            }
+            if (!_forumSettings.AllowCustomersToDeletePosts)
+                return false;
+            var ownPost = customer.Id == post.CustomerId;
 
-            return false;
+            return ownPost;
         }
 
         /// <summary>
@@ -1362,12 +1344,7 @@ namespace Nop.Services.Forums
                 return false;
             }
 
-            if (IsForumModerator(customer))
-            {
-                return true;
-            }
-
-            return false;
+            return customer.IsForumModerator();
         }
 
         /// <summary>
@@ -1400,16 +1377,16 @@ namespace Nop.Services.Forums
         public virtual int CalculateTopicPageIndex(int forumTopicId, int pageSize, int postId)
         {
             var pageIndex = 0;
-            var forumPosts = GetAllPosts(forumTopicId: forumTopicId, ascSort: true);
+            var forumPosts = GetAllPosts(forumTopicId, ascSort: true);
 
             for (var i = 0; i < forumPosts.TotalCount; i++)
             {
-                if (forumPosts[i].Id == postId)
+                if (forumPosts[i].Id != postId) 
+                    continue;
+
+                if (pageSize > 0)
                 {
-                    if (pageSize > 0)
-                    {
-                        pageIndex = i / pageSize;
-                    }
+                    pageIndex = i / pageSize;
                 }
             }
 
@@ -1517,11 +1494,13 @@ namespace Nop.Services.Forums
                     {
                         text = HtmlHelper.FormatText(text, false, true, false, false, false, false);
                     }
+
                     break;
                 case EditorType.BBCodeEditor:
                     {
                         text = HtmlHelper.FormatText(text, false, true, false, true, false, false);
                     }
+
                     break;
                 default:
                     break;
@@ -1550,12 +1529,13 @@ namespace Nop.Services.Forums
             if (subject.Length <= strippedTopicMaxLength)
                 return subject;
 
-            var index = subject.IndexOf(" ", strippedTopicMaxLength);
-            if (index > 0)
-            {
-                subject = subject.Substring(0, index);
-                subject += "...";
-            }
+            var index = subject.IndexOf(" ", strippedTopicMaxLength, StringComparison.Ordinal);
+            
+            if (index <= 0) 
+                return subject;
+
+            subject = subject.Substring(0, index);
+            subject += "...";
 
             return subject;
         }
@@ -1614,7 +1594,7 @@ namespace Nop.Services.Forums
             if (forum == null)
                 throw new ArgumentNullException(nameof(forum));
 
-            return this.GetPostById(forum.LastPostId);
+            return GetPostById(forum.LastPostId);
         }
 
         /// <summary>
@@ -1627,7 +1607,7 @@ namespace Nop.Services.Forums
             if (forumTopic == null)
                 throw new ArgumentNullException(nameof(forumTopic));
 
-            var forumPosts = this.GetAllPosts(forumTopic.Id, 0, string.Empty, 0, 1);
+            var forumPosts = GetAllPosts(forumTopic.Id, 0, string.Empty, 0, 1);
             if (forumPosts.Any())
                 return forumPosts[0];
 
@@ -1644,7 +1624,7 @@ namespace Nop.Services.Forums
             if (forumTopic == null)
                 throw new ArgumentNullException(nameof(forumTopic));
 
-            return this.GetPostById(forumTopic.LastPostId);
+            return GetPostById(forumTopic.LastPostId);
         }
 
         /// <summary>

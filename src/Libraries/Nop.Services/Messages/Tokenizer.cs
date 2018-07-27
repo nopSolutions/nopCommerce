@@ -49,7 +49,7 @@ namespace Nop.Services.Messages
             var position0 = 0;
             int position1;
 
-            var inc = (original.Length / pattern.Length) * (replacement.Length - pattern.Length);
+            var inc = original.Length / pattern.Length * (replacement.Length - pattern.Length);
             var chars = new char[original.Length + Math.Max(0, inc)];
             while ((position1 = original.IndexOf(pattern, position0, stringComparison)) != -1)
             {
@@ -114,10 +114,10 @@ namespace Nop.Services.Messages
                 RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace | RegexOptions.Singleline | RegexOptions.IgnoreCase);
 
             //find conditional statements in the original template
-            var conditionalStatements = regexFullConditionalSatement.Matches(template).Cast<Match>()
-                .SelectMany(match => match.Groups["Condition"].Captures.Cast<Capture>().Select(capture => new
+            var conditionalStatements = regexFullConditionalSatement.Matches(template)
+                .SelectMany(match => match.Groups["Condition"].Captures.Select(capture => new
                 {
-                    Index = capture.Index,
+                    capture.Index,
                     FullStatement = capture.Value,
                     Condition = regexCondition.Match(capture.Value).Value
                 })).ToList();
@@ -137,11 +137,15 @@ namespace Nop.Services.Messages
                         var conditionString = ReplaceTokens(statement.Condition, tokens, stringWithQuotes: true);
                         conditionIsMet = new[] { statement }.AsQueryable().Where(conditionString).Any();
                     }
-                    catch { }
-
+                    catch
+                    {
+                        // ignored
+                    }
                 }
+
                 template = template.Replace(conditionIsMet ? statement.Condition : statement.FullStatement, string.Empty);
             }
+
             template = template.Replace("%if", string.Empty).Replace("endif%", string.Empty);
 
             //return template with resolved conditional statements

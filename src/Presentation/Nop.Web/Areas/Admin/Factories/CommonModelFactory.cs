@@ -805,6 +805,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     //fill in model values from the entity
                     var urlRecordModel = urlRecord.ToModel<UrlRecordModel>();
 
+                    urlRecordModel.Name = urlRecord.Slug;
+
                     //fill in additional values (not existing in the entity)
                     urlRecordModel.Language = urlRecord.LanguageId == 0
                         ? _localizationService.GetResource("Admin.System.SeNames.Language.Standard")
@@ -816,7 +818,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     switch (entityName)
                     {
                         case "blogpost":
-                            detailsUrl = urlHelper.Action("Edit", "Blog", new { id = urlRecord.EntityId });
+                            detailsUrl = urlHelper.Action("BlogPostEdit", "Blog", new { id = urlRecord.EntityId });
                             break;
                         case "category":
                             detailsUrl = urlHelper.Action("Edit", "Category", new { id = urlRecord.EntityId });
@@ -828,7 +830,7 @@ namespace Nop.Web.Areas.Admin.Factories
                             detailsUrl = urlHelper.Action("Edit", "Product", new { id = urlRecord.EntityId });
                             break;
                         case "newsitem":
-                            detailsUrl = urlHelper.Action("Edit", "News", new { id = urlRecord.EntityId });
+                            detailsUrl = urlHelper.Action("NewsItemEdit", "News", new { id = urlRecord.EntityId });
                             break;
                         case "topic":
                             detailsUrl = urlHelper.Action("Edit", "Topic", new { id = urlRecord.EntityId });

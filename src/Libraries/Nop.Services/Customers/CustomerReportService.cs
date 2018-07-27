@@ -75,8 +75,8 @@ namespace Nop.Services.Customers
                          (!orderStatusId.HasValue || orderStatusId == o.OrderStatusId) &&
                          (!paymentStatusId.HasValue || paymentStatusId == o.PaymentStatusId) &&
                          (!shippingStatusId.HasValue || shippingStatusId == o.ShippingStatusId) &&
-                         (!o.Deleted) &&
-                         (!c.Deleted)
+                         !o.Deleted &&
+                         !c.Deleted
                          select new { c, o };
 
             var query2 = from co in query1
@@ -90,14 +90,10 @@ namespace Nop.Services.Customers
             switch (orderBy)
             {
                 case 1:
-                    {
-                        query2 = query2.OrderByDescending(x => x.OrderTotal);
-                    }
+                    query2 = query2.OrderByDescending(x => x.OrderTotal);
                     break;
                 case 2:
-                    {
-                        query2 = query2.OrderByDescending(x => x.OrderCount);
-                    }
+                    query2 = query2.OrderByDescending(x => x.OrderCount);
                     break;
                 default:
                     throw new ArgumentException("Wrong orderBy parameter", "orderBy");
@@ -133,6 +129,7 @@ namespace Nop.Services.Customers
                         c.CreatedOnUtc >= date
                         //&& c.CreatedOnUtc <= DateTime.UtcNow
                         select c;
+
             var count = query.Count();
             return count;
         }

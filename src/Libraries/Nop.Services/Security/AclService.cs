@@ -99,7 +99,6 @@ namespace Nop.Services.Security
             return aclRecords;
         }
 
-
         /// <summary>
         /// Inserts an ACL record
         /// </summary>
@@ -130,7 +129,7 @@ namespace Nop.Services.Security
                 throw new ArgumentNullException(nameof(entity));
 
             if (customerRoleId == 0)
-                throw new ArgumentOutOfRangeException("customerRoleId");
+                throw new ArgumentOutOfRangeException(nameof(customerRoleId));
 
             var entityId = entity.Id;
             var entityName = entity.GetUnproxiedEntityType().Name;

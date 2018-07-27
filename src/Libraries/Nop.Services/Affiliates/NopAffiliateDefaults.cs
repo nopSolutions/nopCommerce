@@ -1,5 +1,4 @@
-﻿
-namespace Nop.Services.Affiliates
+﻿namespace Nop.Services.Affiliates
 {
     /// <summary>
     /// Represents default values related to affiliate services

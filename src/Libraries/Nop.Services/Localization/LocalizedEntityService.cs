@@ -85,6 +85,7 @@ namespace Nop.Services.Localization
                     };
                     list.Add(localizedPropertyForCaching);
                 }
+
                 return list;
             });
         }
@@ -100,10 +101,15 @@ namespace Nop.Services.Localization
         public class LocalizedPropertyForCaching
         {
             public int Id { get; set; }
+
             public int EntityId { get; set; }
+
             public int LanguageId { get; set; }
+
             public string LocaleKeyGroup { get; set; }
+
             public string LocaleKey { get; set; }
+
             public string LocaleValue { get; set; }
         }
 
@@ -162,13 +168,12 @@ namespace Nop.Services.Localization
                                 lp.LocaleKeyGroup == localeKeyGroup &&
                                 lp.LocaleKey == localeKey
                                 select lp.LocaleValue;
-                    var localeValue = query.FirstOrDefault();
+
                     //little hack here. nulls aren't cacheable so set it to ""
-                    if (localeValue == null)
-                        localeValue = "";
+                    var localeValue = query.FirstOrDefault() ?? string.Empty;
+                    
                     return localeValue;
                 });
-
             }
             else
             {
@@ -183,10 +188,9 @@ namespace Nop.Services.Localization
                                 lp.LocaleKeyGroup == localeKeyGroup &&
                                 lp.LocaleKey == localeKey
                                 select lp.LocaleValue;
-                    var localeValue = query.FirstOrDefault();
                     //little hack here. nulls aren't cacheable so set it to ""
-                    if (localeValue == null)
-                        localeValue = "";
+                    var localeValue = query.FirstOrDefault() ?? string.Empty;
+                    
                     return localeValue;
                 });
             }
@@ -256,10 +260,9 @@ namespace Nop.Services.Localization
                 throw new ArgumentNullException(nameof(entity));
 
             if (languageId == 0)
-                throw new ArgumentOutOfRangeException("languageId", "Language ID should not be 0");
+                throw new ArgumentOutOfRangeException(nameof(languageId), "Language ID should not be 0");
 
-            var member = keySelector.Body as MemberExpression;
-            if (member == null)
+            if (!(keySelector.Body is MemberExpression member))
             {
                 throw new ArgumentException(string.Format(
                     "Expression '{0}' refers to a method, not a property.",
@@ -300,19 +303,19 @@ namespace Nop.Services.Localization
             }
             else
             {
-                if (!string.IsNullOrWhiteSpace(localeValueStr))
+                if (string.IsNullOrWhiteSpace(localeValueStr))
+                    return;
+
+                //insert
+                prop = new LocalizedProperty
                 {
-                    //insert
-                    prop = new LocalizedProperty
-                    {
-                        EntityId = entity.Id,
-                        LanguageId = languageId,
-                        LocaleKey = localeKey,
-                        LocaleKeyGroup = localeKeyGroup,
-                        LocaleValue = localeValueStr
-                    };
-                    InsertLocalizedProperty(prop);
-                }
+                    EntityId = entity.Id,
+                    LanguageId = languageId,
+                    LocaleKey = localeKey,
+                    LocaleKeyGroup = localeKeyGroup,
+                    LocaleValue = localeValueStr
+                };
+                InsertLocalizedProperty(prop);
             }
         }
 
