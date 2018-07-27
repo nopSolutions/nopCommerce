@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Routing;
 using Nop.Core.Data;
@@ -62,6 +63,7 @@ namespace Nop.Web.Framework.Localization
             var path = context.HttpContext.Request.Path.Value;
             if (path.IsLocalizedUrl(context.HttpContext.Request.PathBase, false, out Language language))
                 data.VirtualPath = $"/{language.UniqueSeoCode}{data.VirtualPath}";
+            //data.VirtualPath = WebUtility.UrlEncode($"/{language.UniqueSeoCode}{data.VirtualPath}");
 
             return data;
         }
@@ -77,6 +79,7 @@ namespace Nop.Web.Framework.Localization
                 return base.RouteAsync(context);
 
             //if path isn't localized, no special action required
+            //context.HttpContext.Request.Path = WebUtility.UrlEncode(context.HttpContext.Request.Path);
             var path = context.HttpContext.Request.Path.Value;
             if (!path.IsLocalizedUrl(context.HttpContext.Request.PathBase, false, out Language _))
                 return base.RouteAsync(context);

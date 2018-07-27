@@ -3941,3 +3941,8 @@ BEGIN
 	VALUES (N'commonsettings.staticfilescachecontrol', N'public,max-age=604800', 0)
 END
 GO
+
+--delete setting
+DELETE FROM [Setting]
+WHERE [Name] = N'securitysettings.allownonasciicharactersinheaders'
+GO

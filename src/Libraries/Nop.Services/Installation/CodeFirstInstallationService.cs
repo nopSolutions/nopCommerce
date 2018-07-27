@@ -6385,8 +6385,7 @@ namespace Nop.Services.Installation
                 EnableXsrfProtectionForAdminArea = true,
                 EnableXsrfProtectionForPublicStore = true,
                 HoneypotEnabled = false,
-                HoneypotInputName = "hpinput",
-                AllowNonAsciiCharactersInHeaders = true
+                HoneypotInputName = "hpinput"
             });
 
             settingService.SaveSetting(new ShippingSettings
