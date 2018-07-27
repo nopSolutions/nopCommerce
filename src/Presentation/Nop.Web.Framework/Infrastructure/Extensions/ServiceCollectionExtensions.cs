@@ -293,7 +293,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         public static void AddNopRedirectResultExecutor(this IServiceCollection services)
         {
             //we use custom redirect executor as a workaround to allow using non-ASCII characters in redirect URLs
-            services.AddSingleton<RedirectResultExecutor, NopRedirectResultExecutor>();
+            services.AddSingleton<IActionResultExecutor<RedirectResult>, NopRedirectResultExecutor>();
         }
 
         /// <summary>
