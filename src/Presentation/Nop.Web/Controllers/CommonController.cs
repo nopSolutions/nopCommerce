@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Net;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
@@ -137,10 +136,6 @@ namespace Nop.Web.Controllers
 
                 //and add code of passed language
                 returnUrl = returnUrl.AddLanguageSeoCodeToUrl(this.Request.PathBase, true, language);
-
-                //passed redirect URL may contain non-ASCII characters, that are not allowed now (see https://github.com/aspnet/KestrelHttpServer/issues/1144)
-                //so we force to encode this URL before processing
-                returnUrl = Uri.EscapeUriString(WebUtility.UrlDecode(returnUrl));
             }
 
             _workContext.WorkingLanguage = language;

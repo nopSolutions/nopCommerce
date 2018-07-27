@@ -285,7 +285,17 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
 
             return mvcBuilder;
         }
-        
+
+        /// <summary>
+        /// Register custom RedirectResultExecutor
+        /// </summary>
+        /// <param name="services">Collection of service descriptors</param>
+        public static void AddNopRedirectResultExecutor(this IServiceCollection services)
+        {
+            //we use custom redirect executor as a workaround to allow using non-ASCII characters in redirect URLs
+            services.AddSingleton<RedirectResultExecutor, NopRedirectResultExecutor>();
+        }
+
         /// <summary>
         /// Register base object context
         /// </summary>

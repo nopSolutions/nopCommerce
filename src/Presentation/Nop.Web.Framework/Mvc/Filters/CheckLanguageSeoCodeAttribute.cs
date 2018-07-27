@@ -94,10 +94,6 @@ namespace Nop.Web.Framework.Mvc.Filters
 
                 //not localized yet, so redirect to the page with working language SEO code
                 pageUrl = pageUrl.AddLanguageSeoCodeToUrl(context.HttpContext.Request.PathBase, true, _workContext.WorkingLanguage);
-                //passed redirect URL may contain non-ASCII characters, that are not allowed now (see https://github.com/aspnet/KestrelHttpServer/issues/1144)
-                //so we force to encode this URL before processing
-                pageUrl = Uri.EscapeUriString(WebUtility.UrlDecode(pageUrl));
-
                 context.Result = new RedirectResult(pageUrl, false);
             }
 

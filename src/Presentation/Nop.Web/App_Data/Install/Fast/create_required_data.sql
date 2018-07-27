@@ -1851,6 +1851,7 @@ INSERT [dbo].[Setting] ([Id], [Name], [Value], [StoreId]) VALUES (425, N'securit
 INSERT [dbo].[Setting] ([Id], [Name], [Value], [StoreId]) VALUES (426, N'securitysettings.honeypotenabled', N'False', 0)
 INSERT [dbo].[Setting] ([Id], [Name], [Value], [StoreId]) VALUES (427, N'securitysettings.honeypotinputname', N'hpinput', 0)
 INSERT [dbo].[Setting] ([Id], [Name], [Value], [StoreId]) VALUES (428, N'securitysettings.pluginstaticfileextensionsblacklist', N'', 0)
+INSERT [dbo].[Setting] ([Id], [Name], [Value], [StoreId]) VALUES (429, N'securitysettings.allownonasciicharactersinheaders', N'True', 0)
 INSERT [dbo].[Setting] ([Id], [Name], [Value], [StoreId]) VALUES (430, N'shippingsettings.activeshippingratecomputationmethodsystemnames', N'Shipping.FixedByWeightByTotal', 0)
 INSERT [dbo].[Setting] ([Id], [Name], [Value], [StoreId]) VALUES (431, N'shippingsettings.activepickuppointprovidersystemnames', N'Pickup.PickupInStore', 0)
 INSERT [dbo].[Setting] ([Id], [Name], [Value], [StoreId]) VALUES (432, N'shippingsettings.shiptosameaddress', N'True', 0)
