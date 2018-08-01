@@ -1,8 +1,8 @@
-﻿<script type="text/javascript" asp-location="Footer">
+﻿<script asp-location="Footer">
     $(document).ready(function () {
         $('#eu-cookie-bar-notification').show();
 
-        $('#eu-cookie-ok').click(function () {
+        $('#eu-cookie-ok').on('click', function () {
             $.ajax({
                 cache: false,
                 type: 'POST',

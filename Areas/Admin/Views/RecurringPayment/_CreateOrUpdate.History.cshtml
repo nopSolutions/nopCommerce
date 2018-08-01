@@ -1,7 +1,7 @@
-﻿@model RecurringPaymentModel
+@model RecurringPaymentModel
 
 <div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_reccuring_payment_details_history_top", additionalData = Model.Id })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ReccuringPaymentDetailsHistoryTop, additionalData = Model })
     <div class="panel panel-default">
         <div class="panel-body">
             @if (Model.LastPaymentFailed)
@@ -44,17 +44,23 @@
 
             <div id="history-grid"></div>
 
-            <script type="text/javascript">
+            <script>
                 $(document).ready(function () {
                     $("#history-grid").kendoGrid({
                         dataSource: {
                             type: "json",
                             transport: {
                                 read: {
-                                    url: "@Html.Raw(Url.Action("HistoryList", "RecurringPayment", new {recurringPaymentId = Model.Id}))",
+                                    url: "@Html.Raw(Url.Action("HistoryList", "RecurringPayment"))",
                                     type: "POST",
                                     dataType: "json",
-                                    data: addAntiForgeryToken
+                                    data: function() {
+                                        var data = {
+                                            RecurringPaymentId: '@(Model.Id)'
+                                        };
+                                        addAntiForgeryToken(data);
+                                        return data;
+                                    }
                                 }
                             },
                             schema: {
@@ -67,15 +73,14 @@
                                 // Cancel the changes
                                 this.cancelChanges();
                             },
+                            pageSize: @(Model.RecurringPaymentHistorySearchModel.PageSize),
                             serverPaging: true,
                             serverFiltering: true,
                             serverSorting: true
                         },
                         pageable: {
                             refresh: true,
-                            numeric: false,
-                            previousNext: false,
-                            info: false,
+                            pageSizes: [@(Model.RecurringPaymentHistorySearchModel.AvailablePageSizes)],
                             @await Html.PartialAsync("_GridPagerMessages")
                         },
                         editable: {
@@ -116,5 +121,5 @@
             </script>
         </div>
     </div>
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_reccuring_payment_details_history_bottom", additionalData = Model.Id })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ReccuringPaymentDetailsHistoryBottom, additionalData = Model })
 </div>

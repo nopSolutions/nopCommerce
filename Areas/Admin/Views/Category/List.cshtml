@@ -1,10 +1,6 @@
-﻿@model CategoryListModel
+@model CategorySearchModel
 
-@inject AdminAreaSettings adminAreaSettings
 @{
-    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
-    var gridPageSizes = adminAreaSettings.GridPageSizes;
-
     //page title
     ViewBag.Title = T("Admin.Catalog.Categories.Manage").Text;
     //active menu item (system name)
@@ -49,7 +45,7 @@
             <i class="fa fa-upload"></i>
             @T("Admin.Common.Import")
         </button>
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_category_list_buttons" })
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CategoryListButtons })
     </div>
 </div>
 
@@ -90,7 +86,7 @@
                 <div class="panel-body">
                     <div id="categories-grid"></div>
 
-                    <script type="text/javascript">
+                    <script>
                         $(document).ready(function() {
                             $("#categories-grid").kendoGrid({
                                 dataSource: {
@@ -100,7 +96,14 @@
                                             url: "@Html.Raw(Url.Action("List", "Category"))",
                                             type: "POST",
                                             dataType: "json",
-                                            data: additionalData
+                                            data: function() {
+                                                var data = {
+                                                    SearchCategoryName: $('#@Html.IdFor(model => model.SearchCategoryName)').val(),
+                                                    SearchStoreId: $('#SearchStoreId').val()
+                                                };
+                                                addAntiForgeryToken(data);
+                                                return data;
+                                            }
                                         }
                                     },
                                     schema: {
@@ -113,14 +116,14 @@
                                         // Cancel the changes
                                         this.cancelChanges();
                                     },
-                                    pageSize: @(defaultGridPageSize),
+                                    pageSize: @(Model.PageSize),
                                     serverPaging: true,
                                     serverFiltering: true,
                                     serverSorting: true
                                 },
                                 pageable: {
                                     refresh: true,
-                                    pageSizes: [@(gridPageSizes)],
+                                    pageSizes: [@(Model.AvailablePageSizes)],
                                     @await Html.PartialAsync("_GridPagerMessages")
                                 },
                                 editable: {
@@ -156,7 +159,7 @@
                         });
                     </script>
 
-                    <script type="text/javascript">
+                    <script>
                         $(document).ready(function() {
                             //search button
                             $('#search-categories').click(function() {
@@ -174,15 +177,6 @@
                                 }
                             });
                         });
-
-                        function additionalData() {
-                            var data = {
-                                SearchCategoryName: $('#@Html.IdFor(model => model.SearchCategoryName)').val(),
-                                SearchStoreId: $('#SearchStoreId').val()
-                            };
-                            addAntiForgeryToken(data);
-                            return data;
-                        }
                     </script>
                 </div>
             </div>

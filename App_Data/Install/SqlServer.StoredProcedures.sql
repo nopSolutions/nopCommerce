@@ -384,21 +384,21 @@ BEGIN
 	IF @CategoryIdsCount > 0
 	BEGIN
 		SET @sql = @sql + '
-		LEFT JOIN Product_Category_Mapping pcm with (NOLOCK)
+		INNER JOIN Product_Category_Mapping pcm with (NOLOCK)
 			ON p.Id = pcm.ProductId'
 	END
 	
 	IF @ManufacturerId > 0
 	BEGIN
 		SET @sql = @sql + '
-		LEFT JOIN Product_Manufacturer_Mapping pmm with (NOLOCK)
+		INNER JOIN Product_Manufacturer_Mapping pmm with (NOLOCK)
 			ON p.Id = pmm.ProductId'
 	END
 	
 	IF ISNULL(@ProductTagId, 0) != 0
 	BEGIN
 		SET @sql = @sql + '
-		LEFT JOIN Product_ProductTag_Mapping pptm with (NOLOCK)
+		INNER JOIN Product_ProductTag_Mapping pptm with (NOLOCK)
 			ON p.Id = pptm.Product_Id'
 	END
 	
@@ -418,8 +418,12 @@ BEGIN
 	IF @CategoryIdsCount > 0
 	BEGIN
 		SET @sql = @sql + '
-		AND pcm.CategoryId IN (SELECT CategoryId FROM #FilteredCategoryIds)'
+		AND pcm.CategoryId IN ('
 		
+		SET @sql = @sql + + CAST(@CategoryIds AS nvarchar(max))
+
+		SET @sql = @sql + ')'
+
 		IF @FeaturedProducts IS NOT NULL
 		BEGIN
 			SET @sql = @sql + '
@@ -743,7 +747,7 @@ BEGIN
 		ELSE 0
 		END
 	ELSE 0
-	END')
+	END as Value')
 END
 GO
 

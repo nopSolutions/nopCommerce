@@ -1,10 +1,6 @@
-﻿@model ShipmentListModel
-@inject AdminAreaSettings adminAreaSettings
+@model ShipmentSearchModel
 
 @{
-    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
-    var gridPageSizes = adminAreaSettings.GridPageSizes;
-
     //page title
     ViewBag.Title = T("Admin.Orders.Shipments.List").Text;
 
@@ -49,7 +45,7 @@
                 <i class="fa fa-check-square-o"></i>
                 @T("Admin.Orders.Shipments.DeliverySelected")
             </button>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_order_shipment_list_buttons" })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.OrderShipmentListButtons })
         </div>
     </div>
     <div class="content">
@@ -111,6 +107,14 @@
                                 </div>
                                 <div class="form-group">
                                     <div class="col-md-4">
+                                        <nop-label asp-for="County" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-editor asp-for="County" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-4">
                                         <nop-label asp-for="City" />
                                     </div>
                                     <div class="col-md-8">
@@ -142,7 +146,7 @@
                     <div class="panel-body">
                         <div id="shipments-grid"></div>
 
-                        <script type="text/javascript">
+                        <script>
                             $(document).ready(function () {
                                 $("#shipments-grid").kendoGrid({
                                     dataSource: {
@@ -152,7 +156,21 @@
                                                 url: "@Html.Raw(Url.Action("ShipmentListSelect", "Order"))",
                                                 type: "POST",
                                                 dataType: "json",
-                                                data: additionalData
+                                                data: function() {
+                                                    var data = {
+                                                        StartDate: $('#@Html.IdFor(model => model.StartDate)').val(),
+                                                        EndDate: $('#@Html.IdFor(model => model.EndDate)').val(),
+                                                        TrackingNumber: $('#@Html.IdFor(model => model.TrackingNumber)').val(),
+                                                        CountryId: $('#@Html.IdFor(model => model.CountryId)').val(),
+                                                        StateProvinceId: $('#@Html.IdFor(model => model.StateProvinceId)').val(),
+                                                        County: $('#@Html.IdFor(model => model.County)').val(),
+                                                        City: $('#@Html.IdFor(model => model.City)').val(),
+                                                        WarehouseId: $('#@Html.IdFor(model => model.WarehouseId)').val(),
+                                                        LoadNotShipped: $('#@Html.IdFor(model => model.LoadNotShipped)').is(':checked')
+                                                    };
+                                                    addAntiForgeryToken(data);
+                                                    return data;
+                                                }
                                             }
                                         },
                                         schema: {
@@ -165,14 +183,14 @@
                                             // Cancel the changes
                                             this.cancelChanges();
                                         },
-                                        pageSize: @(defaultGridPageSize),
+                                        pageSize: @(Model.PageSize),
                                         serverPaging: true,
                                         serverFiltering: true,
                                         serverSorting: true
                                     },
                                     pageable: {
                                         refresh: true,
-                                        pageSizes: [@(gridPageSizes)],
+                                        pageSizes: [@(Model.AvailablePageSizes)],
                                         @await Html.PartialAsync("_GridPagerMessages")
                                     },
                                     //details grid
@@ -232,10 +250,16 @@
                                         type: "json",
                                         transport: {
                                             read: {
-                                                url: "@Html.Raw(Url.Action("ShipmentsItemsByShipmentId", "Order"))?shipmentId="+e.data.Id,
+                                                url: "@Html.Raw(Url.Action("ShipmentsItemsByShipmentId", "Order"))",
                                                 type: "POST",
                                                 dataType: "json",
-                                                data: addAntiForgeryToken
+                                                data: function() {
+                                                    var data = {
+                                                        ShipmentId: e.data.Id
+                                                    };
+                                                    addAntiForgeryToken(data);
+                                                    return data;
+                                                }
                                             }
                                         },
                                         schema: {
@@ -248,17 +272,15 @@
                                             // Cancel the changes
                                             this.cancelChanges();
                                         },
+                                        pageSize: @(Model.ShipmentItemSearchModel.PageSize),
                                         serverPaging: true,
                                         serverFiltering: true,
                                         serverSorting: true
                                     },
                                     scrollable: false,
-                                    sortable: true,
                                     pageable: {
                                         refresh: true,
-                                        numeric: false,
-                                        previousNext: false,
-                                        info: false,
+                                        pageSizes: [@(Model.ShipmentItemSearchModel.AvailablePageSizes)],
                                         @await Html.PartialAsync("_GridPagerMessages")
                                     },
                                     columns: [
@@ -290,7 +312,7 @@
                     </div>
                 </div>
 
-                <script type="text/javascript">
+                <script>
                     var selectedIds = [];
 
                     $(document).ready(function() {
@@ -396,40 +418,22 @@
                         //wire up checkboxes.
                         $('#shipments-grid').on('change', 'input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]', function(e) {
                             var $check = $(this);
+                            var checked = jQuery.inArray($check.val(), selectedIds);
                             if ($check.is(":checked") == true) {
-                                var checked = jQuery.inArray($check.val(), selectedIds);
                                 if (checked == -1) {
                                     //add id to selectedIds.
                                     selectedIds.push($check.val());
                                 }
-                            } else {
-                                var checked = jQuery.inArray($check.val(), selectedIds);
-                                if (checked > -1) {
-                                    //remove id from selectedIds.
-                                    selectedIds = $.grep(selectedIds, function(item, index) {
-                                        return item != $check.val();
-                                    });
-                                }
+                            } else if (checked > -1) {
+                                //remove id from selectedIds.
+                                selectedIds = $.grep(selectedIds, function (item, index) {
+                                    return item != $check.val();
+                                });
                             }
                             updateMasterCheckbox();
                         });
                     });
-
-                    function additionalData() {
-                        var data = {
-                            StartDate: $('#@Html.IdFor(model => model.StartDate)').val(),
-                            EndDate: $('#@Html.IdFor(model => model.EndDate)').val(),
-                            TrackingNumber: $('#@Html.IdFor(model => model.TrackingNumber)').val(),
-                            CountryId: $('#@Html.IdFor(model => model.CountryId)').val(),
-                            StateProvinceId: $('#@Html.IdFor(model => model.StateProvinceId)').val(),
-                            City: $('#@Html.IdFor(model => model.City)').val(),
-                            WarehouseId: $('#@Html.IdFor(model => model.WarehouseId)').val(),
-                            LoadNotShipped: $('#@Html.IdFor(model => model.LoadNotShipped)').is(':checked')
-                        };
-                        addAntiForgeryToken(data);
-                        return data;
-                    }
-
+                    
                     function onDataBound(e) {
                         $('#shipments-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]').each(function() {
                             var currentId = $(this).val();
@@ -457,7 +461,7 @@
     <input type="hidden" id="selectedIds" name="selectedIds" value="" />
 </form>
 
-<script type="text/javascript">
+<script>
                 $(document).ready(function () {
                     $('#exportpackagingslips-selected').click(function (e) {
                         e.preventDefault();

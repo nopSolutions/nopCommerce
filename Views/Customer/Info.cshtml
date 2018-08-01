@@ -1,5 +1,7 @@
-﻿@using Nop.Core
+﻿@using System.Text.Encodings.Web
+@using Nop.Core
 @model CustomerInfoModel
+@inject Nop.Core.IWebHelper webHelper
 @{
     Layout = "_ColumnsTwo";
 
@@ -11,15 +13,15 @@
 }
 
 @section left
-{
+    {
     @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.Info })
 }
 
 @if (Model.CountryEnabled && Model.StateProvinceEnabled)
 {
-    <script type="text/javascript" asp-location="Footer">
+    <script asp-location="Footer">
         $(document).ready(function () {
-            $("#@Html.IdFor(model => model.CountryId)").change(function () {
+            $("#@Html.IdFor(model => model.CountryId)").on('change', function () {
                 var selectedItem = $(this).val();
                 var ddlStates = $("#@Html.IdFor(model => model.StateProvinceId)");
                 var statesProgress = $("#states-loading-progress");
@@ -77,7 +79,7 @@
                     <div class="inputs">
                         <label asp-for="FirstName" asp-postfix=":"></label>
                         <input asp-for="FirstName" />
-                        <nop-required/>
+                        <nop-required />
                         <span asp-validation-for="FirstName"></span>
                     </div>
                     <div class="inputs">
@@ -90,16 +92,14 @@
                     {
                         <div class="inputs date-of-birth">
                             <label>@T("Account.Fields.DateOfBirth"):</label>
-                            <nop-date-picker 
-                                asp-day-name="@Html.NameFor(x => x.DateOfBirthDay)" 
-                                asp-month-name="@Html.NameFor(x => x.DateOfBirthMonth)" 
-                                asp-year-name="@Html.NameFor(x => x.DateOfBirthYear)"
-                                asp-begin-year="@(DateTime.Now.Year - 110)"
-                                asp-end-year="@(DateTime.Now.Year)"
-                                asp-selected-day="@Model.DateOfBirthDay"
-                                asp-selected-month="@Model.DateOfBirthMonth"
-                                asp-selected-year="@Model.DateOfBirthYear"
-                            />
+                            <nop-date-picker asp-day-name="@Html.NameFor(x => x.DateOfBirthDay)"
+                                             asp-month-name="@Html.NameFor(x => x.DateOfBirthMonth)"
+                                             asp-year-name="@Html.NameFor(x => x.DateOfBirthYear)"
+                                             asp-begin-year="@(DateTime.Now.Year - 110)"
+                                             asp-end-year="@(DateTime.Now.Year)"
+                                             asp-selected-day="@Model.DateOfBirthDay"
+                                             asp-selected-month="@Model.DateOfBirthMonth"
+                                             asp-selected-year="@Model.DateOfBirthYear" />
                             @if (Model.DateOfBirthRequired)
                             {
                                 <nop-required />
@@ -184,10 +184,11 @@
                 </div>
             }
             @if (Model.StreetAddressEnabled ||
-                    Model.StreetAddress2Enabled ||
-                    Model.ZipPostalCodeEnabled ||
-                    Model.CityEnabled ||
-                    Model.CountryEnabled)
+        Model.StreetAddress2Enabled ||
+        Model.ZipPostalCodeEnabled ||
+        Model.CityEnabled ||
+        Model.CountyEnabled ||
+        Model.CountryEnabled)
             {
                 <div class="fieldset">
                     <div class="title">
@@ -240,6 +241,18 @@
                                     <nop-required />
                                 }
                                 <span asp-validation-for="City"></span>
+                            </div>
+                        }
+                        @if (Model.CountyEnabled)
+                        {
+                            <div class="inputs">
+                                <label asp-for="County" asp-postfix=":"></label>
+                                <input asp-for="County" />
+                                @if (Model.CountyRequired)
+                                {
+                                    <nop-required />
+                                }
+                                <span asp-validation-for="County"></span>
                             </div>
                         }
                         @if (Model.CountryEnabled)
@@ -414,23 +427,57 @@
                     @if (Model.NumberOfExternalAuthenticationProviders > Model.AssociatedExternalAuthRecords.Count)
                     {
                         //we can add more external records
+                        var loginUrl = Url.RouteUrl("Login", null, webHelper.CurrentRequestProtocol);
                         <div class="form-fields add-more-external-records">
                             @T("Account.AssociatedExternalAuth.AddMoreRecords")
-                            <a href="@Url.RouteUrl("Login", null, "http")">
-                                @Url.RouteUrl("Login", null, "http")
-                            </a>
+                            <a href="@loginUrl">@loginUrl</a>
                         </div>
                     }
                 </div>
             }
+
+            @if (Model.GdprConsents.Count > 0)
+            {
+                <div class="fieldset">
+                    <div class="title">
+                        <strong>@T("Account.UserAgreement")</strong>
+                    </div>
+                    <div class="form-fields">
+                        @foreach (var consent in Model.GdprConsents)
+                        {
+                            if (consent.IsRequired)
+                            {
+                                <script asp-location="Footer">
+                                    $(document).ready(function() {
+                                        $('#save-info-button').on('click', function() {
+                                            if ($('#consent@(consent.Id)').is(':checked')) {
+                                                    //do some stuff
+                                                    return true;
+                                                } else {
+                                                    //just show validation errors, don't post
+                                               alert('@Html.Raw(JavaScriptEncoder.Default.Encode(consent.RequiredMessage))');
+                                                    return false;
+                                                }
+                                            });
+                                    });
+                                </script>
+                            }
+                            <div class="inputs accept-consent">
+                                <input id="consent@(consent.Id)" type="checkbox" name="consent@(consent.Id)" checked="@consent.Accepted" />
+                                <label for="consent@(consent.Id)">@consent.Message</label>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
             <div class="buttons">
-                <input type="submit" value="@T("Common.Save")" name="save-info-button" class="button-1 save-customer-info-button" />
+                <input type="submit" id="save-info-button" value="@T("Common.Save")" name="save-info-button" class="button-1 save-customer-info-button" />
             </div>
         </form>
     </div>
 </div>
 
-<script type="text/javascript" asp-location="Footer">
+<script asp-location="Footer">
     function removeexternalassociation(itemId) {
         if (confirm('@T("Common.AreYouSure")')) {
             var postData = {

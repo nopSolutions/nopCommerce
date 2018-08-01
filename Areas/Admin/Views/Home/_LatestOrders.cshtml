@@ -1,12 +1,12 @@
 ﻿@using Nop.Core
-@using Nop.Services.Common
 @using Nop.Services.Stores
+@inject Nop.Services.Common.IGenericAttributeService genericAttributeService
 @inject IWorkContext workContext
 @inject IStoreService storeService
 @{
     const string panelId = "latest-orders-box";
     const string hidePanelAttributeName = "HideLatestOrdersPanel";
-    var hidePanel = workContext.CurrentCustomer.GetAttribute<bool>(hidePanelAttributeName);
+    var hidePanel = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hidePanelAttributeName);
     var gridPageSize = 5;
     var stores = storeService.GetAllStores();
 }
@@ -34,7 +34,7 @@
     <div class="box-body">
         <div id="orders-grid"></div>
 
-        <script type="text/javascript">
+        <script>
             $(document).ready(function () {
                 $('#@panelId').on('click', 'button[data-widget="collapse"]', function () {
                     var collapsed = !$('#@panelId').hasClass('collapsed-box');
@@ -49,7 +49,7 @@
                                 url: "@Html.Raw(Url.Action("OrderList", "Order"))",
                                 type: "POST",
                                 dataType: "json",
-                                data: additionalDataLatestOrders
+                                data: addAntiForgeryToken
                             }
                         },
                         schema: {
@@ -118,12 +118,6 @@
                     ]
                 });
             });
-
-            function additionalDataLatestOrders() {
-                var data = {};
-                addAntiForgeryToken(data);
-                return data;
-            }
         </script>
     </div>
 </div>

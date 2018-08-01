@@ -13,7 +13,7 @@
     <div class="panel panel-default">
         <div class="panel-body">
             <div id="tax-countrystatezip-grid"></div>
-            <script type="text/javascript">
+            <script>
                 $(document)
                     .ready(function() {
                         $("#tax-countrystatezip-grid")
@@ -149,7 +149,7 @@
                 @T("Plugins.Tax.FixedOrByCountryStateZip.AddRecordTitle")
             </div>
             <div class="panel-body">
-                <script type="text/javascript">
+                <script>
                     $(document)
                         .ready(function() {
                             $("#@Html.IdFor(model => model.AddCountryId)")
@@ -238,7 +238,7 @@
                     </div>
                     <div class="col-md-9">
                         <input type="button" id="addtaxrate" class="btn btn-primary" value="@T("Plugins.Tax.FixedOrByCountryStateZip.AddRecord")"/>
-                        <script type="text/javascript">
+                        <script>
                             $(document)
                                 .ready(function() {
                                     $('#addtaxrate')

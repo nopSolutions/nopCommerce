@@ -1,11 +1,11 @@
-﻿@model ProductReviewModel
+@model ProductReviewModel
 
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
 
 <div class="content">
     <div class="form-horizontal">
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_review_details_top", additionalData = Model.Id })
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductReviewDetailsTop, additionalData = Model })
         <div class="panel-group">
             <div class="panel panel-default">
                 <div class="panel-body">
@@ -115,9 +115,10 @@
                             <div class="form-text-row">@Model.CreatedOn</div>
                         </div>
                     </div>
+                    @await Html.PartialAsync("_ProductReviewReviewTypeMappingList", Model.ProductReviewReviewTypeMappingSearchModel)
                 </div>
             </div>
         </div>
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_review_details_bottom", additionalData = Model.Id })
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductReviewDetailsBottom, additionalData = Model })
     </div>
 </div>

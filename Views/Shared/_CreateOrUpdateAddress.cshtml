@@ -2,9 +2,9 @@
 @if (Model.CountryEnabled && Model.StateProvinceEnabled)
 {
     //we don't move this script to the footer as it's used in Ajax requests where footer is not available
-    <script type="text/javascript">
+    <script>
         $(document).ready(function () {
-            $("#@Html.IdFor(model => model.CountryId)").change(function () {
+            $("#@Html.IdFor(model => model.CountryId)").on('change', function () {
             var selectedItem = $(this).val();
             var ddlStates = $("#@Html.IdFor(model => model.StateProvinceId)");
             var statesProgress = $("#states-loading-progress");
@@ -79,6 +79,18 @@
             <select asp-for="StateProvinceId" asp-items="Model.AvailableStates"></select>
             <span id="states-loading-progress" style="display: none;" class="please-wait">@T("Common.Wait...")</span>
             <span asp-validation-for="StateProvinceId"></span>
+        </div>
+    }
+    @if (Model.CountyEnabled)
+    {
+        <div class="inputs">
+            <label asp-for="County" asp-postfix=":"></label>
+            <input asp-for="County" />
+            @if (Model.CountyRequired)
+            {
+                <nop-required />
+            }
+            <span asp-validation-for="County"></span>
         </div>
     }
     @if (Model.CityEnabled)

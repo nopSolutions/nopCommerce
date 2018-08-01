@@ -1,28 +1,30 @@
-﻿@model CategoryModel
-@inject AdminAreaSettings adminAreaSettings
-@{
-    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
-    var gridPageSizes = adminAreaSettings.GridPageSizes;
-}
+@model CategoryModel
+
 <div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_category_details_products_top", additionalData = Model.Id })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CategoryDetailsProductsTop, additionalData = Model })
     @if (Model.Id > 0)
     {
         <div class="panel panel-default">
             <div class="panel-body">
                 <div id="products-grid"></div>
 
-                <script type="text/javascript">
+                <script>
                     $(document).ready(function() {
                         $("#products-grid").kendoGrid({
                             dataSource: {
                                 type: "json",
                                 transport: {
                                     read: {
-                                        url: "@Html.Raw(Url.Action("ProductList", "Category", new {categoryId = Model.Id}))",
+                                        url: "@Html.Raw(Url.Action("ProductList", "Category"))",
                                         type: "POST",
                                         dataType: "json",
-                                        data: addAntiForgeryToken
+                                        data: function() {
+                                            var data = {
+                                                CategoryId: '@(Model.Id)'
+                                            };
+                                            addAntiForgeryToken(data);
+                                            return data;
+                                        }
                                     },
                                     update: {
                                         url: "@Html.Raw(Url.Action("ProductUpdate", "Category"))",
@@ -61,14 +63,14 @@
                                     // Cancel the changes
                                     this.cancelChanges();
                                 },
-                                pageSize: @(defaultGridPageSize),
+                                pageSize: @(Model.CategoryProductSearchModel.PageSize),
                                 serverPaging: true,
                                 serverFiltering: true,
                                 serverSorting: true
                             },
                             pageable: {
                                 refresh: true,
-                                pageSizes: [@(gridPageSizes)],
+                                pageSizes: [@(Model.CategoryProductSearchModel.AvailablePageSizes)],
                                 @await Html.PartialAsync("_GridPagerMessages")
                             },
                             editable: {
@@ -124,12 +126,12 @@
 
             <div class="panel-footer">
                 <button type="submit" id="btnAddNewProduct"
-                        onclick="javascript:OpenWindow('@(Url.Action("ProductAddPopup", "Category", new {categoryId = Model.Id, btnId = "btnRefreshProducts", formId = "category-form"}))', 800, 800, true); return false;"
+                        onclick="javascript:OpenWindow('@(Url.Action("ProductAddPopup", "Category", new { categoryId = Model.Id, btnId = "btnRefreshProducts", formId = "category-form" }))', 800, 800, true); return false;"
                         class="btn btn-primary">
                     @T("Admin.Catalog.Categories.Products.AddNew")
                 </button>
                 <input type="submit" id="btnRefreshProducts" style="display: none" />
-                <script type="text/javascript">
+                <script>
                     $(document).ready(function () {
                         $('#btnRefreshProducts').click(function () {
                             //refresh grid
@@ -152,5 +154,5 @@
             </div>
         </div>
     }
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_category_details_products_bottom", additionalData = Model.Id })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CategoryDetailsProductsBottom, additionalData = Model })
 </div>

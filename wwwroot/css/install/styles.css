@@ -10,6 +10,12 @@ hr {
     border-bottom: 1px solid #e7e7e7;
 }
 
+.wrapper {
+    overflow: hidden;
+    min-height: 100%;
+				height: auto;
+}
+
 .btn-install {
     padding: 6px 35px;
     font-size: 22px;

@@ -1,9 +1,6 @@
-﻿@model UrlRecordListModel
-@inject AdminAreaSettings adminAreaSettings
-@{
-    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
-    var gridPageSizes = adminAreaSettings.GridPageSizes;
+@model UrlRecordSearchModel
 
+@{
     //page title
     ViewBag.Title = T("Admin.System.SeNames").Text;
     //active menu item (system name)
@@ -20,14 +17,15 @@
             <i class="fa fa-trash-o"></i>
             @T("Admin.System.SeNames.DeleteSelected")
         </button>
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_senames_buttons" })
+        <nop-action-confirmation asp-button-id="delete-selected" />
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.SenamesButtons })
     </div>
 </div>
 
 <div class="content">
     <div class="form-horizontal">
         <div class="panel-group">
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_senames_top" })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.SenamesTop })
             <div class="panel panel-default panel-search">
                 <div class="panel-body">
                     <div class="row">
@@ -53,7 +51,7 @@
                 <div class="panel-body">
                     <div id="sename-grid"></div>
 
-                    <script type="text/javascript">
+                    <script>
                         $(document).ready(function () {
                             $("#sename-grid").kendoGrid({
                                 dataSource: {
@@ -63,7 +61,13 @@
                                             url: "@Html.Raw(Url.Action("SeNames", "Common"))",
                                             type: "POST",
                                             dataType: "json",
-                                            data: additionalData
+                                            data: function() {
+                                                var data = {
+                                                    SeName: $('#@Html.IdFor(model => model.SeName)').val()
+                                                };
+                                                addAntiForgeryToken(data);
+                                                return data;
+                                            }
                                         }
                                     },
                                     schema: {
@@ -76,14 +80,14 @@
                                         // Cancel the changes
                                         this.cancelChanges();
                                     },
-                                    pageSize: @(defaultGridPageSize),
+                                    pageSize: @(Model.PageSize),
                                     serverPaging: true,
                                     serverFiltering: true,
                                     serverSorting: true
                                 },
                                 pageable: {
                                     refresh: true,
-                                    pageSizes: [@(gridPageSizes)],
+                                    pageSizes: [@(Model.AvailablePageSizes)],
                                     @await Html.PartialAsync("_GridPagerMessages")
                                 },
                                 scrollable: false,
@@ -135,12 +139,12 @@
                     </script>
                 </div>
             </div>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_senames_bottom" })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.SenamesBottom })
         </div>
     </div>
 </div>
 
-<script type="text/javascript">
+<script>
     var selectedIds = [];
 
     $(document).ready(function() {
@@ -164,20 +168,17 @@
         });
 
         //"delete selected" button
-        $('#delete-selected').click(function(e) {
-            e.preventDefault();
-
+        $("#delete-selected-action-confirmation-submit-button").bind("click", function () {
             var postData = {
                 selectedIds: selectedIds
             };
             addAntiForgeryToken(postData);
-
             $.ajax({
                 cache: false,
                 type: "POST",
                 url: "@(Url.Action("DeleteSelectedSeNames", "Common"))",
                 data: postData,
-                complete: function(data) {
+                complete: function (data) {
                     //reload grid
                     var grid = $('#sename-grid').data('kendoGrid');
                     grid.dataSource.page(1); //new search. Set page size to 1
@@ -186,11 +187,12 @@
                     $('.checkboxGroups').attr('checked', false).change();
                     selectedIds = [];
                 },
-                error: function(xhr, ajaxOptions, thrownError) {
+                error: function (xhr, ajaxOptions, thrownError) {
                     alert(thrownError);
                 },
                 traditional: true
             });
+            $('#delete-selected-action-confirmation').modal('toggle');
             return false;
         });
 
@@ -201,32 +203,21 @@
         //wire up checkboxes.
         $('#sename-grid').on('change', 'input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]', function(e) {
             var $check = $(this);
+            var checked = jQuery.inArray($check.val(), selectedIds);
             if ($check.is(":checked") == true) {
-                var checked = jQuery.inArray($check.val(), selectedIds);
                 if (checked == -1) {
                     //add id to selectedIds.
                     selectedIds.push($check.val());
                 }
-            } else {
-                var checked = jQuery.inArray($check.val(), selectedIds);
-                if (checked > -1) {
-                    //remove id from selectedIds.
-                    selectedIds = $.grep(selectedIds, function(item, index) {
-                        return item != $check.val();
-                    });
-                }
+            } else if (checked > -1) {
+                //remove id from selectedIds.
+                selectedIds = $.grep(selectedIds, function (item, index) {
+                    return item != $check.val();
+                });
             }
             updateMasterCheckbox();
         });
     });
-
-    function additionalData() {
-        var data = {
-            SeName: $('#@Html.IdFor(model => model.SeName)').val()
-        };
-        addAntiForgeryToken(data);
-        return data;
-    }
 
     function onDataBound(e) {
         $('#sename-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]').each(function() {

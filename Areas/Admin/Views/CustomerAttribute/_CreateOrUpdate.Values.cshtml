@@ -1,25 +1,32 @@
-﻿@model CustomerAttributeModel
+@model CustomerAttributeModel
+
 <div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_customer_attribute_details_values_top", additionalData = Model.Id })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerAttributeDetailsValuesTop, additionalData = Model })
     <div class="panel panel-default">
         @if (Model.Id > 0)
         {
-            /*TODO display the following warning if values are not supported by selected attribute control type
-            'Values are not required for this attribute control type'*/
+            /*TODO display the following warning if values are not supported by selected attribute control type - 'Values are not required for this attribute control type' */
+            
             <div class="panel-body">
                 <div id="customerattributevalues-grid"></div>
 
-                <script type="text/javascript">
+                <script>
                     $(document).ready(function () {
                         $("#customerattributevalues-grid").kendoGrid({
                             dataSource: {
                                 type: "json",
                                 transport: {
                                     read: {
-                                        url: "@Html.Raw(Url.Action("ValueList", "CustomerAttribute", new { customerAttributeId = Model.Id }))",
+                                        url: "@Html.Raw(Url.Action("ValueList", "CustomerAttribute"))",
                                         type: "POST",
                                         dataType: "json",
-                                        data: addAntiForgeryToken
+                                        data: function() {
+                                            var data = {
+                                                CustomerAttributeId: '@(Model.Id)'
+                                            };
+                                            addAntiForgeryToken(data);
+                                            return data;
+                                        }
                                     },
                                     destroy: {
                                         url: "@Html.Raw(Url.Action("ValueDelete", "CustomerAttribute"))",
@@ -41,15 +48,14 @@
                                     // Cancel the changes
                                     this.cancelChanges();
                                 },
+                                pageSize: @(Model.CustomerAttributeValueSearchModel.PageSize),
                                 serverPaging: true,
                                 serverFiltering: true,
                                 serverSorting: true
                             },
                             pageable: {
                                 refresh: true,
-                                numeric: false,
-                                previousNext: false,
-                                info: false,
+                                pageSizes: [@(Model.CustomerAttributeValueSearchModel.AvailablePageSizes)],
                                 @await Html.PartialAsync("_GridPagerMessages")
                             },
                             editable: {
@@ -90,11 +96,11 @@
                 </script>
             </div>
             <div class="panel-footer">
-                <button type="submit" id="btnAddNewValue" onclick="javascript:OpenWindow('@(Url.Action("ValueCreatePopup", "CustomerAttribute", new {customerAttributeId = Model.Id, btnId = "btnRefresh", formId = "customerattribute-form"}))', 800, 400, true); return false;" class="btn btn-primary">
+                <button type="submit" id="btnAddNewValue" onclick="javascript:OpenWindow('@(Url.Action("ValueCreatePopup", "CustomerAttribute", new { customerAttributeId = Model.Id, btnId = "btnRefresh", formId = "customerattribute-form" }))', 800, 400, true); return false;" class="btn btn-primary">
                     @T("Admin.Customers.CustomerAttributes.Values.AddNew")
                 </button>
                 <input type="submit" id="btnRefresh" style="display: none" />
-                <script type="text/javascript">
+                <script>
                     $(document).ready(function () {
                         $('#btnRefresh').click(function () {
                             //refresh grid
@@ -115,6 +121,6 @@
             </div>
         }
     </div>
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_customer_attribute_details_values_bottom", additionalData = Model.Id })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerAttributeDetailsValuesBottom, additionalData = Model })
 </div>
 

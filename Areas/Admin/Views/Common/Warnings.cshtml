@@ -1,4 +1,4 @@
-﻿@model IList<SystemWarningModel>
+@model IList<SystemWarningModel>
 
 @{
     //page title
@@ -13,14 +13,14 @@
     </h1>
     <div class="pull-right">
         &nbsp;
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_warnings_buttons" })
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.WarningsButtons })
     </div>
 </div>
 
 <div class="content">
     <div class="form-horizontal">
         <div class="panel-group">
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_warnings_top" })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.WarningsTop })
             <div class="panel panel-default">
                 <div class="panel-body">
                     @foreach (var warning in Model)
@@ -31,15 +31,31 @@
                                 {
                                     <p class="text-green">
                                         <i class="icon fa fa-check"></i>
-                                        @warning.Text
+                                        @if (warning.DontEncode)
+                                        {
+                                            @Html.Raw(warning.Text)
+                                        }
+                                        else
+                                        {
+                                            @warning.Text
+                                        }
                                     </p>
                                 }
                                 break;
+                            case SystemWarningLevel.CopyrightRemovalKey:
+                            case SystemWarningLevel.Recommendation:
                             case SystemWarningLevel.Warning:
                                 {
                                     <p class="text-yellow">
                                         <i class="icon fa fa-warning"></i>
-                                        @warning.Text
+                                        @if (warning.DontEncode)
+                                        {
+                                            @Html.Raw(warning.Text)
+                                        }
+                                        else
+                                        {
+                                            @warning.Text
+                                        }
                                     </p>
                                 }
                                 break;
@@ -47,7 +63,14 @@
                                 {
                                     <p class="text-red">
                                         <i class="icon fa fa-ban"></i>
-                                        @warning.Text
+                                        @if (warning.DontEncode)
+                                        {
+                                            @Html.Raw(warning.Text)
+                                        }
+                                        else
+                                        {
+                                            @warning.Text
+                                        }
                                     </p>
                                 }
                                 break;
@@ -55,7 +78,7 @@
                     }
                 </div>
             </div>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_warnings_bottom" })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.WarningsBottom })
         </div>
     </div>
 </div>

@@ -2,11 +2,14 @@
 @inject IWorkContext workContext
 @inject IDateTimeHelper dateTimeHelper
 @inject IPermissionService permissionService
+@inject ICustomerService customerService
 @inject IEventPublisher eventPublisher
 @inject IHttpContextAccessor httpContextAccessor
 @inject CommonSettings commonSettings
 @inject LocalizationSettings localizationSettings
 @inject StoreInformationSettings storeInformationSettings
+@inject Nop.Services.Common.IGenericAttributeService genericAttributeService
+@inject Nop.Services.Localization.ILanguageService languageService
 @using System.Globalization
 @using System.Text.Encodings.Web
 @using Microsoft.AspNetCore.Http
@@ -15,10 +18,10 @@
 @using Nop.Core;
 @using Nop.Core.Domain
 @using Nop.Core.Domain.Localization
-@using Nop.Services.Common
 @using Nop.Services.Customers
 @using Nop.Services.Helpers
 @using Nop.Services.Security;
+
 @{
     var rawUrl = webHelper.GetRawUrl(httpContextAccessor.HttpContext.Request);
     
@@ -29,25 +32,25 @@
     if (supportRtl)
     {
         Html.AppendCssFileParts("~/css/admin/styles.rtl.css");
-        Html.AppendCssFileParts("~/lib/adminLTE/AdminLTE-2.3.0.rtl.css");
+        Html.AppendCssFileParts("~/lib/adminLTE/css/AdminLTE.rtl.css");
         Html.AppendCssFileParts("~/lib/bootstrap/css/bootstrap.rtl.css");
     }
     else
     {
         Html.AppendCssFileParts("~/css/admin/styles.css");
-        Html.AppendCssFileParts("~/lib/adminLTE/AdminLTE-2.3.0.min.css");
+        Html.AppendCssFileParts("~/lib/adminLTE/css/AdminLTE.min.css");
         Html.AppendCssFileParts("~/lib/bootstrap/css/bootstrap.min.css");
     }
 
     Html.AppendCssFileParts($"~/lib/kendo/{kendoVersion}/kendo.rtl.min.css");
     Html.AppendCssFileParts($"~/lib/kendo/{kendoVersion}/kendo.default.min.css");
     Html.AppendCssFileParts($"~/lib/kendo/{kendoVersion}/kendo.common.min.css");
-    Html.AppendCssFileParts("~/lib/jquery-ui-themes/smoothness/jquery-ui-1.10.3.custom.min.css");
-    Html.AppendCssFileParts("~/lib/fontAwesome/css/font-awesome-4.6.3.min.css");
+    Html.AppendCssFileParts("~/lib/jquery-ui/jquery-ui-1.10.3/jquery-ui-themes/smoothness/jquery-ui-1.10.3.custom.min.css");
+    Html.AppendCssFileParts("~/lib/fontAwesome/css/font-awesome.min.css");
     Html.AppendCssFileParts("~/lib/typeahead/typeahead.css");
     Html.AppendCssFileParts("~/lib/bootstrap-touchspin/jquery.bootstrap-touchspin.min.css");
     <!-- AdminLTE Skins (choose a skin from the css/skins) -->
-    Html.AppendCssFileParts("~/lib/adminLTE/skins/_all-skins.min.css");
+    Html.AppendCssFileParts("~/lib/adminLTE/css/skins/_all-skins.min.css");
 
     //scripts
     Html.AppendScriptParts($"~/lib/kendo/{kendoVersion}/kendo.web.min.js");
@@ -55,14 +58,14 @@
     Html.AppendScriptParts("~/js/admin.navigation.js");
     Html.AppendScriptParts("~/js/admin.common.js");
     Html.AppendScriptParts("~/lib/typeahead/typeahead.bundle.min.js");
-    Html.AppendScriptParts("~/lib/jquery-migrate-1.2.1.min.js");
-    Html.AppendScriptParts("~/lib/jquery-ui-1.10.3.custom.min.js");
-    Html.AppendScriptParts("~/lib/jquery.validate.unobtrusive.min.js");
-    Html.AppendScriptParts("~/lib/jquery.validate.min.js");
-    Html.AppendScriptParts("~/lib/adminLTE/app.min.js");
-    Html.AppendScriptParts("~/lib/bootstrap/bootstrap.min.js");
+    Html.AppendScriptParts("~/lib/jquery-migrate/jquery-migrate-1.2.1.min.js");
+    Html.AppendScriptParts("~/lib/jquery-ui/jquery-ui-1.10.3/jquery-ui-1.10.3.custom.min.js");
+    Html.AppendScriptParts("~/lib/jquery-validate/jquery.validate.unobtrusive/jquery.validate.unobtrusive.min.js");
+    Html.AppendScriptParts("~/lib/jquery-validate/jquery.validate-v1.11.1/jquery.validate.min.js");
+    Html.AppendScriptParts("~/lib/adminLTE/js/adminlte.min.js");
+    Html.AppendScriptParts("~/lib/bootstrap/js/bootstrap.min.js");
     Html.AppendScriptParts("~/lib/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js");
-    Html.AppendScriptParts("~/lib/jquery-1.10.2.min.js");
+    Html.AppendScriptParts("~/lib/jquery/jquery-1.10.2.min.js");
 
     //page title
     string adminPageTitle = !string.IsNullOrWhiteSpace(ViewBag.Title) ? ViewBag.Title + " / " : "";
@@ -79,7 +82,7 @@
 
     //sidebar
     const string hideSidebarAttributeName = "HideSidebar";
-    var hideSidebar = workContext.CurrentCustomer.GetAttribute<bool>(hideSidebarAttributeName);
+    var hideSidebar = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSidebarAttributeName);
 
     //avatar
     var currentCustomer = workContext.CurrentCustomer;
@@ -90,11 +93,13 @@
     //info: we specify "Admin" area for actions and widgets here for cases when we use this layout in a plugin that is running in a different area than "admin"
 }
 <!DOCTYPE html>
-<html@(supportRtl ? Html.Raw(" dir=\"rtl\"") : null)>
+<html lang="@languageService.GetTwoLetterIsoLanguageName(workContext.WorkingLanguage)"@(supportRtl ? Html.Raw(" dir=\"rtl\"") : null)>
     <head>
         <title>@adminPageTitle</title>
         <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
         <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+        @*Google Font*@
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
         @Html.NopHeadCustom()
         @Html.NopCssFiles(this.Url, ResourceLocation.Head, false)
         @Html.NopScripts(this.Url, ResourceLocation.Head, false)
@@ -123,7 +128,7 @@
             }
             else
             {
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_header_before" })
+                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.HeaderBefore })
                 <div class="main-header">
                     <a href="@Url.Content("~/Admin")" class="logo">
                         <!-- mini logo for sidebar mini 50x50 pixels -->
@@ -132,12 +137,12 @@
                         <span class="logo-lg"></span>
                     </a>
                     <div class="navbar navbar-static-top" role="navigation">
-                        <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+                        <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
                             <span class="sr-only">&nbsp;</span>
                         </a>
-                        @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_header_toggle_after" })
+                        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.HeaderToggleAfter })
                         <div class="navbar-custom-menu">
-                            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_header_navbar_before" })
+                            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.HeaderNavbarBefore })
                             <ul class="nav navbar-nav">
                                 <li>
                                     @await Component.InvokeAsync("AdminLanguageSelector")
@@ -145,14 +150,14 @@
                                 @if (currentCustomer.IsRegistered())
                                 {
                                     <li class="account-info">
-                                        @currentCustomer.GetFullName()
+                                        @customerService.GetCustomerFullName(currentCustomer)
                                     </li>
                                     <li>
                                         <a asp-controller="Customer" asp-action="Logout" asp-area="">@T("Admin.Header.Logout")</a>
                                     </li>
                                 }
                                 <li>
-                                    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_header_middle" })
+                                    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.HeaderMiddle })
                                 </li>
                                 <li>
                                     <a asp-controller="Home" asp-action="Index" asp-area="">@T("Admin.Header.PublicStore")</a>
@@ -176,7 +181,7 @@
                                                     <button id="restart-application" type="submit" class="bg-light-blue">
                                                         <span>@T("Admin.Header.RestartApplication")</span>
                                                     </button>
-                                                    <script type="text/javascript">
+                                                    <script>
                                                         $(document).ready(function () {
                                                             $("#restart-application").click(function (e) {
                                                                 showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Admin.Header.RestartApplication.Progress").Text))');
@@ -189,11 +194,11 @@
                                     </li>
                                 }
                             </ul>
-                            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_header_navbar_after" })
+                            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.HeaderNavbarAfter })
                         </div>
                     </div>
                 </div>
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_header_after" })
+                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.HeaderAfter })
             }
             @if (IsSectionDefined("headermenu"))
             {
@@ -203,18 +208,18 @@
             {
                 <div class="main-sidebar">
                     <div class="sidebar">
-                        @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_searchbox_before" })
+                        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.SearchBoxBefore })
                         <div class="sidebar-form">
                             <div id="search-box">
                                 <input type="text" class="form-control admin-search-box typeahead" placeholder="@T("Admin.Menu.Search")">
                             </div>
                         </div>
-                        <script type="text/javascript">
+                        <script>
                             $(document).ready(function () {
                                 Admin.Search.init();
                             });
                         </script>
-                        @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_menu_before" })
+                        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.MenuBefore })
                         @await Html.PartialAsync("Menu")
                     </div>
                 </div>
@@ -245,7 +250,7 @@
                 </div>
             </div>
         </div>
-        <script type="text/javascript">
+        <script>
             var AdminLTEOptions = {
                 boxWidgetOptions: {
                     boxWidgetIcons: {
@@ -258,14 +263,29 @@
         @Html.NopCssFiles(this.Url, ResourceLocation.Footer)
         @Html.NopScripts(this.Url, ResourceLocation.Footer)
         <a id="backTop" class="btn btn-back-top bg-teal"></a>
-        <script type="text/javascript">
+        <script>
             $(document).ready(function () {
+                //enable "back top" arrow
                 $('#backTop').backTop();
 
+                //enable tooltips
+                $('[data-toggle="tooltip"]').tooltip()
+
+                //save sidebar preferences
                 $('a.sidebar-toggle').on('click', function () {
-                    var collapsed = $('body').hasClass('sidebar-collapse');
+                    var collapsed = !$('body').hasClass('sidebar-collapse');
                     saveUserPreferences('@(Url.Action("SavePreference", "Preferences"))', '@hideSidebarAttributeName', collapsed);
                 });
+
+                //bug-fix for unexpected auto-closing of grid's page size DropDownList in Chrome (Kendo grid bug)
+                var ddl = $(".k-grid-pager [data-role='dropdownlist']").data("kendoDropDownList");
+                if (ddl) {
+                    ddl.bind("close", pager_close);
+
+                    function pager_close(e) {
+                        e.sender.refresh()
+                    }
+                }
             });
         </script>
     </body>

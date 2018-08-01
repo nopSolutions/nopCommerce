@@ -1,6 +1,6 @@
-﻿@using System.Text.Encodings.Web
-@model MaintenanceModel
+﻿@model MaintenanceModel
 
+@using System.Text.Encodings.Web
 @{
     //page title
     ViewBag.Title = T("Admin.System.Maintenance").Text;
@@ -14,7 +14,7 @@
     </h1>
     <div class="pull-right">
         &nbsp;
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_maintenance_buttons" })
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.MaintenanceButtons })
     </div>
 </div>
 
@@ -22,11 +22,11 @@
     <div class="content">
         <div class="form-horizontal">
             <div class="panel-group">
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_maintenance_top" })
+                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.MaintenanceTop })
                 <div class="panel panel-default">
                     <div class="panel-body">
                         <div class="row">
-                            <div class="col-md-4">
+                            <div class="col-md-4 margin-t-5">
                                 <div class="panel panel-default" style="min-height: 230px;">
                                     <div class="panel-heading">
                                         @T("Admin.System.Maintenance.DeleteGuests")
@@ -78,7 +78,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-4 margin-t-5">
                                 <div class="panel panel-default" style="min-height: 230px;">
                                     <div class="panel-heading">
                                         @T("Admin.System.Maintenance.DeleteAbandonedCarts")
@@ -114,7 +114,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-4 margin-t-5">
                                 <div class="panel panel-default" style="min-height: 230px;">
                                     <div class="panel-heading">
                                         @T("Admin.System.Maintenance.DeleteExportedFiles")
@@ -159,6 +159,32 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col-md-4 margin-t-5">
+                                <div class="panel panel-default" style="min-height: 230px;">
+                                    <div class="panel-heading">
+                                        @T("Admin.System.Maintenance.ReIndexTables")
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="form-group">
+                                            <div class="col-md-12">
+                                                <div>
+                                                    <p>
+                                                        @T("Admin.System.Maintenance.ReIndexTables.Lable")
+                                                    </p>
+                                                </div>
+                                                <div>
+                                                    <button type="submit" name="re-index" class="btn btn-default">
+                                                        <i class="fa fa-gears"></i>
+                                                        @T("Admin.System.Maintenance.ReIndexTables.ReIndexNow")
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="panel panel-default">
@@ -166,6 +192,9 @@
                         @T("Admin.System.Maintenance.BackupDatabase.DatabaseBackups")
                     </div>
                     <div class="panel-body">
+                        <p>
+                            @T("Admin.System.Maintenance.BackupDatabase.Description")
+                        </p>
                         <div id="backup-list"></div>
                     </div>
                     <div class="panel-footer">
@@ -176,7 +205,16 @@
                 </div>
                 <div id="backup-data" style="display: none"></div>
 
-                <script type="text/javascript">
+                <script>
+                    $(document).ready(function() {
+                        $("button[name='re-index']").on("click", function () {
+                            $("html, body").animate({ scrollTop: 0 }, 400);
+                            showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Admin.System.Maintenance.ReIndexTables.Progress").Text))');
+                        });
+                    });
+                </script>
+
+                <script>
                     function submitBackupAction(fileName, action) {
                         $("#backup-data").children().remove();
                         $("#backup-data").append('<input type="hidden" name="backupFileName" value="' + fileName + '"/>');
@@ -188,7 +226,7 @@
                         $("html, body").animate({ scrollTop: 0 }, 400);
                         showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Admin.System.Maintenance.BackupDatabase.Progress").Text))');
                     };
-
+                    
                     $(document).ready(function () {
                         $("#backup-database").on("click", function () {
                             showProgress();
@@ -196,7 +234,7 @@
                     });
                 </script>
 
-                <script type="text/javascript">
+                <script>
                     $(document).ready(function () {
                         $("#backup-list").kendoGrid({
                             dataSource: {
@@ -219,15 +257,14 @@
                                     // Cancel the changes
                                     this.cancelChanges();
                                 },
+                                pageSize: @(Model.BackupFileSearchModel.PageSize),
                                 serverPaging: true,
                                 serverFiltering: true,
                                 serverSorting: true
                             },
                             pageable: {
                                 refresh: true,
-                                numeric: false,
-                                previousNext: false,
-                                info: false,
+                                pageSizes: [@(Model.BackupFileSearchModel.AvailablePageSizes)],
                                 @await Html.PartialAsync("_GridPagerMessages")
                             },
                             editable: {
@@ -269,7 +306,7 @@
                         });
                     });
                 </script>
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_maintenance_bottom" })
+                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.MaintenanceBottom })
             </div>
         </div>
     </div>

@@ -1,24 +1,24 @@
-﻿@model BulkEditListModel
-@inject AdminAreaSettings adminAreaSettings
+@model BulkEditProductSearchModel
 
 @{
-    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
-    var gridPageSizes = adminAreaSettings.GridPageSizes;
-
     //page title
     ViewBag.Title = T("Admin.Catalog.BulkEdit").Text;
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("Bulk edit products");
+    Html.SetActiveMenuItemSystemName("Products");
 }
 
 <form asp-controller="Product" asp-action="BulkEdit" method="post">
         <div class="content-header clearfix">
             <h1 class="pull-left">
                 @T("Admin.Catalog.BulkEdit")
+                <small>
+                    <i class="fa fa-arrow-circle-left"></i>
+                    <a asp-action="List">@T("Admin.Catalog.Products.BackToList")</a>
+                </small>
             </h1>
             <div class="pull-right">
                 &nbsp;
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_bulk_edit_buttons" })
+                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductBulkEditButtons })
             </div>
         </div>
 
@@ -78,7 +78,7 @@
                         <div class="panel-body">
                             <div id="products-grid"></div>
 
-                            <script type="text/javascript">
+                            <script>
                             $(document).ready(function() {
                                 $("#products-grid").kendoGrid({
                                     dataSource: {
@@ -88,7 +88,16 @@
                                                 url: "@Html.Raw(Url.Action("BulkEditSelect", "Product"))",
                                                 type: "POST",
                                                 dataType: "json",
-                                                data: additionalData
+                                                data: function() {
+                                                    var data = {
+                                                        SearchProductName: $('#@Html.IdFor(model => model.SearchProductName)').val(),
+                                                        SearchCategoryId: $('#SearchCategoryId').val(),
+                                                        SearchManufacturerId: $('#SearchManufacturerId').val(),
+                                                        SearchProductTypeId: $('#SearchProductTypeId').val()
+                                                    };
+                                                    addAntiForgeryToken(data);
+                                                    return data;
+                                                }
                                             },
                                             update: {
                                                 url: "@Html.Raw(Url.Action("BulkEditUpdate", "Product"))",
@@ -157,17 +166,17 @@
                                         },
                                         //bulk editing
                                         batch: true,
-                                        pageSize: @(defaultGridPageSize),
+                                        pageSize: @(Model.PageSize),
                                         serverPaging: true,
                                         serverFiltering: true,
                                         serverSorting: true
                                     },
                                     pageable: {
                                         refresh: true,
-                                        pageSizes: [@(gridPageSizes)],
+                                        pageSizes: [@(Model.AvailablePageSizes)],
                                         @await Html.PartialAsync("_GridPagerMessages")
                                     },
-                                    toolbar: ["save", "cancel"],
+                                    toolbar: [{ name: "save", text: "@T("Admin.Common.SaveChanges")" }, { name: "cancel", text: "@T("Admin.Common.CancelChanges")" }],
                                     editable: {
                                         confirmation: "@T("Admin.Common.DeleteConfirmation")",
                                         //bulk editing
@@ -237,7 +246,7 @@
                             });
                             </script>
 
-                            <script type="text/javascript">
+                            <script>
                             $(document).ready(function () {
                                 $('#search-products').click(function () {
                                     var grid = $('#products-grid').data('kendoGrid');
@@ -253,17 +262,6 @@
                                     }
                                 });
                             });
-
-                            function additionalData() {
-                                var data = {
-                                    SearchProductName: $('#@Html.IdFor(model => model.SearchProductName)').val(),
-                                    SearchCategoryId: $('#SearchCategoryId').val(),
-                                    SearchManufacturerId: $('#SearchManufacturerId').val(),
-                                    SearchProductTypeId: $('#SearchProductTypeId').val()
-                                };
-                                addAntiForgeryToken(data);
-                                return data;
-                            }
                             </script>
                         </div>
                     </div>

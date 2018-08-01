@@ -1,9 +1,6 @@
-﻿@model LogListModel
-@inject AdminAreaSettings adminAreaSettings
-@{
-    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
-    var gridPageSizes = adminAreaSettings.GridPageSizes;
+@model LogSearchModel
 
+@{
     //page title
     ViewBag.Title = T("Admin.System.Log").Text;
     //active menu item (system name)
@@ -21,12 +18,13 @@
                 <i class="fa fa-trash-o"></i>
                 @T("Admin.System.Log.DeleteSelected")
             </button>
+            <nop-action-confirmation asp-button-id="delete-selected" />
             <button type="submit" id="clearall" name="clearall" class="btn bg-red">
                 <i class="fa fa-trash-o"></i>
                 @T("Admin.System.Log.ClearLog")
             </button>
             <nop-action-confirmation asp-button-id="clearall" />
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_log_list_buttons" })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.LogListButtons })
         </div>
     </div>
 
@@ -86,7 +84,7 @@
                     <div class="panel-body">
                         <div id="log-grid"></div>
 
-                        <script type="text/javascript">
+                        <script>
                             $(document).ready(function() {
                                 $("#log-grid").kendoGrid({
                                     dataSource: {
@@ -96,7 +94,16 @@
                                                 url: "@Html.Raw(Url.Action("LogList", "Log"))",
                                                 type: "POST",
                                                 dataType: "json",
-                                                data: additionalData
+                                                data: function() {
+                                                    var data = {
+                                                        CreatedOnFrom: $('#@Html.IdFor(model => model.CreatedOnFrom)').val(),
+                                                        CreatedOnTo: $('#@Html.IdFor(model => model.CreatedOnTo)').val(),
+                                                        Message: $('#@Html.IdFor(model => model.Message)').val(),
+                                                        LogLevelId: $('#@Html.IdFor(model => model.LogLevelId)').val()
+                                                    };
+                                                    addAntiForgeryToken(data);
+                                                    return data;
+                                                }
                                             }
                                         },
                                         schema: {
@@ -109,14 +116,14 @@
                                             // Cancel the changes
                                             this.cancelChanges();
                                         },
-                                        pageSize: @(defaultGridPageSize),
+                                        pageSize: @(Model.PageSize),
                                         serverPaging: true,
                                         serverFiltering: true,
                                         serverSorting: true
                                     },
                                     pageable: {
                                         refresh: true,
-                                        pageSizes: [@(gridPageSizes)],
+                                        pageSizes: [@(Model.AvailablePageSizes)],
                                         @await Html.PartialAsync("_GridPagerMessages")
                                     },
                                     scrollable: false,
@@ -156,7 +163,7 @@
                             });
                         </script>
 
-                        <script type="text/javascript">
+                        <script>
                             var selectedIds = [];
 
                             $(document).ready(function() {
@@ -180,20 +187,17 @@
                                 });
 
                                 //"delete selected" button
-                                $('#delete-selected').click(function(e) {
-                                    e.preventDefault();
-
+                                $("#delete-selected-action-confirmation-submit-button").bind("click", function () {
                                     var postData = {
                                         selectedIds: selectedIds
                                     };
                                     addAntiForgeryToken(postData);
-
                                     $.ajax({
                                         cache: false,
                                         type: "POST",
                                         url: "@(Url.Action("DeleteSelected", "Log"))",
                                         data: postData,
-                                        complete: function(data) {
+                                        complete: function (data) {
                                             //reload grid
                                             var grid = $('#log-grid').data('kendoGrid');
                                             grid.dataSource.page(1); //new search. Set page size to 1
@@ -202,13 +206,14 @@
                                             $('.checkboxGroups').attr('checked', false).change();
                                             selectedIds = [];
                                         },
-                                        error: function(xhr, ajaxOptions, thrownError) {
+                                        error: function (xhr, ajaxOptions, thrownError) {
                                             alert(thrownError);
                                         },
                                         traditional: true
                                     });
+                                    $('#delete-selected-action-confirmation').modal('toggle');
                                     return false;
-                                });
+                                }); 
 
                                 $('#mastercheckbox').click(function() {
                                     $('.checkboxGroups').attr('checked', $(this).is(':checked')).change();
@@ -217,35 +222,21 @@
                                 //wire up checkboxes.
                                 $('#log-grid').on('change', 'input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]', function(e) {
                                     var $check = $(this);
+                                    var checked = jQuery.inArray($check.val(), selectedIds);
                                     if ($check.is(":checked") == true) {
-                                        var checked = jQuery.inArray($check.val(), selectedIds);
                                         if (checked == -1) {
                                             //add id to selectedIds.
                                             selectedIds.push($check.val());
                                         }
-                                    } else {
-                                        var checked = jQuery.inArray($check.val(), selectedIds);
-                                        if (checked > -1) {
-                                            //remove id from selectedIds.
-                                            selectedIds = $.grep(selectedIds, function(item, index) {
-                                                return item != $check.val();
-                                            });
-                                        }
+                                    } else if (checked > -1) {
+                                        //remove id from selectedIds.
+                                        selectedIds = $.grep(selectedIds, function (item, index) {
+                                            return item != $check.val();
+                                        });
                                     }
                                     updateMasterCheckbox();
                                 });
                             });
-
-                            function additionalData() {
-                                var data = {
-                                    CreatedOnFrom: $('#@Html.IdFor(model => model.CreatedOnFrom)').val(),
-                                    CreatedOnTo: $('#@Html.IdFor(model => model.CreatedOnTo)').val(),
-                                    Message: $('#@Html.IdFor(model => model.Message)').val(),
-                                    LogLevelId: $('#@Html.IdFor(model => model.LogLevelId)').val()
-                                };
-                                addAntiForgeryToken(data);
-                                return data;
-                            }
 
                             function onDataBound(e) {
                                 $('#log-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]').each(function() {

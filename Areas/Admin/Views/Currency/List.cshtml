@@ -1,4 +1,5 @@
-﻿@model CurrencyListModel
+﻿@model CurrencySearchModel
+
 @{
     //page title
     ViewBag.Title = T("Admin.Configuration.Currencies").Text;
@@ -25,7 +26,7 @@
                 <i class="fa fa-plus-square"></i>
                 @T("Admin.Common.AddNew")
             </a>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_currency_list_buttons" })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CurrencyListButtons })
         </div>
     </div>
 
@@ -36,20 +37,20 @@
                     <div class="panel-body">
                         <div class="form-group">
                             <div class="col-md-3">
-                                <nop-label asp-for="ExchangeRateProvider"/>
+                                <nop-label asp-for="ExchangeRateProviderModel.ExchangeRateProvider" />
                             </div>
                             <div class="col-md-9">
-                                <nop-select asp-for-name="ExchangeRateProvider" asp-items="Model.ExchangeRateProviders" />
-                                <span asp-validation-for="ExchangeRateProvider"></span>
+                                <nop-select asp-for-name="ExchangeRateProviderModel.ExchangeRateProvider" asp-items="Model.ExchangeRateProviderModel.ExchangeRateProviders" />
+                                <span asp-validation-for="ExchangeRateProviderModel.ExchangeRateProvider"></span>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-md-3">
-                                <nop-label asp-for="AutoUpdateEnabled"/>
+                                <nop-label asp-for="ExchangeRateProviderModel.AutoUpdateEnabled" />
                             </div>
                             <div class="col-md-9">
-                                <nop-editor asp-for="AutoUpdateEnabled"/>
-                                <span asp-validation-for="AutoUpdateEnabled"></span>
+                                <nop-editor asp-for="ExchangeRateProviderModel.AutoUpdateEnabled" />
+                                <span asp-validation-for="ExchangeRateProviderModel.AutoUpdateEnabled"></span>
                             </div>
                         </div>
                     </div>
@@ -57,7 +58,7 @@
                 <div class="panel panel-default">
                     <div class="panel-body">
                         <div id="currencies-grid"></div>
-                        <script type="text/javascript">
+                        <script>
                             $(document).ready(function () {
                                 $("#currencies-grid").kendoGrid({
                                     dataSource: {
@@ -80,15 +81,14 @@
                                             // Cancel the changes
                                             this.cancelChanges();
                                         },
+                                        pageSize: @(Model.PageSize),
                                         serverPaging: true,
                                         serverFiltering: true,
                                         serverSorting: true
                                     },
                                     pageable: {
                                         refresh: true,
-                                        numeric: false,
-                                        previousNext: false,
-                                        info: false,
+                                        pageSizes: [@(Model.AvailablePageSizes)],
                                         @await Html.PartialAsync("_GridPagerMessages")
                                     },
                                     editable: {
@@ -156,33 +156,17 @@
                                 });
                             });
                         </script>
+                        <button type="submit" class="btn btn-default" id="btnMarkPERC" style="display:none" />
+                        <button type="submit" class="btn btn-default" id="btnMarkPSC" style="display:none" />
 
-                        <script type="text/javascript">
-                            function markAsPrimaryExchangeRateCurrency(id) {
-                                if (confirm('@T("Admin.Common.AreYouSure")')) {
+                        <script>
+                            var selectedId;
+
+                            $(document).ready(function () {
+
+                                $("#btnMarkPSC-action-confirmation-submit-button").bind("click", function () {
                                     var postData = {
-                                        id: id
-                                    };
-                                    addAntiForgeryToken(postData);
-                                    $.ajax({
-                                        cache: false,
-                                        type: "POST",
-                                        url: "@(Url.Action("MarkAsPrimaryExchangeRateCurrency", "Currency"))",
-                                        data: postData,
-                                        success: function (data) {
-                                            var grid = $("#currencies-grid").data('kendoGrid');
-                                            grid.dataSource.read();
-                                        },
-                                        error: function (xhr, ajaxOptions, thrownError) {
-                                            alert('Failed to update currency');
-                                        }
-                                    });
-                                }
-                            };
-                            function markAsPrimaryStoreCurrency(id) {
-                                if (confirm('@T("Admin.Common.AreYouSure")')) {
-                                    var postData = {
-                                        id: id
+                                        id: selectedId
                                     };
                                     addAntiForgeryToken(postData);
                                     $.ajax({
@@ -198,12 +182,47 @@
                                             alert('Failed to update currency');
                                         }
                                     });
-                                }
+                                    $('#btnMarkPSC-action-confirmation').modal('toggle');
+                                });
+
+                                $("#btnMarkPERC-action-confirmation-submit-button").bind("click", function () {
+                                    var postData = {
+                                        id: selectedId
+                                    };
+                                    addAntiForgeryToken(postData);
+                                    $.ajax({
+                                        cache: false,
+                                        type: "POST",
+                                        url: "@(Url.Action("MarkAsPrimaryExchangeRateCurrency", "Currency"))",
+                                        data: postData,
+                                        success: function (data) {
+                                            var grid = $("#currencies-grid").data('kendoGrid');
+                                            grid.dataSource.read();
+                                        },
+                                        error: function (xhr, ajaxOptions, thrownError) {
+                                            alert('Failed to update currency');
+                                        }
+                                    });
+                                    $('#btnMarkPERC-action-confirmation').modal('toggle');
+                                });
+
+                            });
+
+                            function markAsPrimaryExchangeRateCurrency(id) {
+                                selectedId = id;
+                                $("#btnMarkPERC").click();
                             };
+
+                            function markAsPrimaryStoreCurrency(id) {
+                                selectedId = id;
+                                $("#btnMarkPSC").click();
+                            };
+
                         </script>
+
                     </div>
                 </div>
-                @if (Model.ExchangeRates?.Any() ?? false)
+                @if (Model.ExchangeRateProviderModel.ExchangeRates?.Any() ?? false)
                 {
                     <div class="panel panel-default">
                         <div class="panel-heading">
@@ -212,7 +231,7 @@
                         <div class="panel-body">
                             <div id="rate-grid" style="max-width: 350px;"></div>
 
-                            <script type="text/javascript">
+                            <script>
                                 $(document).ready(function () {
                                     $("#rate-grid").kendoGrid({
                                         dataSource: {
@@ -261,18 +280,14 @@
                                 });
 
                                 function applyCurrencyRate(rate, currencyCode) {
-                                    var postData = (rate && currencyCode) ? {
-                                        rate: rate,
-                                        currencyCode: currencyCode
-                                    } : {
-                                        rates: rates
-                                        };
-                                    var url = (rate && currencyCode) ? '@(Url.Action("ApplyRate"))' : '@(Url.Action("ApplyAllRates"))';
+                                    var postData = {
+                                        rateModels: (rate && currencyCode) ? [ { CurrencyCode: currencyCode, Rate: rate} ] : rates
+                                    };
                                     addAntiForgeryToken(postData);
                                     $.ajax({
                                         cache: false,
                                         type: "POST",
-                                        url: url,
+                                        url: '@(Url.Action("ApplyRates"))',
                                         data: postData,
                                         success: function (data) {
                                             var grid = $("#currencies-grid").data('kendoGrid');
@@ -286,16 +301,16 @@
 
                                 //local datasource
                                 var rates = [
-                                    @for (var i = 0; i < Model.ExchangeRates.Count; i++)
+                                    @for (var i = 0; i < Model.ExchangeRateProviderModel.ExchangeRates.Count; i++)
                                     {
-                                        var rate = Model.ExchangeRates[i];
+                                        var rate = Model.ExchangeRateProviderModel.ExchangeRates[i];
                                         <text>
                                             {
                                                 CurrencyCode: "@(Html.Raw(JavaScriptEncoder.Default.Encode(rate.CurrencyCode)))",
                                                 Rate: "@(Html.Raw(JavaScriptEncoder.Default.Encode(rate.Rate.ToString())))"
                                             }
                                         </text>
-                                        if (i != Model.ExchangeRates.Count - 1)
+                                        if (i != Model.ExchangeRateProviderModel.ExchangeRates.Count - 1)
                                         {
                                             <text>,</text>
                                         }
@@ -309,3 +324,5 @@
         </div>
     </div>
 </form>
+<nop-action-confirmation asp-button-id="btnMarkPERC" asp-additional-confirm="Admin.Configuration.Currencies.AdditionalConfirm" />
+<nop-action-confirmation asp-button-id="btnMarkPSC" asp-additional-confirm="Admin.Configuration.Currencies.AdditionalConfirm"/>

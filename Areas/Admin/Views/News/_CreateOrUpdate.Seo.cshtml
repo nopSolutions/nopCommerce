@@ -1,7 +1,7 @@
-﻿@model NewsItemModel
+@model NewsItemModel
 
 <div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_news_details_seo_top", additionalData = Model.Id })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.NewsDetailsSeoTop, additionalData = Model })
     <div class="panel panel-default">
         <div class="panel-body">
             <div class="form-group">
@@ -40,9 +40,9 @@
                     <span asp-validation-for="SeName"></span>
                 </div>
             </div>
-            <script type="text/javascript">
+            <script>
                 $(document).ready(function () {
-                    $('#@Html.IdFor(model => model.SeName)').on('input propertychange paste', function () {
+                    $('#@Html.IdFor(model => model.SeName)').on('input change', function () {
                         var parameters = {
                             entityId: '@Model.Id',
                             entityName: 'NewsItem',
@@ -54,5 +54,5 @@
             </script>
         </div>
     </div>
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_news_details_seo_bottom", additionalData = Model.Id })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.NewsDetailsSeoBottom, additionalData = Model })
 </div>

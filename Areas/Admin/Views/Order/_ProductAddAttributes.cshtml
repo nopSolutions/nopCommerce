@@ -1,7 +1,8 @@
-﻿@model IList<OrderModel.AddOrderProductModel.ProductAttributeModel>
+﻿@model IList<AddProductToOrderModel.ProductAttributeModel>
 
 @using System.Text
 @using Nop.Core.Domain.Catalog;
+@inject CatalogSettings catalogSettings
 
 @if (Model.Count > 0)
 {
@@ -11,7 +12,7 @@
     var attributesHaveConditions = Model.Any(a => a.HasCondition);
     var attributeChangeHandlerFuncName = $"attribute_change_handler_{productId}";
 
-    var getAttributeValueName = new Func<OrderModel.AddOrderProductModel.ProductAttributeValueModel, string>((attributeValue) =>
+    var getAttributeValueName = new Func<AddProductToOrderModel.ProductAttributeValueModel, string>((attributeValue) =>
         string.IsNullOrEmpty(attributeValue.PriceAdjustment) ? attributeValue.Name : T("Products.ProductAttributes.PriceAdjustment",
             attributeValue.Name, attributeValue.PriceAdjustment, attributeValue.CustomerEntersQty ? T("Products.ProductAttributes.PriceAdjustment.PerItem").Text : string.Empty).Text);
 
@@ -56,7 +57,7 @@
                                                 <input class="qty-box form-control" type="text" name="@(controlId)_@(attributeValue.Id)_qty" id="@(controlId)_@(attributeValue.Id)_qty" value="@(attributeValue.Quantity)" />
                                             </div>
                                         }
-                                        <script type="text/javascript">
+                                        <script>
                         $(document).ready(function() {
                             showHideDropdownQuantity("@controlId");
                         });
@@ -84,7 +85,7 @@
                                                     </div>
                                                 }
                                             </div>
-                                            <script type="text/javascript">
+                                            <script>
                             $(document).ready(function() {
                                 showHideRadioQuantity("@controlId");
                             });
@@ -109,7 +110,7 @@
                                                     <div id="@(controlId)_@(attributeValue.Id)_qty_box" style="display: none">
                                                         <label class="margin-l-10 margin-r-5" for="@(controlId)_@(attributeValue.Id)_qty">@(T("Products.ProductAttributes.PriceAdjustment.Quantity").Text)</label>
                                                         <input class="qty-box form-control" type="text" name="@(controlId)_@(attributeValue.Id)_qty" id="@(controlId)_@(attributeValue.Id)_qty" value="@(attributeValue.Quantity)" />
-                                                        <script type="text/javascript">
+                                                        <script>
                                         $(document).ready(function() {
                                             showHideCheckboxQuantity('@(controlId)_@(attributeValue.Id)');
                                         })
@@ -137,15 +138,15 @@
                                             asp-month-name="@(controlId + "_month")" 
                                             asp-year-name="@(controlId + "_year")"
                                             asp-begin-year="@(DateTime.Now.Year)"
-                                            asp-end-year="@(DateTime.Now.Year + 1)"
+                                            asp-end-year="@(DateTime.Now.Year + catalogSettings.CountDisplayedYearsDatePicker)"
                                         />
                                     }
                                     break;
                                 case AttributeControlType.FileUpload:
                                     {
                                         //register CSS and JS
-                                        Html.AddCssFileParts("~/lib/fineuploader/fineuploader-4.2.2.min.css");
-                                        Html.AddScriptParts("~/lib/fineuploader/jquery.fineuploader-4.2.2.min.js");
+                                        Html.AddCssFileParts("~/lib/fineuploader/fine-uploader.min.css");
+                                        Html.AddScriptParts("~/lib/fineuploader/jquery.fine-uploader.min.js");
 
                                         //ex. ['jpg', 'jpeg', 'png', 'gif'] or []
                                         var allowedFileExtensions = attribute.AllowedFileExtensions != null && attribute.AllowedFileExtensions.Any()
@@ -187,7 +188,7 @@
                                                 </ul>
                                             </div>
                                         </script>
-                                        <script type="text/javascript">
+                                        <script>
                         $(document).ready(function() {
                             $("#@(controlId)uploader").fineUploader({
                                 request: {
@@ -284,7 +285,7 @@
             }
 
             @*render scripts*@
-            <script type="text/javascript">
+            <script>
         function @(attributeChangeHandlerFuncName)() {
             $.ajax({
                 cache: false,
@@ -316,7 +317,7 @@
             </script>
         </div>
 
-        <script type="text/javascript">
+        <script>
             function showHideDropdownQuantity(id) {
                 $('select[name=' + id + '] > option').each(function () {
                     $('#' + id + '_' + this.value + '_qty_box').hide();

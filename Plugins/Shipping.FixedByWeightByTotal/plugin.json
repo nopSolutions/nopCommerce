@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Shipping rate computation",
+  "FriendlyName": "Manual (Fixed or By Weight and By Total)",
+  "SystemName": "Shipping.FixedByWeightByTotal",
+  "Version": "2.12",
+  "SupportedVersions": [ "4.10" ],
+  "Author": "nopCommerce team",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Shipping.FixedByWeightByTotal.dll",
+  "Description": "This plugin offers shipping rates with fixed fee or calculated by weight and by total"
+}

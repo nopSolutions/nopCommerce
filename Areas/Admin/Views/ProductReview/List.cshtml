@@ -1,11 +1,9 @@
-﻿@using Nop.Services.Stores
-@model ProductReviewListModel
-@inject AdminAreaSettings adminAreaSettings
+﻿@model ProductReviewSearchModel
+
+@using Nop.Services.Stores
 @inject IStoreService storeService
 
 @{
-    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
-    var gridPageSizes = adminAreaSettings.GridPageSizes;
     var stores = storeService.GetAllStores();
 
     //page title
@@ -35,8 +33,9 @@
                 <i class="fa fa-trash-o"></i>
                 @T("Admin.Catalog.ProductReviews.DeleteSelected")
             </button>
+            <nop-action-confirmation asp-button-id="delete-selected" />
         }
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_review_list_buttons" })
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductReviewListButtons })
     </div>
 </div>
 
@@ -85,7 +84,7 @@
                                 </div>
                                 <div class="col-md-8">
                                     <input type="text" class="form-control" id="search-product-name" autocomplete="off" />
-                                    <script type="text/javascript">
+                                    <script>
                                     $(document).ready(function() {
                                         $('#search-product-name').autocomplete({
                                             delay: 500,
@@ -105,7 +104,7 @@
                                     <button type="button" id="search-product-clear" class="btn bg-gray" style="display: none; margin-top: 5px;">@T("Admin.Common.Clear")</button>
                                     <input asp-for="SearchProductId" autocomplete = "off" style = "display:none;" />
 
-                                    <script type="text/javascript">
+                                    <script>
                                     //remove button
                                     $('#search-product-clear').click(function() {
                                         $('#@Html.IdFor(model => model.SearchProductId)').val('0');
@@ -141,7 +140,7 @@
                 <div class="panel-body">
                     <div id="productreviews-grid"></div>
 
-                    <script type="text/javascript">
+                    <script>
                         $(document).ready(function() {
                             $("#productreviews-grid").kendoGrid({
                                 dataSource: {
@@ -151,7 +150,18 @@
                                             url: "@Html.Raw(Url.Action("List", "ProductReview"))",
                                             type: "POST",
                                             dataType: "json",
-                                            data: additionalData
+                                            data: function() {
+                                                var data = {
+                                                    CreatedOnFrom: $('#@Html.IdFor(model => model.CreatedOnFrom)').val(),
+                                                    CreatedOnTo: $('#@Html.IdFor(model => model.CreatedOnTo)').val(),
+                                                    SearchText: $('#@Html.IdFor(model => model.SearchText)').val(),
+                                                    SearchStoreId: $('#@Html.IdFor(model => model.SearchStoreId)').val(),
+                                                    SearchProductId: $('#@Html.IdFor(model => model.SearchProductId)').val(),
+                                                    SearchApprovedId: $('#SearchApprovedId').val()
+                                                };
+                                                addAntiForgeryToken(data);
+                                                return data;
+                                            }
                                         }
                                     },
                                     schema: {
@@ -164,14 +174,14 @@
                                         // Cancel the changes
                                         this.cancelChanges();
                                     },
-                                    pageSize: @(defaultGridPageSize),
+                                    pageSize: @(Model.PageSize),
                                     serverPaging: true,
                                     serverFiltering: true,
                                     serverSorting: true
                                 },
                                 pageable: {
                                     refresh: true,
-                                    pageSizes: [@(gridPageSizes)],
+                                    pageSizes: [@(Model.AvailablePageSizes)],
                                     @await Html.PartialAsync("_GridPagerMessages")
                                 },
                                 scrollable: false,
@@ -246,7 +256,7 @@
                         });
                     </script>
 
-                    <script type="text/javascript">
+                    <script>
                         var selectedIds = [];
 
                         $(document).ready(function() {
@@ -317,32 +327,28 @@
                             });
 
                             //"delete selected" button
-                            $('#delete-selected').click(function(e) {
-                                e.preventDefault();
-
+                            $("#delete-selected-action-confirmation-submit-button").bind("click", function () {
                                 var postData = {
                                     selectedIds: selectedIds
                                 };
                                 addAntiForgeryToken(postData);
-
                                 $.ajax({
                                     cache: false,
                                     type: "POST",
                                     url: "@(Url.Action("DeleteSelected", "ProductReview"))",
                                     data: postData,
-                                    complete: function(data) {
+                                    complete: function (data) {
                                         //reload grid
                                         var grid = $('#productreviews-grid').data('kendoGrid');
                                         grid.dataSource.read();
                                     },
-                                    error: function(xhr, ajaxOptions, thrownError) {
+                                    error: function (xhr, ajaxOptions, thrownError) {
                                         alert(thrownError);
-                                    },
-                                    traditional: true
+                                    }
                                 });
+                                $('#delete-selected-action-confirmation').modal('toggle');
                                 return false;
                             });
-
 
                             $('#mastercheckbox').click(function() {
                                 $('.checkboxGroups').attr('checked', $(this).is(':checked')).change();
@@ -369,19 +375,6 @@
                                 updateMasterCheckbox();
                             });
                         });
-
-                        function additionalData() {
-                            var data = {
-                                CreatedOnFrom: $('#@Html.IdFor(model => model.CreatedOnFrom)').val(),
-                                CreatedOnTo: $('#@Html.IdFor(model => model.CreatedOnTo)').val(),
-                                SearchText: $('#@Html.IdFor(model => model.SearchText)').val(),
-                                SearchStoreId: $('#@Html.IdFor(model => model.SearchStoreId)').val(),
-                                SearchProductId: $('#@Html.IdFor(model => model.SearchProductId)').val(),
-                                SearchApprovedId: $('#SearchApprovedId').val()
-                            };
-                            addAntiForgeryToken(data);
-                            return data;
-                        }
 
                         function onDataBound(e) {
 

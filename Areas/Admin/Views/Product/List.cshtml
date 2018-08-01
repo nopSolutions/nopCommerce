@@ -1,12 +1,8 @@
-﻿@model ProductListModel
-@inject AdminAreaSettings adminAreaSettings
+﻿@model ProductSearchModel
 
 @using Nop.Core.Domain.Catalog
 
 @{
-    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
-    var gridPageSizes = adminAreaSettings.GridPageSizes;
-
     //page title
     ViewBag.Title = T("Admin.Catalog.Products").Text;
     //active menu item (system name)
@@ -73,11 +69,16 @@
                 @T("Admin.Common.Import")
             </button>
             }
+            <a asp-action="BulkEdit" class="btn bg-yellow">
+                <i class="fa fa-edit"></i>
+                @T("Admin.Common.BulkEdit")
+            </a>
             <button type="button" id="delete-selected" class="btn bg-red">
                 <i class="fa fa-trash-o"></i>
                 @T("Admin.Common.Delete.Selected")
-            </button>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_list_buttons" })
+            </button>      
+            <nop-action-confirmation asp-button-id="delete-selected" />
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductListButtons })
         </div>
     </div>
 
@@ -194,7 +195,7 @@
                     <div class="panel-body">
                         <div id="products-grid"></div>
 
-                        <script type="text/javascript">
+                        <script>
                             $(document).ready(function() {
                                 $("#products-grid").kendoGrid({
                                     dataSource: {
@@ -204,7 +205,21 @@
                                                 url: "@Html.Raw(Url.Action("ProductList", "Product"))",
                                                 type: "POST",
                                                 dataType: "json",
-                                                data: additionalData
+                                                data: function() {
+                                                    var data = {
+                                                        SearchProductName: $('#@Html.IdFor(model => model.SearchProductName)').val(),
+                                                        SearchCategoryId: $('#SearchCategoryId').val(),
+                                                        SearchIncludeSubCategories: $('#@Html.IdFor(model => model.SearchIncludeSubCategories)').is(':checked'),
+                                                        SearchManufacturerId: $('#SearchManufacturerId').val(),
+                                                        SearchStoreId: $('#SearchStoreId').val(),
+                                                        SearchWarehouseId: $('#SearchWarehouseId').val(),
+                                                        SearchVendorId: $('#SearchVendorId').val(),
+                                                        SearchProductTypeId: $('#SearchProductTypeId').val(),
+                                                        SearchPublishedId: $('#SearchPublishedId').val()
+                                                    };
+                                                    addAntiForgeryToken(data);
+                                                    return data;
+                                                }
                                             }
                                         },
                                         schema: {
@@ -217,14 +232,14 @@
                                             // Cancel the changes
                                             this.cancelChanges();
                                         },
-                                        pageSize: @(defaultGridPageSize),
+                                        pageSize: @(Model.PageSize),
                                         serverPaging: true,
                                         serverFiltering: true,
                                         serverSorting: true
                                     },
                                     pageable: {
                                         refresh: true,
-                                        pageSizes: [@(gridPageSizes)],
+                                        pageSizes: [@(Model.AvailablePageSizes)],
                                         @await Html.PartialAsync("_GridPagerMessages")
                                     },
                                     editable: {
@@ -293,7 +308,7 @@
         </div>
     </div>
 
-    <script type="text/javascript">
+    <script>
         var selectedIds = [];
 
         $(document).ready(function () {
@@ -323,29 +338,26 @@
                 }
             });
             //delete selected
-            $('#delete-selected').click(function(e) {
-                e.preventDefault();
-
+            $("#delete-selected-action-confirmation-submit-button").bind("click", function () {
                 var postData = {
                     selectedIds: selectedIds
                 };
                 addAntiForgeryToken(postData);
-
                 $.ajax({
                     cache: false,
                     type: "POST",
                     url: "@(Url.Action("DeleteSelected", "Product"))",
                     data: postData,
-                    complete: function(data) {
+                    complete: function (data) {
                         //reload grid
                         var grid = $('#products-grid').data('kendoGrid');
                         grid.dataSource.read();
                     },
-                    error: function(xhr, ajaxOptions, thrownError) {
+                    error: function (xhr, ajaxOptions, thrownError) {
                         alert(thrownError);
-                    },
-                    traditional: true
+                    }
                 });
+                $('#delete-selected-action-confirmation').modal('toggle');
                 return false;
             });
 
@@ -356,41 +368,21 @@
             //wire up checkboxes.
             $('#products-grid').on('change', 'input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]', function (e) {
                 var $check = $(this);
+                var checked = jQuery.inArray($check.val(), selectedIds);
                 if ($check.is(":checked") == true) {
-                    var checked = jQuery.inArray($check.val(), selectedIds);
                     if (checked == -1) {
                         //add id to selectedIds.
                         selectedIds.push($check.val());
                     }
-                }
-                else {
-                    var checked = jQuery.inArray($check.val(), selectedIds);
-                    if (checked > -1) {
-                        //remove id from selectedIds.
-                        selectedIds = $.grep(selectedIds, function (item, index) {
-                            return item != $check.val();
-                        });
-                    }
+                } else if (checked > -1) {
+                    //remove id from selectedIds.
+                    selectedIds = $.grep(selectedIds, function (item, index) {
+                        return item != $check.val();
+                    });
                 }
                 updateMasterCheckbox();
             });
         });
-
-        function additionalData() {
-            var data = {
-                SearchProductName: $('#@Html.IdFor(model => model.SearchProductName)').val(),
-                SearchCategoryId: $('#SearchCategoryId').val(),
-                SearchIncludeSubCategories: $('#@Html.IdFor(model => model.SearchIncludeSubCategories)').is(':checked'),
-                SearchManufacturerId: $('#SearchManufacturerId').val(),
-                SearchStoreId: $('#SearchStoreId').val(),
-                SearchWarehouseId: $('#SearchWarehouseId').val(),
-                SearchVendorId: $('#SearchVendorId').val(),
-                SearchProductTypeId: $('#SearchProductTypeId').val(),
-                SearchPublishedId: $('#SearchPublishedId').val()
-            };
-            addAntiForgeryToken(data);
-            return data;
-        }
 
         function onDataBound(e) {
             $('#products-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]').each(function () {
@@ -410,6 +402,7 @@
         }
     </script>
 </form>
+@*<nop-delete-confirmation asp-button-id="delete-selected" />*@
 
 @*import products form*@
 <div id="importexcel-window" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="importexcel-window-title">
@@ -459,7 +452,9 @@
     <input type="hidden" id="selectedIds" name="selectedIds" value="" />
 </form>
 
-<script type="text/javascript">
+
+
+<script>
     $(document).ready(function () {
         $('#exportxml-selected').click(function (e) {
             e.preventDefault();
@@ -476,7 +471,7 @@
     <input type="hidden" id="selectedIds" name="selectedIds" value="" />
 </form>
 
-<script type="text/javascript">
+<script>
     $(document).ready(function () {
         $('#exportexcel-selected').click(function (e) {
             e.preventDefault();

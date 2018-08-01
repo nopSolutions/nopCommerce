@@ -1,22 +1,29 @@
-﻿@model OrderModel
+@model OrderModel
+@using System.Text.Encodings.Web
 
 <div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_order_details_notes_top", additionalData = Model.Id })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.OrderDetailsNotesTop, additionalData = Model })
     <div class="panel panel-default">
         <div class="panel-body">
             <div id="ordernotes-grid"></div>
 
-            <script type="text/javascript">
+            <script>
                 $(document).ready(function() {
                     $("#ordernotes-grid").kendoGrid({
                         dataSource: {
                             type: "json",
                             transport: {
                                 read: {
-                                    url: "@Html.Raw(Url.Action("OrderNotesSelect", "Order", new {orderId = Model.Id}))",
+                                    url: "@Html.Raw(Url.Action("OrderNotesSelect", "Order"))",
                                     type: "POST",
                                     dataType: "json",
-                                    data: addAntiForgeryToken
+                                    data: function () {
+                                        var data = {
+                                            OrderId: '@(Model.Id)'
+                                        };
+                                        addAntiForgeryToken(data);
+                                        return data;
+                                    }
                                 },
                                 destroy: {
                                     url: "@Html.Raw(Url.Action("OrderNoteDelete", "Order", new {orderId = Model.Id}))",
@@ -44,15 +51,14 @@
                                 // Cancel the changes
                                 this.cancelChanges();
                             },
+                            pageSize: @(Model.OrderNoteSearchModel.PageSize),
                             serverPaging: true,
                             serverFiltering: true,
                             serverSorting: true
                         },
                         pageable: {
                             refresh: true,
-                            numeric: false,
-                            previousNext: false,
-                            info: false,
+                            pageSizes: [@(Model.OrderNoteSearchModel.AvailablePageSizes)],
                             @await Html.PartialAsync("_GridPagerMessages")
                         },
                         editable: {
@@ -98,7 +104,7 @@
     </div>
 
     <div class="panel panel-default">
-        <script type="text/javascript">
+        <script>
             $(document).ready(function () {
                 $("#@Html.IdFor(model => model.AddOrderNoteHasDownload)").change(toggleAddOrderNoteHasDownload);
                 toggleAddOrderNoteHasDownload();
@@ -124,7 +130,7 @@
                     <nop-label asp-for="AddOrderNoteMessage" />
                 </div>
                 <div class="col-md-9">
-                    <nop-editor asp-for="AddOrderNoteMessage" />
+                    <nop-textarea asp-for="AddOrderNoteMessage" />
                     <span asp-validation-for="AddOrderNoteMessage"></span>
                 </div>
             </div>
@@ -161,10 +167,10 @@
             </div>
         </div>
     </div>
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_order_details_notes_bottom", additionalData = Model.Id })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.OrderDetailsNotesBottom, additionalData = Model })
 </div>
 
-<script type="text/javascript">
+<script>
     $(document).ready(function () {
         $('#addOrderNote').click(function () {
             var orderNoteMessage = $("#@Html.IdFor(model => model.AddOrderNoteMessage)").val();
@@ -179,22 +185,29 @@
                 DisplayToCustomer: orderNoteDisplayToCustomer,
                 message: orderNoteMessage,
                 downloadId: orderNoteDownloadId,
-                orderId: @Model.Id
-                };
+                orderId: '@Model.Id'
+            };
             addAntiForgeryToken(postData);
 
-            $.ajax({
+             $.ajax({
                 cache:false,
                 type: "POST",
                 url: "@(Url.Action("OrderNoteAdd", "Order"))",
                 data: postData,
-                success: function (data) {
-                    var grid = $("#ordernotes-grid").data('kendoGrid');
-                    grid.dataSource.read();
+                 success: function (data) {
+                     if (data.Error) {
+                         alert(data.Error);
+                     }
+
+                     if (data.Result) { 
+                        var grid = $("#ordernotes-grid").data('kendoGrid');
+                        grid.dataSource.read();
+                     }
+
                     $('#addOrderNote').attr('disabled', false);
                 },
-                error:function (xhr, ajaxOptions, thrownError){
-                    alert('Failed to add order note.');
+                 error: function (xhr, ajaxOptions, thrownError) {
+                    alert('Failed to add order note.');                    
                     $('#addOrderNote').attr('disabled', false);
                 }
             });

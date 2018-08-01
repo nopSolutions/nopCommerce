@@ -1,10 +1,12 @@
 @model ShoppingCartModel
 @using Nop.Core
+@using Nop.Core.Domain.Orders
 @using Nop.Core.Domain.Tax
 @inject IWebHelper webHelper
 @inject IWorkContext workContext
+@inject OrderSettings orderSettings
 <div class="order-summary-content">
-    @await Component.InvokeAsync("Widget", new { widgetZone = "order_summary_content_before" })
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OrderSummaryContentBefore })
     @await Html.PartialAsync("_OrderReviewData", Model.OrderReviewData)
     @if (Model.Items.Count > 0)
     {
@@ -37,6 +39,10 @@
                             <col width="1" />
                         }
                         <col />
+                        @if (Model.ShowVendorName)
+                        {
+                            <col width="1" />
+                        }
                         <col width="1" />
                         <col width="1" />
                         <col width="1" />
@@ -64,6 +70,12 @@
                             <th class="product">
                                 @T("ShoppingCart.Product(s)")
                             </th>
+                            @if (Model.ShowVendorName)
+                            {
+                                <th class="vendor">
+                                    @T("ShoppingCart.VendorName")
+                                </th>
+                            }
                             <th class="unit-price">
                                 @T("ShoppingCart.UnitPrice")
                             </th>
@@ -88,8 +100,8 @@
                                         }
                                         else
                                         {
-                                            <label class="td-title">@T("ShoppingCart.Remove"):</label>
-                                            <input type="checkbox" name="removefromcart" value="@(item.Id)" />
+                                            <label class="td-title" for="removefromcart@(item.Id)">@T("ShoppingCart.Remove"):</label>
+                                            <input type="checkbox" name="removefromcart" id="removefromcart@(item.Id)" value="@(item.Id)"/>
                                         }
                                     </td>
                                 }
@@ -128,8 +140,8 @@
                                     }
                                     @if (Model.IsEditable && item.AllowItemEditing)
                                     {
-                                        var editCartItemUrl = Url.RouteUrl("Product", new { SeName = item.ProductSeName });
-                                        editCartItemUrl = webHelper.ModifyQueryString(editCartItemUrl, "updatecartitemid=" + item.Id, null);
+                                        var editCartItemUrl = Url.RouteUrl("Product", new { SeName = item.ProductSeName }, webHelper.CurrentRequestProtocol);
+                                        editCartItemUrl = webHelper.ModifyQueryString(editCartItemUrl, "updatecartitemid", item.Id.ToString());
                                         <div class="edit-item">
                                             <a href="@editCartItemUrl">@T("Common.Edit")</a>
                                         </div>
@@ -140,23 +152,30 @@
                                             <ul>
                                                 @foreach (var warning in item.Warnings)
                                                 {
-                                                    <li>@warning</li>
+                                                    <li>@Html.Raw(warning)</li>
                                                 }
                                             </ul>
                                         </div>
                                     }
                                 </td>
+                                @if (Model.ShowVendorName)
+                                {
+                                    <td class="vendor">
+                                        <label class="td-title">@T("ShoppingCart.VendorName"):</label>
+                                        <span class="vendor-name">@item.VendorName</span>
+                                    </td>
+                                }
                                 <td class="unit-price">
                                     <label class="td-title">@T("ShoppingCart.UnitPrice"):</label>
                                     <span class="product-unit-price">@item.UnitPrice</span>
                                 </td>
                                 <td class="quantity">
-                                    <label class="td-title">@T("ShoppingCart.Quantity"):</label>
+                                    <label class="td-title" for="itemquantity@(item.Id)">@T("ShoppingCart.Quantity"):</label>
                                     @if (Model.IsEditable)
                                     {
                                         if (item.AllowedQuantities.Count > 0)
                                         {
-                                            <select name="itemquantity@(item.Id)" class="qty-dropdown">
+                                            <select name="itemquantity@(item.Id)" id="itemquantity@(item.Id)" class="qty-dropdown">
                                                 @foreach (var qty in item.AllowedQuantities)
                                                 {
                                                     <option selected="@qty.Selected" value="@qty.Value">@qty.Value</option>
@@ -165,9 +184,8 @@
                                         }
                                         else
                                         {
-                                            <input name="itemquantity@(item.Id)" type="text" value="@(item.Quantity)" class="qty-input" />
+                                            <input name="itemquantity@(item.Id)" id="itemquantity@(item.Id)" type="text" value="@(item.Quantity)" class="qty-input"/>
                                         }
-
                                     }
                                     else
                                     {
@@ -219,14 +237,14 @@
                 @await Component.InvokeAsync("SelectedCheckoutAttributes")
             </div>
             <div class="cart-footer">
-                @await Component.InvokeAsync("Widget", new { widgetZone = "order_summary_cart_footer" })
+                @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OrderSummaryCartFooter })
                 @if (Model.IsEditable)
                 {
                     <div class="cart-collaterals">
                         <div class="deals">
                             @await Html.PartialAsync("_DiscountBox", Model.DiscountBox)
                             @await Html.PartialAsync("_GiftCardBox", Model.GiftCardBox)
-                            @await Component.InvokeAsync("Widget", new { widgetZone = "order_summary_content_deals" })
+                            @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OrderSummaryContentDeals })
                         </div>
                         @await Component.InvokeAsync("EstimateShipping")
                     </div>
@@ -255,7 +273,7 @@
                                 @if (Model.TermsOfServicePopup)
                                 {
                                     <a class="read" id="read-terms">@T("Checkout.TermsOfService.Read")</a>
-                                    <script type="text/javascript" asp-location="Footer">
+                                    <script asp-location="Footer">
                                         $(document).ready(function() {
                                             $('#read-terms').on('click',
                                                 function(e) {
@@ -276,9 +294,9 @@
                         <div class="checkout-buttons">
                             @if (string.IsNullOrEmpty(Model.MinOrderSubtotalWarning) && !Model.HideCheckoutButton)
                             {
-                                <script type="text/javascript" asp-location="Footer">
+                                <script asp-location="Footer">
                                     $(document).ready(function () {
-                                        $('#checkout').click(function () {
+                                        $('#checkout').on('click', function () {
                                             //terms of service
                                             var termOfServiceOk = true;
                                             if ($('#termsofservice').length > 0) {
@@ -294,9 +312,18 @@
                                         });
                                     });
                                 </script>
-                                <button type="submit" id="checkout" name="checkout" value="checkout" class="button-1 checkout-button">
-                                    @T("Checkout.Button")
-                                </button>
+                                if (orderSettings.CheckoutDisabled)
+                                {
+                                    <div class="checkout-disabled">
+                                        @T("Checkout.Disabled")
+                                    </div>
+                                }
+                                else
+                                {
+                                    <button type="submit" id="checkout" name="checkout" value="checkout" class="button-1 checkout-button">
+                                        @T("Checkout.Button")
+                                    </button>
+                                }
                             }
                         </div>
                         <div class="addon-buttons">
@@ -321,5 +348,5 @@
             @T("ShoppingCart.CartIsEmpty")
         </div>
     }
-    @await Component.InvokeAsync("Widget", new { widgetZone = "order_summary_content_after" })
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OrderSummaryContentAfter })
 </div>

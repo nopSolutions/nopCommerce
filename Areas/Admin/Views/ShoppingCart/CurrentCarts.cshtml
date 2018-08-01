@@ -1,37 +1,62 @@
-﻿@using Nop.Services.Stores
-@inject AdminAreaSettings adminAreaSettings
+﻿@model ShoppingCartSearchModel
+
+@using Nop.Services.Stores
 @inject IStoreService storeService
 
 @{
-    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
-    var gridPageSizes = adminAreaSettings.GridPageSizes;
     var stores = storeService.GetAllStores();
 
     //page title
-    ViewBag.Title = T("Admin.CurrentCarts").Text;
+    ViewBag.Title = T("Admin.CurrentCarts.CartsAndWishlists").Text;
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("Current shopping carts");
+    Html.SetActiveMenuItemSystemName("Current shopping carts and wishlists");
 }
 
 <nop-antiforgery-token />
 <div class="content-header clearfix">
     <h1 class="pull-left">
-        @T("Admin.CurrentCarts")
+        @T("Admin.CurrentCarts.CartsAndWishlists")
     </h1>
     <div class="pull-right">
         &nbsp;
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_current_shopping_cart_list_buttons" })
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CurrentShoppingCartListButtons })
     </div>
 </div>
 
 <div class="content">
     <div class="form-horizontal">
         <div class="panel-group">
+            
+            <div class="panel panel-default panel-search">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    <nop-label asp-for="ShoppingCartType" />
+                                </div>
+                                <div class="col-md-8">
+                                    <nop-select asp-for="ShoppingCartType" asp-items="@Model.AvailableShoppingCartTypes" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-8 col-md-offset-4">
+                            <button type="button" id="search-shopping-carts" class="btn btn-primary btn-search">
+                                <i class="fa fa-search"></i>
+                                @T("Admin.Common.Search")
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="panel panel-default">
                 <div class="panel-body">
                     <div id="carts-grid"></div>
 
-                    <script type="text/javascript">
+                    <script>
                         $(document).ready(function() {
                             $("#carts-grid").kendoGrid({
                                 dataSource: {
@@ -41,7 +66,13 @@
                                             url: "@Html.Raw(Url.Action("CurrentCarts", "ShoppingCart"))",
                                             type: "POST",
                                             dataType: "json",
-                                            data: addAntiForgeryToken
+                                            data: function() {
+                                                var data = {
+                                                    ShoppingCartType: $('#@Html.IdFor(model => model.ShoppingCartType)').val()
+                                                };
+                                                addAntiForgeryToken(data);
+                                                return data;
+                                            }
                                         }
                                     },
                                     schema: {
@@ -54,14 +85,14 @@
                                         // Cancel the changes
                                         this.cancelChanges();
                                     },
-                                    pageSize: @(defaultGridPageSize),
+                                    pageSize: @(Model.PageSize),
                                     serverPaging: true,
                                     serverFiltering: true,
                                     serverSorting: true
                                 },
                                 pageable: {
                                     refresh: true,
-                                    pageSizes: [@(gridPageSizes)],
+                                    pageSizes: [@(Model.AvailablePageSizes)],
                                     @await Html.PartialAsync("_GridPagerMessages")
                                 },
                                 //details grid
@@ -71,7 +102,8 @@
                                     {
                                         field: "CustomerId",
                                         title: "@T("Admin.CurrentCarts.Customer")",
-                                        template: '<a href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#">#:CustomerEmail#</a>'
+                                        template:
+                                            '<a href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#">#:CustomerEmail#</a>'
                                     }, {
                                         field: "TotalItems",
                                         title: "@T("Admin.CurrentCarts.TotalItems")",
@@ -88,65 +120,93 @@
                                     type: "json",
                                     transport: {
                                         read: {
-                                            url: "@Html.Raw(Url.Action("GetCartDetails", "ShoppingCart"))?customerId="+e.data.CustomerId,
+                                            url: "@Html.Raw(Url.Action("GetCartDetails", "ShoppingCart"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: function() {
+                                                var data = {
+                                                    CustomerId: e.data.CustomerId,
+                                                    ShoppingCartType: $('#@Html.IdFor(model => model.ShoppingCartType)').val()
+                                                };
+                                                addAntiForgeryToken(data);
+                                                return data;
+                                            }
+                                        },
+                                        destroy: {
+                                            url: "@Html.Raw(Url.Action("DeleteItem", "ShoppingCart"))",
                                             type: "POST",
                                             dataType: "json",
                                             data: addAntiForgeryToken
                                         }
                                     },
+                                    requestEnd: function(e) {
+                                        if (e.type == "destroy") {
+                                            this.read();
+                                        }
+                                    },
                                     schema: {
                                         data: "Data",
                                         total: "Total",
-                                        errors: "Errors"
+                                        errors: "Errors",
+                                        model: {
+                                            id: "Id"
+                                        }
                                     },
                                     error: function(e) {
                                         display_kendoui_grid_error(e);
                                         // Cancel the changes
                                         this.cancelChanges();
                                     },
+                                    pageSize: @(Model.ShoppingCartItemSearchModel.PageSize),
                                     serverPaging: true,
                                     serverFiltering: true,
                                     serverSorting: true
                                 },
+                                editable: {
+                                    confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                                    mode: "inline"
+                                },
                                 scrollable: false,
-                                sortable: true,
                                 pageable: {
                                     refresh: true,
-                                    numeric: false,
-                                    previousNext: false,
-                                    info: false,
+                                    pageSizes: [@(Model.ShoppingCartItemSearchModel.AvailablePageSizes)],
                                     @await Html.PartialAsync("_GridPagerMessages")
                                 },
                                 columns: [
                                     {
                                         field: "ProductName",
                                         title: "@T("Admin.CurrentCarts.Product")",
-                                        template: '<a href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#">#:ProductName#</a>' +
-                                            '# if(AttributeInfo && AttributeInfo.length > 0) {# <div>#=AttributeInfo#</div> #} #',
+                                        template:
+                                            '<a href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#">#:ProductName#</a>' +
+                                                '# if(AttributeInfo && AttributeInfo.length > 0) {# <div>#=AttributeInfo#</div> #} #',
                                         width: 400
-                                    },{
+                                    }, {
                                         field: "Quantity",
                                         title: "@T("Admin.CurrentCarts.Quantity")",
                                         width: 150
-                                    },{
+                                    }, {
                                         field: "UnitPrice",
                                         title: "@T("Admin.CurrentCarts.UnitPrice")",
                                         width: 150
-                                    },{
+                                    }, {
                                         field: "Total",
                                         title: "@T("Admin.CurrentCarts.Total")",
                                         width: 150
-                                    },{
+                                    }, {
                                         field: "Store",
                                         hidden: @(stores.Count > 1 ? "false" : "true"),
                                         title: "@T("Admin.CurrentCarts.Store")",
                                         width: 150
-                                    },{
+                                    }, {
                                         field: "UpdatedOn",
                                         title: "@T("Admin.CurrentCarts.UpdatedOn")",
                                         width: 150,
                                         type: "date",
                                         format: "{0:G}"
+                                    }, {
+                                        command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
+                                        title: "@T("Admin.Common.Delete")",
+                                        width: 100
                                     }
                                 ]
                             });
@@ -156,4 +216,16 @@
             </div>
         </div>
     </div>
+
+    <script>
+        $(document)
+            .ready(function() {
+                //search button
+                $('#search-shopping-carts').click(function() {
+                    //search
+                    $("#carts-grid").data('kendoGrid').dataSource.read();
+                    return false;
+                });
+            });
+    </script>
 </div>

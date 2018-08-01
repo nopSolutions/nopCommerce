@@ -1,4 +1,6 @@
-﻿@{
+@model ForumGroupSearchModel
+
+@{
     //page title
     ViewBag.Title = T("Admin.ContentManagement.Forums.Manage").Text;
     //active menu item (system name)
@@ -13,7 +15,7 @@
     <div class="pull-right">
         <a asp-action="CreateForumGroup" class="btn btn-primary">@T("Admin.ContentManagement.Forums.ForumGroup.CreateForumGroup")</a>
         <a asp-action="CreateForum" class="btn btn-primary">@T("Admin.ContentManagement.Forums.Forum.CreateForum")</a>
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_forum_list_buttons" })
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ForumListButtons })
     </div>
 </div>
 
@@ -24,7 +26,7 @@
                 <div class="panel-body">
                     <div id="forumgroup-grid"></div>
 
-                    <script type="text/javascript">
+                    <script>
                         $(document).ready(function() {
                             $("#forumgroup-grid").kendoGrid({
                                 dataSource: {
@@ -47,15 +49,14 @@
                                         // Cancel the changes
                                         this.cancelChanges();
                                     },
+                                    pageSize: @(Model.PageSize),
                                     serverPaging: true,
                                     serverFiltering: true,
                                     serverSorting: true
                                 },
                                 pageable: {
                                     refresh: true,
-                                    numeric: false,
-                                    previousNext: false,
-                                    info: false,
+                                    pageSizes: [@(Model.AvailablePageSizes)],
                                     @await Html.PartialAsync("_GridPagerMessages")
                                 },
                                 //details grid
@@ -95,10 +96,16 @@
                                     type: "json",
                                     transport: {
                                         read: {
-                                            url: "@Html.Raw(Url.Action("ForumList", "Forum"))?forumGroupId=" + e.data.Id,
+                                            url: "@Html.Raw(Url.Action("ForumList", "Forum"))",
                                             type: "POST",
                                             dataType: "json",
-                                            data: addAntiForgeryToken
+                                            data: function() {
+                                                var data = {
+                                                    ForumGroupId: e.data.Id
+                                                };
+                                                addAntiForgeryToken(data);
+                                                return data;
+                                            }
                                         }
                                     },
                                     schema: {
@@ -111,17 +118,15 @@
                                         // Cancel the changes
                                         this.cancelChanges();
                                     },
+                                    pageSize: @(Model.ForumSearch.PageSize),
                                     serverPaging: true,
                                     serverFiltering: true,
                                     serverSorting: true
                                 },
                                 scrollable: false,
-                                sortable: true,
                                 pageable: {
                                     refresh: true,
-                                    numeric: false,
-                                    previousNext: false,
-                                    info: false,
+                                    pageSizes: [@(Model.ForumSearch.AvailablePageSizes)],
                                     @await Html.PartialAsync("_GridPagerMessages")
                                 },
                                 columns: [

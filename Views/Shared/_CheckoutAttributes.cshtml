@@ -4,6 +4,8 @@
 @using Nop.Core.Domain.Media
 @using Nop.Services.Media
 @inject IDownloadService downloadService
+@inject CatalogSettings catalogSettings
+
 @if (Model.CheckoutAttributes.Count > 0)
 {
     var attributeChangeScriptsBuilder = new StringBuilder();
@@ -40,7 +42,7 @@
                                 <option selected="@attributeValue.IsPreSelected" value="@attributeValue.Id">@attributeName</option>
                             }
                         </select>
-                            attributeChangeScriptsBuilder.AppendFormat("$('#{0}').change(function(){{checkoutAttributeChange();}});\n", controlId);
+                            attributeChangeScriptsBuilder.AppendFormat("$('#{0}').on('change', function(){{checkoutAttributeChange();}});\n", controlId);
                             }
                             break;
                         case AttributeControlType.RadioList:
@@ -55,7 +57,7 @@
                                     <input id="@(controlId)_@(attributeValue.Id)" type="radio" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" />
                                     <label for="@(controlId)_@(attributeValue.Id)">@attributeName</label>
                                 </li>
-                                attributeChangeScriptsBuilder.AppendFormat("$('#{0}_{1}').click(function(){{checkoutAttributeChange();}});\n", controlId, attributeValue.Id);
+                                attributeChangeScriptsBuilder.AppendFormat("$('#{0}_{1}').on('click', function(){{checkoutAttributeChange();}});\n", controlId, attributeValue.Id);
                             }
                         </ul>
                             }
@@ -73,7 +75,7 @@
                                     <input id="@(controlId)_@(attributeValue.Id)" type="checkbox" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" @(attribute.AttributeControlType == AttributeControlType.ReadonlyCheckboxes ? Html.Raw(" disabled=\"disabled\"") : null) />
                                     <label for="@(controlId)_@(attributeValue.Id)">@attributeName</label>
                                 </li>
-                                attributeChangeScriptsBuilder.AppendFormat("$('#{0}_{1}').click(function(){{checkoutAttributeChange();}});\n", controlId, attributeValue.Id);
+                                attributeChangeScriptsBuilder.AppendFormat("$('#{0}_{1}').on('click', function(){{checkoutAttributeChange();}});\n", controlId, attributeValue.Id);
                             }
                         </ul>
                             }
@@ -95,7 +97,7 @@
                                     asp-month-name="@(controlId + "_month")" 
                                     asp-year-name="@(controlId + "_year")"
                                     asp-begin-year="@(DateTime.Now.Year)"
-                                    asp-end-year="@(DateTime.Now.Year + 1)"
+                                    asp-end-year="@(DateTime.Now.Year + catalogSettings.CountDisplayedYearsDatePicker)"
                                     asp-selected-day="@attribute.SelectedDay"
                                     asp-selected-month="@attribute.SelectedMonth"
                                     asp-selected-year="@attribute.SelectedYear"
@@ -111,8 +113,8 @@
                                 }
 
                                 //register CSS and JS
-                                Html.AddCssFileParts("~/lib/fineuploader/fineuploader-4.2.2.min.css");
-                                Html.AddScriptParts(ResourceLocation.Footer, "~/lib/fineuploader/jquery.fineuploader-4.2.2.min.js");
+                                Html.AddCssFileParts("~/lib/fineuploader/fine-uploader.min.css");
+                                Html.AddScriptParts(ResourceLocation.Footer, "~/lib/fineuploader/jquery.fine-uploader.min.js");
 
                                 //ex. ['jpg', 'jpeg', 'png', 'gif'] or []
                                 var allowedFileExtensions = string.Join(", ", attribute.AllowedFileExtensions.Select(x => "'" + x.Trim() + "'").ToList());
@@ -159,7 +161,7 @@
                                         </ul>
                                     </div>
                                 </script>
-                                <script type="text/javascript" asp-location="Footer">
+                                <script asp-location="Footer">
                                     $(document).ready(function() {
                                         $("#@(controlId)uploader").fineUploader({
                                             request: {
@@ -181,7 +183,7 @@
                                             }
                                         });
 
-                                        $("#@(controlId + "remove")").click(function(e) {
+                                        $("#@(controlId + "remove")").on("click", function(e) {
                                             $("#@(controlId + "downloadurl")").html("");
                                             $("#@(controlId)").val('');
                                             $(this).hide();
@@ -224,12 +226,12 @@
                                                 @*<span class="name">@attributeName</span>*@
                                             </label>
                                         </li>
-                                        attributeChangeScriptsBuilder.AppendFormat("$('#{0}_{1}').click(function(){{checkoutAttributeChange();}});\n", controlId, attributeValue.Id);
+                                        attributeChangeScriptsBuilder.AppendFormat("$('#{0}_{1}').on('click', function(){{checkoutAttributeChange();}});\n", controlId, attributeValue.Id);
                                     }
                                 </ul>
-                                <script type="text/javascript" asp-location="Footer">
+                                <script asp-location="Footer">
                                     $(document).ready(function() {
-                                        $('.checkout-attributes #color-squares-@(attribute.Id)').delegate('input', 'click', function (event) {
+                                        $('.checkout-attributes #color-squares-@(attribute.Id)').on('click', 'input', function (event) {
                                             $('.checkout-attributes #color-squares-@(attribute.Id)').find('li').removeClass('selected-value');
                                             $(this).closest('li').addClass('selected-value');
                                         });
@@ -247,7 +249,7 @@
             }
         </dl>
     </div>
-    <script type="text/javascript" asp-location="Footer">
+    <script asp-location="Footer">
         $(document).ready(function() {
             checkoutAttributeChange();
             @Html.Raw(attributeChangeScriptsBuilder.ToString())
@@ -278,7 +280,7 @@
                             $('#checkout_attribute_input_' + data.disabledattributeids[i]).hide();
                         }
                     }
-                    $.event.trigger({ type: "checkout_attributes_changed", changedData: data });
+                    $(document).trigger({ type: "checkout_attributes_changed", changedData: data });
                 }
             });
         }

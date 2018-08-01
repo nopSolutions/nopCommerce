@@ -1,7 +1,7 @@
 @model DateTime
 @using System.Globalization
 <input id="@Html.IdForModel()" name="@Html.NameForModel()" value="@((Model > DateTime.MinValue ? Model : DateTime.Today).ToString(CultureInfo.CurrentCulture.DateTimeFormat))" />
-<script type="text/javascript">
+<script>
     $(document).ready(function () {
         $("#@Html.IdForModel()").kendoDateTimePicker({
             popup: {

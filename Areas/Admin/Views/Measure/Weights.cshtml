@@ -1,6 +1,8 @@
-﻿<div id="measureweight-grid"></div>
+﻿@model MeasureSearchModel
 
-<script type="text/javascript">
+<div id="measureweight-grid"></div>
+
+<script>
     $(document).ready(function() {
         $("#measureweight-grid").kendoGrid({
             dataSource: {
@@ -57,15 +59,14 @@
                     // Cancel the changes
                     this.cancelChanges();
                 },
+                pageSize: @(Model.MeasureWeightSearchModel.PageSize),
                 serverPaging: true,
                 serverFiltering: true,
                 serverSorting: true
             },
             pageable: {
                 refresh: true,
-                numeric: false,
-                previousNext: false,
-                info: false,
+                pageSizes: [@(Model.MeasureWeightSearchModel.AvailablePageSizes)],
                 @await Html.PartialAsync("_GridPagerMessages")
             },
             toolbar: [{ name: "create", text: "@T("Admin.Common.AddNewRecord")" }],
@@ -133,12 +134,19 @@
         });
     });
 </script>
+<button type="submit" class="btn btn-default" id="btnMarkAsPrimaryWeight" style="display:none" />
+<script>
+    var selectedId;
 
-<script type="text/javascript">
     function markAsPrimaryWeight(id) {
-        if (confirm('@T("Admin.Common.AreYouSure")')) {
+        selectedId = id;
+        $("#btnMarkAsPrimaryWeight").click();
+    };
+
+    $(document).ready(function () {
+        $("#btnMarkAsPrimaryWeight-action-confirmation-submit-button").bind("click", function () {
             var postData = {
-                id: id
+                id: selectedId
             };
             addAntiForgeryToken(postData);
             $.ajax({
@@ -146,14 +154,15 @@
                 type: "POST",
                 url: "@(Url.Action("MarkAsPrimaryWeight", "Measure"))",
                 data: postData,
-                success: function(data) {
+                success: function (data) {
                     var grid = $("#measureweight-grid").data('kendoGrid');
                     grid.dataSource.read();
                 },
-                error: function(xhr, ajaxOptions, thrownError) {
+                error: function (xhr, ajaxOptions, thrownError) {
                     alert('Failed to update weight');
                 }
             });
-        }
-    };
+            $('#btnMarkAsPrimaryWeight-action-confirmation').modal('toggle');
+        });
+    });   
 </script>

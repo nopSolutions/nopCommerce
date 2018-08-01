@@ -1,0 +1,101 @@
+﻿<div class="panel-group basic-setting">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div id="shipping-rate-grid"></div>
+
+            <script>
+                $(document)
+                    .ready(function() {
+                        $("#shipping-rate-grid")
+                            .kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("FixedShippingRateList", "FixedByWeightByTotal"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        },
+                                        update: {
+                                            url: "@Html.Raw(Url.Action("UpdateFixedShippingRate", "FixedByWeightByTotal"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors",
+                                        model: {
+                                            id: "ShippingMethodId",
+                                            fields: {
+                                                ShippingMethodId: { editable: false, type: "number" },
+                                                ShippingMethodName: { editable: false, type: "string" },
+                                                Rate: { editable: true, type: "number" }
+                                            }
+                                        }
+                                    },
+                                    requestEnd: function(e) {
+                                        if (e.type == "update") {
+                                            this.read();
+                                        }
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    numeric: false,
+                                    previousNext: false,
+                                    info: false,
+                                    @await Html.PartialAsync("~/Areas/Admin/Views/Shared/_GridPagerMessages.cshtml")
+                                },
+                                editable: {
+                                    confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                                    mode: "inline"
+                                },
+                                scrollable: false,
+                                columns: [
+                                {
+                                    field: "ShippingMethodName",
+                                    title: "@T("Plugins.Shipping.FixedByWeightByTotal.Fields.ShippingMethod")",
+                                    width: 400
+                                }, {
+                                    field: "Rate",
+                                    title: "@T("Plugins.Shipping.FixedByWeightByTotal.Fields.Rate")",
+                                    width: 200,
+                                    editor: function(container, options) {
+                                        $('<input name="' + options.field + '"/>')
+                                            .appendTo(container)
+                                            .kendoNumericTextBox({
+                                                format: "{0:n4}",
+                                                decimals: 4
+                                            });
+                                    }
+                                }, {
+                                    command: {
+                                        name: "edit",
+                                        text: {
+                                            edit: "@T("Admin.Common.Edit")",
+                                            update: "@T("Admin.Common.Update")",
+                                            cancel: "@T("Admin.Common.Cancel")"
+                                        }
+                                    },
+                                    title: "@T("Admin.Common.Edit")",
+                                        width: 150
+                                    }
+                                ]
+                            });
+                    });
+            </script>
+        </div>
+    </div>
+</div>

@@ -7,13 +7,7 @@
 @{
     var supportRtl = workContext.WorkingLanguage.Rtl;
     var themeName = themeContext.WorkingThemeName;
-    var isIe8 = userAgentHelper.IsIe8();
 
-    //add browser specific CSS files
-    if (isIe8)
-    {
-        Html.AppendCssFileParts($"~/Themes/{themeName}/Content/css/ie8.css");
-    }
     //add main CSS file
     if (supportRtl)
     {
@@ -24,11 +18,5 @@
         Html.AppendCssFileParts($"~/Themes/{themeName}/Content/css/styles.css");
     }
     //add jQuery UI css file
-    Html.AppendCssFileParts("~/lib/jquery-ui-themes/smoothness/jquery-ui-1.10.3.custom.min.css");
-    //add browser specific JS files
-    if (isIe8)
-    {
-        Html.AddScriptParts(ResourceLocation.Footer, "~/lib/selectivizr.min.js");
-        Html.AddScriptParts(ResourceLocation.Footer, "~/lib/respond.min.js");
-    }
+    Html.AppendCssFileParts("~/lib/jquery-ui/jquery-ui-1.12.1.custom/jquery-ui.min.css");
 }

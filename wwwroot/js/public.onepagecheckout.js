@@ -22,17 +22,17 @@ var Checkout = {
         var descendants = element.find('*');
         $(descendants).each(function() {
             if (isDisabled) {
-                $(this).attr('disabled', 'disabled');
+                $(this).prop("disabled", true);
             } else {
-                $(this).removeAttr('disabled');
+                $(this).prop("disabled", false);
             }
         });
 
         if (isDisabled) {
-                element.attr('disabled', 'disabled');
-            } else {
-                element.removeAttr('disabled');
-            }
+            element.prop("disabled", true);
+        } else {
+            $(this).prop("disabled", false);
+        }
     },
 
     setLoadWaiting: function (step, keepDisabled) {
@@ -123,7 +123,7 @@ var Billing = {
         } else {
             $('#billing-new-address-form').hide();
         }
-        $.event.trigger({ type: "onepagecheckout_billing_address_new" });
+        $(document).trigger({ type: "onepagecheckout_billing_address_new" });
     },
 
     resetSelectedAddress: function () {
@@ -131,7 +131,7 @@ var Billing = {
         if (selectElement) {
             selectElement.val('');
         }
-        $.event.trigger({ type: "onepagecheckout_billing_address_reset" }); 
+        $(document).trigger({ type: "onepagecheckout_billing_address_reset" }); 
     },
 
     save: function () {
@@ -201,7 +201,7 @@ var Shipping = {
         } else {
             $('#shipping-new-address-form').hide();
         }
-        $.event.trigger({ type: "onepagecheckout_shipping_address_new" });
+        $(document).trigger({ type: "onepagecheckout_shipping_address_new" });
     },
 
     togglePickUpInStore: function (pickupInStoreInput) {
@@ -220,7 +220,7 @@ var Shipping = {
         if (selectElement) {
             selectElement.val('');
         }
-        $.event.trigger({ type: "onepagecheckout_shipping_address_reset" });
+        $(document).trigger({ type: "onepagecheckout_shipping_address_reset" });
     },
 
     save: function () {

@@ -1,7 +1,7 @@
-﻿@model ProductModel
+@model ProductModel
 
 <div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_details_seo_top", additionalData = Model.Id })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductDetailsSeoTop, additionalData = Model })
     <div class="panel panel-default">
         <div class="panel-body">
             @(Html.LocalizedEditor<ProductModel, ProductLocalizedModel>("product-seo-localized",
@@ -42,9 +42,9 @@
                         <span asp-validation-for="@Model.Locales[item].SeName"></span>
                     </div>
                 </div>
-                <script type="text/javascript">
+                <script>
                     $(document).ready(function () {
-                        $('#@Html.IdFor(model => model.Locales[item].SeName)').on('input propertychange paste', function () {
+                        $('#@Html.IdFor(model => model.Locales[item].SeName)').on('input change', function () {
                             var parameters = {
                                 entityId: '@Model.Id',
                                 entityName: 'Product',
@@ -96,9 +96,9 @@
                         <span asp-validation-for="SeName"></span>
                     </div>
                 </div>
-                <script type="text/javascript">
+                <script>
                     $(document).ready(function () {
-                        $('#@Html.IdFor(model => model.SeName)').on('input propertychange paste', function () {
+                        $('#@Html.IdFor(model => model.SeName)').on('input change', function () {
                             var parameters = {
                                 entityId: '@Model.Id',
                                 entityName: 'Product',
@@ -111,5 +111,5 @@
             </div>))
         </div>
     </div>
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_details_seo_bottom", additionalData = Model.Id })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductDetailsSeoBottom, additionalData = Model })
 </div>

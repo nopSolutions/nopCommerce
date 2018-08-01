@@ -1,4 +1,7 @@
 ﻿/* COMMON */
+.content{
+		padding-bottom: 55px;
+}
 ul, ol {
     margin-bottom: 0;
 }
@@ -13,6 +16,13 @@ ul, ol {
 }
 .margin-t-5 {
     margin-top: 5px;
+}
+.margin-b-5 {
+    margin-bottom: 5px;
+}
+.v-center {
+    display: flex;
+    align-items: center;
 }
 .please-wait {
     background: url('images/ajax_loader_small.gif') no-repeat;
@@ -32,7 +42,8 @@ ul, ol {
 .field-validation-error, .validation-summary-errors {
     color: red;
 }
-.field-validation-valid.warning {
+.field-validation-valid.warning, 
+.field-validation-custom.warning {
     color: #fff;
     background-color: #f39c12;
     margin: 5px 0;
@@ -89,6 +100,7 @@ ul.common-list {
     position: fixed;
     width: 61px;
     height: 48px;
+    z-index: 1000;
 }
 .btn-back-top::before {
     content: "";
@@ -1306,6 +1318,7 @@ span.grid-report-item.red {
 /*bootstrap touchspin*/
 .bootstrap-touchspin {
     max-width: 300px;
+    width: 100%;
 }
 .bootstrap-touchspin input {
     height: auto;
@@ -1321,20 +1334,26 @@ span.grid-report-item.red {
 .input-group-addon.bootstrap-touchspin-postfix {
     background-color: #eee;
     height: 34px;
+    padding-right: 30px;
 }
-.bootstrap-touchspin .input-group-btn-vertical>.btn {
+.bootstrap-touchspin .input-group-btn-vertical > .btn {
     background: #fff;
     border-color: #d2d6de;
     border-radius: 0;
-    padding: 0 10px;
     height: 18px;
+    font-size: 0;
+    padding-right: 14px;
+    padding-left: 6px;
 }
-.bootstrap-touchspin .input-group-btn-vertical>.btn:hover {
+.bootstrap-touchspin .input-group-btn-vertical > .btn:before {
+    font-size: 9px;
+}
+.bootstrap-touchspin .input-group-btn-vertical > .btn:hover {
     border-color: #afafaf;
 }
 .bootstrap-touchspin .input-group-btn-vertical .bootstrap-touchspin-down {
-   margin-top: -1px;
-   height: 17px;
+    margin-top: 16px;
+    height: 17px;
 }
 
 /* THROBBER */

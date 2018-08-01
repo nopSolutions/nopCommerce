@@ -1,4 +1,6 @@
-﻿@{    
+@model PickupPointProviderSearchModel
+
+@{    
     //page title
     ViewBag.Title = T("Admin.Configuration.Shipping.PickupPointProviders").Text;
     //active menu item (system name)
@@ -12,7 +14,7 @@
     </h1>
     <div class="pull-right">
         &nbsp;
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_pickup_point_provider_list_buttons" })
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.PickupPointProviderListButtons })
     </div>
 </div>
 
@@ -23,7 +25,7 @@
                 <div class="panel-body">
                     <div id="pickup-point-providers-grid"></div>
 
-                    <script type="text/javascript">
+                    <script>
                         $(document).ready(function() {
                             $("#pickup-point-providers-grid").kendoGrid({
                                 dataSource: {
@@ -67,15 +69,14 @@
                                         // Cancel the changes
                                         this.cancelChanges();
                                     },
+                                    pageSize: @(Model.PageSize),
                                     serverPaging: true,
                                     serverFiltering: true,
                                     serverSorting: true
                                 },
                                 pageable: {
                                     refresh: true,
-                                    numeric: false,
-                                    previousNext: false,
-                                    info: false,
+                                    pageSizes: [@(Model.AvailablePageSizes)],
                                     @await Html.PartialAsync("_GridPagerMessages")
                                 },
                                 editable: {
