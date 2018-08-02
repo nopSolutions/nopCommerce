@@ -3941,3 +3941,10 @@ BEGIN
 	VALUES (N'commonsettings.staticfilescachecontrol', N'public,max-age=604800', 0)
 END
 GO
+
+--rename table
+IF EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ShippingByWeight]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
+BEGIN
+    EXEC sp_RENAME '[dbo].[ShippingByWeightByTotal]', 'ShippingByWeightByTotalRecord'
+END
+GO
