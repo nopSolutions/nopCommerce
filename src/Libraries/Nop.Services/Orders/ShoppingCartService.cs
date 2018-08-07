@@ -514,16 +514,12 @@ namespace Nop.Services.Orders
         /// <param name="storeId"></param>
         /// <param name="ordered"></param>
         /// <returns>Shopping Cart</returns>
-        public virtual IList<ShoppingCartItem> GetShoppingCart(Customer customer, ShoppingCartType shoppingCartType, int storeId, bool ordered = false)
+        public virtual IList<ShoppingCartItem> GetShoppingCart(Customer customer, ShoppingCartType shoppingCartType, int storeId)
         {
-            var shoppingCart = customer.ShoppingCartItems
+            return customer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == shoppingCartType)
-                .LimitPerStore(storeId);
-
-            if (ordered)
-                shoppingCart.OrderByDescending(sci => sci.Id);
-
-            return shoppingCart.ToList();
+                .LimitPerStore(storeId)
+                .ToList();
         }
 
         /// <summary>
