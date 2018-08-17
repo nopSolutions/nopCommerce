@@ -16,23 +16,53 @@ namespace Nop.Core.Tests.Domain.Customers
     [TestFixture]
     public class CustomerTests
     {
+        CustomerRole customerRoleAdmin = new CustomerRole
+        {
+            Active = true,
+            Name = "Administrators",
+            SystemName = NopCustomerDefaults.AdministratorsRoleName
+        };
+
+        CustomerRole customerRoleGuests = new CustomerRole
+        {
+            Active = true,
+            Name = "Guests",
+            SystemName = NopCustomerDefaults.GuestsRoleName
+        };
+
+        CustomerRole customerRoleRegistered = new CustomerRole
+        {
+            Active = true,
+            Name = "Registered",
+            SystemName = NopCustomerDefaults.RegisteredRoleName
+        };
+
         [Test]
         public void Can_check_IsInCustomerRole()
         {
             var customer = new Customer();
 
-            customer.CustomerRoles.Add(new CustomerRole
+            var customerRole1 = new CustomerRole
             {
                 Active = true,
                 Name = "Test name 1",
                 SystemName = "Test system name 1"
-            });
-            customer.CustomerRoles.Add(new CustomerRole
+            };
+
+            var customerRole2 = new CustomerRole
             {
                 Active = false,
                 Name = "Test name 2",
                 SystemName = "Test system name 2"
-            });
+            };
+
+            customer.CustomerCustomerRoleMappings.Add(
+                new CustomerCustomerRoleMapping { CustomerRole = customerRole1 }
+            );
+            customer.CustomerCustomerRoleMappings.Add(
+                new CustomerCustomerRoleMapping { CustomerRole = customerRole2 }
+            );
+
             customer.IsInCustomerRole("Test system name 1", false).ShouldBeTrue();
             customer.IsInCustomerRole("Test system name 1").ShouldBeTrue();
 
@@ -47,28 +77,19 @@ namespace Nop.Core.Tests.Domain.Customers
         {
             var customer = new Customer();
 
-            customer.CustomerRoles.Add(new CustomerRole
-            {
-                Active = true,
-                Name = "Registered",
-                SystemName = NopCustomerDefaults.RegisteredRoleName
-            });
-            customer.CustomerRoles.Add(new CustomerRole
-            {
-                Active = true,
-                Name = "Guests",
-                SystemName = NopCustomerDefaults.GuestsRoleName
-            });
+            customer.CustomerCustomerRoleMappings.Add(
+                new CustomerCustomerRoleMapping { CustomerRole = customerRoleRegistered }
+            );
+            customer.CustomerCustomerRoleMappings.Add(
+                new CustomerCustomerRoleMapping { CustomerRole = customerRoleGuests }
+            );
 
             customer.IsAdmin().ShouldBeFalse();
 
-            customer.CustomerRoles.Add(
-                new CustomerRole
-                {
-                    Active = true,
-                    Name = "Administrators",
-                    SystemName = NopCustomerDefaults.AdministratorsRoleName
-                });
+            customer.CustomerCustomerRoleMappings.Add(
+                new CustomerCustomerRoleMapping { CustomerRole = customerRoleAdmin }
+            );
+
             customer.IsAdmin().ShouldBeTrue();
         }
         [Test]
@@ -76,28 +97,26 @@ namespace Nop.Core.Tests.Domain.Customers
         {
             var customer = new TestCustomer();
 
-            customer.CustomerRoles.Add(new CustomerRole
-            {
-                Active = true,
-                Name = "Registered",
-                SystemName = NopCustomerDefaults.RegisteredRoleName
-            });
-            customer.CustomerRoles.Add(new CustomerRole
-            {
-                Active = true,
-                Name = "Guests",
-                SystemName = NopCustomerDefaults.GuestsRoleName
-            });
+            customer.CustomerCustomerRoleMappings.Add(
+                new CustomerCustomerRoleMapping { CustomerRole = customerRoleRegistered }
+            );
+            customer.CustomerCustomerRoleMappings.Add(
+                new CustomerCustomerRoleMapping { CustomerRole = customerRoleGuests }
+            );
 
             customer.IsForumModerator().ShouldBeFalse();
 
-            customer.CustomerRoles.Add(
-                new CustomerRole
-                {
-                    Active = true,
-                    Name = "ForumModerators",
-                    SystemName = NopCustomerDefaults.ForumModeratorsRoleName
-                });
+            var customerRoleForumModerators = new CustomerRole
+            {
+                Active = true,
+                Name = "ForumModerators",
+                SystemName = NopCustomerDefaults.ForumModeratorsRoleName
+            };
+
+            customer.CustomerCustomerRoleMappings.Add(
+                new CustomerCustomerRoleMapping { CustomerRole = customerRoleForumModerators }
+            );
+
             customer.IsForumModerator().ShouldBeTrue();
         }
         [Test]
@@ -105,63 +124,42 @@ namespace Nop.Core.Tests.Domain.Customers
         {
             var customer = new Customer();
 
-            customer.CustomerRoles.Add(new CustomerRole
-            {
-                Active = true,
-                Name = "Registered",
-                SystemName = NopCustomerDefaults.RegisteredRoleName
-            });
-
-            customer.CustomerRoles.Add(new CustomerRole
-            {
-                Active = true,
-                Name = "Administrators",
-                SystemName = NopCustomerDefaults.AdministratorsRoleName
-            });
+            customer.CustomerCustomerRoleMappings.Add(
+                new CustomerCustomerRoleMapping { CustomerRole = customerRoleRegistered }
+            );
+            customer.CustomerCustomerRoleMappings.Add(
+                new CustomerCustomerRoleMapping { CustomerRole = customerRoleAdmin }
+            );
 
             customer.IsGuest().ShouldBeFalse();
 
-            customer.CustomerRoles.Add(
-                new CustomerRole
-                {
-                    Active = true,
-                    Name = "Guests",
-                    SystemName = NopCustomerDefaults.GuestsRoleName
+            customer.CustomerCustomerRoleMappings.Add(
+                new CustomerCustomerRoleMapping { CustomerRole = customerRoleGuests }
+            );
 
-                }
-                );
             customer.IsGuest().ShouldBeTrue();
         }
         [Test]
         public void Can_check_whether_customer_is_registered()
         {
             var customer = new Customer();
-            customer.CustomerRoles.Add(new CustomerRole
-            {
-                Active = true,
-                Name = "Administrators",
-                SystemName = NopCustomerDefaults.AdministratorsRoleName
-            });
 
-            customer.CustomerRoles.Add(new CustomerRole
-            {
-                Active = true,
-                Name = "Guests",
-                SystemName = NopCustomerDefaults.GuestsRoleName
-            });
+            customer.CustomerCustomerRoleMappings.Add(
+                new CustomerCustomerRoleMapping { CustomerRole = customerRoleAdmin }
+            );
+            customer.CustomerCustomerRoleMappings.Add(
+                new CustomerCustomerRoleMapping { CustomerRole = customerRoleGuests }
+            );
 
             customer.IsRegistered().ShouldBeFalse();
 
-            customer.CustomerRoles.Add(
-                new CustomerRole
-                {
-                    Active = true,
-                    Name = "Registered",
-                    SystemName = NopCustomerDefaults.RegisteredRoleName
-                });
+            customer.CustomerCustomerRoleMappings.Add(
+                new CustomerCustomerRoleMapping { CustomerRole = customerRoleRegistered }
+            );
+
             customer.IsRegistered().ShouldBeTrue();
         }
-       
+
         [Test]
         public void Can_remove_address_assigned_as_billing_address()
         {

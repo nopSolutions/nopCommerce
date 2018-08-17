@@ -16,7 +16,6 @@ namespace Nop.Core.Domain.Customers
         private ICollection<ShoppingCartItem> _shoppingCartItems;
         private ICollection<ReturnRequest> _returnRequests;
         protected ICollection<CustomerAddressMapping> _customerAddressMappings;
-        private IList<CustomerRole> _customerRoles;
 
         public Customer()
         {
@@ -159,7 +158,7 @@ namespace Nop.Core.Domain.Customers
         /// </summary>
         public virtual IList<CustomerRole> CustomerRoles
         {
-            get => _customerRoles ?? (_customerRoles = CustomerCustomerRoleMappings.Select(mapping => mapping.CustomerRole).ToList());
+            get => CustomerCustomerRoleMappings.Select(mapping => mapping.CustomerRole).ToList();
         }
 
         /// <summary>
