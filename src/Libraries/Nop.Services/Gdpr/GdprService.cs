@@ -400,14 +400,14 @@ namespace Nop.Services.Gdpr
             if (customer.IsRegistered())
             {
                 var registeredRole = _customerService.GetCustomerRoleBySystemName(NopCustomerDefaults.RegisteredRoleName);
-                customer.CustomerCustomerRoleMappings
-                    .Remove(customer.CustomerCustomerRoleMappings.FirstOrDefault(mapping => mapping.CustomerRoleId == registeredRole.Id));
+                customer.RemoveCustomerRoleMapping(
+                    customer.CustomerCustomerRoleMappings.FirstOrDefault(mapping => mapping.CustomerRoleId == registeredRole.Id));
             }
 
             if (!customer.IsGuest())
             {
                 var guestRole = _customerService.GetCustomerRoleBySystemName(NopCustomerDefaults.GuestsRoleName);
-                customer.CustomerCustomerRoleMappings.Add(new CustomerCustomerRoleMapping { CustomerRole = guestRole });
+                customer.AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerRole = guestRole });
             }
 
             var email = customer.Email;
