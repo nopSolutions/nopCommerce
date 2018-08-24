@@ -29,5 +29,10 @@ namespace Nop.Core.Domain.Orders
         /// Gets or sets the order total summary
         /// </summary>
         public decimal SumOrders { get; set; }
+
+        /// <summary>
+        /// Gets or sets the refunded amount summary
+        /// </summary>
+        public decimal SumRefundedAmount { get; set; }
     }
 }
