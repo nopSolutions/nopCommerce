@@ -34,6 +34,10 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public bool DisplayPickupPointsOnMap { get; set; }
         public bool DisplayPickupPointsOnMap_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Shipping.IgnoreAdditionalShippingChargeForPickUpInStore")]
+        public bool IgnoreAdditionalShippingChargeForPickUpInStore { get; set; }
+        public bool IgnoreAdditionalShippingChargeForPickUpInStore_OverrideForStore { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Shipping.GoogleMapsApiKey")]
         public string GoogleMapsApiKey { get; set; }
         public bool GoogleMapsApiKey_OverrideForStore { get; set; }

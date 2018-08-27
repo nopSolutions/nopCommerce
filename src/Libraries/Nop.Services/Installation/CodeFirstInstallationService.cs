@@ -6396,6 +6396,7 @@ namespace Nop.Services.Installation
                 ShipToSameAddress = true,
                 AllowPickUpInStore = true,
                 DisplayPickupPointsOnMap = false,
+                IgnoreAdditionalShippingChargeForPickUpInStore = true,
                 UseWarehouseLocation = false,
                 NotifyCustomerAboutShippingFromMultipleLocations = false,
                 FreeShippingOverXEnabled = false,

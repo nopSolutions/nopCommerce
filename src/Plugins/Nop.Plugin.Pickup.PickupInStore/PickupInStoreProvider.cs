@@ -97,7 +97,7 @@ namespace Nop.Plugin.Pickup.PickupInStore
                     PickupFee = point.PickupFee,
                     DisplayOrder = point.DisplayOrder,
                     ProviderSystemName = PluginDescriptor.SystemName
-                });
+                });                
             }
 
             if (!result.PickupPoints.Any())
