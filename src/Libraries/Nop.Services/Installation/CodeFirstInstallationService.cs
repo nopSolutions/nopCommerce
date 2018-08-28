@@ -106,6 +106,9 @@ namespace Nop.Services.Installation
         private readonly IRepository<Warehouse> _warehouseRepository;
         private readonly IWebHelper _webHelper;
 
+        //list of unique search engine names for product tags
+        private List<string> _productTagSeNames;
+
         #endregion
 
         #region Ctor
@@ -223,6 +226,8 @@ namespace Nop.Services.Installation
             this._vendorRepository = vendorRepository;
             this._warehouseRepository = warehouseRepository;
             this._webHelper = webHelper;
+
+            _productTagSeNames  = new List<string>();
         }
 
         #endregion
@@ -7099,6 +7104,7 @@ namespace Nop.Services.Installation
                     IsActive = true,
                     Slug = ValidateSeName(category, category.Name)
                 });
+                _productTagSeNames.Add(ValidateSeName(category, category.Name));
             }
         }
 
@@ -12264,14 +12270,19 @@ namespace Nop.Services.Installation
             _productRepository.Update(product);
 
             //search engine name
-            _urlRecordRepository.Insert(new UrlRecord
+            var slug = ValidateSeName(productTag, productTag.Name);
+            if (!_productTagSeNames.Contains(slug))
             {
-                EntityId = productTag.Id,
-                EntityName = typeof(ProductTag).Name,
-                LanguageId = 0,
-                IsActive = true,
-                Slug = ValidateSeName(productTag, productTag.Name)
-            });
+                _urlRecordRepository.Insert(new UrlRecord
+                {
+                    EntityId = productTag.Id,
+                    EntityName = typeof(ProductTag).Name,
+                    LanguageId = 0,
+                    IsActive = true,
+                    Slug = slug
+                });
+                _productTagSeNames.Add(slug);
+            }
         }
 
         #endregion
