@@ -54,6 +54,9 @@
         public static string CategoryDetailsBeforeSubcategories => "categorydetails_before_subcategories";
         public static string CategoryDetailsBottom => "categorydetails_bottom";
         public static string CategoryDetailsTop => "categorydetails_top";
+        public static string CheckoutBillingAddressBottom => "checkout_billing_address_bottom";
+        public static string CheckoutBillingAddressMiddle => "checkout_billing_address_middle";
+        public static string CheckoutBillingAddressTop => "checkout_billing_address_top";
         public static string CheckoutCompletedBottom => "checkout_completed_bottom";
         public static string CheckoutCompletedTop => "checkout_completed_top";
         public static string CheckoutConfirmBottom => "checkout_confirm_bottom";
@@ -164,7 +167,9 @@
         public static string ProductsByTagBeforeProductList => "productsbytag_before_product_list";
         public static string ProductsByTagBottom => "productsbytag_bottom";
         public static string ProductsByTagTop => "productsbytag_top";
+        public static string ProductSearchPageAdvanced => "productsearch_page_advanced";
         public static string ProductSearchPageAfterResults => "productsearch_page_after_results";
+        public static string ProductSearchPageBasic => "productsearch_page_basic";
         public static string ProductSearchPageBeforeResults => "productsearch_page_before_results";
         public static string ProfilePageInfoUserdetails => "profile_page_info_userdetails";
         public static string ProfilePageInfoUserstats => "profile_page_info_userstats";

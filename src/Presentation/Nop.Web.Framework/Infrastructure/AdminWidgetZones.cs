@@ -395,6 +395,14 @@
         public static string TopicDetailsSeoTop => "admin_topic_details_seo_top";
         public static string TopicListButtons => "admin_topic_list_buttons";
         public static string TopicTemplateListButtons => "admin_topic_template_list_buttons";
+        public static string AdminVendorAttributeDetailsButtons => "admin_vendor_attribute_details_buttons";
+        public static string AdminVendorAttributeDetailsInfoBottom => "admin_vendor_attribute_details_info_bottom";
+        public static string AdminVendorAttributeDetailsInfoTop => "admin_vendor_attribute_details_info_top";
+        public static string AdminVendorAttributeDetailsValuesBottom => "admin_vendor_attribute_details_values_bottom";
+        public static string AdminVendorAttributeDetailsValuesTop => "admin_vendor_attribute_details_values_top";
+        public static string AdminVendorAttributeValueDetailsBottom => "admin_vendor_attribute_value_details_bottom";
+        public static string AdminVendorAttributeValueDetailsButtons => "admin_vendor_attribute_value_details_buttons";
+        public static string AdminVendorAttributeValueDetailsTop => "admin_vendor_attribute_value_details_top";
         public static string VendorDetailsButtons => "admin_vendor_details_buttons";
         public static string VendorDetailsInfoBottom => "admin_vendor_details_info_bottom";
         public static string VendorDetailsInfoTop => "admin_vendor_details_info_top";
