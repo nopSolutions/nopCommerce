@@ -191,7 +191,7 @@
                                 grid.dataSource.read();
 
                                 $("#@Html.IdFor(model => model.AddRewardPoints.Points)").val(0);
-                                $("#@Html.IdFor(model => model.AddRewardPoints.Message)").val("@Model.AddRewardPoints.Message");
+                                $("#@Html.IdFor(model => model.AddRewardPoints.Message)").val(data.Message);
                                 $("#@Html.IdFor(model => model.AddRewardPoints.StoreId)").val(@Model.AddRewardPoints.StoreId);
                                 $("#@Html.IdFor(model => model.AddRewardPoints.ActivationDelayPeriodId)").val(@Model.AddRewardPoints.ActivationDelayPeriodId);
                                 $("#@Html.IdFor(model => model.AddRewardPoints.ActivationDelay)").val(@Model.AddRewardPoints.ActivationDelay);
