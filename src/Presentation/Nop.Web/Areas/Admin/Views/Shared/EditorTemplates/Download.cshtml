@@ -31,11 +31,15 @@
                 url: "@(Url.Action("SaveDownloadUrl", "Download", new { area = AreaNames.Admin }))",
                 data: { "downloadUrl": downloadUrl },
                 success: function (data) {
-                    $('#pnlDownloadURLResult@(randomNumber)').fadeIn("slow").delay(1000).fadeOut("slow");
-                    $("#@(clientId + "value") input").val(data.downloadId);
+                    if (data.success) {
+                        $('#pnlDownloadURLResult@(randomNumber)').fadeIn("slow").delay(1000).fadeOut("slow");
+                        $("#@(clientId + "value") input").val(data.downloadId);                        
+                    }
+                    else {
+                        alert(data.message);
+                    }
                     $('#saveDownloadUrl@(randomNumber)').attr('disabled', false);
-
-                },
+                },                               
                 error: function (xhr, ajaxOptions, thrownError) {
                     alert('Failed to save download object.');
                     $('#saveDownloadUrl@(randomNumber)').attr('disabled', false);
