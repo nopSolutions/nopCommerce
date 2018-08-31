@@ -232,15 +232,15 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare grid model
             var model = new CategoryProductListModel
             {
-                //fill in model values from the entity
-                Data = productCategories.Select(productCategory => new CategoryProductModel
+                Data = productCategories.Select(productCategory => 
                 {
-                    Id = productCategory.Id,
-                    CategoryId = productCategory.CategoryId,
-                    ProductId = productCategory.ProductId,
-                    ProductName = _productService.GetProductById(productCategory.ProductId)?.Name,
-                    IsFeaturedProduct = productCategory.IsFeaturedProduct,
-                    DisplayOrder = productCategory.DisplayOrder
+                    //fill in model values from the entity
+                    var categoryProductModel = category.ToModel<CategoryProductModel>();
+
+                    //fill in additional values (not existing in the entity)
+                    categoryProductModel.ProductName = _productService.GetProductById(productCategory.ProductId)?.Name;
+
+                    return categoryProductModel;                    
                 }),
                 Total = productCategories.TotalCount
             };

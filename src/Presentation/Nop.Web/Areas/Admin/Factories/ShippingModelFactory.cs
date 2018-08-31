@@ -454,11 +454,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new WarehouseListModel
             {
                 //fill in model values from the entity
-                Data = warehouses.PaginationByRequestModel(searchModel).Select(warehouse => new WarehouseModel
-                {
-                    Id = warehouse.Id,
-                    Name = warehouse.Name
-                }),
+                Data = warehouses.PaginationByRequestModel(searchModel).Select(warehouse => warehouse.ToModel<WarehouseModel>()),
                 Total = warehouses.Count
             };
 
@@ -477,12 +473,10 @@ namespace Nop.Web.Areas.Admin.Factories
             if (warehouse != null)
             {
                 //fill in model values from the entity
-                model = model ?? new WarehouseModel
+                if (model == null)
                 {
-                    Id = warehouse.Id,
-                    Name = warehouse.Name,
-                    AdminComment = warehouse.AdminComment
-                };
+                    model = warehouse.ToModel<WarehouseModel>();
+                }
             }
 
             //prepare address model
