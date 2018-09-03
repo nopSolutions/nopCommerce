@@ -180,15 +180,17 @@ namespace Nop.Services.Orders
                     OrderShippingExclTaxSum = result.Sum(o => o.OrderShippingExclTax),
                     OrderPaymentFeeExclTaxSum = result.Sum(o => o.PaymentMethodAdditionalFeeExclTax),
                     OrderTaxSum = result.Sum(o => o.OrderTax),
-                    OrderTotalSum = result.Sum(o => o.OrderTotal)
+                    OrderTotalSum = result.Sum(o => o.OrderTotal),
+                    OrederRefundedAmountSum = result.Sum(o => o.RefundedAmount),
                 }).Select(r => new OrderAverageReportLine
-            {
-                CountOrders = r.OrderCount,
-                SumShippingExclTax = r.OrderShippingExclTaxSum,
-                OrderPaymentFeeExclTaxSum = r.OrderPaymentFeeExclTaxSum,
-                SumTax = r.OrderTaxSum,
-                SumOrders = r.OrderTotalSum
-            }).FirstOrDefault();
+                    {
+                        CountOrders = r.OrderCount,
+                        SumShippingExclTax = r.OrderShippingExclTaxSum,
+                        OrderPaymentFeeExclTaxSum = r.OrderPaymentFeeExclTaxSum,
+                        SumTax = r.OrderTaxSum,
+                        SumOrders = r.OrderTotalSum,
+                        SumRefundedAmount = r.OrederRefundedAmountSum
+                }).FirstOrDefault();
 
             item = item ?? new OrderAverageReportLine
             {
@@ -542,6 +544,7 @@ namespace Nop.Services.Orders
                          - reportSummary.SumShippingExclTax
                          - reportSummary.OrderPaymentFeeExclTaxSum
                          - reportSummary.SumTax
+                         - reportSummary.SumRefundedAmount
                          - productCost;
             return profit;
         }
