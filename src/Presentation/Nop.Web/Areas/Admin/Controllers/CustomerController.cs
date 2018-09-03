@@ -1125,7 +1125,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             _rewardPointService.AddRewardPointsHistoryEntry(customer, model.Points, model.StoreId, model.Message,
                 activatingDate: activatingDate, endDate: endDate);
 
-            return Json(new { Result = true });
+            return Json(new { Result = true, Message = _localizationService.GetResource("Admin.Customers.Customers.SomeComment") });
         }
 
         #endregion
