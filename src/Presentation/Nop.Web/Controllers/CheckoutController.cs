@@ -268,7 +268,7 @@ namespace Nop.Web.Controllers
             var model = _checkoutModelFactory.PrepareBillingAddressModel(cart, prePopulateNewAddressWithCustomerFields: true);
 
             //check whether "billing address" step is enabled
-            if (_orderSettings.DisableBillingAddressCheckoutStep)
+            if (_orderSettings.DisableBillingAddressCheckoutStep && model.ExistingAddresses.Any())
             {
                 if (model.ExistingAddresses.Any())
                 {

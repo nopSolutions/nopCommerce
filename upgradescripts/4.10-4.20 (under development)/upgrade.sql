@@ -5,8 +5,8 @@ declare @resources xml
 --a resource will be deleted if its value is empty
 set @resources='
 <Language>  
-  <LocaleResource Name="">
-    <Value></Value>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.DisableBillingAddressCheckoutStep.Hint">
+    <Value>Check to disable "Billing address" step during checkout. Billing address will be pre-filled and saved using the default registration data (this option cannot be used with guest checkout enabled). Also ensure that appropriate address fields that cannot be pre-filled are not required (or disabled). If a customer doesn''t have a billing address, then the billing address step will be displayed.</Value>
   </LocaleResource>
 </Language>
 '
