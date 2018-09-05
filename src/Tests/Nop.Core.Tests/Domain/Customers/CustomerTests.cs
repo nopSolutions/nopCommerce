@@ -56,10 +56,11 @@ namespace Nop.Core.Tests.Domain.Customers
                 SystemName = "Test system name 2"
             };
 
-            customer.CustomerCustomerRoleMappings.Add(
+            customer.AddCustomerRoleMapping(
                 new CustomerCustomerRoleMapping { CustomerRole = customerRole1 }
             );
-            customer.CustomerCustomerRoleMappings.Add(
+
+            customer.AddCustomerRoleMapping(
                 new CustomerCustomerRoleMapping { CustomerRole = customerRole2 }
             );
 
@@ -77,16 +78,17 @@ namespace Nop.Core.Tests.Domain.Customers
         {
             var customer = new Customer();
 
-            customer.CustomerCustomerRoleMappings.Add(
+            customer.AddCustomerRoleMapping(
                 new CustomerCustomerRoleMapping { CustomerRole = customerRoleRegistered }
             );
-            customer.CustomerCustomerRoleMappings.Add(
+
+            customer.AddCustomerRoleMapping(
                 new CustomerCustomerRoleMapping { CustomerRole = customerRoleGuests }
             );
 
             customer.IsAdmin().ShouldBeFalse();
 
-            customer.CustomerCustomerRoleMappings.Add(
+            customer.AddCustomerRoleMapping(
                 new CustomerCustomerRoleMapping { CustomerRole = customerRoleAdmin }
             );
 
@@ -97,10 +99,11 @@ namespace Nop.Core.Tests.Domain.Customers
         {
             var customer = new TestCustomer();
 
-            customer.CustomerCustomerRoleMappings.Add(
+            customer.AddCustomerRoleMapping(
                 new CustomerCustomerRoleMapping { CustomerRole = customerRoleRegistered }
             );
-            customer.CustomerCustomerRoleMappings.Add(
+
+            customer.AddCustomerRoleMapping(
                 new CustomerCustomerRoleMapping { CustomerRole = customerRoleGuests }
             );
 
@@ -113,7 +116,7 @@ namespace Nop.Core.Tests.Domain.Customers
                 SystemName = NopCustomerDefaults.ForumModeratorsRoleName
             };
 
-            customer.CustomerCustomerRoleMappings.Add(
+            customer.AddCustomerRoleMapping(
                 new CustomerCustomerRoleMapping { CustomerRole = customerRoleForumModerators }
             );
 
@@ -124,16 +127,17 @@ namespace Nop.Core.Tests.Domain.Customers
         {
             var customer = new Customer();
 
-            customer.CustomerCustomerRoleMappings.Add(
+            customer.AddCustomerRoleMapping(
                 new CustomerCustomerRoleMapping { CustomerRole = customerRoleRegistered }
             );
-            customer.CustomerCustomerRoleMappings.Add(
+
+            customer.AddCustomerRoleMapping(
                 new CustomerCustomerRoleMapping { CustomerRole = customerRoleAdmin }
             );
 
             customer.IsGuest().ShouldBeFalse();
 
-            customer.CustomerCustomerRoleMappings.Add(
+            customer.AddCustomerRoleMapping(
                 new CustomerCustomerRoleMapping { CustomerRole = customerRoleGuests }
             );
 
@@ -144,16 +148,17 @@ namespace Nop.Core.Tests.Domain.Customers
         {
             var customer = new Customer();
 
-            customer.CustomerCustomerRoleMappings.Add(
+            customer.AddCustomerRoleMapping(
                 new CustomerCustomerRoleMapping { CustomerRole = customerRoleAdmin }
             );
-            customer.CustomerCustomerRoleMappings.Add(
+
+            customer.AddCustomerRoleMapping(
                 new CustomerCustomerRoleMapping { CustomerRole = customerRoleGuests }
             );
 
             customer.IsRegistered().ShouldBeFalse();
 
-            customer.CustomerCustomerRoleMappings.Add(
+            customer.AddCustomerRoleMapping(
                 new CustomerCustomerRoleMapping { CustomerRole = customerRoleRegistered }
             );
 

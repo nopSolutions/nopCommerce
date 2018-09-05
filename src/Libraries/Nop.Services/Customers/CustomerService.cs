@@ -432,7 +432,7 @@ namespace Nop.Services.Customers
             if (guestRole == null)
                 throw new NopException("'Guests' role could not be loaded");
             //customer.CustomerRoles.Add(guestRole);
-            customer.CustomerCustomerRoleMappings.Add(new CustomerCustomerRoleMapping { CustomerRole = guestRole });
+            customer.AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerRole = guestRole });
 
             _customerRepository.Insert(customer);
 
