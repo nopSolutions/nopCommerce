@@ -649,10 +649,22 @@ set @resources='
   </LocaleResource> 
   <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.WeightTo">
     <Value>Order weight to</Value>
-  </LocaleResource> 
+  </LocaleResource>
   <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.WeightTo.Hint">
     <Value>Order weight to.</Value>
-  </LocaleResource>     
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fields.OrderSubtotalFrom">
+    <Value>Order subtotal from</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fields.OrderSubtotalFrom.Hint">
+    <Value>Order subtotal from.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fields.OrderSubtotalTo">
+    <Value>Order subtotal to</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fields.OrderSubtotalTo.Hint">
+    <Value>Order subtotal to.</Value>
+  </LocaleResource>
   <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.OrderSubtotalFrom">
     <Value>Order subtotal from</Value>
   </LocaleResource> 
