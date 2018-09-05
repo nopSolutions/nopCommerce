@@ -543,14 +543,15 @@ namespace Nop.Services.Orders
                     updatedOrderItem.PriceInclTax = itemSubTotalInclTax = updateOrderParameters.SubTotalInclTax;
                     updatedOrderItem.Quantity = shoppingCartItem.Quantity;
 
-                    taxRate = Math.Round(100 * (itemSubTotalInclTax - itemSubTotalExclTax) / itemSubTotalExclTax, 3);
+                    taxRate = itemSubTotalExclTax > 0 ? Math.Round(100 * (itemSubTotalInclTax - itemSubTotalExclTax) / itemSubTotalExclTax, 3) : taxRate = 0M;
                 }
                 else
                 {
                     //get the already calculated subtotal from the order item
                     itemSubTotalExclTax = updatedOrder.OrderItems.FirstOrDefault(item => item.Id == shoppingCartItem.Id).PriceExclTax;
                     itemSubTotalInclTax = updatedOrder.OrderItems.FirstOrDefault(item => item.Id == shoppingCartItem.Id).PriceInclTax;
-                    taxRate = Math.Round(100 * (itemSubTotalInclTax - itemSubTotalExclTax) / itemSubTotalExclTax, 3);
+
+                     taxRate = itemSubTotalExclTax > 0 ? Math.Round(100 * (itemSubTotalInclTax - itemSubTotalExclTax) / itemSubTotalExclTax, 3) : taxRate = 0M;
                 }
 
                 subTotalExclTax += itemSubTotalExclTax;
