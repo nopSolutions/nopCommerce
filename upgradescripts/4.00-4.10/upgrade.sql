@@ -851,6 +851,18 @@ set @resources='
   <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fields.LimitMethodsToCreated.Hint">
     <Value>If you check this option, then your customers will be limited to shipping options configured here. Otherwise, they''ll be able to choose any existing shipping options even they are not configured here (zero shipping fee in this case).</Value>
   </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fields.WeightFrom">
+    <Value>Order weight from</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fields.WeightFrom.Hint">
+    <Value>Order weight from.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fields.WeightTo">
+    <Value>Order weight to</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fields.WeightTo.Hint">
+    <Value>Order weight to.</Value>
+  </LocaleResource>
   <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fields.DataHtml">
     <Value>Data</Value>
   </LocaleResource>
