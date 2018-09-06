@@ -5895,7 +5895,7 @@ namespace Nop.Services.Installation
                     IsPasswordProtected = false,
                     DisplayOrder = 1,
                     Published = true,
-                    Title = "Vendor instructions",
+                    Title = "Apply vendor instructions",
                     Body = "<p>Put your apply vendor instructions here. You can edit this in the admin site.</p>",
                     TopicTemplateId = defaultTopicTemplate.Id
                 },
@@ -5907,7 +5907,7 @@ namespace Nop.Services.Installation
                     IncludeInFooterColumn1 = true,
                     DisplayOrder = 1,
                     Published = true,
-                    Title = "Terms of service information",
+                    Title = "Terms of services for vendors",
                     Body = "<p>Put your terms of service information here. You can edit this in the admin site.</p>",
                     TopicTemplateId = defaultTopicTemplate.Id
                 }
