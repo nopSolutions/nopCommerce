@@ -14,6 +14,8 @@ namespace Nop.Web.Areas.Admin.Validators.Topics
         {
             RuleFor(x => x.SeName).Length(0, NopSeoDefaults.ForumTopicLength)
                 .WithMessage(string.Format(localizationService.GetResource("Admin.SEO.SeName.MaxLengthValidation"), NopSeoDefaults.ForumTopicLength));
+            RuleFor(x => x.Title).NotEmpty()
+                .WithMessage(string.Format(localizationService.GetResource("Admin.ContentManagement.Topics.Fields.Title.Required")));
 
             SetDatabaseValidationRules<Topic>(dbContext);
         }
