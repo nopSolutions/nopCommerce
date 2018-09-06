@@ -5,8 +5,8 @@ declare @resources xml
 --a resource will be deleted if its value is empty
 set @resources='
 <Language>  
-  <LocaleResource Name="">
-    <Value></Value>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.Title.Required">
+    <Value>Title is required</Value>
   </LocaleResource>
 </Language>
 '
@@ -82,3 +82,7 @@ DEALLOCATE cur_existinglanguage
 DROP TABLE #LocaleStringResourceTmp
 GO
 
+UPDATE [Topic]
+SET [Title] = [SystemName]
+WHERE [Title] IS NULL OR [Title] = ''
+GO

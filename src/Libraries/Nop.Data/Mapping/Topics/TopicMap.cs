@@ -20,6 +20,8 @@ namespace Nop.Data.Mapping.Topics
             builder.ToTable(nameof(Topic));
             builder.HasKey(topic => topic.Id);
 
+            builder.Property(topic => topic.Title).IsRequired();
+
             base.Configure(builder);
         }
 
