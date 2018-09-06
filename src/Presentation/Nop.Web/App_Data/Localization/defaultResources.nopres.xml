@@ -9885,7 +9885,7 @@
   <LocaleResource Name="Admin.ContentManagement.Topics.Fields.Title.Hint">
     <Value>The title of your topic.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.Title.IsRequired">
+  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.Title.Required">
     <Value>Title is required</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Topics.Fields.TopicTemplate">
