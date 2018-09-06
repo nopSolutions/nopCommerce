@@ -82,3 +82,7 @@ DEALLOCATE cur_existinglanguage
 DROP TABLE #LocaleStringResourceTmp
 GO
 
+UPDATE [Topic] 
+SET [IncludeInFooterColumn1] = 0
+WHERE [SystemName] = 'VendorTermsOfService'
+GO
