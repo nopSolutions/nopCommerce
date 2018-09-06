@@ -207,7 +207,8 @@
                                             selectedIds = [];
                                         },
                                         error: function (xhr, ajaxOptions, thrownError) {
-                                            alert(thrownError);
+                                            $('#deleteSelectedFailed-info').html(thrownError);
+                                            $("#deleteSelectedFailed").click();
                                         },
                                         traditional: true
                                     });
@@ -261,3 +262,4 @@
         </div>
     </div>
 </form>
+<nop-alert asp-alert-id="deleteSelectedFailed" />

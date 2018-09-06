@@ -77,7 +77,8 @@
                     return false;
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
-                    alert(thrownError);
+                    $('#createConfigurationFailed-info').html(thrownError);
+                    $("#createConfigurationFailed").click();
                 }
             });
         }
@@ -153,3 +154,4 @@
 </script>
 
 <textarea asp-for="@Model">@ViewData.TemplateInfo.FormattedModelValue</textarea>
+<nop-alert asp-alert-id="createConfigurationFailed" />

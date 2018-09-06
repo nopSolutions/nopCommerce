@@ -265,7 +265,8 @@
                                         grid.dataSource.read();
                                     },
                                     error: function (xhr, ajaxOptions, thrownError) {
-                                        alert(thrownError);
+                                        $('#deleteSelectedCommentsFailed-info').html(thrownError);
+                                        $("#deleteSelectedCommentsFailed").click(); 
                                     }
                                 });
                                 $('#delete-selected-action-confirmation').modal('toggle');
@@ -293,7 +294,8 @@
                                             grid.dataSource.read();
                                         },
                                         error: function(xhr, ajaxOptions, thrownError) {
-                                            alert(thrownError);
+                                            $('#approveSelectedFailed-info').html(thrownError);
+                                            $("#approveSelectedFailed").click();
                                         },
                                         traditional: true
                                     });
@@ -321,7 +323,8 @@
                                             grid.dataSource.read();
                                         },
                                         error: function(xhr, ajaxOptions, thrownError) {
-                                            alert(thrownError);
+                                            $('#disapproveSelectedFailed-info').html(thrownError);
+                                            $("#disapproveSelectedFailed").click();
                                         },
                                         traditional: true
                                     });
@@ -374,3 +377,6 @@
         </div>
     </div>
 </div>
+<nop-alert asp-alert-id="deleteSelectedCommentsFailed "/>
+<nop-alert asp-alert-id="approveSelectedFailed" />
+<nop-alert asp-alert-id="disapproveSelectedFailed" />

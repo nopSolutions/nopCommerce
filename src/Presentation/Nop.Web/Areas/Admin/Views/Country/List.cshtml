@@ -176,7 +176,8 @@
                                         grid.dataSource.read();
                                     },
                                     error: function (xhr, ajaxOptions, thrownError) {
-                                        alert(thrownError);
+                                        $('#publishSelectedFailed-info').html(thrownError);
+                                        $("#publishSelectedFailed").click();
                                     },
                                     traditional: true
                                 });
@@ -203,7 +204,8 @@
                                         grid.dataSource.read();
                                     },
                                     error: function (xhr, ajaxOptions, thrownError) {
-                                        alert(thrownError);
+                                        $('#unpublishSelectedFailed-info').html(thrownError);
+                                        $("#unpublishSelectedFailed").click();
                                     },
                                     traditional: true
                                 });
@@ -256,6 +258,8 @@
         </div>
     </div>
 </div>
+<nop-alert asp-alert-id="publishSelectedFailed" />
+<nop-alert asp-alert-id="unpublishSelectedFailed" />
 
 @*import states form*@
 <div id="importcsv-window" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="importcsv-window-title">

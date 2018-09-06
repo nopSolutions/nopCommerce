@@ -179,7 +179,7 @@
                                             grid.dataSource.read();
                                         },
                                         error: function (xhr, ajaxOptions, thrownError) {
-                                            alert('Failed to update currency');
+                                            $("#currencyAlert").click();
                                         }
                                     });
                                     $('#btnMarkPSC-action-confirmation').modal('toggle');
@@ -200,7 +200,7 @@
                                             grid.dataSource.read();
                                         },
                                         error: function (xhr, ajaxOptions, thrownError) {
-                                            alert('Failed to update currency');
+                                            $("#currencyAlert").click();
                                         }
                                     });
                                     $('#btnMarkPERC-action-confirmation').modal('toggle');
@@ -294,7 +294,7 @@
                                             grid.dataSource.read();
                                         },
                                         error: function (xhr, ajaxOptions, thrownError) {
-                                            alert('Failed to update currency');
+                                            $("#currencyAlert").click();
                                         }
                                     });
                                 }
@@ -325,4 +325,5 @@
     </div>
 </form>
 <nop-action-confirmation asp-button-id="btnMarkPERC" asp-additional-confirm="Admin.Configuration.Currencies.AdditionalConfirm" />
-<nop-action-confirmation asp-button-id="btnMarkPSC" asp-additional-confirm="Admin.Configuration.Currencies.AdditionalConfirm"/>
+<nop-action-confirmation asp-button-id="btnMarkPSC" asp-additional-confirm="Admin.Configuration.Currencies.AdditionalConfirm" />
+<nop-alert asp-alert-id="currencyAlert" asp-alert-message="@T("Admin.Configuration.Currencies.Alert.Error")" />

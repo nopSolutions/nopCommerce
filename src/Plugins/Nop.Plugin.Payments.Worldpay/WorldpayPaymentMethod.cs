@@ -581,6 +581,7 @@ namespace Nop.Plugin.Payments.Worldpay
             _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.WorldpayCustomer", "Worldpay Vault");
             _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.WorldpayCustomer.Create", "Store customer to the Worldpay Vault");
             _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.WorldpayCustomer.NotExists", "This customer is not yet stored in the Worldpay Vault");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.WorldpayCustomer.Create.Failed", "Failed to create customer.");
 
             base.Install();
         }
@@ -635,6 +636,7 @@ namespace Nop.Plugin.Payments.Worldpay
             _localizationService.DeletePluginLocaleResource("Plugins.Payments.Worldpay.WorldpayCustomer");
             _localizationService.DeletePluginLocaleResource("Plugins.Payments.Worldpay.WorldpayCustomer.Create");
             _localizationService.DeletePluginLocaleResource("Plugins.Payments.Worldpay.WorldpayCustomer.NotExists");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Worldpay.WorldpayCustomer.Create.Failed");
 
             base.Uninstall();
         }

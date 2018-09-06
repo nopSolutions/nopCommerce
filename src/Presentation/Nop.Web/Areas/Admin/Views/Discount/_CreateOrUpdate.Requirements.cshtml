@@ -117,7 +117,7 @@
                         }
                     },
                     error: function(xhr, ajaxOptions, thrownError) {
-                        alert('Failed to load requirements info. Please refresh the page');
+                        $("#getDiscountRequirementsAlert").click();                        
                     }
                 });
             };
@@ -160,7 +160,7 @@
                         $("#discountRequirementContainer").trigger('nopnewdiscountruleadded', [data.NewRequirementId]);
                     },
                     error:function (xhr, ajaxOptions, thrownError) {
-                        alert('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Admin.Promotions.Discounts.Requirements.FailedToSave").Text))');
+                        $("#failedToSave").click();
                     }
                 });
             };
@@ -202,10 +202,10 @@
                         </select>
                     </div>
                     {{else}}
-                    <div class="pull-left">
-                        @T("Admin.Promotions.Discounts.Requirements.Requirement.Title")
-                        <i>{{= RuleName }}</i>
-                    </div>
+                        <div class="pull-left">
+                            @T("Admin.Promotions.Discounts.Requirements.Requirement.Title")
+                            <i>{{= RuleName }}</i>
+                        </div>
                     {{/if}}
                     {{if ParentId}}
                         <button type="button" class="btn btn-link" id="deleterequirement{{= DiscountRequirementId }}" onclick="deleteRequirement({{= DiscountRequirementId }})">
@@ -240,7 +240,7 @@
             <div class="panel-body">
                 <div class="form-group">
                     <div class="col-md-3">
-                        <nop-label asp-for="AddDiscountRequirement"/>
+                        <nop-label asp-for="AddDiscountRequirement" />
                     </div>
                     <div class="col-md-9">
                         <nop-select asp-for="AddDiscountRequirement" asp-items="Model.AvailableDiscountRequirementRules" />
@@ -249,7 +249,7 @@
                 </div>
                 <div class="form-group" id="pnlGroup" style="display: none">
                     <div class="col-md-3">
-                        <nop-label asp-for="RequirementGroupId"/>
+                        <nop-label asp-for="RequirementGroupId" />
                     </div>
                     <div class="col-md-9">
                         <nop-select asp-for="RequirementGroupId" asp-items="Model.AvailableRequirementGroups" />
@@ -259,10 +259,10 @@
                 <div id="addrequirementplaceholder"></div>
                 <div class="form-group" id="pnlGroupName" style="display: none">
                     <div class="col-md-3">
-                        <nop-label asp-for="GroupName"/>
+                        <nop-label asp-for="GroupName" />
                     </div>
                     <div class="col-md-9">
-                        <nop-editor asp-for="GroupName"/>
+                        <nop-editor asp-for="GroupName" />
                         <span asp-validation-for="GroupName"></span>
                     </div>
                 </div>
@@ -284,3 +284,5 @@
     }
     @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.DiscountDetailsRequirementsBottom, additionalData = Model })
 </div>
+<nop-alert asp-alert-id="failedToSave" asp-alert-message="@T("Admin.Promotions.Discounts.Requirements.Alert.FailedToSave")" />
+<nop-alert asp-alert-id="getDiscountRequirementsAlert" asp-alert-message="@T("Admin.Promotions.Discounts.Requirements.Alert.FailedGetDiscountRequirements")" />

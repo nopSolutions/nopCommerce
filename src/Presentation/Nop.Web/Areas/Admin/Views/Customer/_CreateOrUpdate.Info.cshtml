@@ -25,7 +25,7 @@
                         });
                     },
                     error: function(xhr, ajaxOptions, thrownError) {
-                        alert('Failed to retrieve states.');
+                        $("#statesAlert").click();
                     }
                 });
             });
@@ -537,3 +537,4 @@
     </div>
     @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerDetailsInfoBottom, additionalData = Model })
 </div>
+<nop-alert asp-alert-id="statesAlert" asp-alert-message="@T("Admin.Common.Alert.States.Failed")" />

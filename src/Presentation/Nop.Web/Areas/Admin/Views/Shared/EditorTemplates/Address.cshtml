@@ -19,7 +19,7 @@
                         });
                     },
                     error: function (xhr, ajaxOptions, thrownError) {
-                        alert('Failed to retrieve states.');
+                        $("#statesAlert").click();
                     }
                 });
             });
@@ -212,3 +212,4 @@
 {
     @await Html.PartialAsync("_AddressAttributes", Model.CustomAddressAttributes)
 }
+<nop-alert asp-alert-id="statesAlert" asp-alert-message="@T("Admin.Common.Alert.States.Failed")" />

@@ -135,7 +135,7 @@
                             var displayOrder = $("#@Html.IdFor(model => model.AddPictureModel.DisplayOrder)").val();
 
                             if (pictureId == 0) {
-                                alert('Upload picture first');
+                                $("#addProductPictureAlert").click();
                                 return;
                             }
 
@@ -163,7 +163,7 @@
                                     grid.data('kendoGrid').dataSource.read();
                                 },
                                 error: function(xhr, ajaxOptions, thrownError) {
-                                    alert('Failed to add product picture.');
+                                    $("#productPictureAddAlert").click();
                                     $('#addProductPicture').attr('disabled', false);
                                 }
                             });
@@ -224,3 +224,5 @@
     }
     @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductDetailsPicturesBottom, additionalData = Model })
 </div>
+<nop-alert asp-alert-id="addProductPictureAlert" asp-alert-message="@T("Admin.Catalog.Products.Pictures.Alert.AddNew")" />
+<nop-alert asp-alert-id="productPictureAddAlert" asp-alert-message="@T("Admin.Catalog.Products.Pictures.Alert.PictureAdd")" />

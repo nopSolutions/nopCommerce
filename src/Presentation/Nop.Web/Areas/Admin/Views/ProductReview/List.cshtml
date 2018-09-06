@@ -292,7 +292,8 @@
                                         grid.dataSource.read();
                                     },
                                     error: function(xhr, ajaxOptions, thrownError) {
-                                        alert(thrownError);
+                                        $('#approveSelectedFailed-info').html(thrownError);
+                                        $("#approveSelectedFailed").click();
                                     },
                                     traditional: true
                                 });
@@ -319,7 +320,8 @@
                                         grid.dataSource.read();
                                     },
                                     error: function(xhr, ajaxOptions, thrownError) {
-                                        alert(thrownError);
+                                        $('#disapproveSelectedFailed-info').html(thrownError);
+                                        $("#disapproveSelectedFailed").click();
                                     },
                                     traditional: true
                                 });
@@ -343,7 +345,8 @@
                                         grid.dataSource.read();
                                     },
                                     error: function (xhr, ajaxOptions, thrownError) {
-                                        alert(thrownError);
+                                        $('#deleteSelectedFailed-info').html(thrownError);
+                                        $("#deleteSelectedFailed").click();
                                     }
                                 });
                                 $('#delete-selected-action-confirmation').modal('toggle');
@@ -400,3 +403,6 @@
         </div>
     </div>
 </div>
+<nop-alert asp-alert-id="approveSelectedFailed" />
+<nop-alert asp-alert-id="disapproveSelectedFailed" />
+<nop-alert asp-alert-id="deleteSelectedFailed" />

@@ -1,11 +1,11 @@
 @model NewsCommentSearchModel
 
-@{ 
+@{
     int? filterByNewsItemId = ViewBag.FilterByNewsItemId;
 }
 
 <nop-antiforgery-token />
-<div class="content-header clearfix">   
+<div class="content-header clearfix">
     <div class="pull-right">
         <button type="button" id="approve-selected" class="btn bg-green">
             <i class="fa fa-check-square-o"></i>
@@ -140,7 +140,7 @@
                                                 CustomerInfo: { editable: false, type: "string" },
                                                 CustomerId: { editable: false, type: "number" },
                                                 CommentTitle: { editable: false, type: "string" },
-                                                CommentText: { editable: false, type: "string" },                                                
+                                                CommentText: { editable: false, type: "string" },
                                                 IsApproved: { editable: true, type: "boolean" },
                                                 CreatedOn: { editable: false, type: "date" }
                                             }
@@ -267,17 +267,18 @@
                                     complete: function (data) {
                                         //reload grid
                                         var grid = $('#comments-grid').data('kendoGrid');
-                                        grid.dataSource.read(); 
+                                        grid.dataSource.read();
                                     },
                                     error: function (xhr, ajaxOptions, thrownError) {
-                                        alert(thrownError);
+                                        $('#deleteSelectedCommentsFailed-info').html(thrownError);
+                                        $("#deleteSelectedCommentsFailed").click();
                                     },
                                     traditional: true
                                 });
                                 $('#delete-selected-action-confirmation').modal('toggle');
                                 return false;
-                            });                           
-                            
+                            });
+
                             //"approve selected" button
                             $('#approve-selected')
                                 .click(function(e) {
@@ -299,7 +300,8 @@
                                             grid.dataSource.read();
                                         },
                                         error: function(xhr, ajaxOptions, thrownError) {
-                                            alert(thrownError);
+                                            $('#approveSelectedFailed-info').html(thrownError);
+                                            $("#approveSelectedFailed").click();
                                         },
                                         traditional: true
                                     });
@@ -327,13 +329,14 @@
                                             grid.dataSource.read();
                                         },
                                         error: function(xhr, ajaxOptions, thrownError) {
-                                            alert(thrownError);
+                                            $('#disapproveSelectedFailed-info').html(thrownError);
+                                            $("#disapproveSelectedFailed").click();
                                         },
                                         traditional: true
                                     });
                                     return false;
                                 });
-                            
+
                             $('#mastercheckbox').click(function() {
                                 $('.checkboxGroups').attr('checked', $(this).is(':checked')).change();
                             });
@@ -379,3 +382,6 @@
         </div>
     </div>
 </div>
+<nop-alert asp-alert-id="deleteSelectedCommentsFailed" />
+<nop-alert asp-alert-id="approveSelectedFailed" />
+<nop-alert asp-alert-id="disapproveSelectedFailed" />

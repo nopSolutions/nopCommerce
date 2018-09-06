@@ -197,7 +197,7 @@
                                         });
                                     },
                                     error: function(xhr, ajaxOptions, thrownError) {
-                                        alert('Failed to retrieve specification options.');
+                                        $("#getOptionsByAttributeIdAlert").click();
                                     }
                                 });
                             });
@@ -216,10 +216,10 @@
                                     //some validation
                                     if (attributeTypeId == @(((int) SpecificationAttributeType.Option).ToString())) {
                                         //option
-                                        alert('@T("Admin.Catalog.Products.SpecificationAttributes.SelectOption")');
+                                        $("#selectOption").click();
                                 } else {
                                     //other (text, hyperlink, etc)
-                                    alert('@T("Admin.Catalog.Products.SpecificationAttributes.NoAttributeOptions")');
+                                    $("#noAttributeOptions").click();
                                 }
                             } else {
                                     $('#addProductSpec').attr('disabled', true);
@@ -246,7 +246,7 @@
                                     $('#addProductSpec').attr('disabled', false);
                                 },
                                 error: function(xhr, ajaxOptions, thrownError) {
-                                    alert('Failed to add specification attribute.');
+                                    $("#productSpecificationAttributeAddAlert").click();
                                     $('#addProductSpec').attr('disabled', false);
                                 }
                             });
@@ -372,3 +372,7 @@
     }
     @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductDetailsSpecificationAttributesBottom, additionalData = Model })
 </div>
+<nop-alert asp-alert-id="selectOption" asp-alert-message="@T("Admin.Catalog.Products.SpecificationAttributes.Alert.SelectOption")" />
+<nop-alert asp-alert-id="noAttributeOptions" asp-alert-message="@T("Admin.Catalog.Products.SpecificationAttributes.Alert.NoAttributeOptions")" />
+<nop-alert asp-alert-id="getOptionsByAttributeIdAlert" asp-alert-message="@T("Admin.Catalog.Products.SpecificationAttributes.Alert.FailedRetrieving")" />
+<nop-alert asp-alert-id="productSpecificationAttributeAddAlert" asp-alert-message="@T("Admin.Catalog.Products.SpecificationAttributes.Alert.FailedAdd")" />
