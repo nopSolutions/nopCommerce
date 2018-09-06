@@ -29,7 +29,18 @@ namespace Nop.Services.Media
 
         private readonly IStaticCacheManager _cacheManager;
         private readonly MediaSettings _mediaSettings;
-        private readonly NopConfig _config;
+        
+        private readonly object s_initLock = new object();
+
+        private static bool s_initialized = false;
+
+        private static string s_azureBlobStorageConnectionString;
+
+        private static string s_azureBlobStorageContainerName;
+
+        private static string s_azureBlobStorageEndPoint;
+
+        private static bool s_azureBlobStorageAppendContainerName;
 
         #endregion
 
@@ -64,30 +75,55 @@ namespace Nop.Services.Media
         {
             this._cacheManager = cacheManager;
             this._mediaSettings = mediaSettings;
-            this._config = config;
-
-            if (string.IsNullOrEmpty(_config.AzureBlobStorageConnectionString))
+            
+            if (string.IsNullOrEmpty(config.AzureBlobStorageConnectionString))
                 throw new Exception("Azure connection string for BLOB is not specified");
 
-            if (string.IsNullOrEmpty(_config.AzureBlobStorageContainerName))
+            if (string.IsNullOrEmpty(config.AzureBlobStorageContainerName))
                 throw new Exception("Azure container name for BLOB is not specified");
 
-            if (string.IsNullOrEmpty(_config.AzureBlobStorageEndPoint))
+            if (string.IsNullOrEmpty(config.AzureBlobStorageEndPoint))
                 throw new Exception("Azure end point for BLOB is not specified");
 
-            CreateCloudBlobContainer();
+            OneTimeInit(config);
         }
 
         #endregion
 
         #region Utilities
 
+        protected void OneTimeInit(NopConfig config)
+        {
+            if (!s_initialized)
+            {
+                lock (s_initLock)
+                {
+                    if (!s_initialized)
+                    {
+                        s_azureBlobStorageAppendContainerName = config.AzureBlobStorageAppendContainerName;
+                        s_azureBlobStorageConnectionString = config.AzureBlobStorageConnectionString;
+                        s_azureBlobStorageContainerName = config.AzureBlobStorageContainerName.Trim().ToLower();
+                        s_azureBlobStorageEndPoint = config.AzureBlobStorageEndPoint.Trim().ToLower();
+
+                        if (s_azureBlobStorageEndPoint.EndsWith('/'))
+                        {
+                            s_azureBlobStorageEndPoint = s_azureBlobStorageEndPoint.Substring(0, s_azureBlobStorageEndPoint.Length - 1);
+                        }
+                        
+                        CreateCloudBlobContainer();
+
+                        s_initialized = true;
+                    }
+                }
+            }
+        }
+
         /// <summary>
         /// Create cloud blob container
         /// </summary>
         protected virtual async void CreateCloudBlobContainer()
         {
-            var storageAccount = CloudStorageAccount.Parse(_config.AzureBlobStorageConnectionString);
+            var storageAccount = CloudStorageAccount.Parse(s_azureBlobStorageConnectionString);
             if (storageAccount == null)
                 throw new Exception("Azure connection string for BLOB is not working");
 
@@ -95,7 +131,7 @@ namespace Nop.Services.Media
             var blobClient = storageAccount.CreateCloudBlobClient();
 
             //GetContainerReference doesn't need to be async since it doesn't contact the server yet
-            _container = blobClient.GetContainerReference(_config.AzureBlobStorageContainerName);
+            _container = blobClient.GetContainerReference(s_azureBlobStorageContainerName);
 
             await _container.CreateIfNotExistsAsync();
             await _container.SetPermissionsAsync(new BlobContainerPermissions
@@ -120,7 +156,9 @@ namespace Nop.Services.Media
         /// <returns>Local picture thumb path</returns>
         protected override string GetThumbLocalPath(string thumbFileName)
         {
-            return $"{_config.AzureBlobStorageEndPoint}{_config.AzureBlobStorageContainerName}/{thumbFileName}";
+            var path = s_azureBlobStorageAppendContainerName ? s_azureBlobStorageContainerName + "/" : string.Empty;
+
+            return $"{s_azureBlobStorageEndPoint}/{path}{thumbFileName}";
         }
 
         /// <summary>
@@ -131,7 +169,7 @@ namespace Nop.Services.Media
         /// <returns>Local picture thumb path</returns>
         protected override string GetThumbUrl(string thumbFileName, string storeLocation = null)
         {
-            return $"{_config.AzureBlobStorageEndPoint}{_config.AzureBlobStorageContainerName}/{thumbFileName}";
+            return GetThumbLocalPath(thumbFileName);
         }
 
         /// <summary>
