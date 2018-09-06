@@ -5,9 +5,12 @@ declare @resources xml
 --a resource will be deleted if its value is empty
 set @resources='
 <Language>  
-  <LocaleResource Name="">
-    <Value></Value>
-  </LocaleResource>
+   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.UseResponseCompression">
+    <Value>Use response compression</Value>
+  </LocaleResource>  
+   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.UseResponseCompression.Hint">
+    <Value>Enable to compress response (gzip by default). You can disable it if you have an active IIS Dynamic Compression Module configured at the server level.</Value>
+  </LocaleResource>   
 </Language>
 '
 

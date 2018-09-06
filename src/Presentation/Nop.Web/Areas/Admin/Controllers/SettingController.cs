@@ -1200,6 +1200,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             commonSettings.SitemapIncludeProducts = model.StoreInformationSettings.SitemapIncludeProducts;
             commonSettings.SitemapIncludeProductTags = model.StoreInformationSettings.SitemapIncludeProductTags;
 
+            //use response compression
+            commonSettings.UseResponseCompression = model.StoreInformationSettings.UseResponseCompression;
+
             //we do not clear cache after each setting update.
             //this behavior can increase performance because cached settings will not be cleared 
             //and loaded from database after each update
@@ -1221,6 +1224,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             _settingService.SaveSettingOverridablePerStore(commonSettings, x => x.SitemapIncludeManufacturers, model.StoreInformationSettings.SitemapIncludeManufacturers_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(commonSettings, x => x.SitemapIncludeProducts, model.StoreInformationSettings.SitemapIncludeProducts_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(commonSettings, x => x.SitemapIncludeProductTags, model.StoreInformationSettings.SitemapIncludeProductTags_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(commonSettings, x => x.UseResponseCompression, model.StoreInformationSettings.UseResponseCompression_OverrideForStore, storeScope, false);
 
             //now clear settings cache
             _settingService.ClearCache();
