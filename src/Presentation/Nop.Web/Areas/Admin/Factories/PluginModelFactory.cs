@@ -8,6 +8,7 @@ using Nop.Core.Plugins;
 using Nop.Services.Authentication.External;
 using Nop.Services.Cms;
 using Nop.Services.Localization;
+using Nop.Services.Logging;
 using Nop.Services.Payments;
 using Nop.Services.Plugins;
 using Nop.Services.Shipping;
@@ -39,6 +40,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IStoreMappingSupportedModelFactory _storeMappingSupportedModelFactory;
         private readonly IWidgetService _widgetService;
         private readonly TaxSettings _taxSettings;
+        private readonly ILogger _logger;
 
         #endregion
 
@@ -55,7 +57,8 @@ namespace Nop.Web.Areas.Admin.Factories
             IShippingService shippingService,
             IStoreMappingSupportedModelFactory storeMappingSupportedModelFactory,
             IWidgetService widgetService,
-            TaxSettings taxSettings)
+            TaxSettings taxSettings,
+            ILogger logger)
         {
             this._aclSupportedModelFactory = aclSupportedModelFactory;
             this._baseAdminModelFactory = baseAdminModelFactory;
@@ -69,6 +72,7 @@ namespace Nop.Web.Areas.Admin.Factories
             this._storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
             this._widgetService = widgetService;
             this._taxSettings = taxSettings;
+            this._logger = logger;
         }
 
         #endregion
@@ -244,9 +248,23 @@ namespace Nop.Web.Areas.Admin.Factories
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
+            IList<OfficialFeedVersion> pluginVersions = new List<OfficialFeedVersion>();
+            IList<OfficialFeedCategory> pluginCategories = new List<OfficialFeedCategory>();
+
+            //ensure that no exception is thrown when www.nopcommerce.com website is not available
+            try
+            {
+                pluginVersions = _officialFeedManager.GetVersions();
+                pluginCategories = _officialFeedManager.GetCategories();
+            }
+            catch (Exception ex)
+            {
+                _logger.Error("No access to the list of plugins. Website www.nopcommerce.com is not available.", ex);
+            }
+
             //prepare available versions
             searchModel.AvailableVersions.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
-            foreach (var version in _officialFeedManager.GetVersions())
+            foreach (var version in pluginVersions)
                 searchModel.AvailableVersions.Add(new SelectListItem { Text = version.Name, Value = version.Id.ToString() });
 
             //pre-select current version
@@ -258,8 +276,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 currentVersionItem.Selected = true;
             }
 
-            //prepare available plugin categories
-            var pluginCategories = _officialFeedManager.GetCategories();
+            //prepare available plugin categories            
             searchModel.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             foreach (var pluginCategory in pluginCategories)
             {
@@ -316,10 +333,11 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //get plugins
             var plugins = _officialFeedManager.GetAllPlugins(categoryId: searchModel.SearchCategoryId,
-                versionId: searchModel.SearchVersionId,
-                price: searchModel.SearchPriceId,
-                searchTerm: searchModel.SearchName,
-                pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
+            versionId: searchModel.SearchVersionId,
+            price: searchModel.SearchPriceId,
+            searchTerm: searchModel.SearchName,
+            pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);                
+            
 
             //prepare list model
             var model = new OfficialFeedPluginListModel
