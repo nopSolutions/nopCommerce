@@ -5904,7 +5904,7 @@ namespace Nop.Services.Installation
                     SystemName = "VendorTermsOfService",
                     IncludeInSitemap = false,
                     IsPasswordProtected = false,
-                    IncludeInFooterColumn1 = true,
+                    IncludeInFooterColumn1 = false,
                     DisplayOrder = 1,
                     Published = true,
                     Title = string.Empty,
