@@ -1051,7 +1051,7 @@ namespace Nop.Services.Orders
                 //price is the same (for products which require customers to enter a price)
                 var customerEnteredPricesEqual = true;
                 if (sci.Product.CustomerEntersPrice)
-                    //TODO should we use RoundingHelper.RoundPrice here?
+                    //TODO should we use PriceCalculationService.RoundPrice here?
                     customerEnteredPricesEqual = Math.Round(sci.CustomerEnteredPrice, 2) == Math.Round(customerEnteredPrice, 2);
 
                 //rental products

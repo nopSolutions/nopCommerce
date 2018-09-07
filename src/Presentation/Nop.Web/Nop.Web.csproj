@@ -72,5 +72,31 @@
       At the moment you can't disable this behavior. That's why we have to manually delete all unnecessary libraries from plugin output directories. -->
     <MSBuild Projects="$(MSBuildProjectDirectory)\..\..\Build\ClearPluginAssemblies.proj" Properties="PluginPath=$(PluginsFolders)" Targets="NopClear" />
   </Target>
+  
+  <PropertyGroup> 
+    <!--The common language runtime (CLR) supports two types of garbage collection:
+      workstation garbage collection, which is available on all systems, and server garbage collection,
+      which is available on multiprocessor systems.
+      
+      For single-processor computers, the default workstation garbage collection should be the fastest option.
+      Either workstation or server can be used for two-processor computers.
+      Server garbage collection should be the fastest option for more than two processors.
+      
+      More details about GC you can see here: https://docs.microsoft.com/en-us/dotnet/standard/garbage-collection/fundamentals-->
+    <ServerGarbageCollection>false</ServerGarbageCollection>
+    <!--In workstation or server garbage collection, you can enable concurrent garbage collection,
+      which enables threads to run concurrently with a dedicated thread that performs the garbage
+      collection for most of the duration of the collection.
+      
+      Concurrent garbage collection enables interactive applications to be more responsive by
+      minimizing pauses for a collection. Managed threads can continue to run most of the time while
+      the concurrent garbage collection thread is running. This results in shorter pauses while
+      a garbage collection is occurring.
+      
+      To improve performance when several processes are running, disable concurrent garbage collection.
+      
+      More details here: https://docs.microsoft.com/en-us/dotnet/standard/garbage-collection/fundamentals#concurrent-garbage-collection-->
+    <ConcurrentGarbageCollection>false</ConcurrentGarbageCollection>
+  </PropertyGroup>
 
 </Project>

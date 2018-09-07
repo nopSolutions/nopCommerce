@@ -159,7 +159,7 @@ namespace Nop.Core.Domain.Customers
         /// </summary>
         public virtual IList<CustomerRole> CustomerRoles
         {
-            get => _customerRoles ?? (_customerRoles = CustomerCustomerRoleMappings.Select(mapping => mapping.CustomerRole).ToList());
+            get => CustomerCustomerRoleMappings.Select(mapping => mapping.CustomerRole).ToList();
         }
 
         /// <summary>
@@ -211,6 +211,30 @@ namespace Nop.Core.Domain.Customers
         {
             get => _customerAddressMappings ?? (_customerAddressMappings = new List<CustomerAddressMapping>());
             protected set => _customerAddressMappings = value;
+        }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Add customer role and reset customer roles cache
+        /// </summary>
+        /// <param name="role">Role</param>
+        public void AddCustomerRoleMapping(CustomerCustomerRoleMapping role)
+        {
+            CustomerCustomerRoleMappings.Add(role);
+            _customerRoles = null;
+        }
+
+        /// <summary>
+        /// Remove customer role and reset customer roles cache
+        /// </summary>
+        /// <param name="role">Role</param>
+        public void RemoveCustomerRoleMapping(CustomerCustomerRoleMapping role)
+        {
+            CustomerCustomerRoleMappings.Remove(role);
+            _customerRoles = null;
         }
 
         #endregion

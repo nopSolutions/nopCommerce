@@ -397,8 +397,12 @@ namespace Nop.Web.Factories
                     FormattedSignature = _forumService.FormatForumSignatureText(_genericAttributeService.GetAttribute<string>(post.Customer, NopCustomerDefaults.SignatureAttribute)),
                 };
                 //created on string
+                var languageCode = _workContext.WorkingLanguage.LanguageCulture;
                 if (_forumSettings.RelativeDateTimeFormattingEnabled)
-                    forumPostModel.PostCreatedOnStr = post.CreatedOnUtc.RelativeFormat(true, "f");
+                {
+                    var postCreatedAgo = post.CreatedOnUtc.RelativeFormat(true, "f", languageCode);
+                    forumPostModel.PostCreatedOnStr = string.Format(_localizationService.GetResource("Common.Extensions.RelativeFormat"), postCreatedAgo);
+                }
                 else
                     forumPostModel.PostCreatedOnStr =
                         _dateTimeHelper.ConvertToUserTime(post.CreatedOnUtc, DateTimeKind.Utc).ToString("f");
@@ -847,8 +851,12 @@ namespace Nop.Web.Factories
             model.AllowViewingProfiles = _customerSettings.AllowViewingProfiles && !forumPost.Customer.IsGuest();
             model.CustomerName = _customerService.FormatUserName(forumPost.Customer);
             //created on string
+            var languageCode = _workContext.WorkingLanguage.LanguageCulture;
             if (_forumSettings.RelativeDateTimeFormattingEnabled)
-                model.PostCreatedOnStr = forumPost.CreatedOnUtc.RelativeFormat(true, "f");
+            {
+                var postCreatedAgo = forumPost.CreatedOnUtc.RelativeFormat(true, "f", languageCode);
+                model.PostCreatedOnStr = string.Format(_localizationService.GetResource("Common.Extensions.RelativeFormat"), postCreatedAgo);
+            }
             else
                 model.PostCreatedOnStr = _dateTimeHelper.ConvertToUserTime(forumPost.CreatedOnUtc, DateTimeKind.Utc).ToString("f");
 

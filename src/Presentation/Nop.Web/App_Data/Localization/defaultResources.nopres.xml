@@ -9885,6 +9885,9 @@
   <LocaleResource Name="Admin.ContentManagement.Topics.Fields.Title.Hint">
     <Value>The title of your topic.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.Title.Required">
+    <Value>Title is required</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Topics.Fields.TopicTemplate">
     <Value>Topic template</Value>
   </LocaleResource>
@@ -14576,6 +14579,9 @@
   </LocaleResource>
   <LocaleResource Name="Common.Edit">
     <Value>Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Common.Extensions.RelativeFormat">
+    <Value>{0} ago</Value>
   </LocaleResource>
   <LocaleResource Name="Common.Error">
     <Value>Error</Value>

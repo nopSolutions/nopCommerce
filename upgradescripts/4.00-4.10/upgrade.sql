@@ -649,10 +649,22 @@ set @resources='
   </LocaleResource> 
   <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.WeightTo">
     <Value>Order weight to</Value>
-  </LocaleResource> 
+  </LocaleResource>
   <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.WeightTo.Hint">
     <Value>Order weight to.</Value>
-  </LocaleResource>     
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fields.OrderSubtotalFrom">
+    <Value>Order subtotal from</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fields.OrderSubtotalFrom.Hint">
+    <Value>Order subtotal from.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fields.OrderSubtotalTo">
+    <Value>Order subtotal to</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fields.OrderSubtotalTo.Hint">
+    <Value>Order subtotal to.</Value>
+  </LocaleResource>
   <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.OrderSubtotalFrom">
     <Value>Order subtotal from</Value>
   </LocaleResource> 
@@ -850,6 +862,18 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fields.LimitMethodsToCreated.Hint">
     <Value>If you check this option, then your customers will be limited to shipping options configured here. Otherwise, they''ll be able to choose any existing shipping options even they are not configured here (zero shipping fee in this case).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fields.WeightFrom">
+    <Value>Order weight from</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fields.WeightFrom.Hint">
+    <Value>Order weight from.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fields.WeightTo">
+    <Value>Order weight to</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fields.WeightTo.Hint">
+    <Value>Order weight to.</Value>
   </LocaleResource>
   <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fields.DataHtml">
     <Value>Data</Value>
@@ -2723,7 +2747,7 @@ GO
 --rename table
 IF EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ShippingByWeight]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
 BEGIN
-    EXEC sp_RENAME '[dbo].[ShippingByWeight]', 'ShippingByWeightByTotal'
+    EXEC sp_RENAME '[dbo].[ShippingByWeight]', 'ShippingByWeightByTotalRecord'
 END
 GO
 
@@ -3939,5 +3963,12 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'commonsettings.staticfil
 BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'commonsettings.staticfilescachecontrol', N'public,max-age=604800', 0)
+END
+GO
+
+--rename table
+IF EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ShippingByWeightByTotal]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
+BEGIN
+    EXEC sp_RENAME '[dbo].[ShippingByWeightByTotal]', 'ShippingByWeightByTotalRecord'
 END
 GO

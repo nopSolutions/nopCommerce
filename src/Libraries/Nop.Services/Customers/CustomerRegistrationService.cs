@@ -258,14 +258,14 @@ namespace Nop.Services.Customers
             if (registeredRole == null)
                 throw new NopException("'Registered' role could not be loaded");
             //request.Customer.CustomerRoles.Add(registeredRole);
-            request.Customer.CustomerCustomerRoleMappings.Add(new CustomerCustomerRoleMapping { CustomerRole = registeredRole });
+            request.Customer.AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerRole = registeredRole });
             //remove from 'Guests' role
             var guestRole = request.Customer.CustomerRoles.FirstOrDefault(cr => cr.SystemName == NopCustomerDefaults.GuestsRoleName);
             if (guestRole != null)
             {
                 //request.Customer.CustomerRoles.Remove(guestRole);
-                request.Customer.CustomerCustomerRoleMappings
-                    .Remove(request.Customer.CustomerCustomerRoleMappings.FirstOrDefault(mapping => mapping.CustomerRoleId == guestRole.Id));
+                request.Customer.RemoveCustomerRoleMapping(
+                    request.Customer.CustomerCustomerRoleMappings.FirstOrDefault(mapping => mapping.CustomerRoleId == guestRole.Id));
             }
 
             //add reward points for customer registration (if enabled)

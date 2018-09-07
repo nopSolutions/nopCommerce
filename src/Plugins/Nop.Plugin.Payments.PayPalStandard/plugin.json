@@ -3,7 +3,7 @@
   "FriendlyName": "PayPal Standard",
   "SystemName": "Payments.PayPalStandard",
   "Version": "1.49",
-  "SupportedVersions": [ "4.10" ],
+  "SupportedVersions": [ "4.20" ],
   "Author": "nopCommerce team",
   "DisplayOrder": 1,
   "FileName": "Nop.Plugin.Payments.PayPalStandard.dll",

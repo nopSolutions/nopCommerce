@@ -106,6 +106,9 @@ namespace Nop.Services.Installation
         private readonly IRepository<Warehouse> _warehouseRepository;
         private readonly IWebHelper _webHelper;
 
+        //list of unique search engine names for product tags
+        private List<string> _productTagSeNames;
+
         #endregion
 
         #region Ctor
@@ -223,6 +226,8 @@ namespace Nop.Services.Installation
             this._vendorRepository = vendorRepository;
             this._warehouseRepository = warehouseRepository;
             this._webHelper = webHelper;
+
+            _productTagSeNames  = new List<string>();
         }
 
         #endregion
@@ -4171,9 +4176,9 @@ namespace Nop.Services.Installation
             //adminUser.CustomerRoles.Add(crAdministrators);
             //adminUser.CustomerRoles.Add(crForumModerators);
             //adminUser.CustomerRoles.Add(crRegistered);
-            adminUser.CustomerCustomerRoleMappings.Add(new CustomerCustomerRoleMapping { CustomerRole = crAdministrators });
-            adminUser.CustomerCustomerRoleMappings.Add(new CustomerCustomerRoleMapping { CustomerRole = crForumModerators });
-            adminUser.CustomerCustomerRoleMappings.Add(new CustomerCustomerRoleMapping { CustomerRole = crRegistered });
+            adminUser.AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerRole = crAdministrators });
+            adminUser.AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerRole = crForumModerators });
+            adminUser.AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerRole = crRegistered });
 
             _customerRepository.Insert(adminUser);
             //set default customer name
@@ -4219,7 +4224,7 @@ namespace Nop.Services.Installation
             secondUser.ShippingAddress = defaultSecondUserAddress;
 
             //secondUser.CustomerRoles.Add(crRegistered);
-            secondUser.CustomerCustomerRoleMappings.Add(new CustomerCustomerRoleMapping { CustomerRole = crRegistered });
+            secondUser.AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerRole = crRegistered });
 
             _customerRepository.Insert(secondUser);
             //set default customer name
@@ -4269,7 +4274,7 @@ namespace Nop.Services.Installation
             thirdUser.ShippingAddress = defaultThirdUserAddress;
 
             //thirdUser.CustomerRoles.Add(crRegistered);
-            thirdUser.CustomerCustomerRoleMappings.Add(new CustomerCustomerRoleMapping { CustomerRole = crRegistered });
+            thirdUser.AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerRole = crRegistered });
 
             _customerRepository.Insert(thirdUser);
             //set default customer name
@@ -4319,7 +4324,7 @@ namespace Nop.Services.Installation
             fourthUser.ShippingAddress = defaultFourthUserAddress;
 
             //fourthUser.CustomerRoles.Add(crRegistered);
-            fourthUser.CustomerCustomerRoleMappings.Add(new CustomerCustomerRoleMapping { CustomerRole = crRegistered });
+            fourthUser.AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerRole = crRegistered });
 
             _customerRepository.Insert(fourthUser);
             //set default customer name
@@ -4370,7 +4375,7 @@ namespace Nop.Services.Installation
             fifthUser.ShippingAddress = defaultFifthUserAddress;
 
             //fifthUser.CustomerRoles.Add(crRegistered);
-            fifthUser.CustomerCustomerRoleMappings.Add(new CustomerCustomerRoleMapping { CustomerRole = crRegistered });
+            fifthUser.AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerRole = crRegistered });
 
             _customerRepository.Insert(fifthUser);
             //set default customer name
@@ -4421,7 +4426,8 @@ namespace Nop.Services.Installation
             sixthUser.ShippingAddress = defaultSixthUserAddress;
 
             //sixthUser.CustomerRoles.Add(crRegistered);
-            sixthUser.CustomerCustomerRoleMappings.Add(new CustomerCustomerRoleMapping { CustomerRole = crRegistered });
+            //__sixthUser.CustomerCustomerRoleMappings.Add(new CustomerCustomerRoleMapping { CustomerRole = crRegistered });
+            sixthUser.AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerRole = crRegistered });
 
             _customerRepository.Insert(sixthUser);
             //set default customer name
@@ -4452,7 +4458,8 @@ namespace Nop.Services.Installation
                 RegisteredInStoreId = storeId
             };
             //searchEngineUser.CustomerRoles.Add(crGuests);
-            searchEngineUser.CustomerCustomerRoleMappings.Add(new CustomerCustomerRoleMapping { CustomerRole = crGuests });
+            //__searchEngineUser.CustomerCustomerRoleMappings.Add(new CustomerCustomerRoleMapping { CustomerRole = crGuests });
+            searchEngineUser.AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerRole = crGuests });
             _customerRepository.Insert(searchEngineUser);
             
             //built-in user for background tasks
@@ -4469,7 +4476,7 @@ namespace Nop.Services.Installation
                 RegisteredInStoreId = storeId
             };
             //backgroundTaskUser.CustomerRoles.Add(crGuests);
-            backgroundTaskUser.CustomerCustomerRoleMappings.Add(new CustomerCustomerRoleMapping { CustomerRole = crGuests });
+            backgroundTaskUser.AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerRole = crGuests });
             _customerRepository.Insert(backgroundTaskUser);
         }
 
@@ -5781,7 +5788,7 @@ namespace Nop.Services.Installation
                     IsPasswordProtected = false,
                     DisplayOrder = 1,
                     Published = true,
-                    Title = string.Empty,
+                    Title = "Checkout as guest or register",
                     Body =
                         "<p><strong>Register and save time!</strong><br />Register with us for future convenience:</p><ul><li>Fast and easy check out</li><li>Easy access to your order history and status</li></ul>",
                     TopicTemplateId = defaultTopicTemplate.Id
@@ -5805,7 +5812,7 @@ namespace Nop.Services.Installation
                     IsPasswordProtected = false,
                     DisplayOrder = 1,
                     Published = true,
-                    Title = string.Empty,
+                    Title = "Contact Us",
                     Body = "<p>Put your contact information here. You can edit this in the admin site.</p>",
                     TopicTemplateId = defaultTopicTemplate.Id
                 },
@@ -5863,7 +5870,7 @@ namespace Nop.Services.Installation
                     IsPasswordProtected = false,
                     DisplayOrder = 1,
                     Published = true,
-                    Title = string.Empty,
+                    Title = "Page not found",
                     Body =
                         "<p><strong>The page you requested was not found, and we have a fine guess why.</strong></p><ul><li>If you typed the URL directly, please make sure the spelling is correct.</li><li>The page no longer exists. In this case, we profusely apologize for the inconvenience and for any damage this may cause.</li></ul>",
                     TopicTemplateId = defaultTopicTemplate.Id
@@ -5888,7 +5895,7 @@ namespace Nop.Services.Installation
                     IsPasswordProtected = false,
                     DisplayOrder = 1,
                     Published = true,
-                    Title = string.Empty,
+                    Title = "Apply vendor instructions",
                     Body = "<p>Put your apply vendor instructions here. You can edit this in the admin site.</p>",
                     TopicTemplateId = defaultTopicTemplate.Id
                 },
@@ -5897,10 +5904,10 @@ namespace Nop.Services.Installation
                     SystemName = "VendorTermsOfService",
                     IncludeInSitemap = false,
                     IsPasswordProtected = false,
-                    IncludeInFooterColumn1 = true,
+                    IncludeInFooterColumn1 = false,
                     DisplayOrder = 1,
                     Published = true,
-                    Title = string.Empty,
+                    Title = "Terms of services for vendors",
                     Body = "<p>Put your terms of service information here. You can edit this in the admin site.</p>",
                     TopicTemplateId = defaultTopicTemplate.Id
                 }
@@ -7099,6 +7106,7 @@ namespace Nop.Services.Installation
                     IsActive = true,
                     Slug = ValidateSeName(category, category.Name)
                 });
+                _productTagSeNames.Add(ValidateSeName(category, category.Name));
             }
         }
 
@@ -12264,14 +12272,19 @@ namespace Nop.Services.Installation
             _productRepository.Update(product);
 
             //search engine name
-            _urlRecordRepository.Insert(new UrlRecord
+            var slug = ValidateSeName(productTag, productTag.Name);
+            if (!_productTagSeNames.Contains(slug))
             {
-                EntityId = productTag.Id,
-                EntityName = typeof(ProductTag).Name,
-                LanguageId = 0,
-                IsActive = true,
-                Slug = ValidateSeName(productTag, productTag.Name)
-            });
+                _urlRecordRepository.Insert(new UrlRecord
+                {
+                    EntityId = productTag.Id,
+                    EntityName = typeof(ProductTag).Name,
+                    LanguageId = 0,
+                    IsActive = true,
+                    Slug = slug
+                });
+                _productTagSeNames.Add(slug);
+            }
         }
 
         #endregion

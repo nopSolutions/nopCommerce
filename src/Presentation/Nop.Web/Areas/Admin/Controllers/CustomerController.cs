@@ -440,7 +440,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     if (customerRole.SystemName == NopCustomerDefaults.AdministratorsRoleName && !_workContext.CurrentCustomer.IsAdmin())
                         continue;
 
-                    customer.CustomerCustomerRoleMappings.Add(new CustomerCustomerRoleMapping { CustomerRole = customerRole });
+                    customer.AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerRole = customerRole });
                 }
 
                 _customerService.UpdateCustomer(customer);
@@ -462,8 +462,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                         .CustomerRoles
                         .FirstOrDefault(x => x.SystemName == NopCustomerDefaults.VendorsRoleName);
                     //customer.CustomerRoles.Remove(vendorRole);
-                    customer.CustomerCustomerRoleMappings
-                        .Remove(customer.CustomerCustomerRoleMappings.FirstOrDefault(mapping => mapping.CustomerRoleId == vendorRole.Id));
+                    customer.RemoveCustomerRoleMapping(
+                        customer.CustomerCustomerRoleMappings.FirstOrDefault(mapping => mapping.CustomerRoleId == vendorRole.Id));
                     _customerService.UpdateCustomer(customer);
                     ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.CannotBeInVendoRoleWithoutVendorAssociated"));
                 }
@@ -686,7 +686,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                         {
                             //new role
                             if (customer.CustomerCustomerRoleMappings.Count(mapping => mapping.CustomerRoleId == customerRole.Id) == 0)
-                                customer.CustomerCustomerRoleMappings.Add(new CustomerCustomerRoleMapping { CustomerRole = customerRole });
+                                customer.AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerRole = customerRole });
                         }
                         else
                         {
@@ -700,8 +700,9 @@ namespace Nop.Web.Areas.Admin.Controllers
                             //remove role
                             if (customer.CustomerCustomerRoleMappings.Count(mapping => mapping.CustomerRoleId == customerRole.Id) > 0)
                             {
-                                customer.CustomerCustomerRoleMappings
-                                    .Remove(customer.CustomerCustomerRoleMappings.FirstOrDefault(mapping => mapping.CustomerRoleId == customerRole.Id));
+                                customer.RemoveCustomerRoleMapping(
+                                    customer.CustomerCustomerRoleMappings.FirstOrDefault(mapping => mapping.CustomerRoleId == customerRole.Id));
+
                             }
                         }
                     }
@@ -725,8 +726,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                             .CustomerRoles
                             .FirstOrDefault(x => x.SystemName == NopCustomerDefaults.VendorsRoleName);
                         //customer.CustomerRoles.Remove(vendorRole);
-                        customer.CustomerCustomerRoleMappings
-                            .Remove(customer.CustomerCustomerRoleMappings.FirstOrDefault(mapping => mapping.CustomerRoleId == vendorRole.Id));
+                        customer.RemoveCustomerRoleMapping(
+                            customer.CustomerCustomerRoleMappings.FirstOrDefault(mapping => mapping.CustomerRoleId == vendorRole.Id));
                         _customerService.UpdateCustomer(customer);
                         ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.CannotBeInVendoRoleWithoutVendorAssociated"));
                     }
@@ -1125,7 +1126,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             _rewardPointService.AddRewardPointsHistoryEntry(customer, model.Points, model.StoreId, model.Message,
                 activatingDate: activatingDate, endDate: endDate);
 
-            return Json(new { Result = true });
+            return Json(new { Result = true, Message = _localizationService.GetResource("Admin.Customers.Customers.SomeComment") });
         }
 
         #endregion

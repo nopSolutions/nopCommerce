@@ -24,8 +24,8 @@
         }
     }
 </script>
-<div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_vendor_attribute_details_info_top", additionalData = Model })
+<div class="panel-group"> 
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.AdminVendorAttributeDetailsInfoTop, additionalData = Model })
     <div class="panel panel-default">
         <div class="panel-body">
             @(Html.LocalizedEditor<VendorAttributeModel, VendorAttributeLocalizedModel>("vendorattribute-localized",
@@ -89,5 +89,5 @@
             </div>
         </div>
     </div>
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_vendor_attribute_details_info_bottom", additionalData = Model })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.AdminVendorAttributeDetailsInfoBottom, additionalData = Model })
 </div>

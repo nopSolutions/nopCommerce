@@ -214,7 +214,8 @@ namespace Nop.Services.Seo
         protected virtual IEnumerable<SitemapUrl> GetCategoryUrls()
         {
             var urlHelper = GetUrlHelper();
-            return _categoryService.GetAllCategories().Select(category =>
+
+            return _categoryService.GetAllCategories(storeId: _storeContext.CurrentStore.Id).Select(category =>
             {
                 var url = urlHelper.RouteUrl("Category", new { SeName = _urlRecordService.GetSeName(category) }, GetHttpProtocol());
                 return new SitemapUrl(url, UpdateFrequency.Weekly, category.UpdatedOnUtc);

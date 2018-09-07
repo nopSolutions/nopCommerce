@@ -2296,13 +2296,14 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     //values
                     var attributeValues = _productAttributeService.GetProductAttributeValues(attribute.Id);
+                    var preSelectedValue = _productAttributeParser.ParseValues(model.AttributesXml, attribute.Id);
                     foreach (var attributeValue in attributeValues)
                     {
                         var attributeValueModel = new ProductAttributeCombinationModel.ProductAttributeValueModel
                         {
                             Id = attributeValue.Id,
                             Name = attributeValue.Name,
-                            IsPreSelected = attributeValue.IsPreSelected
+                            IsPreSelected = preSelectedValue.Contains(attributeValue.Id.ToString())
                         };
                         attributeModel.Values.Add(attributeValueModel);
                     }

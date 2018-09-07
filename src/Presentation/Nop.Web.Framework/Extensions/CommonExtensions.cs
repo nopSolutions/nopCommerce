@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Globalization;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Humanizer;
 using Nop.Core.Infrastructure;
 using Nop.Services.Helpers;
 using Nop.Web.Framework.Kendoui;
@@ -80,7 +82,9 @@ namespace Nop.Web.Framework.Extensions
         /// <param name="defaultFormat">Default format string (in case relative formatting is not applied)</param>
         /// <returns>Formatted date and time string</returns>
         public static string RelativeFormat(this DateTime source,
-            bool convertToUserTime, string defaultFormat)
+            bool convertToUserTime, 
+            string defaultFormat,
+            string languageCode = "en-US")
         {
             var result = "";
 
@@ -89,47 +93,16 @@ namespace Nop.Web.Framework.Extensions
 
             if (delta > 0)
             {
-                if (delta < 60) // 60 (seconds)
+                CultureInfo culture = null;
+                try
                 {
-                    result = ts.Seconds == 1 ? "one second ago" : ts.Seconds + " seconds ago";
+                    culture = new CultureInfo(languageCode);
                 }
-                else if (delta < 120) //2 (minutes) * 60 (seconds)
+                catch (CultureNotFoundException)
                 {
-                    result = "a minute ago";
+                    culture = new CultureInfo("en-US");
                 }
-                else if (delta < 2700) // 45 (minutes) * 60 (seconds)
-                {
-                    result = ts.Minutes + " minutes ago";
-                }
-                else if (delta < 5400) // 90 (minutes) * 60 (seconds)
-                {
-                    result = "an hour ago";
-                }
-                else if (delta < 86400) // 24 (hours) * 60 (minutes) * 60 (seconds)
-                {
-                    var hours = ts.Hours;
-                    if (hours == 1)
-                        hours = 2;
-                    result = hours + " hours ago";
-                }
-                else if (delta < 172800) // 48 (hours) * 60 (minutes) * 60 (seconds)
-                {
-                    result = "yesterday";
-                }
-                else if (delta < 2592000) // 30 (days) * 24 (hours) * 60 (minutes) * 60 (seconds)
-                {
-                    result = ts.Days + " days ago";
-                }
-                else if (delta < 31104000) // 12 (months) * 30 (days) * 24 (hours) * 60 (minutes) * 60 (seconds)
-                {
-                    var months = Convert.ToInt32(Math.Floor((double)ts.Days / 30));
-                    result = months <= 1 ? "one month ago" : months + " months ago";
-                }
-                else
-                {
-                    var years = Convert.ToInt32(Math.Floor((double)ts.Days / 365));
-                    result = years <= 1 ? "one year ago" : years + " years ago";
-                }
+                result = TimeSpan.FromSeconds(delta).Humanize(precision: 1, culture: culture);
             }
             else
             {

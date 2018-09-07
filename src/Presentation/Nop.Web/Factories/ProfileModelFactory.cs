@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Media;
@@ -32,6 +33,7 @@ namespace Nop.Web.Factories
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
         private readonly IPictureService _pictureService;
+        private readonly IWorkContext _workContext;
         private readonly MediaSettings _mediaSettings;
 
         #endregion
@@ -47,6 +49,7 @@ namespace Nop.Web.Factories
             IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
             IPictureService pictureService,
+            IWorkContext workContext,
             MediaSettings mediaSettings)
         {
             this._customerSettings = customerSettings;
@@ -58,6 +61,7 @@ namespace Nop.Web.Factories
             this._genericAttributeService = genericAttributeService;
             this._localizationService = localizationService;
             this._pictureService = pictureService;
+            this._workContext = workContext;
             this._mediaSettings = mediaSettings;
         }
 
@@ -219,7 +223,9 @@ namespace Nop.Web.Factories
                 var posted = string.Empty;
                 if (_forumSettings.RelativeDateTimeFormattingEnabled)
                 {
-                    posted = forumPost.CreatedOnUtc.RelativeFormat(true, "f");
+                    var languageCode = _workContext.WorkingLanguage.LanguageCulture;
+                    var postedAgo = forumPost.CreatedOnUtc.RelativeFormat(true, "f", languageCode);
+                    posted = string.Format(_localizationService.GetResource("Common.Extensions.RelativeFormat"), postedAgo);
                 }
                 else
                 {

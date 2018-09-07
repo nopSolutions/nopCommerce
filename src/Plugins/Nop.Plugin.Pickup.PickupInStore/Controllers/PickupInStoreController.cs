@@ -34,6 +34,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
         private readonly IStateProvinceService _stateProvinceService;
         private readonly IStorePickupPointService _storePickupPointService;
         private readonly IStoreService _storeService;
+        private readonly AddressSettings _addressSettings;
 
         #endregion
 
@@ -45,7 +46,8 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
             IPermissionService permissionService,
             IStateProvinceService stateProvinceService,
             IStorePickupPointService storePickupPointService,
-            IStoreService storeService)
+            IStoreService storeService,
+            AddressSettings customerSettings)
         {
             this._addressService = addressService;
             this._countryService = countryService;
@@ -54,6 +56,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
             this._stateProvinceService = stateProvinceService;
             this._storePickupPointService = storePickupPointService;
             this._storeService = storeService;
+            this._addressSettings = customerSettings;
         }
 
         #endregion
@@ -104,6 +107,12 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
 
             var model = new StorePickupPointModel();
 
+            model.Address.CountryEnabled = _addressSettings.CountryEnabled;
+            model.Address.StateProvinceEnabled = _addressSettings.StateProvinceEnabled;
+            model.Address.ZipPostalCodeEnabled = _addressSettings.ZipPostalCodeEnabled;
+            model.Address.CityEnabled = _addressSettings.CityEnabled;
+            model.Address.CountyEnabled = _addressSettings.CountyEnabled;
+
             model.Address.AvailableCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "0" });
             foreach (var country in _countryService.GetAllCountries(showHidden: true))
                 model.Address.AvailableCountries.Add(new SelectListItem { Text = country.Name, Value = country.Id.ToString() });
@@ -141,7 +150,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
                 CountryId = model.Address.CountryId,
                 StateProvinceId = model.Address.StateProvinceId,
                 ZipPostalCode = model.Address.ZipPostalCode,
-                CreatedOnUtc = DateTime.UtcNow
+                CreatedOnUtc = DateTime.UtcNow                
             };
             _addressService.InsertAddress(address);
 
@@ -192,7 +201,12 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
                     County = address.County,
                     CountryId = address.CountryId,
                     StateProvinceId = address.StateProvinceId,
-                    ZipPostalCode = address.ZipPostalCode
+                    ZipPostalCode = address.ZipPostalCode,
+                    CountryEnabled = _addressSettings.CountryEnabled,
+                    StateProvinceEnabled = _addressSettings.StateProvinceEnabled,
+                    ZipPostalCodeEnabled = _addressSettings.ZipPostalCodeEnabled,
+                    CityEnabled = _addressSettings.CityEnabled,
+                    CountyEnabled = _addressSettings.CountyEnabled                    
                 };
             }
 

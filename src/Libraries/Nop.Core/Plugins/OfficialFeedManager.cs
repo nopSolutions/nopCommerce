@@ -71,7 +71,7 @@ namespace Nop.Core.Plugins
             {
                 Id = int.Parse(ElText(node, @"id")),
                 Name = ElText(node, @"name")
-            }).ToList();            
+            }).ToList();
         }
 
         /// <summary>
@@ -92,20 +92,20 @@ namespace Nop.Core.Plugins
             //pageSize parameter is currently ignored by official site (set to 15)
             var xmlDoc = GetDocument("category={0}&version={1}&price={2}&pageIndex={3}&pageSize={4}&searchTerm={5}",
                 categoryId, versionId, price, pageIndex, pageSize, WebUtility.UrlEncode(searchTerm));
-
+            
             var list = xmlDoc.SelectNodes(@"//extensions/extension").Cast<XmlNode>().Select(node => new OfficialFeedPlugin
-            {
-                Name = ElText(node, @"name"),
-                Url = ElText(node, @"url"),
-                PictureUrl = ElText(node, @"picture"),
-                Category = ElText(node, @"category"),
-                SupportedVersions = ElText(node, @"versions"),
-                Price = ElText(node, @"price")
-            }).ToList();
+                {
+                    Name = ElText(node, @"name"),
+                    Url = ElText(node, @"url"),
+                    PictureUrl = ElText(node, @"picture"),
+                    Category = ElText(node, @"category"),
+                    SupportedVersions = ElText(node, @"versions"),
+                    Price = ElText(node, @"price")
+                }).ToList();
 
             var totalRecords = int.Parse(ElText(xmlDoc.SelectNodes(@"//totalRecords")[0], @"value"));
-                        
-            return new PagedList<OfficialFeedPlugin>(list, pageIndex, pageSize, totalRecords);
+
+            return new PagedList<OfficialFeedPlugin>(list, pageIndex, pageSize, totalRecords);            
         }
     }
 }
