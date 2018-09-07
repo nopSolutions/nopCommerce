@@ -14580,6 +14580,9 @@
   <LocaleResource Name="Common.Edit">
     <Value>Edit</Value>
   </LocaleResource>
+  <LocaleResource Name="Common.Extensions.RelativeFormat">
+    <Value>{0} ago</Value>
+  </LocaleResource>
   <LocaleResource Name="Common.Error">
     <Value>Error</Value>
   </LocaleResource>

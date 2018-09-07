@@ -8,6 +8,9 @@ set @resources='
   <LocaleResource Name="Admin.ContentManagement.Topics.Fields.Title.Required">
     <Value>Title is required</Value>
   </LocaleResource>
+  <LocaleResource Name="Common.Extensions.RelativeFormat">
+    <Value>{0} ago</Value>
+  </LocaleResource>
 </Language>
 '
 
