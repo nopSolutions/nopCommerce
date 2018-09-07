@@ -91,3 +91,6 @@ UPDATE [Topic]
 SET [Title] = [SystemName]
 WHERE [Title] IS NULL OR [Title] = ''
 GO
+
+ALTER TABLE [Topic] ALTER COLUMN [Title] nvarchar(max) NOT NULL
+GO
