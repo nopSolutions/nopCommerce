@@ -32,6 +32,7 @@ using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Topics;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Infrastructure;
+using Nop.Data.Extensions;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Customers;
@@ -106,8 +107,6 @@ namespace Nop.Services.Installation
         private readonly IRepository<Warehouse> _warehouseRepository;
         private readonly IWebHelper _webHelper;
 
-        //list of unique search engine names for product tags
-        private List<string> _productTagSeNames;
 
         #endregion
 
@@ -226,28 +225,24 @@ namespace Nop.Services.Installation
             this._vendorRepository = vendorRepository;
             this._warehouseRepository = warehouseRepository;
             this._webHelper = webHelper;
-
-            _productTagSeNames  = new List<string>();
         }
 
         #endregion
 
         #region Utilities
 
-        protected virtual string ValidateSeName<T>(T entity, string name) where T : BaseEntity
+        protected virtual string ValidateSeName<T>(T entity, string seName) where T : BaseEntity
         {
-            //simplified and very fast (no DB calls) version of "ValidateSeName" method of UrlRecordService
-            //we know that there's no same names of entities in sample data
-
+            //duplicate of ValidateSeName method of \Nop.Services\Seo\UrlRecordService.cs (we cannot inject it here)
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
             //validation
             var okChars = "abcdefghijklmnopqrstuvwxyz1234567890 _-";
-            name = name.Trim().ToLowerInvariant();
+            seName = seName.Trim().ToLowerInvariant();
 
             var sb = new StringBuilder();
-            foreach (var c in name.ToCharArray())
+            foreach (var c in seName.ToCharArray())
             {
                 var c2 = c.ToString();
                 if (okChars.Contains(c2))
@@ -256,17 +251,40 @@ namespace Nop.Services.Installation
                 }
             }
 
-            name = sb.ToString();
-            name = name.Replace(" ", "-");
-            while (name.Contains("--"))
-                name = name.Replace("--", "-");
-            while (name.Contains("__"))
-                name = name.Replace("__", "_");
+            seName = sb.ToString();
+            seName = seName.Replace(" ", "-");
+            while (seName.Contains("--"))
+                seName = seName.Replace("--", "-");
+            while (seName.Contains("__"))
+                seName = seName.Replace("__", "_");
 
             //max length
-            name = CommonHelper.EnsureMaximumLength(name, NopSeoDefaults.SearchEngineNameLength);
+            seName = CommonHelper.EnsureMaximumLength(seName, NopSeoDefaults.SearchEngineNameLength);
 
-            return name;
+            //ensure this sename is not reserved yet
+            var i = 2;
+            var tempSeName = seName;
+            while (true)
+            {
+                //check whether such slug already exists (and that is not the current entity)
+
+                var query = from ur in _urlRecordRepository.Table
+                            where ur.Slug == tempSeName
+                            select ur;
+                var urlRecord = query.FirstOrDefault();
+
+                var entityName = entity.GetUnproxiedEntityType().Name;
+                var reserved = urlRecord != null && !(urlRecord.EntityId == entity.Id && urlRecord.EntityName.Equals(entityName, StringComparison.InvariantCultureIgnoreCase));
+                if (!reserved)
+                    break;
+
+                tempSeName = $"{seName}-{i}";
+                i++;
+            }
+
+            seName = tempSeName;
+
+            return seName;
         }
 
         protected virtual string GetSamplesPath()
@@ -7106,7 +7124,6 @@ namespace Nop.Services.Installation
                     IsActive = true,
                     Slug = ValidateSeName(category, category.Name)
                 });
-                _productTagSeNames.Add(ValidateSeName(category, category.Name));
             }
         }
 
@@ -12263,27 +12280,28 @@ namespace Nop.Services.Installation
 
         private void AddProductTag(Product product, string tag)
         {
-            var productTag = _productTagRepository.Table.FirstOrDefault(pt => pt.Name == tag) ?? new ProductTag
+            var productTag = _productTagRepository.Table.FirstOrDefault(pt => pt.Name == tag);
+            bool exist = productTag != null;
+            if (productTag == null)
             {
-                Name = tag
-            };
-            //product.ProductTags.Add(productTag);
+                productTag = new ProductTag
+                {
+                    Name = tag
+                };
+            }
             product.ProductProductTagMappings.Add(new ProductProductTagMapping { ProductTag = productTag });
             _productRepository.Update(product);
-
-            //search engine name
-            var slug = ValidateSeName(productTag, productTag.Name);
-            if (!_productTagSeNames.Contains(slug))
+            if (!exist)
             {
+                //search engine name
                 _urlRecordRepository.Insert(new UrlRecord
                 {
                     EntityId = productTag.Id,
                     EntityName = typeof(ProductTag).Name,
                     LanguageId = 0,
                     IsActive = true,
-                    Slug = slug
+                    Slug = ValidateSeName(productTag, productTag.Name)
                 });
-                _productTagSeNames.Add(slug);
             }
         }
 
