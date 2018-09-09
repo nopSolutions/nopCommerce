@@ -129,7 +129,7 @@
     <Value>Guardar informação</Value>
   </LocaleResource>
   <LocaleResource Name="Title">
-    <Value>Instação nopCommerce</Value>
+    <Value>Instalação nopCommerce</Value>
   </LocaleResource>
   <LocaleResource Name="Tooltip1">
     <Value>nopCommerce é a solução ASP.NET online líder em lojas de e-commerce. Este passo a passo irá guiar você no processo de configuração do nopCommerce</Value>
@@ -138,6 +138,6 @@
     <Value>Para completar o passo a passo você precisa saber algumas informações sobre seu servidor de banco de dados ("string de conexão"). Por favor entre em contato com seu provedor de hospedagem se necessário. Se você está instalando em um computador local ou servidor talvez seja necessário informações do seu Administrador de Sistemas.</Value>
   </LocaleResource>
   <LocaleResource Name="WindowsAuthentication">
-    <Value>Usar autenticação integrada com o Winwdows</Value>
+    <Value>Usar autenticação integrada com o Windows</Value>
   </LocaleResource>
 </Language>
