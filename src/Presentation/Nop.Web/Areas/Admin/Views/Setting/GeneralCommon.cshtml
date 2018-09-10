@@ -599,6 +599,16 @@
                         </div>
                         <div class="form-group advanced-setting">
                             <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="StoreInformationSettings.UseResponseCompression_OverrideForStore" asp-input="StoreInformationSettings.UseResponseCompression" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="StoreInformationSettings.UseResponseCompression" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="StoreInformationSettings.UseResponseCompression" />
+                                <span asp-validation-for="StoreInformationSettings.UseResponseCompression"></span>
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
                                 <nop-override-store-checkbox asp-for="SeoSettings.WwwRequirement_OverrideForStore" asp-input="SeoSettings.WwwRequirement" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                                 <nop-label asp-for="SeoSettings.WwwRequirement" />
                             </div>
