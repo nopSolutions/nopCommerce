@@ -71,6 +71,7 @@ namespace Nop.Web.Factories
         private readonly IProductService _productService;
         private readonly IProductTagService _productTagService;
         private readonly ISitemapGenerator _sitemapGenerator;
+        private readonly IShoppingCartService _shoppingCartService;
         private readonly IStaticCacheManager _cacheManager;
         private readonly IStoreContext _storeContext;
         private readonly IThemeContext _themeContext;
@@ -113,6 +114,7 @@ namespace Nop.Web.Factories
             IProductService productService,
             IProductTagService productTagService,
             ISitemapGenerator sitemapGenerator,
+            IShoppingCartService shoppingCartService,
             IStaticCacheManager cacheManager,
             IStoreContext storeContext,
             IThemeContext themeContext,
@@ -151,6 +153,7 @@ namespace Nop.Web.Factories
             this._productService = productService;
             this._productTagService = productTagService;
             this._sitemapGenerator = sitemapGenerator;
+            this._shoppingCartService = shoppingCartService;
             this._cacheManager = cacheManager;
             this._storeContext = storeContext;
             this._themeContext = themeContext;
@@ -348,13 +351,10 @@ namespace Nop.Web.Factories
             //performance optimization (use "HasShoppingCartItems" property)
             if (customer.HasShoppingCartItems)
             {
-                model.ShoppingCartItems = customer.ShoppingCartItems
-                    .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                    .LimitPerStore(_storeContext.CurrentStore.Id)
+                model.ShoppingCartItems = _shoppingCartService.GetShoppingCart(customer, ShoppingCartType.ShoppingCart, _storeContext.CurrentStore.Id)
                     .Sum(item => item.Quantity);
-                model.WishlistItems = customer.ShoppingCartItems
-                    .Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist)
-                    .LimitPerStore(_storeContext.CurrentStore.Id)
+
+                model.WishlistItems = _shoppingCartService.GetShoppingCart(customer, ShoppingCartType.Wishlist, _storeContext.CurrentStore.Id)
                     .Sum(item => item.Quantity);
             }
 

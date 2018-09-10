@@ -155,10 +155,7 @@ namespace Nop.Services.Orders
                 //only for shopping cart items (ignore wishlist)
                 shoppingCartItem.ShoppingCartType == ShoppingCartType.ShoppingCart)
             {
-                var cart = customer.ShoppingCartItems
-                    .Where(x => x.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                    .LimitPerStore(storeId)
-                    .ToList();
+                var cart = GetShoppingCart(customer, ShoppingCartType.ShoppingCart, storeId);
 
                 var checkoutAttributesXml = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.CheckoutAttributes, storeId);
                 checkoutAttributesXml = _checkoutAttributeParser.EnsureOnlyActiveAttributes(checkoutAttributesXml, cart);
@@ -249,9 +246,7 @@ namespace Nop.Services.Orders
             var requiredProductQuantity = 1;
 
             //get customer shopping cart
-            var cart = customer.ShoppingCartItems
-                .Where(item => item.ShoppingCartType == shoppingCartType)
-                .LimitPerStore(storeId).ToList();
+            var cart = GetShoppingCart(customer, shoppingCartType, storeId);
 
             //whether other cart items require the passed product
             var passedProductRequiredQuantity = cart
@@ -509,6 +504,21 @@ namespace Nop.Services.Orders
             }
             
             return warnings;
+        }
+
+        /// <summary>
+        /// Gets shopping cart
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="shoppingCartType">Shopping cart type</param>
+        /// <param name="storeId">Store identifier</param>
+        /// <returns>Shopping Cart</returns>
+        public virtual IList<ShoppingCartItem> GetShoppingCart(Customer customer, ShoppingCartType shoppingCartType, int storeId)
+        {
+            return customer.ShoppingCartItems
+                .Where(sci => sci.ShoppingCartType == shoppingCartType)
+                .LimitPerStore(storeId)
+                .ToList();
         }
 
         /// <summary>
@@ -1123,10 +1133,7 @@ namespace Nop.Services.Orders
             //reset checkout info
             _customerService.ResetCheckoutData(customer, storeId);
 
-            var cart = customer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == shoppingCartType)
-                .LimitPerStore(storeId)
-                .ToList();
+            var cart = GetShoppingCart(customer, shoppingCartType, storeId);
 
             var shoppingCartItem = FindShoppingCartItemInTheCart(cart,
                 shoppingCartType, product, attributesXml, customerEnteredPrice,

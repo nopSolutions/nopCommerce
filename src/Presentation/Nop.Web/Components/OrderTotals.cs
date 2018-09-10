@@ -11,24 +11,24 @@ namespace Nop.Web.Components
     public class OrderTotalsViewComponent : NopViewComponent
     {
         private readonly IShoppingCartModelFactory _shoppingCartModelFactory;
+        private readonly IShoppingCartService _shoppingCartService;
         private readonly IStoreContext _storeContext;
         private readonly IWorkContext _workContext;
 
         public OrderTotalsViewComponent(IShoppingCartModelFactory shoppingCartModelFactory,
+            IShoppingCartService shoppingCartService,
             IStoreContext storeContext,
             IWorkContext workContext)
         {
             this._shoppingCartModelFactory = shoppingCartModelFactory;
+            this._shoppingCartService = shoppingCartService;
             this._storeContext = storeContext;
             this._workContext = workContext;
         }
 
         public IViewComponentResult Invoke(bool isEditable)
         {
-            var cart = _workContext.CurrentCustomer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .LimitPerStore(_storeContext.CurrentStore.Id)
-                .ToList();
+            var cart = _shoppingCartService.GetShoppingCart(_workContext.CurrentCustomer, ShoppingCartType.ShoppingCart, _storeContext.CurrentStore.Id);
 
             var model = _shoppingCartModelFactory.PrepareOrderTotalsModel(cart, isEditable);
             return View(model);

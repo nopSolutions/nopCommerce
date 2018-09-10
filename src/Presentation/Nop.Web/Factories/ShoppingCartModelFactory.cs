@@ -959,10 +959,8 @@ namespace Nop.Web.Factories
             //performance optimization (use "HasShoppingCartItems" property)
             if (_workContext.CurrentCustomer.HasShoppingCartItems)
             {
-                var cart = _workContext.CurrentCustomer.ShoppingCartItems
-                    .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                    .LimitPerStore(_storeContext.CurrentStore.Id)
-                    .ToList();
+                var cart = _shoppingCartService.GetShoppingCart(_workContext.CurrentCustomer, ShoppingCartType.ShoppingCart, _storeContext.CurrentStore.Id);
+
                 model.TotalProducts = cart.Sum(item => item.Quantity);
                 if (cart.Any())
                 {

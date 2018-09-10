@@ -65,6 +65,15 @@ namespace Nop.Services.Orders
             decimal customerEnteredPrice, int quantity);
 
         /// <summary>
+        /// Gets shopping cart
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="shoppingCartType">Shopping cart type</param>
+        /// <param name="storeId">Store identifier</param>
+        /// <returns>Shopping Cart</returns>
+        IList<ShoppingCartItem> GetShoppingCart(Customer customer, ShoppingCartType shoppingCartType, int storeId);
+
+        /// <summary>
         /// Validates shopping cart item attributes
         /// </summary>
         /// <param name="customer">Customer</param>
