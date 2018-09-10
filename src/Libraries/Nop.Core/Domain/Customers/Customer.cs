@@ -159,7 +159,7 @@ namespace Nop.Core.Domain.Customers
         /// </summary>
         public virtual IList<CustomerRole> CustomerRoles
         {
-            get => CustomerCustomerRoleMappings.Select(mapping => mapping.CustomerRole).ToList();
+            get => _customerRoles ?? (_customerRoles = CustomerCustomerRoleMappings.Select(mapping => mapping.CustomerRole).ToList());
         }
 
         /// <summary>
