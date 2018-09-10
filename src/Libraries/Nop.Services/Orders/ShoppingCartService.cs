@@ -155,10 +155,7 @@ namespace Nop.Services.Orders
                 //only for shopping cart items (ignore wishlist)
                 shoppingCartItem.ShoppingCartType == ShoppingCartType.ShoppingCart)
             {
-                var cart = customer.ShoppingCartItems
-                    .Where(x => x.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                    .LimitPerStore(storeId)
-                    .ToList();
+                var cart = GetShoppingCart(customer, ShoppingCartType.ShoppingCart, storeId);
 
                 var checkoutAttributesXml = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.CheckoutAttributes, storeId);
                 checkoutAttributesXml = _checkoutAttributeParser.EnsureOnlyActiveAttributes(checkoutAttributesXml, cart);
@@ -249,9 +246,7 @@ namespace Nop.Services.Orders
             var requiredProductQuantity = 1;
 
             //get customer shopping cart
-            var cart = customer.ShoppingCartItems
-                .Where(item => item.ShoppingCartType == shoppingCartType)
-                .LimitPerStore(storeId).ToList();
+            var cart = GetShoppingCart(customer, shoppingCartType, storeId);
 
             //whether other cart items require the passed product
             var passedProductRequiredQuantity = cart
@@ -509,6 +504,22 @@ namespace Nop.Services.Orders
             }
             
             return warnings;
+        }
+
+        /// <summary>
+        /// Gets the customer's shopping cart.  Can be sorted.
+        /// </summary>
+        /// <param name="customer"></param>
+        /// <param name="shoppingCartType"></param>
+        /// <param name="storeId"></param>
+        /// <param name="ordered"></param>
+        /// <returns>Shopping Cart</returns>
+        public virtual IList<ShoppingCartItem> GetShoppingCart(Customer customer, ShoppingCartType shoppingCartType, int storeId)
+        {
+            return customer.ShoppingCartItems
+                .Where(sci => sci.ShoppingCartType == shoppingCartType)
+                .LimitPerStore(storeId)
+                .ToList();
         }
 
         /// <summary>
@@ -808,6 +819,8 @@ namespace Nop.Services.Orders
             warnings.Add(_localizationService.GetResource("ShoppingCart.Rental.StartDateShouldBeFuture"));
             return warnings;
         }
+
+        //public IList<ShoppingCartItem>
 
         /// <summary>
         /// Validates shopping cart item
@@ -1123,10 +1136,7 @@ namespace Nop.Services.Orders
             //reset checkout info
             _customerService.ResetCheckoutData(customer, storeId);
 
-            var cart = customer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == shoppingCartType)
-                .LimitPerStore(storeId)
-                .ToList();
+            var cart = GetShoppingCart(customer, shoppingCartType, storeId);
 
             var shoppingCartItem = FindShoppingCartItemInTheCart(cart,
                 shoppingCartType, product, attributesXml, customerEnteredPrice,

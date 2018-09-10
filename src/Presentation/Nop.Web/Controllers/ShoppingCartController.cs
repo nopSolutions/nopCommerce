@@ -152,7 +152,7 @@ namespace Nop.Web.Controllers
 
         #region Utilities
 
-        protected virtual void ParseAndSaveCheckoutAttributes(List<ShoppingCartItem> cart, IFormCollection form)
+        protected virtual void ParseAndSaveCheckoutAttributes(IList<ShoppingCartItem> cart, IFormCollection form)
         {
             if (cart == null)
                 throw new ArgumentNullException(nameof(cart));
@@ -509,10 +509,8 @@ namespace Nop.Web.Controllers
             }
             else
             {
-                var cart = _workContext.CurrentCustomer.ShoppingCartItems
-                    .Where(x => x.ShoppingCartType == updatecartitem.ShoppingCartType)
-                    .LimitPerStore(_storeContext.CurrentStore.Id)
-                    .ToList();
+                var cart = _shoppingCartService.GetShoppingCart(_workContext.CurrentCustomer, updatecartitem.ShoppingCartType, _storeContext.CurrentStore.Id);
+
                 var otherCartItemWithSameParameters = _shoppingCartService.FindShoppingCartItemInTheCart(
                     cart, updatecartitem.ShoppingCartType, product, attributes, customerEnteredPriceConverted,
                     rentalStartDate, rentalEndDate);
@@ -720,10 +718,7 @@ namespace Nop.Web.Controllers
 
             //get standard warnings without attribute validations
             //first, try to find existing shopping cart item
-            var cart = _workContext.CurrentCustomer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == cartType)
-                .LimitPerStore(_storeContext.CurrentStore.Id)
-                .ToList();
+            var cart = _shoppingCartService.GetShoppingCart(_workContext.CurrentCustomer, cartType, _storeContext.CurrentStore.Id);
             var shoppingCartItem = _shoppingCartService.FindShoppingCartItemInTheCart(cart, cartType, product);
             //if we already have the same product in the cart, then use the total quantity to validate
             var quantityToValidate = shoppingCartItem != null ? shoppingCartItem.Quantity + quantity : quantity;
@@ -864,10 +859,8 @@ namespace Nop.Web.Controllers
             if (_shoppingCartSettings.AllowCartItemEditing && updatecartitemid > 0)
             {
                 //search with the same cart type as specified
-                var cart = _workContext.CurrentCustomer.ShoppingCartItems
-                    .Where(x => x.ShoppingCartTypeId == shoppingCartTypeId)
-                    .LimitPerStore(_storeContext.CurrentStore.Id)
-                    .ToList();
+                var cart = _shoppingCartService.GetShoppingCart(_workContext.CurrentCustomer, (ShoppingCartType)shoppingCartTypeId, _storeContext.CurrentStore.Id);
+
                 updatecartitem = cart.FirstOrDefault(x => x.Id == updatecartitemid);
                 //not found? let's ignore it. in this case we'll add a new item
                 //if (updatecartitem == null)
@@ -1067,11 +1060,8 @@ namespace Nop.Web.Controllers
         [HttpPost]
         public virtual IActionResult CheckoutAttributeChange(IFormCollection form, bool isEditable)
         {
-            var cart = _workContext.CurrentCustomer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .LimitPerStore(_storeContext.CurrentStore.Id)
-                .ToList();
-
+            var cart = _shoppingCartService.GetShoppingCart(_workContext.CurrentCustomer, ShoppingCartType.ShoppingCart, _storeContext.CurrentStore.Id);
+            
             //save selected attributes
             ParseAndSaveCheckoutAttributes(cart, form);
             var attributeXml = _genericAttributeService.GetAttribute<string>(_workContext.CurrentCustomer,
@@ -1275,10 +1265,7 @@ namespace Nop.Web.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart))
                 return RedirectToRoute("HomePage");
 
-            var cart = _workContext.CurrentCustomer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .LimitPerStore(_storeContext.CurrentStore.Id)
-                .ToList();
+            var cart = _shoppingCartService.GetShoppingCart(_workContext.CurrentCustomer, ShoppingCartType.ShoppingCart, _storeContext.CurrentStore.Id);
             var model = new ShoppingCartModel();
             model = _shoppingCartModelFactory.PrepareShoppingCartModel(model, cart);
             return View(model);
@@ -1291,10 +1278,7 @@ namespace Nop.Web.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart))
                 return RedirectToRoute("HomePage");
 
-            var cart = _workContext.CurrentCustomer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .LimitPerStore(_storeContext.CurrentStore.Id)
-                .ToList();
+            var cart = _shoppingCartService.GetShoppingCart(_workContext.CurrentCustomer, ShoppingCartType.ShoppingCart, _storeContext.CurrentStore.Id);
 
             //get identifiers of items to remove
             var itemIdsToRemove = form["removefromcart"]
@@ -1332,10 +1316,7 @@ namespace Nop.Web.Controllers
             ParseAndSaveCheckoutAttributes(cart, form);
 
             //updated cart
-            cart = _workContext.CurrentCustomer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .LimitPerStore(_storeContext.CurrentStore.Id)
-                .ToList();
+            cart = _shoppingCartService.GetShoppingCart(_workContext.CurrentCustomer, ShoppingCartType.ShoppingCart, _storeContext.CurrentStore.Id);
 
             //prepare model
             var model = new ShoppingCartModel();
@@ -1369,10 +1350,7 @@ namespace Nop.Web.Controllers
         [FormValueRequired("checkout")]
         public virtual IActionResult StartCheckout(IFormCollection form)
         {
-            var cart = _workContext.CurrentCustomer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .LimitPerStore(_storeContext.CurrentStore.Id)
-                .ToList();
+            var cart = _shoppingCartService.GetShoppingCart(_workContext.CurrentCustomer, ShoppingCartType.ShoppingCart, _storeContext.CurrentStore.Id);
 
             //parse and save checkout attributes
             ParseAndSaveCheckoutAttributes(cart, form);
@@ -1414,10 +1392,7 @@ namespace Nop.Web.Controllers
                 discountcouponcode = discountcouponcode.Trim();
 
             //cart
-            var cart = _workContext.CurrentCustomer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .LimitPerStore(_storeContext.CurrentStore.Id)
-                .ToList();
+            var cart = _shoppingCartService.GetShoppingCart(_workContext.CurrentCustomer, ShoppingCartType.ShoppingCart, _storeContext.CurrentStore.Id);
 
             //parse and save checkout attributes
             ParseAndSaveCheckoutAttributes(cart, form);
@@ -1479,10 +1454,7 @@ namespace Nop.Web.Controllers
                 giftcardcouponcode = giftcardcouponcode.Trim();
 
             //cart
-            var cart = _workContext.CurrentCustomer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .LimitPerStore(_storeContext.CurrentStore.Id)
-                .ToList();
+            var cart = _shoppingCartService.GetShoppingCart(_workContext.CurrentCustomer, ShoppingCartType.ShoppingCart, _storeContext.CurrentStore.Id);
 
             //parse and save checkout attributes
             ParseAndSaveCheckoutAttributes(cart, form);
@@ -1526,10 +1498,7 @@ namespace Nop.Web.Controllers
         [HttpPost]
         public virtual IActionResult GetEstimateShipping(int? countryId, int? stateProvinceId, string zipPostalCode, IFormCollection form)
         {
-            var cart = _workContext.CurrentCustomer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .LimitPerStore(_storeContext.CurrentStore.Id)
-                .ToList();
+            var cart = _shoppingCartService.GetShoppingCart(_workContext.CurrentCustomer, ShoppingCartType.ShoppingCart, _storeContext.CurrentStore.Id);
 
             //parse and save checkout attributes
             ParseAndSaveCheckoutAttributes(cart, form);
@@ -1573,11 +1542,8 @@ namespace Nop.Web.Controllers
             if (discount != null)
                 _customerService.RemoveDiscountCouponCode(_workContext.CurrentCustomer, discount.CouponCode);
 
+            var cart = _shoppingCartService.GetShoppingCart(_workContext.CurrentCustomer, ShoppingCartType.ShoppingCart, _storeContext.CurrentStore.Id);
 
-            var cart = _workContext.CurrentCustomer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .LimitPerStore(_storeContext.CurrentStore.Id)
-                .ToList();
             model = _shoppingCartModelFactory.PrepareShoppingCartModel(model, cart);
             return View(model);
         }
@@ -1597,10 +1563,8 @@ namespace Nop.Web.Controllers
             if (gc != null)
                 _customerService.RemoveGiftCardCouponCode(_workContext.CurrentCustomer, gc.GiftCardCouponCode);
 
-            var cart = _workContext.CurrentCustomer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .LimitPerStore(_storeContext.CurrentStore.Id)
-                .ToList();
+            var cart = _shoppingCartService.GetShoppingCart(_workContext.CurrentCustomer, ShoppingCartType.ShoppingCart, _storeContext.CurrentStore.Id);
+
             model = _shoppingCartModelFactory.PrepareShoppingCartModel(model, cart);
             return View(model);
         }
@@ -1636,10 +1600,7 @@ namespace Nop.Web.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.EnableWishlist))
                 return RedirectToRoute("HomePage");
 
-            var cart = _workContext.CurrentCustomer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist)
-                .LimitPerStore(_storeContext.CurrentStore.Id)
-                .ToList();
+            var cart = _shoppingCartService.GetShoppingCart(_workContext.CurrentCustomer, ShoppingCartType.Wishlist, _storeContext.CurrentStore.Id);
 
             var allIdsToRemove = form.ContainsKey("removefromcart")
                 ? form["removefromcart"].ToString().Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
@@ -1674,10 +1635,7 @@ namespace Nop.Web.Controllers
             }
 
             //updated wishlist
-            cart = _workContext.CurrentCustomer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist)
-                .LimitPerStore(_storeContext.CurrentStore.Id)
-                .ToList();
+            cart = _shoppingCartService.GetShoppingCart(_workContext.CurrentCustomer, ShoppingCartType.Wishlist, _storeContext.CurrentStore.Id);
             var model = new WishlistModel();
             model = _shoppingCartModelFactory.PrepareWishlistModel(model, cart);
             //update current warnings
@@ -1712,10 +1670,7 @@ namespace Nop.Web.Controllers
             if (pageCustomer == null)
                 return RedirectToRoute("HomePage");
 
-            var pageCart = pageCustomer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist)
-                .LimitPerStore(_storeContext.CurrentStore.Id)
-                .ToList();
+            var pageCart = _shoppingCartService.GetShoppingCart(pageCustomer, ShoppingCartType.Wishlist, _storeContext.CurrentStore.Id);
 
             var allWarnings = new List<string>();
             var numberOfAddedItems = 0;
@@ -1762,10 +1717,8 @@ namespace Nop.Web.Controllers
                 ErrorNotification(_localizationService.GetResource("Wishlist.AddToCart.Error"), false);
             }
 
-            var cart = pageCustomer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist)
-                .LimitPerStore(_storeContext.CurrentStore.Id)
-                .ToList();
+            var cart = _shoppingCartService.GetShoppingCart(pageCustomer, ShoppingCartType.Wishlist, _storeContext.CurrentStore.Id);
+
             var model = new WishlistModel();
             model = _shoppingCartModelFactory.PrepareWishlistModel(model, cart, !customerGuid.HasValue);
             return View(model);
@@ -1777,10 +1730,7 @@ namespace Nop.Web.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.EnableWishlist) || !_shoppingCartSettings.EmailWishlistEnabled)
                 return RedirectToRoute("HomePage");
 
-            var cart = _workContext.CurrentCustomer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist)
-                .LimitPerStore(_storeContext.CurrentStore.Id)
-                .ToList();
+            var cart = _shoppingCartService.GetShoppingCart(_workContext.CurrentCustomer, ShoppingCartType.Wishlist, _storeContext.CurrentStore.Id);
 
             if (!cart.Any())
                 return RedirectToRoute("HomePage");
@@ -1799,10 +1749,8 @@ namespace Nop.Web.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.EnableWishlist) || !_shoppingCartSettings.EmailWishlistEnabled)
                 return RedirectToRoute("HomePage");
 
-            var cart = _workContext.CurrentCustomer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist)
-                .LimitPerStore(_storeContext.CurrentStore.Id)
-                .ToList();
+            var cart = _shoppingCartService.GetShoppingCart(_workContext.CurrentCustomer, ShoppingCartType.Wishlist, _storeContext.CurrentStore.Id);
+
             if (!cart.Any())
                 return RedirectToRoute("HomePage");
 
