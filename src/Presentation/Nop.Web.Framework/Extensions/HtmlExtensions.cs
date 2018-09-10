@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc.Routing;
 using Nop.Core.Infrastructure;
 using Nop.Services.Localization;
 using Nop.Services.Stores;
+using Nop.Web.Framework.Events;
 using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Framework.Extensions
@@ -147,6 +148,46 @@ namespace Nop.Web.Framework.Extensions
                 tabName = helper.ViewContext.TempData[dataKey].ToString();
 
             return tabName;
+        }
+
+        /// <summary>
+        /// Add a tab to TabStrip
+        /// </summary>
+        /// <param name="eventMessage">AdminTabStripCreated</param>
+        /// <param name="tabId">Tab Id</param>
+        /// <param name="tabName">Tab name</param>
+        /// <param name="url">url</param>
+        /// <returns>Html content of new Tab</returns>
+        public static IHtmlContent TabContentByURL(this AdminTabStripCreated eventMessage, string tabId, string tabName, string url)
+        {
+            return new HtmlString($@"
+                <script type='text/javascript'>
+                    $(document).ready(function() {{
+                        $('<li><a data-tab-name='{tabId}' data-toggle='tab' href='#{tabId}'>{tabName}</a></li>').appendTo('#{eventMessage.TabStripName} .nav-tabs:first');
+                        $.get('{url}', function(result) {{
+                            $(`<div class='tab-pane' id='{tabId}'>` + result + `</div>`).appendTo('#{eventMessage.TabStripName} .tab-content:first');
+                        }});
+                    }});
+                </script>");
+        }
+
+        /// <summary>
+        /// Add a tab to TabStrip
+        /// </summary>
+        /// <param name="eventMessage">AdminTabStripCreated</param>
+        /// <param name="tabId">Tab Id</param>
+        /// <param name="tabName">Tab name</param>
+        /// <param name="contentModel">Content model</param>
+        /// <returns>Html content of new Tab</returns>
+        public static IHtmlContent TabContentByModel(this AdminTabStripCreated eventMessage, string tabId, string tabName, string contentModel)
+        {
+            return new HtmlString($@"
+                <script>
+                    $(document).ready(function() {{
+                        $(`<li><a data-tab-name='{tabId}' data-toggle='tab' href='#{tabId}'>{tabName}</a></li>`).appendTo('#{eventMessage.TabStripName} .nav-tabs:first');
+                        $(`<div class='tab-pane' id='{tabId}'>{contentModel}</div>`).appendTo('#{eventMessage.TabStripName} .tab-content:first');
+                    }});
+                </script>");
         }
 
         #region Form fields

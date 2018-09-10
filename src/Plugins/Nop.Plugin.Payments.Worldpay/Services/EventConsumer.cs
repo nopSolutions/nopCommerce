@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Domain.Customers;
 using Nop.Plugin.Payments.Worldpay.Models.Customer;
@@ -109,29 +108,12 @@ namespace Nop.Plugin.Payments.Worldpay.Services
                 WorldpayCustomerId = vaultCustomer?.CustomerId
             };
 
-            //compose script to create a new tab
-            var worldpayCustomerTabElementId = "tab-worldpay";
-            var worldpayCustomerTab = new HtmlString($@"
-                <script>
-                    $(document).ready(function() {{
-                        $(`
-                            <li>
-                                <a data-tab-name='{worldpayCustomerTabElementId}' data-toggle='tab' href='#{worldpayCustomerTabElementId}'>
-                                    {_localizationService.GetResource("Plugins.Payments.Worldpay.WorldpayCustomer")}
-                                </a>
-                            </li>
-                        `).appendTo('#{tabsElementId} .nav-tabs:first');
-                        $(`
-                            <div class='tab-pane' id='{worldpayCustomerTabElementId}'>
-                                {
-                                    (await eventMessage.Helper.PartialAsync("~/Plugins/Payments.Worldpay/Views/Customer/_CreateOrUpdate.Worldpay.cshtml", model)).RenderHtmlContent()
-                                        .Replace("</script>", "<\\/script>") //we need escape a closing script tag to prevent terminating the script block early
-                                }
-                            </div>
-                        `).appendTo('#{tabsElementId} .tab-content:first');
-                    }});
-                </script>");
-
+            //create a new tab
+            var tabName = _localizationService.GetResource("Plugins.Payments.Worldpay.WorldpayCustomer");
+            var url = "~/Plugins/Payments.Worldpay/Views/Customer/_CreateOrUpdate.Worldpay.cshtml";            
+            var contentModel = (await eventMessage.Helper.PartialAsync(url, model)).RenderHtmlContent()
+                .Replace("</script>", "<\\/script>");  //we need escape a closing script tag to prevent terminating the script block early
+            var worldpayCustomerTab = eventMessage.TabContentByModel("tab-worldpay", tabName, contentModel);
             //add this tab as a block to render on the customer details page
             eventMessage.BlocksToRender.Add(worldpayCustomerTab);
         }
