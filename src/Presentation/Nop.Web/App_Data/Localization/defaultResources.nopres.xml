@@ -8001,6 +8001,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.HideShippingTotal.Hint">
     <Value>Check if you want to hide 'Shipping total' label when shipping is not required.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.IgnoreAdditionalShippingChargeForPickUpInStore">
+    <Value>Ignore additional shipping charge for pick up in store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.IgnoreAdditionalShippingChargeForPickUpInStore.Hint">
+    <Value>Check if you want ignore additional shipping charge for pick up in store.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.NotifyCustomerAboutShippingFromMultipleLocations">
     <Value>Notify customer about shipping from multiple locations</Value>
   </LocaleResource>

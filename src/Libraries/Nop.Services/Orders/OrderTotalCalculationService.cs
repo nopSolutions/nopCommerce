@@ -955,7 +955,15 @@ namespace Nop.Services.Orders
                 return decimal.Zero;
 
             //with additional shipping charges
-            var adjustedRate = shippingRate + GetShoppingCartAdditionalShippingCharge(cart);
+            var pickupPoint = _genericAttributeService.GetAttribute<PickupPoint>(cart.FirstOrDefault(item => item.Customer != null)?.Customer,
+                    NopCustomerDefaults.SelectedPickupPointAttribute, _storeContext.CurrentStore.Id);
+
+            var adjustedRate = shippingRate;
+
+            if (_shippingSettings.AllowPickUpInStore && !_shippingSettings.IgnoreAdditionalShippingChargeForPickUpInStore && pickupPoint != null)
+            {
+                adjustedRate += GetShoppingCartAdditionalShippingCharge(cart);
+            }                
 
             //discount
             var discountAmount = GetShippingDiscount(cart.FirstOrDefault(item => item.Customer != null)?.Customer, adjustedRate, out appliedDiscounts);

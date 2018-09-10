@@ -45,6 +45,16 @@
                             </div>
                         </div>
                         <nop-nested-setting asp-for="AllowPickUpInStore">
+                            <div class="form-group advanced-setting" id="pnlIgnoreAdditionalShippingChargeForPickUpInStore">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="IgnoreAdditionalShippingChargeForPickUpInStore_OverrideForStore" asp-input="IgnoreAdditionalShippingChargeForPickUpInStore" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="IgnoreAdditionalShippingChargeForPickUpInStore" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="IgnoreAdditionalShippingChargeForPickUpInStore" />
+                                    <span asp-validation-for="IgnoreAdditionalShippingChargeForPickUpInStore"></span>
+                                </div>
+                            </div>
                             <div class="form-group advanced-setting" id="pnlDisplayPickupPointsOnMap">
                                 <div class="col-md-3">
                                     <nop-override-store-checkbox asp-for="DisplayPickupPointsOnMap_OverrideForStore" asp-input="DisplayPickupPointsOnMap" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
@@ -217,6 +227,7 @@
                         function toggleAllowPickUpInStore() {
                             if ($('#@Html.IdFor(model => model.AllowPickUpInStore)').is(':checked')) {
                                 $('#pnlDisplayPickupPointsOnMap').show();
+                                $('#pnlIgnoreAdditionalShippingChargeForPickUpInStore').show();
                                 if ($('#@Html.IdFor(model => model.DisplayPickupPointsOnMap)').is(':checked')) {
                                     $('#pnlGoogleMapsApiKey').show();
                                 } else {
@@ -224,6 +235,7 @@
                                 }
                             } else {
                                 $('#pnlDisplayPickupPointsOnMap').hide();
+                                $('#pnlIgnoreAdditionalShippingChargeForPickUpInStore').hide();
                                 $('#pnlGoogleMapsApiKey').hide();
                             }
                         }

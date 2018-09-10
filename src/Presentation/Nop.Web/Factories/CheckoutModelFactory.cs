@@ -210,7 +210,7 @@ namespace Nop.Web.Factories
                                 OpeningHours = point.OpeningHours
                             };
                             if (point.PickupFee > 0)
-                            {
+                            {                                
                                 var amount = _taxService.GetShippingPrice(point.PickupFee, _workContext.CurrentCustomer);
                                 amount = _currencyService.ConvertFromPrimaryStoreCurrency(amount, _workContext.WorkingCurrency);
                                 pickupPointModel.PickupFee = _priceFormatter.FormatShippingPrice(amount, true);
