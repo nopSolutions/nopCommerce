@@ -106,7 +106,7 @@ WHERE [SystemName] = 'VendorTermsOfService'
 GO
 
 UPDATE [Topic]
-SET [Title] = [SystemName]
+SET [Title] = ISNULL([SystemName], '')
 WHERE [Title] IS NULL OR [Title] = ''
 GO
 
