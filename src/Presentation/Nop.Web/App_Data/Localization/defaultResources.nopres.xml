@@ -14649,6 +14649,9 @@
   <LocaleResource Name="Common.OK">
     <Value>OK</Value>
   </LocaleResource>
+  <LocaleResource Name="Common.RelativeDateTime.Past">
+    <Value>{0} ago</Value>
+  </LocaleResource>
   <LocaleResource Name="Common.Remove">
     <Value>Remove</Value>
   </LocaleResource>

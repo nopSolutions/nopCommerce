@@ -4,8 +4,7 @@ using System.Linq;
 using System.Globalization;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Humanizer;
-using Nop.Core.Infrastructure;
-using Nop.Services.Helpers;
+using Humanizer.Localisation;
 using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Models;
 
@@ -59,69 +58,24 @@ namespace Nop.Web.Framework.Extensions
         /// Relative formatting of DateTime (e.g. 2 hours ago, a month ago)
         /// </summary>
         /// <param name="source">Source (UTC format)</param>
-        /// <returns>Formatted date and time string</returns>
-        public static string RelativeFormat(this DateTime source)
-        {
-            return RelativeFormat(source, string.Empty);
-        }
-        /// <summary>
-        /// Relative formatting of DateTime (e.g. 2 hours ago, a month ago)
-        /// </summary>
-        /// <param name="source">Source (UTC format)</param>
-        /// <param name="defaultFormat">Default format string (in case relative formatting is not applied)</param>
-        /// <returns>Formatted date and time string</returns>
-        public static string RelativeFormat(this DateTime source, string defaultFormat)
-        {
-            return RelativeFormat(source, false, defaultFormat);
-        }
-        /// <summary>
-        /// Relative formatting of DateTime (e.g. 2 hours ago, a month ago)
-        /// </summary>
-        /// <param name="source">Source (UTC format)</param>
-        /// <param name="convertToUserTime">A value indicating whether we should convet DateTime instance to user local time (in case relative formatting is not applied)</param>
-        /// <param name="defaultFormat">Default format string (in case relative formatting is not applied)</param>
+        /// <param name="languageCode">Language culture code</param>
         /// <returns>Formatted date and time string</returns>
         public static string RelativeFormat(this DateTime source,
-            bool convertToUserTime, 
-            string defaultFormat,
             string languageCode = "en-US")
         {
-            var result = "";
-
             var ts = new TimeSpan(DateTime.UtcNow.Ticks - source.Ticks);
             var delta = ts.TotalSeconds;
 
-            if (delta > 0)
+            CultureInfo culture = null;
+            try
             {
-                CultureInfo culture = null;
-                try
-                {
-                    culture = new CultureInfo(languageCode);
-                }
-                catch (CultureNotFoundException)
-                {
-                    culture = new CultureInfo("en-US");
-                }
-                result = TimeSpan.FromSeconds(delta).Humanize(precision: 1, culture: culture);
+                culture = new CultureInfo(languageCode);
             }
-            else
+            catch (CultureNotFoundException)
             {
-                var tmp1 = source;
-                if (convertToUserTime)
-                {
-                    tmp1 = EngineContext.Current.Resolve<IDateTimeHelper>().ConvertToUserTime(tmp1, DateTimeKind.Utc);
-                }
-                //default formatting
-                if (!string.IsNullOrEmpty(defaultFormat))
-                {
-                    result = tmp1.ToString(defaultFormat);
-                }
-                else
-                {
-                    result = tmp1.ToString();
-                }
+                culture = new CultureInfo("en-US");
             }
-            return result;
+            return TimeSpan.FromSeconds(delta).Humanize(precision: 1, culture: culture, maxUnit: TimeUnit.Year);
         }
     }
 }

@@ -224,8 +224,8 @@ namespace Nop.Web.Factories
                 if (_forumSettings.RelativeDateTimeFormattingEnabled)
                 {
                     var languageCode = _workContext.WorkingLanguage.LanguageCulture;
-                    var postedAgo = forumPost.CreatedOnUtc.RelativeFormat(true, "f", languageCode);
-                    posted = string.Format(_localizationService.GetResource("Common.Extensions.RelativeFormat"), postedAgo);
+                    var postedAgo = forumPost.CreatedOnUtc.RelativeFormat(languageCode);
+                    posted = string.Format(_localizationService.GetResource("Common.RelativeDateTime.Past"), postedAgo);
                 }
                 else
                 {

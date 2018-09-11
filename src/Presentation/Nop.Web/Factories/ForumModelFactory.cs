@@ -400,8 +400,8 @@ namespace Nop.Web.Factories
                 var languageCode = _workContext.WorkingLanguage.LanguageCulture;
                 if (_forumSettings.RelativeDateTimeFormattingEnabled)
                 {
-                    var postCreatedAgo = post.CreatedOnUtc.RelativeFormat(true, "f", languageCode);
-                    forumPostModel.PostCreatedOnStr = string.Format(_localizationService.GetResource("Common.Extensions.RelativeFormat"), postCreatedAgo);
+                    var postCreatedAgo = post.CreatedOnUtc.RelativeFormat(languageCode);
+                    forumPostModel.PostCreatedOnStr = string.Format(_localizationService.GetResource("Common.RelativeDateTime.Past"), postCreatedAgo);
                 }
                 else
                     forumPostModel.PostCreatedOnStr =
@@ -854,8 +854,8 @@ namespace Nop.Web.Factories
             var languageCode = _workContext.WorkingLanguage.LanguageCulture;
             if (_forumSettings.RelativeDateTimeFormattingEnabled)
             {
-                var postCreatedAgo = forumPost.CreatedOnUtc.RelativeFormat(true, "f", languageCode);
-                model.PostCreatedOnStr = string.Format(_localizationService.GetResource("Common.Extensions.RelativeFormat"), postCreatedAgo);
+                var postCreatedAgo = forumPost.CreatedOnUtc.RelativeFormat(languageCode);
+                model.PostCreatedOnStr = string.Format(_localizationService.GetResource("Common.RelativeDateTime.Past"), postCreatedAgo);
             }
             else
                 model.PostCreatedOnStr = _dateTimeHelper.ConvertToUserTime(forumPost.CreatedOnUtc, DateTimeKind.Utc).ToString("f");
