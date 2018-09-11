@@ -161,7 +161,7 @@ namespace Nop.Web.Framework.Extensions
         public static IHtmlContent TabContentByURL(this AdminTabStripCreated eventMessage, string tabId, string tabName, string url)
         {
             return new HtmlString($@"
-                <script type='text/javascript'>
+                <script>
                     $(document).ready(function() {{
                         $('<li><a data-tab-name='{tabId}' data-toggle='tab' href='#{tabId}'>{tabName}</a></li>').appendTo('#{eventMessage.TabStripName} .nav-tabs:first');
                         $.get('{url}', function(result) {{
