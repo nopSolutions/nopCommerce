@@ -1133,12 +1133,20 @@ namespace Nop.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(PRODUCTATTRIBUTE_PICTURE_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CART_PICTURE_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCT_DETAILS_PICTURES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(PRODUCT_DEFAULTPICTURE_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(CATEGORY_PICTURE_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(MANUFACTURER_PICTURE_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(VENDOR_PICTURE_PATTERN_KEY);
         }
         public void HandleEvent(EntityDeletedEvent<Picture> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCTATTRIBUTE_PICTURE_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CART_PICTURE_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCT_DETAILS_PICTURES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(PRODUCT_DEFAULTPICTURE_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(CATEGORY_PICTURE_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(MANUFACTURER_PICTURE_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(VENDOR_PICTURE_PATTERN_KEY);
         }
 
         //Product picture mappings
