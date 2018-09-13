@@ -158,7 +158,7 @@ namespace Nop.Web.Controllers
 
             //display "edit" (manage) link
             if (hasAdminAccess)
-                DisplayEditLink(Url.Action("Edit", "Blog", new { id = blogPost.Id, area = AreaNames.Admin }));
+                DisplayEditLink(Url.Action("BlogPostEdit", "Blog", new { id = blogPost.Id, area = AreaNames.Admin }));
 
             var model = new BlogPostModel();
             _blogModelFactory.PrepareBlogPostModel(model, blogPost, true);
