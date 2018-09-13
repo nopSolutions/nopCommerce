@@ -980,11 +980,12 @@ namespace Nop.Services.Orders
         /// Gets shopping cart shipping total
         /// </summary>
         /// <param name="cart">Cart</param>
+        /// <param name="shippingRateComputationMethods">Shipping rate computation methods</param>
         /// <returns>Shipping total</returns>
-        public virtual decimal? GetShoppingCartShippingTotal(IList<ShoppingCartItem> cart)
+        public virtual decimal? GetShoppingCartShippingTotal(IList<ShoppingCartItem> cart, IList<IShippingRateComputationMethod> shippingRateComputationMethods)
         {
             var includingTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax;
-            return GetShoppingCartShippingTotal(cart, includingTax);
+            return GetShoppingCartShippingTotal(cart, includingTax, shippingRateComputationMethods);
         }
 
         /// <summary>
@@ -992,10 +993,11 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="cart">Cart</param>
         /// <param name="includingTax">A value indicating whether calculated price should include tax</param>
+        /// <param name="shippingRateComputationMethods">Shipping rate computation methods</param>
         /// <returns>Shipping total</returns>
-        public virtual decimal? GetShoppingCartShippingTotal(IList<ShoppingCartItem> cart, bool includingTax)
+        public virtual decimal? GetShoppingCartShippingTotal(IList<ShoppingCartItem> cart, bool includingTax, IList<IShippingRateComputationMethod> shippingRateComputationMethods)
         {
-            return GetShoppingCartShippingTotal(cart, includingTax, out _);
+            return GetShoppingCartShippingTotal(cart, includingTax, shippingRateComputationMethods, out _);
         }
 
         /// <summary>
@@ -1003,12 +1005,13 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="cart">Cart</param>
         /// <param name="includingTax">A value indicating whether calculated price should include tax</param>
+        /// <param name="shippingRateComputationMethods">Shipping rate computation methods</param>
         /// <param name="taxRate">Applied tax rate</param>
         /// <returns>Shipping total</returns>
-        public virtual decimal? GetShoppingCartShippingTotal(IList<ShoppingCartItem> cart, bool includingTax,
+        public virtual decimal? GetShoppingCartShippingTotal(IList<ShoppingCartItem> cart, bool includingTax, IList<IShippingRateComputationMethod> shippingRateComputationMethods,
             out decimal taxRate)
         {
-            return GetShoppingCartShippingTotal(cart, includingTax, out taxRate, out _);
+            return GetShoppingCartShippingTotal(cart, includingTax, shippingRateComputationMethods,  out taxRate, out _);
         }
 
         /// <summary>
@@ -1016,10 +1019,11 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="cart">Cart</param>
         /// <param name="includingTax">A value indicating whether calculated price should include tax</param>
+        /// <param name="shippingRateComputationMethods">Shipping rate computation methods</param>
         /// <param name="taxRate">Applied tax rate</param>
         /// <param name="appliedDiscounts">Applied discounts</param>
         /// <returns>Shipping total</returns>
-        public virtual decimal? GetShoppingCartShippingTotal(IList<ShoppingCartItem> cart, bool includingTax,
+        public virtual decimal? GetShoppingCartShippingTotal(IList<ShoppingCartItem> cart, bool includingTax, IList<IShippingRateComputationMethod> shippingRateComputationMethods,
             out decimal taxRate, out List<DiscountForCaching> appliedDiscounts)
         {
             decimal? shippingTotal = null;
@@ -1049,36 +1053,38 @@ namespace Nop.Services.Orders
                 if (customer != null)
                     shippingAddress = customer.ShippingAddress;
 
-                var shippingRateComputationMethods = _shippingService.LoadActiveShippingRateComputationMethods(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id);
-                if (!shippingRateComputationMethods.Any() && !_shippingSettings.AllowPickUpInStore)
-                    throw new NopException("Shipping rate computation method could not be loaded");
-
-                if (shippingRateComputationMethods.Count == 1)
+                if (shippingRateComputationMethods != null)
                 {
-                    var shippingRateComputationMethod = shippingRateComputationMethods[0];
+                    if (!shippingRateComputationMethods.Any() && !_shippingSettings.AllowPickUpInStore)
+                        throw new NopException("Shipping rate computation method could not be loaded");
 
-                    var shippingOptionRequests = _shippingService.CreateShippingOptionRequests(cart,
-                        shippingAddress,
-                        _storeContext.CurrentStore.Id,
-                        out _);
-                    decimal? fixedRate = null;
-                    foreach (var shippingOptionRequest in shippingOptionRequests)
+                    if (shippingRateComputationMethods.Count == 1)
                     {
-                        //calculate fixed rates for each request-package
-                        var fixedRateTmp = shippingRateComputationMethod.GetFixedRate(shippingOptionRequest);
-                        if (!fixedRateTmp.HasValue) 
-                            continue;
+                        var shippingRateComputationMethod = shippingRateComputationMethods[0];
 
-                        if (!fixedRate.HasValue)
-                            fixedRate = decimal.Zero;
+                        var shippingOptionRequests = _shippingService.CreateShippingOptionRequests(cart,
+                            shippingAddress,
+                            _storeContext.CurrentStore.Id,
+                            out _);
+                        decimal? fixedRate = null;
+                        foreach (var shippingOptionRequest in shippingOptionRequests)
+                        {
+                            //calculate fixed rates for each request-package
+                            var fixedRateTmp = shippingRateComputationMethod.GetFixedRate(shippingOptionRequest);
+                            if (!fixedRateTmp.HasValue)
+                                continue;
 
-                        fixedRate += fixedRateTmp.Value;
-                    }
+                            if (!fixedRate.HasValue)
+                                fixedRate = decimal.Zero;
 
-                    if (fixedRate.HasValue)
-                    {
-                        //adjust shipping rate
-                        shippingTotal = AdjustShippingRate(fixedRate.Value, cart, out appliedDiscounts);
+                            fixedRate += fixedRateTmp.Value;
+                        }
+
+                        if (fixedRate.HasValue)
+                        {
+                            //adjust shipping rate
+                            shippingTotal = AdjustShippingRate(fixedRate.Value, cart, out appliedDiscounts);
+                        }
                     }
                 }
             }
@@ -1109,24 +1115,26 @@ namespace Nop.Services.Orders
         /// Gets tax
         /// </summary>
         /// <param name="cart">Shopping cart</param>
+        /// <param name="shippingRateComputationMethods">Shipping rate computation methods</param>
         /// <param name="usePaymentMethodAdditionalFee">A value indicating whether we should use payment method additional fee when calculating tax</param>
         /// <returns>Tax total</returns>
-        public virtual decimal GetTaxTotal(IList<ShoppingCartItem> cart, bool usePaymentMethodAdditionalFee = true)
+        public virtual decimal GetTaxTotal(IList<ShoppingCartItem> cart, IList<IShippingRateComputationMethod> shippingRateComputationMethods = null, bool usePaymentMethodAdditionalFee = true)
         {
             if (cart == null)
                 throw new ArgumentNullException(nameof(cart));
 
-            return GetTaxTotal(cart, out _, usePaymentMethodAdditionalFee);
+            return GetTaxTotal(cart, shippingRateComputationMethods, out _, usePaymentMethodAdditionalFee);
         }
 
         /// <summary>
         /// Gets tax
         /// </summary>
         /// <param name="cart">Shopping cart</param>
+        /// <param name="shippingRateComputationMethods">Shipping rate computation methods</param>
         /// <param name="taxRates">Tax rates</param>
         /// <param name="usePaymentMethodAdditionalFee">A value indicating whether we should use payment method additional fee when calculating tax</param>
         /// <returns>Tax total</returns>
-        public virtual decimal GetTaxTotal(IList<ShoppingCartItem> cart,
+        public virtual decimal GetTaxTotal(IList<ShoppingCartItem> cart, IList<IShippingRateComputationMethod> shippingRateComputationMethods,
             out SortedDictionary<decimal, decimal> taxRates, bool usePaymentMethodAdditionalFee = true)
         {
             if (cart == null)
@@ -1164,8 +1172,8 @@ namespace Nop.Services.Orders
             var shippingTax = decimal.Zero;
             if (_taxSettings.ShippingIsTaxable)
             {
-                var shippingExclTax = GetShoppingCartShippingTotal(cart, false, out var taxRate);
-                var shippingInclTax = GetShoppingCartShippingTotal(cart, true, out taxRate);
+                var shippingExclTax = GetShoppingCartShippingTotal(cart, false, shippingRateComputationMethods, out var taxRate);
+                var shippingInclTax = GetShoppingCartShippingTotal(cart, true, shippingRateComputationMethods, out taxRate);
                 if (shippingExclTax.HasValue && shippingInclTax.HasValue)
                 {
                     shippingTax = shippingInclTax.Value - shippingExclTax.Value;
@@ -1269,8 +1277,11 @@ namespace Nop.Services.Orders
             //subtotal with discount
             var subtotalBase = subTotalWithDiscountBase;
 
+            //LoadAllShippingRateComputationMethods
+            var shippingRateComputationMethods = _shippingService.LoadActiveShippingRateComputationMethods(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id);
+
             //shipping without tax
-            var shoppingCartShipping = GetShoppingCartShippingTotal(cart, false);
+            var shoppingCartShipping = GetShoppingCartShippingTotal(cart, false, shippingRateComputationMethods);
 
             //payment method additional fee without tax
             var paymentMethodAdditionalFeeWithoutTax = decimal.Zero;
@@ -1284,7 +1295,7 @@ namespace Nop.Services.Orders
             }
 
             //tax
-            var shoppingCartTax = GetTaxTotal(cart, usePaymentMethodAdditionalFee);
+            var shoppingCartTax = GetTaxTotal(cart, shippingRateComputationMethods, usePaymentMethodAdditionalFee);
 
             //order total
             var resultTemp = decimal.Zero;

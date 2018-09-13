@@ -275,6 +275,7 @@ namespace Nop.Services.Tests.Orders
                 _shippingService,
                 _shoppingCartService.Object,
                 _stateProvinceService.Object,
+                _storeContext.Object,
                 _taxService,
                 _vendorService.Object,
                 _webHelper.Object,
