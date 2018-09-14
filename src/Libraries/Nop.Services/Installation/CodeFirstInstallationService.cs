@@ -6067,6 +6067,7 @@ namespace Nop.Services.Installation
                 RichEditorAdditionalSettings = null,
                 RichEditorAllowJavaScript = false,
                 RichEditorAllowStyleTag = false,
+                UseRichEditorForCustomerEmails = false,
                 UseRichEditorInMessageTemplates = false,
                 CheckCopyrightRemovalKey = true,
                 UseIsoDateFormatInJsonResult = true,

@@ -121,3 +121,11 @@ BEGIN
 	VALUES (N'shippingsettings.ignoreadditionalshippingchargeforpickupinstore', N'true', 0)
 END
 GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'adminareasettings.usericheditorforcustomeremails')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'adminareasettings.usericheditorforcustomeremails', N'False', 0)
+END
+GO
