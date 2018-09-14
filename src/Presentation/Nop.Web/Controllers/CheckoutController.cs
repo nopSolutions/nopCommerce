@@ -296,7 +296,9 @@ namespace Nop.Web.Controllers
             var cart = _shoppingCartService.GetShoppingCart(_workContext.CurrentCustomer, ShoppingCartType.ShoppingCart, _storeContext.CurrentStore.Id);
 
             //ship to the same address?
-            if (_shippingSettings.ShipToSameAddress && shipToSameAddress && _shoppingCartService.ShoppingCartRequiresShipping(cart) && address.Country.AllowsShipping)
+            var isAllowsShipping = _addressSettings.CountryEnabled && (address.Country != null) && address.Country.AllowsShipping;
+
+            if (_shippingSettings.ShipToSameAddress && shipToSameAddress && _shoppingCartService.ShoppingCartRequiresShipping(cart) && isAllowsShipping)
             {
                 _workContext.CurrentCustomer.ShippingAddress = _workContext.CurrentCustomer.BillingAddress;
                 _customerService.UpdateCustomer(_workContext.CurrentCustomer);
@@ -1202,10 +1204,13 @@ namespace Nop.Web.Controllers
                 if (_shoppingCartService.ShoppingCartRequiresShipping(cart))
                 {
                     //shipping is required
-                    if (_shippingSettings.ShipToSameAddress && model.ShipToSameAddress && _workContext.CurrentCustomer.BillingAddress.Country.AllowsShipping)
+                    var address = _workContext.CurrentCustomer.BillingAddress;
+                    var isAllowsShipping = _addressSettings.CountryEnabled && (address.Country != null) && address.Country.AllowsShipping;
+
+                    if (_shippingSettings.ShipToSameAddress && model.ShipToSameAddress && isAllowsShipping)
                     {
                         //ship to the same address
-                        _workContext.CurrentCustomer.ShippingAddress = _workContext.CurrentCustomer.BillingAddress;
+                        _workContext.CurrentCustomer.ShippingAddress = address;
                         _customerService.UpdateCustomer(_workContext.CurrentCustomer);
                         //reset selected shipping method (in case if "pick up in store" was selected)
                         _genericAttributeService.SaveAttribute<ShippingOption>(_workContext.CurrentCustomer, NopCustomerDefaults.SelectedShippingOptionAttribute, null, _storeContext.CurrentStore.Id);
