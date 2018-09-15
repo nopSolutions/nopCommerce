@@ -16,6 +16,7 @@ namespace Nop.Web.Controllers
         private readonly ICategoryService _categoryService;
         private readonly IManufacturerService _manufacturerService;
         private readonly INewsService _newsService;
+        private readonly IProductTagService _productTagService;
         private readonly IProductService _productService;
         private readonly ITopicService _topicService;
         private readonly IUrlRecordService _urlRecordService;
@@ -29,6 +30,7 @@ namespace Nop.Web.Controllers
             ICategoryService categoryService,
             IManufacturerService manufacturerService,
             INewsService newsService,
+            IProductTagService productTagService,
             IProductService productService,
             ITopicService topicService,
             IUrlRecordService urlRecordService,
@@ -38,6 +40,7 @@ namespace Nop.Web.Controllers
             this._categoryService = categoryService;
             this._manufacturerService = manufacturerService;
             this._newsService = newsService;
+            this._productTagService = productTagService;
             this._productService = productService;
             this._topicService = topicService;
             this._urlRecordService = urlRecordService;
@@ -116,6 +119,16 @@ namespace Nop.Web.Controllers
                 return RedirectToRoutePermanent("HomePage");
 
             return RedirectToRoutePermanent("Vendor", new { SeName = _urlRecordService.GetSeName(vendor) });
+        }
+
+        //in versions 3.00-4.00 we had ID in product tag URLs
+        public virtual IActionResult RedirectProductTagById(int productTagId)
+        {
+            var productTag = _productTagService.GetProductTagById(productTagId);
+            if (productTag == null)
+                return RedirectToRoutePermanent("HomePage");
+
+            return RedirectToRoutePermanent("ProductsByTag", new { SeName = _urlRecordService.GetSeName(productTag) });
         }
 
         #endregion

@@ -50,6 +50,10 @@ namespace Nop.Web.Infrastructure
             //vendors
             routeBuilder.MapLocalizedRoute("", "vendor/{vendorId:min(0)}/{SeName?}",
                 new { controller = "BackwardCompatibility2X", action = "RedirectVendorById" });
+
+            //product tags
+            routeBuilder.MapLocalizedRoute("", "producttag/{productTagId:min(0)}/{SeName?}",
+                new { controller = "BackwardCompatibility2X", action = "RedirectProductTagById" });
         }
 
         #endregion
