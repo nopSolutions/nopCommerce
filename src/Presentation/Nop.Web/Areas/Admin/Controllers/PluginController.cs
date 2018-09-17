@@ -15,6 +15,7 @@ using Nop.Services.Configuration;
 using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
+using Nop.Services.Messages;
 using Nop.Services.Payments;
 using Nop.Services.Plugins;
 using Nop.Services.Security;
@@ -37,6 +38,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly IEventPublisher _eventPublisher;
         private readonly IExternalAuthenticationService _externalAuthenticationService;
         private readonly ILocalizationService _localizationService;
+        private readonly INotificationService _notificationService;
         private readonly IPaymentService _paymentService;
         private readonly IPermissionService _permissionService;
         private readonly IPluginFinder _pluginFinder;
@@ -60,6 +62,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             IEventPublisher eventPublisher,
             IExternalAuthenticationService externalAuthenticationService,
             ILocalizationService localizationService,
+            INotificationService notificationService,
             IPaymentService paymentService,
             IPermissionService permissionService,
             IPluginFinder pluginFinder,
@@ -79,6 +82,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             this._eventPublisher = eventPublisher;
             this._externalAuthenticationService = externalAuthenticationService;
             this._localizationService = localizationService;
+            this._notificationService = notificationService;
             this._paymentService = paymentService;
             this._permissionService = permissionService;
             this._pluginFinder = pluginFinder;
@@ -160,7 +164,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 if (archivefile == null || archivefile.Length == 0)
                 {
-                    ErrorNotification(_localizationService.GetResource("Admin.Common.UploadFile"));
+                    _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Common.UploadFile"));
                     return RedirectToAction("List");
                 }
 
@@ -189,14 +193,14 @@ namespace Nop.Web.Areas.Admin.Controllers
                     _eventPublisher.Publish(new ThemesUploadedEvent(themeDescriptors));
 
                 var message = string.Format(_localizationService.GetResource("Admin.Configuration.Plugins.Uploaded"), pluginDescriptors.Count, themeDescriptors.Count);
-                SuccessNotification(message);
+                _notificationService.SuccessNotification(message);
 
                 //restart application
                 _webHelper.RestartAppDomain();
             }
             catch (Exception exc)
             {
-                ErrorNotification(exc);
+                _notificationService.ErrorNotification(exc);
             }
 
             return RedirectToAction("List");
@@ -233,14 +237,14 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _customerActivityService.InsertActivity("InstallNewPlugin",
                     string.Format(_localizationService.GetResource("ActivityLog.InstallNewPlugin"), pluginDescriptor.FriendlyName));
 
-                SuccessNotification(_localizationService.GetResource("Admin.Configuration.Plugins.Installed"));
+                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Plugins.Installed"));
 
                 //restart application
                 _webHelper.RestartAppDomain();
             }
             catch (Exception exc)
             {
-                ErrorNotification(exc);
+                _notificationService.ErrorNotification(exc);
             }
 
             return RedirectToAction("List");
@@ -277,14 +281,14 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _customerActivityService.InsertActivity("UninstallPlugin",
                     string.Format(_localizationService.GetResource("ActivityLog.UninstallPlugin"), pluginDescriptor.FriendlyName));
 
-                SuccessNotification(_localizationService.GetResource("Admin.Configuration.Plugins.Uninstalled"));
+                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Plugins.Uninstalled"));
 
                 //restart application
                 _webHelper.RestartAppDomain();
             }
             catch (Exception exc)
             {
-                ErrorNotification(exc);
+                _notificationService.ErrorNotification(exc);
             }
 
             return RedirectToAction("List");
@@ -313,14 +317,14 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _customerActivityService.InsertActivity("DeletePlugin",
                     string.Format(_localizationService.GetResource("ActivityLog.DeletePlugin"), pluginDescriptor.FriendlyName));
 
-                SuccessNotification(_localizationService.GetResource("Admin.Configuration.Plugins.Deleted"));
+                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Plugins.Deleted"));
 
                 //restart application
                 _webHelper.RestartAppDomain();
             }
             catch (Exception exc)
             {
-                ErrorNotification(exc);
+                _notificationService.ErrorNotification(exc);
             }
 
             return RedirectToAction("List");

@@ -13,6 +13,7 @@ using Nop.Services.ExportImport;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Media;
+using Nop.Services.Messages;
 using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Stores;
@@ -39,6 +40,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly ILocalizedEntityService _localizedEntityService;
         private readonly IManufacturerModelFactory _manufacturerModelFactory;
         private readonly IManufacturerService _manufacturerService;
+        private readonly INotificationService _notificationService;
         private readonly IPermissionService _permissionService;
         private readonly IPictureService _pictureService;
         private readonly IProductService _productService;
@@ -61,6 +63,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             ILocalizedEntityService localizedEntityService,
             IManufacturerModelFactory manufacturerModelFactory,
             IManufacturerService manufacturerService,
+            INotificationService notificationService,
             IPermissionService permissionService,
             IPictureService pictureService,
             IProductService productService,
@@ -79,6 +82,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             this._localizedEntityService = localizedEntityService;
             this._manufacturerModelFactory = manufacturerModelFactory;
             this._manufacturerService = manufacturerService;
+            this._notificationService = notificationService;
             this._permissionService = permissionService;
             this._pictureService = pictureService;
             this._productService = productService;
@@ -273,7 +277,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _customerActivityService.InsertActivity("AddNewManufacturer",
                     string.Format(_localizationService.GetResource("ActivityLog.AddNewManufacturer"), manufacturer.Name), manufacturer);
 
-                SuccessNotification(_localizationService.GetResource("Admin.Catalog.Manufacturers.Added"));
+                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Catalog.Manufacturers.Added"));
 
                 if (!continueEditing)
                     return RedirectToAction("List");
@@ -374,7 +378,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _customerActivityService.InsertActivity("EditManufacturer",
                     string.Format(_localizationService.GetResource("ActivityLog.EditManufacturer"), manufacturer.Name), manufacturer);
 
-                SuccessNotification(_localizationService.GetResource("Admin.Catalog.Manufacturers.Updated"));
+                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Catalog.Manufacturers.Updated"));
 
                 if (!continueEditing)
                     return RedirectToAction("List");
@@ -409,7 +413,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             _customerActivityService.InsertActivity("DeleteManufacturer",
                 string.Format(_localizationService.GetResource("ActivityLog.DeleteManufacturer"), manufacturer.Name), manufacturer);
 
-            SuccessNotification(_localizationService.GetResource("Admin.Catalog.Manufacturers.Deleted"));
+            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Catalog.Manufacturers.Deleted"));
 
             return RedirectToAction("List");
         }
@@ -431,7 +435,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
             catch (Exception exc)
             {
-                ErrorNotification(exc);
+                _notificationService.ErrorNotification(exc);
                 return RedirectToAction("List");
             }
         }
@@ -449,7 +453,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
             catch (Exception exc)
             {
-                ErrorNotification(exc);
+                _notificationService.ErrorNotification(exc);
                 return RedirectToAction("List");
             }
         }
@@ -472,16 +476,16 @@ namespace Nop.Web.Areas.Admin.Controllers
                 }
                 else
                 {
-                    ErrorNotification(_localizationService.GetResource("Admin.Common.UploadFile"));
+                    _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Common.UploadFile"));
                     return RedirectToAction("List");
                 }
 
-                SuccessNotification(_localizationService.GetResource("Admin.Catalog.Manufacturers.Imported"));
+                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Catalog.Manufacturers.Imported"));
                 return RedirectToAction("List");
             }
             catch (Exception exc)
             {
-                ErrorNotification(exc);
+                _notificationService.ErrorNotification(exc);
                 return RedirectToAction("List");
             }
         }

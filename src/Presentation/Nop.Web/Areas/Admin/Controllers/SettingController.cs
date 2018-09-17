@@ -28,6 +28,7 @@ using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Media;
+using Nop.Services.Messages;
 using Nop.Services.Orders;
 using Nop.Services.Security;
 using Nop.Services.Stores;
@@ -57,6 +58,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly ILocalizedEntityService _localizedEntityService;
         private readonly ILocalizationService _localizationService;
         private readonly IMaintenanceService _maintenanceService;
+        private readonly INotificationService _notificationService;
         private readonly IOrderService _orderService;
         private readonly IPermissionService _permissionService;
         private readonly IPictureService _pictureService;
@@ -81,6 +83,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             ILocalizedEntityService localizedEntityService,
             ILocalizationService localizationService,
             IMaintenanceService maintenanceService,
+            INotificationService notificationService,
             IOrderService orderService,
             IPermissionService permissionService,
             IPictureService pictureService,
@@ -101,6 +104,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             this._localizedEntityService = localizedEntityService;
             this._localizationService = localizationService;
             this._maintenanceService = maintenanceService;
+            this._notificationService = notificationService;
             this._orderService = orderService;
             this._permissionService = permissionService;
             this._pictureService = pictureService;
@@ -195,7 +199,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //activity log
             _customerActivityService.InsertActivity("EditSettings", _localizationService.GetResource("ActivityLog.EditSettings"));
 
-            SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
+            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
 
             return RedirectToAction("Blog");
         }
@@ -242,7 +246,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //activity log
             _customerActivityService.InsertActivity("EditSettings", _localizationService.GetResource("ActivityLog.EditSettings"));
 
-            SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
+            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
 
             return RedirectToAction("Vendor");
         }
@@ -301,7 +305,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //activity log
             _customerActivityService.InsertActivity("EditSettings", _localizationService.GetResource("ActivityLog.EditSettings"));
 
-            SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
+            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
 
             return RedirectToAction("Forum");
         }
@@ -346,7 +350,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //activity log
             _customerActivityService.InsertActivity("EditSettings", _localizationService.GetResource("ActivityLog.EditSettings"));
 
-            SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
+            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
 
             return RedirectToAction("News");
         }
@@ -422,7 +426,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //activity log
             _customerActivityService.InsertActivity("EditSettings", _localizationService.GetResource("ActivityLog.EditSettings"));
 
-            SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
+            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
 
             return RedirectToAction("Shipping");
         }
@@ -506,7 +510,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //activity log
             _customerActivityService.InsertActivity("EditSettings", _localizationService.GetResource("ActivityLog.EditSettings"));
 
-            SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
+            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
 
             return RedirectToAction("Tax");
         }
@@ -614,7 +618,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //activity log
             _customerActivityService.InsertActivity("EditSettings", _localizationService.GetResource("ActivityLog.EditSettings"));
 
-            SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
+            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
 
             return RedirectToAction("Catalog");
         }
@@ -700,14 +704,14 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //activity log
                 _customerActivityService.InsertActivity("EditSettings", _localizationService.GetResource("ActivityLog.EditSettings"));
 
-                SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
+                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
             }
             else
             {
                 //if we got this far, something failed, redisplay form
                 foreach (var modelState in ModelState.Values)
                     foreach (var error in modelState.Errors)
-                        ErrorNotification(error.ErrorMessage);
+                        _notificationService.ErrorNotification(error.ErrorMessage);
             }
 
             return RedirectToAction("RewardPoints");
@@ -780,21 +784,21 @@ namespace Nop.Web.Areas.Admin.Controllers
                     }
                     catch (Exception exc)
                     {
-                        ErrorNotification(exc.Message);
+                        _notificationService.ErrorNotification(exc.Message);
                     }
                 }
 
                 //activity log
                 _customerActivityService.InsertActivity("EditSettings", _localizationService.GetResource("ActivityLog.EditSettings"));
 
-                SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
+                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
             }
             else
             {
                 //if we got this far, something failed, redisplay form
                 foreach (var modelState in ModelState.Values)
                     foreach (var error in modelState.Errors)
-                        ErrorNotification(error.ErrorMessage);
+                        _notificationService.ErrorNotification(error.ErrorMessage);
             }
 
             //selected tab
@@ -852,7 +856,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //activity log
             _customerActivityService.InsertActivity("EditSettings", _localizationService.GetResource("ActivityLog.EditSettings"));
 
-            SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
+            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
 
             return RedirectToAction("ShoppingCart");
         }
@@ -904,7 +908,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //activity log
             _customerActivityService.InsertActivity("EditSettings", _localizationService.GetResource("ActivityLog.EditSettings"));
 
-            SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
+            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
 
             return RedirectToAction("Media");
         }
@@ -920,7 +924,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //activity log
             _customerActivityService.InsertActivity("EditSettings", _localizationService.GetResource("ActivityLog.EditSettings"));
 
-            SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
+            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
 
             return RedirectToAction("Media");
         }
@@ -968,7 +972,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     customerSettings.UsernameValidationEnabled = lastUsernameValidationEnabledValue;
                     customerSettings.UsernameValidationUseRegex = lastUsernameValidationUseRegexValue;
 
-                    ErrorNotification(_localizationService.GetResource("Admin.Configuration.Settings.CustomerSettings.RegexValidationRule.Error"));
+                    _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Configuration.Settings.CustomerSettings.RegexValidationRule.Error"));
                 }
             }
 
@@ -987,7 +991,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //activity log
             _customerActivityService.InsertActivity("EditSettings", _localizationService.GetResource("ActivityLog.EditSettings"));
 
-            SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
+            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
 
             //selected tab
             SaveSelectedTabName();
@@ -1031,7 +1035,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //activity log
             _customerActivityService.InsertActivity("EditSettings", _localizationService.GetResource("ActivityLog.EditSettings"));
                         
-            SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
+            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
 
             return RedirectToAction("Gdpr");
         }
@@ -1071,7 +1075,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //locales                
                 UpdateGDPRConsentLocales(gdprConsent, model);
 
-                SuccessNotification(_localizationService.GetResource("Admin.Configuration.Settings.Gdpr.Consent.Added"));
+                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Settings.Gdpr.Consent.Added"));
 
                 return continueEditing ? RedirectToAction("EditGdprConsent", new { gdprConsent.Id }) : RedirectToAction("Gdpr");
             }
@@ -1119,7 +1123,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //locales                
                 UpdateGDPRConsentLocales(gdprConsent, model);
 
-                SuccessNotification(_localizationService.GetResource("Admin.Configuration.Settings.Gdpr.Consent.Updated"));
+                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Settings.Gdpr.Consent.Updated"));
 
                 return continueEditing ? RedirectToAction("EditGdprConsent", gdprConsent.Id) : RedirectToAction("Gdpr");
             }
@@ -1143,7 +1147,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             _gdprService.DeleteConsent(gdprConsent);
 
-            SuccessNotification(_localizationService.GetResource("Admin.Configuration.Settings.Gdpr.Consent.Deleted"));
+            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Settings.Gdpr.Consent.Deleted"));
 
             return RedirectToAction("Gdpr");
         }
@@ -1160,7 +1164,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //notify admin that CSS bundling is not allowed in virtual directories
             if (model.SeoSettings.EnableCssBundling && this.HttpContext.Request.PathBase.HasValue)
-                WarningNotification(_localizationService.GetResource("Admin.Configuration.Settings.GeneralCommon.EnableCssBundling.Warning"), false);
+                _notificationService.WarningNotification(_localizationService.GetResource("Admin.Configuration.Settings.GeneralCommon.EnableCssBundling.Warning"));
 
             return View(model);
         }
@@ -1321,7 +1325,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 (string.IsNullOrWhiteSpace(captchaSettings.ReCaptchaPublicKey) || string.IsNullOrWhiteSpace(captchaSettings.ReCaptchaPrivateKey)))
             {
                 //captcha is enabled but the keys are not entered
-                ErrorNotification(_localizationService.GetResource("Admin.Configuration.Settings.GeneralCommon.CaptchaAppropriateKeysNotEnteredError"));
+                _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Configuration.Settings.GeneralCommon.CaptchaAppropriateKeysNotEnteredError"));
             }
 
             //PDF settings
@@ -1448,7 +1452,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //activity log
             _customerActivityService.InsertActivity("EditSettings", _localizationService.GetResource("ActivityLog.EditSettings"));
 
-            SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
+            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
 
             return RedirectToAction("GeneralCommon");
         }
@@ -1522,11 +1526,11 @@ namespace Nop.Web.Areas.Admin.Controllers
                 securitySettings.EncryptionKey = newEncryptionPrivateKey;
                 _settingService.SaveSetting(securitySettings);
 
-                SuccessNotification(_localizationService.GetResource("Admin.Configuration.Settings.GeneralCommon.EncryptionKey.Changed"));
+                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Settings.GeneralCommon.EncryptionKey.Changed"));
             }
             catch (Exception exc)
             {
-                ErrorNotification(exc);
+                _notificationService.ErrorNotification(exc);
             }
 
             return RedirectToAction("GeneralCommon");
@@ -1552,7 +1556,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     commonSettings.UseFullTextSearch = false;
                     _settingService.SaveSetting(commonSettings);
 
-                    SuccessNotification(_localizationService.GetResource("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.Disabled"));
+                    _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.Disabled"));
                 }
                 else
                 {
@@ -1561,12 +1565,12 @@ namespace Nop.Web.Areas.Admin.Controllers
                     commonSettings.UseFullTextSearch = true;
                     _settingService.SaveSetting(commonSettings);
 
-                    SuccessNotification(_localizationService.GetResource("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.Enabled"));
+                    _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.Enabled"));
                 }
             }
             catch (Exception exc)
             {
-                ErrorNotification(exc);
+                _notificationService.ErrorNotification(exc);
             }
 
             return RedirectToAction("GeneralCommon");

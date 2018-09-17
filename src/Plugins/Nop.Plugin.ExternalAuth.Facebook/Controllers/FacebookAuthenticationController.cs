@@ -10,6 +10,7 @@ using Nop.Plugin.ExternalAuth.Facebook.Models;
 using Nop.Services.Authentication.External;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
+using Nop.Services.Messages;
 using Nop.Services.Security;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
@@ -24,6 +25,7 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
         private readonly FacebookExternalAuthSettings _facebookExternalAuthSettings;
         private readonly IExternalAuthenticationService _externalAuthenticationService;
         private readonly ILocalizationService _localizationService;
+        private readonly INotificationService _notificationService;
         private readonly IOptionsMonitorCache<FacebookOptions> _optionsCache;
         private readonly IPermissionService _permissionService;
         private readonly ISettingService _settingService;
@@ -35,6 +37,7 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
         public FacebookAuthenticationController(FacebookExternalAuthSettings facebookExternalAuthSettings,
             IExternalAuthenticationService externalAuthenticationService,
             ILocalizationService localizationService,
+            INotificationService notificationService,
             IOptionsMonitorCache<FacebookOptions> optionsCache,
             IPermissionService permissionService,
             ISettingService settingService)
@@ -42,6 +45,7 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
             this._facebookExternalAuthSettings = facebookExternalAuthSettings;
             this._externalAuthenticationService = externalAuthenticationService;
             this._localizationService = localizationService;
+            this._notificationService = notificationService;
             this._optionsCache = optionsCache;
             this._permissionService = permissionService;
             this._settingService = settingService;
@@ -87,7 +91,7 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
             //clear Facebook authentication options cache
             _optionsCache.TryRemove(FacebookDefaults.AuthenticationScheme);
 
-            SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
+            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
 
             return Configure();
         }

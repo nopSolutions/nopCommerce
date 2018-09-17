@@ -11,6 +11,7 @@ using Nop.Services.Customers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Media;
+using Nop.Services.Messages;
 using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Vendors;
@@ -33,6 +34,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
         private readonly ILocalizedEntityService _localizedEntityService;
+        private readonly INotificationService _notificationService;
         private readonly IPermissionService _permissionService;
         private readonly IPictureService _pictureService;
         private readonly IUrlRecordService _urlRecordService;
@@ -51,6 +53,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
             ILocalizedEntityService localizedEntityService,
+            INotificationService notificationService,
             IPermissionService permissionService,
             IPictureService pictureService,
             IUrlRecordService urlRecordService,
@@ -65,6 +68,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             this._genericAttributeService = genericAttributeService;
             this._localizationService = localizationService;
             this._localizedEntityService = localizedEntityService;
+            this._notificationService = notificationService;
             this._permissionService = permissionService;
             this._pictureService = pictureService;
             this._urlRecordService = urlRecordService;
@@ -286,7 +290,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //update picture seo file name
                 UpdatePictureSeoNames(vendor);
 
-                SuccessNotification(_localizationService.GetResource("Admin.Vendors.Added"));
+                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Vendors.Added"));
 
                 if (!continueEditing)
                     return RedirectToAction("List");
@@ -396,7 +400,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //update picture seo file name
                 UpdatePictureSeoNames(vendor);
 
-                SuccessNotification(_localizationService.GetResource("Admin.Vendors.Updated"));
+                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Vendors.Updated"));
 
                 if (!continueEditing)
                     return RedirectToAction("List");
@@ -440,7 +444,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             _customerActivityService.InsertActivity("DeleteVendor",
                 string.Format(_localizationService.GetResource("ActivityLog.DeleteVendor"), vendor.Id), vendor);
 
-            SuccessNotification(_localizationService.GetResource("Admin.Vendors.Deleted"));
+            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Vendors.Deleted"));
 
             return RedirectToAction("List");
         }

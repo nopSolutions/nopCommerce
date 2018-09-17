@@ -25,6 +25,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly ILocalizedEntityService _localizedEntityService;
         private readonly IMessageTemplateModelFactory _messageTemplateModelFactory;
         private readonly IMessageTemplateService _messageTemplateService;
+        private readonly INotificationService _notificationService;
         private readonly IPermissionService _permissionService;
         private readonly IStoreMappingService _storeMappingService;
         private readonly IStoreService _storeService;
@@ -39,6 +40,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             ILocalizedEntityService localizedEntityService,
             IMessageTemplateModelFactory messageTemplateModelFactory,
             IMessageTemplateService messageTemplateService,
+            INotificationService notificationService,
             IPermissionService permissionService,
             IStoreMappingService storeMappingService,
             IStoreService storeService,
@@ -49,6 +51,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             this._localizedEntityService = localizedEntityService;
             this._messageTemplateModelFactory = messageTemplateModelFactory;
             this._messageTemplateService = messageTemplateService;
+            this._notificationService = notificationService;
             this._permissionService = permissionService;
             this._storeMappingService = storeMappingService;
             this._storeService = storeService;
@@ -190,7 +193,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //locales
                 UpdateLocales(messageTemplate, model);
 
-                SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.MessageTemplates.Updated"));
+                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.MessageTemplates.Updated"));
 
                 if (!continueEditing)
                     return RedirectToAction("List");
@@ -222,7 +225,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             _customerActivityService.InsertActivity("DeleteMessageTemplate",
                 string.Format(_localizationService.GetResource("ActivityLog.DeleteMessageTemplate"), messageTemplate.Id), messageTemplate);
 
-            SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.MessageTemplates.Deleted"));
+            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.MessageTemplates.Deleted"));
 
             return RedirectToAction("List");
         }
@@ -243,13 +246,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 var newMessageTemplate = _messageTemplateService.CopyMessageTemplate(messageTemplate);
 
-                SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.MessageTemplates.Copied"));
+                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.MessageTemplates.Copied"));
 
                 return RedirectToAction("Edit", new { id = newMessageTemplate.Id });
             }
             catch (Exception exc)
             {
-                ErrorNotification(exc.Message);
+                _notificationService.ErrorNotification(exc.Message);
                 return RedirectToAction("Edit", new { id = model.Id });
             }
         }
@@ -309,7 +312,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.MessageTemplates.Test.Success"));
+                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.MessageTemplates.Test.Success"));
             }
 
             return RedirectToAction("Edit", new { id = messageTemplate.Id });

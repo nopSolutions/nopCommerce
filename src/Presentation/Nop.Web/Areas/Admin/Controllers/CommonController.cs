@@ -9,6 +9,7 @@ using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
+using Nop.Services.Messages;
 using Nop.Services.Orders;
 using Nop.Services.Security;
 using Nop.Services.Seo;
@@ -36,6 +37,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly IMaintenanceService _maintenanceService;
         private readonly INopFileProvider _fileProvider;
+        private readonly INotificationService _notificationService;
         private readonly IPermissionService _permissionService;
         private readonly IShoppingCartService _shoppingCartService;
         private readonly IStaticCacheManager _cacheManager;
@@ -54,6 +56,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             ILocalizationService localizationService,
             IMaintenanceService maintenanceService,
             INopFileProvider fileProvider,
+            INotificationService notificationService,
             IPermissionService permissionService,
             IShoppingCartService shoppingCartService,
             IStaticCacheManager cacheManager,
@@ -68,6 +71,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             this._localizationService = localizationService;
             this._maintenanceService = maintenanceService;
             this._fileProvider = fileProvider;
+            this._notificationService = notificationService;
             this._permissionService = permissionService;
             this._shoppingCartService = shoppingCartService;
             this._cacheManager = cacheManager;
@@ -178,7 +182,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 }
                 catch (Exception exc)
                 {
-                    ErrorNotification(exc, false);
+                    _notificationService.ErrorNotification(exc);
                 }
             }
 
@@ -207,11 +211,11 @@ namespace Nop.Web.Areas.Admin.Controllers
             try
             {
                 _maintenanceService.BackupDatabase();
-                SuccessNotification(_localizationService.GetResource("Admin.System.Maintenance.BackupDatabase.BackupCreated"));
+                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.System.Maintenance.BackupDatabase.BackupCreated"));
             }
             catch (Exception exc)
             {
-                ErrorNotification(exc);
+                _notificationService.ErrorNotification(exc);
             }
 
             return View(model);
@@ -227,11 +231,11 @@ namespace Nop.Web.Areas.Admin.Controllers
             try
             {
                 _maintenanceService.ReIndexTables();
-                SuccessNotification(_localizationService.GetResource("Admin.System.Maintenance.ReIndexTables.Complete"));
+                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.System.Maintenance.ReIndexTables.Complete"));
             }
             catch (Exception exc)
             {
-                ErrorNotification(exc);
+                _notificationService.ErrorNotification(exc);
             }
 
             return View(model);
@@ -256,20 +260,20 @@ namespace Nop.Web.Areas.Admin.Controllers
                     case "delete-backup":
                         {
                             _fileProvider.DeleteFile(backupPath);
-                            SuccessNotification(string.Format(_localizationService.GetResource("Admin.System.Maintenance.BackupDatabase.BackupDeleted"), fileName));
+                            _notificationService.SuccessNotification(string.Format(_localizationService.GetResource("Admin.System.Maintenance.BackupDatabase.BackupDeleted"), fileName));
                         }
                         break;
                     case "restore-backup":
                         {
                             _maintenanceService.RestoreDatabase(backupPath);
-                            SuccessNotification(_localizationService.GetResource("Admin.System.Maintenance.BackupDatabase.DatabaseRestored"));
+                            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.System.Maintenance.BackupDatabase.DatabaseRestored"));
                         }
                         break;
                 }
             }
             catch (Exception exc)
             {
-                ErrorNotification(exc);
+                _notificationService.ErrorNotification(exc);
             }
 
             return View(model);

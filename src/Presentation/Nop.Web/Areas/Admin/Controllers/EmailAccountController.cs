@@ -25,6 +25,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly IEmailAccountService _emailAccountService;
         private readonly IEmailSender _emailSender;
         private readonly ILocalizationService _localizationService;
+        private readonly INotificationService _notificationService;
         private readonly IPermissionService _permissionService;
         private readonly ISettingService _settingService;
         private readonly IStoreContext _storeContext;
@@ -39,6 +40,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             IEmailAccountService emailAccountService,
             IEmailSender emailSender,
             ILocalizationService localizationService,
+            INotificationService notificationService,
             IPermissionService permissionService,
             ISettingService settingService,
             IStoreContext storeContext)
@@ -49,6 +51,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             this._emailAccountService = emailAccountService;
             this._emailSender = emailSender;
             this._localizationService = localizationService;
+            this._notificationService = notificationService;
             this._permissionService = permissionService;
             this._settingService = settingService;
             this._storeContext = storeContext;
@@ -125,7 +128,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _customerActivityService.InsertActivity("AddNewEmailAccount",
                     string.Format(_localizationService.GetResource("ActivityLog.AddNewEmailAccount"), emailAccount.Id), emailAccount);
 
-                SuccessNotification(_localizationService.GetResource("Admin.Configuration.EmailAccounts.Added"));
+                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.EmailAccounts.Added"));
 
                 return continueEditing ? RedirectToAction("Edit", new { id = emailAccount.Id }) : RedirectToAction("List");
             }
@@ -174,7 +177,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _customerActivityService.InsertActivity("EditEmailAccount",
                     string.Format(_localizationService.GetResource("ActivityLog.EditEmailAccount"), emailAccount.Id), emailAccount);
 
-                SuccessNotification(_localizationService.GetResource("Admin.Configuration.EmailAccounts.Updated"));
+                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.EmailAccounts.Updated"));
 
                 return continueEditing ? RedirectToAction("Edit", new { id = emailAccount.Id }) : RedirectToAction("List");
             }
@@ -202,7 +205,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             emailAccount.Password = model.Password;
             _emailAccountService.UpdateEmailAccount(emailAccount);
 
-            SuccessNotification(_localizationService.GetResource("Admin.Configuration.EmailAccounts.Fields.Password.PasswordChanged"));
+            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.EmailAccounts.Fields.Password.PasswordChanged"));
 
             return RedirectToAction("Edit", new { id = emailAccount.Id });
         }
@@ -221,7 +224,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (!CommonHelper.IsValidEmail(model.SendTestEmailTo))
             {
-                ErrorNotification(_localizationService.GetResource("Admin.Common.WrongEmail"), false);
+                _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Common.WrongEmail"));
                 return View(model);
             }
 
@@ -234,11 +237,11 @@ namespace Nop.Web.Areas.Admin.Controllers
                 var body = "Email works fine.";
                 _emailSender.SendEmail(emailAccount, subject, body, emailAccount.Email, emailAccount.DisplayName, model.SendTestEmailTo, null);
 
-                SuccessNotification(_localizationService.GetResource("Admin.Configuration.EmailAccounts.SendTestEmail.Success"), false);
+                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.EmailAccounts.SendTestEmail.Success"));
             }
             catch (Exception exc)
             {
-                ErrorNotification(exc.Message, false);
+                _notificationService.ErrorNotification(exc.Message);
             }
 
             //prepare model
@@ -267,13 +270,13 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _customerActivityService.InsertActivity("DeleteEmailAccount",
                     string.Format(_localizationService.GetResource("ActivityLog.DeleteEmailAccount"), emailAccount.Id), emailAccount);
 
-                SuccessNotification(_localizationService.GetResource("Admin.Configuration.EmailAccounts.Deleted"));
+                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.EmailAccounts.Deleted"));
 
                 return RedirectToAction("List");
             }
             catch (Exception exc)
             {
-                ErrorNotification(exc);
+                _notificationService.ErrorNotification(exc);
                 return RedirectToAction("Edit", new { id = emailAccount.Id });
             }
         }

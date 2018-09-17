@@ -95,7 +95,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                     .ToList();
 
                 //apply discount coupon codes to customer
-                discounts.ForEach(discount => _customerService.ApplyDiscountCouponCode(_workContext.CurrentCustomer, discount.CouponCode));
+                discounts.ForEach(discount => _customerService.ApplyDiscountCouponCode(_workContext.CurrentCustomer, discount.CouponCode));                
             }
 
             /// <summary>

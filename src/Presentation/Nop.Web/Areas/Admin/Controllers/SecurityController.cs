@@ -9,6 +9,7 @@ using Nop.Core.Domain.Security;
 using Nop.Services.Customers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
+using Nop.Services.Messages;
 using Nop.Services.Security;
 using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Models.Security;
@@ -22,6 +23,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly ICustomerService _customerService;
         private readonly ILocalizationService _localizationService;
         private readonly ILogger _logger;
+        private readonly INotificationService _notificationService;
         private readonly IPermissionService _permissionService;
         private readonly ISecurityModelFactory _securityModelFactory;
         private readonly IWorkContext _workContext;
@@ -33,6 +35,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public SecurityController(ICustomerService customerService,
             ILocalizationService localizationService,
             ILogger logger,
+            INotificationService notificationService,
             IPermissionService permissionService,
             ISecurityModelFactory securityModelFactory,
             IWorkContext workContext)
@@ -40,6 +43,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             this._customerService = customerService;
             this._localizationService = localizationService;
             this._logger = logger;
+            this._notificationService = notificationService;
             this._permissionService = permissionService;
             this._securityModelFactory = securityModelFactory;
             this._workContext = workContext;
@@ -113,7 +117,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 }
             }
 
-            SuccessNotification(_localizationService.GetResource("Admin.Configuration.ACL.Updated"));
+            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.ACL.Updated"));
 
             return RedirectToAction("Permissions");
         }

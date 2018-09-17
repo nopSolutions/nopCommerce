@@ -173,6 +173,7 @@ namespace Nop.Web.Framework.Infrastructure
             builder.RegisterType<MessageTemplateService>().As<IMessageTemplateService>().InstancePerLifetimeScope();
             builder.RegisterType<QueuedEmailService>().As<IQueuedEmailService>().InstancePerLifetimeScope();
             builder.RegisterType<NewsLetterSubscriptionService>().As<INewsLetterSubscriptionService>().InstancePerLifetimeScope();
+            builder.RegisterType<NotificationService>().As<INotificationService>().InstancePerLifetimeScope();
             builder.RegisterType<CampaignService>().As<ICampaignService>().InstancePerLifetimeScope();
             builder.RegisterType<EmailAccountService>().As<IEmailAccountService>().InstancePerLifetimeScope();
             builder.RegisterType<WorkflowMessageService>().As<IWorkflowMessageService>().InstancePerLifetimeScope();

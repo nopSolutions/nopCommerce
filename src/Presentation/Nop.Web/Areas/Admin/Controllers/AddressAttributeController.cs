@@ -4,6 +4,7 @@ using Nop.Core.Domain.Common;
 using Nop.Services.Common;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
+using Nop.Services.Messages;
 using Nop.Services.Security;
 using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
@@ -22,6 +23,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly ICustomerActivityService _customerActivityService;
         private readonly ILocalizedEntityService _localizedEntityService;
         private readonly ILocalizationService _localizationService;
+        private readonly INotificationService _notificationService;
         private readonly IPermissionService _permissionService;
 
         #endregion
@@ -33,6 +35,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             ICustomerActivityService customerActivityService,
             ILocalizedEntityService localizedEntityService,
             ILocalizationService localizationService,
+            INotificationService notificationService,
             IPermissionService permissionService)
         {
             this._addressAttributeModelFactory = addressAttributeModelFactory;
@@ -137,7 +140,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //locales
                 UpdateAttributeLocales(addressAttribute, model);
 
-                SuccessNotification(_localizationService.GetResource("Admin.Address.AddressAttributes.Added"));
+                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Address.AddressAttributes.Added"));
 
                 if (!continueEditing)
                     return RedirectToAction("List");
@@ -195,7 +198,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //locales
                 UpdateAttributeLocales(addressAttribute, model);
 
-                SuccessNotification(_localizationService.GetResource("Admin.Address.AddressAttributes.Updated"));
+                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Address.AddressAttributes.Updated"));
 
                 if (!continueEditing)
                     return RedirectToAction("List");
@@ -231,7 +234,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 string.Format(_localizationService.GetResource("ActivityLog.DeleteAddressAttribute"), addressAttribute.Id),
                 addressAttribute);
 
-            SuccessNotification(_localizationService.GetResource("Admin.Address.AddressAttributes.Deleted"));
+            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Address.AddressAttributes.Deleted"));
 
             return RedirectToAction("List");
         }
