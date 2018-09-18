@@ -351,7 +351,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
                 requirementModel.RuleName = requirementRule.PluginDescriptor.FriendlyName;
                 requirementModel
-                    .ConfigurationUrl = $"{_webHelper.GetStoreLocation()}{requirementRule.GetConfigurationUrl(discount.Id, requirement.Id)}";
+                    .ConfigurationUrl = requirementRule.GetConfigurationUrl(discount.Id, requirement.Id);
 
                 return requirementModel;
             }).ToList();
