@@ -169,14 +169,6 @@
                             return false;
                         });
                     });
-
-                    $("".concat("#@Html.IdFor(model => model.LocaleResourceSearchModel.SearchResourceName),",
-                        "#@Html.IdFor(model => model.LocaleResourceSearchModel.SearchResourceValue)")).keydown(function(event) {
-                        if (event.keyCode === 13) {
-                            $("#search-resources").click();
-                            return false;
-                        }
-                    });
                 </script>
             </div>
         </div>

@@ -159,13 +159,6 @@
                                 return false;
                             });
                         });
-
-                        $("#@Html.IdFor(model => model.SearchProductName)").keydown(function(event) {
-                            if (event.keyCode == 13) {
-                                $("#search-products").click();
-                                return false;
-                            }
-                        });
                         
                         function addProductToOrder(productId) {
                             //load "product details page" block

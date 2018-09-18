@@ -186,13 +186,6 @@
                                     return false;
                                 });
 
-                                $("#@Html.IdFor(model => model.SearchProductName)").keydown(function (event) {
-                                    if (event.keyCode == 13) {
-                                        $("#search-products").click();
-                                        return false;
-                                    }
-                                });
-
                                 //wire up checkboxes
                                 $('#mastercheckbox').click(function() {
                                     $('.checkboxGroups').attr('checked', $(this).is(':checked')).change();
