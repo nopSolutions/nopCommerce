@@ -1,9 +1,9 @@
 using System;
 using System.Linq;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
+using Nop.Core;
 using Nop.Core.Plugins;
 using Nop.Services.Configuration;
 using Nop.Services.Discounts;
@@ -20,6 +20,7 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles
         private readonly ILocalizationService _localizationService;
         private readonly ISettingService _settingService;
         private readonly IUrlHelperFactory _urlHelperFactory;
+        private readonly IWebHelper _webHelper;
 
         #endregion
 
@@ -29,13 +30,15 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles
             IDiscountService discountService,
             ILocalizationService localizationService,
             ISettingService settingService,
-            IUrlHelperFactory urlHelperFactory)
+            IUrlHelperFactory urlHelperFactory,
+            IWebHelper webHelper)
         {
             this._actionContextAccessor = actionContextAccessor;
             this._discountService = discountService;
             this._localizationService = localizationService;
             this._settingService = settingService;
             this._urlHelperFactory = urlHelperFactory;
+            this._webHelper = webHelper;
         }
 
         #endregion
@@ -78,14 +81,9 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles
         public string GetConfigurationUrl(int discountId, int? discountRequirementId)
         {
             var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
-            var url = new PathString(urlHelper.Action("Configure", "DiscountRulesCustomerRoles",
-                new { discountId = discountId, discountRequirementId = discountRequirementId }));            
-
-            //remove the application path from the generated URL if exists
-            var pathBase = _actionContextAccessor.ActionContext?.HttpContext?.Request?.PathBase ?? PathString.Empty;
-            url.StartsWithSegments(pathBase, out url);
-
-            return url.Value.TrimStart('/');
+            
+            return urlHelper.Action("Configure", "DiscountRulesCustomerRoles", 
+                new { discountId = discountId, discountRequirementId = discountRequirementId }, _webHelper.CurrentRequestProtocol);
         }
 
         /// <summary>

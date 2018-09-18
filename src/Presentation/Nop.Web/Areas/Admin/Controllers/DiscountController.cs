@@ -292,7 +292,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (discount == null)
                 throw new ArgumentException("Discount could not be loaded");
 
-            var url = $"{_webHelper.GetStoreLocation()}{discountRequirementRule.GetConfigurationUrl(discount.Id, discountRequirementId)}";
+            var url = discountRequirementRule.GetConfigurationUrl(discount.Id, discountRequirementId);
 
             return Json(new { url });
         }
