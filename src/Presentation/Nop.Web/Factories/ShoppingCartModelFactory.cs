@@ -1079,12 +1079,14 @@ namespace Nop.Web.Factories
                     model.SubTotalDiscount = _priceFormatter.FormatPrice(-orderSubTotalDiscountAmount, true, _workContext.WorkingCurrency, _workContext.WorkingLanguage, subTotalIncludingTax);
                 }
 
+                //LoadAllShippingRateComputationMethods
+                var shippingRateComputationMethods = _shippingService.LoadActiveShippingRateComputationMethods(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id);
 
                 //shipping info
                 model.RequiresShipping = _shoppingCartService.ShoppingCartRequiresShipping(cart);
                 if (model.RequiresShipping)
                 {
-                    var shoppingCartShippingBase = _orderTotalCalculationService.GetShoppingCartShippingTotal(cart);
+                    var shoppingCartShippingBase = _orderTotalCalculationService.GetShoppingCartShippingTotal(cart, shippingRateComputationMethods);
                     if (shoppingCartShippingBase.HasValue)
                     {
                         var shoppingCartShipping = _currencyService.ConvertFromPrimaryStoreCurrency(shoppingCartShippingBase.Value, _workContext.WorkingCurrency);
@@ -1122,7 +1124,7 @@ namespace Nop.Web.Factories
                 }
                 else
                 {
-                    var shoppingCartTaxBase = _orderTotalCalculationService.GetTaxTotal(cart, out SortedDictionary<decimal, decimal> taxRates);
+                    var shoppingCartTaxBase = _orderTotalCalculationService.GetTaxTotal(cart, shippingRateComputationMethods, out SortedDictionary<decimal, decimal> taxRates);
                     var shoppingCartTax = _currencyService.ConvertFromPrimaryStoreCurrency(shoppingCartTaxBase, _workContext.WorkingCurrency);
 
                     if (shoppingCartTaxBase == 0 && _taxSettings.HideZeroTax)
@@ -1197,7 +1199,7 @@ namespace Nop.Web.Factories
                 if (_rewardPointsSettings.Enabled && _rewardPointsSettings.DisplayHowMuchWillBeEarned && shoppingCartTotalBase.HasValue)
                 {
                     //get shipping total
-                    var shippingBaseInclTax = !model.RequiresShipping ? 0 : _orderTotalCalculationService.GetShoppingCartShippingTotal(cart, true) ?? 0;
+                    var shippingBaseInclTax = !model.RequiresShipping ? 0 : _orderTotalCalculationService.GetShoppingCartShippingTotal(cart, true, shippingRateComputationMethods) ?? 0;
 
                     //get total for reward points
                     var totalForRewardPoints = _orderTotalCalculationService
