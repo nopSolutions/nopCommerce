@@ -1,35 +1,35 @@
 ﻿@{
     //success messages
     var successMessages = new List<string>();
-    if (TempData[$"nop.notifications.{NotifyType.Success}"] != null)
+    if (TempData[$"{NopNotificationsDefaults.Prefix}{NotifyType.Success}"] != null)
     {
-        successMessages.AddRange(TempData[$"nop.notifications.{NotifyType.Success}"] as IList<string>);
+        successMessages.AddRange(TempData[$"{NopNotificationsDefaults.Prefix}{NotifyType.Success}"] as IList<string>);
     }
-    if (ViewData[$"nop.notifications.{NotifyType.Success}"] != null)
+    if (ViewData[$"{NopNotificationsDefaults.Prefix}{NotifyType.Success}"] != null)
     {
-        successMessages.AddRange(ViewData[$"nop.notifications.{NotifyType.Success}"] as IList<string>);
+        successMessages.AddRange(ViewData[$"{NopNotificationsDefaults.Prefix}{NotifyType.Success}"] as IList<string>);
     }
 
 
     //error messages
     var errorMessages = new List<string>();
-    if (TempData[$"nop.notifications.{NotifyType.Error}"] != null)
+    if (TempData[$"{NopNotificationsDefaults.Prefix}{NotifyType.Error}"] != null)
     {
-        errorMessages.AddRange(TempData[$"nop.notifications.{NotifyType.Error}"] as IList<string>);
+        errorMessages.AddRange(TempData[$"{NopNotificationsDefaults.Prefix}{NotifyType.Error}"] as IList<string>);
     }
-    if (ViewData[$"nop.notifications.{NotifyType.Error}"] != null)
+    if (ViewData[$"{NopNotificationsDefaults.Prefix}{NotifyType.Error}"] != null)
     {
-        errorMessages.AddRange(ViewData[$"nop.notifications.{NotifyType.Error}"] as IList<string>);
+        errorMessages.AddRange(ViewData[$"{NopNotificationsDefaults.Prefix}{NotifyType.Error}"] as IList<string>);
     }
 
 
     //warning messages
     var warningMessages = new List<string>();
-    if (TempData[$"nop.notifications.{NotifyType.Warning}"] != null) {
-        warningMessages.AddRange(TempData[$"nop.notifications.{NotifyType.Warning}"] as IList<string>);
+    if (TempData[$"{NopNotificationsDefaults.Prefix}{NotifyType.Warning}"] != null) {
+        warningMessages.AddRange(TempData[$"{NopNotificationsDefaults.Prefix}{NotifyType.Warning}"] as IList<string>);
     }
-    if (ViewData[$"nop.notifications.{NotifyType.Warning}"] != null) {
-        warningMessages.AddRange(ViewData[$"nop.notifications.{NotifyType.Warning}"] as IList<string>);
+    if (ViewData[$"{NopNotificationsDefaults.Prefix}{NotifyType.Warning}"] != null) {
+        warningMessages.AddRange(ViewData[$"{NopNotificationsDefaults.Prefix}{NotifyType.Warning}"] as IList<string>);
     }
 }
 

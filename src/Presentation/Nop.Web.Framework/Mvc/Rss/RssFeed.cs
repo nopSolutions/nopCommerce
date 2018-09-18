@@ -41,10 +41,10 @@ namespace Nop.Web.Framework.Mvc.Rss
         /// <param name="lastBuildDate">Last build date</param>
         private void Init(string title, string description, Uri link, DateTimeOffset lastBuildDate)
         {
-            this.Title = new XElement("title", title);
-            this.Description = new XElement("description", description);
-            this.Link = new XElement("link", link);
-            this.LastBuildDate = new XElement("lastBuildDate", lastBuildDate.ToString("r"));
+            this.Title = new XElement(NopRssDefaults.Title, title);
+            this.Description = new XElement(NopRssDefaults.Description, description);
+            this.Link = new XElement(NopRssDefaults.Link, link);
+            this.LastBuildDate = new XElement(NopRssDefaults.LastBuildDate, lastBuildDate.ToString("r"));
         }
 
         /// <summary>
@@ -78,20 +78,20 @@ namespace Nop.Web.Framework.Mvc.Rss
             {
                 var document = XDocument.Load(reader);
 
-                var channel = document.Root?.Element("channel");
+                var channel = document.Root?.Element(NopRssDefaults.Channel);
 
                 if (channel == null)
                     return null;
 
-                var title = channel.Element("title")?.Value ?? string.Empty;
-                var description = channel.Element("description")?.Value ?? string.Empty;
-                var link = new Uri(channel.Element("link")?.Value ?? string.Empty);
-                var lastBuildDateValue = channel.Element("lastBuildDate")?.Value;
+                var title = channel.Element(NopRssDefaults.Title)?.Value ?? string.Empty;
+                var description = channel.Element(NopRssDefaults.Description)?.Value ?? string.Empty;
+                var link = new Uri(channel.Element(NopRssDefaults.Link)?.Value ?? string.Empty);
+                var lastBuildDateValue = channel.Element(NopRssDefaults.LastBuildDate)?.Value;
                 var lastBuildDate = lastBuildDateValue == null ? DateTimeOffset.Now : DateTimeOffset.ParseExact(lastBuildDateValue, "r", null);
 
                 var feed = new RssFeed(title, description, link, lastBuildDate);
 
-                foreach (var item in channel.Elements("item"))
+                foreach (var item in channel.Elements(NopRssDefaults.Item))
                 {
                     feed.Items.Add(new RssItem(item));
                 }
@@ -127,8 +127,8 @@ namespace Nop.Web.Framework.Mvc.Rss
         public string GetContent()
         {
             var document = new XDocument();
-            var root = new XElement("rss", new XAttribute("version", "2.0"));
-            var channel = new XElement("channel",
+            var root = new XElement(NopRssDefaults.RSS, new XAttribute("version", "2.0"));
+            var channel = new XElement(NopRssDefaults.Channel,
                 new XAttribute(XName.Get(AttributeExtension.Key.Name, AttributeExtension.Key.Namespace), AttributeExtension.Value));
 
             channel.Add(Title, Description, Link, LastBuildDate);
