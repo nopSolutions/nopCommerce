@@ -36,6 +36,11 @@
         /// <summary>
         /// Type
         /// </summary>
+        public const string ApplicationXml = "application/xml";
+
+        /// <summary>
+        /// Type
+        /// </summary>
         public const string ApplicationXWwwFormUrlencoded = "application/x-www-form-urlencoded";
 
         /// <summary>

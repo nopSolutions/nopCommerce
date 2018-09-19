@@ -363,7 +363,7 @@ namespace Nop.Web.Controllers
             var productAttributes = _productAttributeService.GetProductAttributeMappingsByProductId(product.Id);
             foreach (var attribute in productAttributes)
             {
-                var controlId = $"product_attribute_{attribute.Id}";
+                var controlId = $"{NopAttributePrefixDefaults.Product}{attribute.Id}";
                 switch (attribute.AttributeControlType)
                 {
                     case AttributeControlType.DropdownList:
@@ -379,7 +379,7 @@ namespace Nop.Web.Controllers
                                 {
                                     //get quantity entered by customer
                                     var quantity = 1;
-                                    var quantityStr = form[$"product_attribute_{attribute.Id}_{selectedAttributeId}_qty"];
+                                    var quantityStr = form[$"{NopAttributePrefixDefaults.Product}{attribute.Id}_{selectedAttributeId}_qty"];
                                     if (!StringValues.IsNullOrEmpty(quantityStr) &&
                                         (!int.TryParse(quantityStr, out quantity) || quantity < 1))
                                         errors.Add(_localizationService.GetResource("ShoppingCart.QuantityShouldPositive"));
@@ -403,7 +403,7 @@ namespace Nop.Web.Controllers
                                     {
                                         //get quantity entered by customer
                                         var quantity = 1;
-                                        var quantityStr = form[$"product_attribute_{attribute.Id}_{item}_qty"];
+                                        var quantityStr = form[$"{NopAttributePrefixDefaults.Product}{attribute.Id}_{item}_qty"];
                                         if (!StringValues.IsNullOrEmpty(quantityStr) &&
                                             (!int.TryParse(quantityStr, out quantity) || quantity < 1))
                                             errors.Add(_localizationService.GetResource("ShoppingCart.QuantityShouldPositive"));
@@ -426,7 +426,7 @@ namespace Nop.Web.Controllers
                             {
                                 //get quantity entered by customer
                                 var quantity = 1;
-                                var quantityStr = form[$"product_attribute_{attribute.Id}_{selectedAttributeId}_qty"];
+                                var quantityStr = form[$"{NopAttributePrefixDefaults.Product}{attribute.Id}_{selectedAttributeId}_qty"];
                                 if (!StringValues.IsNullOrEmpty(quantityStr) &&
                                     (!int.TryParse(quantityStr, out quantity) || quantity < 1))
                                     errors.Add(_localizationService.GetResource("ShoppingCart.QuantityShouldPositive"));

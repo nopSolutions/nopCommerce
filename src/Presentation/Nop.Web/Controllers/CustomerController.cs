@@ -188,7 +188,7 @@ namespace Nop.Web.Controllers
             var attributes = _customerAttributeService.GetAllCustomerAttributes();
             foreach (var attribute in attributes)
             {
-                var controlId = $"customer_attribute_{attribute.Id}";
+                var controlId = $"{NopAttributePrefixDefaults.Customer}{attribute.Id}";
                 switch (attribute.AttributeControlType)
                 {
                     case AttributeControlType.DropdownList:
