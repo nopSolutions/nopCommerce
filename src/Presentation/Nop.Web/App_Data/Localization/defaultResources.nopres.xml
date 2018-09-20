@@ -13999,7 +13999,7 @@
     <Value>Specified store URL ({0}) doesn't match this store URL ({1})</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.Warnings.URL.Reserved">
-    <Value>Entered page name already exists, so it will be replaced by '{0}'</Value>
+    <Value>The entered text will be replaced by '{0}', since it is already used as a SEO-friendly name for another page or contains invalid characters</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Vendors">
     <Value>Vendors</Value>
