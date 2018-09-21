@@ -29,6 +29,28 @@ set @resources='
   <LocaleResource Name="Admin.System.Warnings.URL.Reserved">
     <Value>The entered text will be replaced by ''{0}'', since it is already used as a SEO-friendly name for another page or contains invalid characters</Value>
   </LocaleResource>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.PayPalStandard.Instructions">
+    <Value>
+		<![CDATA[
+		<p>
+			<b>If you''re using this gateway ensure that your primary store currency is supported by PayPal.</b>
+			<br />
+			<br />To use PDT, you must activate PDT and Auto Return in your PayPal account profile. You must also acquire a PDT identity token, which is used in all PDT communication you send to PayPal. Follow these steps to configure your account for PDT:<br />
+			<br />1. Log in to your PayPal account (click <a href="https://www.paypal.com/us/webapps/mpp/referral/paypal-business-account2?partner_id=9JJPJNNPQ7PZ8" target="_blank">here</a> to create your account).
+			<br />2. Click the Profile button.
+			<br />3. Click the Profile and Settings button.
+			<br />4. Select the My selling tools item on left panel.
+			<br />5. Click Website Preferences Update in the Selling online section.
+			<br />6. Under Auto Return for Website Payments, click the On radio button.
+			<br />7. For the Return URL, enter the URL on your site that will receive the transaction ID posted by PayPal after a customer payment ({0}).
+			<br />8. Under Payment Data Transfer, click the On radio button and get your PDT identity token.
+			<br />9. Click Save.
+			<br />
+		</p>
+		]]>
+	</Value>
+  </LocaleResource>  
 </Language>
 '
 
