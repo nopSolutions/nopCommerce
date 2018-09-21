@@ -29,7 +29,6 @@ set @resources='
   <LocaleResource Name="Admin.System.Warnings.URL.Reserved">
     <Value>The entered text will be replaced by ''{0}'', since it is already used as a SEO-friendly name for another page or contains invalid characters</Value>
   </LocaleResource>
-  </LocaleResource>
   <LocaleResource Name="Plugins.Payments.PayPalStandard.Instructions">
     <Value>
 		<![CDATA[
