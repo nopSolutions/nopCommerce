@@ -1328,6 +1328,11 @@ span.grid-report-item.red {
 .bootstrap-touchspin-postfix {
     border-left: none;
 }
+
+.input-group-btn-vertical {
+    top: 0;
+}
+
 .bootstrap-touchspin .input-group-btn-vertical i {
     left: 6px;
 }
