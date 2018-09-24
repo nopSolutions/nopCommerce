@@ -133,13 +133,6 @@
                                 //grid.dataSource.read(); we already loaded the grid above using "page" function
                                 return false;
                             });
-
-                            $("#@Html.IdFor(model => model.SearchName)").keydown(function (event) {
-                                if (event.keyCode == 13) {
-                                    $("#search-vendors").click();
-                                    return false;
-                                }
-                            });
                         });
                     </script>
                 </div>

@@ -193,13 +193,6 @@
                         });
                     });
 
-                    $("#@Html.IdFor(model => model.SearchProductName)").keydown(function(event) {
-                        if (event.keyCode == 13) {
-                            $("#search-products").click();
-                            return false;
-                        }
-                    });
-
                     function selectAssociatedProduct(productid) {
                         $("#@Html.IdFor(model => model.AddProductToCustomerRoleModel.AssociatedToProductId)").val(productid);
                         $('#save').click();

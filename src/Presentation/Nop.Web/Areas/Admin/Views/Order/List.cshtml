@@ -436,16 +436,6 @@
                                     return false;
                                 });
 
-                                $("".concat("#@Html.IdFor(model => model.BillingEmail),",
-                                    "#@Html.IdFor(model => model.BillingLastName),",
-                                    "#@Html.IdFor(model => model.BillingPhone),",
-                                    "#@Html.IdFor(model => model.OrderNotes)")).keydown(function (event) {
-                                    if (event.keyCode === 13) {
-                                        $("#search-orders").click();
-                                        return false;
-                                    }
-                                });
-
                                 $("#@Html.IdFor(model => model.GoDirectlyToCustomOrderNumber)").keydown(function(event) {
                                     if (event.keyCode === 13) {
                                         $("#go-to-order-by-number").click();
