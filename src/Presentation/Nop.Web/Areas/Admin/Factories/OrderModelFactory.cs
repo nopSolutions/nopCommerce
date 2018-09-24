@@ -842,6 +842,9 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare available vendors
             _baseAdminModelFactory.PrepareVendors(searchModel.AvailableVendors);
 
+            //prepare available warehouses
+            _baseAdminModelFactory.PrepareWarehouses(searchModel.AvailableWarehouses);
+
             //prepare available payment methods
             searchModel.AvailablePaymentMethods = _paymentService.LoadAllPaymentMethods().Select(method =>
                 new SelectListItem { Text = method.PluginDescriptor.FriendlyName, Value = method.PluginDescriptor.SystemName }).ToList();
@@ -964,6 +967,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var reportSummary = _orderReportService.GetOrderAverageReportLine(storeId: searchModel.StoreId,
                 vendorId: searchModel.VendorId,
                 productId: filterByProductId,
+                warehouseId: searchModel.WarehouseId,
                 paymentMethodSystemName: searchModel.PaymentMethodSystemName,
                 osIds: orderStatusIds,
                 psIds: paymentStatusIds,
@@ -979,6 +983,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var profit = _orderReportService.ProfitReport(storeId: searchModel.StoreId,
                 vendorId: searchModel.VendorId,
                 productId: filterByProductId,
+                warehouseId: searchModel.WarehouseId,
                 paymentMethodSystemName: searchModel.PaymentMethodSystemName,
                 osIds: orderStatusIds,
                 psIds: paymentStatusIds,
