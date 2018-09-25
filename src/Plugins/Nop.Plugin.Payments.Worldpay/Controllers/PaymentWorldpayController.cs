@@ -16,6 +16,7 @@ using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Customers;
 using Nop.Services.Localization;
+using Nop.Services.Messages;
 using Nop.Services.Security;
 using Nop.Web.Areas.Admin.Controllers;
 using Nop.Web.Framework.Kendoui;
@@ -31,6 +32,7 @@ namespace Nop.Plugin.Payments.Worldpay.Controllers
         private readonly ICustomerService _customerService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
+        private readonly INotificationService _notificationService;
         private readonly IPermissionService _permissionService;
         private readonly ISettingService _settingService;
         private readonly WorldpayPaymentManager _worldpayPaymentManager;
@@ -42,6 +44,7 @@ namespace Nop.Plugin.Payments.Worldpay.Controllers
 
         public PaymentWorldpayController(ICustomerService customerService,
             IGenericAttributeService genericAttributeService,
+            INotificationService notificationService,
             ILocalizationService localizationService,
             IPermissionService permissionService,
             ISettingService settingService,
@@ -51,6 +54,7 @@ namespace Nop.Plugin.Payments.Worldpay.Controllers
             this._customerService = customerService;
             this._genericAttributeService = genericAttributeService;
             this._localizationService = localizationService;
+            this._notificationService = notificationService;
             this._permissionService = permissionService;
             this._settingService = settingService;
             this._worldpayPaymentManager = worldpayPaymentManager;
@@ -105,7 +109,7 @@ namespace Nop.Plugin.Payments.Worldpay.Controllers
             _worldpayPaymentSettings.AdditionalFeePercentage = model.AdditionalFeePercentage;
             _settingService.SaveSetting(_worldpayPaymentSettings);
 
-            SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
+            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
 
             return Configure();
         }

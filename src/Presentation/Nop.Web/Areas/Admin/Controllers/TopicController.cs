@@ -4,6 +4,7 @@ using Nop.Core.Domain.Topics;
 using Nop.Services.Customers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
+using Nop.Services.Messages;
 using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Stores;
@@ -24,6 +25,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly ICustomerService _customerService;
         private readonly ILocalizationService _localizationService;
         private readonly ILocalizedEntityService _localizedEntityService;
+        private readonly INotificationService _notificationService;
         private readonly IPermissionService _permissionService;
         private readonly IStoreMappingService _storeMappingService;
         private readonly IStoreService _storeService;
@@ -40,6 +42,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             ICustomerService customerService,
             ILocalizationService localizationService,
             ILocalizedEntityService localizedEntityService,
+            INotificationService notificationService,
             IPermissionService permissionService,
             IStoreMappingService storeMappingService,
             IStoreService storeService,
@@ -52,6 +55,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             this._customerService = customerService;
             this._localizationService = localizationService;
             this._localizedEntityService = localizedEntityService;
+            this._notificationService = notificationService;
             this._permissionService = permissionService;
             this._storeMappingService = storeMappingService;
             this._storeService = storeService;
@@ -221,7 +225,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //locales
                 UpdateLocales(topic, model);
 
-                SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Topics.Added"));
+                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Topics.Added"));
 
                 //activity log
                 _customerActivityService.InsertActivity("AddNewTopic",
@@ -291,7 +295,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //locales
                 UpdateLocales(topic, model);
 
-                SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Topics.Updated"));
+                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Topics.Updated"));
 
                 //activity log
                 _customerActivityService.InsertActivity("EditTopic",
@@ -326,7 +330,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             _topicService.DeleteTopic(topic);
 
-            SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Topics.Deleted"));
+            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Topics.Deleted"));
 
             //activity log
             _customerActivityService.InsertActivity("DeleteTopic",

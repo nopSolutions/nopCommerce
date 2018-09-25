@@ -10,6 +10,7 @@ using Nop.Services.Catalog;
 using Nop.Services.Discounts;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
+using Nop.Services.Messages;
 using Nop.Services.Security;
 using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
@@ -31,6 +32,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly IDiscountService _discountService;
         private readonly ILocalizationService _localizationService;
         private readonly IManufacturerService _manufacturerService;
+        private readonly INotificationService _notificationService;
         private readonly IPermissionService _permissionService;
         private readonly IProductService _productService;
         private readonly IWebHelper _webHelper;
@@ -46,6 +48,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             IDiscountService discountService,
             ILocalizationService localizationService,
             IManufacturerService manufacturerService,
+            INotificationService notificationService,
             IPermissionService permissionService,
             IProductService productService,
             IWebHelper webHelper)
@@ -57,6 +60,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             this._discountService = discountService;
             this._localizationService = localizationService;
             this._manufacturerService = manufacturerService;
+            this._notificationService = notificationService;
             this._permissionService = permissionService;
             this._productService = productService;
             this._webHelper = webHelper;
@@ -96,7 +100,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //whether discounts are ignored
             if (_catalogSettings.IgnoreDiscounts)
-                WarningNotification(_localizationService.GetResource("Admin.Promotions.Discounts.IgnoreDiscounts.Warning"));
+                _notificationService.WarningNotification(_localizationService.GetResource("Admin.Promotions.Discounts.IgnoreDiscounts.Warning"));
 
             //prepare model
             var model = _discountModelFactory.PrepareDiscountSearchModel(new DiscountSearchModel());
@@ -142,7 +146,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _customerActivityService.InsertActivity("AddNewDiscount",
                     string.Format(_localizationService.GetResource("ActivityLog.AddNewDiscount"), discount.Name), discount);
 
-                SuccessNotification(_localizationService.GetResource("Admin.Promotions.Discounts.Added"));
+                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Promotions.Discounts.Added"));
 
                 if (!continueEditing)
                     return RedirectToAction("List");
@@ -225,7 +229,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _customerActivityService.InsertActivity("EditDiscount",
                     string.Format(_localizationService.GetResource("ActivityLog.EditDiscount"), discount.Name), discount);
 
-                SuccessNotification(_localizationService.GetResource("Admin.Promotions.Discounts.Updated"));
+                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Promotions.Discounts.Updated"));
 
                 if (!continueEditing)
                     return RedirectToAction("List");
@@ -267,7 +271,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             _customerActivityService.InsertActivity("DeleteDiscount",
                 string.Format(_localizationService.GetResource("ActivityLog.DeleteDiscount"), discount.Name), discount);
 
-            SuccessNotification(_localizationService.GetResource("Admin.Promotions.Discounts.Deleted"));
+            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Promotions.Discounts.Deleted"));
 
             return RedirectToAction("List");
         }

@@ -5,6 +5,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Services.Catalog;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
+using Nop.Services.Messages;
 using Nop.Services.Security;
 using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
@@ -21,6 +22,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly ICustomerActivityService _customerActivityService;
         private readonly ILocalizationService _localizationService;
         private readonly ILocalizedEntityService _localizedEntityService;
+        private readonly INotificationService _notificationService;
         private readonly IPermissionService _permissionService;
         private readonly ISpecificationAttributeModelFactory _specificationAttributeModelFactory;
         private readonly ISpecificationAttributeService _specificationAttributeService;
@@ -32,6 +34,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public SpecificationAttributeController(ICustomerActivityService customerActivityService,
             ILocalizationService localizationService,
             ILocalizedEntityService localizedEntityService,
+            INotificationService notificationService,
             IPermissionService permissionService,
             ISpecificationAttributeModelFactory specificationAttributeModelFactory,
             ISpecificationAttributeService specificationAttributeService)
@@ -39,6 +42,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             this._customerActivityService = customerActivityService;
             this._localizationService = localizationService;
             this._localizedEntityService = localizedEntityService;
+            this._notificationService = notificationService;
             this._permissionService = permissionService;
             this._specificationAttributeModelFactory = specificationAttributeModelFactory;
             this._specificationAttributeService = specificationAttributeService;
@@ -129,7 +133,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _customerActivityService.InsertActivity("AddNewSpecAttribute",
                     string.Format(_localizationService.GetResource("ActivityLog.AddNewSpecAttribute"), specificationAttribute.Name), specificationAttribute);
 
-                SuccessNotification(_localizationService.GetResource("Admin.Catalog.Attributes.SpecificationAttributes.Added"));
+                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Catalog.Attributes.SpecificationAttributes.Added"));
 
                 if (!continueEditing)
                     return RedirectToAction("List");
@@ -186,7 +190,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _customerActivityService.InsertActivity("EditSpecAttribute",
                     string.Format(_localizationService.GetResource("ActivityLog.EditSpecAttribute"), specificationAttribute.Name), specificationAttribute);
 
-                SuccessNotification(_localizationService.GetResource("Admin.Catalog.Attributes.SpecificationAttributes.Updated"));
+                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Catalog.Attributes.SpecificationAttributes.Updated"));
 
                 if (!continueEditing)
                     return RedirectToAction("List");
@@ -221,7 +225,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             _customerActivityService.InsertActivity("DeleteSpecAttribute",
                 string.Format(_localizationService.GetResource("ActivityLog.DeleteSpecAttribute"), specificationAttribute.Name), specificationAttribute);
 
-            SuccessNotification(_localizationService.GetResource("Admin.Catalog.Attributes.SpecificationAttributes.Deleted"));
+            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Catalog.Attributes.SpecificationAttributes.Deleted"));
 
             return RedirectToAction("List");
         }

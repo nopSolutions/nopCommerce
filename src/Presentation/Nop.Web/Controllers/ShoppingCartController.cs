@@ -57,6 +57,7 @@ namespace Nop.Web.Controllers
         private readonly IGiftCardService _giftCardService;
         private readonly ILocalizationService _localizationService;
         private readonly INopFileProvider _fileProvider;
+        private readonly INotificationService _notificationService;
         private readonly IPermissionService _permissionService;
         private readonly IPictureService _pictureService;
         private readonly IPriceCalculationService _priceCalculationService;
@@ -94,6 +95,7 @@ namespace Nop.Web.Controllers
             IGiftCardService giftCardService,
             ILocalizationService localizationService,
             INopFileProvider fileProvider,
+            INotificationService notificationService,
             IPermissionService permissionService,
             IPictureService pictureService,
             IPriceCalculationService priceCalculationService,
@@ -127,6 +129,7 @@ namespace Nop.Web.Controllers
             this._giftCardService = giftCardService;
             this._localizationService = localizationService;
             this._fileProvider = fileProvider;
+            this._notificationService = notificationService;
             this._permissionService = permissionService;
             this._pictureService = pictureService;
             this._priceCalculationService = priceCalculationService;
@@ -1700,7 +1703,7 @@ namespace Nop.Web.Controllers
 
                 if (allWarnings.Any())
                 {
-                    ErrorNotification(_localizationService.GetResource("Wishlist.AddToCart.Error"), true);
+                    _notificationService.ErrorNotification(_localizationService.GetResource("Wishlist.AddToCart.Error"));
                 }
 
                 return RedirectToRoute("ShoppingCart");
@@ -1709,7 +1712,7 @@ namespace Nop.Web.Controllers
 
             if (allWarnings.Any())
             {
-                ErrorNotification(_localizationService.GetResource("Wishlist.AddToCart.Error"), false);
+                _notificationService.ErrorNotification(_localizationService.GetResource("Wishlist.AddToCart.Error"));
             }
 
             var cart = _shoppingCartService.GetShoppingCart(pageCustomer, ShoppingCartType.Wishlist, _storeContext.CurrentStore.Id);

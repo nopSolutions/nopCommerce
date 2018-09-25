@@ -13,6 +13,7 @@ using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
+using Nop.Services.Messages;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Security;
@@ -26,48 +27,52 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
     {
         #region Fields
 
-        private readonly IWorkContext _workContext;
-        private readonly ISettingService _settingService;
-        private readonly IPaymentService _paymentService;
-        private readonly IOrderService _orderService;
-        private readonly IOrderProcessingService _orderProcessingService;
-        private readonly IPermissionService _permissionService;
         private readonly IGenericAttributeService _genericAttributeService;
+        private readonly IOrderProcessingService _orderProcessingService;
+        private readonly IOrderService _orderService;
+        private readonly IPaymentService _paymentService;
+        private readonly IPermissionService _permissionService;
         private readonly ILocalizationService _localizationService;
-        private readonly IStoreContext _storeContext;
         private readonly ILogger _logger;
+        private readonly INotificationService _notificationService;
+        private readonly ISettingService _settingService;
+        private readonly IStoreContext _storeContext;
         private readonly IWebHelper _webHelper;
+        private readonly IWorkContext _workContext;
         private readonly ShoppingCartSettings _shoppingCartSettings;
 
         #endregion
 
         #region Ctor
 
-        public PaymentPayPalStandardController(IWorkContext workContext,
-            ISettingService settingService,
-            IPaymentService paymentService,
-            IOrderService orderService,
-            IOrderProcessingService orderProcessingService,
-            IPermissionService permissionService,
+        public PaymentPayPalStandardController(
             IGenericAttributeService genericAttributeService,
+            IOrderProcessingService orderProcessingService,
+            IOrderService orderService,
+            IPaymentService paymentService,
+            IPermissionService permissionService,
             ILocalizationService localizationService,
-            IStoreContext storeContext,
             ILogger logger,
+            INotificationService notificationService,
+            ISettingService settingService,
+            IStoreContext storeContext,
             IWebHelper webHelper,
+            IWorkContext workContext,
             ShoppingCartSettings shoppingCartSettings)
         {
-            this._workContext = workContext;
-            this._settingService = settingService;
-            this._paymentService = paymentService;
+            this._genericAttributeService = genericAttributeService;
             this._orderService = orderService;
             this._orderProcessingService = orderProcessingService;
+            this._paymentService = paymentService;
             this._permissionService = permissionService;
-            this._genericAttributeService = genericAttributeService;
             this._localizationService = localizationService;
-            this._storeContext = storeContext;
             this._logger = logger;
-            this._webHelper = webHelper;
+            this._notificationService = notificationService;
+            this._settingService = settingService;
             this._shoppingCartSettings = shoppingCartSettings;
+            this._storeContext = storeContext;
+            this._webHelper = webHelper;
+            this._workContext = workContext;
         }
 
         #endregion
@@ -145,7 +150,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
             //now clear settings cache
             _settingService.ClearCache();
 
-            SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
+            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
 
             return Configure();
         }

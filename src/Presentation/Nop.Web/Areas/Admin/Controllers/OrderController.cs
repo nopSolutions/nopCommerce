@@ -47,6 +47,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly IExportManager _exportManager;
         private readonly IGiftCardService _giftCardService;
         private readonly ILocalizationService _localizationService;
+        private readonly INotificationService _notificationService;
         private readonly IOrderModelFactory _orderModelFactory;
         private readonly IOrderProcessingService _orderProcessingService;
         private readonly IOrderService _orderService;
@@ -78,6 +79,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             IExportManager exportManager,
             IGiftCardService giftCardService,
             ILocalizationService localizationService,
+            INotificationService notificationService,
             IOrderModelFactory orderModelFactory,
             IOrderProcessingService orderProcessingService,
             IOrderService orderService,
@@ -105,6 +107,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             this._exportManager = exportManager;
             this._giftCardService = giftCardService;
             this._localizationService = localizationService;
+            this._notificationService = notificationService;
             this._orderModelFactory = orderModelFactory;
             this._orderProcessingService = orderProcessingService;
             this._orderService = orderService;
@@ -562,7 +565,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
             catch (Exception exc)
             {
-                ErrorNotification(exc);
+                _notificationService.ErrorNotification(exc);
                 return RedirectToAction("List");
             }
         }
@@ -646,7 +649,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
             catch (Exception exc)
             {
-                ErrorNotification(exc);
+                _notificationService.ErrorNotification(exc);
                 return RedirectToAction("List");
             }
         }
@@ -674,7 +677,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
             catch (Exception exc)
             {
-                ErrorNotification(exc);
+                _notificationService.ErrorNotification(exc);
                 return RedirectToAction("List");
             }
         }
@@ -716,7 +719,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //prepare model
                 var model = _orderModelFactory.PrepareOrderModel(null, order);
 
-                ErrorNotification(exc, false);
+                _notificationService.ErrorNotification(exc);
                 return View(model);
             }
         }
@@ -746,7 +749,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 var model = _orderModelFactory.PrepareOrderModel(null, order);
 
                 foreach (var error in errors)
-                    ErrorNotification(error, false);
+                    _notificationService.ErrorNotification(error);
 
                 return View(model);
             }
@@ -755,7 +758,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //prepare model
                 var model = _orderModelFactory.PrepareOrderModel(null, order);
 
-                ErrorNotification(exc, false);
+                _notificationService.ErrorNotification(exc);
                 return View(model);
             }
         }
@@ -791,7 +794,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //prepare model
                 var model = _orderModelFactory.PrepareOrderModel(null, order);
 
-                ErrorNotification(exc, false);
+                _notificationService.ErrorNotification(exc);
                 return View(model);
             }
         }
@@ -821,7 +824,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 var model = _orderModelFactory.PrepareOrderModel(null, order);
 
                 foreach (var error in errors)
-                    ErrorNotification(error, false);
+                    _notificationService.ErrorNotification(error);
 
                 return View(model);
             }
@@ -830,7 +833,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //prepare model
                 var model = _orderModelFactory.PrepareOrderModel(null, order);
 
-                ErrorNotification(exc, false);
+                _notificationService.ErrorNotification(exc);
                 return View(model);
             }
         }
@@ -866,7 +869,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //prepare model
                 var model = _orderModelFactory.PrepareOrderModel(null, order);
 
-                ErrorNotification(exc, false);
+                _notificationService.ErrorNotification(exc);
                 return View(model);
             }
         }
@@ -896,7 +899,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 var model = _orderModelFactory.PrepareOrderModel(null, order);
 
                 foreach (var error in errors)
-                    ErrorNotification(error, false);
+                    _notificationService.ErrorNotification(error);
 
                 return View(model);
             }
@@ -905,7 +908,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //prepare model
                 var model = _orderModelFactory.PrepareOrderModel(null, order);
 
-                ErrorNotification(exc, false);
+                _notificationService.ErrorNotification(exc);
                 return View(model);
             }
         }
@@ -941,7 +944,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //prepare model
                 var model = _orderModelFactory.PrepareOrderModel(null, order);
 
-                ErrorNotification(exc, false);
+                _notificationService.ErrorNotification(exc);
                 return View(model);
             }
         }
@@ -1015,7 +1018,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 model = _orderModelFactory.PrepareOrderModel(model, order);
 
                 foreach (var error in errors)
-                    ErrorNotification(error, false);
+                    _notificationService.ErrorNotification(error);
 
                 return View(model);
             }
@@ -1024,7 +1027,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //prepare model
                 model = _orderModelFactory.PrepareOrderModel(model, order);
 
-                ErrorNotification(exc, false);
+                _notificationService.ErrorNotification(exc);
                 return View(model);
             }
         }
@@ -1070,7 +1073,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //prepare model
                 model = _orderModelFactory.PrepareOrderModel(model, order);
 
-                ErrorNotification(exc, false);
+                _notificationService.ErrorNotification(exc);
                 return View(model);
             }
         }
@@ -1239,7 +1242,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //ensure that we at least one order selected
             if (!orders.Any())
             {
-                ErrorNotification(_localizationService.GetResource("Admin.Orders.PdfInvoice.NoOrders"));
+                _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Orders.PdfInvoice.NoOrders"));
                 return RedirectToAction("List");
             }
 
@@ -1525,7 +1528,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             var model = _orderModelFactory.PrepareOrderModel(null, order);
 
             foreach (var warning in updateOrderParameters.Warnings)
-                WarningNotification(warning, false);
+                _notificationService.WarningNotification(warning);
 
             //selected tab
             SaveSelectedTabName(persistForTheNextRequest: false);
@@ -1566,7 +1569,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //prepare model
                 var model = _orderModelFactory.PrepareOrderModel(null, order);
 
-                ErrorNotification(_localizationService.GetResource("Admin.Orders.OrderItem.DeleteAssociatedGiftCardRecordError"), false);
+                _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Orders.OrderItem.DeleteAssociatedGiftCardRecordError"));
 
                 //selected tab
                 SaveSelectedTabName(persistForTheNextRequest: false);
@@ -1604,7 +1607,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 var model = _orderModelFactory.PrepareOrderModel(null, order);
 
                 foreach (var warning in updateOrderParameters.Warnings)
-                    WarningNotification(warning, false);
+                    _notificationService.WarningNotification(warning);
 
                 //selected tab
                 SaveSelectedTabName(persistForTheNextRequest: false);
@@ -1977,7 +1980,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 //redirect to order details page
                 foreach (var warning in updateOrderParameters.Warnings)
-                    WarningNotification(warning);
+                    _notificationService.WarningNotification(warning);
 
                 return RedirectToAction("Edit", "Order", new { id = order.Id });
             }
@@ -2295,13 +2298,13 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _orderService.UpdateOrder(order);
                 LogEditOrder(order.Id);
 
-                SuccessNotification(_localizationService.GetResource("Admin.Orders.Shipments.Added"));
+                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Orders.Shipments.Added"));
                 return continueEditing
                            ? RedirectToAction("ShipmentDetails", new { id = shipment.Id })
                            : RedirectToAction("Edit", new { id = orderId });
             }
 
-            ErrorNotification(_localizationService.GetResource("Admin.Orders.Shipments.NoProductsSelected"));
+            _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Orders.Shipments.NoProductsSelected"));
 
             return RedirectToAction("AddShipment", new { orderId });
         }
@@ -2365,7 +2368,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             _orderService.UpdateOrder(order);
             LogEditOrder(order.Id);
 
-            SuccessNotification(_localizationService.GetResource("Admin.Orders.Shipments.Deleted"));
+            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Orders.Shipments.Deleted"));
             return RedirectToAction("Edit", new { id = orderId });
         }
 
@@ -2438,7 +2441,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             catch (Exception exc)
             {
                 //error
-                ErrorNotification(exc);
+                _notificationService.ErrorNotification(exc);
                 return RedirectToAction("ShipmentDetails", new { id = shipment.Id });
             }
         }
@@ -2473,7 +2476,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             catch (Exception exc)
             {
                 //error
-                ErrorNotification(exc);
+                _notificationService.ErrorNotification(exc);
                 return RedirectToAction("ShipmentDetails", new { id = shipment.Id });
             }
         }
@@ -2503,7 +2506,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             catch (Exception exc)
             {
                 //error
-                ErrorNotification(exc);
+                _notificationService.ErrorNotification(exc);
                 return RedirectToAction("ShipmentDetails", new { id = shipment.Id });
             }
         }
@@ -2538,7 +2541,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             catch (Exception exc)
             {
                 //error
-                ErrorNotification(exc);
+                _notificationService.ErrorNotification(exc);
                 return RedirectToAction("ShipmentDetails", new { id = shipment.Id });
             }
         }
@@ -2605,7 +2608,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //ensure that we at least one shipment selected
             if (!shipments.Any())
             {
-                ErrorNotification(_localizationService.GetResource("Admin.Orders.Shipments.NoShipmentsSelected"));
+                _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Orders.Shipments.NoShipmentsSelected"));
                 return RedirectToAction("ShipmentList");
             }
 
@@ -2643,7 +2646,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //ensure that we at least one shipment selected
             if (!shipments.Any())
             {
-                ErrorNotification(_localizationService.GetResource("Admin.Orders.Shipments.NoShipmentsSelected"));
+                _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Orders.Shipments.NoShipmentsSelected"));
                 return RedirectToAction("ShipmentList");
             }
 

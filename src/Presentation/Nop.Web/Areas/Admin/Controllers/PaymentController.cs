@@ -8,6 +8,7 @@ using Nop.Core.Plugins;
 using Nop.Services.Configuration;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
+using Nop.Services.Messages;
 using Nop.Services.Payments;
 using Nop.Services.Plugins;
 using Nop.Services.Security;
@@ -24,6 +25,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         private readonly ICountryService _countryService;
         private readonly ILocalizationService _localizationService;
+        private readonly INotificationService _notificationService;
         private readonly IPaymentModelFactory _paymentModelFactory;
         private readonly IPaymentService _paymentService;
         private readonly IPermissionService _permissionService;
@@ -37,6 +39,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public PaymentController(ICountryService countryService,
             ILocalizationService localizationService,
+            INotificationService notificationService,
             IPaymentModelFactory paymentModelFactory,
             IPaymentService paymentService,
             IPermissionService permissionService,
@@ -46,6 +49,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         {
             this._countryService = countryService;
             this._localizationService = localizationService;
+            this._notificationService = notificationService;
             this._paymentModelFactory = paymentModelFactory;
             this._paymentService = paymentService;
             this._permissionService = permissionService;
@@ -164,7 +168,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _paymentService.SaveRestictedCountryIds(pm, newCountryIds);
             }
 
-            SuccessNotification(_localizationService.GetResource("Admin.Configuration.Payment.MethodRestrictions.Updated"));
+            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Payment.MethodRestrictions.Updated"));
 
             //selected tab
             SaveSelectedTabName();

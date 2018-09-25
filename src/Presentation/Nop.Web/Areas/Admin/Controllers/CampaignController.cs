@@ -28,6 +28,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IEmailAccountService _emailAccountService;
         private readonly ILocalizationService _localizationService;
+        private readonly INotificationService _notificationService;
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
         private readonly IPermissionService _permissionService;
         private readonly IStoreContext _storeContext;
@@ -44,6 +45,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             IDateTimeHelper dateTimeHelper,
             IEmailAccountService emailAccountService,
             ILocalizationService localizationService,
+            INotificationService notificationService,
             INewsLetterSubscriptionService newsLetterSubscriptionService,
             IPermissionService permissionService,
             IStoreContext storeContext,
@@ -56,6 +58,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             this._dateTimeHelper = dateTimeHelper;
             this._emailAccountService = emailAccountService;
             this._localizationService = localizationService;
+            this._notificationService = notificationService;
             this._newsLetterSubscriptionService = newsLetterSubscriptionService;
             this._permissionService = permissionService;
             this._storeContext = storeContext;
@@ -136,7 +139,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _customerActivityService.InsertActivity("AddNewCampaign",
                     string.Format(_localizationService.GetResource("ActivityLog.AddNewCampaign"), campaign.Id), campaign);
 
-                SuccessNotification(_localizationService.GetResource("Admin.Promotions.Campaigns.Added"));
+                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Promotions.Campaigns.Added"));
 
                 return continueEditing ? RedirectToAction("Edit", new { id = campaign.Id }) : RedirectToAction("List");
             }
@@ -190,7 +193,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _customerActivityService.InsertActivity("EditCampaign",
                     string.Format(_localizationService.GetResource("ActivityLog.EditCampaign"), campaign.Id), campaign);
 
-                SuccessNotification(_localizationService.GetResource("Admin.Promotions.Campaigns.Updated"));
+                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Promotions.Campaigns.Updated"));
 
                 return continueEditing ? RedirectToAction("Edit", new { id = campaign.Id }) : RedirectToAction("List");
             }
@@ -220,7 +223,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //ensure that the entered email is valid
             if (!CommonHelper.IsValidEmail(model.TestEmail))
             {
-                ErrorNotification(_localizationService.GetResource("Admin.Common.WrongEmail"), false);
+                _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Common.WrongEmail"));
                 return View(model);
             }
 
@@ -240,13 +243,13 @@ namespace Nop.Web.Areas.Admin.Controllers
                     _campaignService.SendCampaign(campaign, emailAccount, model.TestEmail);
                 }
 
-                SuccessNotification(_localizationService.GetResource("Admin.Promotions.Campaigns.TestEmailSentToCustomers"), false);
+                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Promotions.Campaigns.TestEmailSentToCustomers"));
 
                 return View(model);
             }
             catch (Exception exc)
             {
-                ErrorNotification(exc, false);
+                _notificationService.ErrorNotification(exc);
             }
 
             //prepare model
@@ -282,13 +285,13 @@ namespace Nop.Web.Areas.Admin.Controllers
                     isActive: true);
                 var totalEmailsSent = _campaignService.SendCampaign(campaign, emailAccount, subscriptions);
 
-                SuccessNotification(string.Format(_localizationService.GetResource("Admin.Promotions.Campaigns.MassEmailSentToCustomers"), totalEmailsSent), false);
+                _notificationService.SuccessNotification(string.Format(_localizationService.GetResource("Admin.Promotions.Campaigns.MassEmailSentToCustomers"), totalEmailsSent));
 
                 return View(model);
             }
             catch (Exception exc)
             {
-                ErrorNotification(exc, false);
+                _notificationService.ErrorNotification(exc);
             }
 
             //prepare model
@@ -315,7 +318,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             _customerActivityService.InsertActivity("DeleteCampaign",
                 string.Format(_localizationService.GetResource("ActivityLog.DeleteCampaign"), campaign.Id), campaign);
 
-            SuccessNotification(_localizationService.GetResource("Admin.Promotions.Campaigns.Deleted"));
+            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Promotions.Campaigns.Deleted"));
 
             return RedirectToAction("List");
         }

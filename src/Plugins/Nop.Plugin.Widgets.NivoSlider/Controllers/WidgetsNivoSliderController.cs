@@ -6,6 +6,7 @@ using Nop.Plugin.Widgets.NivoSlider.Models;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Media;
+using Nop.Services.Messages;
 using Nop.Services.Security;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
@@ -15,24 +16,26 @@ namespace Nop.Plugin.Widgets.NivoSlider.Controllers
     [Area(AreaNames.Admin)]
     public class WidgetsNivoSliderController : BasePluginController
     {
-        private readonly IStoreContext _storeContext;
+        private readonly ILocalizationService _localizationService;
+        private readonly INotificationService _notificationService;
         private readonly IPermissionService _permissionService;
         private readonly IPictureService _pictureService;
         private readonly ISettingService _settingService;
-        private readonly ILocalizationService _localizationService;
+        private readonly IStoreContext _storeContext;
 
-        public WidgetsNivoSliderController(IStoreContext storeContext,
+        public WidgetsNivoSliderController(ILocalizationService localizationService,
+            INotificationService notificationService,
             IPermissionService permissionService, 
             IPictureService pictureService,
             ISettingService settingService,
-            ICacheManager cacheManager,
-            ILocalizationService localizationService)
+            IStoreContext storeContext)
         {
-            this._storeContext = storeContext;
+            this._localizationService = localizationService;
+            this._notificationService = notificationService;
             this._permissionService = permissionService;
             this._pictureService = pictureService;
             this._settingService = settingService;
-            this._localizationService = localizationService;
+            this._storeContext = storeContext;
         }
 
         public IActionResult Configure()
@@ -181,7 +184,7 @@ namespace Nop.Plugin.Widgets.NivoSlider.Controllers
                     _pictureService.DeletePicture(previousPicture);
             }
 
-            SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
+            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
             return Configure();
         }
     }

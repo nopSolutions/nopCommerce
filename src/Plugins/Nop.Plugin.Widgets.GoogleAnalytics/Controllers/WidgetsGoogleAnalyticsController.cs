@@ -3,6 +3,7 @@ using Nop.Core;
 using Nop.Plugin.Widgets.GoogleAnalytics.Models;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
+using Nop.Services.Messages;
 using Nop.Services.Security;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
@@ -16,25 +17,29 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
     public class WidgetsGoogleAnalyticsController : BasePluginController
     {
         #region Fields
-        
-        private readonly IStoreContext _storeContext;
-        private readonly ISettingService _settingService;
+
         private readonly ILocalizationService _localizationService;
+        private readonly INotificationService _notificationService;
         private readonly IPermissionService _permissionService;
+        private readonly ISettingService _settingService;
+        private readonly IStoreContext _storeContext;
 
         #endregion
 
         #region Ctor
 
-        public WidgetsGoogleAnalyticsController(IStoreContext storeContext, 
-            ISettingService settingService, 
+        public WidgetsGoogleAnalyticsController(
             ILocalizationService localizationService,
-            IPermissionService permissionService)
+            INotificationService notificationService,
+            IPermissionService permissionService,
+            ISettingService settingService,
+            IStoreContext storeContext)
         {
-            this._storeContext = storeContext;
-            this._settingService = settingService;
             this._localizationService = localizationService;
+            this._notificationService = notificationService;
             this._permissionService = permissionService;
+            this._settingService = settingService;
+            this._storeContext = storeContext;
         }
 
         #endregion
@@ -104,7 +109,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
             //now clear settings cache
             _settingService.ClearCache();
 
-            SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
+            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
 
             return Configure();
         }
