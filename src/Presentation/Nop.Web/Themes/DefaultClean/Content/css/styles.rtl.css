@@ -1902,16 +1902,16 @@ label, label + * {
 }
 .overview .free-shipping,
 .variant-overview .free-shipping {
-    display: none;
+    display: inline-block;
     margin: 0 0 10px;
     background: url('../images/shipping.png') right center no-repeat;
     padding: 2px 28px 2px 0;
     font-weight: bold;
     color: #444;
 }
-.overview .free-shipping.visible,
-.variant-overview .free-shipping.visible {
-    display: inline-block;
+.overview .free-shipping.invisible,
+.variant-overview .free-shipping.invisible {
+    display: none;
 }
 .overview .delivery-date,
 .variant-overview .delivery-date {
