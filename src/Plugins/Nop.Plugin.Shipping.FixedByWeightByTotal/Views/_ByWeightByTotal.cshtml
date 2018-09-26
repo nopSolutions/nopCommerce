@@ -29,61 +29,61 @@
 </script>
 
 <form asp-controller="FixedByWeightByTotal" asp-action="Configure" method="post" id="shipping-byweight-form">
-    <div class="content advanced-setting">
+    <div class="panel-group advanced-setting">
         <div class="form-horizontal">
-            <div class="panel-group">
+            
                 <div class="panel panel-default panel-search">
                     <div class="panel-body">
                         <div class="row">
                             <div class="col-md-5">
                                 <div class="form-group">
                                     <div class="col-md-4">
-                                        <nop-label asp-for="SearchStoreId" />
+                                        <nop-label asp-for="SearchStoreId"/>
                                     </div>
                                     <div class="col-md-8">
-                                        <nop-select asp-for="SearchStoreId" asp-items="Model.AvailableStores" />
-                                    </div>
-                                </div>
-                                <div class="form-group" )>
-                                    <div class="col-md-4">
-                                        <nop-label asp-for="SearchWarehouseId" />
-                                    </div>
-                                    <div class="col-md-8">
-                                        <nop-select asp-for="SearchWarehouseId" asp-items="Model.AvailableWarehouses" />
+                                        <nop-select asp-for="SearchStoreId" asp-items="Model.AvailableStores"/>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <div class="col-md-4">
-                                        <nop-label asp-for="SearchShippingMethodId" />
+                                        <nop-label asp-for="SearchWarehouseId"/>
                                     </div>
                                     <div class="col-md-8">
-                                        <nop-select asp-for="SearchShippingMethodId" asp-items="Model.AvailableShippingMethods" />
+                                        <nop-select asp-for="SearchWarehouseId" asp-items="Model.AvailableWarehouses"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="SearchShippingMethodId"/>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-select asp-for="SearchShippingMethodId" asp-items="Model.AvailableShippingMethods"/>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-7">
-                                <div class="form-group" )>
+                                <div class="form-group">
                                     <div class="col-md-4">
-                                        <nop-label asp-for="SearchCountryId" />
+                                        <nop-label asp-for="SearchCountryId"/>
                                     </div>
                                     <div class="col-md-8">
-                                        <nop-select asp-for="SearchCountryId" asp-items="Model.AvailableCountries" />
+                                        <nop-select asp-for="SearchCountryId" asp-items="Model.AvailableCountries"/>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <div class="col-md-4">
-                                        <nop-label asp-for="SearchStateProvinceId" />
+                                        <nop-label asp-for="SearchStateProvinceId"/>
                                     </div>
                                     <div class="col-md-8">
-                                        <nop-select asp-for="SearchStateProvinceId" asp-items="Model.AvailableStates" />
+                                        <nop-select asp-for="SearchStateProvinceId" asp-items="Model.AvailableStates"/>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <div class="col-md-4">
-                                        <nop-label asp-for="SearchZip" />
+                                        <nop-label asp-for="SearchZip"/>
                                     </div>
                                     <div class="col-md-8">
-                                        <nop-editor asp-for="SearchZip" />
+                                        <nop-editor asp-for="SearchZip"/>
                                     </div>
                                 </div>
                             </div>
@@ -215,19 +215,19 @@
                     </div>
                     <div class="panel-footer">
                         <button type="submit" id="btnAddNewRecord" class="btn btn-primary"
-                                onclick="javascript:OpenWindow('@(Url.Action("AddRateByWeightByTotalPopup", "FixedByWeightByTotal", new { btnId = "btnRefresh", formId = "shipping-byweight-form" }))', 800, 800, true); return false;">
+                                onclick="javascript:OpenWindow('@(Url.Action("AddRateByWeightByTotalPopup", "FixedByWeightByTotal", new {btnId = "btnRefresh", formId = "shipping-byweight-form"}))', 800, 800, true);return false;">
                             @T("Plugins.Shipping.FixedByWeightByTotal.AddRecord")
                         </button>
-                        <input type="submit" id="btnRefresh" class="btn btn-default" style="display: none" />
+                        <input type="submit" id="btnRefresh" class="btn btn-default" style="display: none"/>
                     </div>
                 </div>
                 <div class="panel panel-advanced-setting">
                     <div class="form-group">
                         <div class="col-md-3">
-                            <nop-label asp-for="LimitMethodsToCreated" />
+                            <nop-label asp-for="LimitMethodsToCreated"/>
                         </div>
                         <div class="col-md-9">
-                            <nop-editor asp-for="LimitMethodsToCreated" />
+                            <nop-editor asp-for="LimitMethodsToCreated"/>
                             <span asp-validation-for="LimitMethodsToCreated"></span>
                         </div>
                     </div>
@@ -236,7 +236,7 @@
                             &nbsp;
                         </div>
                         <div class="col-md-9">
-                            <input type="button" id="savegeneralsettings" class="btn btn-primary" value="@T("Admin.Common.Save")" />
+                            <input type="button" id="savegeneralsettings" class="btn btn-primary" value="@T("Admin.Common.Save")"/>
                             <script>
                                 $(document)
                                     .ready(function() {
@@ -264,7 +264,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+
         </div>
     </div>
     <script>
