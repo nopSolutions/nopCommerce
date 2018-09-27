@@ -375,12 +375,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = vendorNotes.PaginationByRequestModel(searchModel).Select(note =>
                 {
                     //fill in model values from the entity        
-                    var vendorNoteModel = new VendorNoteModel
-                    {
-                        Id = note.Id,
-                        VendorId = note.VendorId
-                    };
-
+                    var vendorNoteModel = note.ToModel<VendorNoteModel>();
+                    
                     //convert dates to the user time
                     vendorNoteModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(note.CreatedOnUtc, DateTimeKind.Utc);
 

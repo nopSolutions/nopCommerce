@@ -1455,13 +1455,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = settings.PaginationByRequestModel(searchModel).Select(setting =>
                 {
                     //fill in model values from the entity
-                    var settingModel = new SettingModel
-                    {
-                        Id = setting.Id,
-                        Name = setting.Name,
-                        Value = setting.Value,
-                        StoreId = setting.StoreId
-                    };
+                    var settingModel = setting.ToModel<SettingModel>();
 
                     //fill in additional values (not existing in the entity)
                     settingModel.Store = setting.StoreId > 0

@@ -8,6 +8,7 @@ using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Orders;
 using Nop.Web.Framework.Extensions;
 
@@ -113,16 +114,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = recurringPayments.Select(recurringPayment =>
                 {
                     //fill in model values from the entity
-                    var recurringPaymentModel = new RecurringPaymentModel
-                    {
-                        Id = recurringPayment.Id,
-                        CycleLength = recurringPayment.CycleLength,
-                        CyclePeriodId = recurringPayment.CyclePeriodId,
-                        TotalCycles = recurringPayment.TotalCycles,
-                        IsActive = recurringPayment.IsActive,
-                        CyclesRemaining = recurringPayment.CyclesRemaining,
-                        CustomerId = recurringPayment.InitialOrder.CustomerId
-                    };
+                    var recurringPaymentModel = recurringPayment.ToModel<RecurringPaymentModel>();                    
 
                     //convert dates to the user time
                     if (recurringPayment.NextPaymentDate.HasValue)
@@ -161,18 +153,10 @@ namespace Nop.Web.Areas.Admin.Factories
                 return model;
 
             //fill in model values from the entity
-            model = model ?? new RecurringPaymentModel
+            if (model == null)
             {
-                Id = recurringPayment.Id,
-                CycleLength = recurringPayment.CycleLength,
-                CyclePeriodId = recurringPayment.CyclePeriodId,
-                TotalCycles = recurringPayment.TotalCycles,
-                IsActive = recurringPayment.IsActive,
-                CyclesRemaining = recurringPayment.CyclesRemaining,
-                InitialOrderId = recurringPayment.InitialOrder.Id,
-                CustomerId = recurringPayment.InitialOrder.CustomerId,
-                LastPaymentFailed = recurringPayment.LastPaymentFailed
-            };
+                model = recurringPayment.ToModel<RecurringPaymentModel>();
+            }
 
             //convert dates to the user time
             if (recurringPayment.NextPaymentDate.HasValue)
@@ -215,12 +199,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = recurringPayments.PaginationByRequestModel(searchModel).Select(historyEntry =>
                 {
                     //fill in model values from the entity
-                    var historyModel = new RecurringPaymentHistoryModel
-                    {
-                        Id = historyEntry.Id,
-                        OrderId = historyEntry.OrderId,
-                        RecurringPaymentId = historyEntry.RecurringPaymentId
-                    };
+                    var historyModel = historyEntry.ToModel<RecurringPaymentHistoryModel>();
 
                     //convert dates to the user time
                     historyModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(historyEntry.CreatedOnUtc, DateTimeKind.Utc);

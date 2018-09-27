@@ -112,14 +112,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = returnRequests.Select(returnRequest =>
                 {
                     //fill in model values from the entity
-                    var returnRequestModel = new ReturnRequestModel
-                    {
-                        Id = returnRequest.Id,
-                        CustomNumber = returnRequest.CustomNumber,
-                        CustomerId = returnRequest.CustomerId,
-                        Quantity = returnRequest.Quantity
-                    };
-
+                    var returnRequestModel = returnRequest.ToModel<ReturnRequestModel>();
+                    
                     //convert dates to the user time
                     returnRequestModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(returnRequest.CreatedOnUtc, DateTimeKind.Utc);
 

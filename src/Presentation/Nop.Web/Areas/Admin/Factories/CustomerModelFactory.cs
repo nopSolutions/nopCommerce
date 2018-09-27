@@ -599,19 +599,15 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = customers.Select(customer =>
                 {
                     //fill in model values from the entity
-                    var customerModel = new CustomerModel
-                    {
-                        Id = customer.Id,
-                        Email = customer.IsRegistered() ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest"),
-                        Username = customer.Username,
-                        FullName = _customerService.GetCustomerFullName(customer),
-                        Company = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.CompanyAttribute),
-                        Phone = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.PhoneAttribute),
-                        ZipPostalCode = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.ZipPostalCodeAttribute),
-                        Active = customer.Active
-                    };
+                    var customerModel = customer.ToModel<CustomerModel>();                    
 
                     //convert dates to the user time
+                    customerModel.Email = customer.IsRegistered() ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
+                    customerModel.FullName = _customerService.GetCustomerFullName(customer);
+                    customerModel.Company = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.CompanyAttribute);
+                    customerModel.Phone = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.PhoneAttribute);
+                    customerModel.ZipPostalCode = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.ZipPostalCodeAttribute);
+
                     customerModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(customer.CreatedOnUtc, DateTimeKind.Utc);
                     customerModel.LastActivityDate = _dateTimeHelper.ConvertToUserTime(customer.LastActivityDateUtc, DateTimeKind.Utc);
 
@@ -812,11 +808,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = rewardPoints.Select(historyEntry =>
                 {
                     //fill in model values from the entity        
-                    var rewardPointsHistoryModel = new CustomerRewardPointsModel
-                    {
-                        Points = historyEntry.Points,
-                        Message = historyEntry.Message
-                    };
+                    var rewardPointsHistoryModel = historyEntry.ToModel<CustomerRewardPointsModel>();                    
 
                     //convert dates to the user time
                     var activatingDate = _dateTimeHelper.ConvertToUserTime(historyEntry.CreatedOnUtc, DateTimeKind.Utc);
@@ -930,22 +922,17 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = orders.Select(order =>
                 {
                     //fill in model values from the entity
-                    var orderModel = new CustomerOrderModel
-                    {
-                        Id = order.Id,
-                        OrderStatus = _localizationService.GetLocalizedEnum(order.OrderStatus),
-                        OrderStatusId = order.OrderStatusId,
-                        PaymentStatus = _localizationService.GetLocalizedEnum(order.PaymentStatus),
-                        ShippingStatus = _localizationService.GetLocalizedEnum(order.ShippingStatus),
-                        OrderTotal = _priceFormatter.FormatPrice(order.OrderTotal, true, false),
-                        CustomOrderNumber = order.CustomOrderNumber
-                    };
+                    var orderModel = order.ToModel<CustomerOrderModel>();
 
                     //convert dates to the user time
                     orderModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc);
-
+                    
                     //fill in additional values (not existing in the entity)
                     orderModel.StoreName = _storeService.GetStoreById(order.StoreId)?.Name ?? "Unknown";
+                    orderModel.OrderStatus = _localizationService.GetLocalizedEnum(order.OrderStatus);
+                    orderModel.PaymentStatus = _localizationService.GetLocalizedEnum(order.PaymentStatus);
+                    orderModel.ShippingStatus = _localizationService.GetLocalizedEnum(order.ShippingStatus);
+                    orderModel.OrderTotal = _priceFormatter.FormatPrice(order.OrderTotal, true, false);
 
                     return orderModel;
                 }),
@@ -979,24 +966,15 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = shoppingCart.PaginationByRequestModel(searchModel).Select(item =>
                 {
                     //fill in model values from the entity
-                    var shoppingCartItemModel = new ShoppingCartItemModel
-                    {
-                        Id = item.Id,
-                        ProductId = item.ProductId,
-                        Quantity = item.Quantity,
-                        ProductName = item.Product.Name,
-                        AttributeInfo = _productAttributeFormatter.FormatAttributes(item.Product, item.AttributesXml),
-                        UnitPrice = _priceFormatter
-                            .FormatPrice(_taxService.GetProductPrice(item.Product, _priceCalculationService.GetUnitPrice(item), out var _)),
-                        Total = _priceFormatter
-                            .FormatPrice(_taxService.GetProductPrice(item.Product, _priceCalculationService.GetSubTotal(item), out _))
-                    };
-
-                    //convert dates to the user time
-                    shoppingCartItemModel.UpdatedOn = _dateTimeHelper.ConvertToUserTime(item.UpdatedOnUtc, DateTimeKind.Utc);
+                    var shoppingCartItemModel = item.ToModel<ShoppingCartItemModel>(); 
 
                     //fill in additional values (not existing in the entity)
-                    shoppingCartItemModel.Store = _storeService.GetStoreById(item.StoreId)?.Name ?? "Unknown";
+                    shoppingCartItemModel.Store = _storeService.GetStoreById(item.StoreId)?.Name ?? "Unknown";                    
+                    shoppingCartItemModel.AttributeInfo = _productAttributeFormatter.FormatAttributes(item.Product, item.AttributesXml);
+                    shoppingCartItemModel.UnitPrice = _priceFormatter.FormatPrice(_taxService.GetProductPrice(item.Product, _priceCalculationService.GetUnitPrice(item), out var _));
+                    shoppingCartItemModel.Total = _priceFormatter.FormatPrice(_taxService.GetProductPrice(item.Product, _priceCalculationService.GetSubTotal(item), out _));
+                    //convert dates to the user time
+                    shoppingCartItemModel.UpdatedOn = _dateTimeHelper.ConvertToUserTime(item.UpdatedOnUtc, DateTimeKind.Utc);
 
                     return shoppingCartItemModel;
                 }),
@@ -1030,14 +1008,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = activityLog.Select(logItem =>
                 {
                     //fill in model values from the entity
-                    var customerActivityLogModel = new CustomerActivityLogModel
-                    {
-                        Id = logItem.Id,
-                        ActivityLogTypeName = logItem.ActivityLogType.Name,
-                        Comment = logItem.Comment,
-                        IpAddress = logItem.IpAddress
-                    };
+                    var customerActivityLogModel = logItem.ToModel<CustomerActivityLogModel>();
 
+                    //fill in additional values (not existing in the entity)
                     //convert dates to the user time
                     customerActivityLogModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(logItem.CreatedOnUtc, DateTimeKind.Utc);
 
@@ -1073,19 +1046,15 @@ namespace Nop.Web.Areas.Admin.Factories
             {
                 Data = subscriptions.Select(subscription =>
                 {
-                    //fill in model values from the entity
-                    var subscriptionModel = new CustomerBackInStockSubscriptionModel
-                    {
-                        Id = subscription.Id,
-                        ProductId = subscription.ProductId
-                    };
 
+                    //fill in model values from the entity
+                    var subscriptionModel = subscription.ToModel<CustomerBackInStockSubscriptionModel>();
+                    
                     //convert dates to the user time
                     subscriptionModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(subscription.CreatedOnUtc, DateTimeKind.Utc);
 
                     //fill in additional values (not existing in the entity)
                     subscriptionModel.StoreName = _storeService.GetStoreById(subscription.StoreId)?.Name ?? "Unknown";
-                    subscriptionModel.ProductName = subscription.Product?.Name ?? "Unknown";
 
                     return subscriptionModel;
                 }),
@@ -1135,10 +1104,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = customers.Select(customer =>
                 {
                     //fill in model values from the entity
-                    var customerModel = new OnlineCustomerModel
-                    {
-                        Id = customer.Id
-                    };
+                    var customerModel = customer.ToModel<OnlineCustomerModel>();                    
 
                     //convert dates to the user time
                     customerModel.LastActivityDate = _dateTimeHelper.ConvertToUserTime(customer.LastActivityDateUtc, DateTimeKind.Utc);
@@ -1218,16 +1184,13 @@ namespace Nop.Web.Areas.Admin.Factories
                     //fill in model values from the entity
                     var customer = _customerService.GetCustomerById(log.CustomerId);
 
-                    var requestModel = new GdprLogModel
-                    {
-                        Id = log.Id,
-                        CustomerInfo = customer != null && !customer.Deleted && !String.IsNullOrEmpty(customer.Email) ?
-                            customer.Email :
-                            log.CustomerInfo,
-                        RequestType = _localizationService.GetLocalizedEnum(log.RequestType),
-                        RequestDetails = log.RequestDetails,
-                        CreatedOn = _dateTimeHelper.ConvertToUserTime(log.CreatedOnUtc, DateTimeKind.Utc)
-                    };
+                    var requestModel = log.ToModel<GdprLogModel>();
+
+                    //fill in additional values (not existing in the entity)
+                    requestModel.CustomerInfo = customer != null && !customer.Deleted && !String.IsNullOrEmpty(customer.Email) ? customer.Email : log.CustomerInfo;
+                    requestModel.RequestType = _localizationService.GetLocalizedEnum(log.RequestType);
+                    requestModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(log.CreatedOnUtc, DateTimeKind.Utc);
+
                     return requestModel;
                 }),
                 Total = gdprLog.TotalCount
