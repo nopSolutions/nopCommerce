@@ -107,15 +107,13 @@ namespace Nop.Services.Orders
             var allDiscounts = _discountService.GetAllDiscountsForCaching(DiscountType.AssignedToOrderSubTotal);
             var allowedDiscounts = new List<DiscountForCaching>();
             if (allDiscounts != null)
-            {
                 foreach (var discount in allDiscounts)
-                    if (!_discountService.ContainsDiscount(allowedDiscounts, discount) &&
-                        _discountService.ValidateDiscount(discount, customer).IsValid)
+                    if (_discountService.ValidateDiscount(discount, customer).IsValid &&
+                        !_discountService.ContainsDiscount(allowedDiscounts, discount))
                     {
                         allowedDiscounts.Add(discount);
                     }
-            }
-                
+
             appliedDiscounts = _discountService.GetPreferredDiscount(allowedDiscounts, orderSubTotal, out discountAmount);
 
             if (discountAmount < decimal.Zero)
@@ -142,8 +140,8 @@ namespace Nop.Services.Orders
             var allowedDiscounts = new List<DiscountForCaching>();
             if (allDiscounts != null)
                 foreach (var discount in allDiscounts)
-                    if (!_discountService.ContainsDiscount(allowedDiscounts, discount) &&
-                        _discountService.ValidateDiscount(discount, customer).IsValid)
+                    if (_discountService.ValidateDiscount(discount, customer).IsValid &&
+                        !_discountService.ContainsDiscount(allowedDiscounts, discount))
                     {
                         allowedDiscounts.Add(discount);
                     }
@@ -177,8 +175,8 @@ namespace Nop.Services.Orders
             var allowedDiscounts = new List<DiscountForCaching>();
             if (allDiscounts != null)
                 foreach (var discount in allDiscounts)
-                    if (!_discountService.ContainsDiscount(allowedDiscounts, discount) &&
-                        _discountService.ValidateDiscount(discount, customer).IsValid)
+                    if (_discountService.ValidateDiscount(discount, customer).IsValid &&
+                        !_discountService.ContainsDiscount(allowedDiscounts, discount))
                     {
                         allowedDiscounts.Add(discount);
                     }

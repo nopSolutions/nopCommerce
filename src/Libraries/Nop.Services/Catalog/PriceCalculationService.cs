@@ -118,8 +118,8 @@ namespace Nop.Services.Catalog
             //we use this property ("HasDiscountsApplied") for performance optimization to avoid unnecessary database calls
             foreach (var discount in product.AppliedDiscounts)
             {
-                if (discount.DiscountType == DiscountType.AssignedToSkus &&
-                    _discountService.ValidateDiscount(discount, customer).IsValid)
+                if (_discountService.ValidateDiscount(discount, customer).IsValid &&
+                    discount.DiscountType == DiscountType.AssignedToSkus)
                     allowedDiscounts.Add(_discountService.MapDiscount(discount));
             }
 
@@ -165,8 +165,8 @@ namespace Nop.Services.Catalog
                     if (!discountCategoryIds.Contains(categoryId)) 
                         continue;
 
-                    if (!_discountService.ContainsDiscount(allowedDiscounts, discount) &&
-                        _discountService.ValidateDiscount(discount, customer).IsValid)
+                    if (_discountService.ValidateDiscount(discount, customer).IsValid &&
+                        !_discountService.ContainsDiscount(allowedDiscounts, discount))
                         allowedDiscounts.Add(discount);
                 }
             }
@@ -212,8 +212,8 @@ namespace Nop.Services.Catalog
                     if (!discountManufacturerIds.Contains(manufacturerId)) 
                         continue;
 
-                    if (!_discountService.ContainsDiscount(allowedDiscounts, discount) &&
-                        _discountService.ValidateDiscount(discount, customer).IsValid)
+                    if (_discountService.ValidateDiscount(discount, customer).IsValid &&
+                        !_discountService.ContainsDiscount(allowedDiscounts, discount))
                         allowedDiscounts.Add(discount);
                 }
             }
