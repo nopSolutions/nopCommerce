@@ -135,13 +135,6 @@
                                     return false;
                                 });
 
-                                $("#@Html.IdFor(model => model.SearchCategoryName)").keydown(function(event) {
-                                    if (event.keyCode == 13) {
-                                        $("#search-categories").click();
-                                        return false;
-                                    }
-                                });
-
                                 //wire up checkboxes
                                 $('#mastercheckbox').click(function() {
                                     $('.checkboxGroups').attr('checked', $(this).is(':checked')).change();

@@ -7,6 +7,7 @@ using Nop.Services.Blogs;
 using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
+using Nop.Services.Messages;
 using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Stores;
@@ -27,6 +28,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IEventPublisher _eventPublisher;
         private readonly ILocalizationService _localizationService;
+        private readonly INotificationService _notificationService;
         private readonly IPermissionService _permissionService;
         private readonly IStoreMappingService _storeMappingService;
         private readonly IStoreService _storeService;
@@ -41,6 +43,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             ICustomerActivityService customerActivityService,
             IEventPublisher eventPublisher,
             ILocalizationService localizationService,
+            INotificationService notificationService,
             IPermissionService permissionService,
             IStoreMappingService storeMappingService,
             IStoreService storeService,
@@ -51,6 +54,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             this._customerActivityService = customerActivityService;
             this._eventPublisher = eventPublisher;
             this._localizationService = localizationService;
+            this._notificationService = notificationService;
             this._permissionService = permissionService;
             this._storeMappingService = storeMappingService;
             this._storeService = storeService;
@@ -155,7 +159,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //Stores
                 SaveStoreMappings(blogPost, model);
 
-                SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Blog.BlogPosts.Added"));
+                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Blog.BlogPosts.Added"));
 
                 if (!continueEditing)
                     return RedirectToAction("List");
@@ -218,7 +222,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //Stores
                 SaveStoreMappings(blogPost, model);
 
-                SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Blog.BlogPosts.Updated"));
+                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Blog.BlogPosts.Updated"));
 
                 if (!continueEditing)
                     return RedirectToAction("List");
@@ -253,7 +257,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             _customerActivityService.InsertActivity("DeleteBlogPost",
                 string.Format(_localizationService.GetResource("ActivityLog.DeleteBlogPost"), blogPost.Id), blogPost);
 
-            SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Blog.BlogPosts.Deleted"));
+            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Blog.BlogPosts.Deleted"));
 
             return RedirectToAction("List");
         }

@@ -7,6 +7,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
+using Nop.Services.Messages;
 using Nop.Services.Orders;
 using Nop.Services.Security;
 using Nop.Services.Stores;
@@ -30,6 +31,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly ICustomerActivityService _customerActivityService;
         private readonly ILocalizationService _localizationService;
         private readonly ILocalizedEntityService _localizedEntityService;
+        private readonly INotificationService _notificationService;
         private readonly IMeasureService _measureService;
         private readonly IPermissionService _permissionService;
         private readonly IStoreMappingService _storeMappingService;
@@ -48,6 +50,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             ICustomerActivityService customerActivityService,
             ILocalizationService localizationService,
             ILocalizedEntityService localizedEntityService,
+            INotificationService notificationService,
             IMeasureService measureService,
             IPermissionService permissionService,
             IStoreMappingService storeMappingService,
@@ -62,6 +65,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             this._customerActivityService = customerActivityService;
             this._localizationService = localizationService;
             this._localizedEntityService = localizedEntityService;
+            this._notificationService = notificationService;
             this._measureService = measureService;
             this._permissionService = permissionService;
             this._storeMappingService = storeMappingService;
@@ -245,7 +249,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _customerActivityService.InsertActivity("AddNewCheckoutAttribute",
                     string.Format(_localizationService.GetResource("ActivityLog.AddNewCheckoutAttribute"), checkoutAttribute.Name), checkoutAttribute);
 
-                SuccessNotification(_localizationService.GetResource("Admin.Catalog.Attributes.CheckoutAttributes.Added"));
+                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Catalog.Attributes.CheckoutAttributes.Added"));
 
                 if (!continueEditing)
                     return RedirectToAction("List");
@@ -306,7 +310,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _customerActivityService.InsertActivity("EditCheckoutAttribute",
                     string.Format(_localizationService.GetResource("ActivityLog.EditCheckoutAttribute"), checkoutAttribute.Name), checkoutAttribute);
 
-                SuccessNotification(_localizationService.GetResource("Admin.Catalog.Attributes.CheckoutAttributes.Updated"));
+                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Catalog.Attributes.CheckoutAttributes.Updated"));
 
                 if (!continueEditing)
                     return RedirectToAction("List");
@@ -341,7 +345,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             _customerActivityService.InsertActivity("DeleteCheckoutAttribute",
                 string.Format(_localizationService.GetResource("ActivityLog.DeleteCheckoutAttribute"), checkoutAttribute.Name), checkoutAttribute);
 
-            SuccessNotification(_localizationService.GetResource("Admin.Catalog.Attributes.CheckoutAttributes.Deleted"));
+            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Catalog.Attributes.CheckoutAttributes.Deleted"));
 
             return RedirectToAction("List");
         }

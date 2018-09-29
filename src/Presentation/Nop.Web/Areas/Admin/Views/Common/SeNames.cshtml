@@ -160,13 +160,6 @@
             return false;
         });
 
-        $("#@Html.IdFor(model => model.SeName)").keydown(function(event) {
-            if (event.keyCode == 13) {
-                $("#search-senames").click();
-                return false;
-            }
-        });
-
         //"delete selected" button
         $("#delete-selected-action-confirmation-submit-button").bind("click", function () {
             var postData = {

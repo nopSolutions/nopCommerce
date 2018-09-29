@@ -8,6 +8,7 @@ using Nop.Services.Configuration;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
+using Nop.Services.Messages;
 using Nop.Services.Security;
 using Nop.Services.Stores;
 using Nop.Web.Areas.Admin.Factories;
@@ -28,6 +29,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly ICustomerActivityService _customerActivityService;
         private readonly ILocalizationService _localizationService;
         private readonly ILocalizedEntityService _localizedEntityService;
+        private readonly INotificationService _notificationService;
         private readonly IPermissionService _permissionService;
         private readonly ISettingService _settingService;
         private readonly IStoreMappingService _storeMappingService;
@@ -43,6 +45,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             ICustomerActivityService customerActivityService,
             ILocalizationService localizationService,
             ILocalizedEntityService localizedEntityService,
+            INotificationService notificationService,
             IPermissionService permissionService,
             ISettingService settingService,
             IStoreMappingService storeMappingService,
@@ -54,6 +57,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             this._customerActivityService = customerActivityService;
             this._localizationService = localizationService;
             this._localizedEntityService = localizedEntityService;
+            this._notificationService = notificationService;
             this._permissionService = permissionService;
             this._settingService = settingService;
             this._storeMappingService = storeMappingService;
@@ -224,7 +228,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //stores
                 SaveStoreMappings(currency, model);
 
-                SuccessNotification(_localizationService.GetResource("Admin.Configuration.Currencies.Added"));
+                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Currencies.Added"));
 
                 if (!continueEditing)
                     return RedirectToAction("List");
@@ -272,7 +276,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 var allCurrencies = _currencyService.GetAllCurrencies();
                 if (allCurrencies.Count == 1 && allCurrencies[0].Id == currency.Id && !model.Published)
                 {
-                    ErrorNotification(_localizationService.GetResource("Admin.Configuration.Currencies.PublishedCurrencyRequired"));
+                    _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Configuration.Currencies.PublishedCurrencyRequired"));
                     return RedirectToAction("Edit", new { id = currency.Id });
                 }
 
@@ -290,7 +294,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //stores
                 SaveStoreMappings(currency, model);
 
-                SuccessNotification(_localizationService.GetResource("Admin.Configuration.Currencies.Updated"));
+                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Currencies.Updated"));
 
                 if (!continueEditing)
                     return RedirectToAction("List");
@@ -328,7 +332,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 var allCurrencies = _currencyService.GetAllCurrencies(loadCacheableCopy: false);
                 if (allCurrencies.Count == 1 && allCurrencies[0].Id == currency.Id)
                 {
-                    ErrorNotification(_localizationService.GetResource("Admin.Configuration.Currencies.PublishedCurrencyRequired"));
+                    _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Configuration.Currencies.PublishedCurrencyRequired"));
                     return RedirectToAction("Edit", new { id = currency.Id });
                 }
 
@@ -338,13 +342,13 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _customerActivityService.InsertActivity("DeleteCurrency",
                     string.Format(_localizationService.GetResource("ActivityLog.DeleteCurrency"), currency.Id), currency);
 
-                SuccessNotification(_localizationService.GetResource("Admin.Configuration.Currencies.Deleted"));
+                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Currencies.Deleted"));
 
                 return RedirectToAction("List");
             }
             catch (Exception exc)
             {
-                ErrorNotification(exc);
+                _notificationService.ErrorNotification(exc);
                 return RedirectToAction("Edit", new { id = currency.Id });
             }
         }

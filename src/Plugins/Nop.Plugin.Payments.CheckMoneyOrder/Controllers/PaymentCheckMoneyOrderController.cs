@@ -3,6 +3,7 @@ using Nop.Core;
 using Nop.Plugin.Payments.CheckMoneyOrder.Models;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
+using Nop.Services.Messages;
 using Nop.Services.Security;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
@@ -18,6 +19,7 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder.Controllers
 
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
+        private readonly INotificationService _notificationService;
         private readonly IPermissionService _permissionService;
         private readonly ISettingService _settingService;
         private readonly IStoreContext _storeContext;
@@ -28,12 +30,14 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder.Controllers
 
         public PaymentCheckMoneyOrderController(ILanguageService languageService,
             ILocalizationService localizationService,
+            INotificationService notificationService,
             IPermissionService permissionService,
             ISettingService settingService,
             IStoreContext storeContext)
         {
             this._languageService = languageService;
             this._localizationService = localizationService;
+            this._notificationService = notificationService;
             this._permissionService = permissionService;
             this._settingService = settingService;
             this._storeContext = storeContext;
@@ -117,7 +121,7 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder.Controllers
                     x => x.DescriptionText, localized.LanguageId, localized.DescriptionText);
             }
 
-            SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
+            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
 
             return Configure();
         }

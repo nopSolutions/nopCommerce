@@ -61,6 +61,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
+        private readonly INotificationService _notificationService;
         private readonly IPermissionService _permissionService;
         private readonly IQueuedEmailService _queuedEmailService;
         private readonly IRewardPointService _rewardPointService;
@@ -96,6 +97,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
             INewsLetterSubscriptionService newsLetterSubscriptionService,
+            INotificationService notificationService,
             IPermissionService permissionService,
             IQueuedEmailService queuedEmailService,
             IRewardPointService rewardPointService,
@@ -127,6 +129,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             this._genericAttributeService = genericAttributeService;
             this._localizationService = localizationService;
             this._newsLetterSubscriptionService = newsLetterSubscriptionService;
+            this._notificationService = notificationService;
             this._permissionService = permissionService;
             this._queuedEmailService = queuedEmailService;
             this._rewardPointService = rewardPointService;
@@ -314,7 +317,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!string.IsNullOrEmpty(customerRolesError))
             {
                 ModelState.AddModelError(string.Empty, customerRolesError);
-                ErrorNotification(customerRolesError, false);
+                _notificationService.ErrorNotification(customerRolesError);
             }
 
             // Ensure that valid email address is entered if Registered role is checked to avoid registered customers with empty email address
@@ -322,7 +325,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 !CommonHelper.IsValidEmail(model.Email))
             {
                 ModelState.AddModelError(string.Empty, _localizationService.GetResource("Admin.Customers.Customers.ValidEmailRequiredRegisteredRole"));
-                ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.ValidEmailRequiredRegisteredRole"), false);
+
+                _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.ValidEmailRequiredRegisteredRole"));
             }
 
             //custom customer attributes
@@ -429,7 +433,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     if (!changePassResult.Success)
                     {
                         foreach (var changePassError in changePassResult.Errors)
-                            ErrorNotification(changePassError);
+                            _notificationService.ErrorNotification(changePassError);
                     }
                 }
 
@@ -451,7 +455,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 {
                     customer.VendorId = 0;
                     _customerService.UpdateCustomer(customer);
-                    ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.AdminCouldNotbeVendor"));
+
+                    _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.AdminCouldNotbeVendor"));
                 }
 
                 //ensure that a customer in the Vendors role has a vendor account associated.
@@ -465,14 +470,14 @@ namespace Nop.Web.Areas.Admin.Controllers
                     customer.RemoveCustomerRoleMapping(
                         customer.CustomerCustomerRoleMappings.FirstOrDefault(mapping => mapping.CustomerRoleId == vendorRole.Id));
                     _customerService.UpdateCustomer(customer);
-                    ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.CannotBeInVendoRoleWithoutVendorAssociated"));
+
+                    _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.CannotBeInVendoRoleWithoutVendorAssociated"));
                 }
 
                 //activity log
                 _customerActivityService.InsertActivity("AddNewCustomer",
                     string.Format(_localizationService.GetResource("ActivityLog.AddNewCustomer"), customer.Id), customer);
-
-                SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.Added"));
+                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.Added"));
 
                 if (!continueEditing)
                     return RedirectToAction("List");
@@ -528,7 +533,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!string.IsNullOrEmpty(customerRolesError))
             {
                 ModelState.AddModelError(string.Empty, customerRolesError);
-                ErrorNotification(customerRolesError, false);
+                _notificationService.ErrorNotification(customerRolesError);
             }
 
             // Ensure that valid email address is entered if Registered role is checked to avoid registered customers with empty email address
@@ -536,7 +541,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 !CommonHelper.IsValidEmail(model.Email))
             {
                 ModelState.AddModelError(string.Empty, _localizationService.GetResource("Admin.Customers.Customers.ValidEmailRequiredRegisteredRole"));
-                ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.ValidEmailRequiredRegisteredRole"), false);
+                _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.ValidEmailRequiredRegisteredRole"));
             }
 
             //custom customer attributes
@@ -561,7 +566,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     if (!customer.IsAdmin() || model.Active || SecondAdminAccountExists(customer))
                         customer.Active = model.Active;
                     else
-                        ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.AdminAccountShouldExists.Deactivate"));
+                        _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.AdminAccountShouldExists.Deactivate"));
 
                     //email
                     if (!string.IsNullOrWhiteSpace(model.Email))
@@ -693,7 +698,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                             //prevent attempts to delete the administrator role from the user, if the user is the last active administrator
                             if (customerRole.SystemName == NopCustomerDefaults.AdministratorsRoleName && !SecondAdminAccountExists(customer))
                             {
-                                ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.AdminAccountShouldExists.DeleteRole"));
+                                _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.AdminAccountShouldExists.DeleteRole"));
                                 continue;
                             }
 
@@ -715,7 +720,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     {
                         customer.VendorId = 0;
                         _customerService.UpdateCustomer(customer);
-                        ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.AdminCouldNotbeVendor"));
+                        _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.AdminCouldNotbeVendor"));
                     }
 
                     //ensure that a customer in the Vendors role has a vendor account associated.
@@ -729,14 +734,14 @@ namespace Nop.Web.Areas.Admin.Controllers
                         customer.RemoveCustomerRoleMapping(
                             customer.CustomerCustomerRoleMappings.FirstOrDefault(mapping => mapping.CustomerRoleId == vendorRole.Id));
                         _customerService.UpdateCustomer(customer);
-                        ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.CannotBeInVendoRoleWithoutVendorAssociated"));
+                        _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.CannotBeInVendoRoleWithoutVendorAssociated"));
                     }
 
                     //activity log
                     _customerActivityService.InsertActivity("EditCustomer",
                         string.Format(_localizationService.GetResource("ActivityLog.EditCustomer"), customer.Id), customer);
 
-                    SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.Updated"));
+                    _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.Updated"));
 
                     if (!continueEditing)
                         return RedirectToAction("List");
@@ -748,7 +753,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 }
                 catch (Exception exc)
                 {
-                    ErrorNotification(exc.Message, false);
+                    _notificationService.ErrorNotification(exc.Message);
                 }
             }
 
@@ -774,7 +779,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //ensure that the current customer cannot change passwords of "Administrators" if he's not an admin himself
             if (customer.IsAdmin() && !_workContext.CurrentCustomer.IsAdmin())
             {
-                ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.OnlyAdminCanChangePassword"));
+                _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.OnlyAdminCanChangePassword"));
                 return RedirectToAction("Edit", new { id = customer.Id });
             }
 
@@ -785,10 +790,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                 false, _customerSettings.DefaultPasswordFormat, model.Password);
             var changePassResult = _customerRegistrationService.ChangePassword(changePassRequest);
             if (changePassResult.Success)
-                SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.PasswordChanged"));
+                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.PasswordChanged"));
             else
                 foreach (var error in changePassResult.Errors)
-                    ErrorNotification(error);
+                    _notificationService.ErrorNotification(error);
 
             return RedirectToAction("Edit", new { id = customer.Id });
         }
@@ -865,14 +870,14 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //prevent attempts to delete the user, if it is the last active administrator
                 if (customer.IsAdmin() && !SecondAdminAccountExists(customer))
                 {
-                    ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.AdminAccountShouldExists.DeleteAdministrator"));
+                    _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.AdminAccountShouldExists.DeleteAdministrator"));
                     return RedirectToAction("Edit", new { id = customer.Id });
                 }
 
                 //ensure that the current customer cannot delete "Administrators" if he's not an admin himself
                 if (customer.IsAdmin() && !_workContext.CurrentCustomer.IsAdmin())
                 {
-                    ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.OnlyAdminCanDeleteAdmin"));
+                    _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.OnlyAdminCanDeleteAdmin"));
                     return RedirectToAction("Edit", new { id = customer.Id });
                 }
 
@@ -891,13 +896,13 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _customerActivityService.InsertActivity("DeleteCustomer",
                     string.Format(_localizationService.GetResource("ActivityLog.DeleteCustomer"), customer.Id), customer);
 
-                SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.Deleted"));
+                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.Deleted"));
 
                 return RedirectToAction("List");
             }
             catch (Exception exc)
             {
-                ErrorNotification(exc.Message);
+                _notificationService.ErrorNotification(exc.Message);
                 return RedirectToAction("Edit", new { id = customer.Id });
             }
         }
@@ -918,7 +923,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //otherwise, that user can simply impersonate as an administrator and gain additional administrative privileges
             if (!_workContext.CurrentCustomer.IsAdmin() && customer.IsAdmin())
             {
-                ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.NonAdminNotImpersonateAsAdminError"));
+                _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.NonAdminNotImpersonateAsAdminError"));
                 return RedirectToAction("Edit", customer.Id);
             }
 
@@ -950,7 +955,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             _workflowMessageService.SendCustomerWelcomeMessage(customer, _workContext.WorkingLanguage.Id);
 
-            SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.SendWelcomeMessage.Success"));
+            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.SendWelcomeMessage.Success"));
 
             return RedirectToAction("Edit", new { id = customer.Id });
         }
@@ -971,7 +976,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.AccountActivationTokenAttribute, Guid.NewGuid().ToString());
             _workflowMessageService.SendCustomerEmailValidationMessage(customer, _workContext.WorkingLanguage.Id);
 
-            SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.ReSendActivationMessage.Success"));
+            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.ReSendActivationMessage.Success"));
 
             return RedirectToAction("Edit", new { id = customer.Id });
         }
@@ -1018,11 +1023,11 @@ namespace Nop.Web.Areas.Admin.Controllers
                 };
                 _queuedEmailService.InsertQueuedEmail(email);
 
-                SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.SendEmail.Queued"));
+                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.SendEmail.Queued"));
             }
             catch (Exception exc)
             {
-                ErrorNotification(exc.Message);
+                _notificationService.ErrorNotification(exc.Message);
             }
 
             return RedirectToAction("Edit", new { id = customer.Id });
@@ -1063,12 +1068,12 @@ namespace Nop.Web.Areas.Admin.Controllers
                 };
 
                 _forumService.InsertPrivateMessage(privateMessage);
-
-                SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.SendPM.Sent"));
+                
+                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.SendPM.Sent"));
             }
             catch (Exception exc)
             {
-                ErrorNotification(exc.Message);
+                _notificationService.ErrorNotification(exc.Message);
             }
 
             return RedirectToAction("Edit", new { id = customer.Id });
@@ -1223,7 +1228,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 customer.CustomerAddressMappings.Add(new CustomerAddressMapping { Address = address });
                 _customerService.UpdateCustomer(customer);
 
-                SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.Addresses.Added"));
+                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.Addresses.Added"));
 
                 return RedirectToAction("AddressEdit", new { addressId = address.Id, customerId = model.CustomerId });
             }
@@ -1286,7 +1291,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 address.CustomAttributes = customAttributes;
                 _addressService.UpdateAddress(address);
 
-                SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.Addresses.Updated"));
+                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.Addresses.Updated"));
 
                 return RedirectToAction("AddressEdit", new { addressId = model.Address.Id, customerId = model.CustomerId });
             }
@@ -1512,14 +1517,14 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //prevent attempts to delete the user, if it is the last active administrator
                 if (customer.IsAdmin() && !SecondAdminAccountExists(customer))
                 {
-                    ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.AdminAccountShouldExists.DeleteAdministrator"));
+                    _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.AdminAccountShouldExists.DeleteAdministrator"));
                     return RedirectToAction("Edit", new { id = customer.Id });
                 }
 
                 //ensure that the current customer cannot delete "Administrators" if he's not an admin himself
                 if (customer.IsAdmin() && !_workContext.CurrentCustomer.IsAdmin())
                 {
-                    ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.OnlyAdminCanDeleteAdmin"));
+                    _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.OnlyAdminCanDeleteAdmin"));
                     return RedirectToAction("Edit", new { id = customer.Id });
                 }
 
@@ -1530,13 +1535,13 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _customerActivityService.InsertActivity("DeleteCustomer",
                     string.Format(_localizationService.GetResource("ActivityLog.DeleteCustomer"), customer.Id), customer);
 
-                SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.Deleted"));
+                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.Deleted"));
 
                 return RedirectToAction("List");
             }
             catch (Exception exc)
             {
-                ErrorNotification(exc.Message);
+                _notificationService.ErrorNotification(exc.Message);
                 return RedirectToAction("Edit", new { id = customer.Id });
             }
         }
@@ -1563,7 +1568,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
             catch (Exception exc)
             {
-                ErrorNotification(exc);
+                _notificationService.ErrorNotification(exc);
                 return RedirectToAction("Edit", new { id = customer.Id });
             }
         }
@@ -1597,7 +1602,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
             catch (Exception exc)
             {
-                ErrorNotification(exc);
+                _notificationService.ErrorNotification(exc);
                 return RedirectToAction("List");
             }
         }
@@ -1625,7 +1630,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
             catch (Exception exc)
             {
-                ErrorNotification(exc);
+                _notificationService.ErrorNotification(exc);
                 return RedirectToAction("List");
             }
         }
@@ -1656,7 +1661,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
             catch (Exception exc)
             {
-                ErrorNotification(exc);
+                _notificationService.ErrorNotification(exc);
                 return RedirectToAction("List");
             }
         }

@@ -138,13 +138,6 @@
                                     return false;
                                 });
 
-                                $("#@Html.IdFor(model => model.SearchManufacturerName)").keydown(function(event) {
-                                    if (event.keyCode == 13) {
-                                        $("#search-manufacturers").click();
-                                        return false;
-                                    }
-                                });
-
                                 //wire up checkboxes
                                 $('#mastercheckbox').click(function() {
                                     $('.checkboxGroups').attr('checked', $(this).is(':checked')).change();

@@ -8,6 +8,7 @@ using Nop.Core.Html;
 using Nop.Services.Catalog;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Framework.Extensions;
 
@@ -124,22 +125,14 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = productReviews.Select(productReview =>
                 {
                     //fill in model values from the entity
-                    var productReviewModel = new ProductReviewModel
-                    {
-                        Id = productReview.Id,
-                        StoreName = productReview.Store.Name,
-                        ProductId = productReview.ProductId,
-                        ProductName = productReview.Product.Name,
-                        CustomerId = productReview.CustomerId,
-                        Rating = productReview.Rating,
-                        Title = productReview.Title,
-                        IsApproved = productReview.IsApproved
-                    };
+                    var productReviewModel = productReview.ToModel<ProductReviewModel>();
 
                     //convert dates to the user time
                     productReviewModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(productReview.CreatedOnUtc, DateTimeKind.Utc);
 
                     //fill in additional values (not existing in the entity)
+                    productReviewModel.StoreName = productReview.Store.Name;
+                    productReviewModel.ProductName = productReview.Product.Name;
                     productReviewModel.CustomerInfo = productReview.Customer.IsRegistered()
                         ? productReview.Customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
                     productReviewModel.ReviewText = HtmlHelper.FormatText(productReview.ReviewText, false, true, false, false, false, false);
@@ -243,12 +236,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = productReviewReviewTypeMappings.PaginationByRequestModel(searchModel).Select(productReviewReviewTypeMapping =>
                 {
                     //fill in model values from the entity
-                    var productReviewReviewTypeMappingModel = new ProductReviewReviewTypeMappingModel
-                    {
-                        Id = productReviewReviewTypeMapping.Id,
-                        ProductReviewId = productReviewReviewTypeMapping.ProductReviewId,
-                        Rating = productReviewReviewTypeMapping.Rating                        
-                    };
+                    var productReviewReviewTypeMappingModel = productReviewReviewTypeMapping.ToModel<ProductReviewReviewTypeMappingModel>();
 
                     //fill in additional values (not existing in the entity)
                     var reviewType = _reviewTypeService.GetReviewTypeById(productReviewReviewTypeMapping.ReviewTypeId);

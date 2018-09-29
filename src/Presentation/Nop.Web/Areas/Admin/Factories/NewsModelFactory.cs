@@ -243,16 +243,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = comments.PaginationByRequestModel(searchModel).Select(newsComment =>
                 {
                     //fill in model values from the entity
-                    var commentModel = new NewsCommentModel
-                    {
-                        Id = newsComment.Id,
-                        NewsItemId = newsComment.NewsItemId,
-                        NewsItemTitle = newsComment.NewsItem.Title,
-                        CustomerId = newsComment.CustomerId,
-                        IsApproved = newsComment.IsApproved,
-                        StoreId = newsComment.StoreId,
-                        CommentTitle = newsComment.CommentTitle
-                    };
+                    var commentModel = newsComment.ToModel<NewsCommentModel>();                        
 
                     //convert dates to the user time
                     commentModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(newsComment.CreatedOnUtc, DateTimeKind.Utc);

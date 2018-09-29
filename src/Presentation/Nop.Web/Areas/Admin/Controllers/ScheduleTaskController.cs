@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
+using Nop.Services.Messages;
 using Nop.Services.Security;
 using Nop.Services.Tasks;
 using Nop.Web.Areas.Admin.Factories;
@@ -17,6 +18,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         private readonly ICustomerActivityService _customerActivityService;
         private readonly ILocalizationService _localizationService;
+        private readonly INotificationService _notificationService;
         private readonly IPermissionService _permissionService;
         private readonly IScheduleTaskModelFactory _scheduleTaskModelFactory;
         private readonly IScheduleTaskService _scheduleTaskService;
@@ -27,12 +29,14 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public ScheduleTaskController(ICustomerActivityService customerActivityService,
             ILocalizationService localizationService,
+            INotificationService notificationService,
             IPermissionService permissionService,
             IScheduleTaskModelFactory scheduleTaskModelFactory,
             IScheduleTaskService scheduleTaskService)
         {
             this._customerActivityService = customerActivityService;
             this._localizationService = localizationService;
+            this._notificationService = notificationService;
             this._permissionService = permissionService;
             this._scheduleTaskModelFactory = scheduleTaskModelFactory;
             this._scheduleTaskService = scheduleTaskService;
@@ -111,11 +115,11 @@ namespace Nop.Web.Areas.Admin.Controllers
                 var task = new Task(scheduleTask) { Enabled = true };
                 task.Execute(true, false);
 
-                SuccessNotification(_localizationService.GetResource("Admin.System.ScheduleTasks.RunNow.Done"));
+                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.System.ScheduleTasks.RunNow.Done"));
             }
             catch (Exception exc)
             {
-                ErrorNotification(exc);
+                _notificationService.ErrorNotification(exc);
             }
 
             return RedirectToAction("List");

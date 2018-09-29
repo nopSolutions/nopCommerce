@@ -272,16 +272,18 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new AffiliatedOrderListModel
             {
                 //fill in model values from the entity
-                Data = orders.Select(order => new AffiliatedOrderModel
+                Data = orders.Select(order => 
                 {
-                    Id = order.Id,
-                    OrderStatus = _localizationService.GetLocalizedEnum(order.OrderStatus),
-                    OrderStatusId = order.OrderStatusId,
-                    PaymentStatus = _localizationService.GetLocalizedEnum(order.PaymentStatus),
-                    ShippingStatus = _localizationService.GetLocalizedEnum(order.ShippingStatus),
-                    OrderTotal = _priceFormatter.FormatPrice(order.OrderTotal, true, false),
-                    CreatedOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc),
-                    CustomOrderNumber = order.CustomOrderNumber
+                    var affiliatedOrderModel = order.ToModel<AffiliatedOrderModel>();
+
+                    //fill in additional values (not existing in the entity)
+                    affiliatedOrderModel.OrderStatus = _localizationService.GetLocalizedEnum(order.OrderStatus);
+                    affiliatedOrderModel.PaymentStatus = _localizationService.GetLocalizedEnum(order.PaymentStatus);
+                    affiliatedOrderModel.ShippingStatus = _localizationService.GetLocalizedEnum(order.ShippingStatus);
+                    affiliatedOrderModel.OrderTotal = _priceFormatter.FormatPrice(order.OrderTotal, true, false);
+                    affiliatedOrderModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc);
+
+                    return affiliatedOrderModel;
                 }),
                 Total = orders.TotalCount
             };
@@ -312,11 +314,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new AffiliatedCustomerListModel
             {
                 //fill in model values from the entity
-                Data = customers.Select(customer => new AffiliatedCustomerModel
-                {
-                    Id = customer.Id,
-                    Name = customer.Email
-                }),
+                Data = customers.Select(customer => customer.ToModel<AffiliatedCustomerModel>()),
                 Total = customers.TotalCount
             };
 

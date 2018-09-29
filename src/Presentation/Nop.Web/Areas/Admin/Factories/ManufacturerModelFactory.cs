@@ -222,15 +222,16 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare grid model
             var model = new ManufacturerProductListModel
             {
-                //fill in model values from the entity
-                Data = productManufacturers.Select(productManufacturer => new ManufacturerProductModel
+                
+                Data = productManufacturers.Select(productManufacturer =>
                 {
-                    Id = productManufacturer.Id,
-                    ManufacturerId = productManufacturer.ManufacturerId,
-                    ProductId = productManufacturer.ProductId,
-                    ProductName = _productService.GetProductById(productManufacturer.ProductId)?.Name,
-                    IsFeaturedProduct = productManufacturer.IsFeaturedProduct,
-                    DisplayOrder = productManufacturer.DisplayOrder
+                    //fill in model values from the entity
+                    var manufacturerProductModel = productManufacturer.ToModel<ManufacturerProductModel>();
+
+                    //fill in additional values (not existing in the entity)
+                    manufacturerProductModel.ProductName = _productService.GetProductById(productManufacturer.ProductId)?.Name;
+
+                    return manufacturerProductModel;
                 }),
                 Total = productManufacturers.TotalCount
             };

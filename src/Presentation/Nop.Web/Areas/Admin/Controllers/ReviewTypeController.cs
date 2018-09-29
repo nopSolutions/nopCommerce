@@ -4,6 +4,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Services.Catalog;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
+using Nop.Services.Messages;
 using Nop.Services.Security;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Factories;
@@ -22,6 +23,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly ICustomerActivityService _customerActivityService;
         private readonly ILocalizationService _localizationService;
         private readonly ILocalizedEntityService _localizedEntityService;
+        private readonly INotificationService _notificationService;
         private readonly IPermissionService _permissionService;
         private readonly IReviewTypeModelFactory _reviewTypeModelFactory;
         private readonly IReviewTypeService _reviewTypeService;
@@ -33,6 +35,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public ReviewTypeController(ICustomerActivityService customerActivityService,
             ILocalizationService localizationService,
             ILocalizedEntityService localizedEntityService,
+            INotificationService notificationService,
             IPermissionService permissionService,
             IReviewTypeModelFactory reviewTypeModelFactory,
             IReviewTypeService reviewTypeService)
@@ -42,6 +45,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             this._customerActivityService = customerActivityService;
             this._localizedEntityService = localizedEntityService;
             this._localizationService = localizationService;
+            this._notificationService = notificationService;
             this._permissionService = permissionService;
         }
 
@@ -124,7 +128,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //locales                
                 UpdateReviewTypeLocales(reviewType, model);
 
-                SuccessNotification(_localizationService.GetResource("Admin.Settings.ReviewType.Added"));
+                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Settings.ReviewType.Added"));
 
                 return continueEditing ? RedirectToAction("Edit", new { id = reviewType.Id }) : RedirectToAction("List");                
             }
@@ -176,7 +180,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //locales
                 UpdateReviewTypeLocales(reviewType, model);
 
-                SuccessNotification(_localizationService.GetResource("Admin.Settings.ReviewType.Updated"));
+                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Settings.ReviewType.Updated"));
 
                 return continueEditing ? RedirectToAction("Edit", new { id = reviewType.Id }) : RedirectToAction("List");                
             }
@@ -208,13 +212,13 @@ namespace Nop.Web.Areas.Admin.Controllers
                     string.Format(_localizationService.GetResource("ActivityLog.DeleteReviewType"), reviewType),
                     reviewType);
 
-                SuccessNotification(_localizationService.GetResource("Admin.Settings.ReviewType.Deleted"));
+                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Settings.ReviewType.Deleted"));
 
                 return RedirectToAction("List");
             }
             catch (Exception exc)
             {
-                ErrorNotification(exc);
+                _notificationService.ErrorNotification(exc);
                 return RedirectToAction("Edit", new { id = reviewType.Id });
             }            
         }

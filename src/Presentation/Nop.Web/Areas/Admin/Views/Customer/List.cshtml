@@ -393,20 +393,6 @@
             return false;
         });
 
-        $("".concat("#@Html.IdFor(model => model.SearchEmail),",
-            "#@Html.IdFor(model => model.SearchUsername),",
-            "#@Html.IdFor(model => model.SearchFirstName),",
-            "#@Html.IdFor(model => model.SearchLastName),",
-            "#@Html.IdFor(model => model.SearchCompany),",
-            "#@Html.IdFor(model => model.SearchPhone),",
-            "#@Html.IdFor(model => model.SearchZipPostalCode),",
-            "#@Html.IdFor(model => model.SearchIpAddress)")).keydown(function(event) {
-            if (event.keyCode === 13) {
-                $("#search-customers").click();
-                return false;
-            }
-        });
-
         $('#mastercheckbox').click(function() {
             $('.checkboxGroups').attr('checked', $(this).is(':checked')).change();
         });

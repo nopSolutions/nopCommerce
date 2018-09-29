@@ -8,6 +8,7 @@ using Nop.Plugin.Shipping.UPS.Models;
 using Nop.Services;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
+using Nop.Services.Messages;
 using Nop.Services.Security;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
@@ -22,6 +23,7 @@ namespace Nop.Plugin.Shipping.UPS.Controllers
         #region Fields
 
         private readonly ILocalizationService _localizationService;
+        private readonly INotificationService _notificationService;
         private readonly IPermissionService _permissionService;
         private readonly ISettingService _settingService;
         private readonly UPSSettings _upsSettings;
@@ -31,11 +33,13 @@ namespace Nop.Plugin.Shipping.UPS.Controllers
         #region Ctor
 
         public ShippingUPSController(ILocalizationService localizationService,
+            INotificationService notificationService,
             IPermissionService permissionService,
             ISettingService settingService,
             UPSSettings upsSettings)
         {
             this._localizationService = localizationService;
+            this._notificationService = notificationService;
             this._permissionService = permissionService;
             this._settingService = settingService;
             this._upsSettings = upsSettings;
@@ -163,7 +167,7 @@ namespace Nop.Plugin.Shipping.UPS.Controllers
 
             _settingService.SaveSetting(_upsSettings);
 
-            SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
+            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
 
             return Configure();
         }

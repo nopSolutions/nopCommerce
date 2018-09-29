@@ -3,6 +3,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Polls;
 using Nop.Services.Localization;
+using Nop.Services.Messages;
 using Nop.Services.Polls;
 using Nop.Services.Security;
 using Nop.Services.Stores;
@@ -20,6 +21,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Fields
 
         private readonly ILocalizationService _localizationService;
+        private readonly INotificationService _notificationService;
         private readonly IPermissionService _permissionService;
         private readonly IPollModelFactory _pollModelFactory;
         private readonly IPollService _pollService;
@@ -31,6 +33,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Ctor
 
         public PollController(ILocalizationService localizationService,
+            INotificationService notificationService,
             IPermissionService permissionService,
             IPollModelFactory pollModelFactory,
             IPollService pollService,
@@ -38,6 +41,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             IStoreService storeService)
         {
             this._localizationService = localizationService;
+            this._notificationService = notificationService;
             this._permissionService = permissionService;
             this._pollModelFactory = pollModelFactory;
             this._pollService = pollService;
@@ -130,7 +134,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //save store mappings
                 SaveStoreMappings(poll, model);
 
-                SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Polls.Added"));
+                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Polls.Added"));
 
                 if (!continueEditing)
                     return RedirectToAction("List");
@@ -185,7 +189,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //save store mappings
                 SaveStoreMappings(poll, model);
 
-                SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Polls.Updated"));
+                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Polls.Updated"));
 
                 if (!continueEditing)
                     return RedirectToAction("List");
@@ -216,7 +220,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             _pollService.DeletePoll(poll);
 
-            SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Polls.Deleted"));
+            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Polls.Deleted"));
 
             return RedirectToAction("List");
         }

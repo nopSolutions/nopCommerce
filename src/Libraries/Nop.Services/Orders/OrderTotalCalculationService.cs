@@ -960,7 +960,7 @@ namespace Nop.Services.Orders
 
             var adjustedRate = shippingRate;
 
-            if (_shippingSettings.AllowPickUpInStore && !_shippingSettings.IgnoreAdditionalShippingChargeForPickUpInStore && pickupPoint != null)
+            if (!_shippingSettings.AllowPickUpInStore || pickupPoint == null || !_shippingSettings.IgnoreAdditionalShippingChargeForPickUpInStore)
             {
                 adjustedRate += GetShoppingCartAdditionalShippingCharge(cart);
             }                

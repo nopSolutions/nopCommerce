@@ -8,6 +8,7 @@ using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Stores;
 using Nop.Services.Tax;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.ShoppingCart;
 using Nop.Web.Framework.Extensions;
 
@@ -167,13 +168,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = items.PaginationByRequestModel(searchModel).Select(item =>
                 {
                     //fill in model values from the entity
-                    var itemModel = new ShoppingCartItemModel
-                    {
-                        Id = item.Id,
-                        ProductId = item.ProductId,
-                        Quantity = item.Quantity,
-                        ProductName = item.Product?.Name
-                    };
+                    var itemModel = item.ToModel<ShoppingCartItemModel>();
 
                     //convert dates to the user time
                     itemModel.UpdatedOn = _dateTimeHelper.ConvertToUserTime(item.UpdatedOnUtc, DateTimeKind.Utc);

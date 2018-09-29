@@ -266,12 +266,12 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new SpecificationAttributeProductListModel
             {
                 //fill in model values from the entity
-                Data = products.Select(product => new SpecificationAttributeProductModel
+                Data = products.Select(product => 
                 {
-                    SpecificationAttributeId = specificationAttribute.Id,
-                    ProductId = product.Id,
-                    ProductName = product.Name,
-                    Published = product.Published
+                    var specificationAttributeProductModel = product.ToModel<SpecificationAttributeProductModel>();
+                    specificationAttributeProductModel.SpecificationAttributeId = specificationAttribute.Id;
+
+                    return specificationAttributeProductModel;
                 }),
                 Total = products.TotalCount
             };

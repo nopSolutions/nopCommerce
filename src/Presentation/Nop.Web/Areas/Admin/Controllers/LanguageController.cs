@@ -9,6 +9,7 @@ using Nop.Core.Domain.Localization;
 using Nop.Core.Infrastructure;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
+using Nop.Services.Messages;
 using Nop.Services.Security;
 using Nop.Services.Stores;
 using Nop.Web.Areas.Admin.Factories;
@@ -35,6 +36,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
         private readonly INopFileProvider _fileProvider;
+        private readonly INotificationService _notificationService;
         private readonly IPermissionService _permissionService;
         private readonly IStoreMappingService _storeMappingService;
         private readonly IStoreService _storeService;
@@ -48,6 +50,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             ILanguageService languageService,
             ILocalizationService localizationService,
             INopFileProvider fileProvider,
+            INotificationService notificationService,
             IPermissionService permissionService,
             IStoreMappingService storeMappingService,
             IStoreService storeService)
@@ -57,6 +60,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             this._languageService = languageService;
             this._localizationService = localizationService;
             this._fileProvider = fileProvider;
+            this._notificationService = notificationService;
             this._permissionService = permissionService;
             this._storeMappingService = storeMappingService;
             this._storeService = storeService;
@@ -151,7 +155,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //Stores
                 SaveStoreMappings(language, model);
 
-                SuccessNotification(_localizationService.GetResource("Admin.Configuration.Languages.Added"));
+                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Languages.Added"));
 
                 if (!continueEditing)
                     return RedirectToAction("List");
@@ -202,7 +206,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 var allLanguages = _languageService.GetAllLanguages(loadCacheableCopy: false);
                 if (allLanguages.Count == 1 && allLanguages[0].Id == language.Id && !model.Published)
                 {
-                    ErrorNotification(_localizationService.GetResource("Admin.Configuration.Languages.PublishedLanguageRequired"));
+                    _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Configuration.Languages.PublishedLanguageRequired"));
                     return RedirectToAction("Edit", new { id = language.Id });
                 }
 
@@ -218,7 +222,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 SaveStoreMappings(language, model);
 
                 //notification
-                SuccessNotification(_localizationService.GetResource("Admin.Configuration.Languages.Updated"));
+                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Languages.Updated"));
 
                 if (!continueEditing)
                     return RedirectToAction("List");
@@ -251,7 +255,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             var allLanguages = _languageService.GetAllLanguages(loadCacheableCopy: false);
             if (allLanguages.Count == 1 && allLanguages[0].Id == language.Id)
             {
-                ErrorNotification(_localizationService.GetResource("Admin.Configuration.Languages.PublishedLanguageRequired"));
+                _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Configuration.Languages.PublishedLanguageRequired"));
                 return RedirectToAction("Edit", new { id = language.Id });
             }
 
@@ -263,7 +267,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 string.Format(_localizationService.GetResource("ActivityLog.DeleteLanguage"), language.Id), language);
 
             //notification
-            SuccessNotification(_localizationService.GetResource("Admin.Configuration.Languages.Deleted"));
+            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Languages.Deleted"));
 
             return RedirectToAction("List");
         }
@@ -415,7 +419,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
             catch (Exception exc)
             {
-                ErrorNotification(exc);
+                _notificationService.ErrorNotification(exc);
                 return RedirectToAction("List");
             }
         }
@@ -442,16 +446,16 @@ namespace Nop.Web.Areas.Admin.Controllers
                 }
                 else
                 {
-                    ErrorNotification(_localizationService.GetResource("Admin.Common.UploadFile"));
+                    _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Common.UploadFile"));
                     return RedirectToAction("Edit", new {id = language.Id});
                 }
 
-                SuccessNotification(_localizationService.GetResource("Admin.Configuration.Languages.Imported"));
+                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Languages.Imported"));
                 return RedirectToAction("Edit", new { id = language.Id });
             }
             catch (Exception exc)
             {
-                ErrorNotification(exc);
+                _notificationService.ErrorNotification(exc);
                 return RedirectToAction("Edit", new { id = language.Id });
             }
         }

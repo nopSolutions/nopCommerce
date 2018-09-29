@@ -382,13 +382,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = history.Select(historyEntry =>
                 {
                     //fill in model values from the entity
-                    var discountUsageHistoryModel = new DiscountUsageHistoryModel
-                    {
-                        Id = historyEntry.Id,
-                        DiscountId = historyEntry.DiscountId,
-                        OrderId = historyEntry.OrderId
-                    };
-
+                    var discountUsageHistoryModel = historyEntry.ToModel<DiscountUsageHistoryModel>();
+                    
                     //convert dates to the user time
                     discountUsageHistoryModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(historyEntry.CreatedOnUtc, DateTimeKind.Utc);
 
@@ -431,11 +426,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new DiscountProductListModel
             {
                 //fill in model values from the entity
-                Data = discountProducts.Select(product => new DiscountProductModel
-                {
-                    ProductId = product.Id,
-                    ProductName = product.Name
-                }),
+                Data = discountProducts.Select(product => product.ToModel<DiscountProductModel>()),
                 Total = discountProducts.TotalCount
             };
 
@@ -527,11 +518,15 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new DiscountCategoryListModel
             {
                 //fill in model values from the entity
-                Data = discountCategories.Select(category => new DiscountCategoryModel
+                Data = discountCategories.Select(category => 
                 {
-                    CategoryId = category.Id,
-                    CategoryName = _categoryService.GetFormattedBreadCrumb(category)
+                    var discountCategoryModel = category.ToModel<DiscountCategoryModel>();
+
+                    discountCategoryModel.CategoryName = _categoryService.GetFormattedBreadCrumb(category);
+
+                    return discountCategoryModel;
                 }),
+
                 Total = discountCategories.TotalCount
             };
 
@@ -612,11 +607,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new DiscountManufacturerListModel
             {
                 //fill in model values from the entity
-                Data = discountManufacturers.Select(manufacturer => new DiscountManufacturerModel
-                {
-                    ManufacturerId = manufacturer.Id,
-                    ManufacturerName = manufacturer.Name
-                }),
+                Data = discountManufacturers.Select(manufacturer => manufacturer.ToModel<DiscountManufacturerModel>()),
                 Total = discountManufacturers.TotalCount
             };
 

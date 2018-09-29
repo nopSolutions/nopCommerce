@@ -2,7 +2,7 @@
   "Group": "ExternalAuth methods",
   "FriendlyName": "Facebook authentication",
   "SystemName": "ExternalAuth.Facebook",
-  "Version": "1.51",
+  "Version": "1.52",
   "SupportedVersions": [ "4.20" ],
   "Author": "nopCommerce team",
   "DisplayOrder": 5,

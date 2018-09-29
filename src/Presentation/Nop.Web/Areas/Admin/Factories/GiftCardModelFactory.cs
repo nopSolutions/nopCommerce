@@ -206,12 +206,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = usageHistory.PaginationByRequestModel(searchModel).Select(historyEntry =>
                 {
                     //fill in model values from the entity
-                    var giftCardUsageHistoryModel = new GiftCardUsageHistoryModel
-                    {
-                        Id = historyEntry.Id,
-                        OrderId = historyEntry.UsedWithOrderId,
-                        CustomOrderNumber = historyEntry.UsedWithOrder.CustomOrderNumber
-                    };
+                    var giftCardUsageHistoryModel = historyEntry.ToModel<GiftCardUsageHistoryModel>();
 
                     //convert dates to the user time
                     giftCardUsageHistoryModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(historyEntry.CreatedOnUtc, DateTimeKind.Utc);

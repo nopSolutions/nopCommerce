@@ -188,14 +188,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new PollAnswerListModel
             {
                 //fill in model values from the entity
-                Data = pollAnswers.PaginationByRequestModel(searchModel).Select(pollAnswer => new PollAnswerModel
-                {
-                    Id = pollAnswer.Id,
-                    PollId = pollAnswer.PollId,
-                    Name = pollAnswer.Name,
-                    NumberOfVotes = pollAnswer.NumberOfVotes,
-                    DisplayOrder = pollAnswer.DisplayOrder
-                }),
+                Data = pollAnswers.PaginationByRequestModel(searchModel).Select(pollAnswer => pollAnswer.ToModel<PollAnswerModel>()),
                 Total = pollAnswers.Count
             };
 
