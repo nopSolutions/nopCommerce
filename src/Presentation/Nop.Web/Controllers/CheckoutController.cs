@@ -296,8 +296,10 @@ namespace Nop.Web.Controllers
             var cart = _shoppingCartService.GetShoppingCart(_workContext.CurrentCustomer, ShoppingCartType.ShoppingCart, _storeContext.CurrentStore.Id);
 
             //ship to the same address?
-            var isAllowsShipping = _addressSettings.CountryEnabled && (address.Country != null) && address.Country.AllowsShipping;
-
+            //by default Shipping is available if the country is not specified
+            var isAllowsShipping = (address.Country != null) && address.Country.AllowsShipping;
+            isAllowsShipping = _addressSettings.CountryEnabled ? isAllowsShipping : true;
+                        
             if (_shippingSettings.ShipToSameAddress && shipToSameAddress && _shoppingCartService.ShoppingCartRequiresShipping(cart) && isAllowsShipping)
             {
                 _workContext.CurrentCustomer.ShippingAddress = _workContext.CurrentCustomer.BillingAddress;
@@ -1205,7 +1207,10 @@ namespace Nop.Web.Controllers
                 {
                     //shipping is required
                     var address = _workContext.CurrentCustomer.BillingAddress;
-                    var isAllowsShipping = _addressSettings.CountryEnabled && (address.Country != null) && address.Country.AllowsShipping;
+
+                    //by default Shipping is available if the country is not specified
+                    var isAllowsShipping = (address.Country != null) && address.Country.AllowsShipping;
+                    isAllowsShipping = _addressSettings.CountryEnabled ? isAllowsShipping : true;
 
                     if (_shippingSettings.ShipToSameAddress && model.ShipToSameAddress && isAllowsShipping)
                     {
