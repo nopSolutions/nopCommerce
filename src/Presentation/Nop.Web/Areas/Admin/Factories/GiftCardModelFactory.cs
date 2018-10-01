@@ -212,6 +212,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     giftCardUsageHistoryModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(historyEntry.CreatedOnUtc, DateTimeKind.Utc);
 
                     //fill in additional values (not existing in the entity)
+                    giftCardUsageHistoryModel.OrderId = historyEntry.UsedWithOrderId;
+                    giftCardUsageHistoryModel.CustomOrderNumber = historyEntry.UsedWithOrder.CustomOrderNumber;
                     giftCardUsageHistoryModel.UsedValue = _priceFormatter.FormatPrice(historyEntry.UsedValue, true, false);
 
                     return giftCardUsageHistoryModel;

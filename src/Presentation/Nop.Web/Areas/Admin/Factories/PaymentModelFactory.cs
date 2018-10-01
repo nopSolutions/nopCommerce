@@ -119,11 +119,20 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(model));
 
             var countries = _countryService.GetAllCountries(showHidden: true);
-            model.AvailableCountries = countries.Select(country => country.ToModel<CountryModel>()).ToList();
+            model.AvailableCountries = countries.Select(country =>
+            {
+                var countryModel = country.ToModel<CountryModel>();
+                countryModel.NumberOfStates = country.StateProvinces?.Count ?? 0;
+
+                return countryModel;
+            }).ToList();
 
             foreach (var method in _paymentService.LoadAllPaymentMethods())
             {
-                model.AvailablePaymentMethods.Add(method.ToPluginModel<PaymentMethodModel>());
+                var paymentMethodModel = method.ToPluginModel<PaymentMethodModel>();
+                paymentMethodModel.RecurringPaymentType = _localizationService.GetLocalizedEnum(method.RecurringPaymentType);
+
+                model.AvailablePaymentMethods.Add(paymentMethodModel);
 
                 var restrictedCountries = _paymentService.GetRestictedCountryIds(method);
                 foreach (var country in countries)

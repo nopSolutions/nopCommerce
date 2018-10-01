@@ -117,6 +117,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     //little performance optimization: ensure that "Body" is not returned
                     topicModel.Body = string.Empty;
 
+                    topicModel.SeName = _urlRecordService.GetSeName(topic, 0, true, false);
+
                     return topicModel;
                 }),
                 Total = topics.Count
@@ -139,7 +141,11 @@ namespace Nop.Web.Areas.Admin.Factories
             if (topic != null)
             {
                 //fill in model values from the entity
-                model = model ?? topic.ToModel<TopicModel>();
+                if (model == null)
+                {
+                    model = topic.ToModel<TopicModel>();
+                    model.SeName = _urlRecordService.GetSeName(topic, 0, true, false);
+                }
 
                 model.Url = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext)
                     .RouteUrl("Topic", new { SeName = _urlRecordService.GetSeName(topic) }, _webHelper.CurrentRequestProtocol);

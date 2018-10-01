@@ -57,11 +57,11 @@ namespace Nop.Web.Areas.Admin.Models.Polls
 
         [NopResourceDisplayName("Admin.ContentManagement.Polls.Fields.StartDate")]
         [UIHint("DateTimeNullable")]
-        public DateTime? StartDate { get; set; }
+        public DateTime? StartDateUtc { get; set; }
 
         [NopResourceDisplayName("Admin.ContentManagement.Polls.Fields.EndDate")]
         [UIHint("DateTimeNullable")]
-        public DateTime? EndDate { get; set; }
+        public DateTime? EndDateUtc { get; set; }
         
         [NopResourceDisplayName("Admin.ContentManagement.Polls.Fields.LimitedToStores")]
         public IList<int> SelectedStoreIds { get; set; }

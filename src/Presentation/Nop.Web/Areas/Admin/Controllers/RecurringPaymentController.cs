@@ -5,6 +5,7 @@ using Nop.Services.Localization;
 using Nop.Services.Orders;
 using Nop.Services.Security;
 using Nop.Web.Areas.Admin.Factories;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Orders;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc.Filters;
@@ -100,10 +101,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                payment.CycleLength = model.CycleLength;
-                payment.CyclePeriodId = model.CyclePeriodId;
-                payment.TotalCycles = model.TotalCycles;
-                payment.IsActive = model.IsActive;
+                payment = model.ToEntity(payment);
                 _orderService.UpdateRecurringPayment(payment);
 
                 SuccessNotification(_localizationService.GetResource("Admin.RecurringPayments.Updated"));

@@ -115,9 +115,9 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     //convert dates to the user time
                     if (poll.StartDateUtc.HasValue)
-                        pollModel.StartDate = _dateTimeHelper.ConvertToUserTime(poll.StartDateUtc.Value, DateTimeKind.Utc);
+                        pollModel.StartDateUtc = _dateTimeHelper.ConvertToUserTime(poll.StartDateUtc.Value, DateTimeKind.Utc);
                     if (poll.EndDateUtc.HasValue)
-                        pollModel.EndDate = _dateTimeHelper.ConvertToUserTime(poll.EndDateUtc.Value, DateTimeKind.Utc);
+                        pollModel.EndDateUtc = _dateTimeHelper.ConvertToUserTime(poll.EndDateUtc.Value, DateTimeKind.Utc);
 
                     //fill in additional values (not existing in the entity)
                     pollModel.LanguageName = _languageService.GetLanguageById(poll.LanguageId)?.Name;
@@ -144,8 +144,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 //fill in model values from the entity
                 model = model ?? poll.ToModel<PollModel>();
 
-                model.StartDate = poll.StartDateUtc;
-                model.EndDate = poll.EndDateUtc;
+                model.StartDateUtc = poll.StartDateUtc;
+                model.EndDateUtc = poll.EndDateUtc;
 
                 //prepare nested search model
                 PreparePollAnswerSearchModel(model.PollAnswerSearchModel, poll);
