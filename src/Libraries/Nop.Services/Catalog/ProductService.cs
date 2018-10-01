@@ -326,9 +326,12 @@ namespace Nop.Services.Catalog
         {
             var query = from p in _productRepository.Table
                         orderby p.DisplayOrder, p.Id
-                        where p.Published &&
-                        !p.Deleted &&
-                        p.ShowOnHomePage
+                        where p.Published 
+                              && !p.Deleted 
+                              && p.ShowOnHomePage
+                              && p.ParentGroupedProductId == 0
+                              && p.VisibleIndividually
+
                         select p;
             var products = query.ToList();
             return products;
@@ -503,6 +506,7 @@ namespace Nop.Services.Catalog
         /// <param name="priceMax">Maximum price; null to load all records</param>
         /// <param name="productTagId">Product tag identifier; 0 to load all records</param>
         /// <param name="keywords">Keywords</param>
+        /// <param name="parentGroupedProductId">Parent grouped product identifier</param>
         /// <param name="searchDescriptions">A value indicating whether to search by a specified "keyword" in product descriptions</param>
         /// <param name="searchManufacturerPartNumber">A value indicating whether to search by a specified "keyword" in manufacturer part number</param>
         /// <param name="searchSku">A value indicating whether to search by a specified "keyword" in product SKU</param>
@@ -533,6 +537,7 @@ namespace Nop.Services.Catalog
             decimal? priceMax = null,
             int productTagId = 0,
             string keywords = null,
+            int? parentGroupedProductId = null,
             bool searchDescriptions = false,
             bool searchManufacturerPartNumber = true,
             bool searchSku = true,
@@ -547,7 +552,7 @@ namespace Nop.Services.Catalog
                 pageIndex, pageSize, categoryIds, manufacturerId,
                 storeId, vendorId, warehouseId,
                 productType, visibleIndividuallyOnly, markedAsNewOnly, featuredProducts,
-                priceMin, priceMax, productTagId, keywords, searchDescriptions, searchManufacturerPartNumber, searchSku,
+                priceMin, priceMax, productTagId, keywords, parentGroupedProductId, searchDescriptions, searchManufacturerPartNumber, searchSku,
                 searchProductTags, languageId, filteredSpecs,
                 orderBy, showHidden, overridePublished);
         }
@@ -572,6 +577,7 @@ namespace Nop.Services.Catalog
         /// <param name="priceMax">Maximum price; null to load all records</param>
         /// <param name="productTagId">Product tag identifier; 0 to load all records</param>
         /// <param name="keywords">Keywords</param>
+        /// <param name="parentGroupedProductId">Parent grouped product identifier</param>
         /// <param name="searchDescriptions">A value indicating whether to search by a specified "keyword" in product descriptions</param>
         /// <param name="searchManufacturerPartNumber">A value indicating whether to search by a specified "keyword" in manufacturer part number</param>
         /// <param name="searchSku">A value indicating whether to search by a specified "keyword" in product SKU</param>
@@ -604,6 +610,7 @@ namespace Nop.Services.Catalog
             decimal? priceMax = null,
             int productTagId = 0,
             string keywords = null,
+            int? parentGroupedProductId = null,
             bool searchDescriptions = false,
             bool searchManufacturerPartNumber = true,
             bool searchSku = true,
@@ -671,6 +678,7 @@ namespace Nop.Services.Catalog
             var pPriceMin = _dataProvider.GetDecimalParameter("PriceMin", priceMin);
             var pPriceMax = _dataProvider.GetDecimalParameter("PriceMax", priceMax);
             var pKeywords = _dataProvider.GetStringParameter("Keywords", keywords);
+            var pParentGroupedProductId = _dataProvider.GetInt32Parameter("ParentGroupedProductId", parentGroupedProductId);
             var pSearchDescriptions = _dataProvider.GetBooleanParameter("SearchDescriptions", searchDescriptions);
             var pSearchManufacturerPartNumber = _dataProvider.GetBooleanParameter("SearchManufacturerPartNumber", searchManufacturerPartNumber);
             var pSearchSku = _dataProvider.GetBooleanParameter("SearchSku", searchSku);
@@ -707,6 +715,7 @@ namespace Nop.Services.Catalog
                 pPriceMin,
                 pPriceMax,
                 pKeywords,
+                pParentGroupedProductId,
                 pSearchDescriptions,
                 pSearchManufacturerPartNumber,
                 pSearchSku,

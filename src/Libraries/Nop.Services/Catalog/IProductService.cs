@@ -91,6 +91,7 @@ namespace Nop.Services.Catalog
         /// <param name="priceMax">Maximum price; null to load all records</param>
         /// <param name="productTagId">Product tag identifier; 0 to load all records</param>
         /// <param name="keywords">Keywords</param>
+        /// <param name="parentGroupedProductId">Parent grouped product identifier</param>
         /// <param name="searchDescriptions">A value indicating whether to search by a specified "keyword" in product descriptions</param>
         /// <param name="searchManufacturerPartNumber">A value indicating whether to search by a specified "keyword" in manufacturer part number</param>
         /// <param name="searchSku">A value indicating whether to search by a specified "keyword" in product SKU</param>
@@ -121,6 +122,7 @@ namespace Nop.Services.Catalog
             decimal? priceMax = null,
             int productTagId = 0,
             string keywords = null,
+            int? parentGroupedProductId = null,
             bool searchDescriptions = false,
             bool searchManufacturerPartNumber = true,
             bool searchSku = true,
@@ -151,6 +153,7 @@ namespace Nop.Services.Catalog
         /// <param name="priceMax">Maximum price; null to load all records</param>
         /// <param name="productTagId">Product tag identifier; 0 to load all records</param>
         /// <param name="keywords">Keywords</param>
+        /// <param name="parentGroupedProductId">Parent grouped product identifier</param>
         /// <param name="searchDescriptions">A value indicating whether to search by a specified "keyword" in product descriptions</param>
         /// <param name="searchManufacturerPartNumber">A value indicating whether to search by a specified "keyword" in manufacturer part number</param>
         /// <param name="searchSku">A value indicating whether to search by a specified "keyword" in product SKU</param>
@@ -183,6 +186,7 @@ namespace Nop.Services.Catalog
             decimal? priceMax = null,
             int productTagId = 0,
             string keywords = null,
+            int? parentGroupedProductId = null,
             bool searchDescriptions = false,
             bool searchManufacturerPartNumber = true,
             bool searchSku = true,
