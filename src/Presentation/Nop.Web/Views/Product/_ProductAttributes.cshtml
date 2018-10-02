@@ -358,9 +358,7 @@
             };
         </script>
     </div>
-}
-@if (Model.Count > 0)
-{
+
     //dynamic update support
     var attributesHaveConditions = Model.Any(x => x.HasCondition);
     var attributesHaveAssociatedPictures = Model.Any(x => x.ProductId > 0);
