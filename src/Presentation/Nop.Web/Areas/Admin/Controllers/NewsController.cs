@@ -143,8 +143,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 var newsItem = model.ToEntity<NewsItem>();
-                newsItem.StartDateUtc = model.StartDate;
-                newsItem.EndDateUtc = model.EndDate;
                 newsItem.CreatedOnUtc = DateTime.UtcNow;
                 _newsService.InsertNews(newsItem);
 
@@ -207,8 +205,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 newsItem = model.ToEntity(newsItem);
-                newsItem.StartDateUtc = model.StartDate;
-                newsItem.EndDateUtc = model.EndDate;
                 _newsService.UpdateNews(newsItem);
 
                 //activity log
@@ -306,7 +302,8 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             var previousIsApproved = comment.IsApproved;
 
-            comment.IsApproved = model.IsApproved;
+            //fill entity from model
+            comment = model.ToEntity(comment);
             _newsService.UpdateNews(comment.NewsItem);
 
             //activity log

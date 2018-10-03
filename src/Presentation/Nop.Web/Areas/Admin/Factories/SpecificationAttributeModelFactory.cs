@@ -269,6 +269,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = products.Select(product => 
                 {
                     var specificationAttributeProductModel = product.ToModel<SpecificationAttributeProductModel>();
+                    specificationAttributeProductModel.ProductId = product.Id;
+                    specificationAttributeProductModel.ProductName = product.Name;
                     specificationAttributeProductModel.SpecificationAttributeId = specificationAttribute.Id;
 
                     return specificationAttributeProductModel;

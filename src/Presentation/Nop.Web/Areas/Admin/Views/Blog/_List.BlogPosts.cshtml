@@ -102,13 +102,13 @@
                                     attributes: { style: "text-align:center" },
                                     template: '<a class="btn btn-default" href="List?tabNameToSelect=blog-comments&filterByBlogPostId=#=Id#">@T("Admin.ContentManagement.Blog.BlogPosts.Fields.Comments") - #=ApprovedComments + NotApprovedComments# (#=NotApprovedComments#)</a>'
                                 }, {
-                                    field: "StartDate",
+                                    field: "StartDateUtc",
                                     title: "@T("Admin.ContentManagement.Blog.BlogPosts.Fields.StartDate")",
                                     width: 200,
                                     type: "date",
                                     format: "{0:G}"
                                 }, {
-                                    field: "EndDate",
+                                    field: "EndDateUtc",
                                     title: "@T("Admin.ContentManagement.Blog.BlogPosts.Fields.EndDate")",
                                     width: 200,
                                     type: "date",

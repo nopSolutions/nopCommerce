@@ -7,6 +7,7 @@ using Nop.Core.Html;
 using Nop.Services.Blogs;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
+using Nop.Services.Seo;
 using Nop.Services.Stores;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Blogs;
@@ -29,6 +30,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly ILocalizationService _localizationService;
         private readonly IStoreMappingSupportedModelFactory _storeMappingSupportedModelFactory;
         private readonly IStoreService _storeService;
+        private readonly IUrlRecordService _urlRecordService;
 
         #endregion
 
@@ -40,7 +42,8 @@ namespace Nop.Web.Areas.Admin.Factories
             ILanguageService languageService,
             ILocalizationService localizationService,
             IStoreMappingSupportedModelFactory storeMappingSupportedModelFactory,
-            IStoreService storeService)
+            IStoreService storeService,
+            IUrlRecordService urlRecordService)
         {
             this._baseAdminModelFactory = baseAdminModelFactory;
             this._blogService = blogService;
@@ -49,6 +52,7 @@ namespace Nop.Web.Areas.Admin.Factories
             this._localizationService = localizationService;
             this._storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
             this._storeService = storeService;
+            this._urlRecordService = urlRecordService;
         }
 
         #endregion
@@ -119,15 +123,16 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     //convert dates to the user time
                     if (blogPost.StartDateUtc.HasValue)
-                        blogPostModel.StartDate = _dateTimeHelper.ConvertToUserTime(blogPost.StartDateUtc.Value, DateTimeKind.Utc);
+                        blogPostModel.StartDateUtc = _dateTimeHelper.ConvertToUserTime(blogPost.StartDateUtc.Value, DateTimeKind.Utc);
                     if (blogPost.EndDateUtc.HasValue)
-                        blogPostModel.EndDate = _dateTimeHelper.ConvertToUserTime(blogPost.EndDateUtc.Value, DateTimeKind.Utc);
+                        blogPostModel.EndDateUtc = _dateTimeHelper.ConvertToUserTime(blogPost.EndDateUtc.Value, DateTimeKind.Utc);
                     blogPostModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(blogPost.CreatedOnUtc, DateTimeKind.Utc);
 
                     //fill in additional values (not existing in the entity)
                     blogPostModel.LanguageName = _languageService.GetLanguageById(blogPost.LanguageId)?.Name;
                     blogPostModel.ApprovedComments = _blogService.GetBlogCommentsCount(blogPost, isApproved: true);
                     blogPostModel.NotApprovedComments = _blogService.GetBlogCommentsCount(blogPost, isApproved: false);
+                    blogPostModel.SeName = _urlRecordService.GetSeName(blogPost, blogPost.LanguageId, true, false);
 
                     return blogPostModel;
                 }),
@@ -149,9 +154,13 @@ namespace Nop.Web.Areas.Admin.Factories
             //fill in model values from the entity
             if (blogPost != null)
             {
-                model = model ?? blogPost.ToModel<BlogPostModel>();
-                model.StartDate = blogPost.StartDateUtc;
-                model.EndDate = blogPost.EndDateUtc;
+                if (model == null)
+                {
+                    model = blogPost.ToModel<BlogPostModel>();
+                    model.SeName = _urlRecordService.GetSeName(blogPost, blogPost.LanguageId, true, false);
+                }
+                model.StartDateUtc = blogPost.StartDateUtc;
+                model.EndDateUtc = blogPost.EndDateUtc;
             }
 
             //set default values for the new model

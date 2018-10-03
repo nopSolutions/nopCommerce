@@ -342,19 +342,14 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var customer = new Customer
-                {
-                    CustomerGuid = Guid.NewGuid(),
-                    Email = model.Email,
-                    Username = model.Username,
-                    VendorId = model.VendorId,
-                    AdminComment = model.AdminComment,
-                    IsTaxExempt = model.IsTaxExempt,
-                    Active = model.Active,
-                    CreatedOnUtc = DateTime.UtcNow,
-                    LastActivityDateUtc = DateTime.UtcNow,
-                    RegisteredInStoreId = _storeContext.CurrentStore.Id
-                };
+                //fill entity from model
+                var customer = model.ToEntity<Customer>();
+
+                customer.CustomerGuid = Guid.NewGuid();
+                customer.CreatedOnUtc = DateTime.UtcNow;
+                customer.LastActivityDateUtc = DateTime.UtcNow;
+                customer.RegisteredInStoreId = _storeContext.CurrentStore.Id;
+
                 _customerService.InsertCustomer(customer);
 
                 //form fields

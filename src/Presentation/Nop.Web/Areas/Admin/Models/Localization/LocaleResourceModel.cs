@@ -14,10 +14,10 @@ namespace Nop.Web.Areas.Admin.Models.Localization
         #region Properties
 
         [NopResourceDisplayName("Admin.Configuration.Languages.Resources.Fields.Name")]
-        public string Name { get; set; }
+        public string ResourceName { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Languages.Resources.Fields.Value")]
-        public string Value { get; set; }
+        public string ResourceValue { get; set; }
 
         public int LanguageId { get; set; }
 

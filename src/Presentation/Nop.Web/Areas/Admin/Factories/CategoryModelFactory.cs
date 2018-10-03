@@ -136,6 +136,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     //fill in additional values (not existing in the entity)
                     categoryModel.Breadcrumb = _categoryService.GetFormattedBreadCrumb(category);
+                    categoryModel.SeName = _urlRecordService.GetSeName(category, 0, true, false);
 
                     return categoryModel;
                 }),
@@ -159,7 +160,11 @@ namespace Nop.Web.Areas.Admin.Factories
             if (category != null)
             {
                 //fill in model values from the entity
-                model = model ?? category.ToModel<CategoryModel>();
+                if (model == null)
+                {
+                    model = category.ToModel<CategoryModel>();
+                    model.SeName = _urlRecordService.GetSeName(category, 0, true, false);
+                }
 
                 //prepare nested search model
                 PrepareCategoryProductSearchModel(model.CategoryProductSearchModel, category);
@@ -235,7 +240,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = productCategories.Select(productCategory => 
                 {
                     //fill in model values from the entity
-                    var categoryProductModel = category.ToModel<CategoryProductModel>();
+                    var categoryProductModel = productCategory.ToModel<CategoryProductModel>();
 
                     //fill in additional values (not existing in the entity)
                     categoryProductModel.ProductName = _productService.GetProductById(productCategory.ProductId)?.Name;
@@ -303,7 +308,13 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new AddProductToCategoryListModel
             {
                 //fill in model values from the entity
-                Data = products.Select(product => product.ToModel<ProductModel>()),
+                Data = products.Select(product =>
+                {
+                    var productModel = product.ToModel<ProductModel>();
+                    productModel.SeName = _urlRecordService.GetSeName(product, 0, true, false);
+
+                    return productModel;
+                }),
                 Total = products.TotalCount
             };
 
