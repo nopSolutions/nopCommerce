@@ -18,8 +18,9 @@ namespace Nop.Plugin.Widgets.NivoSlider.Infrastructure.Cache
         /// </summary>
         /// <remarks>
         /// {0} : picture id
+        /// {1} : connection type (http/https)
         /// </remarks>
-        public const string PICTURE_URL_MODEL_KEY = "Nop.plugins.widgets.nivoslider.pictureurl-{0}";
+        public const string PICTURE_URL_MODEL_KEY = "Nop.plugins.widgets.nivoslider.pictureurl-{0}-{1}";
         public const string PICTURE_URL_PATTERN_KEY = "Nop.plugins.widgets.nivoslider";
 
         private readonly IStaticCacheManager _cacheManager;
