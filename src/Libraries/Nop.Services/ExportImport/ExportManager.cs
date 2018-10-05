@@ -419,6 +419,7 @@ namespace Nop.Services.ExportImport
                 },
                 new PropertyByName<ExportSpecificationAttribute>("CustomValue", p => p.CustomValue),
                 new PropertyByName<ExportSpecificationAttribute>("SpecificationAttributeOptionId", p => p.SpecificationAttributeOptionId),
+                new PropertyByName<ExportSpecificationAttribute>("SpecificationAttributeOptionValue", p => p.SpecificationAttributeOptionValue),
                 new PropertyByName<ExportSpecificationAttribute>("AllowFiltering", p => p.AllowFiltering),
                 new PropertyByName<ExportSpecificationAttribute>("ShowOnProductPage", p => p.ShowOnProductPage),
                 new PropertyByName<ExportSpecificationAttribute>("DisplayOrder", p => p.DisplayOrder)
@@ -536,6 +537,8 @@ namespace Nop.Services.ExportImport
 
         private int ExportSpecificationAttributes(Product item, PropertyManager<ExportSpecificationAttribute> attributeManager, ExcelWorksheet worksheet, int row, ExcelWorksheet faWorksheet)
         {
+            var allSpecificationAttributes = _specificationAttributeService.GetProductSpecificationAttributes(item.Id);
+
             var attributes = item.ProductSpecificationAttributes.Select(
                 psa => new ExportSpecificationAttribute
                 {
@@ -545,6 +548,7 @@ namespace Nop.Services.ExportImport
                     ShowOnProductPage = psa.ShowOnProductPage,
                     DisplayOrder = psa.DisplayOrder,
                     SpecificationAttributeOptionId = psa.SpecificationAttributeOptionId,
+                    SpecificationAttributeOptionValue = allSpecificationAttributes.FirstOrDefault(sao => sao.SpecificationAttributeOptionId == psa.SpecificationAttributeOptionId).SpecificationAttributeOption.Name,
                     SpecificationAttributeId = psa.SpecificationAttributeOption.SpecificationAttribute.Id
                 }).ToList();
 

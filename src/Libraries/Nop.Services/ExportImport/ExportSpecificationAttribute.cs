@@ -8,6 +8,7 @@
         public bool ShowOnProductPage { get; set; }
         public int DisplayOrder { get; set; }
         public int SpecificationAttributeOptionId { get; set; }
+        public string SpecificationAttributeOptionValue { get; set; }
         public int SpecificationAttributeId { get; set; }
     }
 }
