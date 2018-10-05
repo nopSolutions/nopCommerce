@@ -865,7 +865,7 @@ namespace Nop.Services.Catalog
             //filter by products with stock quantity less than the minimum
             query = query.Where(product =>
                 (product.UseMultipleWarehouses ? product.ProductWarehouseInventory.Sum(pwi => pwi.StockQuantity - pwi.ReservedQuantity)
-                    : product.StockQuantity) <= product.MinStockQuantity);
+                    : product.StockQuantity) <= product.NotifyAdminForQuantityBelow);
 
             //ignore deleted products
             query = query.Where(product => !product.Deleted);
@@ -920,7 +920,7 @@ namespace Nop.Services.Catalog
             var combinations = products.SelectMany(product => product.ProductAttributeCombinations);
 
             //filter by combinations with stock quantity less than the minimum
-            combinations = combinations.Where(combination => combination.StockQuantity <= 0);
+            combinations = combinations.Where(combination => combination.StockQuantity <= combination.NotifyAdminForQuantityBelow);
 
             combinations = combinations.OrderBy(combination => combination.ProductId).ThenBy(combination => combination.Id);
 
