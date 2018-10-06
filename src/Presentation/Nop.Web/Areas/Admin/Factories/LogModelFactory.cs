@@ -99,6 +99,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     //fill in additional values (not existing in the entity)
                     logModel.LogLevel = _localizationService.GetLocalizedEnum(logItem.LogLevel);
                     logModel.ShortMessage = HtmlHelper.FormatText(logItem.ShortMessage, false, true, false, false, false, false);
+                    logModel.FullMessage = string.Empty;
+                    logModel.CustomerEmail = logItem.Customer?.Email ?? string.Empty;
 
                     return logModel;
                 }),
@@ -128,6 +130,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     model.ShortMessage = HtmlHelper.FormatText(log.ShortMessage, false, true, false, false, false, false);
                     model.FullMessage = HtmlHelper.FormatText(log.FullMessage, false, true, false, false, false, false);
                     model.CreatedOn = _dateTimeHelper.ConvertToUserTime(log.CreatedOnUtc, DateTimeKind.Utc);
+                    model.FullMessage = string.Empty;
+                    model.CustomerEmail = log.Customer?.Email ?? string.Empty;
                 }
             }
             return model;

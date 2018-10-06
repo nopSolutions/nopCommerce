@@ -127,6 +127,8 @@ namespace Nop.Web.Areas.Admin.Factories
                         .ConvertToUserTime(recurringPayment.StartDateUtc, DateTimeKind.Utc).ToString(CultureInfo.InvariantCulture);
 
                     //fill in additional values (not existing in the entity)
+                    recurringPaymentModel.CustomerId = recurringPayment.InitialOrder.CustomerId;
+                    recurringPaymentModel.InitialOrderId = recurringPayment.InitialOrder.Id;
                     recurringPaymentModel.CyclePeriodStr = _localizationService.GetLocalizedEnum(recurringPayment.CyclePeriod);
                     recurringPaymentModel.CustomerEmail = recurringPayment.InitialOrder.Customer.IsRegistered()
                         ? recurringPayment.InitialOrder.Customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
@@ -163,6 +165,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.NextPaymentDate = _dateTimeHelper.ConvertToUserTime(recurringPayment.NextPaymentDate.Value, DateTimeKind.Utc).ToString(CultureInfo.InvariantCulture);
             model.StartDate = _dateTimeHelper.ConvertToUserTime(recurringPayment.StartDateUtc, DateTimeKind.Utc).ToString(CultureInfo.InvariantCulture);
 
+            model.CustomerId = recurringPayment.InitialOrder.CustomerId;
+            model.InitialOrderId = recurringPayment.InitialOrder.Id;
             model.CustomerEmail = recurringPayment.InitialOrder.Customer.IsRegistered()
                 ? recurringPayment.InitialOrder.Customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
             model.PaymentType = _localizationService.GetLocalizedEnum(_paymentService

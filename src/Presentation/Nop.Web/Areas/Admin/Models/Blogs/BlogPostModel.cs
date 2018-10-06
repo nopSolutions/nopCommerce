@@ -57,11 +57,11 @@ namespace Nop.Web.Areas.Admin.Models.Blogs
 
         [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.StartDate")]
         [UIHint("DateTimeNullable")]
-        public DateTime? StartDate { get; set; }
+        public DateTime? StartDateUtc { get; set; }
 
         [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.EndDate")]
         [UIHint("DateTimeNullable")]
-        public DateTime? EndDate { get; set; }
+        public DateTime? EndDateUtc { get; set; }
 
         [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.MetaKeywords")]
         public string MetaKeywords { get; set; }

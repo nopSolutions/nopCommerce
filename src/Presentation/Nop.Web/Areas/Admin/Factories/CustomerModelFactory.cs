@@ -854,6 +854,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     //fill in model values from the entity        
                     var addressModel = address.ToModel<AddressModel>();
+                    addressModel.CountryName = address.Country?.Name;
+                    addressModel.StateProvinceName = address.StateProvince?.Name;
 
                     //fill in additional values (not existing in the entity)
                     PrepareModelAddressHtml(addressModel, address);
@@ -966,9 +968,10 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = shoppingCart.PaginationByRequestModel(searchModel).Select(item =>
                 {
                     //fill in model values from the entity
-                    var shoppingCartItemModel = item.ToModel<ShoppingCartItemModel>(); 
+                    var shoppingCartItemModel = item.ToModel<ShoppingCartItemModel>();
 
                     //fill in additional values (not existing in the entity)
+                    shoppingCartItemModel.ProductName = item.Product.Name;
                     shoppingCartItemModel.Store = _storeService.GetStoreById(item.StoreId)?.Name ?? "Unknown";                    
                     shoppingCartItemModel.AttributeInfo = _productAttributeFormatter.FormatAttributes(item.Product, item.AttributesXml);
                     shoppingCartItemModel.UnitPrice = _priceFormatter.FormatPrice(_taxService.GetProductPrice(item.Product, _priceCalculationService.GetUnitPrice(item), out var _));
@@ -1011,6 +1014,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     var customerActivityLogModel = logItem.ToModel<CustomerActivityLogModel>();
 
                     //fill in additional values (not existing in the entity)
+                    customerActivityLogModel.ActivityLogTypeName = logItem.ActivityLogType.Name;
+
                     //convert dates to the user time
                     customerActivityLogModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(logItem.CreatedOnUtc, DateTimeKind.Utc);
 
@@ -1055,6 +1060,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     //fill in additional values (not existing in the entity)
                     subscriptionModel.StoreName = _storeService.GetStoreById(subscription.StoreId)?.Name ?? "Unknown";
+                    subscriptionModel.ProductName = subscription.Product?.Name ?? "Unknown";
 
                     return subscriptionModel;
                 }),

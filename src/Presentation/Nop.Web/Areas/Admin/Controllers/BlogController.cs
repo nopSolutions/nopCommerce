@@ -143,8 +143,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 var blogPost = model.ToEntity<BlogPost>();
-                blogPost.StartDateUtc = model.StartDate;
-                blogPost.EndDateUtc = model.EndDate;
                 blogPost.CreatedOnUtc = DateTime.UtcNow;
                 _blogService.InsertBlogPost(blogPost);
 
@@ -207,8 +205,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 blogPost = model.ToEntity(blogPost);
-                blogPost.StartDateUtc = model.StartDate;
-                blogPost.EndDateUtc = model.EndDate;
                 _blogService.UpdateBlogPost(blogPost);
 
                 //activity log
@@ -306,7 +302,8 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             var previousIsApproved = comment.IsApproved;
 
-            comment.IsApproved = model.IsApproved;
+            //fill entity from model
+            comment = model.ToEntity(comment);
             _blogService.UpdateBlogPost(comment.BlogPost);
 
             //raise event (only if it wasn't approved before and is approved now)

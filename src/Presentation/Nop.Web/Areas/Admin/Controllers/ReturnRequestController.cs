@@ -146,12 +146,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                returnRequest.Quantity = model.Quantity;
-                returnRequest.ReasonForReturn = model.ReasonForReturn;
-                returnRequest.RequestedAction = model.RequestedAction;
-                returnRequest.CustomerComments = model.CustomerComments;
-                returnRequest.StaffNotes = model.StaffNotes;
-                returnRequest.ReturnRequestStatusId = model.ReturnRequestStatusId;
+                returnRequest = model.ToEntity(returnRequest);
                 returnRequest.UpdatedOnUtc = DateTime.UtcNow;
                 _customerService.UpdateCustomer(returnRequest.Customer);
 

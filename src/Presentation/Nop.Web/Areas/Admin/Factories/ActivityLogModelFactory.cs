@@ -115,6 +115,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     //fill in model values from the entity
                     var logItemModel = logItem.ToModel<ActivityLogModel>();
+                    logItemModel.ActivityLogTypeName = logItem.ActivityLogType.Name;
+                    logItemModel.CustomerEmail = logItem.Customer.Email;
 
                     //convert dates to the user time
                     logItemModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(logItem.CreatedOnUtc, DateTimeKind.Utc);

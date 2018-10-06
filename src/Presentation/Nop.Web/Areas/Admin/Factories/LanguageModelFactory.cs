@@ -174,8 +174,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     LanguageId = language.Id,
                     Id = localeResource.Value.Key,
-                    Name = localeResource.Key,
-                    Value = localeResource.Value.Value
+                    ResourceName = localeResource.Key,
+                    ResourceValue = localeResource.Value.Value
                 }),
                 Total = localeResources.Count()
             };

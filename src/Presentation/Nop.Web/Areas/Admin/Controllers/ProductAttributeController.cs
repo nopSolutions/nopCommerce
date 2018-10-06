@@ -303,17 +303,8 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var ppav = new PredefinedProductAttributeValue
-                {
-                    ProductAttributeId = model.ProductAttributeId,
-                    Name = model.Name,
-                    PriceAdjustment = model.PriceAdjustment,
-                    PriceAdjustmentUsePercentage = model.PriceAdjustmentUsePercentage,
-                    WeightAdjustment = model.WeightAdjustment,
-                    Cost = model.Cost,
-                    IsPreSelected = model.IsPreSelected,
-                    DisplayOrder = model.DisplayOrder
-                };
+                //fill entity from model
+                var ppav = model.ToEntity<PredefinedProductAttributeValue>();
 
                 _productAttributeService.InsertPredefinedProductAttributeValue(ppav);
                 UpdateLocales(ppav, model);
@@ -365,13 +356,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                productAttributeValue.Name = model.Name;
-                productAttributeValue.PriceAdjustment = model.PriceAdjustment;
-                productAttributeValue.PriceAdjustmentUsePercentage = model.PriceAdjustmentUsePercentage;
-                productAttributeValue.WeightAdjustment = model.WeightAdjustment;
-                productAttributeValue.Cost = model.Cost;
-                productAttributeValue.IsPreSelected = model.IsPreSelected;
-                productAttributeValue.DisplayOrder = model.DisplayOrder;
+                productAttributeValue = model.ToEntity(productAttributeValue);
                 _productAttributeService.UpdatePredefinedProductAttributeValue(productAttributeValue);
 
                 UpdateLocales(productAttributeValue, model);

@@ -192,6 +192,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     var affiliateModel = affiliate.ToModel<AffiliateModel>();
                     affiliateModel.Address = affiliate.Address.ToModel<AddressModel>();
+                    affiliateModel.Address.CountryName = affiliate.Address.Country?.Name;
+                    affiliateModel.Address.StateProvinceName = affiliate.Address.StateProvince?.Name;
 
                     return affiliateModel;
                 }),
@@ -314,7 +316,13 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new AffiliatedCustomerListModel
             {
                 //fill in model values from the entity
-                Data = customers.Select(customer => customer.ToModel<AffiliatedCustomerModel>()),
+                Data = customers.Select(customer =>
+                {
+                    var affiliatedCustomerModel = customer.ToModel<AffiliatedCustomerModel>();
+                    affiliatedCustomerModel.Name = customer.Email;
+
+                    return affiliatedCustomerModel;
+                }),
                 Total = customers.TotalCount
             };
 

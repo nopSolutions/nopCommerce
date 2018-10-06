@@ -665,12 +665,9 @@ namespace Nop.Web.Areas.Admin.Controllers
                 address.CreatedOnUtc = DateTime.UtcNow;
                 _addressService.InsertAddress(address);
 
-                var warehouse = new Warehouse
-                {
-                    Name = model.Name,
-                    AdminComment = model.AdminComment,
-                    AddressId = address.Id
-                };
+                //fill entity from model
+                var warehouse = model.ToEntity<Warehouse>(); 
+                warehouse.AddressId = address.Id;
 
                 _shippingService.InsertWarehouse(warehouse);
 
@@ -730,8 +727,9 @@ namespace Nop.Web.Areas.Admin.Controllers
                 else
                     _addressService.InsertAddress(address);
 
-                warehouse.Name = model.Name;
-                warehouse.AdminComment = model.AdminComment;
+                //fill entity from model
+                warehouse = model.ToEntity(warehouse);
+                
                 warehouse.AddressId = address.Id;
 
                 _shippingService.UpdateWarehouse(warehouse);

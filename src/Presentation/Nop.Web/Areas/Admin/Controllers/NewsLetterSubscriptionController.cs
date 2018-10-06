@@ -9,6 +9,7 @@ using Nop.Services.Localization;
 using Nop.Services.Messages;
 using Nop.Services.Security;
 using Nop.Web.Areas.Admin.Factories;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Messages;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
@@ -94,8 +95,9 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
 
             var subscription = _newsLetterSubscriptionService.GetNewsLetterSubscriptionById(model.Id);
-            subscription.Email = model.Email;
-            subscription.Active = model.Active;
+
+            //fill entity from model
+            subscription = model.ToEntity(subscription);
             _newsLetterSubscriptionService.UpdateNewsLetterSubscription(subscription);
 
             return new NullJsonResult();

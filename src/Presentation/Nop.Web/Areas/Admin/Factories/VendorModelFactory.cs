@@ -286,7 +286,13 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new VendorListModel
             {
                 //fill in model values from the entity
-                Data = vendors.Select(vendor => vendor.ToModel<VendorModel>()),
+                Data = vendors.Select(vendor =>
+                {
+                    var vendorModel = vendor.ToModel<VendorModel>();
+                    vendorModel.SeName = _urlRecordService.GetSeName(vendor, 0, true, false);
+
+                    return vendorModel;
+                }),
                 Total = vendors.TotalCount
             };
 
@@ -307,7 +313,11 @@ namespace Nop.Web.Areas.Admin.Factories
             if (vendor != null)
             {
                 //fill in model values from the entity
-                model = model ?? vendor.ToModel<VendorModel>();
+                if (model == null)
+                {
+                    model = vendor.ToModel<VendorModel>();
+                    model.SeName = _urlRecordService.GetSeName(vendor, 0, true, false);
+                }
 
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>

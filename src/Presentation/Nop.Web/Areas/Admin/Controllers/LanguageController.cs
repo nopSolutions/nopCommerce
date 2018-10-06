@@ -319,10 +319,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
                 return AccessDeniedView();
 
-            if (model.Name != null)
-                model.Name = model.Name.Trim();
-            if (model.Value != null)
-                model.Value = model.Value.Trim();
+            if (model.ResourceName != null)
+                model.ResourceName = model.ResourceName.Trim();
+            if (model.ResourceValue != null)
+                model.ResourceValue = model.ResourceValue.Trim();
 
             if (!ModelState.IsValid)
             {
@@ -331,17 +331,18 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             var resource = _localizationService.GetLocaleStringResourceById(model.Id);
             // if the resourceName changed, ensure it isn't being used by another resource
-            if (!resource.ResourceName.Equals(model.Name, StringComparison.InvariantCultureIgnoreCase))
+            if (!resource.ResourceName.Equals(model.ResourceName, StringComparison.InvariantCultureIgnoreCase))
             {
-                var res = _localizationService.GetLocaleStringResourceByName(model.Name, model.LanguageId, false);
+                var res = _localizationService.GetLocaleStringResourceByName(model.ResourceName, model.LanguageId, false);
                 if (res != null && res.Id != resource.Id)
                 {
                     return Json(new DataSourceResult { Errors = string.Format(_localizationService.GetResource("Admin.Configuration.Languages.Resources.NameAlreadyExists"), res.ResourceName) });
                 }
             }
 
-            resource.ResourceName = model.Name;
-            resource.ResourceValue = model.Value;
+            //fill entity from model
+            resource = model.ToEntity(resource);
+
             _localizationService.UpdateLocaleStringResource(resource);
 
             return new NullJsonResult();
@@ -353,31 +354,29 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
                 return AccessDeniedView();
 
-            if (model.Name != null)
-                model.Name = model.Name.Trim();
-            if (model.Value != null)
-                model.Value = model.Value.Trim();
+            if (model.ResourceName != null)
+                model.ResourceName = model.ResourceName.Trim();
+            if (model.ResourceValue != null)
+                model.ResourceValue = model.ResourceValue.Trim();
 
             if (!ModelState.IsValid)
             {
                 return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
             }
 
-            var res = _localizationService.GetLocaleStringResourceByName(model.Name, model.LanguageId, false);
+            var res = _localizationService.GetLocaleStringResourceByName(model.ResourceName, model.LanguageId, false);
             if (res == null)
             {
-                var resource = new LocaleStringResource
-                {
-                    LanguageId = languageId,
-                    ResourceName = model.Name,
-                    ResourceValue = model.Value
-                };
+                //fill entity from model
+                var resource = model.ToEntity<LocaleStringResource>();
+
+                resource.LanguageId = languageId;
 
                 _localizationService.InsertLocaleStringResource(resource);
             }
             else
             {
-                return Json(new DataSourceResult { Errors = string.Format(_localizationService.GetResource("Admin.Configuration.Languages.Resources.NameAlreadyExists"), model.Name) });
+                return Json(new DataSourceResult { Errors = string.Format(_localizationService.GetResource("Admin.Configuration.Languages.Resources.NameAlreadyExists"), model.ResourceName) });
             }
 
             return new NullJsonResult();

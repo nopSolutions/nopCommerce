@@ -270,7 +270,12 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new ProductAttributeProductListModel
             {
                 //fill in model values from the entity
-                Data = products.Select(product => product.ToModel<ProductAttributeProductModel>()),
+                Data = products.Select(product =>
+                {
+                    var productAttributeProductModel = product.ToModel<ProductAttributeProductModel>();
+                    productAttributeProductModel.ProductName = product.Name;
+                    return productAttributeProductModel;
+                }),
                 Total = products.TotalCount
             };
 

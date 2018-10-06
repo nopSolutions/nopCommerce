@@ -103,7 +103,13 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new CountryListModel
             {
                 //fill in model values from the entity
-                Data = countries.PaginationByRequestModel(searchModel).Select(country => country.ToModel<CountryModel>()),
+                Data = countries.PaginationByRequestModel(searchModel).Select(country =>
+                {
+                    var countryModel = country.ToModel<CountryModel>();
+                    countryModel.NumberOfStates = country.StateProvinces?.Count ?? 0;
+
+                    return countryModel;
+                }),
                 Total = countries.Count
             };
 
@@ -124,7 +130,11 @@ namespace Nop.Web.Areas.Admin.Factories
             if (country != null)
             {
                 //fill in model values from the entity
-                model = model ?? country.ToModel<CountryModel>();
+                if (model == null)
+                {
+                    model = country.ToModel<CountryModel>();
+                    model.NumberOfStates = country.StateProvinces?.Count ?? 0;
+                }
 
                 //prepare nested search model
                 PrepareStateProvinceSearchModel(model.StateProvinceSearchModel, country);

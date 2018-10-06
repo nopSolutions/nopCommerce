@@ -520,8 +520,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             var productManufacturer = _manufacturerService.GetProductManufacturerById(model.Id)
                 ?? throw new ArgumentException("No product manufacturer mapping found with the specified id");
 
-            productManufacturer.IsFeaturedProduct = model.IsFeaturedProduct;
-            productManufacturer.DisplayOrder = model.DisplayOrder;
+            //fill entity from model
+            productManufacturer = model.ToEntity(productManufacturer);
             _manufacturerService.UpdateProductManufacturer(productManufacturer);
 
             return new NullJsonResult();

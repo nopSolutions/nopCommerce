@@ -6,6 +6,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
+using Nop.Services.Seo;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Areas.Admin.Models.Customers;
@@ -23,6 +24,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IBaseAdminModelFactory _baseAdminModelFactory;
         private readonly ICustomerService _customerService;
         private readonly IProductService _productService;
+        private readonly IUrlRecordService _urlRecordService;
         private readonly IWorkContext _workContext;
 
         #endregion
@@ -32,11 +34,13 @@ namespace Nop.Web.Areas.Admin.Factories
         public CustomerRoleModelFactory(IBaseAdminModelFactory baseAdminModelFactory,
             ICustomerService customerService,
             IProductService productService,
+            IUrlRecordService urlRecordService,
             IWorkContext workContext)
         {
             this._baseAdminModelFactory = baseAdminModelFactory;
             this._customerService = customerService;
             this._productService = productService;
+            this._urlRecordService = urlRecordService;
             this._workContext = workContext;
         }
 
@@ -180,7 +184,13 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new CustomerRoleProductListModel
             {
                 //fill in model values from the entity
-                Data = products.Select(product => product.ToModel<ProductModel>()),
+                Data = products.Select(product => 
+                {
+                    var productModel = product.ToModel<ProductModel>();
+                    productModel.SeName = _urlRecordService.GetSeName(product, 0, true, false);
+
+                    return productModel;
+                }),
                 Total = products.TotalCount
             };
 

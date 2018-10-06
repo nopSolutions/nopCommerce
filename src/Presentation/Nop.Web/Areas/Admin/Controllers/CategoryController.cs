@@ -522,8 +522,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             var productCategory = _categoryService.GetProductCategoryById(model.Id)
                 ?? throw new ArgumentException("No product category mapping found with the specified id");
 
-            productCategory.IsFeaturedProduct = model.IsFeaturedProduct;
-            productCategory.DisplayOrder = model.DisplayOrder;
+            //fill entity from product
+            productCategory = model.ToEntity(productCategory);
             _categoryService.UpdateProductCategory(productCategory);
 
             return new NullJsonResult();
