@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Nop.Core.Data
 {
@@ -25,6 +26,13 @@ namespace Nop.Core.Data
         void Insert(TEntity entity);
 
         /// <summary>
+        /// Asynchronously Insert entity
+        /// </summary>
+        /// <param name="entity">Entity</param>
+        /// <returns>A task that represents the asynchronous save operation.</returns>
+        Task InsertAsync(TEntity entity);
+
+        /// <summary>
         /// Insert entities
         /// </summary>
         /// <param name="entities">Entities</param>
@@ -35,6 +43,13 @@ namespace Nop.Core.Data
         /// </summary>
         /// <param name="entity">Entity</param>
         void Update(TEntity entity);
+
+        /// <summary>
+        /// Asynchronously Update entity
+        /// </summary>
+        /// <param name="entity">Entity</param>
+        /// <returns>A task that represents the asynchronous save operation.</returns>
+        Task UpdateAsync(TEntity entity);
 
         /// <summary>
         /// Update entities

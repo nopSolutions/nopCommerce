@@ -1,5 +1,6 @@
 using Nop.Core;
 using Nop.Core.Domain.Common;
+using System.Threading.Tasks;
 
 namespace Nop.Services.Common
 {
@@ -41,12 +42,12 @@ namespace Nop.Services.Common
         /// Inserts a search term record
         /// </summary>
         /// <param name="searchTerm">Search term</param>
-        void InsertSearchTerm(SearchTerm searchTerm);
+        Task InsertSearchTerm(SearchTerm searchTerm);
 
         /// <summary>
         /// Updates the search term record
         /// </summary>
         /// <param name="searchTerm">Search term</param>
-         void UpdateSearchTerm(SearchTerm searchTerm);
+         Task UpdateSearchTerm(SearchTerm searchTerm);
     }
 }

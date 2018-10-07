@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain.Common;
@@ -109,12 +110,12 @@ namespace Nop.Services.Common
         /// Inserts a search term record
         /// </summary>
         /// <param name="searchTerm">Search term</param>
-        public virtual void InsertSearchTerm(SearchTerm searchTerm)
+        public async virtual Task InsertSearchTerm(SearchTerm searchTerm)
         {
             if (searchTerm == null)
                 throw new ArgumentNullException(nameof(searchTerm));
 
-            _searchTermRepository.Insert(searchTerm);
+            await _searchTermRepository.InsertAsync(searchTerm);
 
             //event notification
             _eventPublisher.EntityInserted(searchTerm);
@@ -124,12 +125,12 @@ namespace Nop.Services.Common
         /// Updates the search term record
         /// </summary>
         /// <param name="searchTerm">Search term</param>
-        public virtual void UpdateSearchTerm(SearchTerm searchTerm)
+        public async virtual Task UpdateSearchTerm(SearchTerm searchTerm)
         {
             if (searchTerm == null)
                 throw new ArgumentNullException(nameof(searchTerm));
 
-            _searchTermRepository.Update(searchTerm);
+            await _searchTermRepository.UpdateAsync(searchTerm);
 
             //event notification
             _eventPublisher.EntityUpdated(searchTerm);

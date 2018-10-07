@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Nop.Core;
 using Nop.Core.Data;
@@ -88,6 +89,28 @@ namespace Nop.Data
         }
 
         /// <summary>
+        /// Asynchronously Insert entity
+        /// </summary>
+        /// <param name="entity">Entity</param>
+        /// <returns>A task that represents the asynchronous save operation.</returns>
+        public async virtual Task InsertAsync(TEntity entity)
+        {
+            if (entity == null)
+                throw new ArgumentNullException(nameof(entity));
+
+            try
+            {
+                await Entities.AddAsync(entity);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException exception)
+            {
+                //ensure that the detailed error text is saved in the Log
+                throw new Exception(GetFullErrorTextAndRollbackEntityChanges(exception), exception);
+            }
+        }
+
+        /// <summary>
         /// Insert entities
         /// </summary>
         /// <param name="entities">Entities</param>
@@ -121,6 +144,28 @@ namespace Nop.Data
             {
                 Entities.Update(entity);
                 _context.SaveChanges();
+            }
+            catch (DbUpdateException exception)
+            {
+                //ensure that the detailed error text is saved in the Log
+                throw new Exception(GetFullErrorTextAndRollbackEntityChanges(exception), exception);
+            }
+        }
+
+        /// <summary>
+        /// Asynchronously Update entity
+        /// </summary>
+        /// <param name="entity">Entity</param>
+        /// <returns>A task that represents the asynchronous save operation.</returns>
+        public async virtual Task UpdateAsync(TEntity entity)
+        {
+            if (entity == null)
+                throw new ArgumentNullException(nameof(entity));
+
+            try
+            {
+                Entities.Update(entity);
+                await _context.SaveChangesAsync();
             }
             catch (DbUpdateException exception)
             {
