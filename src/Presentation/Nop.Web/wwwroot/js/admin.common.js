@@ -137,7 +137,7 @@ function saveUserPreferences(url, name, value) {
 
 function warningValidation(validationUrl, warningElementName, passedParameters) {
     addAntiForgeryToken(passedParameters);
-    var element = $('[name="' + warningElementName + '"]');
+    var element = $('[data-valmsg-for="' + warningElementName + '"]');
 
     var messageElement = element.siblings('.field-validation-custom');
     if (messageElement.length == 0) {
