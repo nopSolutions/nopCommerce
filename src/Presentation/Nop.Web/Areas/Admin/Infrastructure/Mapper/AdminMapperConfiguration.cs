@@ -516,7 +516,8 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
             CreateMap<ProductAttributeMappingModel, ProductAttributeMapping>()
                 .ForMember(entity => entity.ConditionAttributeXml, options => options.Ignore())
                 .ForMember(entity => entity.Product, options => options.Ignore())
-                .ForMember(entity => entity.ProductAttributeValues, options => options.Ignore());
+                .ForMember(entity => entity.ProductAttributeValues, options => options.Ignore())
+                .ForMember(entity => entity.AttributeControlType, options => options.Ignore());
 
             CreateMap<ProductAttributeValue, ProductAttributeValueModel>()
                 .ForMember(model => model.AttributeValueTypeName, options => options.Ignore())
