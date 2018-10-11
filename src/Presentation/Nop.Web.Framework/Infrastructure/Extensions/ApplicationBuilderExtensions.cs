@@ -80,7 +80,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                     finally
                     {
                         //rethrow the exception to show the error page
-                        throw exception;
+                        System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(exception).Throw();
                     }
                 });
             });
