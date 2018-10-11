@@ -15307,7 +15307,7 @@
     <Value>Remove Filter</Value>
   </LocaleResource>
   <LocaleResource Name="Filtering.SpecificationFilter.Separator">
-    <Value>or </Value>
+    <Value>or</Value>
   </LocaleResource>
   <LocaleResource Name="Footer.CustomerService">
     <Value>Customer service</Value>
