@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Runtime.ExceptionServices;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
@@ -80,8 +81,10 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                     finally
                     {
                         //rethrow the exception to show the error page
-                        System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(exception).Throw();
+                        ExceptionDispatchInfo.Throw(exception);
                     }
+
+                    return Task.CompletedTask;
                 });
             });
         }
