@@ -1361,11 +1361,11 @@ namespace Nop.Services.Messages
         /// <returns>Collection of allowed (supported) message tokens for campaigns</returns>
         public virtual IEnumerable<string> GetListOfCampaignAllowedTokens()
         {
-            var additionTokens = new CampaignAdditionTokensAddedEvent();
-            _eventPublisher.Publish(additionTokens);
+            var additionalTokens = new CampaignAdditionalTokensAddedEvent();
+            _eventPublisher.Publish(additionalTokens);
 
             var allowedTokens = GetListOfAllowedTokens(new[] { TokenGroupNames.StoreTokens, TokenGroupNames.SubscriptionTokens }).ToList();
-            allowedTokens.AddRange(additionTokens.AdditionTokens);
+            allowedTokens.AddRange(additionalTokens.AdditionalTokens);
 
             return allowedTokens.Distinct();
         }
@@ -1377,13 +1377,13 @@ namespace Nop.Services.Messages
         /// <returns>Collection of allowed message tokens</returns>
         public virtual IEnumerable<string> GetListOfAllowedTokens(IEnumerable<string> tokenGroups = null)
         {
-            var additionTokens = new AdditionTokensAddedEvent();
-            _eventPublisher.Publish(additionTokens);
+            var additionalTokens = new AdditionalTokensAddedEvent();
+            _eventPublisher.Publish(additionalTokens);
 
             var allowedTokens = AllowedTokens.Where(x => tokenGroups == null || tokenGroups.Contains(x.Key))
                 .SelectMany(x => x.Value).ToList();
 
-            allowedTokens.AddRange(additionTokens.AdditionTokens);
+            allowedTokens.AddRange(additionalTokens.AdditionalTokens);
 
             return allowedTokens.Distinct();
         }
