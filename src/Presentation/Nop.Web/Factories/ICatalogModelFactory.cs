@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Vendors;
 using Nop.Web.Models.Catalog;
@@ -179,7 +180,7 @@ namespace Nop.Web.Factories
         /// <param name="model">Search model</param>
         /// <param name="command">Catalog paging filtering command</param>
         /// <returns>Search model</returns>
-        SearchModel PrepareSearchModel(SearchModel model, CatalogPagingFilteringModel command);
+        Task<SearchModel> PrepareSearchModel(SearchModel model, CatalogPagingFilteringModel command);
 
         /// <summary>
         /// Prepare search box model

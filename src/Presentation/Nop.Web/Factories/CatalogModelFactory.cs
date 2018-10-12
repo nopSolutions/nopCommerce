@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
@@ -1164,15 +1165,12 @@ namespace Nop.Web.Factories
         /// <param name="model">Search model</param>
         /// <param name="command">Catalog paging filtering command</param>
         /// <returns>Search model</returns>
-        public virtual SearchModel PrepareSearchModel(SearchModel model, CatalogPagingFilteringModel command)
+        public async virtual Task<SearchModel> PrepareSearchModel(SearchModel model, CatalogPagingFilteringModel command)
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
 
-            var searchTerms = model.q;
-            if (searchTerms == null)
-                searchTerms = "";
-            searchTerms = searchTerms.Trim();
+            var searchTerms = model.q?.Trim() ?? string.Empty;
 
             //sorting
             PrepareSortingOptions(model.PagingFilteringContext, command);
@@ -1193,11 +1191,11 @@ namespace Nop.Web.Factories
                 var categoriesModel = new List<SearchModel.CategoryModel>();
                 //all categories
                 var allCategories = _categoryService.GetAllCategories(storeId: _storeContext.CurrentStore.Id);
-                foreach (var c in allCategories)
+                foreach (var category in allCategories)
                 {
                     //generate full category name (breadcrumb)
                     var categoryBreadcrumb = "";
-                    var breadcrumb = _categoryService.GetCategoryBreadCrumb(c, allCategories);
+                    var breadcrumb = _categoryService.GetCategoryBreadCrumb(category, allCategories);
                     for (var i = 0; i <= breadcrumb.Count - 1; i++)
                     {
                         categoryBreadcrumb += _localizationService.GetLocalized(breadcrumb[i], x => x.Name);
@@ -1206,7 +1204,7 @@ namespace Nop.Web.Factories
                     }
                     categoriesModel.Add(new SearchModel.CategoryModel
                     {
-                        Id = c.Id,
+                        Id = category.Id,
                         Breadcrumb = categoryBreadcrumb
                     });
                 }

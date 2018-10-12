@@ -1,4 +1,6 @@
 ﻿using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Nop.Core;
 
@@ -23,6 +25,13 @@ namespace Nop.Data
         /// </summary>
         /// <returns>The number of state entries written to the database</returns>
         int SaveChanges();
+
+        /// <summary>
+        /// Asynchronously saves all changes made in this context to the database.
+        /// </summary>
+        /// <param name="cancellationToken">A System.Threading.CancellationToken to observe while waiting for the task to complete.</param>
+        /// <returns>A task that represents the asynchronous save operation.</returns>
+        Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Generate a script to create all tables for the current model

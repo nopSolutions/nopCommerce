@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
@@ -251,7 +252,7 @@ namespace Nop.Web.Controllers
         #region Searching
 
         [HttpsRequirement(SslRequirement.No)]
-        public virtual IActionResult Search(SearchModel model, CatalogPagingFilteringModel command)
+        public async virtual Task<IActionResult> Search(SearchModel model, CatalogPagingFilteringModel command)
         {
             //'Continue shopping' URL
             _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
@@ -262,14 +263,14 @@ namespace Nop.Web.Controllers
             if (model == null)
                 model = new SearchModel();
 
-            model = _catalogModelFactory.PrepareSearchModel(model, command);
+            model = await _catalogModelFactory.PrepareSearchModel(model, command);
             return View(model);
         }
 
         public virtual IActionResult SearchTermAutoComplete(string term)
         {
             if (string.IsNullOrWhiteSpace(term) || term.Length < _catalogSettings.ProductSearchTermMinimumLength)
-                return Content("");
+                return Content(string.Empty);
 
             //products
             var productNumber = _catalogSettings.ProductSearchAutoCompleteNumberOfProducts > 0 ?
