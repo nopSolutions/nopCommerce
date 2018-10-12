@@ -196,7 +196,8 @@
                 data: postData,
                  success: function (data) {
                      if (data.Error) {
-                         alert(data.Error);
+                         $('#orderNoteAddFailed-info').html(data.Error);
+                         $("#orderNoteAddFailed").click();
                      }
 
                      if (data.Result) { 
@@ -207,10 +208,12 @@
                     $('#addOrderNote').attr('disabled', false);
                 },
                  error: function (xhr, ajaxOptions, thrownError) {
-                    alert('Failed to add order note.');                    
-                    $('#addOrderNote').attr('disabled', false);
+                     $("#orderNoteAddAlert").click(); 
+                     $('#addOrderNote').attr('disabled', false);
                 }
             });
         });
     });
 </script>
+<nop-alert asp-alert-id="orderNoteAddAlert" asp-alert-message="@T("Admin.Orders.OrderNotes.Alert.Add")" />
+<nop-alert asp-alert-id="orderNoteAddFailed" />

@@ -3432,6 +3432,12 @@
   <LocaleResource Name="Admin.Catalog.Products.Pictures.AddNew">
     <Value>Add a new picture</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Pictures.Alert.AddNew">
+    <Value>Upload picture first.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Pictures.Alert.PictureAdd">
+    <Value>Failed to add product picture.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Pictures.Fields.DisplayOrder">
     <Value>Display order</Value>
   </LocaleResource>
@@ -3473,6 +3479,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AttributeCombinations.AddTitle">
     <Value>Select new combination and enter details below</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Alert.FailedGenerate">
+    <Value>Error while generating attribute combinations.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AttributeCombinations.AlreadyExists">
     <Value>The same combination already exists</Value>
@@ -3891,6 +3900,18 @@
   <LocaleResource Name="Admin.Catalog.Products.SpecificationAttributes.AddNew">
     <Value>Add a new product specification attribute</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.SpecificationAttributes.Alert.FailedAdd">
+    <Value>Failed to add specification attribute.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.SpecificationAttributes.Alert.NoAttributeOptions">
+    <Value>First, please create at least one specification attribute option</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.SpecificationAttributes.Alert.SelectOption">
+    <Value>Select specification attribute option.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.SpecificationAttributes.Alert.FailedRetrieving">
+    <Value>Failed to retrieve specification options.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.SpecificationAttributes.Fields.AllowFiltering">
     <Value>Allow filtering</Value>
   </LocaleResource>
@@ -4068,6 +4089,21 @@
   <LocaleResource Name="Admin.Common.AddNewRecord">
     <Value>Add new record</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Common.Alert">
+    <Value>Information</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Common.Alert.Add.Error">
+    <Value>Failed to add record.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Common.Alert.Save.Error">
+    <Value>Error while saving.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Common.Alert.Save.Ok">
+    <Value>Successfully saved.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Common.Alert.States.Failed">
+    <Value>Failed to retrieve states.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Common.All">
     <Value>All</Value>
   </LocaleResource>
@@ -4169,6 +4205,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Common.NoCancel">
     <Value>No, cancel</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Common.Ok">
+    <Value>Ok</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Common.Preview">
     <Value>Preview</Value>
@@ -4457,6 +4496,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Currencies.AddNew">
     <Value>Add a new currency</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Currencies.Alert.Error">
+    <Value>Failed to update currency.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Currencies.ApplyRate">
     <Value>Apply rate</Value>
@@ -8463,6 +8505,9 @@
   <LocaleResource Name="Admin.Configuration.Shipping.Measures.Dimensions.Description">
     <Value>NOTE: if you change your primary dimension, then do not forget to update the appropriate ratios of the units</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Dimensions.MarkAsPrimaryDimension.Alert.FailedToUpdate">
+    <Value>Failed to update dimension.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Shipping.Measures.Dimensions.Fields.DisplayOrder">
     <Value>Display order</Value>
   </LocaleResource>
@@ -8504,7 +8549,7 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Shipping.Measures.Weights.Fields.MarkAsPrimaryWeight">
     <Value>Mark as primary weight</Value>
-  </LocaleResource>
+  </LocaleResource>  
   <LocaleResource Name="Admin.Configuration.Shipping.Measures.Weights.Fields.Name">
     <Value>Name</Value>
   </LocaleResource>
@@ -8519,6 +8564,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Shipping.Measures.Weights.Fields.SystemKeyword.Required">
     <Value>Please provide a system keyword.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Weights.MarkAsPrimaryWeight.Alert.FailedToUpdate">
+    <Value>Failed to update weight.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Shipping.Methods">
     <Value>Shipping methods</Value>
@@ -10686,6 +10734,9 @@
   <LocaleResource Name="Admin.Customers.Customers.RewardPoints.AddTitle">
     <Value>Add (reduce) points</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.RewardPoints.Alert.HistoryAdd">
+    <Value>Failed to add reward points.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.RewardPoints.Fields.ActivatePointsImmediately">
     <Value>Activate points immediately</Value>
   </LocaleResource>
@@ -10733,7 +10784,7 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.RewardPoints.Fields.Store.Hint">
     <Value>Choose a store. It's useful only when you have "Points accumulated for all stores" setting disabled.</Value>
-  </LocaleResource>
+  </LocaleResource>  
   <LocaleResource Name="Admin.Customers.Customers.SendEmail">
     <Value>Send email</Value>
   </LocaleResource>
@@ -10902,6 +10953,9 @@
   <LocaleResource Name="Admin.Download.SaveDownloadURL">
     <Value>Save download</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Download.SaveDownloadURL.Alert.FailedSave">
+    <Value>Failed to save download object.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Download.UploadFile">
     <Value>Upload file</Value>
   </LocaleResource>
@@ -10946,6 +11000,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.GiftCards.Fields.GiftCardCouponCode">
     <Value>Coupon code</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GiftCards.Fields.GiftCardCouponCode.Alert.FailedGenerate">
+    <Value>Failed to generate code.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.GiftCards.Fields.GiftCardCouponCode.Generate">
     <Value>Generate code</Value>
@@ -11654,6 +11711,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.OrderNotes.AddTitle">
     <Value>Add order note</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.OrderNotes.Alert.Add">
+    <Value>Failed to add order note.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.OrderNotes.Fields.CreatedOn">
     <Value>Created on</Value>
@@ -12453,6 +12513,12 @@
   <LocaleResource Name="Admin.Promotions.Discounts.Requirements.AddNew">
     <Value>Add a new discount requirement</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Requirements.Alert.FailedGetDiscountRequirements">
+    <Value>Failed to load requirements info. Please refresh the page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Requirements.Alert.FailedToSave">
+    <Value>Failed to save requirement</Value>
+  </LocaleResource>  
   <LocaleResource Name="Admin.Promotions.Discounts.Requirements.DefaultRequirementGroup">
     <Value>Default requirement group</Value>
   </LocaleResource>
@@ -12472,7 +12538,7 @@
     <Value>Select requirement type</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.Requirements.FailedToSave">
-    <Value>Failed to save requirement</Value>
+    <Value>Failed to save discount requirements.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.Requirements.GroupIsEmpty">
     <Value>The group is empty</Value>
@@ -13145,6 +13211,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.SalesReport.OrderStatistics">
     <Value>Orders</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.OrderStatistics.Alert.FailedLoad">
+    <Value>Failed to load statistics.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.SalesReport.OrderStatistics.Month">
     <Value>Month</Value>
@@ -14234,6 +14303,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Vendors.VendorNotes.AddTitle">
     <Value>Add vendor note</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.VendorNotes.AddTitle.Alert.FailedAddNote">
+    <Value>Failed to add vendor note.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Vendors.VendorNotes.Fields.CreatedOn">
     <Value>Created on</Value>

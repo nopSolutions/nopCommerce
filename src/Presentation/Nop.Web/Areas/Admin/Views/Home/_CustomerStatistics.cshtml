@@ -148,8 +148,8 @@
                         window.customerStatistics.update();
                     }
                 },
-                error: function (xhr, ajaxOptions, thrownError) {
-                    alert('Failed to load statistics.');
+                error: function (xhr, ajaxOptions, thrownError) {                    
+                    $("#loadCustomerStatisticsAlert").click();
                 }
             });
         }

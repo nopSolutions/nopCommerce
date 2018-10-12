@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Encodings.Web;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
@@ -2755,7 +2756,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (string.IsNullOrEmpty(message))
             {
-                return Json(new { Result = false, Error = _localizationService.GetResource("Admin.Orders.OrderNotes.Fields.Note.Validation") });
+                return Json(new { Result = false, Error = JavaScriptEncoder.Default.Encode(_localizationService.GetResource("Admin.Orders.OrderNotes.Fields.Note.Validation")) });
             }
 
             //try to get an order with the specified id

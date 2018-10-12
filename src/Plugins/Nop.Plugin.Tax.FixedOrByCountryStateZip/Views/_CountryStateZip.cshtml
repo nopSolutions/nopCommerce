@@ -172,7 +172,7 @@
                                                 });
                                         },
                                         error: function(xhr, ajaxOptions, thrownError) {
-                                            alert('Failed to retrieve states.');
+                                            $("#getStatesByCountryIdAlert").click();
                                         }
                                     });
                                 });
@@ -259,7 +259,7 @@
                                                     grid.dataSource.read();
                                                 },
                                                 error: function(xhr, ajaxOptions, thrownError) {
-                                                    alert('Failed to add record.');
+                                                    $("#addRateByCountryStateZipAlert").click();
                                                 }
                                             });
                                             return false;
@@ -272,3 +272,5 @@
         </div>
     </form>
 </div>
+<nop-alert asp-alert-id="getStatesByCountryIdAlert" asp-alert-message="@T("Admin.Common.Alert.States.Failed")" />
+<nop-alert asp-alert-id="addRateByCountryStateZipAlert" asp-alert-message="@T("Admin.Common.Alert.Add.Error")" />

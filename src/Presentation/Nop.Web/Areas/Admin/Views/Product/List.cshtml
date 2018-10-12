@@ -347,7 +347,8 @@
                         grid.dataSource.read();
                     },
                     error: function (xhr, ajaxOptions, thrownError) {
-                        alert(thrownError);
+                        $('#deleteSelectedFailed-info').html(thrownError);
+                        $("#deleteSelectedFailed").click();
                     }
                 });
                 $('#delete-selected-action-confirmation').modal('toggle');
@@ -396,6 +397,7 @@
     </script>
 </form>
 @*<nop-delete-confirmation asp-button-id="delete-selected" />*@
+<nop-alert asp-alert-id="deleteSelectedFailed" />
 
 @*import products form*@
 <div id="importexcel-window" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="importexcel-window-title">

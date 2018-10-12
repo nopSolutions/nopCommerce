@@ -41,7 +41,7 @@
                                                         location.reload();
                                                     },
                                                     error: function (xhr, ajaxOptions, thrownError) {
-                                                        alert('Failed to create customer.');
+                                                        $("#createUpdateCustomerAlert").click();
                                                     },
                                                     complete: function (xhr, ajaxOptions, thrownError) {
                                                         $('#WorldpayCustomerCreate').prop('disabled', false);
@@ -145,3 +145,4 @@
         }
     </div>
 </div>
+<nop-alert asp-alert-id="createUpdateCustomerAlert" asp-alert-message="@T("Plugins.Payments.Worldpay.WorldpayCustomer.Create.Failed")" />

@@ -135,10 +135,11 @@
                     $('#addVendorNote').attr('disabled', false);
                 },
                 error: function(xhr, ajaxOptions, thrownError) {
-                    alert('Failed to add vendor note.');
+                    $("#vendorNoteAddAlert").click();
                     $('#addVendorNote').attr('disabled', false);
                 }
             });
         });
     });
 </script>
+<nop-alert asp-alert-id="vendorNoteAddAlert" asp-alert-message="@T("Admin.Vendors.VendorNotes.AddTitle.Alert.FailedAddNote")" />

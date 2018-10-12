@@ -159,10 +159,11 @@
                     grid.dataSource.read();
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
-                    alert('Failed to update weight');
+                    $("#markAsPrimaryWeightAlert").click();
                 }
             });
             $('#btnMarkAsPrimaryWeight-action-confirmation').modal('toggle');
         });
     });   
 </script>
+<nop-alert asp-alert-id="markAsPrimaryWeightAlert" asp-alert-message="@T("Admin.Configuration.Shipping.Measures.Weights.MarkAsPrimaryWeight.Alert.FailedToUpdate")" />

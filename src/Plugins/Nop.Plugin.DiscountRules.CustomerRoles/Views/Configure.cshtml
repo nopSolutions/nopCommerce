@@ -31,7 +31,7 @@
                     }
                 },
                 error:function (xhr, ajaxOptions, thrownError){
-                    alert('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Admin.Promotions.Discounts.Requirements.FailedToSave").Text))');
+                    $("#savecustomerrolesrequirementAlert").click();
                 }
             });
         });
@@ -58,3 +58,4 @@
         </div>
     </div>
 </div>
+<nop-alert asp-alert-id="savecustomerrolesrequirementAlert" asp-alert-message="@T("Admin.Promotions.Discounts.Requirements.FailedToSave")" />

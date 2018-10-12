@@ -38,12 +38,13 @@
                         data: {value: $(this).is(':checked')},
                         dataType: 'json',
                         error: function(xhr, ajaxOptions, thrownError) {
-                            alert('Failed to save preferences.');
+                            $("#saveModeAlert").click();
                         }
                     });
                 });
             });
 </script>
+<nop-alert asp-alert-id="saveModeAlert" asp-alert-message="@T("Admin.Common.Alert.Save.Error")" />
 
 @await Html.PartialAsync("~/Plugins/Tax.FixedOrByCountryStateZip/Views/_FixedRate.cshtml")
 @await Html.PartialAsync("~/Plugins/Tax.FixedOrByCountryStateZip/Views/_CountryStateZip.cshtml", Model)
