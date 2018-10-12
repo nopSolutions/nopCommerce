@@ -56,7 +56,7 @@
                             <li class="item">
                                 <strong>@group.First().SpecificationAttributeName</strong>:
                                 @group.ToList().Aggregate(string.Empty, (current, next) =>
-                                    $"{(string.IsNullOrEmpty(current) ? string.Empty : $"{current} {T("Filtering.SpecificationFilter.Separator")}")}{next.SpecificationAttributeOptionName}")
+                                    $"{(string.IsNullOrEmpty(current) ? string.Empty : $"{current} {T("Filtering.SpecificationFilter.Separator")} ")}{next.SpecificationAttributeOptionName}")
                             </li>
                         }
                     </ul>
