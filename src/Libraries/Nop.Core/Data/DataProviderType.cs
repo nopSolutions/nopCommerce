@@ -17,6 +17,12 @@ namespace Nop.Core.Data
         /// MS SQL Server
         /// </summary>
         [EnumMember(Value = "sqlserver")]
-        SqlServer
+        SqlServer,
+
+        /// <summary>
+        /// MySQL
+        /// </summary>
+        [EnumMember(Value = "mysql")]
+        MySQL
     }
 }

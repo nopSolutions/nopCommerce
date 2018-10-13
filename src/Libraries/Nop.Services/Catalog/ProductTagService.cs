@@ -58,7 +58,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="storeId">Store identifier</param>
         /// <returns>Dictionary of "product tag ID : product count"</returns>
-        private Dictionary<int, int> GetProductCount(int storeId)
+        protected virtual Dictionary<int, int> GetProductCount(int storeId)
         {
             var key = string.Format(NopCatalogDefaults.ProductTagCountCacheKey, storeId);
             return _staticCacheManager.Get(key, () =>

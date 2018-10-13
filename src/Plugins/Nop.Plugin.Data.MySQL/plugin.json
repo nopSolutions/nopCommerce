@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Data",
+  "FriendlyName": "MySQL Support",
+  "SystemName": "Data.MySQL",
+  "Version": "1.0",
+  "SupportedVersions": [ "4.10" ],
+  "Author": "turgayozgur",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Data.MySQL.dll",
+  "Description": "This plugin allows you to use MySQL."
+}

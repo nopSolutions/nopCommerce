@@ -242,7 +242,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         public static IMvcBuilder AddNopMvc(this IServiceCollection services)
         {
             //add basic MVC feature
-            var mvcBuilder = services.AddMvc();
+            var mvcBuilder = services.AddMvc().AddControllersAsServices();
 
             //sets the default value of settings on MvcOptions to match the behavior of asp.net core mvc 2.1
             mvcBuilder.SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
