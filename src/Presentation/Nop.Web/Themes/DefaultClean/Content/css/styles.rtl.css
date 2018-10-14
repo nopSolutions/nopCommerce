@@ -94,7 +94,7 @@ textarea, select {
     padding: 8px;
     vertical-align: middle;
 }
-input, textarea, select {
+input, textarea, select, button {
 	font-size: 14px;
 	font-family: Arial, Helvetica, sans-serif;
 	color: #777;
