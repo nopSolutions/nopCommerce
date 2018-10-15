@@ -1484,7 +1484,10 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
         {
             CreateMap<ScheduleTask, ScheduleTaskModel>();
             CreateMap<ScheduleTaskModel, ScheduleTask>()
-                .ForMember(entity => entity.Type, options => options.Ignore());
+                .ForMember(entity => entity.Type, options => options.Ignore())
+                .ForMember(entity => entity.LastStartUtc, options => options.Ignore())
+                .ForMember(entity => entity.LastEndUtc, options => options.Ignore())
+                .ForMember(entity => entity.LastSuccessUtc, options => options.Ignore());
         }
 
         /// <summary>
