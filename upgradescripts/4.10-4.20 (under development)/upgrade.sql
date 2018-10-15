@@ -143,6 +143,9 @@ set @resources='
   <LocaleResource Name="Admin.Common.Alert.Add.Error">
     <Value>Failed to add record.</Value>
   </LocaleResource>
+  <LocaleResource Name="FormattedAttributes.PriceAdjustment">
+    <Value> [{0}{1}{2}]</Value>
+  </LocaleResource>
 </Language>
 '
 
