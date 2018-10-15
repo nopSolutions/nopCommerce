@@ -17391,6 +17391,9 @@
   <LocaleResource Name="ShoppingCart.DiscountCouponCode">
     <Value>Discount Code</Value>
   </LocaleResource>
+  <LocaleResource Name="ShoppingCart.DiscountCouponCode.Activated">
+    <Value>Coupon code ({0}) is activated! The discount will be applied to your order.</Value>
+  </LocaleResource>
   <LocaleResource Name="ShoppingCart.DiscountCouponCode.Applied">
     <Value>The coupon code was applied</Value>
   </LocaleResource>
@@ -17399,6 +17402,9 @@
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.DiscountCouponCode.CurrentCode">
     <Value>Entered coupon code - {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.DiscountCouponCode.Invalid">
+    <Value>This coupon code ({0}) is invalid or no longer available.</Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.DiscountCouponCode.Label">
     <Value>Enter discount coupon code</Value>

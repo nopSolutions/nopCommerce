@@ -142,6 +142,11 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.Common.Alert.Add.Error">
     <Value>Failed to add record.</Value>
+  <LocaleResource Name="ShoppingCart.DiscountCouponCode.Activated">
+    <Value>Coupon code ({0}) is activated! The discount will be applied to your order.</Value>
+  </LocaleResource>  
+  <LocaleResource Name="ShoppingCart.DiscountCouponCode.Invalid">
+    <Value>This coupon code ({0}) is invalid or no longer available.</Value>
   </LocaleResource>
 </Language>
 '
@@ -244,5 +249,12 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'adminareasettings.useric
 BEGIN
     INSERT [Setting] ([Name], [Value], [StoreId])
     VALUES (N'adminareasettings.usericheditorforcustomeremails', N'False', 0)
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'messagessettings.usepopupnotifications')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'messagessettings.usepopupnotifications', N'False', 0)
 END
 GO
