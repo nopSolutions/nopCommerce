@@ -142,6 +142,7 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.Common.Alert.Add.Error">
     <Value>Failed to add record.</Value>
+  </LocaleResource>
   <LocaleResource Name="ShoppingCart.DiscountCouponCode.Activated">
     <Value>Coupon code ({0}) is activated! The discount will be applied to your order.</Value>
   </LocaleResource>  
