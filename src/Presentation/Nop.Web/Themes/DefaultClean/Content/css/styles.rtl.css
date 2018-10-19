@@ -1482,13 +1482,18 @@ label, label + * {
 	margin: 0 0 10px;
 }
 .item-box .rating {
-	background: url('../images/rating1.png') repeat-x;
-	width: 95px;
+    background: url('../images/rating1.png') repeat-x;
+    width: 95px;
     height: 14px;
+
+    -ms-transform: scaleX(-1);
+    -webkit-transform: scaleX(-1);
+    transform: scaleX(-1);
 }
 .item-box .rating div {
 	background: url('../images/rating2.png') repeat-x;
     height: 14px;
+    margin-right: auto;
 }
 .item-box .description {
 	display: none;
@@ -1788,13 +1793,19 @@ label, label + * {
 	margin: 0 0 8px;
 }
 .product-review-box .rating {
-	width: 95px;
-	height: 14px;
-	background: url('../images/rating1.png') repeat-x;
+    width: 95px;
+    height: 14px;
+    background: url('../images/rating1.png') repeat-x;
+
+    -ms-transform: scaleX(-1);
+    -webkit-transform: scaleX(-1);
+    transform: scaleX(-1);
 }
+
 .product-review-box .rating div {
 	height: 14px; 
 	background: url('../images/rating2.png') repeat-x;
+    margin-right: auto;
 }
 .product-review-links a {
 	display: inline-block;
