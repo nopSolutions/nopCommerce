@@ -150,8 +150,6 @@ namespace Nop.Core.Caching
         /// </summary>
         protected virtual async Task ClearAsync()
         {
-            _perRequestCacheManager.Clear();
-
             foreach (var endPoint in _connectionWrapper.GetEndPoints())
             {
                 var server = _connectionWrapper.GetServer(endPoint);
@@ -160,12 +158,18 @@ namespace Nop.Core.Caching
                 //server.FlushDatabase();
 
                 //that's why we manually delete all elements
-                var keys = server.Keys(database: _db.Database);
-
-                //we should always persist the data protection key list
-                keys = keys.Where(key => !key.ToString().Equals(NopCachingDefaults.RedisDataProtectionKey, StringComparison.OrdinalIgnoreCase));
-
-                await _db.KeyDeleteAsync(keys.ToArray());
+                var keys = server.Keys(database: _db.Database)
+                    //we should always persist the data protection key list
+                    .Where(key => !key.ToString().Equals(NopCachingDefaults.RedisDataProtectionKey, StringComparison.OrdinalIgnoreCase)).ToArray();
+                
+                //we cant use _perRequestCacheManager.Clear(),
+                //because HttpContext stores some server data that we should not delete
+                foreach (var redisKey in keys)
+                {
+                    _perRequestCacheManager.Remove(redisKey.ToString());
+                }
+                
+                await _db.KeyDeleteAsync(keys);
             }
         }
 
