@@ -6612,6 +6612,11 @@ namespace Nop.Services.Installation
                 ReCaptchaDefaultLanguage = string.Empty,
                 AutomaticallyChooseLanguage = true
             });
+
+            settingService.SaveSetting(new MessagesSettings
+            {
+                UsePopupNotifications = false
+            });
         }
 
         protected virtual void InstallCheckoutAttributes()

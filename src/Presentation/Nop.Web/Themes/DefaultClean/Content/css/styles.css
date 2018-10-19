@@ -478,17 +478,15 @@ label, label + * {
 
 
 
-.bar-notification {
-	display: none;
-	position: fixed;
-	top: 0;
-	left: 0;
-	z-index: 1000;
-	width: 100%;
-	padding: 15px 25px 15px 10px;
-	line-height: 16px;
-	color: #fff;
-	opacity: 0.95;
+.bar-notification-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    width: 100%;
+    line-height: 16px;
+    color: #fff;
+    opacity: 0.95;
 }
 .bar-notification.success {
 	background-color: #4bb07a;
@@ -498,6 +496,11 @@ label, label + * {
 }
 .bar-notification.warning {
 	background-color: #f39c12;
+}
+.bar-notification {
+    position: relative;
+    display: none;
+    padding: 15px 25px 15px 10px;
 }
 .bar-notification .content {
 	margin: 0 10px 0 0;
@@ -515,6 +518,20 @@ label, label + * {
 	margin: 7px;
 	background: #fff url('../images/close.png') center no-repeat;
 	cursor: pointer;
+}
+.popup-notification {
+    border-radius: 5px;
+    padding: 3px;
+    margin: 5px 0;
+}
+.popup-notification.success {
+    border: 2px rgba( 75,176,122,.5) solid;
+}
+.popup-notification.error {
+    border: 2px rgba( 228,68,76,.5) solid;
+}
+.popup-notification.warning {
+    border: 2px rgba( 243,156,18,.5) solid;
 }
 
 .noscript {
