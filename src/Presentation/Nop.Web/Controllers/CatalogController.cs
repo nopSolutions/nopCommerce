@@ -280,6 +280,7 @@ namespace Nop.Web.Controllers
                 keywords: term,
                 languageId: _workContext.WorkingLanguage.Id,
                 visibleIndividuallyOnly: true,
+                parentGroupedProductId: 0,
                 pageSize: productNumber);
 
             var showLinkToResultSearch = _catalogSettings.ShowLinkToAllResultInSearchAutoComplete && (products.TotalCount > productNumber);
