@@ -69,6 +69,13 @@ namespace Nop.Web.Framework.Security
             
             try
             {
+                var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
+
+                if (!(fileProvider.FileExists(path) || fileProvider.DirectoryExists(path)))
+                {
+                    return true;
+                }
+
                 var current = WindowsIdentity.GetCurrent();
 
                 var readIsDeny = false;
@@ -81,7 +88,6 @@ namespace Nop.Web.Framework.Security
                 var modifyIsAllow = false;
                 var deleteIsAllow = false;
 
-                var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
                 var rules = fileProvider.GetAccessControl(path).GetAccessRules(true, true, typeof(SecurityIdentifier))
                     .Cast<FileSystemAccessRule>()
                     .ToList();
