@@ -526,7 +526,7 @@ namespace Nop.Services.Installation
                     Rate = 0.86M,
                     DisplayLocale = string.Empty,
                     //CustomFormatting = "ˆ0.00",
-                    CustomFormatting = "€0.00",
+                    CustomFormatting = string.Format("{0}0.00", "\u20ac"), //euro symbol
                     Published = true,
                     DisplayOrder = 6,
                     CreatedOnUtc = DateTime.UtcNow,
