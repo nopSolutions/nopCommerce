@@ -17376,6 +17376,9 @@
   <LocaleResource Name="ShoppingCart.CustomerEnteredPrice.RangeError">
     <Value>The price must be from {0} to {1}</Value>
   </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Discount.CannotBeUsed">
+    <Value>You cannot use this discount coupon because the validation conditions are not met</Value>
+  </LocaleResource>
   <LocaleResource Name="ShoppingCart.Discount.CannotBeUsedAnymore">
     <Value>Sorry, you've used this discount already</Value>
   </LocaleResource>
