@@ -10608,6 +10608,9 @@
   <LocaleResource Name="Admin.Customers.Customers.Impersonate.Description2">
     <Value>Note: Click 'finish session' link in order to finish this session</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Impersonate.Inactive">
+    <Value>This customer is inactive</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.Info">
     <Value>Customer info</Value>
   </LocaleResource>

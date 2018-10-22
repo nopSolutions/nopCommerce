@@ -915,6 +915,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (customer == null)
                 return RedirectToAction("List");
 
+            if (!customer.Active)
+            {
+                _notificationService.WarningNotification(
+                    _localizationService.GetResource("Admin.Customers.Customers.Impersonate.Inactive"));
+                return RedirectToAction("Edit", customer.Id);
+            }
+
             //ensure that a non-admin user cannot impersonate as an administrator
             //otherwise, that user can simply impersonate as an administrator and gain additional administrative privileges
             if (!_workContext.CurrentCustomer.IsAdmin() && customer.IsAdmin())
