@@ -9,10 +9,11 @@
         <div class="modal-body">
             <div class="additional-text" id="@(Model.AlertId)-info"></div>
             @(Model.AlertMessage)
-        </div>        
+        </div>
         <div class="modal-footer">
             <span class="btn btn-primary pull-right" data-dismiss="modal">@T("Admin.Common.Ok")</span>
-        </div>        
+        </div>
     </div>
 </div>
+@*The closing tag must be described in full, otherwise, some browsers incorrectly render the markup, without taking into account the closing tag.*@
 <div class="btn btn-default" id="@(Model.AlertId)" style="display:none"></div>
