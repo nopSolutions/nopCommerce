@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Customers;
 
 namespace Nop.Services.Catalog
 {
@@ -61,6 +62,7 @@ namespace Nop.Services.Catalog
         /// <returns>Number of products</returns>
         int GetProductCount(int productTagId, int storeId);
 
+        int GetProductCount(int productTagId, int storeId, Customer customer);
         /// <summary>
         /// Update product tags
         /// </summary>

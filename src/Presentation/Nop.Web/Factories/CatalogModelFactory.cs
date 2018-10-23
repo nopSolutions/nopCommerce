@@ -1055,9 +1055,9 @@ namespace Nop.Web.Factories
                 var allTags = _productTagService
                     .GetAllProductTags()
                     //filter by current store
-                    .Where(x => _productTagService.GetProductCount(x.Id, _storeContext.CurrentStore.Id) > 0)
+                    .Where(x => _productTagService.GetProductCount(x.Id, _storeContext.CurrentStore.Id, _workContext.CurrentCustomer) > 0)
                     //order by product count
-                    .OrderByDescending(x => _productTagService.GetProductCount(x.Id, _storeContext.CurrentStore.Id))
+                    .OrderByDescending(x => _productTagService.GetProductCount(x.Id, _storeContext.CurrentStore.Id, _workContext.CurrentCustomer))
                     .ToList();
 
                 var tags = allTags
@@ -1074,7 +1074,7 @@ namespace Nop.Web.Factories
                         Id = tag.Id,
                         Name = _localizationService.GetLocalized(tag, y => y.Name),
                         SeName = _urlRecordService.GetSeName(tag),
-                        ProductCount = _productTagService.GetProductCount(tag.Id, _storeContext.CurrentStore.Id)
+                        ProductCount = _productTagService.GetProductCount(tag.Id, _storeContext.CurrentStore.Id, _workContext.CurrentCustomer)
                     });
                 return model;
             });
@@ -1135,7 +1135,7 @@ namespace Nop.Web.Factories
                 Tags = _productTagService
                 .GetAllProductTags()
                 //filter by current store
-                .Where(x => _productTagService.GetProductCount(x.Id, _storeContext.CurrentStore.Id) > 0)
+                .Where(x => _productTagService.GetProductCount(x.Id, _storeContext.CurrentStore.Id, _workContext.CurrentCustomer) > 0)
                 //sort by name
                 .OrderBy(x => _localizationService.GetLocalized(x, y => y.Name))
                 .Select(x =>
@@ -1145,7 +1145,7 @@ namespace Nop.Web.Factories
                         Id = x.Id,
                         Name = _localizationService.GetLocalized(x, y => y.Name),
                         SeName = _urlRecordService.GetSeName(x),
-                        ProductCount = _productTagService.GetProductCount(x.Id, _storeContext.CurrentStore.Id)
+                        ProductCount = _productTagService.GetProductCount(x.Id, _storeContext.CurrentStore.Id, _workContext.CurrentCustomer)
                     };
                     return ptModel;
                 })

@@ -1484,7 +1484,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //get product tags
             var productTags = _productTagService.GetAllProductTags()
-                .OrderByDescending(tag => _productTagService.GetProductCount(tag.Id, storeId: 0)).ToList();
+                .OrderByDescending(tag => _productTagService.GetProductCount(tag.Id, storeId: 0, customer:_workContext.CurrentCustomer)).ToList();
 
             //prepare list model
             var model = new ProductTagListModel
@@ -1495,7 +1495,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     var productTagModel = tag.ToModel<ProductTagModel>();
                     
                     //fill in additional values (not existing in the entity)
-                    productTagModel.ProductCount = _productTagService.GetProductCount(tag.Id, storeId: 0);
+                    productTagModel.ProductCount = _productTagService.GetProductCount(tag.Id, storeId: 0, customer: _workContext.CurrentCustomer);
 
                     return productTagModel;
                 }),
@@ -1524,7 +1524,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     model = productTag.ToModel<ProductTagModel>();
                 }
                
-                model.ProductCount = _productTagService.GetProductCount(productTag.Id, storeId: 0);
+                model.ProductCount = _productTagService.GetProductCount(productTag.Id, storeId: 0, customer: _workContext.CurrentCustomer);
 
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>

@@ -535,17 +535,19 @@ namespace Nop.Web.Factories
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            var productTagsCacheKey = string.Format(ModelCacheEventConsumer.PRODUCTTAG_BY_PRODUCT_MODEL_KEY, product.Id, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
+            var activeRoleIds = _workContext.CurrentCustomer.CustomerRoles.Where(role => role.Active).Select(role => role.Id);
+            var rolePart = string.Join(";", activeRoleIds);
+            var productTagsCacheKey = string.Format(ModelCacheEventConsumer.PRODUCTTAG_BY_PRODUCT_MODEL_KEY, product.Id, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id, rolePart);
             var model = _cacheManager.Get(productTagsCacheKey, () =>
                 _productTagService.GetAllProductTagsByProductId(product.Id)
                 //filter by store
-                .Where(x => _productTagService.GetProductCount(x.Id, _storeContext.CurrentStore.Id) > 0)
+                .Where(x => _productTagService.GetProductCount(x.Id, _storeContext.CurrentStore.Id, _workContext.CurrentCustomer) > 0)
                 .Select(x => new ProductTagModel
                 {
                     Id = x.Id,
                     Name = _localizationService.GetLocalized(x, y => y.Name),
                     SeName = _urlRecordService.GetSeName(x),
-                    ProductCount = _productTagService.GetProductCount(x.Id, _storeContext.CurrentStore.Id)
+                    ProductCount = _productTagService.GetProductCount(x.Id, _storeContext.CurrentStore.Id, _workContext.CurrentCustomer)
                 })
                 .ToList());
 

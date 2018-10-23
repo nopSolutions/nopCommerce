@@ -4,6 +4,7 @@ using System.Linq;
 using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Customers;
 using Nop.Data;
 using Nop.Services.Events;
 using Nop.Services.Seo;
@@ -25,6 +26,7 @@ namespace Nop.Services.Catalog
         private readonly IRepository<ProductTag> _productTagRepository;
         private readonly IStaticCacheManager _staticCacheManager;
         private readonly IUrlRecordService _urlRecordService;
+        private readonly CatalogSettings _catalogSettings;
 
         #endregion
 
@@ -37,7 +39,7 @@ namespace Nop.Services.Catalog
             IRepository<ProductProductTagMapping> productProductTagMappingRepository,
             IRepository<ProductTag> productTagRepository,
             IStaticCacheManager staticCacheManager,
-            IUrlRecordService urlRecordService)
+            IUrlRecordService urlRecordService, CatalogSettings catalogSettings)
         {
             this._cacheManager = cacheManager;
             this._dbContext = dbContext;
@@ -47,6 +49,7 @@ namespace Nop.Services.Catalog
             this._productTagRepository = productTagRepository;
             this._staticCacheManager = staticCacheManager;
             this._urlRecordService = urlRecordService;
+            _catalogSettings = catalogSettings;
         }
 
         #endregion
@@ -64,6 +67,24 @@ namespace Nop.Services.Catalog
             return _staticCacheManager.Get(key, () =>
             {
                 return _dbContext.QueryFromSql<ProductTagWithCount>($"Exec ProductTagCountLoadAll {storeId}")
+                    .ToDictionary(item => item.ProductTagId, item => item.ProductCount);
+            });
+        }
+
+        /// <summary>
+        /// Get product count for each of existing product tag
+        /// </summary>
+        /// <param name="storeId">Store identifier</param>
+        /// <param name="customer">Current customer</param>
+        /// <returns>Dictionary of "product tag ID : product count"</returns>
+        private Dictionary<int, int> GetProductCount(int storeId, Customer customer)
+        {
+            var activeRoleIds = customer.CustomerRoles.Where(role => role.Active).Select(role => role.Id);
+            var roleParameters = string.Join(";", activeRoleIds);
+            var key = string.Format(NopCatalogDefaults.ProductTagCountCacheKey, storeId + "-" + roleParameters);
+            return _staticCacheManager.Get(key, () =>
+            {
+                return _dbContext.QueryFromSql<ProductTagWithCount>($"Exec ProductTagByRoleCountLoadAll {storeId}, ';{roleParameters};, {(_catalogSettings.IgnoreAcl ? 1 : 0)}'")
                     .ToDictionary(item => item.ProductTagId, item => item.ProductCount);
             });
         }
@@ -205,6 +226,19 @@ namespace Nop.Services.Catalog
                 return dictionary[productTagId];
 
             return 0;
+        }
+
+        /// <summary>
+        /// Get number of products
+        /// </summary>
+        /// <param name="productTagId">Product tag identifier</param>
+        /// <param name="storeId">Store identifier</param>
+        /// <param name="customer">Current customer</param>
+        /// <returns>Number of products</returns>
+        public virtual int GetProductCount(int productTagId, int storeId, Customer customer)
+        {
+            var dictionary = GetProductCount(storeId, customer);
+            return dictionary.ContainsKey(productTagId) ? dictionary[productTagId] : 0;
         }
 
         /// <summary>
