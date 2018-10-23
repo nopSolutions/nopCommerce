@@ -276,7 +276,7 @@
 
                 //save sidebar preferences
                 $('a.sidebar-toggle').on('click', function () {
-                    var collapsed = !$('body').hasClass('sidebar-collapse');
+                    var collapsed = $('body').hasClass('sidebar-collapse');
                     saveUserPreferences('@(Url.Action("SavePreference", "Preferences"))', '@hideSidebarAttributeName', collapsed);
                 });
 
