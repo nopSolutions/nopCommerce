@@ -84,7 +84,7 @@ namespace Nop.Services.Catalog
             var key = string.Format(NopCatalogDefaults.ProductTagCountCacheKey, storeId + "-" + roleParameters);
             return _staticCacheManager.Get(key, () =>
             {
-                return _dbContext.QueryFromSql<ProductTagWithCount>($"Exec ProductTagByRoleCountLoadAll {storeId}, ';{roleParameters};, {(_catalogSettings.IgnoreAcl ? 1 : 0)}'")
+                return _dbContext.QueryFromSql<ProductTagWithCount>($"Exec ProductTagByRoleCountLoadAll {storeId}, ';{roleParameters};', {(_catalogSettings.IgnoreAcl ? 1 : 0)}")
                     .ToDictionary(item => item.ProductTagId, item => item.ProductCount);
             });
         }
