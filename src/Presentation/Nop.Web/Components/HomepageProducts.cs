@@ -34,6 +34,8 @@ namespace Nop.Web.Components
             //availability dates
             products = products.Where(p => _productService.ProductIsAvailable(p)).ToList();
 
+            products = products.Where(p => p.VisibleIndividually).ToList();
+
             if (!products.Any())
                 return Content("");
 

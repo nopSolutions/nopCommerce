@@ -430,7 +430,6 @@ namespace Nop.Web.Factories
                        categoryIds: new List<int> { category.Id },
                        storeId: _storeContext.CurrentStore.Id,
                        visibleIndividuallyOnly: true,
-                       parentGroupedProductId: 0,
                        featuredProducts: true);
                     return featuredProducts.TotalCount > 0;
                 });
@@ -442,7 +441,6 @@ namespace Nop.Web.Factories
                        categoryIds: new List<int> { category.Id },
                        storeId: _storeContext.CurrentStore.Id,
                        visibleIndividuallyOnly: true,
-                       parentGroupedProductId: 0,
                        featuredProducts: true);
                 }
                 if (featuredProducts != null)
@@ -465,7 +463,6 @@ namespace Nop.Web.Factories
                 categoryIds: categoryIds,
                 storeId: _storeContext.CurrentStore.Id,
                 visibleIndividuallyOnly: true,
-                parentGroupedProductId: 0,
                 featuredProducts: _catalogSettings.IncludeFeaturedProductsInNormalLists ? null : (bool?)false,
                 priceMin: minPriceConverted,
                 priceMax: maxPriceConverted,
@@ -773,7 +770,6 @@ namespace Nop.Web.Factories
                        manufacturerId: manufacturer.Id,
                        storeId: _storeContext.CurrentStore.Id,
                        visibleIndividuallyOnly: true,
-                       parentGroupedProductId: 0,
                        featuredProducts: true);
                     return featuredProducts.TotalCount > 0;
                 });
@@ -785,7 +781,6 @@ namespace Nop.Web.Factories
                        manufacturerId: manufacturer.Id,
                        storeId: _storeContext.CurrentStore.Id,
                        visibleIndividuallyOnly: true,
-                       parentGroupedProductId: 0,
                        featuredProducts: true);
                 }
                 if (featuredProducts != null)
@@ -799,7 +794,6 @@ namespace Nop.Web.Factories
                 manufacturerId: manufacturer.Id,
                 storeId: _storeContext.CurrentStore.Id,
                 visibleIndividuallyOnly: true,
-                parentGroupedProductId: 0,
                 featuredProducts: _catalogSettings.IncludeFeaturedProductsInNormalLists ? null : (bool?)false,
                 priceMin: minPriceConverted,
                 priceMax: maxPriceConverted,
@@ -959,7 +953,6 @@ namespace Nop.Web.Factories
                 vendorId: vendor.Id,
                 storeId: _storeContext.CurrentStore.Id,
                 visibleIndividuallyOnly: true,
-                parentGroupedProductId: 0,
                 orderBy: (ProductSortingEnum)command.OrderBy,
                 pageIndex: command.PageNumber - 1,
                 pageSize: command.PageSize);
@@ -1122,7 +1115,6 @@ namespace Nop.Web.Factories
                 storeId: _storeContext.CurrentStore.Id,
                 productTagId: productTag.Id,
                 visibleIndividuallyOnly: true,
-                parentGroupedProductId: 0,
                 orderBy: (ProductSortingEnum)command.OrderBy,
                 pageIndex: command.PageNumber - 1,
                 pageSize: command.PageSize);
@@ -1340,7 +1332,6 @@ namespace Nop.Web.Factories
                         manufacturerId: manufacturerId,
                         storeId: _storeContext.CurrentStore.Id,
                         visibleIndividuallyOnly: true,
-                        parentGroupedProductId: 0,
                         priceMin: minPriceConverted,
                         priceMax: maxPriceConverted,
                         keywords: searchTerms,

@@ -214,7 +214,6 @@ namespace Nop.Web.Controllers
             var products = _productService.SearchProducts(
                 storeId: _storeContext.CurrentStore.Id,
                 visibleIndividuallyOnly: true,
-                parentGroupedProductId: 0,
                 markedAsNewOnly: true,
                 orderBy: ProductSortingEnum.CreatedOn,
                 pageSize: _catalogSettings.NewProductsNumber);
@@ -241,7 +240,6 @@ namespace Nop.Web.Controllers
             var products = _productService.SearchProducts(
                 storeId: _storeContext.CurrentStore.Id,
                 visibleIndividuallyOnly: true,
-                parentGroupedProductId: 0,
                 markedAsNewOnly: true,
                 orderBy: ProductSortingEnum.CreatedOn,
                 pageSize: _catalogSettings.NewProductsNumber);
