@@ -18,7 +18,6 @@ using Nop.Services.Localization;
 using Nop.Services.Stores;
 using Nop.Services.Tasks;
 using Nop.Services.Vendors;
-using Nop.Web.Framework.Localization;
 
 namespace Nop.Web.Framework
 {

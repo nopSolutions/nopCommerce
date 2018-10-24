@@ -8,6 +8,7 @@ using Nop.Core.Data;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Infrastructure;
 using Nop.Services.Events;
+using Nop.Services.Localization;
 using Nop.Services.Seo;
 using Nop.Web.Framework.Localization;
 
