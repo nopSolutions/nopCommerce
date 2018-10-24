@@ -227,7 +227,7 @@ FROM Product p");
 
             if (visibleIndividuallyOnly) filter.AppendLine("AND p.VisibleIndividually = 1");
 
-            if (markedAsNewOnly) filter.AppendLine(@"p.MarkAsNew = 1
+            if (markedAsNewOnly) filter.AppendLine(@"AND p.MarkAsNew = 1
 		        AND (UTC_TIMESTAMP() BETWEEN IFNULL(p.MarkAsNewStartDateTimeUtc, '1900-1-1') and IFNULL(p.MarkAsNewEndDateTimeUtc, '2999-1-1'))");
 
             if (productTagId != 0)
