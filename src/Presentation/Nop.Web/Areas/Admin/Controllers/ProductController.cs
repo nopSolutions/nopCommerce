@@ -3236,13 +3236,27 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                 return RedirectToAction("List", "Product");
 
-            if (ModelState.IsValid)
+            //attributes
+            var warnings = new List<string>();
+            var attributesXml = GetAttributesXmlForProductAttributeCombination(model.Form, warnings, product.Id);
+
+            warnings.AddRange(_shoppingCartService.GetShoppingCartItemAttributeWarnings(_workContext.CurrentCustomer,
+                ShoppingCartType.ShoppingCart, product, 1, attributesXml, true));
+
+            //check whether the same attribute combination already exists
+            var existingCombination = _productAttributeParser.FindProductAttributeCombination(product, attributesXml);
+            if (existingCombination != null)
+                warnings.Add(_localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.AlreadyExists"));
+
+            if (!warnings.Any() && ModelState.IsValid)
             {
                 var previousStockQuantity = combination.StockQuantity;
 
                 //save combination
                 //fill entity from model
                 combination = model.ToEntity(combination);
+                combination.AttributesXml = attributesXml;
+
                 _productAttributeService.UpdateProductAttributeCombination(combination);
 
                 //quantity change history
@@ -3253,9 +3267,10 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 return View(model);
             }
-
+                        
             //prepare model
             model = _productModelFactory.PrepareProductAttributeCombinationModel(model, product, combination, true);
+            model.Warnings = warnings;
 
             //if we got this far, something failed, redisplay form
             return View(model);
