@@ -157,6 +157,7 @@ namespace Nop.Services.Orders
                         if (int.TryParse(valueStr, out var attributeValueId))
                         {
                             var attributeValue = _checkoutAttributeService.GetCheckoutAttributeValueById(attributeValueId);
+
                             if (attributeValue != null)
                             {
                                 formattedAttribute = $"{_localizationService.GetLocalized(attribute, a => a.Name, _workContext.WorkingLanguage.Id)}: {_localizationService.GetLocalized(attributeValue, a => a.Name, _workContext.WorkingLanguage.Id)}";
@@ -166,18 +167,21 @@ namespace Nop.Services.Orders
                                     var priceAdjustment = _currencyService.ConvertFromPrimaryStoreCurrency(priceAdjustmentBase, _workContext.WorkingCurrency);
                                     if (priceAdjustmentBase > 0)
                                     {
-                                        var priceAdjustmentStr = _priceFormatter.FormatPrice(priceAdjustment);
-                                        formattedAttribute += $" [+{priceAdjustmentStr}]";
+                                        formattedAttribute += string.Format(
+                                                _localizationService.GetResource("FormattedAttributes.PriceAdjustment"),
+                                                "+", _priceFormatter.FormatPrice(priceAdjustment), string.Empty);
                                     }
                                 }
                             }
+
                             //encode (if required)
                             if (htmlEncode)
                                 formattedAttribute = WebUtility.HtmlEncode(formattedAttribute);
+
                         }
                     }
 
-                    if (string.IsNullOrEmpty(formattedAttribute)) 
+                    if (string.IsNullOrEmpty(formattedAttribute))
                         continue;
 
                     if (i != 0 || j != 0)
