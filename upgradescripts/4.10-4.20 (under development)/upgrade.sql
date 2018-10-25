@@ -149,6 +149,69 @@ set @resources='
   <LocaleResource Name="ShoppingCart.DiscountCouponCode.Invalid">
     <Value>This coupon code ({0}) is invalid or no longer available.</Value>
   </LocaleResource>
+   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PasswordRequireDigit">
+    <Value>Password must have at least one digit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PasswordRequireDigit.Hint">
+    <Value>Specify that passwords must have at least one digit.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PasswordRequireLowercase">
+    <Value>Password must have at least one lowercase</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PasswordRequireLowercase.Hint">
+    <Value>Specify that password must have at least one lowercase.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PasswordRequireNonAlphanumeric">
+    <Value>Password must have at least one non alphanumeric character</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PasswordRequireNonAlphanumeric.Hint">
+    <Value>Specify that password must have at least one non alphanumeric character.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PasswordRequireUppercase">
+    <Value>Password must have at least one uppercase</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PasswordRequireUppercase.Hint">
+    <Value>Specify that passwords must have at least one uppercase.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Validation.Password.IsNotEmpty">
+    <Value>Password is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Validation.Password.RequireDigit">
+    <Value><![CDATA[<li>must have at least one digit</li>]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Validation.Password.RequireLowercase">
+    <Value><![CDATA[<li>must have at least one lowercase</li>]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Validation.Password.RequireNonAlphanumeric">
+    <Value><![CDATA[<li>must have at least one special character (e.g. #?!@$%^&*-)</li>]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Validation.Password.RequireUppercase">
+    <Value><![CDATA[<li>must have at least one uppercase</li>]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Validation.Password.LengthValidation">
+    <Value><![CDATA[<li>must have at least {0} characters</li>]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Validation.Password.Rule">
+    <Value><![CDATA[<p>Password must meet the following rules: </p><ul>{0}{1}{2}{3}{4}</ul>]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.ChangePassword.Fields.NewPassword.LengthValidation">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.ChangePassword.Fields.NewPassword.Required">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Fields.Password.Required">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Fields.Password.LengthValidation">
+    <Value></Value>
+  </LocaleResource>  
+  <LocaleResource Name="Account.PasswordRecovery.NewPassword.Required">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.PasswordRecovery.NewPassword.LengthValidation">
+    <Value></Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -891,5 +954,33 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'messagessettings.usepopu
 BEGIN
     INSERT [Setting] ([Name], [Value], [StoreId])
     VALUES (N'messagessettings.usepopupnotifications', N'False', 0)
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'customersettings.passwordrequirelowercase')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'customersettings.passwordrequirelowercase', N'False', 0)
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'customersettings.passwordrequireuppercase')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'customersettings.passwordrequireuppercase', N'False', 0)
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'customersettings.passwordrequirenonalphanumeric')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'customersettings.passwordrequirenonalphanumeric', N'False', 0)
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'customersettings.passwordrequiredigit')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'customersettings.passwordrequiredigit', N'False', 0)
 END
 GO
