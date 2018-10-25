@@ -15420,6 +15420,9 @@
   <LocaleResource Name="Footer.TaxShipping.InclTax">
     <Value><![CDATA[All prices are entered including tax. Excluding <a href="{0}">shipping</a>]]></Value>
   </LocaleResource>
+  <LocaleResource Name="FormattedAttributes.PriceAdjustment">
+    <Value> [{0}{1}{2}]</Value>
+  </LocaleResource>
   <LocaleResource Name="Forum.ActiveDiscussions">
     <Value>Active discussions</Value>
   </LocaleResource>
