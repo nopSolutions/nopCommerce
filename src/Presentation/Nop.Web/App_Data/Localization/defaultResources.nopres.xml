@@ -12822,6 +12822,9 @@
   <LocaleResource Name="Admin.Reports.Customers.CustomerStatistics">
     <Value>New customers</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Customers.CustomerStatistics.Alert.FailedLoad">
+    <Value>Failed to load statistics.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Reports.Customers.CustomerStatistics.Month">
     <Value>Month</Value>
   </LocaleResource>
