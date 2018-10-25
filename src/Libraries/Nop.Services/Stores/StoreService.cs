@@ -202,6 +202,33 @@ namespace Nop.Services.Stores
             return contains;
         }
 
+        /// <summary>
+        /// Returns a list of names of not existing stores
+        /// </summary>
+        /// <param name="storeIdsNames">The names and/or IDs of the store to check</param>
+        /// <returns>List of names and/or IDs not existing stores</returns>
+        public string[] GetNotExistingStores(string[] storeIdsNames)
+        {
+            if (storeIdsNames == null)
+                throw new ArgumentNullException(nameof(storeIdsNames));
+
+            var query = _storeRepository.Table;
+            var queryFilter = storeIdsNames.Distinct().ToArray();
+            //filtering by name
+            var filter = query.Select(store => store.Name).Where(store => queryFilter.Contains(store)).ToList();
+            queryFilter = queryFilter.Except(filter).ToArray();
+
+            //if some names not found
+            if (!queryFilter.Any())
+                return queryFilter.ToArray();
+
+            //filtering by IDs
+            filter = query.Select(store => store.Id.ToString()).Where(store => queryFilter.Contains(store)).ToList();
+            queryFilter = queryFilter.Except(filter).ToArray();
+
+            return queryFilter.ToArray();
+        }
+
         #endregion
     }
 }

@@ -401,6 +401,11 @@ namespace Nop.Core.Domain.Catalog
         public bool ExportImportProductAttributes { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether need to use "limited to stores" property for exported/imported products
+        /// </summary>
+        public bool ExportImportProductUseLimitedToStores { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether the products need to be exported/imported with their specification attributes
         /// </summary>
         public bool ExportImportProductSpecificationAttributes { get; set; }

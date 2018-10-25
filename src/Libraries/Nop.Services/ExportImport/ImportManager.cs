@@ -73,6 +73,7 @@ namespace Nop.Services.ExportImport
         private readonly IStateProvinceService _stateProvinceService;
         private readonly IStoreContext _storeContext;
         private readonly IStoreMappingService _storeMappingService;
+        private readonly IStoreService _storeService;
         private readonly ITaxCategoryService _taxCategoryService;
         private readonly IUrlRecordService _urlRecordService;
         private readonly IVendorService _vendorService;
@@ -108,6 +109,7 @@ namespace Nop.Services.ExportImport
             IStateProvinceService stateProvinceService,
             IStoreContext storeContext,
             IStoreMappingService storeMappingService,
+            IStoreService storeService,
             ITaxCategoryService taxCategoryService,
             IUrlRecordService urlRecordService,
             IVendorService vendorService,
@@ -139,6 +141,7 @@ namespace Nop.Services.ExportImport
             this._stateProvinceService = stateProvinceService;
             this._storeContext = storeContext;
             this._storeMappingService = storeMappingService;
+            this._storeService = storeService;
             this._taxCategoryService = taxCategoryService;
             this._urlRecordService = urlRecordService;
             this._vendorService = vendorService;
@@ -869,6 +872,10 @@ namespace Nop.Services.ExportImport
             tempProperty = manager.GetProperty("Manufacturers");
             var manufacturerCellNum = tempProperty?.PropertyOrderPosition ?? -1;
 
+            var allStores = new List<string>();
+            tempProperty = manager.GetProperty("LimitedToStores");
+            var limitedToStoresCellNum = tempProperty?.PropertyOrderPosition ?? -1;
+
             if (_catalogSettings.ExportImportUseDropdownlistsForAssociatedEntities)
             {
                 productAttributeManager.SetSelectList("AttributeControlType", AttributeControlType.TextBox.ToSelectList(useLocalization: false));
@@ -1011,6 +1018,15 @@ namespace Nop.Services.ExportImport
                             .Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()));
                 }
 
+                if (limitedToStoresCellNum > 0)
+                {
+                    var storeIds = worksheet.Cells[endRow, limitedToStoresCellNum].Value?.ToString() ??
+                                          string.Empty;
+                    if (!string.IsNullOrEmpty(storeIds))
+                        allStores.AddRange(storeIds
+                            .Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()));
+                }
+
                 //counting the number of products
                 productsInFile.Add(endRow);
 
@@ -1043,6 +1059,13 @@ namespace Nop.Services.ExportImport
             if (notExistingSpecificationAttributeOptions.Any())
             {
                 throw new ArgumentException($"The following specification attribute option ID(s) don't exist - {string.Join(", ", notExistingSpecificationAttributeOptions)}");
+            }
+
+            //performance optimization, the check for the existence of the stores in one SQL request
+            var notExistingStores = _storeService.GetNotExistingStores(allStores.ToArray());
+            if (notExistingStores.Any())
+            {
+                throw new ArgumentException(string.Format(_localizationService.GetResource("Admin.Catalog.Products.Import.StoresDontExist"), string.Join(", ", notExistingStores)));
             }
 
             return new ImportProductMetadata
@@ -1208,6 +1231,9 @@ namespace Nop.Services.ExportImport
 
                 //performance optimization, load all manufacturers in one SQL request
                 var allManufacturers = _manufacturerService.GetAllManufacturers(showHidden: true);
+
+                //performance optimization, load all stores in one SQL request
+                var allStores = _storeService.GetAllStores();
 
                 //product to import images
                 var productPictureMetadata = new List<ProductPictureMetadata>();
@@ -1533,6 +1559,9 @@ namespace Nop.Services.ExportImport
                             case "Height":
                                 product.Height = property.DecimalValue;
                                 break;
+                            case "IsLimitedToStores":
+                                product.LimitedToStores = property.BooleanValue;
+                                break;
                         }
                     }
 
@@ -1684,6 +1713,17 @@ namespace Nop.Services.ExportImport
 
                         //product tag mappings
                         _productTagService.UpdateProductTags(product, productTags.Where(pt => !filter.Contains(pt)).ToArray());
+                    }
+
+                    tempProperty = metadata.Manager.GetProperty("LimitedToStores");
+                    if (tempProperty != null)
+                    {
+                        var limitedToStoresList = tempProperty.StringValue;
+
+                        var importedStores = product.LimitedToStores ? limitedToStoresList.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
+                            .Select(x => allStores.FirstOrDefault(store => store.Name == x.Trim())?.Id ?? int.Parse(x.Trim())).ToList() : new List<int>();
+
+                        _productService.UpdateProductStoreMappings(product, importedStores);
                     }
 
                     var picture1 = DownloadFile(metadata.Manager.GetProperty("Picture1")?.StringValue, downloadedFiles);

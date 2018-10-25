@@ -149,6 +149,15 @@ set @resources='
   <LocaleResource Name="ShoppingCart.DiscountCouponCode.Invalid">
     <Value>This coupon code ({0}) is invalid or no longer available.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ExportImportProductUseLimitedToStores">
+    <Value>Export/Import products with "limited to stores"</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ExportImportProductUseLimitedToStores.Hint">
+    <Value>Check if products should be exported/imported with "limited to stores" property.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Import.StoresDontExist">
+    <Value>Stores with the following names and/or IDs don''t exist: {0}</Value>
+  </LocaleResource>    
 </Language>
 '
 
@@ -898,9 +907,18 @@ BEGIN
 END
 GO
 
+--new setting
 IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'messagessettings.usepopupnotifications')
 BEGIN
     INSERT [Setting] ([Name], [Value], [StoreId])
     VALUES (N'messagessettings.usepopupnotifications', N'False', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'catalogsettings.exportimportproductuselimitedtostores')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'catalogsettings.exportimportproductuselimitedtostores', N'False', 0)
 END
 GO
