@@ -489,6 +489,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                .ForMember(model => model.PictureThumbnailUrl, options => options.Ignore())
                .ForMember(model => model.Warnings, options => options.Ignore());
             CreateMap<ProductAttributeCombinationModel, ProductAttributeCombination>()
+               .ForMember(entity => entity.AttributesXml, options => options.Ignore())
                .ForMember(entity => entity.Product, options => options.Ignore());
 
             CreateMap<ProductAttribute, ProductAttributeModel>()

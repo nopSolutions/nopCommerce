@@ -3110,6 +3110,9 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //save combination
                 var combination = model.ToEntity<ProductAttributeCombination>();
 
+                //fill attributes
+                combination.AttributesXml = attributesXml;
+
                 _productAttributeService.InsertProductAttributeCombination(combination);
 
                 //quantity change history
