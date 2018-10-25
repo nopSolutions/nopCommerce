@@ -634,30 +634,26 @@
                             <span asp-validation-for="ManufacturerPartNumber"></span>
                         </div>
                     </div>
-                    @if (Model.AssociatedToProductId == 0)
-                    {
-                        <div class="form-group @(Model.ProductEditorSettingsModel.ShowOnHomePage ? null : "advanced-setting")" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
+                    <div class="form-group @(Model.ProductEditorSettingsModel.ShowOnHomePage ? null : "advanced-setting")" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
+                        <div class="col-md-3">
+                            <nop-label asp-for="ShowOnHomePage" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="ShowOnHomePage" />
+                            <span asp-validation-for="ShowOnHomePage"></span>
+                        </div>
+                    </div>
+                    <nop-nested-setting asp-for="ShowOnHomePage">
+                        <div class="form-group @(Model.ProductEditorSettingsModel.DisplayOrder ? null : "advanced-setting")" id="pnlDisplayOrder" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
                             <div class="col-md-3">
-                                <nop-label asp-for="ShowOnHomePage" />
+                                <nop-label asp-for="DisplayOrder" />
                             </div>
                             <div class="col-md-9">
-                                <nop-editor asp-for="ShowOnHomePage" />
-                                <span asp-validation-for="ShowOnHomePage"></span>
+                                <nop-editor asp-for="DisplayOrder" />
+                                <span asp-validation-for="DisplayOrder"></span>
                             </div>
                         </div>
-                        <nop-nested-setting asp-for="ShowOnHomePage">
-                            <div class="form-group @(Model.ProductEditorSettingsModel.DisplayOrder ? null : "advanced-setting")" id="pnlDisplayOrder" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
-                                <div class="col-md-3">
-                                    <nop-label asp-for="DisplayOrder" />
-                                </div>
-                                <div class="col-md-9">
-                                    <nop-editor asp-for="DisplayOrder" />
-                                    <span asp-validation-for="DisplayOrder"></span>
-                                </div>
-                            </div>
-                        </nop-nested-setting>
-                    }
-
+                    </nop-nested-setting>
                     <div class="form-group @(Model.ProductEditorSettingsModel.AllowCustomerReviews ? null : "advanced-setting")">
                         <div class="col-md-3">
                             <nop-label asp-for="AllowCustomerReviews" />

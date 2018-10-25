@@ -641,7 +641,7 @@ namespace Nop.Web.Factories
                 if (_commonSettings.SitemapIncludeProducts)
                 {
                     var productsGroupTitle = _localizationService.GetResource("Sitemap.Products");
-                    var products = _productService.SearchProducts(storeId: _storeContext.CurrentStore.Id, visibleIndividuallyOnly: true, parentGroupedProductId: 0);
+                    var products = _productService.SearchProducts(storeId: _storeContext.CurrentStore.Id, visibleIndividuallyOnly: true);
                     model.Items.AddRange(products.Select(product => new SitemapModel.SitemapItemModel
                     {
                         GroupTitle = productsGroupTitle,
