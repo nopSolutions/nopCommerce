@@ -211,6 +211,7 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Account.PasswordRecovery.NewPassword.LengthValidation">
     <Value></Value>
+  </LocaleResource>
   <LocaleResource Name="FormattedAttributes.PriceAdjustment">
     <Value> [{0}{1}{2}]</Value>
   </LocaleResource>
