@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.AccessControl;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using Microsoft.AspNetCore.Hosting;
@@ -435,7 +436,12 @@ namespace Nop.Core.Infrastructure
         /// <returns>The physical path. E.g. "c:\inetpub\wwwroot\bin"</returns>
         public virtual string MapPath(string path)
         {
-            path = path.Replace("~/", string.Empty).TrimStart('/').Replace('/', '\\');
+            path = path.Replace("~/", string.Empty).TrimStart('/');
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                path = path.Replace('/', '\\');
+            }
+            
             return Path.Combine(BaseDirectory ?? string.Empty, path);
         }
         
