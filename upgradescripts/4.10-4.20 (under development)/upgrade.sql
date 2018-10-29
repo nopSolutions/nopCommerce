@@ -215,6 +215,9 @@ set @resources='
   <LocaleResource Name="FormattedAttributes.PriceAdjustment">
     <Value> [{0}{1}{2}]</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Impersonate.Inactive">
+    <Value>This customer is inactive</Value>
+  </LocaleResource>
 </Language>
 '
 
