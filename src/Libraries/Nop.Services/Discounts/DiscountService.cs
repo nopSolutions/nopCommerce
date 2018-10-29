@@ -163,7 +163,12 @@ namespace Nop.Services.Discounts
 
                     //add validation error
                     if (!ruleResult.IsValid)
-                        errors.Add(ruleResult.UserError);
+                    {
+                        var userError = !string.IsNullOrEmpty(ruleResult.UserError)
+                            ? ruleResult.UserError
+                            : _localizationService.GetResource("ShoppingCart.Discount.CannotBeUsed");
+                        errors.Add(userError);
+                    }
 
                     result = ruleResult.IsValid;
                 }

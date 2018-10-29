@@ -218,6 +218,9 @@ set @resources='
   <LocaleResource Name="Admin.Customers.Customers.Impersonate.Inactive">
     <Value>This customer is inactive</Value>
   </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Discount.CannotBeUsed">
+    <Value>You cannot use this discount coupon because the validation conditions are not met</Value>
+  </LocaleResource>
 </Language>
 '
 
