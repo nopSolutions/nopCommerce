@@ -307,7 +307,7 @@ namespace Nop.Core
             var queryParameters = QueryHelpers.ParseQuery(uri.Query);
 
             //and add passed one
-            queryParameters[key] = new StringValues(values);
+            queryParameters[key] = string.Join(",", values);
             
             //add only first value
             //two the same query parameters? theoretically it's not possible.
