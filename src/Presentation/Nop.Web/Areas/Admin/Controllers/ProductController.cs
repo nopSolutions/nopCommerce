@@ -69,8 +69,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly IShippingService _shippingService;
         private readonly IShoppingCartService _shoppingCartService;
         private readonly ISpecificationAttributeService _specificationAttributeService;
-        private readonly IStoreMappingService _storeMappingService;
-        private readonly IStoreService _storeService;
         private readonly IUrlRecordService _urlRecordService;
         private readonly IWorkContext _workContext;
         private readonly VendorSettings _vendorSettings;
@@ -107,8 +105,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             IShippingService shippingService,
             IShoppingCartService shoppingCartService,
             ISpecificationAttributeService specificationAttributeService,
-            IStoreMappingService storeMappingService,
-            IStoreService storeService,
             IUrlRecordService urlRecordService,
             IWorkContext workContext,
             VendorSettings vendorSettings)
@@ -141,8 +137,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             this._shippingService = shippingService;
             this._shoppingCartService = shoppingCartService;
             this._specificationAttributeService = specificationAttributeService;
-            this._storeMappingService = storeMappingService;
-            this._storeService = storeService;
             this._urlRecordService = urlRecordService;
             this._workContext = workContext;
             this._vendorSettings = vendorSettings;
@@ -249,30 +243,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                     var aclRecordToDelete = existingAclRecords.FirstOrDefault(acl => acl.CustomerRoleId == customerRole.Id);
                     if (aclRecordToDelete != null)
                         _aclService.DeleteAclRecord(aclRecordToDelete);
-                }
-            }
-        }
-
-        protected virtual void SaveStoreMappings(Product product, ProductModel model)
-        {
-            product.LimitedToStores = model.SelectedStoreIds.Any();
-
-            var existingStoreMappings = _storeMappingService.GetStoreMappings(product);
-            var allStores = _storeService.GetAllStores();
-            foreach (var store in allStores)
-            {
-                if (model.SelectedStoreIds.Contains(store.Id))
-                {
-                    //new store
-                    if (existingStoreMappings.Count(sm => sm.StoreId == store.Id) == 0)
-                        _storeMappingService.InsertStoreMapping(product, store.Id);
-                }
-                else
-                {
-                    //remove store
-                    var storeMappingToDelete = existingStoreMappings.FirstOrDefault(sm => sm.StoreId == store.Id);
-                    if (storeMappingToDelete != null)
-                        _storeMappingService.DeleteStoreMapping(storeMappingToDelete);
                 }
             }
         }
@@ -863,7 +833,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 SaveProductAcl(product, model);
 
                 //stores
-                SaveStoreMappings(product, model);
+                _productService.UpdateProductStoreMappings(product, model.SelectedStoreIds);
 
                 //discounts
                 SaveDiscountMappings(product, model);
@@ -991,7 +961,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 SaveProductAcl(product, model);
 
                 //stores
-                SaveStoreMappings(product, model);
+                _productService.UpdateProductStoreMappings(product, model.SelectedStoreIds);
 
                 //discounts
                 SaveDiscountMappings(product, model);

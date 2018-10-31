@@ -3318,6 +3318,9 @@
   <LocaleResource Name="Admin.Catalog.Products.Import.ProductAttributesDontExist">
     <Value>Product attributes with the following IDs don't exist: {0}</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Import.StoresDontExist">
+    <Value>Stores with the following names and/or IDs don't exist: {0}</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Imported">
     <Value>Products have been imported successfully.</Value>
   </LocaleResource>
@@ -5435,6 +5438,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ExportImportProductSpecificationAttributes.Hint">
     <Value>Check if products should be exported/imported with specification attributes.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ExportImportProductUseLimitedToStores">
+    <Value>Export/Import products with "limited to stores"</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ExportImportProductUseLimitedToStores.Hint">
+    <Value>Check if products should be exported/imported with "limited to stores" property.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ExportImportRelatedEntitiesByName">
     <Value>Export/Import related entities using name</Value>

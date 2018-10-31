@@ -221,6 +221,15 @@ set @resources='
   <LocaleResource Name="ShoppingCart.Discount.CannotBeUsed">
     <Value>You cannot use this discount coupon because the validation conditions are not met</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ExportImportProductUseLimitedToStores">
+    <Value>Export/Import products with "limited to stores"</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ExportImportProductUseLimitedToStores.Hint">
+    <Value>Check if products should be exported/imported with "limited to stores" property.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Import.StoresDontExist">
+    <Value>Stores with the following names and/or IDs don''t exist: {0}</Value>
+  </LocaleResource> 
 </Language>
 '
 
@@ -959,6 +968,7 @@ BEGIN
 END
 GO
 
+--new setting
 IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'messagessettings.usepopupnotifications')
 BEGIN
     INSERT [Setting] ([Name], [Value], [StoreId])
@@ -966,6 +976,7 @@ BEGIN
 END
 GO
 
+--new setting
 IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'customersettings.passwordrequirelowercase')
 BEGIN
     INSERT [Setting] ([Name], [Value], [StoreId])
@@ -973,6 +984,7 @@ BEGIN
 END
 GO
 
+--new setting
 IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'customersettings.passwordrequireuppercase')
 BEGIN
     INSERT [Setting] ([Name], [Value], [StoreId])
@@ -980,6 +992,7 @@ BEGIN
 END
 GO
 
+--new setting
 IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'customersettings.passwordrequirenonalphanumeric')
 BEGIN
     INSERT [Setting] ([Name], [Value], [StoreId])
@@ -987,9 +1000,18 @@ BEGIN
 END
 GO
 
+--new setting
 IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'customersettings.passwordrequiredigit')
 BEGIN
     INSERT [Setting] ([Name], [Value], [StoreId])
     VALUES (N'customersettings.passwordrequiredigit', N'False', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'catalogsettings.exportimportproductuselimitedtostores')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'catalogsettings.exportimportproductuselimitedtostores', N'False', 0)
 END
 GO

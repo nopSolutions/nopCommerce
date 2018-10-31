@@ -71,6 +71,7 @@ namespace Nop.Services.ExportImport
         private readonly IProductTemplateService _productTemplateService;
         private readonly ISpecificationAttributeService _specificationAttributeService;
         private readonly IStateProvinceService _stateProvinceService;
+        private readonly IStoreMappingService _storeMappingService;
         private readonly IStoreService _storeService;
         private readonly ITaxCategoryService _taxCategoryService;
         private readonly IUrlRecordService _urlRecordService;
@@ -109,6 +110,7 @@ namespace Nop.Services.ExportImport
             IProductTemplateService productTemplateService,
             ISpecificationAttributeService specificationAttributeService,
             IStateProvinceService stateProvinceService,
+            IStoreMappingService storeMappingService,
             IStoreService storeService,
             ITaxCategoryService taxCategoryService,
             IUrlRecordService urlRecordService,
@@ -143,6 +145,7 @@ namespace Nop.Services.ExportImport
             this._productTemplateService = productTemplateService;
             this._specificationAttributeService = specificationAttributeService;
             this._stateProvinceService = stateProvinceService;
+            this._storeMappingService = storeMappingService;
             this._storeService = storeService;
             this._taxCategoryService = taxCategoryService;
             this._urlRecordService = urlRecordService;
@@ -274,6 +277,26 @@ namespace Nop.Services.ExportImport
         }
 
         /// <summary>
+        /// Returns the list of limited to stores for a product separated by a ";"
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <returns>List of store</returns>
+        protected virtual string GetLimitedToStores(Product product)
+        {
+            string limitedToStores = null;
+            foreach (var storeMapping in _storeMappingService.GetStoreMappings(product))
+            {
+                limitedToStores += _catalogSettings.ExportImportRelatedEntitiesByName
+                    ? storeMapping.Store.Name
+                    : storeMapping.Store.Id.ToString();
+
+                limitedToStores += ";";
+            }
+
+            return limitedToStores;
+        }
+
+        /// <summary>
         /// Returns the list of product tag for a product separated by a ";"
         /// </summary>
         /// <param name="product">Product</param>
@@ -367,6 +390,13 @@ namespace Nop.Services.ExportImport
             {
                 return false;
             }
+        }
+
+        protected virtual bool IgnoreExportLimitedToStore()
+        {
+            return _catalogSettings.IgnoreStoreLimitations || 
+                   !_catalogSettings.ExportImportProductUseLimitedToStores ||
+                   _storeService.GetAllStores().Count == 1;
         }
 
         private PropertyManager<ExportProductAttribute> GetProductAttributeManager()
@@ -1283,6 +1313,8 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Product>("Categories", GetCategories),
                 new PropertyByName<Product>("Manufacturers", GetManufacturers, IgnoreExportPoductProperty(p => p.Manufacturers)),
                 new PropertyByName<Product>("ProductTags", GetProductTags, IgnoreExportPoductProperty(p => p.ProductTags)),
+                new PropertyByName<Product>("IsLimitedToStores", p=>p.LimitedToStores, IgnoreExportLimitedToStore()),
+                new PropertyByName<Product>("LimitedToStores", GetLimitedToStores, IgnoreExportLimitedToStore()),
                 new PropertyByName<Product>("Picture1", p => GetPictures(p)[0]),
                 new PropertyByName<Product>("Picture2", p => GetPictures(p)[1]),
                 new PropertyByName<Product>("Picture3", p => GetPictures(p)[2])

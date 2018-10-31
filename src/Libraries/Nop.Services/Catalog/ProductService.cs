@@ -54,6 +54,7 @@ namespace Nop.Services.Catalog
         private readonly IRepository<StoreMapping> _storeMappingRepository;
         private readonly IRepository<TierPrice> _tierPriceRepository;
         private readonly IStoreMappingService _storeMappingService;
+        private readonly IStoreService _storeService;
         private readonly IWorkContext _workContext;
         private readonly LocalizationSettings _localizationSettings;
         private readonly string _entityName;
@@ -84,6 +85,7 @@ namespace Nop.Services.Catalog
             IRepository<StockQuantityHistory> stockQuantityHistoryRepository,
             IRepository<StoreMapping> storeMappingRepository,
             IRepository<TierPrice> tierPriceRepository,
+            IStoreService storeService,
             IStoreMappingService storeMappingService,
             IWorkContext workContext,
             LocalizationSettings localizationSettings)
@@ -111,6 +113,7 @@ namespace Nop.Services.Catalog
             this._storeMappingRepository = storeMappingRepository;
             this._tierPriceRepository = tierPriceRepository;
             this._storeMappingService = storeMappingService;
+            this._storeService = storeService;
             this._workContext = workContext;
             this._localizationSettings = localizationSettings;
             this._entityName = typeof(Product).Name;
@@ -1289,6 +1292,35 @@ namespace Nop.Services.Catalog
                 return null;
 
             return date.ToShortDateString();
+        }
+
+        /// <summary>
+        /// Update product store mappings
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="limitedToStoresIds">A list of store ids for mapping</param>
+        public virtual void UpdateProductStoreMappings(Product product, IList<int> limitedToStoresIds)
+        {
+            product.LimitedToStores = limitedToStoresIds.Any();
+
+            var existingStoreMappings = _storeMappingService.GetStoreMappings(product);
+            var allStores = _storeService.GetAllStores();
+            foreach (var store in allStores)
+            {
+                if (limitedToStoresIds.Contains(store.Id))
+                {
+                    //new store
+                    if (existingStoreMappings.Count(sm => sm.StoreId == store.Id) == 0)
+                        _storeMappingService.InsertStoreMapping(product, store.Id);
+                }
+                else
+                {
+                    //remove store
+                    var storeMappingToDelete = existingStoreMappings.FirstOrDefault(sm => sm.StoreId == store.Id);
+                    if (storeMappingToDelete != null)
+                        _storeMappingService.DeleteStoreMapping(storeMappingToDelete);
+                }
+            }
         }
 
         #endregion
