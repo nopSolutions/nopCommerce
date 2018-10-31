@@ -1,0 +1,13 @@
+language: csharp
+mono: none
+dotnet: 2.1
+install:
+- dotnet restore ./src/NopCommerce.sln
+script:
+- dotnet build ./src/NopCommerce.sln
+- dotnet test ./src/Tests/Nop.Core.Tests/Nop.Core.Tests.csproj
+- dotnet test ./src/Tests/Nop.Web.MVC.Tests/Nop.Web.MVC.Tests.csproj
+- dotnet test ./src/Tests/Nop.Services.Tests/Nop.Services.Tests.csproj
+notifications:
+  slack:
+    secure: MLoLaCIQEzDMujZe7VGFI78quWq+dAzrZUltdrUUaWIq5cbi+luD0W/6defgK/IctGOYnSVr3noCK+z3KaCqoldjCfDLgH5VH4uqqH52gjpEw8c6huDmQJNjkD2fMBDhi/X+Jbnszs33Aw8n+IlEIRMwG2EllViwNapGYGsok5KowoZDDxd5HYYeGC/M5fyrS9F6yrgrExvZIyVGET6Kykteq+rpQ5twTlis+Lof3m8KLwnrBY6jbK6+h/nzGakEIQ9rDNE239WopxnvnZGM5b0qaSTVMlRD8b5x4iqTYv6vYkOaThsZKmuNo72WlhzunogyjFi9ChYNKZWwvQjtEtlhWyHR3I3LQK2n71KNBnSgzJYiCTZd4AU6kiB+AM7aSaaTBaebv93Pyhh/VW9NAd/iNQy0GgccUCav9g0iDMXVo9gINFfyDqOLkrrOUwTNP8xJHGueadakVTpbTv7Xc/pSyVO7ZF/5eIFxIi5GuPKr8hr59/rrFcXGgDJrRgHUZMNb8ePk3ObPlpZ2omPXnxkQMJr4SPz6kxRN83pN6rJiSXraqyKFA/DGrruqfqciLeVo899bWZ+iLhr8VM4a7+Civ7FQyhLQpGQb/fqLZKAyaxib9My3jeoX+8eZko5Y8hjFbyI+uxfl2CtaH0dPBlthk471xvhurOXvUst3QOo=
