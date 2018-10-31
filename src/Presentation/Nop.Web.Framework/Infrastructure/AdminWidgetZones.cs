@@ -307,6 +307,8 @@
         public static string ProductDetailsSeoTop => "admin_product_details_seo_top";
         public static string ProductDetailsSpecificationAttributesBottom => "admin_product_details_specification_attributes_bottom";
         public static string ProductDetailsSpecificationAttributesTop => "admin_product_details_specification_attributes_top";
+        public static string ProductDetailsSpecificationAttributeDetailsBottom => "admin_product_details_specification_attributes_bottom";
+        public static string ProductDetailsSpecificationAttributeDetailsTop => "admin_product_details_specification_attributes_top";
         public static string ProductDetailsStockQuantityHistoryBottom => "admin_product_details_stock_quantity_history_bottom";
         public static string ProductDetailsStockQuantityHistoryTop => "admin_product_details_stock_quantity_history_top";
         public static string ProductListButtons => "admin_product_list_buttons";

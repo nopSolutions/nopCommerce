@@ -1,10 +1,11 @@
 @model ProductModel
 
 @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductDetailsProductAttributesInfoTop, additionalData = Model })
-<div class="panel panel-default">
-    <div class="panel-body">
-        <div id="productattributemappings-grid"></div>
-        <script>
+<div class="panel-group">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div id="productattributemappings-grid"></div>
+            <script>
             $(document).ready(function() {
                 $("#productattributemappings-grid").kendoGrid({
                     dataSource: {
@@ -102,15 +103,15 @@
                     ]
                 });
             });
+            </script>
+        </div>
 
-        </script>
-    </div>
-
-    <div class="panel-footer">
-        <a asp-action="ProductAttributeMappingCreate" asp-route-productId="@Model.Id" class="btn bg-blue">
-            <i class="fa fa-plus-square"></i>
-            @T("Admin.Catalog.Products.ProductAttributes.Attributes.AddNew")
-        </a>
+        <div class="panel-footer">
+            <a asp-action="ProductAttributeMappingCreate" asp-route-productId="@Model.Id" class="btn bg-blue">
+                <i class="fa fa-plus-square"></i>
+                @T("Admin.Catalog.Products.ProductAttributes.Attributes.AddNew")
+            </a>
+        </div>
     </div>
 </div>
 @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductDetailsProductAttributesInfoBottom, additionalData = Model })

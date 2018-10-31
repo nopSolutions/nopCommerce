@@ -117,6 +117,7 @@ namespace Nop.Web.Areas.Admin.Factories
             this._currencySettings = currencySettings;
             this._aclSupportedModelFactory = aclSupportedModelFactory;
             this._baseAdminModelFactory = baseAdminModelFactory;
+            this._cacheManager = cacheManager;
             this._categoryService = categoryService;
             this._currencyService = currencyService;
             this._customerService = customerService;
@@ -141,7 +142,6 @@ namespace Nop.Web.Areas.Admin.Factories
             this._shippingService = shippingService;
             this._shoppingCartService = shoppingCartService;
             this._specificationAttributeService = specificationAttributeService;
-            this._cacheManager = cacheManager;
             this._storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
             this._storeService = storeService;
             this._urlRecordService = urlRecordService;
@@ -203,45 +203,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
                 models.Add(model);
             }
-        }
-
-        /// <summary>
-        /// Prepare specification attribute model to add to the product
-        /// </summary>
-        /// <param name="model">Specification attribute model to add to the product</param>
-        /// <returns>Specification attribute model to add to the product</returns>
-        protected virtual AddSpecificationAttributeToProductModel PrepareAddSpecificationAttributeToProductModel(
-            AddSpecificationAttributeToProductModel model)
-        {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
-
-            model.ShowOnProductPage = true;
-
-            model.AvailableAttributes = _cacheManager.Get(ModelCacheEventConsumer.SPEC_ATTRIBUTES_MODEL_KEY, () =>
-            {
-                var availableSpecificationAttributes = new List<SelectListItem>();
-                foreach (var sa in _specificationAttributeService.GetSpecificationAttributes())
-                {
-                    availableSpecificationAttributes.Add(new SelectListItem
-                    {
-                        Text = sa.Name,
-                        Value = sa.Id.ToString()
-                    });
-                }
-
-                return availableSpecificationAttributes;
-            });
-
-            //options of preselected specification attribute
-            if (model.AvailableAttributes.Any() && int.TryParse(model.AvailableAttributes.FirstOrDefault()?.Value, out var selectedAttributeId))
-            {
-                model.AvailableOptions = _specificationAttributeService
-                    .GetSpecificationAttributeOptionsBySpecificationAttribute(selectedAttributeId)
-                    .Select(option => new SelectListItem { Text = option.Name, Value = option.Id.ToString() }).ToList();
-            }
-
-            return model;
         }
 
         /// <summary>
@@ -806,9 +767,6 @@ namespace Nop.Web.Areas.Admin.Factories
                 //prepare copy product model
                 PrepareCopyProductModel(model.CopyProductModel, product);
 
-                //prepare specification attribute model to add to the product
-                PrepareAddSpecificationAttributeToProductModel(model.AddSpecificationAttributeModel);
-
                 //prepare nested search model
                 PrepareRelatedProductSearchModel(model.RelatedProductSearchModel, product);
                 PrepareCrossSellProductSearchModel(model.CrossSellProductSearchModel, product);
@@ -858,6 +816,8 @@ namespace Nop.Web.Areas.Admin.Factories
             model.BaseWeightIn = _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId).Name;
             model.BaseDimensionIn = _measureService.GetMeasureDimensionById(_measureSettings.BaseDimensionId).Name;
             model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
+            model.HasAvailableSpecificationAttributes = _cacheManager.Get(ModelCacheEventConsumer.SPEC_ATTRIBUTES_MODEL_KEY,
+                    () => _specificationAttributeService.GetSpecificationAttributesWithOptions()).Any();
 
             //prepare localized models
             if (!excludeProperties)
@@ -1441,7 +1401,7 @@ namespace Nop.Web.Areas.Admin.Factories
                             productSpecificationAttributeModel.ValueRaw = WebUtility.HtmlEncode(attribute.CustomValue);
                             break;
                         case SpecificationAttributeType.CustomHtmlText:
-                            productSpecificationAttributeModel.ValueRaw = WebUtility.HtmlEncode(attribute.CustomValue);
+                            productSpecificationAttributeModel.ValueRaw = attribute.CustomValue;
                             break;
                         case SpecificationAttributeType.Hyperlink:
                             productSpecificationAttributeModel.ValueRaw = attribute.CustomValue;
@@ -1452,6 +1412,76 @@ namespace Nop.Web.Areas.Admin.Factories
                 }),
                 Total = productSpecificationAttributes.Count
             };
+
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare paged product specification attribute model
+        /// </summary>
+        /// <param name="productId">Product id</param>
+        /// <param name="specificationId">Specification attribute id</param>
+        /// <returns>Product specification attribute model</returns>
+        public virtual AddSpecificationAttributeModel PrepareAddSpecificationAttributeModel(int productId, int? specificationId)
+        {
+            if (!specificationId.HasValue)
+            {
+                return new AddSpecificationAttributeModel
+                {
+                    AvailableAttributes = _cacheManager.Get(ModelCacheEventConsumer.SPEC_ATTRIBUTES_MODEL_KEY,
+                            () => _specificationAttributeService.GetSpecificationAttributesWithOptions())
+                        .Select(sa => new SelectListItem {Text = sa.Name, Value = sa.Id.ToString()})
+                        .ToList(),
+                    ProductId = productId
+                };
+
+            }
+
+            var attribute = _specificationAttributeService.GetProductSpecificationAttributeById(specificationId.Value);
+
+            if (attribute == null)
+            {
+                throw new ArgumentException("No specification attribute found with the specified id");
+            }
+
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null && attribute.Product.VendorId != _workContext.CurrentVendor.Id)
+                throw new UnauthorizedAccessException("This is not your product");
+
+            var model = attribute.ToModel<AddSpecificationAttributeModel>();
+            model.SpecificationId = attribute.Id;
+            model.AttributeId = attribute.SpecificationAttributeOption.SpecificationAttribute.Id;
+            model.AttributeTypeName = _localizationService.GetLocalizedEnum(attribute.AttributeType);
+            model.AttributeName = attribute.SpecificationAttributeOption.SpecificationAttribute.Name;
+
+            model.AvailableAttributes = _cacheManager.Get(ModelCacheEventConsumer.SPEC_ATTRIBUTES_MODEL_KEY,
+                    () => _specificationAttributeService.GetSpecificationAttributesWithOptions())
+                .Select(sa => new SelectListItem {Text = sa.Name, Value = sa.Id.ToString()})
+                .ToList();
+
+            model.AvailableOptions = _specificationAttributeService
+                .GetSpecificationAttributeOptionsBySpecificationAttribute(model.AttributeId)
+                .Select(option => new SelectListItem { Text = option.Name, Value = option.Id.ToString() })
+                .ToList();
+
+            switch (attribute.AttributeType)
+            {
+                case SpecificationAttributeType.Option:
+                    model.ValueRaw = WebUtility.HtmlEncode(attribute.SpecificationAttributeOption.Name);
+                    model.SpecificationAttributeOptionId = attribute.SpecificationAttributeOptionId;
+                    break;
+                case SpecificationAttributeType.CustomText:
+                    model.Value = WebUtility.HtmlDecode(attribute.CustomValue);
+                    break;
+                case SpecificationAttributeType.CustomHtmlText:
+                    model.ValueRaw = attribute.CustomValue;
+                    break;
+                case SpecificationAttributeType.Hyperlink:
+                    model.Value = attribute.CustomValue;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(attribute.AttributeType));
+            }
 
             return model;
         }

@@ -111,16 +111,16 @@ set @resources='
     <Value>Failed to add vendor note.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.SpecificationAttributes.Alert.FailedAdd">
-    <Value>Failed to add specification attribute.</Value>
+    <Value></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Currencies.Alert.Error">
     <Value>Failed to update currency.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.SpecificationAttributes.Alert.SelectOption">
-    <Value>Select specification attribute option.</Value>
+    <Value></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.SpecificationAttributes.Alert.NoAttributeOptions">
-    <Value>First, please create at least one specification attribute option</Value>
+    <Value></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.Requirements.FailedToSave">
     <Value></Value>
