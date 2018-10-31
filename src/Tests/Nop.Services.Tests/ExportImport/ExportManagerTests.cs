@@ -48,6 +48,7 @@ namespace Nop.Services.Tests.ExportImport
         private Mock<IVendorService> _vendorService;
         private Mock<IProductTemplateService> _productTemplateService;
         private Mock<IDateRangeService> _dateRangeService;
+        private Mock<IStoreMappingService> _storeMappingService;
         private Mock<IStoreService> _storeService;
         private Mock<IProductAttributeService> _productAttributeService;
         private Mock<IProductTagService> _productTagService;
@@ -83,6 +84,7 @@ namespace Nop.Services.Tests.ExportImport
             _vendorService = new Mock<IVendorService>();
             _productTemplateService = new Mock<IProductTemplateService>();
             _dateRangeService = new Mock<IDateRangeService>();
+            _storeMappingService = new Mock<IStoreMappingService>();
             _storeService = new Mock<IStoreService>();
             _productAttributeService = new Mock<IProductAttributeService>();
             _productTagService = new Mock<IProductTagService>();
@@ -137,6 +139,7 @@ namespace Nop.Services.Tests.ExportImport
 
             EngineContext.Replace(nopEngine.Object);
            
+
             _exportManager = new ExportManager(_addressSettings,
                 _catalogSettings,
                 _customerSettings,
@@ -163,6 +166,7 @@ namespace Nop.Services.Tests.ExportImport
                 _productTemplateService.Object,
                 _specificationAttributeService.Object,
                 _stateProvinceService.Object,
+                _storeMappingService.Object,
                 _storeService.Object,
                 _taxCategoryService.Object,
                 _urlRecordService.Object,
