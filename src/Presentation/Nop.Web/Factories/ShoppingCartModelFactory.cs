@@ -212,7 +212,7 @@ namespace Nop.Web.Factories
                     TextPrompt = _localizationService.GetLocalized(attribute, x => x.TextPrompt),
                     IsRequired = attribute.IsRequired,
                     AttributeControlType = attribute.AttributeControlType,
-                    DefaultValue = attribute.DefaultValue
+                    DefaultValue = _localizationService.GetLocalized(attribute, x => x.DefaultValue)
                 };
                 if (!string.IsNullOrEmpty(attribute.ValidationFileAllowedExtensions))
                 {

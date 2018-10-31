@@ -209,6 +209,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                     x => x.TextPrompt,
                     localized.TextPrompt,
                     localized.LanguageId);
+                _localizedEntityService.SaveLocalizedValue(pam,
+                    x => x.DefaultValue,
+                    localized.DefaultValue,
+                    localized.LanguageId);
             }
         }
 

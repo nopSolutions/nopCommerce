@@ -18,25 +18,25 @@
             $('#pnlValidationMaxLength').show();
             $('#pnlValidationFileMaximumSize').hide();
             $('#pnlValidationFileAllowedExtensions').hide();
-            $('#pnlDefaultValue').show();
+            $('#pnlDefaultValueLocalized').show();
         } else if (selectedAttributeControlTypeId == @(((int) AttributeControlType.MultilineTextbox).ToString())) {
             $('#pnlValidationMinLength').show();
             $('#pnlValidationMaxLength').show();
             $('#pnlValidationFileMaximumSize').hide();
             $('#pnlValidationFileAllowedExtensions').hide();
-            $('#pnlDefaultValue').show();
+            $('#pnlDefaultValueLocalized').show();
         } else if (selectedAttributeControlTypeId == @(((int) AttributeControlType.FileUpload).ToString())) {
             $('#pnlValidationMinLength').hide();
             $('#pnlValidationMaxLength').hide();
             $('#pnlValidationFileMaximumSize').show();
             $('#pnlValidationFileAllowedExtensions').show();
-            $('#pnlDefaultValue').hide();
+            $('#pnlDefaultValueLocalized').hide();
         } else {
             $('#pnlValidationMinLength').hide();
             $('#pnlValidationMaxLength').hide();
             $('#pnlValidationFileMaximumSize').hide();
             $('#pnlValidationFileAllowedExtensions').hide();
-            $('#pnlDefaultValue').hide();
+            $('#pnlDefaultValueLocalized').hide();
         }
 
         //values
@@ -79,7 +79,7 @@
                 </div>
                 <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
             </div>
-    ,
+,
             @<div>
                 <div class="form-group">
                     <div class="col-md-3">
@@ -91,7 +91,7 @@
                     </div>
                 </div>
             </div>
-                  ))
+))
             <div class="form-group">
                 <div class="col-md-3">
                     <nop-label asp-for="IsRequired" />
@@ -110,6 +110,32 @@
                     <span asp-validation-for="AttributeControlTypeId"></span>
                 </div>
             </div>
+            @(Html.LocalizedEditor<ProductAttributeMappingModel, ProductAttributeMappingLocalizedModel>("pnlDefaultValueLocalized",
+            @<div>
+                <div class="form-group advanced-setting">
+                    <div class="col-md-3">
+                        <nop-label asp-for="@Model.Locales[item].DefaultValue"/>
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="@Model.Locales[item].DefaultValue"/>
+                        <span asp-validation-for="@Model.Locales[item].DefaultValue"></span>
+                    </div>
+                </div>
+                <input type="hidden" asp-for="@Model.Locales[item].LanguageId" /> 
+            </div>
+,
+            @<div>
+                <div class="form-group advanced-setting">
+                    <div class="col-md-3">
+                        <nop-label asp-for="DefaultValue"/>
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="DefaultValue"/>
+                        <span asp-validation-for="DefaultValue"></span>
+                    </div>
+                </div>
+             </div>
+))
             <div class="form-group">
                 <div class="col-md-3">
                     <nop-label asp-for="DisplayOrder" />
@@ -153,15 +179,6 @@
                 <div class="col-md-9">
                     <nop-editor asp-for="ValidationFileMaximumSize" />
                     <span asp-validation-for="ValidationFileMaximumSize"></span>
-                </div>
-            </div>
-            <div class="form-group" id="pnlDefaultValue">
-                <div class="col-md-3">
-                    <nop-label asp-for="DefaultValue" />
-                </div>
-                <div class="col-md-9">
-                    <nop-editor asp-for="DefaultValue" />
-                    <span asp-validation-for="DefaultValue"></span>
                 </div>
             </div>
         </div>

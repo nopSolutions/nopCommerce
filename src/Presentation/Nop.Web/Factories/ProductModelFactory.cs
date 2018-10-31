@@ -762,7 +762,7 @@ namespace Nop.Web.Factories
                     TextPrompt = _localizationService.GetLocalized(attribute, x => x.TextPrompt),
                     IsRequired = attribute.IsRequired,
                     AttributeControlType = attribute.AttributeControlType,
-                    DefaultValue = updatecartitem != null ? null : attribute.DefaultValue,
+                    DefaultValue = updatecartitem != null ? null : _localizationService.GetLocalized(attribute, x => x.DefaultValue),
                     HasCondition = !string.IsNullOrEmpty(attribute.ConditionAttributeXml)
                 };
                 if (!string.IsNullOrEmpty(attribute.ValidationFileAllowedExtensions))
