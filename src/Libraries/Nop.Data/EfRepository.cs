@@ -45,7 +45,17 @@ namespace Nop.Data
                 var entries = dbContext.ChangeTracker.Entries()
                     .Where(e => e.State == EntityState.Added || e.State == EntityState.Modified).ToList();
 
-                entries.ForEach(entry => entry.State = EntityState.Unchanged);
+                entries.ForEach(entry =>
+                {
+                    try
+                    {
+                        entry.State = EntityState.Unchanged;
+                    }
+                    catch (InvalidOperationException)
+                    {
+                        // ignored
+                    }
+                });
             }
 
             _context.SaveChanges();
