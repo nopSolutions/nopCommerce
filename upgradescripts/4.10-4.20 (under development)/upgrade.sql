@@ -1018,3 +1018,4 @@ GO
 
 --updating of indexes in the Picture table for reduced table size after upgrade nopCommerce from 4.00 to 4.10 version
 ALTER INDEX ALL ON [Picture] REBUILD
+GO
