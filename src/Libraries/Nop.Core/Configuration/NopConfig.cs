@@ -30,7 +30,6 @@ namespace Nop.Core.Configuration
         public bool AzureBlobStorageAppendContainerName { get; set; }
 
 
-
         /// <summary>
         /// Gets or sets a value indicating whether we should use Redis server for caching (instead of default in-memory caching)
         /// </summary>
