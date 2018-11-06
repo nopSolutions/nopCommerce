@@ -204,6 +204,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     locale.Name = _localizationService.GetLocalized(checkoutAttribute, entity => entity.Name, languageId, false, false);
                     locale.TextPrompt = _localizationService.GetLocalized(checkoutAttribute, entity => entity.TextPrompt, languageId, false, false);
+                    locale.DefaultValue = _localizationService.GetLocalized(checkoutAttribute, entity => entity.DefaultValue, languageId, false, false);
                 };
 
                 //whether to fill in some of properties

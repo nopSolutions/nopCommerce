@@ -90,6 +90,11 @@ namespace Nop.Web.Areas.Admin.Controllers
                     x => x.TextPrompt,
                     localized.TextPrompt,
                     localized.LanguageId);
+
+                _localizedEntityService.SaveLocalizedValue(checkoutAttribute,
+                    x => x.DefaultValue,
+                    localized.DefaultValue,
+                    localized.LanguageId);
             }
         }
 
