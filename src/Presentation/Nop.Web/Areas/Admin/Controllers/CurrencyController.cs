@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Domain.Directory;
 using Nop.Services.Configuration;
@@ -114,8 +115,17 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
                 return AccessDeniedView();
 
-            //prepare model
-            var model = _currencyModelFactory.PrepareCurrencySearchModel(new CurrencySearchModel(), liveRates);
+            var model = new CurrencySearchModel();
+
+            try
+            {
+                //prepare model
+                model = _currencyModelFactory.PrepareCurrencySearchModel(new CurrencySearchModel(), liveRates);
+            }
+            catch (Exception e)
+            {
+                _notificationService.ErrorNotification(e);
+            }
 
             return View(model);
         }

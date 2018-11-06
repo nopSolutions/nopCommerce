@@ -6331,7 +6331,7 @@ namespace Nop.Services.Installation
                 DisplayCurrencyLabel = false,
                 PrimaryStoreCurrencyId = _currencyRepository.Table.Single(c => c.CurrencyCode == "USD").Id,
                 PrimaryExchangeRateCurrencyId = _currencyRepository.Table.Single(c => c.CurrencyCode == "USD").Id,
-                ActiveExchangeRateProviderSystemName = "CurrencyExchange.MoneyConverter",
+                ActiveExchangeRateProviderSystemName = "CurrencyExchange.ECB",
                 AutoUpdateEnabled = false
             });
 
