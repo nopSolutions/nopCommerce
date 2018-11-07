@@ -1,0 +1,33 @@
+
+div.dt-button-info {
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	width: 400px;
+	margin-top: -100px;
+	margin-left: -200px;
+	background-color: white;
+	border: 2px solid #111;
+	box-shadow: 3px 3px 8px rgba( 0, 0, 0, 0.3);
+	border-radius: 3px;
+	text-align: center;
+	z-index: 21;
+
+	h2 {
+		padding: 0.5em;
+		margin: 0;
+		font-weight: normal;
+		border-bottom: 1px solid #ddd;
+		background-color: #f3f3f3;
+	}
+
+	> div {
+		padding: 1em;
+	}
+}
+
+div.dt-button-collection-title {
+	text-align: center;
+	padding: 0.3em 0 0.5em;
+	font-size: 0.9em;
+}

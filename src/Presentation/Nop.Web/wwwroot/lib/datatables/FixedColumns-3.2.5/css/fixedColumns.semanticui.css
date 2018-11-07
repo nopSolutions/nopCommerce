@@ -1,0 +1,40 @@
+div.DTFC_LeftWrapper table.ui.table.dataTable {
+  border-right: none;
+}
+
+div.DTFC_RightWrapper table.ui.table.dataTable {
+  border-left: none;
+}
+
+div.DTFC_Blocker {
+  background-color: white;
+}
+
+div.DTFC_LeftWrapper table.dataTable,
+div.DTFC_RightWrapper table.dataTable {
+  z-index: 2;
+}
+
+div.DTFC_LeftHeadWrapper table.ui.table.dataTable,
+div.DTFC_RightHeadWrapper table.ui.table.dataTable {
+  border-bottom: none;
+}
+
+div.DTFC_LeftBodyWrapper table.ui.table.dataTable,
+div.DTFC_RightBodyWrapper table.ui.table.dataTable {
+  border-top: none;
+}
+div.DTFC_LeftBodyWrapper table.ui.table.dataTable thead .sorting:after,
+div.DTFC_LeftBodyWrapper table.ui.table.dataTable thead .sorting_asc:after,
+div.DTFC_LeftBodyWrapper table.ui.table.dataTable thead .sorting_desc:after,
+div.DTFC_LeftBodyWrapper table.ui.table.dataTable thead .sorting:after,
+div.DTFC_LeftBodyWrapper table.ui.table.dataTable thead .sorting_asc:after,
+div.DTFC_LeftBodyWrapper table.ui.table.dataTable thead .sorting_desc:after,
+div.DTFC_RightBodyWrapper table.ui.table.dataTable thead .sorting:after,
+div.DTFC_RightBodyWrapper table.ui.table.dataTable thead .sorting_asc:after,
+div.DTFC_RightBodyWrapper table.ui.table.dataTable thead .sorting_desc:after,
+div.DTFC_RightBodyWrapper table.ui.table.dataTable thead .sorting:after,
+div.DTFC_RightBodyWrapper table.ui.table.dataTable thead .sorting_asc:after,
+div.DTFC_RightBodyWrapper table.ui.table.dataTable thead .sorting_desc:after {
+  display: none;
+}
