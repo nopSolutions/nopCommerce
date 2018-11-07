@@ -634,6 +634,7 @@ namespace Nop.Plugin.Payments.Square
             _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.Location", "Business location");
             _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.Location.Hint", "Choose your business location. Location is a required parameter for payment requests.");
             _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.Location.NotExist", "No locations");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.Location.Select", "Select location");
             _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.PostalCode", "Postal code");
             _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.PostalCode.Key", "Postal code");
             _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.SandboxAccessToken", "Sandbox access token");
@@ -711,6 +712,7 @@ namespace Nop.Plugin.Payments.Square
             _localizationService.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.Location");
             _localizationService.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.Location.Hint");
             _localizationService.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.Location.NotExist");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.Location.Select");
             _localizationService.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.PostalCode");
             _localizationService.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.PostalCode.Key");
             _localizationService.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.SandboxAccessToken");

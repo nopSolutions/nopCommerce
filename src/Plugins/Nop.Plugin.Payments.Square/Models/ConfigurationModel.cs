@@ -39,6 +39,8 @@ namespace Nop.Plugin.Payments.Square.Models
         public string AccessToken { get; set; }
 
         [NopResourceDisplayName("Plugins.Payments.Square.Fields.SandboxAccessToken")]
+        [DataType(DataType.Password)]
+        [NoTrim]
         public string SandboxAccessToken { get; set; }
 
         [NopResourceDisplayName("Plugins.Payments.Square.Fields.UseSandbox")]

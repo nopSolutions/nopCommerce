@@ -229,7 +229,10 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Import.StoresDontExist">
     <Value>Stores with the following names and/or IDs don''t exist: {0}</Value>
-  </LocaleResource> 
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Square.Fields.Location.Select">
+    <Value>Select location</Value>
+  </LocaleResource>
 </Language>
 '
 

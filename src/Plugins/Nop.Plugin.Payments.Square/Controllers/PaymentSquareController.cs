@@ -64,8 +64,10 @@ namespace Nop.Plugin.Payments.Square.Controllers
             var model = new ConfigurationModel
             {
                 ApplicationId = _squarePaymentSettings.ApplicationId,
+                SandboxApplicationId = _squarePaymentSettings.ApplicationId,
                 ApplicationSecret = _squarePaymentSettings.ApplicationSecret,
                 AccessToken = _squarePaymentSettings.AccessToken,
+                SandboxAccessToken = _squarePaymentSettings.AccessToken,
                 UseSandbox = _squarePaymentSettings.UseSandbox,
                 TransactionModeId = (int)_squarePaymentSettings.TransactionMode,
                 TransactionModes = _squarePaymentSettings.TransactionMode.ToSelectList(),
@@ -84,6 +86,11 @@ namespace Nop.Plugin.Payments.Square.Controllers
                         name = $"{name} ({location.Name})";
                     return new SelectListItem { Text = name, Value = location.Id };
                 }).ToList();
+                if (model.Locations.Any())
+                {
+                    var selectLocationText = _localizationService.GetResource("Plugins.Payments.Square.Fields.Location.Select");
+                    model.Locations.Insert(0, new SelectListItem { Text = selectLocationText, Value = "0" });
+                }
             }
 
             //add the special item for 'there are no location' with value 0
@@ -92,6 +99,10 @@ namespace Nop.Plugin.Payments.Square.Controllers
                 var noLocationText = _localizationService.GetResource("Plugins.Payments.Square.Fields.Location.NotExist");
                 model.Locations.Add(new SelectListItem { Text = noLocationText, Value = "0" });
             }
+
+            //warn admin that the location is a required parameter
+            if (string.IsNullOrEmpty(_squarePaymentSettings.LocationId) || _squarePaymentSettings.LocationId.Equals("0"))
+                _notificationService.WarningNotification(_localizationService.GetResource("Plugins.Payments.Square.Fields.Location.Hint"));
 
             return View("~/Plugins/Payments.Square/Views/Configure.cshtml", model);
         }
@@ -111,9 +122,13 @@ namespace Nop.Plugin.Payments.Square.Controllers
                 return Configure();
 
             //save settings
-            _squarePaymentSettings.ApplicationId = model.ApplicationId;
-            _squarePaymentSettings.ApplicationSecret = model.ApplicationSecret;
-            _squarePaymentSettings.AccessToken = model.AccessToken;
+            _squarePaymentSettings.ApplicationId = model.UseSandbox ? model.SandboxApplicationId : model.ApplicationId;
+            if (!model.UseSandbox && !string.IsNullOrEmpty(model.ApplicationSecret))
+                _squarePaymentSettings.ApplicationSecret = model.ApplicationSecret;
+            if (model.UseSandbox && !string.IsNullOrEmpty(model.SandboxAccessToken))
+                _squarePaymentSettings.AccessToken = model.SandboxAccessToken;
+            if (model.UseSandbox != _squarePaymentSettings.UseSandbox)
+                _squarePaymentSettings.AccessToken = string.Empty;
             _squarePaymentSettings.UseSandbox = model.UseSandbox;
             _squarePaymentSettings.TransactionMode = (TransactionMode)model.TransactionModeId;
             _squarePaymentSettings.LocationId = model.LocationId;
@@ -121,11 +136,7 @@ namespace Nop.Plugin.Payments.Square.Controllers
             _squarePaymentSettings.AdditionalFeePercentage = model.AdditionalFeePercentage;
             _settingService.SaveSetting(_squarePaymentSettings);
 
-            //warn admin that the location is a required parameter
-            if (string.IsNullOrEmpty(_squarePaymentSettings.LocationId) || _squarePaymentSettings.LocationId.Equals("0"))
-                _notificationService.WarningNotification(_localizationService.GetResource("Plugins.Payments.Square.Fields.Location.Hint"));
-            else
-                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
+            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
 
             return Configure();
         }

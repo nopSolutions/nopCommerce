@@ -52,9 +52,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="Square.Connect">
-      <HintPath>Square.Connect.dll</HintPath>
-    </Reference>
+    <PackageReference Include="Square.Connect" Version="2.11.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="RestSharp.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Square.Connect.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
