@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Facebook;
+using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Infrastructure;
 using Nop.Services.Authentication.External;
@@ -24,6 +26,16 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Infrastructure
                 options.AppId = settings.ClientKeyIdentifier;
                 options.AppSecret = settings.ClientSecret;
                 options.SaveTokens = true;
+
+                options.Events = new OAuthEvents
+                {
+                    OnRemoteFailure = ctx =>
+                    {
+                        ctx.HandleResponse();
+                        ctx.Response.Redirect(ctx.Properties.GetString("ErrorCallback"));
+                        return Task.FromResult(0);
+                    }
+                };
             });
         }
     }
