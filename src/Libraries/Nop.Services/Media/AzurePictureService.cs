@@ -222,7 +222,7 @@ namespace Nop.Services.Media
             try
             {
                 var key = string.Format(NopMediaDefaults.ThumbExistsCacheKey, thumbFileName);
-                return await _cacheManager.Get(key, async () =>
+                return await _cacheManager.GetAsync(key, async () =>
                 {
                     //GetBlockBlobReference doesn't need to be async since it doesn't contact the server yet
                     var blockBlob = _container.GetBlockBlobReference(thumbFileName);

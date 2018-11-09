@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 
 namespace Nop.Core.Caching
 {
@@ -18,6 +19,19 @@ namespace Nop.Core.Caching
         public virtual T Get<T>(string key, Func<T> acquire, int? cacheTime = null)
         {
             return default(T);
+        }
+
+        /// <summary>
+        /// Get a cached item. If it's not in the cache yet, then load and cache it
+        /// </summary>
+        /// <typeparam name="T">Type of cached item</typeparam>
+        /// <param name="key">Cache key</param>
+        /// <param name="acquire">Function to load item if it's not in the cache yet</param>
+        /// <param name="cacheTime">Cache time in minutes; pass 0 to do not cache; pass null to use the default time</param>
+        /// <returns>The cached value associated with the specified key</returns>
+        public async Task<T> GetAsync<T>(string key, Func<Task<T>> acquire, int? cacheTime = null)
+        {
+            return await Task.Run(() => default(T));
         }
 
         /// <summary>

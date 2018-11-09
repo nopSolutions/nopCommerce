@@ -55,7 +55,7 @@ namespace Nop.Core.Caching
             //we use "PerRequestCacheManager" to cache a loaded object in memory for the current HTTP request.
             //this way we won't connect to Redis server many times per HTTP request (e.g. each time to load a locale or setting)
             if (_perRequestCacheManager.IsSet(key))
-                return _perRequestCacheManager.Get<T>(key, () => default(T), 0);
+                return _perRequestCacheManager.Get(key, () => default(T), 0);
 
             //get serialized item from cache
             var serializedItem = await _db.StringGetAsync(key);
@@ -72,7 +72,7 @@ namespace Nop.Core.Caching
 
             return item;
         }
-
+        
         /// <summary>
         /// Adds the specified key and object to the cache
         /// </summary>
@@ -187,16 +187,29 @@ namespace Nop.Core.Caching
         /// <returns>The cached value associated with the specified key</returns>
         public virtual T Get<T>(string key, Func<T> acquire, int? cacheTime = null)
         {
+            return GetAsync(key, () => Task.Run(acquire), cacheTime).Result;
+        }
+
+        /// <summary>
+        /// Get a cached item. If it's not in the cache yet, then load and cache it
+        /// </summary>
+        /// <typeparam name="T">Type of cached item</typeparam>
+        /// <param name="key">Cache key</param>
+        /// <param name="acquire">Function to load item if it's not in the cache yet</param>
+        /// <param name="cacheTime">Cache time in minutes; pass 0 to do not cache; pass null to use the default time</param>
+        /// <returns>The cached value associated with the specified key</returns>
+        public async Task<T> GetAsync<T>(string key, Func<Task<T>> acquire, int? cacheTime = null)
+        {
             //item already is in cache, so return it
-            if (this.IsSetAsync(key).Result)
-                return this.GetAsync<T>(key).Result;
+            if (await IsSetAsync(key))
+                return await GetAsync<T>(key);
 
             //or create it using passed function
-            var result = acquire();
+            var result = await acquire();
 
             //and set in cache (if cache time is defined)
             if ((cacheTime ?? NopCachingDefaults.CacheTime) > 0)
-                this.SetAsync(key, result, cacheTime ?? NopCachingDefaults.CacheTime).Wait();
+                await SetAsync(key, result, cacheTime ?? NopCachingDefaults.CacheTime);
 
             return result;
         }
