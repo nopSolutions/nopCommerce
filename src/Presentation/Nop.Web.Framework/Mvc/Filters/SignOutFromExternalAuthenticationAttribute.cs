@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Nop.Core.Infrastructure.Threading;
 using Nop.Services.Authentication;
 
 namespace Nop.Web.Framework.Mvc.Filters
@@ -35,15 +36,15 @@ namespace Nop.Web.Framework.Mvc.Filters
             /// Called early in the filter pipeline to confirm request is authorized
             /// </summary>
             /// <param name="filterContext">Authorization filter context</param>
-            public async void OnAuthorization(AuthorizationFilterContext filterContext)
+            public void OnAuthorization(AuthorizationFilterContext filterContext)
             {
                 if (filterContext == null)
                     throw new ArgumentNullException(nameof(filterContext));
 
                 //sign out from the external authentication scheme
-                var authenticateResult = await filterContext.HttpContext.AuthenticateAsync(NopAuthenticationDefaults.ExternalAuthenticationScheme);
+                var authenticateResult = filterContext.HttpContext.AuthenticateAsync(NopAuthenticationDefaults.ExternalAuthenticationScheme).AsSync();
                 if (authenticateResult.Succeeded)
-                    await filterContext.HttpContext.SignOutAsync(NopAuthenticationDefaults.ExternalAuthenticationScheme);
+                    filterContext.HttpContext.SignOutAsync(NopAuthenticationDefaults.ExternalAuthenticationScheme).AsSync();
             }
 
             #endregion

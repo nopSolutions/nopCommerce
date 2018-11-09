@@ -4,6 +4,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Infrastructure.Threading;
 using Nop.Services.Customers;
 
 namespace Nop.Services.Authentication
@@ -43,7 +44,7 @@ namespace Nop.Services.Authentication
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="isPersistent">Whether the authentication session is persisted across multiple requests</param>
-        public virtual async void SignIn(Customer customer, bool isPersistent)
+        public virtual void SignIn(Customer customer, bool isPersistent)
         {
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
@@ -69,7 +70,7 @@ namespace Nop.Services.Authentication
             };
 
             //sign in
-            await _httpContextAccessor.HttpContext.SignInAsync(NopAuthenticationDefaults.AuthenticationScheme, userPrincipal, authenticationProperties);
+            _httpContextAccessor.HttpContext.SignInAsync(NopAuthenticationDefaults.AuthenticationScheme, userPrincipal, authenticationProperties).AsSync();
 
             //cache authenticated customer
             _cachedCustomer = customer;
@@ -78,13 +79,13 @@ namespace Nop.Services.Authentication
         /// <summary>
         /// Sign out
         /// </summary>
-        public virtual async void SignOut()
+        public virtual void SignOut()
         {
             //reset cached customer
             _cachedCustomer = null;
 
             //and sign out from the current authentication scheme
-            await _httpContextAccessor.HttpContext.SignOutAsync(NopAuthenticationDefaults.AuthenticationScheme);
+            _httpContextAccessor.HttpContext.SignOutAsync(NopAuthenticationDefaults.AuthenticationScheme).AsSync();
         }
 
         /// <summary>

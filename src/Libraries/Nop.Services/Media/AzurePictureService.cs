@@ -10,6 +10,7 @@ using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Media;
 using Nop.Core.Infrastructure;
+using Nop.Core.Infrastructure.Threading;
 using Nop.Data;
 using Nop.Services.Catalog;
 using Nop.Services.Configuration;
@@ -100,8 +101,8 @@ namespace Nop.Services.Media
                 _azureBlobStorageConnectionString = config.AzureBlobStorageConnectionString;
                 _azureBlobStorageContainerName = config.AzureBlobStorageContainerName.Trim().ToLower();
                 _azureBlobStorageEndPoint = config.AzureBlobStorageEndPoint.Trim().ToLower().TrimEnd('/');
-                
-                CreateCloudBlobContainer();
+
+                CreateCloudBlobContainer().AsSync();
 
                 _isInitialized = true;
             }
@@ -110,7 +111,7 @@ namespace Nop.Services.Media
         /// <summary>
         /// Create cloud blob container
         /// </summary>
-        protected virtual async void CreateCloudBlobContainer()
+        protected virtual async Task CreateCloudBlobContainer()
         {
             var storageAccount = CloudStorageAccount.Parse(_azureBlobStorageConnectionString);
             if (storageAccount == null)
@@ -133,9 +134,9 @@ namespace Nop.Services.Media
         /// Delete picture thumbs
         /// </summary>
         /// <param name="picture">Picture</param>
-        protected override async void DeletePictureThumbs(Picture picture)
+        protected override void DeletePictureThumbs(Picture picture)
         {
-            await DeletePictureThumbsAsync(picture);
+            DeletePictureThumbsAsync(picture).AsSync();
         }
 
         /// <summary>
@@ -169,7 +170,7 @@ namespace Nop.Services.Media
         /// <returns>Result</returns>
         protected override bool GeneratedThumbExists(string thumbFilePath, string thumbFileName)
         {
-            return GeneratedThumbExistsAsync(thumbFilePath, thumbFileName).Result;
+            return GeneratedThumbExistsAsync(thumbFilePath, thumbFileName).AsSync();
         }
 
         /// <summary>
@@ -179,9 +180,9 @@ namespace Nop.Services.Media
         /// <param name="thumbFileName">Thumb file name</param>
         /// <param name="mimeType">MIME type</param>
         /// <param name="binary">Picture binary</param>
-        protected override async void SaveThumb(string thumbFilePath, string thumbFileName, string mimeType, byte[] binary)
+        protected override void SaveThumb(string thumbFilePath, string thumbFileName, string mimeType, byte[] binary)
         {
-            await SaveThumbAsync(thumbFilePath, thumbFileName, mimeType, binary);
+            SaveThumbAsync(thumbFilePath, thumbFileName, mimeType, binary).AsSync();
         }
 
         /// <summary>

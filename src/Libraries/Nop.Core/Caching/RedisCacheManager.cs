@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Nop.Core.Configuration;
+using Nop.Core.Infrastructure.Threading;
 using StackExchange.Redis;
 
 namespace Nop.Core.Caching
@@ -188,15 +189,15 @@ namespace Nop.Core.Caching
         public virtual T Get<T>(string key, Func<T> acquire, int? cacheTime = null)
         {
             //item already is in cache, so return it
-            if (this.IsSetAsync(key).Result)
-                return this.GetAsync<T>(key).Result;
+            if (this.IsSetAsync(key).AsSync())
+                return this.GetAsync<T>(key).AsSync();
 
             //or create it using passed function
             var result = acquire();
 
             //and set in cache (if cache time is defined)
             if ((cacheTime ?? NopCachingDefaults.CacheTime) > 0)
-                this.SetAsync(key, result, cacheTime ?? NopCachingDefaults.CacheTime).Wait();
+                this.SetAsync(key, result, cacheTime ?? NopCachingDefaults.CacheTime).AsSync();
 
             return result;
         }
@@ -207,9 +208,9 @@ namespace Nop.Core.Caching
         /// <param name="key">Key of cached item</param>
         /// <param name="data">Value for caching</param>
         /// <param name="cacheTime">Cache time in minutes</param>
-        public virtual async void Set(string key, object data, int cacheTime)
+        public virtual void Set(string key, object data, int cacheTime)
         {
-            await this.SetAsync(key, data, cacheTime);
+            this.SetAsync(key, data, cacheTime).AsSync();
         }
 
         /// <summary>
@@ -219,33 +220,33 @@ namespace Nop.Core.Caching
         /// <returns>True if item already is in cache; otherwise false</returns>
         public virtual bool IsSet(string key)
         {
-            return this.IsSetAsync(key).Result;
+            return this.IsSetAsync(key).AsSync();
         }
 
         /// <summary>
         /// Removes the value with the specified key from the cache
         /// </summary>
         /// <param name="key">Key of cached item</param>
-        public virtual async void Remove(string key)
+        public virtual void Remove(string key)
         {
-            await this.RemoveAsync(key);
+            this.RemoveAsync(key).AsSync();
         }
 
         /// <summary>
         /// Removes items by key pattern
         /// </summary>
         /// <param name="pattern">String key pattern</param>
-        public virtual async void RemoveByPattern(string pattern)
+        public virtual void RemoveByPattern(string pattern)
         {
-            await this.RemoveByPatternAsync(pattern);
+            this.RemoveByPatternAsync(pattern).AsSync();
         }
 
         /// <summary>
         /// Clear all cache data
         /// </summary>
-        public virtual async void Clear()
+        public virtual void Clear()
         {
-            await this.ClearAsync();
+            this.ClearAsync().AsSync();
         }
 
         /// <summary>

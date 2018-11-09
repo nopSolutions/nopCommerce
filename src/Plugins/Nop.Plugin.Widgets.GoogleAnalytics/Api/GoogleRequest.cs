@@ -3,6 +3,7 @@
 using System;
 using System.Net.Http;
 using Nop.Core;
+using Nop.Core.Infrastructure.Threading;
 
 namespace Nop.Plugin.Widgets.GoogleAnalytics.Api
 {
@@ -28,7 +29,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Api
         
         #region Utilities
 
-        private async void FireRequest(string url)
+        private void FireRequest(string url)
         {
             if (_requestCount < 500)
             {
@@ -38,7 +39,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Api
                 try
                 {
                     // we don't need the response so this is the end of the request
-                    var response = (await httpClient.GetAsync(url)).EnsureSuccessStatusCode();
+                    var response = httpClient.GetAsync(url).AsSync().EnsureSuccessStatusCode();
                 }
                 catch (Exception)
                 {
