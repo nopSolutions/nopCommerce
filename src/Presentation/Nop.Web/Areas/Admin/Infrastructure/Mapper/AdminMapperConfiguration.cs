@@ -1286,6 +1286,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.AllowOutOfStockItemsToBeAddedToWishlist_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.CartsSharedBetweenStores_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.CrossSellsNumber_OverrideForStore, options => options.Ignore())
+                .ForMember(model => model.GroupTierPricesForDistinctShoppingCartItems_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.DisplayCartAfterAddingProduct_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.DisplayWishlistAfterAddingProduct_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.EmailWishlistEnabled_OverrideForStore, options => options.Ignore())
@@ -1300,7 +1301,6 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.ShowProductImagesOnShoppingCart_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.ShowProductImagesOnWishList_OverrideForStore, options => options.Ignore());
             CreateMap<ShoppingCartSettingsModel, ShoppingCartSettings>()
-                .ForMember(settings => settings.GroupTierPricesForDistinctShoppingCartItems, options => options.Ignore())
                 .ForMember(settings => settings.RenderAssociatedAttributeValueQuantity, options => options.Ignore())
                 .ForMember(settings => settings.RoundPricesDuringCalculation, options => options.Ignore());
 
