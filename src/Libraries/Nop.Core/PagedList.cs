@@ -15,10 +15,10 @@ namespace Nop.Core
         /// Ctor
         /// </summary>
         /// <param name="source">source</param>
-        /// <param name="pageIndex">Page index</param>
+        /// <param name="skip">Skip number of Rows count</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="getOnlyTotalCount">A value in indicating whether you want to load only total number of records. Set to "true" if you don't want to load data from database</param>
-        public PagedList(IQueryable<T> source, int pageIndex, int pageSize, bool getOnlyTotalCount = false)
+        public PagedList(IQueryable<T> source, int skip, int pageSize, bool getOnlyTotalCount = false)
         {
             var total = source.Count();
             this.TotalCount = total;
@@ -27,12 +27,11 @@ namespace Nop.Core
             if (total % pageSize > 0)
                 TotalPages++;
 
-            this.PageSize = pageSize;
-            this.PageIndex = pageIndex;
+            this.PageSize = pageSize;            
             if (getOnlyTotalCount)
                 return;
-            this.AddRange(source.Skip(pageIndex * pageSize).Take(pageSize).ToList());
-        }
+            this.AddRange(source.Skip(skip).Take(pageSize).ToList());
+        }        
 
         /// <summary>
         /// Ctor

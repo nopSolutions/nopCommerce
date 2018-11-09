@@ -116,9 +116,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             //prepare model
             var model = _activityLogModelFactory.PrepareActivityLogListModel(searchModel);
 
-            return Json(model);
+            return Json(new { draw = searchModel.Draw, recordsFiltered = model.Total, recordsTotal = model.Total, data = model.Data });
         }
 
+        [HttpPost]
         public virtual IActionResult AcivityLogDelete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageActivityLog))
