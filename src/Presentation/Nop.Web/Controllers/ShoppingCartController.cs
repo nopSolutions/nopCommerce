@@ -1366,20 +1366,22 @@ namespace Nop.Web.Controllers
                 return View(model);
             }
 
-            //everything is OK
-            if (_workContext.CurrentCustomer.IsGuest())
+            var anonymousPermissed = _orderSettings.AnonymousCheckoutAllowed 
+                                     && _customerSettings.UserRegistrationType == UserRegistrationType.Disabled;
+
+            if (anonymousPermissed || !_workContext.CurrentCustomer.IsGuest())
+                return RedirectToRoute("Checkout");
+            
+            var downloadableProductsRequireRegistration =
+                _customerSettings.RequireRegistrationForDownloadableProducts && cart.Any(sci => sci.Product.IsDownload);
+
+            if (!_orderSettings.AnonymousCheckoutAllowed || downloadableProductsRequireRegistration)
             {
-                var downloadableProductsRequireRegistration =
-                    _customerSettings.RequireRegistrationForDownloadableProducts && cart.Any(sci => sci.Product.IsDownload);
-
-                if (!_orderSettings.AnonymousCheckoutAllowed
-                    || downloadableProductsRequireRegistration)
-                    return Challenge();
-
-                return RedirectToRoute("LoginCheckoutAsGuest", new { returnUrl = Url.RouteUrl("ShoppingCart") });
+                //verify user identity (it may be facebook login page, or google, or local)
+                return Challenge();
             }
 
-            return RedirectToRoute("Checkout");
+            return RedirectToRoute("LoginCheckoutAsGuest", new { returnUrl = Url.RouteUrl("ShoppingCart") });
         }
 
         [HttpPost, ActionName("Cart")]
