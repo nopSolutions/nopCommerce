@@ -18,6 +18,7 @@ namespace Nop.Web.Areas.Admin.Controllers
     [ValidateIpAddress]
     [AuthorizeAdmin]
     [ValidateVendor]
+    [RequestFormSizeLimit]
     public abstract partial class BaseAdminController : BaseController
     {
         /// <summary>
