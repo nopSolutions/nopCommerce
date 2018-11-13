@@ -89,6 +89,8 @@
                                     paging: true,
                                     language: @await Html.PartialAsync("_GridLocalization"),
                                     lengthMenu: [@(Model.AvailablePageSizes)],
+                                    ordering: false,
+                                    fixedHeader: true,
                                     dom: 'lrtip',
                                     columnDefs: [
                                         {
@@ -168,7 +170,7 @@
                                 data: postData,
                                 success: function () {
                                     //reload grid
-                                    $('#activityLog-grid').DataTable().draw();
+                                    $('#activityLog-grid').DataTable().draw(false);
                                 },
                                 error: function (xhr, ajaxOptions, thrownError) {
                                     alert(thrownError);
