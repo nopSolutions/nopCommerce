@@ -699,6 +699,19 @@ namespace Nop.Services.Localization
         }
 
         /// <summary>
+        /// Add a locale resources (if new) or update an existing others
+        /// </summary>
+        /// <param name="plugin">Plugin</param>
+        /// <param name="LocaleResources">Locale Resources</param> 
+        /// <param name="languageCulture">Language culture code. If null or empty, then a resource will be added for all languages</param>
+        public virtual void AddOrUpdatePluginLocaleResources(Dictionary<string, string> LocaleResources, string languageCulture = null)
+        { 
+            foreach (var LocaleResource in LocaleResources)
+            {
+                AddOrUpdatePluginLocaleResource(LocaleResource.Key, LocaleResource.Value, languageCulture);
+            }
+        }
+        /// <summary>
         /// Delete a locale resource
         /// </summary>
         /// <param name="resourceName">Resource name</param>
