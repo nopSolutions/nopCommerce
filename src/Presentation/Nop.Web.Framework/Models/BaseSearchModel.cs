@@ -41,10 +41,19 @@ namespace Nop.Web.Framework.Models
         /// </summary>
         public string AvailablePageSizes { get; set; }
 
+        /// <summary>
+        /// Gets or sets draw
+        /// </summary>
         public string Draw { get; set; }
 
+        /// <summary>
+        /// Gets or sets skiping number of rows count
+        /// </summary>
         public int Start { get; set; }
 
+        /// <summary>
+        /// Gets or sets paging length 
+        /// </summary>
         public int Length { get; set; }
 
         #endregion
