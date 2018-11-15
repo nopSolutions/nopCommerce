@@ -22,29 +22,29 @@
     </div>
 
     <script>
-        $(document).ready(function () {
-            $("#@Html.IdFor(model => model.StoreInformationSettings.SitemapEnabled)").click(toggleSitemapSettings);
-            $("#@Html.IdFor(model => model.LocalizationSettings.LoadAllLocaleRecordsOnStartup)").click(toggleLoadAllLocaleRecordsOnStartup);
-            toggleSitemapSettings();
-            toggleLoadAllLocaleRecordsOnStartup();
-        });
+    $(document).ready(function () {
+        $("#@Html.IdFor(model => model.StoreInformationSettings.SitemapEnabled)").click(toggleSitemapSettings);
+        $("#@Html.IdFor(model => model.LocalizationSettings.LoadAllLocaleRecordsOnStartup)").click(toggleLoadAllLocaleRecordsOnStartup);
+        toggleSitemapSettings();
+        toggleLoadAllLocaleRecordsOnStartup();
+    });
 
-        function toggleSitemapSettings() {
-            if ($('#@Html.IdFor(model => model.StoreInformationSettings.SitemapEnabled)').is(':checked')) {
-                $("#pnlSitemapPageSize, #pnlSitemapIncludeCategories, #pnlSitemapIncludeManufacturers, #pnlSitemapIncludeProducts, #pnlSitemapIncludeProductTags").show();
-            }
-            else {
-                $("#pnlSitemapPageSize, #pnlSitemapIncludeCategories, #pnlSitemapIncludeManufacturers, #pnlSitemapIncludeProducts, #pnlSitemapIncludeProductTags").hide();
-            }
+    function toggleSitemapSettings() {
+        if ($('#@Html.IdFor(model => model.StoreInformationSettings.SitemapEnabled)').is(':checked')) {
+            $("#pnlSitemapPageSize, #pnlSitemapIncludeCategories, #pnlSitemapIncludeManufacturers, #pnlSitemapIncludeProducts, #pnlSitemapIncludeProductTags").show();
         }
+        else {
+            $("#pnlSitemapPageSize, #pnlSitemapIncludeCategories, #pnlSitemapIncludeManufacturers, #pnlSitemapIncludeProducts, #pnlSitemapIncludeProductTags").hide();
+        }
+    }
 
-        function toggleLoadAllLocaleRecordsOnStartup() {
-            warningValidation('@Url.Action("RedisCacheHighTrafficWarning", "Setting")',
-                '@Html.NameFor(model => model.LocalizationSettings.LoadAllLocaleRecordsOnStartup)',
-                {
-                    loadAllLocaleRecordsOnStartup: $('#@Html.IdFor(model => model.LocalizationSettings.LoadAllLocaleRecordsOnStartup)').is(':checked')
-                });
-        }
+    function toggleLoadAllLocaleRecordsOnStartup() {
+        warningValidation('@Url.Action("RedisCacheHighTrafficWarning", "Setting")',
+            '@Html.NameFor(model => model.LocalizationSettings.LoadAllLocaleRecordsOnStartup)',
+            {
+                loadAllLocaleRecordsOnStartup: $('#@Html.IdFor(model => model.LocalizationSettings.LoadAllLocaleRecordsOnStartup)').is(':checked')
+            });
+    }
     </script>
 
     <div class="content">
@@ -156,6 +156,27 @@
                         </div>
                     </div>
                 </div>
+                
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        @T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.FaviconAndAppIcons")
+                    </div>
+                    <div class="panel-body">
+                        <p>
+                            @T("Admin.Configuration.Settings.GeneralCommon.FaviconAndAppIcons.Description")
+                        </p>
+                        <div class="form-group">
+                            <div class="col-md-3"></div>
+                            <div class="col-md-9">
+                                <button type="button" name="uploadiconsarchive" class="btn bg-olive" data-toggle="modal" data-target="#uploadiconsarchive-window">
+                                    <i class="fa fa-upload"></i>
+                                    @T("Admin.Configuration.Settings.GeneralCommon.FaviconAndAppIcons.UploadIconsArchive")
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
 
                 <div class="panel panel-default advanced-setting">
                     <div class="panel-heading">
@@ -217,9 +238,9 @@
                                 <nop-override-store-checkbox asp-for="DisplayDefaultMenuItemSettings.DisplayForumsMenuItem_OverrideForStore" asp-input="DisplayDefaultMenuItemSettings.DisplayForumsMenuItem" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                                 <nop-label asp-for="DisplayDefaultMenuItemSettings.DisplayForumsMenuItem" />
                             </div>
-                            <div class="col-md-9">  
+                            <div class="col-md-9">
                                 <nop-editor asp-for="DisplayDefaultMenuItemSettings.DisplayForumsMenuItem" />
-                                <span asp-validation-for="DisplayDefaultMenuItemSettings.DisplayForumsMenuItem"></span> 
+                                <span asp-validation-for="DisplayDefaultMenuItemSettings.DisplayForumsMenuItem"></span>
                             </div>
                         </div>
                         <div class="form-group">
@@ -260,7 +281,7 @@
                                 <span asp-validation-for="DisplayDefaultFooterItemSettings.DisplayContactUsFooterItem"></span>
                             </div>
                         </div>
-                        
+
                         <div class="form-group">
                             <div class="col-md-3">
                                 <nop-override-store-checkbox asp-for="DisplayDefaultFooterItemSettings.DisplayProductSearchFooterItem_OverrideForStore" asp-input="DisplayDefaultFooterItemSettings.DisplayProductSearchFooterItem" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
@@ -330,7 +351,7 @@
                                 <nop-editor asp-for="DisplayDefaultFooterItemSettings.DisplayNewProductsFooterItem" />
                                 <span asp-validation-for="DisplayDefaultFooterItemSettings.DisplayNewProductsFooterItem"></span>
                             </div>
-                        </div>                        
+                        </div>
                         <div class="form-group">
                             <div class="col-md-3">
                                 <nop-override-store-checkbox asp-for="DisplayDefaultFooterItemSettings.DisplayCustomerInfoFooterItem_OverrideForStore" asp-input="DisplayDefaultFooterItemSettings.DisplayCustomerInfoFooterItem" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
@@ -370,7 +391,7 @@
                                 <nop-editor asp-for="DisplayDefaultFooterItemSettings.DisplayShoppingCartFooterItem" />
                                 <span asp-validation-for="DisplayDefaultFooterItemSettings.DisplayShoppingCartFooterItem"></span>
                             </div>
-                        </div>                        
+                        </div>
                         <div class="form-group">
                             <div class="col-md-3">
                                 <nop-override-store-checkbox asp-for="DisplayDefaultFooterItemSettings.DisplayWishlistFooterItem_OverrideForStore" asp-input="DisplayDefaultFooterItemSettings.DisplayWishlistFooterItem" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
@@ -393,7 +414,7 @@
                         </div>
                     </div>
                 </div>
-            
+
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         @T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.SocialMedia")
@@ -705,7 +726,7 @@
                             <div class="col-md-3">
                                 <nop-label asp-for="SecuritySettings.EnableXsrfProtectionForPublicStore" />
                             </div>
-                            <div class="col-md-9"> 
+                            <div class="col-md-9">
                                 <nop-editor asp-for="SecuritySettings.EnableXsrfProtectionForPublicStore" />
                                 <span asp-validation-for="SecuritySettings.EnableXsrfProtectionForPublicStore"></span>
                             </div>
@@ -743,11 +764,11 @@
                         @T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.Captcha")
                     </div>
                     <div class="panel-body">
-                       @T("Admin.Configuration.Settings.GeneralCommon.Captcha.Instructions")
+                        @T("Admin.Configuration.Settings.GeneralCommon.Captcha.Instructions")
                         <div class="form-group">
                             <div class="col-md-3">
                                 <nop-override-store-checkbox asp-for="CaptchaSettings.Enabled_OverrideForStore" asp-input="CaptchaSettings.Enabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="CaptchaSettings.Enabled"/>
+                                <nop-label asp-for="CaptchaSettings.Enabled" />
                             </div>
                             <div class="col-md-9">
                                 <nop-editor asp-for="CaptchaSettings.Enabled" />
@@ -844,7 +865,7 @@
                                     <nop-editor asp-for="CaptchaSettings.ShowOnApplyVendorPage" />
                                     <span asp-validation-for="CaptchaSettings.ShowOnApplyVendorPage"></span>
                                 </div>
-                            </div>                            
+                            </div>
                             <div class="form-group" id="ssReCaptchaPublicKeypnl">
                                 <div class="col-md-3">
                                     <nop-override-store-checkbox asp-for="CaptchaSettings.ReCaptchaPublicKey_OverrideForStore" asp-input="CaptchaSettings.ReCaptchaPublicKey" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
@@ -868,38 +889,38 @@
                         </nop-nested-setting>
                     </div>
                     <script>
-                        $(document).ready(function () {
-                            $("#@Html.IdFor(model => model.CaptchaSettings.Enabled)").click(toggleReCaptcha);
-                            toggleReCaptcha();
-                        });
+        $(document).ready(function () {
+            $("#@Html.IdFor(model => model.CaptchaSettings.Enabled)").click(toggleReCaptcha);
+            toggleReCaptcha();
+        });
 
-                        function toggleReCaptcha() {
-                            if ($('#@Html.IdFor(model => model.CaptchaSettings.Enabled)').is(':checked')) {
-                                $('#ssCaptchaShowOnLoginPagepnl').show();
-                                $('#ssCaptchaShowOnRegistrationPagepnl').show();
-                                $('#ssCaptchaShowOnContactUsPagepnl').show();
-                                $('#ssCaptchaShowOnEmailWishlistToFriendPagepnl').show();
-                                $('#ssCaptchaShowOnEmailProductToFriendPagepnl').show();
-                                $('#ssCaptchaShowOnBlogCommentPagepnl').show();
-                                $('#ssCaptchaShowOnNewsCommentPagepnl').show();
-                                $('#ssCaptchaShowOnProductReviewPagepnl').show();
-                                $('#ssCaptchaShowOnApplyVendorPagepnl').show();
-                                $('#ssReCaptchaPublicKeypnl').show();
-                                $('#ssReCaptchaPrivateKeypnl').show();
-                            } else {
-                                $('#ssCaptchaShowOnLoginPagepnl').hide();
-                                $('#ssCaptchaShowOnRegistrationPagepnl').hide();
-                                $('#ssCaptchaShowOnContactUsPagepnl').hide();
-                                $('#ssCaptchaShowOnEmailWishlistToFriendPagepnl').hide();
-                                $('#ssCaptchaShowOnEmailProductToFriendPagepnl').hide();
-                                $('#ssCaptchaShowOnBlogCommentPagepnl').hide();
-                                $('#ssCaptchaShowOnNewsCommentPagepnl').hide();
-                                $('#ssCaptchaShowOnProductReviewPagepnl').hide();
-                                $('#ssCaptchaShowOnApplyVendorPagepnl').hide();
-                                $('#ssReCaptchaPublicKeypnl').hide();
-                                $('#ssReCaptchaPrivateKeypnl').hide();
-                            }
-                        }
+        function toggleReCaptcha() {
+            if ($('#@Html.IdFor(model => model.CaptchaSettings.Enabled)').is(':checked')) {
+                $('#ssCaptchaShowOnLoginPagepnl').show();
+                $('#ssCaptchaShowOnRegistrationPagepnl').show();
+                $('#ssCaptchaShowOnContactUsPagepnl').show();
+                $('#ssCaptchaShowOnEmailWishlistToFriendPagepnl').show();
+                $('#ssCaptchaShowOnEmailProductToFriendPagepnl').show();
+                $('#ssCaptchaShowOnBlogCommentPagepnl').show();
+                $('#ssCaptchaShowOnNewsCommentPagepnl').show();
+                $('#ssCaptchaShowOnProductReviewPagepnl').show();
+                $('#ssCaptchaShowOnApplyVendorPagepnl').show();
+                $('#ssReCaptchaPublicKeypnl').show();
+                $('#ssReCaptchaPrivateKeypnl').show();
+            } else {
+                $('#ssCaptchaShowOnLoginPagepnl').hide();
+                $('#ssCaptchaShowOnRegistrationPagepnl').hide();
+                $('#ssCaptchaShowOnContactUsPagepnl').hide();
+                $('#ssCaptchaShowOnEmailWishlistToFriendPagepnl').hide();
+                $('#ssCaptchaShowOnEmailProductToFriendPagepnl').hide();
+                $('#ssCaptchaShowOnBlogCommentPagepnl').hide();
+                $('#ssCaptchaShowOnNewsCommentPagepnl').hide();
+                $('#ssCaptchaShowOnProductReviewPagepnl').hide();
+                $('#ssCaptchaShowOnApplyVendorPagepnl').hide();
+                $('#ssReCaptchaPublicKeypnl').hide();
+                $('#ssReCaptchaPrivateKeypnl').hide();
+            }
+        }
                     </script>
                 </div>
                 <div class="panel panel-default advanced-setting">
@@ -1100,3 +1121,45 @@
         </div>
     </div>
 </form>
+
+
+@*upload favicon and app icons form*@
+<div id="uploadiconsarchive-window" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="uploadiconsarchive-window-title">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="uploadiconsarchive-window-title">@T("Admin.Configuration.Settings.GeneralCommon.FaviconAndAppIcons.UploadIconsArchive")</h4>
+            </div>
+            <form asp-controller="Setting" asp-action="UploadIconsArchive" method="post" enctype="multipart/form-data">
+                <div class="form-horizontal">
+                    <div class="modal-body">
+                        <ul class="common-list">
+                            <li>
+                                @string.Format(T("Admin.Configuration.Settings.GeneralCommon.FaviconAndAppIcons.UploadIconsArchive.Hint").Text, Model.ActiveStoreScopeConfiguration)
+                            </li>
+                        </ul>
+                        <div class="form-group">
+                            <div class="col-md-2">
+                                <div class="label-wrapper">
+                                    <label class="control-label">
+                                        @T("Admin.Common.ZipFile")
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-10">
+                                <input type="file" id="archivefile" name="archivefile" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary" id="upload-icons-archive">
+                            @T("Admin.Configuration.Settings.GeneralCommon.FaviconAndAppIcons.UploadIconsArchive")
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+

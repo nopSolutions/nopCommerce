@@ -242,8 +242,28 @@ set @resources='
   <LocaleResource Name="Checkout.Addresses.Invalid">
     <Value>You have {0} invalid address(es)</Value>
   </LocaleResource>  
-</Language>
-'
+  <LocaleResource Name="ActivityLog.UploadNewIconsArchive">
+    <Value>Uploaded a new favicon and app icons archive for store (ID = {0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.FaviconAndAppIcons.Uploaded">
+    <Value>Favicon and app icons have been uploaded</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.BlockTitle.FaviconAndAppIcons">
+    <Value>Favicon and app icons</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.FaviconAndAppIcons.UploadIconsArchive">
+    <Value>Upload icons archive</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.FaviconAndAppIcons.UploadIconsArchive.Hint">
+    <Value>Upload archive with favicon and app icons for different operating systems and devices. You can see an example of the favicon and app icons archive in /icons/samples in the root of the site. Your favicon and app icons path is "icons/icons_{0}"</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.FaviconAndAppIcons.Description">
+    <Value>Favicon and app icons are small pictures associated with a particular website or web page. They are displayed by the browser in the tab before the page title, and as a picture next to a bookmark, in tabs and in other interface elements. You can see an example of the favicon and app icons archive in /icons/samples in the root of the site.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.FaviconAndAppIcons.MissingFile">
+    <Value>Could not find file {0}. This file is required. It contains the code for the page head element.</Value>
+  </LocaleResource>
+</Language>'
 
 CREATE TABLE #LocaleStringResourceTmp
 	(
@@ -1028,6 +1048,22 @@ BEGIN
 END
 GO
 
+  --new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'commonsettings.faviconandappiconsheadcode')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'commonsettings.faviconandappiconsheadcode', N'<link rel="shortcut icon" href="/favicon.ico"/>', 0)
+END
+GO
+
 --updating of indexes in the Picture table for reduced table size after upgrade nopCommerce from 4.00 to 4.10 version
 ALTER INDEX ALL ON [Picture] REBUILD
 GO
+
+--new activity log type
+IF NOT EXISTS (SELECT 1 FROM [ActivityLogType] WHERE [Name] = N'Upload a favicon and app icons archive')
+BEGIN
+	INSERT [dbo].[ActivityLogType] ( [SystemKeyword], [Name], [Enabled]) VALUES ( N'UploadIconsArchive', N'Upload a favicon and app icons archive', 1)
+END
+GO
+

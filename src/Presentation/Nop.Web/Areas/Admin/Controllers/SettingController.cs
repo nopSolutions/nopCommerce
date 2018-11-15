@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text.RegularExpressions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Configuration;
@@ -20,6 +22,7 @@ using Nop.Core.Domain.Seo;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
+using Nop.Core.Infrastructure;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Customers;
@@ -30,6 +33,7 @@ using Nop.Services.Logging;
 using Nop.Services.Media;
 using Nop.Services.Messages;
 using Nop.Services.Orders;
+using Nop.Services.Plugins;
 using Nop.Services.Security;
 using Nop.Services.Stores;
 using Nop.Web.Areas.Admin.Factories;
@@ -58,6 +62,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly ILocalizedEntityService _localizedEntityService;
         private readonly ILocalizationService _localizationService;
         private readonly IMaintenanceService _maintenanceService;
+        private readonly INopFileProvider _fileProvider;
         private readonly INotificationService _notificationService;
         private readonly IOrderService _orderService;
         private readonly IPermissionService _permissionService;
@@ -67,6 +72,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly IStoreContext _storeContext;
         private readonly IStoreService _storeService;
         private readonly IWorkContext _workContext;
+        private readonly IUploadService _uploadService;
         private readonly NopConfig _config;
 
         #endregion
@@ -83,6 +89,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             ILocalizedEntityService localizedEntityService,
             ILocalizationService localizationService,
             IMaintenanceService maintenanceService,
+            INopFileProvider fileProvider,
             INotificationService notificationService,
             IOrderService orderService,
             IPermissionService permissionService,
@@ -92,6 +99,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             IStoreContext storeContext,
             IStoreService storeService,
             IWorkContext workContext,
+            IUploadService uploadService,
             NopConfig config)
         {
             this._addressService = addressService;
@@ -104,6 +112,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             this._localizedEntityService = localizedEntityService;
             this._localizationService = localizationService;
             this._maintenanceService = maintenanceService;
+            this._fileProvider = fileProvider;
             this._notificationService = notificationService;
             this._orderService = orderService;
             this._permissionService = permissionService;
@@ -113,6 +122,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             this._storeContext = storeContext;
             this._storeService = storeService;
             this._workContext = workContext;
+            this._uploadService = uploadService;
             this._config = config;
         }
 
@@ -1577,6 +1587,60 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             return RedirectToAction("GeneralCommon");
         }
+
+        [HttpPost]
+        public virtual IActionResult UploadIconsArchive(IFormFile archivefile)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+                return AccessDeniedView();
+
+            try
+            {
+                if (archivefile == null || archivefile.Length == 0)
+                {
+                    _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Common.UploadFile"));
+                    return RedirectToAction("GeneralCommon");
+                }
+
+               _uploadService.UploadIconsArchive(archivefile);
+
+                //load settings for a chosen store scope
+                var storeScope = _storeContext.ActiveStoreScopeConfiguration;
+                var commonSettings = _settingService.LoadSetting<CommonSettings>(storeScope);
+
+                var headCodePath = _fileProvider.GetAbsolutePath(string.Format(NopCommonDefaults.FaviconAndAppIconsPath, _storeContext.ActiveStoreScopeConfiguration), NopCommonDefaults.HeadCodeFileName);
+
+                if (!_fileProvider.FileExists(headCodePath))
+                {
+                    throw new Exception(string.Format(_localizationService.GetResource("Admin.Configuration.Settings.GeneralCommon.FaviconAndAppIcons.MissingFile"), NopCommonDefaults.HeadCodeFileName));
+                }
+
+                using (var sr = new StreamReader(headCodePath))
+                {
+                    commonSettings.FaviconAndAppIconsHeadCode = sr.ReadToEnd();
+                }
+
+                _settingService.SaveSettingOverridablePerStore(commonSettings, x => x.FaviconAndAppIconsHeadCode, true, storeScope, true);
+
+                //delete old favicon icon if exist
+                var oldFaviconIconPath = _fileProvider.GetAbsolutePath(string.Format(NopCommonDefaults.OldFaviconIconName, _storeContext.ActiveStoreScopeConfiguration));
+                if (_fileProvider.FileExists(oldFaviconIconPath))
+                {
+                    _fileProvider.DeleteFile(oldFaviconIconPath);
+                }
+
+                //activity log
+                _customerActivityService.InsertActivity("UploadIconsArchive", string.Format(_localizationService.GetResource("ActivityLog.UploadNewIconsArchive"), _storeContext.ActiveStoreScopeConfiguration));
+                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.FaviconAndAppIcons.Uploaded"));
+            }
+            catch (Exception exc)
+            {
+                _notificationService.ErrorNotification(exc);
+            }
+
+            return RedirectToAction("GeneralCommon");
+        }
+
 
         public virtual IActionResult AllSettings()
         {
