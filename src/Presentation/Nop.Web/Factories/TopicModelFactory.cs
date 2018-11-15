@@ -95,7 +95,7 @@ namespace Nop.Web.Factories
         /// <returns>Topic model</returns>
         public virtual TopicModel PrepareTopicModelById(int topicId)
         {
-            var cacheKey = string.Format(ModelCacheEventConsumer.TOPIC_MODEL_BY_ID_KEY,
+            var cacheKey = string.Format(NopModelCacheDefaults.TopicModelByIdKey,
                 topicId,
                 _workContext.WorkingLanguage.Id,
                 _storeContext.CurrentStore.Id,
@@ -119,7 +119,7 @@ namespace Nop.Web.Factories
         /// <returns>Topic model</returns>
         public virtual TopicModel PrepareTopicModelBySystemName(string systemName)
         {
-            var cacheKey = string.Format(ModelCacheEventConsumer.TOPIC_MODEL_BY_SYSTEMNAME_KEY,
+            var cacheKey = string.Format(NopModelCacheDefaults.TopicModelBySystemNameKey,
                 systemName,
                 _workContext.WorkingLanguage.Id,
                 _storeContext.CurrentStore.Id,
@@ -143,7 +143,7 @@ namespace Nop.Web.Factories
         /// <returns>View path</returns>
         public virtual string PrepareTemplateViewPath(int topicTemplateId)
         {
-            var templateCacheKey = string.Format(ModelCacheEventConsumer.TOPIC_TEMPLATE_MODEL_KEY, topicTemplateId);
+            var templateCacheKey = string.Format(NopModelCacheDefaults.TopicTemplateModelKey, topicTemplateId);
             var templateViewPath = _cacheManager.Get(templateCacheKey, () =>
             {
                 var template = _topicTemplateService.GetTopicTemplateById(topicTemplateId);

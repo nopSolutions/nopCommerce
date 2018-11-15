@@ -767,7 +767,7 @@ namespace Nop.Web.Factories
         /// <returns>Picture model</returns>
         public virtual PictureModel PrepareCartItemPictureModel(ShoppingCartItem sci, int pictureSize, bool showDefaultPicture, string productName)
         {
-            var pictureCacheKey = string.Format(ModelCacheEventConsumer.CART_PICTURE_MODEL_KEY, sci.Id, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
+            var pictureCacheKey = string.Format(NopModelCacheDefaults.CartPictureModelKey, sci.Id, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
             //as we cache per user (shopping cart item identifier)
             //let's cache just for 3 minutes
             var cacheTime = 3;
@@ -976,7 +976,7 @@ namespace Nop.Web.Factories
                     //1. "terms of service" are enabled
                     //2. min order sub-total is OK
                     //3. we have at least one checkout attribute
-                    var checkoutAttributesExistCacheKey = string.Format(ModelCacheEventConsumer.CHECKOUTATTRIBUTES_EXIST_KEY,
+                    var checkoutAttributesExistCacheKey = string.Format(NopModelCacheDefaults.CheckoutAttributesExistKey,
                         _storeContext.CurrentStore.Id, requiresShipping);
                     var checkoutAttributesExist = _cacheManager.Get(checkoutAttributesExistCacheKey,
                         () =>

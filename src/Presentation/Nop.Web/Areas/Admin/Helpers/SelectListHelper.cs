@@ -29,7 +29,7 @@ namespace Nop.Web.Areas.Admin.Helpers
             if (cacheManager == null)
                 throw new ArgumentNullException(nameof(cacheManager));
 
-            var cacheKey = string.Format(ModelCacheEventConsumer.CATEGORIES_LIST_KEY, showHidden);
+            var cacheKey = string.Format(NopModelCacheDefaults.CategoriesListKey, showHidden);
             var listItems = cacheManager.Get(cacheKey, () =>
             {
                 var categories = categoryService.GetAllCategories(showHidden: showHidden);
@@ -69,7 +69,7 @@ namespace Nop.Web.Areas.Admin.Helpers
             if (cacheManager == null)
                 throw new ArgumentNullException(nameof(cacheManager));
 
-            var cacheKey = string.Format(ModelCacheEventConsumer.MANUFACTURERS_LIST_KEY, showHidden);
+            var cacheKey = string.Format(NopModelCacheDefaults.ManufacturersListKey, showHidden);
             var listItems = cacheManager.Get(cacheKey, () =>
             {
                 var manufacturers = manufacturerService.GetAllManufacturers(showHidden: showHidden);
@@ -109,7 +109,7 @@ namespace Nop.Web.Areas.Admin.Helpers
             if (cacheManager == null)
                 throw new ArgumentNullException(nameof(cacheManager));
 
-            var cacheKey = string.Format(ModelCacheEventConsumer.VENDORS_LIST_KEY, showHidden);
+            var cacheKey = string.Format(NopModelCacheDefaults.VendorsListKey, showHidden);
             var listItems = cacheManager.Get(cacheKey, () =>
             {
                 var vendors = vendorService.GetAllVendors(showHidden: showHidden);

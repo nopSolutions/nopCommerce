@@ -38,7 +38,7 @@ namespace Nop.Web.Components
         public IViewComponentResult Invoke(int productId, int? productThumbPictureSize)
         {
             //load and cache report
-            var productIds = _cacheManager.Get(string.Format(ModelCacheEventConsumer.PRODUCTS_RELATED_IDS_KEY, productId, _storeContext.CurrentStore.Id),
+            var productIds = _cacheManager.Get(string.Format(NopModelCacheDefaults.ProductsRelatedIdsKey, productId, _storeContext.CurrentStore.Id),
                 () => _productService.GetRelatedProductsByProductId1(productId).Select(x => x.ProductId2).ToArray());
 
             //load products

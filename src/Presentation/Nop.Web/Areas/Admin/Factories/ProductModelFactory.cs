@@ -218,7 +218,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             model.ShowOnProductPage = true;
 
-            model.AvailableAttributes = _cacheManager.Get(ModelCacheEventConsumer.SPEC_ATTRIBUTES_MODEL_KEY, () =>
+            model.AvailableAttributes = _cacheManager.Get(NopModelCacheDefaults.SpecAttributesModelKey, () =>
             {
                 var availableSpecificationAttributes = new List<SelectListItem>();
                 foreach (var sa in _specificationAttributeService.GetSpecificationAttributes())

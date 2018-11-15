@@ -210,7 +210,7 @@ namespace Nop.Web.Factories
                 StoreName = _localizationService.GetLocalized(_storeContext.CurrentStore, x => x.Name)
             };
 
-            var cacheKey = string.Format(ModelCacheEventConsumer.STORE_LOGO_PATH, _storeContext.CurrentStore.Id, _themeContext.WorkingThemeName, _webHelper.IsCurrentConnectionSecured());
+            var cacheKey = string.Format(NopModelCacheDefaults.StoreLogoPath, _storeContext.CurrentStore.Id, _themeContext.WorkingThemeName, _webHelper.IsCurrentConnectionSecured());
             model.LogoPath = _cacheManager.Get(cacheKey, () =>
             {
                 var logo = "";
@@ -236,7 +236,7 @@ namespace Nop.Web.Factories
         /// <returns>Language selector model</returns>
         public virtual LanguageSelectorModel PrepareLanguageSelectorModel()
         {
-            var availableLanguages = _cacheManager.Get(string.Format(ModelCacheEventConsumer.AVAILABLE_LANGUAGES_MODEL_KEY, _storeContext.CurrentStore.Id), () =>
+            var availableLanguages = _cacheManager.Get(string.Format(NopModelCacheDefaults.AvailableLanguagesModelKey, _storeContext.CurrentStore.Id), () =>
             {
                 var result = _languageService
                     .GetAllLanguages(storeId: _storeContext.CurrentStore.Id)
@@ -266,7 +266,7 @@ namespace Nop.Web.Factories
         /// <returns>Currency selector model</returns>
         public virtual CurrencySelectorModel PrepareCurrencySelectorModel()
         {
-            var availableCurrencies = _cacheManager.Get(string.Format(ModelCacheEventConsumer.AVAILABLE_CURRENCIES_MODEL_KEY, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id), () =>
+            var availableCurrencies = _cacheManager.Get(string.Format(NopModelCacheDefaults.AvailableCurrenciesModelKey, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id), () =>
             {
                 var result = _currencyService
                     .GetAllCurrencies(storeId: _storeContext.CurrentStore.Id)
@@ -406,7 +406,7 @@ namespace Nop.Web.Factories
         public virtual FooterModel PrepareFooterModel()
         {
             //footer topics
-            var topicCacheKey = string.Format(ModelCacheEventConsumer.TOPIC_FOOTER_MODEL_KEY,
+            var topicCacheKey = string.Format(NopModelCacheDefaults.TopicFooterModelKey,
                 _workContext.WorkingLanguage.Id,
                 _storeContext.CurrentStore.Id,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()));
@@ -522,7 +522,7 @@ namespace Nop.Web.Factories
         /// <returns>Sitemap model</returns>
         public virtual SitemapModel PrepareSitemapModel(SitemapPageModel pageModel)
         {
-            var cacheKey = string.Format(ModelCacheEventConsumer.SITEMAP_PAGE_MODEL_KEY,
+            var cacheKey = string.Format(NopModelCacheDefaults.SitemapPageModelKey,
                 _workContext.WorkingLanguage.Id,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);
@@ -684,7 +684,7 @@ namespace Nop.Web.Factories
         /// <returns>Sitemap as string in XML format</returns>
         public virtual string PrepareSitemapXml(int? id)
         {
-            var cacheKey = string.Format(ModelCacheEventConsumer.SITEMAP_SEO_MODEL_KEY, id,
+            var cacheKey = string.Format(NopModelCacheDefaults.SitemapSeoModelKey, id,
                 _workContext.WorkingLanguage.Id,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);

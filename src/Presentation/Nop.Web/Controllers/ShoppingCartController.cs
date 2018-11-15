@@ -1010,7 +1010,7 @@ namespace Nop.Web.Controllers
 
                 if (pictureId > 0)
                 {
-                    var productAttributePictureCacheKey = string.Format(ModelCacheEventConsumer.PRODUCTATTRIBUTE_PICTURE_MODEL_KEY,
+                    var productAttributePictureCacheKey = string.Format(NopModelCacheDefaults.ProductAttributePictureModelKey,
                         pictureId, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
                     var pictureModel = _cacheManager.Get(productAttributePictureCacheKey, () =>
                     {
