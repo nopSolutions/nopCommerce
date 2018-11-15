@@ -109,6 +109,7 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
             {
                 RedirectUri = Url.Action("LoginCallback", "FacebookAuthentication", new { returnUrl = returnUrl })
             };
+            authenticationProperties.SetString("ErrorCallback", Url.RouteUrl("Login", new { returnUrl }));
 
             return Challenge(authenticationProperties, FacebookDefaults.AuthenticationScheme);
         }
