@@ -296,5 +296,15 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 EngineContext.Current.Resolve<IRoutePublisher>().RegisterRoutes(routeBuilder);
             });
         }
+
+        /// <summary>
+        /// Configure ETag headers in ASP.NET Core
+        /// Add this after static files but before MVC in order to provide ETags to MVC Views and Razor Pages.
+        /// </summary>
+        /// <param name="application">Builder for configuring an application's request pipeline</param>
+        public static void UseETagger(this IApplicationBuilder application)
+        {
+            application.UseMiddleware<ETagMiddleware>();
+        }
     }
 }
