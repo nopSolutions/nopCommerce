@@ -13,7 +13,7 @@ namespace Nop.Web.Areas.Admin.Models.Logging
         public ActivityLogContainerModel()
         {
             ListLogs = new ActivityLogSearchModel();
-            ListTypes = new List<ActivityLogTypeModel>();
+            ListTypes = new ActivityLogTypeSearchModel();
         }
 
         #endregion
@@ -22,7 +22,7 @@ namespace Nop.Web.Areas.Admin.Models.Logging
 
         public ActivityLogSearchModel ListLogs { get; set; }
 
-        public IList<ActivityLogTypeModel> ListTypes { get; set; }
+        public ActivityLogTypeSearchModel ListTypes { get; set; }
 
         #endregion
     }

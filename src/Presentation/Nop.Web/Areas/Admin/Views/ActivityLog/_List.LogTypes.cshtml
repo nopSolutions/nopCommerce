@@ -1,5 +1,4 @@
-﻿@using System.Text.Encodings.Web
-@model List<ActivityLogTypeModel>
+﻿@model ActivityLogTypeSearchModel
 
 @*<form asp-controller="ActivityLog" asp-action="SaveTypes" method="post">*@
     <div class="content-header clearfix">
@@ -19,14 +18,11 @@
                     <div class="panel-body">
                         @*<div id="activityLogType-grid"></div>*@
 
-                        <table class="table table-bordered table-hover dataTable" width="100%" id="activityLogType-grid"></table>
-                       
-                        <script>
-                            //local datasource
+                        @*<script>
                             var activityLogTypes = [
-                                @for (var i = 0; i < Model.Count; i++)
+                                @for (var i = 0; i < Model.ActivityLogTypeListModel.Count; i++)
                                 {
-                                    var alt = Model[i];
+                                    var alt = Model.ActivityLogTypeListModel[i];
                                     <text>
                                         {
                                             Id: @(alt.Id),
@@ -34,7 +30,36 @@
                                             Enabled: @(alt.Enabled.ToString().ToLowerInvariant()),
                                         }
                                     </text>
-                                    if (i != Model.Count - 1)
+                                    if (i != Model.ActivityLogTypeListModel.Count - 1)
+                                    {
+                                        <text>,</text>
+                                    }
+                                }
+                            ];
+
+                            @Model.Grid.Data = activityLogTypes;
+                        </script>*@
+
+                       
+                        @await Html.PartialAsync("Table", Model.Grid)
+
+
+
+                        @*<table class="table table-bordered table-hover dataTable" width="100%" id="activityLogType-grid"></table>
+                        <script>
+                            //local datasource
+                            var activityLogTypes = [
+                                @for (var i = 0; i < Model.ActivityLogTypeListModel.Count; i++)
+                                {
+                                    var alt = Model.ActivityLogTypeListModel[i];
+                                    <text>
+                                        {
+                                            Id: @(alt.Id),
+                                            Name: "@(Html.Raw(JavaScriptEncoder.Default.Encode(alt.Name)))",
+                                            Enabled: @(alt.Enabled.ToString().ToLowerInvariant()),
+                                        }
+                                    </text>
+                                    if (i != Model.ActivityLogTypeListModel.Count - 1)
                                     {
                                         <text>,</text>
                                     }
@@ -72,7 +97,7 @@
                                 });
 
 
-                            });
+                            });*@
 
                             @*$(document).ready(function() {
                                 $("#activityLogType-grid").kendoGrid({
@@ -116,9 +141,9 @@
                                         }
                                     ]
                                 });
-                            });*@
+                            });
 
-                        </script>
+                        </script>*@
                         <script>
                             $(document).ready(function () {
                                 updateMasterCheckbox();

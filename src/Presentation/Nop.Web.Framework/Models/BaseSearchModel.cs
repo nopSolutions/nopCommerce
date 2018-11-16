@@ -1,5 +1,6 @@
 ﻿using Nop.Core.Domain.Common;
 using Nop.Core.Infrastructure;
+using Nop.Web.Framework.Models.DataTables;
 
 namespace Nop.Web.Framework.Models
 {
@@ -55,6 +56,11 @@ namespace Nop.Web.Framework.Models
         /// Gets or sets paging length 
         /// </summary>
         public int Length { get; set; }
+
+        /// <summary>
+        /// Gets or sets grid model (DataTables)
+        /// </summary>
+        public DataTablesModel Grid { get; set; }
 
         #endregion
 

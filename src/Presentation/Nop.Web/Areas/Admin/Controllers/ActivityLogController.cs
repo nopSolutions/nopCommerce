@@ -49,21 +49,12 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             //prepare model
-            var model = _activityLogModelFactory.PrepareActivityLogContainerModel(new ActivityLogContainerModel());
+            var model = new ActivityLogContainerModel();
+            _activityLogModelFactory.PrepareActivityLogSearchModel(model.ListLogs);
+            _activityLogModelFactory.PrepareActivityLogTypeSearchModel(model.ListTypes);
 
             return View(model);
-        }
-
-        public virtual IActionResult ListTypes()
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActivityLog))
-                return AccessDeniedView();
-
-            //prepare model
-            var model = _activityLogModelFactory.PrepareActivityLogTypeModels();
-
-            return View(model);
-        }
+        }        
 
         [HttpPost, ActionName("ListTypes")]
         public virtual IActionResult SaveTypes(IFormCollection form)
@@ -116,7 +107,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //prepare model
             var model = _activityLogModelFactory.PrepareActivityLogListModel(searchModel);
 
-            return Json(new { draw = searchModel.Draw, recordsFiltered = model.Total, recordsTotal = model.Total, data = model.Data });
+            return JsonDataTable(model);
         }
 
         [HttpPost]

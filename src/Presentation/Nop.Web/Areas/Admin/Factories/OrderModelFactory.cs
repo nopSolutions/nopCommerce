@@ -1321,7 +1321,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = shipments.Select(shipment =>
                 {
                     //fill in model values from the entity
-                    var shipmentModel = shipment.ToModel<ShipmentModel>();                     
+                    var shipmentModel = shipment.ToModel<ShipmentModel>();
 
                     //convert dates to the user time
                     shipmentModel.ShippedDate = shipment.ShippedDateUtc.HasValue
@@ -1341,7 +1341,9 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     return shipmentModel;
                 }),
-                Total = shipments.TotalCount
+                Draw  = searchModel.Draw,
+                RecordsFiltered = shipments.TotalCount,
+                RecordsTotal = shipments.TotalCount
             };
 
             return model;

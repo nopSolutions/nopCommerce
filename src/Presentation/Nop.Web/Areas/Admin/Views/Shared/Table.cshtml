@@ -1,0 +1,189 @@
+﻿@using System.Text.Encodings.Web
+@model DataTablesModel
+
+@using Nop.Web.Framework.Models.DataTables;
+
+<table class="table table-bordered table-hover dataTable" width="100%" id="@Model.Name"></table>
+<script>
+    $(document).ready(function () {
+        var table = $('#@Model.Name').DataTable({
+            @if (Model.Processing)
+            {
+                <text>processing: @Model.Processing.ToString().ToLower(),
+                </text>
+            }
+            @if (Model.ServerSide)
+            {
+                <text>serverSide: @Model.ServerSide.ToString().ToLower(),
+                </text>
+            }
+            @if(Model.Data != null) {
+                <text> data: @(Html.Raw(Model.Data.ToString())),
+                </text>
+            } else {
+                <text>
+                    ajax:
+                    {
+                        url: "@Html.Raw(Url.Action(@Model.UrlRead.ActionName, @Model.UrlRead.ControllerName))",
+                        type: 'POST',
+                        dataType: 'json',
+                        data: function(data) {
+                            @if(@Model.Filters != null)
+                            {
+                                foreach (string filter in @Model.Filters)
+                                {
+                                    <text>data.@filter = $('#@filter').val();</text>
+                                }
+                            }
+                            addAntiForgeryToken(data);
+                            return data;
+                        }
+                    },
+                </text>
+            }
+            paging: @Model.Paging.ToString().ToLower(),
+            language: @await Html.PartialAsync("_GridLocalization"),
+            lengthMenu: [@Model.LengthMenu],
+            ordering: @Model.Ordering.ToString().ToLower(),
+            fixedHeader: @Model.FixedHeader.ToString().ToLower(),
+            dom: '@Model.Dom',
+            columnDefs: [
+                @if (Model.ColumnDefs != null)
+                {
+                    foreach (ColumnDefinition def in Model.ColumnDefs)
+                    {
+                        <Text>
+                        {
+                            targets: @def.Targets,
+                            visible: @def.Visible.ToString().ToLower(),
+                            searchable: @def.Searchable.ToString().ToLower(),
+                            @if(!string.IsNullOrEmpty(def.ClassName))
+                            {
+                                <Text>className: "@def.ClassName",
+                                </text>
+                            }
+                            @if (!string.IsNullOrEmpty(def.Width))
+                            {
+                                <Text>width: "@def.Width"
+                                </text>
+                            }
+                        },
+                        </text>
+                    }
+                }
+            ],
+            columns: [
+                @if (Model.ColumnCollection != null)
+                {
+                    foreach (ColumnProperty column in Model.ColumnCollection)
+                    {
+                        <Text>
+                        {
+                            data: "@column.Data",
+                            @if (!string.IsNullOrEmpty(column.Title))
+                            {
+                                <Text>
+                                title: "@(Html.Raw(JavaScriptEncoder.Default.Encode(column.Title)))",</text>
+                            }
+                            width: "@column.Width",
+                            @if (column.AutoWidth)
+                            {
+                                <Text>
+                                autoWidth: @column.AutoWidth.ToString().ToLower(),</text>
+                            }
+
+                            @if (@column.Render != null)
+                            {
+                                switch (@column.Render.Type)
+                                {
+                                    case RenderType.Link:
+                                        var link = (RenderLink)@column.Render;
+                                        <Text>
+                                            render: function (data, type, full, meta) {
+                                                return '<a href="@Url.Content(@link.Url)' + full.@link.UrlId + '">' + @link.Title + '</a>'
+                                            }
+                                        </text>
+                                        break;
+                                    case RenderType.Date:
+                                        <Text>
+                                            render: function (data, type, full, meta) {
+                                                var date = new Date(data);
+                                                return date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear() + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
+                                            }
+                                        </text>
+                                        break;
+                                    case RenderType.Button:
+                                        var button = (RenderButton)@column.Render;
+                                        <Text>
+                                            render : function(data, type, full, meta) {
+                                                return '<a href="#" class="btn btn-danger" onclick=ActionData("' + data + '");>@button.Title</a>'
+                                            }
+                                        </text>
+                                        break;
+                                    case RenderType.Checkbox:
+                                        var checkBox = (RenderCheckBox)@column.Render;
+                                        <text>
+                                            render: function (data, type, row) {
+                                                return (data == "true") ? "<input name='@checkBox.Name' value='" + row.Id + "' type='checkbox' class='checkboxGroups' checked='checked'/>"
+                                                    : "<input name='@checkBox.Name' value='" + row.Id + "' type='checkbox' class='checkboxGroups'/>";
+                    }
+                                        </text>
+                                        break;
+                                }
+                            }
+                        },
+                        </text>
+                    }
+                }
+            ]
+        });
+
+        @if (!string.IsNullOrEmpty(Model.SearchButtonId))
+        {
+            <Text>
+                $('#@Model.SearchButtonId').click(function () {
+                    table.ajax.reload();
+                });
+            </text>
+        }
+
+    });
+</script>
+@if (Model.UrlAction != null)
+{
+    <Text>
+    <script>
+            function ActionData(RowID) {
+                if (confirm("@T("Admin.Common.DeleteConfirmation")")) {
+                    Action(RowID);
+                }
+                else {
+                    return false;
+                }
+            }
+
+            function Action(RowID) {
+                var postData = {
+                    id: RowID
+                };
+                addAntiForgeryToken(postData);
+
+                $.ajax({
+                    url: "@Html.Raw(Url.Action(@Model.UrlAction.ActionName, @Model.UrlAction.ControllerName))",
+                    type: 'POST',
+                    dataType: 'json',
+                    data: postData,
+                    success: function () {
+                        //reload grid
+                        $('#@Model.Name').DataTable().draw(false);
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        alert(thrownError);
+                    }
+                });
+            }
+    </script>
+    </text>
+}
+
+

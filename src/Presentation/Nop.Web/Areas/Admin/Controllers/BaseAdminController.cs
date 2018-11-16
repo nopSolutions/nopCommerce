@@ -7,6 +7,7 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Infrastructure;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Framework.Security;
 
@@ -91,6 +92,22 @@ namespace Nop.Web.Areas.Admin.Controllers
             serializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Unspecified;
 
             return base.Json(data, serializerSettings);
+        }
+
+        /// <summary>
+        /// Creates an object that serializes the specified object to JSON.
+        /// </summary>
+        /// <param name="model">The model to serialize.</param>
+        /// <returns>The created object that serializes the specified data to JSON format for the response.</returns>
+        public JsonResult JsonDataTable<T>(BasePagedListDTModel<T> model) where T : BaseNopModel
+        {
+            return Json(new
+            {
+                draw = model.Draw,
+                recordsTotal = model.RecordsTotal,
+                recordsFiltered = model.RecordsFiltered,
+                data = model.Data
+            });
         }
     }
 }
