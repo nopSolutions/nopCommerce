@@ -419,6 +419,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.CopyProductModel, options => options.Ignore())
                 .ForMember(model => model.CreatedOn, options => options.Ignore())
                 .ForMember(model => model.CrossSellProductSearchModel, options => options.Ignore())
+                .ForMember(model => model.HasAvailableSpecificationAttributes, options => options.Ignore())
                 .ForMember(model => model.IsLoggedInAsVendor, options => options.Ignore())
                 .ForMember(model => model.LastStockQuantity, options => options.Ignore())
                 .ForMember(model => model.PictureThumbnailUrl, options => options.Ignore())
