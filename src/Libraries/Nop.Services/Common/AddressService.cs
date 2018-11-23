@@ -17,6 +17,7 @@ namespace Nop.Services.Common
         #region Fields
 
         private readonly AddressSettings _addressSettings;
+        private readonly IAddressAttributeParser _addressAttributeParser;
         private readonly IAddressAttributeService _addressAttributeService;
         private readonly ICacheManager _cacheManager;
         private readonly ICountryService _countryService;
@@ -29,6 +30,7 @@ namespace Nop.Services.Common
         #region Ctor
 
         public AddressService(AddressSettings addressSettings,
+            IAddressAttributeParser addressAttributeParser,
             IAddressAttributeService addressAttributeService,
             ICacheManager cacheManager,
             ICountryService countryService,
@@ -37,6 +39,7 @@ namespace Nop.Services.Common
             IStateProvinceService stateProvinceService)
         {
             this._addressSettings = addressSettings;
+            this._addressAttributeParser = addressAttributeParser;
             this._addressAttributeService = addressAttributeService;
             this._cacheManager = cacheManager;
             this._countryService = countryService;
@@ -246,9 +249,15 @@ namespace Nop.Services.Common
                 string.IsNullOrWhiteSpace(address.FaxNumber))
                 return false;
 
-            var attributes = _addressAttributeService.GetAllAddressAttributes();
-            if (attributes.Any(x => x.IsRequired))
-                return false;
+            var requiredAttributes = _addressAttributeService.GetAllAddressAttributes().Where(x => x.IsRequired);
+
+            foreach (var requiredAttribute in requiredAttributes)
+            { 
+                var value  = _addressAttributeParser.ParseValues(address.CustomAttributes, requiredAttribute.Id);
+
+                if (!value.Any() || (string.IsNullOrEmpty(value[0])))
+                    return false;
+            }
 
             return true;
         }
