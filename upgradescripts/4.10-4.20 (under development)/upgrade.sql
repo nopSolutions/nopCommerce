@@ -1826,3 +1826,11 @@ BEGIN
     VALUES (N'proxysettings.preauthenticate', N'True', 0)
 END
 GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id = object_id('[Picture]') AND NAME = 'VirtualPath')
+BEGIN
+	ALTER TABLE [Picture] ADD
+	VirtualPath nvarchar(MAX) NULL
+END
+GO

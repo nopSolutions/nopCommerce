@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Runtime.ExceptionServices;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
@@ -19,6 +18,7 @@ using Nop.Services.Authentication;
 using Nop.Services.Common;
 using Nop.Services.Installation;
 using Nop.Services.Logging;
+using Nop.Services.Media.RoxyFileman;
 using Nop.Web.Framework.Globalization;
 using Nop.Web.Framework.Mvc.Routing;
 using WebMarkupMin.AspNetCore2;
@@ -175,17 +175,17 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public static void UseNopStaticFiles(this IApplicationBuilder application)
         {
-            var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
-
-            Action<StaticFileResponseContext> staticFileResponse = (context) =>
+            void staticFileResponse(StaticFileResponseContext context)
             {
-                if (DataSettingsManager.DatabaseIsInstalled)
-                {
-                    var commonSettings = EngineContext.Current.Resolve<CommonSettings>();
-                    if (!string.IsNullOrEmpty(commonSettings.StaticFilesCacheControl))
-                        context.Context.Response.Headers.Append(HeaderNames.CacheControl, commonSettings.StaticFilesCacheControl);
-                }
-            };
+                if (!DataSettingsManager.DatabaseIsInstalled)
+                    return;
+
+                var commonSettings = EngineContext.Current.Resolve<CommonSettings>();
+                if (!string.IsNullOrEmpty(commonSettings.StaticFilesCacheControl))
+                    context.Context.Response.Headers.Append(HeaderNames.CacheControl, commonSettings.StaticFilesCacheControl);
+            }
+
+            var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
 
             //common static files
             application.UseStaticFiles(new StaticFileOptions { OnPrepareResponse = staticFileResponse });
@@ -225,6 +225,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                     staticFileOptions.ContentTypeProvider = fileExtensionContentTypeProvider;
                 }
             }
+
             application.UseStaticFiles(staticFileOptions);
 
             //add support for backups
@@ -249,6 +250,16 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 RequestPath = "/icons",
                 ContentTypeProvider = provider
             });
+
+            if (DataSettingsManager.DatabaseIsInstalled)
+            {
+                application.UseStaticFiles(new StaticFileOptions
+                {
+                    FileProvider = new RoxyFilemanProvider(fileProvider.GetAbsolutePath(NopRoxyFilemanDefaults.DefaultRootDirectory.TrimStart('/').Split('/'))),
+                    RequestPath = new PathString(NopRoxyFilemanDefaults.DefaultRootDirectory),
+                    OnPrepareResponse = staticFileResponse
+                });
+            }
         }
 
         /// <summary>
