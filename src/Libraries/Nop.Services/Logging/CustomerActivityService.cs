@@ -278,7 +278,7 @@ namespace Nop.Services.Logging
 
             query = query.OrderByDescending(logItem => logItem.CreatedOnUtc).ThenBy(logItem => logItem.Id);
 
-            return new PagedList<ActivityLog>(query, pageIndex, pageSize, null);
+            return new PagedList<ActivityLog>(query, pageIndex, pageSize);
         }
 
         /// <summary>

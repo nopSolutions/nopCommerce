@@ -258,7 +258,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 createdOnTo: endDateValue,
                 activityLogTypeId: searchModel.ActivityLogTypeId,
                 ipAddress: searchModel.IpAddress,
-                pageIndex: searchModel.Start, pageSize: searchModel.Length);
+                pageIndex: (searchModel.Start / searchModel.Length), pageSize: searchModel.Length);
 
             //prepare list model
             var model = new ActivityLogListModel

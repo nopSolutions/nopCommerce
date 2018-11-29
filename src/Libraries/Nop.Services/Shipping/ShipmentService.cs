@@ -124,7 +124,7 @@ namespace Nop.Services.Shipping
 
             query = query.OrderByDescending(s => s.CreatedOnUtc);
 
-            var shipments = new PagedList<Shipment>(query, pageIndex, pageSize, null);
+            var shipments = new PagedList<Shipment>(query, pageIndex, pageSize);
             return shipments;
         }
 

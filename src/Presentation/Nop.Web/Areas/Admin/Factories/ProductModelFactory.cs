@@ -30,6 +30,7 @@ using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Areas.Admin.Models.Orders;
 using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;
+using Nop.Web.Framework.Models.DataTables;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -699,6 +700,128 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare page parameters
             searchModel.SetGridPageSize();
 
+            #region prepare grid model
+
+            List<string> Filters = new List<string>()
+            {
+                "SearchProductName",
+                "SearchCategoryId",
+                "SearchIncludeSubCategories",
+                "SearchManufacturerId",
+                "SearchStoreId",
+                "SearchWarehouseId",
+                "SearchVendorId",
+                "SearchProductTypeId",
+                "SearchPublishedId",
+            };
+
+            List<ColumnProperty> columns = new List<ColumnProperty>
+            {
+                new ColumnProperty()
+                {
+                    Data = "ProductTypeId"
+                }, 
+                new ColumnProperty()
+                {
+                    Data = "Id",
+                    Title = "<input id='mastercheckbox' type='checkbox'/>",
+                    Render = new RenderCheckBox("checkbox_products"),
+                    Width = "50",
+                },
+                new ColumnProperty()
+                {
+                    Data = "PictureThumbnailUrl",
+                    Title = _localizationService.GetResource("Admin.Catalog.Products.Fields.PictureThumbnailUrl"),
+                    Width = "100",
+                    Render = new RenderPicture("data")
+                },
+                new ColumnProperty()
+                {
+                    Data = "Name",
+                    Title = _localizationService.GetResource("Admin.Catalog.Products.Fields.Name"),
+                    Width = "300"
+                },
+                new ColumnProperty()
+                {
+                    Data = "Sku",
+                    Title = _localizationService.GetResource("Admin.Catalog.Products.Fields.Sku"),
+                    Width = "100"
+                },
+                new ColumnProperty()
+                {
+                    Data = "Price",
+                    Title = _localizationService.GetResource("Admin.Catalog.Products.Fields.Price"),
+                    Width = "150", 
+                    Render = new RenderCustom("function(data, type, row) { return (row.ProductTypeId != " + ((int)ProductType.GroupedProduct) + ") ? data : null; }")
+                },
+                new ColumnProperty()
+                {
+                    Data = "StockQuantityStr",
+                    Title = _localizationService.GetResource("Admin.Catalog.Products.Fields.StockQuantity"),
+                    Width = "100"
+                },
+
+                new ColumnProperty()
+                {
+                    Data = "ProductTypeName",
+                    Title = _localizationService.GetResource("Admin.Catalog.Products.Fields.ProductType"),
+                    Width = "100"
+                },
+                new ColumnProperty()
+                {
+                    Data = "Published",
+                    Title = _localizationService.GetResource("Admin.Catalog.Products.Fields.Published"),
+                    Width = "100",
+                    Render = new RenderBoolean()
+                },
+                new ColumnProperty()
+                {
+                    Data = "Id",
+                    Title = _localizationService.GetResource("Admin.Common.Edit"),
+                    Width = "100",
+                    Render = new RenderButtonEdit("Edit/")
+                }
+            };
+
+            List<ColumnDefinition> ColDef = new List<ColumnDefinition>
+            {
+                new ColumnDefinition()
+                {
+                    Targets = "0",
+                    Visible = false,
+                    Searchable = false
+                },
+                new ColumnDefinition()
+                {
+                    Targets = "1",
+                    ClassName =  "dt-head-center dt-body-center",
+                    Width = "50",
+                    Searchable = false
+                },
+                new ColumnDefinition()
+                {
+                    Targets = "-1",
+                    ClassName =  "dt-head-center dt-body-center",
+                    Searchable = false
+                }
+            };
+
+            searchModel.Grid = new DataTablesModel
+            {
+                Name = "products-grid",
+                ServerSide = true,
+                Processing = true,
+                UrlRead = new DataUrl("ProductList", "Product"),
+                DeleteSelected = new DataUrl("DeleteSelected", "Product"),
+                LengthMenu = searchModel.AvailablePageSizes,
+                SearchButtonId = "search-products",
+                Filters = Filters,
+                ColumnCollection = columns,
+                ColumnDefs = ColDef
+            };
+
+            #endregion
+
             return searchModel;
         }
 
@@ -732,7 +855,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 warehouseId: searchModel.SearchWarehouseId,
                 productType: searchModel.SearchProductTypeId > 0 ? (ProductType?)searchModel.SearchProductTypeId : null,
                 keywords: searchModel.SearchProductName,
-                pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize,
+                pageIndex: (searchModel.Start / searchModel.Length), pageSize: searchModel.Length,
                 overridePublished: overridePublished);
 
             //prepare list model
@@ -756,7 +879,9 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     return productModel;
                 }),
-                Total = products.TotalCount
+                Draw = searchModel.Draw,
+                RecordsTotal = products.TotalCount,
+                RecordsFiltered = products.TotalCount
             };
 
             return model;

@@ -26,7 +26,6 @@ namespace Nop.Web.Framework.Models.DataTables
         #endregion
 
         #region Methods
-
        
         /// <summary>
         /// Perform additional actions for the model initialization
@@ -50,7 +49,8 @@ namespace Nop.Web.Framework.Models.DataTables
 
         public string Name { get; set; }
         public DataUrl UrlRead { get; set; }
-        public DataUrl UrlAction { get; set; }        
+        public DataUrl UrlAction { get; set; }
+        public DataUrl DeleteSelected { get; set; }
 
         public string SearchButtonId { get; set; }
         public List<string> Filters { get; set; }

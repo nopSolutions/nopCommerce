@@ -1,14 +1,11 @@
 ﻿@model ProductSearchModel
 
-@using Nop.Core.Domain.Catalog
-
 @{
     //page title
     ViewBag.Title = T("Admin.Catalog.Products").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Products");
 }
-
 
 <form asp-controller="Product" asp-action="List" method="post">
     <div class="content-header clearfix">
@@ -193,9 +190,11 @@
 
                 <div class="panel panel-default">
                     <div class="panel-body">
-                        <div id="products-grid"></div>
+                        @await Html.PartialAsync("Table", Model.Grid)
 
-                        <script>
+                        @*<div id="products-grid"></div>*@
+
+                        @*<script>
                             $(document).ready(function() {
                                 $("#products-grid").kendoGrid({
                                     dataSource: {
@@ -301,18 +300,18 @@
                                     ]
                                 });
                             });
-                        </script>
+                        </script>*@
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <script>
+    @*<script>
         var selectedIds = [];
 
         $(document).ready(function () {
-            //search button
+            //search button            
             $('#search-products').click(function () {
                 //search
                 var grid = $('#products-grid').data('kendoGrid');
@@ -394,10 +393,8 @@
             var numChkBoxesChecked = $('#products-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]:checked').length;
             $('#mastercheckbox').attr('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
         }
-    </script>
+    </script>*@
 </form>
-@*<nop-delete-confirmation asp-button-id="delete-selected" />*@
-<nop-alert asp-alert-id="deleteSelectedFailed" />
 
 @*import products form*@
 <div id="importexcel-window" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="importexcel-window-title">
@@ -446,8 +443,6 @@
 <form asp-controller="Product" asp-action="ExportXmlSelected" method="post" id="export-xml-selected-form">
     <input type="hidden" id="selectedIds" name="selectedIds" value="" />
 </form>
-
-
 
 <script>
     $(document).ready(function () {

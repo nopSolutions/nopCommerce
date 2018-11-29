@@ -30,13 +30,11 @@
             this.Type = RenderType.Link;
             this.Url = url;
             this.Title = title;
-            this.UrlId = urlId;
+            this.UrlId = urlId;            
         }        
 
         public string Url { get; set; }
-
         public string UrlId { get; set; }
-
         public string Title { get; set; }
     }
 
@@ -62,6 +60,17 @@
         public string Title { get; set; }
     }
 
+    public partial class RenderButtonEdit : Render
+    {
+        public RenderButtonEdit(string url)
+        {
+            this.Type = RenderType.ButtonEdit;
+            this.Url = url;
+        }
+
+        public string Url { get; set; }
+    }
+
     public partial class RenderCheckBox : Render
     {
         public RenderCheckBox(string name)
@@ -73,12 +82,45 @@
         public string Name { get; set; }
     }
 
+    public partial class RenderPicture : Render
+    {
+        public RenderPicture(string src)
+        {
+            this.Type = RenderType.Picture;
+            this.Src = src;
+        }
+
+        public string Src { get; set; }
+    }
+
+    public partial class RenderCustom : Render
+    {
+        public RenderCustom(string function)
+        {
+            this.Type = RenderType.Custom;
+            this.Function = function;
+        }
+
+        public string Function { get; set; }
+    }
+
+    public partial class RenderBoolean : Render
+    {
+        public RenderBoolean()
+        {
+            this.Type = RenderType.Boolean;
+        }
+    }
+
     public enum RenderType
     {
         Checkbox,
         Date,
         Link,
         Button,
+        ButtonEdit,
+        Picture,
+        Boolean,
         Custom
     }
 }

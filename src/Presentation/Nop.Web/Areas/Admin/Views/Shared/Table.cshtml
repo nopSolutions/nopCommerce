@@ -120,13 +120,42 @@
                                             }
                                         </text>
                                         break;
+                                    case RenderType.ButtonEdit:
+                                        var buttonEdit = (RenderButtonEdit)@column.Render;
+                                        <Text>
+                                            render : function(data, type, full, meta) {
+                                                return '<a class="btn btn-default" href="@Url.Content(buttonEdit.Url)' + data + '"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>'
+                                            }
+                                        </text>
+                                        break;
+                                    case RenderType.Picture:
+                                        var picture = (RenderPicture)@column.Render;
+                                        <Text>
+                                            render : function(data, type, full, meta) {
+                                                return '<img src="' + @picture.Src + '" />'
+                                            }
+                                        </text>
+                                        break;
                                     case RenderType.Checkbox:
                                         var checkBox = (RenderCheckBox)@column.Render;
                                         <text>
                                             render: function (data, type, row) {
                                                 return (data == "true") ? "<input name='@checkBox.Name' value='" + row.Id + "' type='checkbox' class='checkboxGroups' checked='checked'/>"
                                                     : "<input name='@checkBox.Name' value='" + row.Id + "' type='checkbox' class='checkboxGroups'/>";
-                    }
+                                            }
+                                        </text>
+                                        break;
+                                    case RenderType.Boolean:
+                                        <text>
+                                            render: function (data, type, row) {
+                                                return (data == true) ? "<i class='fa fa-check true-icon'></i>" : "<i class='fa fa-close false-icon'></i>";
+                                            }
+                                        </text>
+                                        break;
+                                    case RenderType.Custom:
+                                        var custom = (RenderCustom)@column.Render;
+                                        <Text>
+                                            render : @(Html.Raw(JavaScriptEncoder.Default.Encode(custom.Function)))
                                         </text>
                                         break;
                                 }
@@ -138,7 +167,7 @@
             ]
         });
 
-        @if (!string.IsNullOrEmpty(Model.SearchButtonId))
+        @if (!string.IsNullOrEmpty(Model.SearchButtonId) && (Model.DeleteSelected == null))
         {
             <Text>
                 $('#@Model.SearchButtonId').click(function () {
@@ -186,4 +215,81 @@
     </text>
 }
 
+@if (Model.DeleteSelected != null)
+{
+    <Text>
+    <script>
+        var selectedIds = [];
 
+        $(document).ready(function () {
+            @if (!string.IsNullOrEmpty(Model.SearchButtonId))
+            {
+                <Text>
+                $('#@Model.SearchButtonId').click(function() {
+                //search
+                $('#@Model.Name').DataTable().ajax.reload();
+                //clear selected checkboxes
+                $('.checkboxGroups').attr('checked', false).change();
+                    selectedIds = [];
+                    return false;
+                });
+                </Text>
+            }
+
+            //delete selected
+            $("#delete-selected-action-confirmation-submit-button").bind("click", function () {
+                var postData = {
+                    selectedIds: selectedIds
+                };
+                addAntiForgeryToken(postData);
+                $.ajax({
+                    cache: false,
+                    type: "POST",
+                    url: "@Html.Raw(Url.Action(@Model.DeleteSelected.ActionName, @Model.DeleteSelected.ControllerName))",
+                    data: postData,
+                    complete: function (data) {
+                        //reload grid
+                        $('#@Model.Name').DataTable().ajax.reload();
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        $('#deleteSelectedFailed-info').html(thrownError);
+                        $("#deleteSelectedFailed").click();
+                    }
+                });
+                $('#delete-selected-action-confirmation').modal('toggle');
+                return false;
+            });
+
+            $('#mastercheckbox').click(function () {
+                $('.checkboxGroups').attr('checked', $(this).is(':checked')).change();
+            });
+
+            //wire up checkboxes.
+            $('#@Model.Name').on('change', 'input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]', function (e) {
+                var $check = $(this);
+                var checked = jQuery.inArray($check.val(), selectedIds);
+                if ($check.is(":checked") == true) {
+                    if (checked == -1) {
+                        //add id to selectedIds.
+                        selectedIds.push($check.val());
+                    }
+                } else if (checked > -1) {
+                    //remove id from selectedIds.
+                    selectedIds = $.grep(selectedIds, function (item, index) {
+                        return item != $check.val();
+                    });
+                }
+                updateMasterCheckbox();
+            });
+        });
+
+        function updateMasterCheckbox() {
+            var numChkBoxes = $('#@Model.Name input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]').length;
+            var numChkBoxesChecked = $('#@Model.Name input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]:checked').length;
+            $('#mastercheckbox').attr('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
+        }
+
+    </script>
+    <nop-alert asp-alert-id="deleteSelectedFailed" />
+    </Text>
+}

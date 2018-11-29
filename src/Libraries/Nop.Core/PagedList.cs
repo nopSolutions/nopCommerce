@@ -17,19 +17,18 @@ namespace Nop.Core
         /// <param name="source">source</param>
         /// <param name="skip">Skip number of Rows count</param>
         /// <param name="pageSize">Page size</param>
-        /// <param name="obj">Only for DataTables (remove later!!!)</param>
-        public PagedList(IQueryable<T> source, int skip, int pageSize, object obj)
-        {
-            var total = source.Count();
-            this.TotalCount = total;
-            this.TotalPages = total / pageSize;
+        //public PagedList(IQueryable<T> source, int skip, int pageSize)
+        //{
+        //    var total = source.Count();
+        //    this.TotalCount = total;
+        //    this.TotalPages = total / pageSize;
 
-            if (total % pageSize > 0)
-                TotalPages++;
+        //    if (total % pageSize > 0)
+        //        TotalPages++;
 
-            this.PageSize = pageSize;
-            this.AddRange(source.Skip(skip).Take(pageSize).ToList());
-        }
+        //    this.PageSize = pageSize;
+        //    this.AddRange(source.Skip(skip).Take(pageSize).ToList());
+        //}
 
         /// <summary>
         /// Ctor for kendo grid
