@@ -5,7 +5,7 @@ using Nop.Services.Helpers;
 using Nop.Services.Logging;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Logging;
-using Nop.Web.Framework.Models.DataTables;
+using Nop.Web.Framework.DataTables;
 using Nop.Services.Localization;
 using Newtonsoft.Json.Linq;
 
@@ -173,7 +173,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     Data = "CustomerEmail",
                     Title = _localizationService.GetResource("Admin.Configuration.ActivityLog.ActivityLog.Fields.Customer"),
                     Width = "100",
-                    Render = new RenderLink("~/Admin/Customer/Edit/", "CustomerId", "data")
+                    Render = new RenderLink(new DataUrl("~/Admin/Customer/Edit/", "CustomerId"), "data")
                 },
                 new ColumnProperty()
                 {

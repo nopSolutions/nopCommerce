@@ -30,7 +30,7 @@ using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Areas.Admin.Models.Orders;
 using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;
-using Nop.Web.Framework.Models.DataTables;
+using Nop.Web.Framework.DataTables;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -779,7 +779,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     Data = "Id",
                     Title = _localizationService.GetResource("Admin.Common.Edit"),
                     Width = "100",
-                    Render = new RenderButtonEdit("Edit/")
+                    Render = new RenderButtonEdit(new DataUrl("Edit/"))
                 }
             };
 

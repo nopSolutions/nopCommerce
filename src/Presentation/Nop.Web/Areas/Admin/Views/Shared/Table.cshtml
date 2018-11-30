@@ -1,7 +1,24 @@
 ﻿@using System.Text.Encodings.Web
 @model DataTablesModel
 
-@using Nop.Web.Framework.Models.DataTables;
+@using Nop.Web.Framework.DataTables;
+
+@functions{ 
+    string GetUrl(DataUrl dataUrl)
+    {
+        string url = null;
+        if (!string.IsNullOrEmpty(dataUrl.ControllerName) && !string.IsNullOrEmpty(dataUrl.ActionName))
+        {
+            url = Url.Action(dataUrl.ActionName, dataUrl.ControllerName, dataUrl.RouteValues, null, null);
+        }
+        else if (!string.IsNullOrEmpty(dataUrl.Url))
+        {
+            url = dataUrl.Url.StartsWith("~/", StringComparison.Ordinal) ? Url.Content(dataUrl.Url) : dataUrl.Url;
+        }
+
+        return url;
+    }
+}
 
 <table class="table table-bordered table-hover dataTable" width="100%" id="@Model.Name"></table>
 <script>
@@ -24,7 +41,7 @@
                 <text>
                     ajax:
                     {
-                        url: "@Html.Raw(Url.Action(@Model.UrlRead.ActionName, @Model.UrlRead.ControllerName))",
+                        url: "@Html.Raw(GetUrl(Model.UrlRead))",
                         type: 'POST',
                         dataType: 'json',
                         data: function(data) {
@@ -100,7 +117,7 @@
                                         var link = (RenderLink)@column.Render;
                                         <Text>
                                             render: function (data, type, full, meta) {
-                                                return '<a href="@Url.Content(@link.Url)' + full.@link.UrlId + '">' + @link.Title + '</a>'
+                                                return '<a href="@GetUrl(@link.Url)' + full.@link.Url.DataId + '">' + @link.Title + '</a>'
                                             }
                                         </text>
                                         break;
@@ -124,7 +141,7 @@
                                         var buttonEdit = (RenderButtonEdit)@column.Render;
                                         <Text>
                                             render : function(data, type, full, meta) {
-                                                return '<a class="btn btn-default" href="@Url.Content(buttonEdit.Url)' + data + '"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>'
+                                                return '<a class="btn btn-default" href="@GetUrl(buttonEdit.Url)' + data + '"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>'
                                             }
                                         </text>
                                         break;
@@ -198,7 +215,7 @@
                 addAntiForgeryToken(postData);
 
                 $.ajax({
-                    url: "@Html.Raw(Url.Action(@Model.UrlAction.ActionName, @Model.UrlAction.ControllerName))",
+                    url: "@Html.Raw(GetUrl(Model.UrlAction))",
                     type: 'POST',
                     dataType: 'json',
                     data: postData,
@@ -245,7 +262,7 @@
                 $.ajax({
                     cache: false,
                     type: "POST",
-                    url: "@Html.Raw(Url.Action(@Model.DeleteSelected.ActionName, @Model.DeleteSelected.ControllerName))",
+                    url: "@Html.Raw(GetUrl(Model.DeleteSelected))",
                     data: postData,
                     complete: function (data) {
                         //reload grid

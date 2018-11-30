@@ -1,7 +1,7 @@
-﻿namespace Nop.Web.Framework.Models.DataTables
+﻿namespace Nop.Web.Framework.DataTables
 {
     /// <summary>
-    /// DataTables column definition
+    /// Represent DataTables column definition
     /// </summary>
     public partial class ColumnDefinition
     {

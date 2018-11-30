@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
 
-namespace Nop.Web.Framework.Models.DataTables
+namespace Nop.Web.Framework.DataTables
 {
     /// <summary>
     /// Represents base DataTables model
@@ -68,20 +68,5 @@ namespace Nop.Web.Framework.Models.DataTables
         public List<ColumnDefinition> ColumnDefs { get; set; }
 
         #endregion
-
     }
-
-    public partial class DataUrl
-    {
-        public DataUrl(string actionName, string controllerName)
-        {
-            this.ActionName = actionName;
-            this.ControllerName = controllerName;
-        }
-
-        public string ActionName { get; set; }
-
-        public string ControllerName { get; set; }
-    }
-
 }

@@ -1,6 +1,6 @@
 ﻿using Nop.Core.Domain.Common;
 using Nop.Core.Infrastructure;
-using Nop.Web.Framework.Models.DataTables;
+using Nop.Web.Framework.DataTables;
 
 namespace Nop.Web.Framework.Models
 {
