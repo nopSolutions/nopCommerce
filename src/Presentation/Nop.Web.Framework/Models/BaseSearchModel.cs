@@ -43,17 +43,17 @@ namespace Nop.Web.Framework.Models
         public string AvailablePageSizes { get; set; }
 
         /// <summary>
-        /// Gets or sets draw
+        /// Gets or sets draw. Draw counter. This is used by DataTables to ensure that the Ajax returns from server-side processing requests are drawn in sequence by DataTables (Ajax requests are asynchronous and thus can return out of sequence).
         /// </summary>
         public string Draw { get; set; }
 
         /// <summary>
-        /// Gets or sets skiping number of rows count
+        /// Gets or sets skiping number of rows count. Paging first record indicator.
         /// </summary>
         public int Start { get; set; }
 
         /// <summary>
-        /// Gets or sets paging length 
+        /// Gets or sets paging length. Number of records that the table can display in the current draw. 
         /// </summary>
         public int Length { get; set; }
 

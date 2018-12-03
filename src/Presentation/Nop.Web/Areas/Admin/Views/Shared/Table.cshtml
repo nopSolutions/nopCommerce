@@ -3,6 +3,11 @@
 
 @using Nop.Web.Framework.DataTables;
 
+@{ 
+    //the locale which MomentJS should use - the default is en (English).
+    var locate = "en";
+}
+
 @functions{ 
     string GetUrl(DataUrl dataUrl)
     {
@@ -59,7 +64,7 @@
                 </text>
             }
             paging: @Model.Paging.ToString().ToLower(),
-            language: @await Html.PartialAsync("_GridLocalization"),
+            language: @await Html.PartialAsync("_GridLocalization"),            
             lengthMenu: [@Model.LengthMenu],
             ordering: @Model.Ordering.ToString().ToLower(),
             fixedHeader: @Model.FixedHeader.ToString().ToLower(),
@@ -122,10 +127,10 @@
                                         </text>
                                         break;
                                     case RenderType.Date:
+                                        var date = (RenderDate)@column.Render;
                                         <Text>
                                             render: function (data, type, full, meta) {
-                                                var date = new Date(data);
-                                                return date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear() + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
+                                                return moment(data).locale("@locate").format("@date.Format");
                                             }
                                         </text>
                                         break;

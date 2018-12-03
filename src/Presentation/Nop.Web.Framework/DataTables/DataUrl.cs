@@ -2,6 +2,9 @@
 
 namespace Nop.Web.Framework.DataTables
 {
+    /// <summary>
+    /// Represents the data url
+    /// </summary>
     public partial class DataUrl
     {
         #region Ctor
@@ -48,6 +51,9 @@ namespace Nop.Web.Framework.DataTables
         /// </summary>
         public RouteValueDictionary RouteValues { get; set; }
 
+        /// <summary>
+        /// Gets or sets data Id
+        /// </summary>
         public string DataId { get; set; }
 
         #endregion

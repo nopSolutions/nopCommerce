@@ -192,7 +192,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     Data = "CreatedOn",
                     Title = _localizationService.GetResource("Admin.System.Log.Fields.CreatedOn"),
                     Width = "200",
-                    Render = new RenderDate("")
+                    Render = new RenderDate("MM-DD-YYYY HH:mm:ss")
                 },
                 new ColumnProperty()
                 {
