@@ -256,7 +256,7 @@ namespace Nop.Web.Controllers
             //'Continue shopping' URL
             _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
                 NopCustomerDefaults.LastContinueShoppingPageAttribute,
-                _webHelper.GetThisPageUrl(false),
+                _webHelper.GetThisPageUrl(true),
                 _storeContext.CurrentStore.Id);
 
             if (model == null)
