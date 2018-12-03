@@ -9,6 +9,7 @@ using Nop.Services.Localization;
 using Nop.Services.Seo;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Catalog;
+using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;
 
 namespace Nop.Web.Areas.Admin.Factories
@@ -104,6 +105,8 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare available stores
             _baseAdminModelFactory.PrepareStores(searchModel.AvailableStores);
+
+            searchModel.HideStoresList = _catalogSettings.IgnoreStoreLimitations || searchModel.AvailableStores.SelectionIsNotPossible();
 
             //prepare page parameters
             searchModel.SetGridPageSize();

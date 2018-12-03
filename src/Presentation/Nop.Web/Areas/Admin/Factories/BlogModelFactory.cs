@@ -2,6 +2,7 @@
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Domain.Blogs;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Html;
 using Nop.Services.Blogs;
@@ -23,6 +24,7 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
+        private readonly CatalogSettings _catalogSettings;
         private readonly IBaseAdminModelFactory _baseAdminModelFactory;
         private readonly IBlogService _blogService;
         private readonly IDateTimeHelper _dateTimeHelper;
@@ -36,7 +38,8 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #region Ctor
 
-        public BlogModelFactory(IBaseAdminModelFactory baseAdminModelFactory,
+        public BlogModelFactory(CatalogSettings catalogSettings,
+            IBaseAdminModelFactory baseAdminModelFactory,
             IBlogService blogService,
             IDateTimeHelper dateTimeHelper,
             ILanguageService languageService,
@@ -45,6 +48,7 @@ namespace Nop.Web.Areas.Admin.Factories
             IStoreService storeService,
             IUrlRecordService urlRecordService)
         {
+            this._catalogSettings = catalogSettings;
             this._baseAdminModelFactory = baseAdminModelFactory;
             this._blogService = blogService;
             this._dateTimeHelper = dateTimeHelper;
@@ -89,6 +93,8 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare available stores
             _baseAdminModelFactory.PrepareStores(searchModel.AvailableStores);
+
+            searchModel.HideStoresList = _catalogSettings.IgnoreStoreLimitations || searchModel.AvailableStores.SelectionIsNotPossible();
 
             //prepare page parameters
             searchModel.SetGridPageSize();

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Messages;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
@@ -18,6 +19,7 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
+        private readonly CatalogSettings _catalogSettings;
         private readonly IBaseAdminModelFactory _baseAdminModelFactory;
         private readonly ILocalizationService _localizationService;
         private readonly ILocalizedModelFactory _localizedModelFactory;
@@ -30,7 +32,8 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #region Ctor
 
-        public MessageTemplateModelFactory(IBaseAdminModelFactory baseAdminModelFactory,
+        public MessageTemplateModelFactory(CatalogSettings catalogSettings,
+            IBaseAdminModelFactory baseAdminModelFactory,
             ILocalizationService localizationService,
             ILocalizedModelFactory localizedModelFactory,
             IMessageTemplateService messageTemplateService,
@@ -38,6 +41,7 @@ namespace Nop.Web.Areas.Admin.Factories
             IStoreMappingSupportedModelFactory storeMappingSupportedModelFactory,
             IStoreService storeService)
         {
+            this._catalogSettings = catalogSettings;
             this._baseAdminModelFactory = baseAdminModelFactory;
             this._localizationService = localizationService;
             this._localizedModelFactory = localizedModelFactory;
@@ -63,6 +67,8 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare available stores
             _baseAdminModelFactory.PrepareStores(searchModel.AvailableStores);
+
+            searchModel.HideStoresList = _catalogSettings.IgnoreStoreLimitations || searchModel.AvailableStores.SelectionIsNotPossible();
 
             //prepare page parameters
             searchModel.SetGridPageSize();

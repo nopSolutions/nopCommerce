@@ -21,6 +21,7 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
+        private readonly CatalogSettings _catalogSettings;
         private readonly IBaseAdminModelFactory _baseAdminModelFactory;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ILocalizationService _localizationService;
@@ -32,13 +33,15 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #region Ctor
 
-        public ProductReviewModelFactory(IBaseAdminModelFactory baseAdminModelFactory,
+        public ProductReviewModelFactory(CatalogSettings catalogSettings,
+            IBaseAdminModelFactory baseAdminModelFactory,
             IDateTimeHelper dateTimeHelper,
             ILocalizationService localizationService,
             IProductService productService,
             IReviewTypeService reviewTypeService,
             IWorkContext workContext)
         {
+            this._catalogSettings = catalogSettings;
             this._baseAdminModelFactory = baseAdminModelFactory;
             this._dateTimeHelper = dateTimeHelper;
             this._localizationService = localizationService;
@@ -82,6 +85,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 Text = _localizationService.GetResource("Admin.Catalog.ProductReviews.List.SearchApproved.DisapprovedOnly"),
                 Value = "2"
             });
+
+            searchModel.HideStoresList = _catalogSettings.IgnoreStoreLimitations || searchModel.AvailableStores.SelectionIsNotPossible();
 
             //prepare page parameters
             searchModel.SetGridPageSize();

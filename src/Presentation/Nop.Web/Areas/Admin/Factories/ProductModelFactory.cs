@@ -40,6 +40,7 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
+        private readonly CatalogSettings _catalogSettings;
         private readonly CurrencySettings _currencySettings;
         private readonly IAclSupportedModelFactory _aclSupportedModelFactory;
         private readonly IBaseAdminModelFactory _baseAdminModelFactory;
@@ -79,7 +80,8 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #region Ctor
 
-        public ProductModelFactory(CurrencySettings currencySettings,
+        public ProductModelFactory(CatalogSettings catalogSettings,
+            CurrencySettings currencySettings,
             IAclSupportedModelFactory aclSupportedModelFactory,
             IBaseAdminModelFactory baseAdminModelFactory,
             ICategoryService categoryService,
@@ -114,6 +116,7 @@ namespace Nop.Web.Areas.Admin.Factories
             TaxSettings taxSettings,
             VendorSettings vendorSettings)
         {
+            this._catalogSettings = catalogSettings;
             this._currencySettings = currencySettings;
             this._aclSupportedModelFactory = aclSupportedModelFactory;
             this._baseAdminModelFactory = baseAdminModelFactory;
@@ -639,6 +642,8 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare available warehouses
             _baseAdminModelFactory.PrepareWarehouses(searchModel.AvailableWarehouses);
+
+            searchModel.HideStoresList = _catalogSettings.IgnoreStoreLimitations || searchModel.AvailableStores.SelectionIsNotPossible();
 
             //prepare "published" filter (0 - all; 1 - published only; 2 - unpublished only)
             searchModel.AvailablePublishedOptions.Add(new SelectListItem
