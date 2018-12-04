@@ -1275,6 +1275,9 @@ namespace Nop.Web.Areas.Admin.Factories
             //fill in additional values (not existing in the entity)
             model.ActiveStoreScopeConfiguration = storeId;
 
+            //prepare nested search model
+            PrepareGdprConsentSearchModel(model.GdprConsentSearchModel);
+
             if (storeId <= 0)
                 return model;
 
@@ -1282,9 +1285,6 @@ namespace Nop.Web.Areas.Admin.Factories
             model.GdprEnabled_OverrideForStore = _settingService.SettingExists(gdprSettings, x => x.GdprEnabled, storeId);
             model.LogPrivacyPolicyConsent_OverrideForStore = _settingService.SettingExists(gdprSettings, x => x.LogPrivacyPolicyConsent, storeId);
             model.LogNewsletterConsent_OverrideForStore = _settingService.SettingExists(gdprSettings, x => x.LogNewsletterConsent, storeId);
-
-            //prepare nested search model
-            PrepareGdprConsentSearchModel(model.GdprConsentSearchModel);
 
             return model;
         }
