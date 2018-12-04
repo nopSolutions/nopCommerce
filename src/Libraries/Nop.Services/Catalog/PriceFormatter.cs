@@ -420,8 +420,9 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="productPrice">Product price (in primary currency). Pass null if you want to use a default produce price</param>
+        /// <param name="totalWeight">Total weight of product (with attribute weight adjustment). Pass null if you want to use a default produce weight</param>
         /// <returns>Base price</returns>
-        public virtual string FormatBasePrice(Product product, decimal? productPrice)
+        public virtual string FormatBasePrice(Product product, decimal? productPrice, decimal? totalWeight = null)
         {
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
@@ -429,7 +430,7 @@ namespace Nop.Services.Catalog
             if (!product.BasepriceEnabled)
                 return null;
 
-            var productAmount = product.BasepriceAmount;
+            var productAmount = totalWeight.HasValue && totalWeight.Value > decimal.Zero ? totalWeight.Value : product.BasepriceAmount;
             //Amount in product cannot be 0
             if (productAmount == 0)
                 return null;
