@@ -12,26 +12,7 @@ namespace Nop.Core
     public class PagedList<T> : List<T>, IPagedList<T> 
     {
         /// <summary>
-        /// Ctor for DataTables grid
-        /// </summary>
-        /// <param name="source">source</param>
-        /// <param name="skip">Skip number of Rows count</param>
-        /// <param name="pageSize">Page size</param>
-        //public PagedList(IQueryable<T> source, int skip, int pageSize)
-        //{
-        //    var total = source.Count();
-        //    this.TotalCount = total;
-        //    this.TotalPages = total / pageSize;
-
-        //    if (total % pageSize > 0)
-        //        TotalPages++;
-
-        //    this.PageSize = pageSize;
-        //    this.AddRange(source.Skip(skip).Take(pageSize).ToList());
-        //}
-
-        /// <summary>
-        /// Ctor for kendo grid
+        /// Ctor
         /// </summary>
         /// <param name="source">source</param>
         /// <param name="pageIndex">Page index</param>

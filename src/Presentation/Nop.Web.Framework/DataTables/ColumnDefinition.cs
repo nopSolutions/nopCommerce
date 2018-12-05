@@ -39,7 +39,7 @@
         /// <summary>
         /// Class to assign to each cell in the column.
         /// </summary>
-        public string ClassName { get; set; }
+        public StyleColumn ClassName { get; set; }
 
         #endregion
     }

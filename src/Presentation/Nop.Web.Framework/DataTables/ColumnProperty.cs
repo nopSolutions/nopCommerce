@@ -32,6 +32,11 @@
         /// </summary>
         public bool AutoWidth { get; set; }
 
+        /// <summary>
+        /// Indicate whether the column is master check box
+        /// </summary>
+        public bool IsMasterCheckBox { get; set; }
+
         #endregion
     }
 }

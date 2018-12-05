@@ -16,11 +16,6 @@ namespace Nop.Web.Framework.Models
             //set the default values
             this.Page = 1;
             this.PageSize = 10;
-
-            //set the default values for DataTables
-            this.Draw = "";
-            this.Start = 0;
-            this.Length = 0;
         }
 
         #endregion

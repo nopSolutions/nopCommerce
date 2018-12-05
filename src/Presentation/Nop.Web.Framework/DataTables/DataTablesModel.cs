@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
-using Microsoft.AspNetCore.Http;
+using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Framework.DataTables
 {
     /// <summary>
     /// Represents base DataTables model
     /// </summary>
-    public partial class DataTablesModel
+    public partial class DataTablesModel : BaseNopModel
     {
         #region Ctor
 
@@ -16,36 +16,14 @@ namespace Nop.Web.Framework.DataTables
         public DataTablesModel()
         {
             this.Dom = "lrtip";
-            this.FixedHeader = false;
             this.Ordering = false;
             this.Paging = true;            
-            this.CustomProperties = new Dictionary<string, object>();
-            PostInitialize();
-        }
-
-        #endregion
-
-        #region Methods
-       
-        /// <summary>
-        /// Perform additional actions for the model initialization
-        /// </summary>
-        /// <remarks>Developers can override this method in custom partial classes in order to add some custom initialization code to constructors</remarks>
-        protected virtual void PostInitialize()
-        {            
         }
 
         #endregion
 
         #region Properties
-
-        //MVC is suppressing further validation if the IFormCollection is passed to a controller method. That's why we add it to the model
-        public IFormCollection Form { get; set; }
-
-        /// <summary>
-        /// Gets or sets property to store any custom values for models 
-        /// </summary>
-        public Dictionary<string, object> CustomProperties { get; set; }
+        
         /// <summary>
         /// Gets or sets table name
         /// </summary>
@@ -73,9 +51,9 @@ namespace Nop.Web.Framework.DataTables
         /// <summary>
         /// Gets or sets data for table (ajax, json, array)
         /// </summary>
-        public dynamic Data { get; set; }
+        public object Data { get; set; }
         /// <summary>
-        /// Gets or sets 
+        /// Enable or disable the display of a 'processing' indicator when the table is being processed 
         /// </summary>
         public bool Processing { get; set; }
         /// <summary>

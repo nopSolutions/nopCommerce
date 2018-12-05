@@ -1585,7 +1585,9 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     return shipmentItemModel;
                 }),
-                Total = shipmentItems.Count
+                RecordsTotal = shipmentItems.Count,
+                RecordsFiltered = shipmentItems.Count,
+                Draw = searchModel.Draw
             };
 
             return model;

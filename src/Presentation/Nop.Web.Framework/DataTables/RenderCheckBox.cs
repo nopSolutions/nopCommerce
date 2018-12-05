@@ -1,7 +1,7 @@
 ﻿namespace Nop.Web.Framework.DataTables
 {
     /// <summary>
-    /// Represets checkbox render for DataTables column
+    /// Represents checkbox render for DataTables column
     /// </summary>
     public partial class RenderCheckBox : Render
     {

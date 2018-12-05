@@ -1,14 +1,16 @@
 ﻿@using System.Text.Encodings.Web
+@using System.Runtime.Serialization;
+
 @model DataTablesModel
 
 @using Nop.Web.Framework.DataTables;
 
-@{ 
+@{
     //the locale which MomentJS should use - the default is en (English).
     var locate = "en";
 }
 
-@functions{ 
+@functions{
     string GetUrl(DataUrl dataUrl)
     {
         string url = null;
@@ -19,9 +21,22 @@
         else if (!string.IsNullOrEmpty(dataUrl.Url))
         {
             url = dataUrl.Url.StartsWith("~/", StringComparison.Ordinal) ? Url.Content(dataUrl.Url) : dataUrl.Url;
+            url += "/";
         }
 
         return url;
+    }
+
+    string GetEnumValue(Type enumType, object enumVal)
+    {
+        var memInfo = enumType.GetMember(enumVal.ToString());
+        var attr = memInfo[0].GetCustomAttributes(false).OfType<EnumMemberAttribute>().FirstOrDefault();
+        if (attr != null)
+        {
+            return attr.Value;
+        }
+
+        return null;
     }
 }
 
@@ -64,7 +79,7 @@
                 </text>
             }
             paging: @Model.Paging.ToString().ToLower(),
-            language: @await Html.PartialAsync("_GridLocalization"),            
+            language: @await Html.PartialAsync("_GridLocalization"),
             lengthMenu: [@Model.LengthMenu],
             ordering: @Model.Ordering.ToString().ToLower(),
             fixedHeader: @Model.FixedHeader.ToString().ToLower(),
@@ -79,9 +94,9 @@
                             targets: @def.Targets,
                             visible: @def.Visible.ToString().ToLower(),
                             searchable: @def.Searchable.ToString().ToLower(),
-                            @if(!string.IsNullOrEmpty(def.ClassName))
+                            @if((int)def.ClassName > 0)
                             {
-                                <Text>className: "@def.ClassName",
+                                <Text>className: "@GetEnumValue(typeof(StyleColumn), def.ClassName)",
                                 </text>
                             }
                             @if (!string.IsNullOrEmpty(def.Width))
@@ -102,10 +117,25 @@
                         <Text>
                         {
                             data: "@column.Data",
-                            @if (!string.IsNullOrEmpty(column.Title))
+                            @if (!string.IsNullOrEmpty(column.Title) && !column.IsMasterCheckBox)
                             {
                                 <Text>
                                 title: "@(Html.Raw(JavaScriptEncoder.Default.Encode(column.Title)))",</text>
+                            } else
+                            {
+                                if (!string.IsNullOrEmpty(column.Title) && column.IsMasterCheckBox)
+                                {
+                                    <Text>
+                                    title: "<div class='checkbox'><label><input id='mastercheckbox' type='checkbox'/>@column.Title</label></div>",</text>
+                                }
+                                else
+                                {
+                                    if (string.IsNullOrEmpty(column.Title) && column.IsMasterCheckBox)
+                                    {
+                                        <Text>
+                                        title: "<input id='mastercheckbox' type='checkbox'/>",</text>
+                                    }
+                                }
                             }
                             width: "@column.Width",
                             @if (column.AutoWidth)
@@ -138,15 +168,16 @@
                                         var button = (RenderButton)@column.Render;
                                         <Text>
                                             render : function(data, type, full, meta) {
-                                                return '<a href="#" class="btn btn-danger" onclick=ActionData("' + data + '");>@button.Title</a>'
+                                                return '<a href="#" class="@GetEnumValue(typeof(StyleButton), button.Style)" onclick=ActionData("' + data + '");>@button.Title</a>'
                                             }
                                         </text>
                                         break;
                                     case RenderType.ButtonEdit:
                                         var buttonEdit = (RenderButtonEdit)@column.Render;
+
                                         <Text>
                                             render : function(data, type, full, meta) {
-                                                return '<a class="btn btn-default" href="@GetUrl(buttonEdit.Url)' + data + '"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>'
+                                                return '<a class="@GetEnumValue(typeof(StyleButton), buttonEdit.Style)" href="@GetUrl(buttonEdit.Url)' + data + '"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>'
                                             }
                                         </text>
                                         break;

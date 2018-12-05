@@ -1,7 +1,7 @@
 ﻿namespace Nop.Web.Framework.DataTables
 {
     /// <summary>
-    /// Represets date render for DataTables column
+    /// Represents date render for DataTables column
     /// </summary>
     public partial class RenderDate : Render
     {

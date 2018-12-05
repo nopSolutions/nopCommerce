@@ -1,7 +1,7 @@
 ﻿namespace Nop.Web.Framework.DataTables
 {
     /// <summary>
-    /// Represets custom render for DataTables column
+    /// Represents custom render for DataTables column
     /// </summary>
     public partial class RenderCustom : Render
     {

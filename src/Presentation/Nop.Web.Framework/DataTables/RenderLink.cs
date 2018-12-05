@@ -1,7 +1,7 @@
 ﻿namespace Nop.Web.Framework.DataTables
 {
     /// <summary>
-    /// Represets link render for DataTables column
+    /// Represents link render for DataTables column
     /// </summary>
     public partial class RenderLink : Render
     {

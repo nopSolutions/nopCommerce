@@ -2148,7 +2148,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //prepare model
             var model = _orderModelFactory.PrepareShipmentItemListModel(searchModel, shipment);
 
-            return Json(new { draw = searchModel.Draw, recordsFiltered = model.Total, recordsTotal = model.Total, data = model.Data });
+            return JsonDataTable(model);
         }
 
         public virtual IActionResult AddShipment(int orderId)

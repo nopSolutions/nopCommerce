@@ -1,7 +1,7 @@
 ﻿namespace Nop.Web.Framework.DataTables
 {
     /// <summary>
-    /// Represets picture render for DataTables column
+    /// Represents picture render for DataTables column
     /// </summary>
     public partial class RenderPicture : Render
     {
