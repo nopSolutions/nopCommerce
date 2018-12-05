@@ -7,11 +7,13 @@
             <div class="col-md-6">
                 <div class="row">
                     <table class="table table-hover table-bordered" style="max-width: 500px;">
-                        <tr>
-                            <th colspan="2">
-                                <strong>@T("Admin.Orders.Fields.BillingAddress")</strong>
-                            </th>
-                        </tr>
+                        <thead>
+                            <tr>
+                                <th colspan="2">
+                                    <strong>@T("Admin.Orders.Fields.BillingAddress")</strong>
+                                </th>
+                            </tr>
+                        </thead>
                         @if (Model.BillingAddress.FirstNameEnabled || Model.BillingAddress.LastNameEnabled)
                         {
                             <tr>
