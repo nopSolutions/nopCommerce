@@ -96,17 +96,17 @@ namespace Nop.Web.Areas.Admin.Factories
             };
 
             //prepare Data
-            var activityLogTypes = new JArray() as dynamic;
-
+            JArray activityLogTypes = new JArray();
             foreach (var altm in searchModel.ActivityLogTypeListModel)
             {
-                dynamic activityLogType = new JObject();
-                activityLogType.Id = altm.Id;
-                activityLogType.Name = altm.Name;
-                activityLogType.Enabled = altm.Enabled.ToString().ToLowerInvariant();
-
+                JObject activityLogType = new JObject
+                {
+                    [nameof(altm.Id)] = altm.Id,
+                    [nameof(altm.Name)] = altm.Name,
+                    [nameof(altm.Enabled)] = altm.Enabled.ToString().ToLowerInvariant()
+                };
                 activityLogTypes.Add(activityLogType);
-            };
+            }
 
             return new DataTablesModel
             {
