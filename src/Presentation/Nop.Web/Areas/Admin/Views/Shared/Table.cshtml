@@ -79,7 +79,7 @@
                 </text>
             }
             paging: @Model.Paging.ToString().ToLower(),
-            pagingType: "full_numbers",
+            pagingType: "@Model.PagingType",
             language: @await Html.PartialAsync("_GridLocalization"),            
             lengthMenu: [@Model.LengthMenu],
             ordering: @Model.Ordering.ToString().ToLower(),

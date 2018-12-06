@@ -8,6 +8,14 @@ namespace Nop.Web.Framework.DataTables
     /// </summary>
     public partial class DataTablesModel : BaseNopModel
     {
+        #region Const
+
+        private const string DEFAULT_DOM = "lrtip";
+
+        private const string DEFAULT_PAGING_TYPE = "full_numbers";
+
+        #endregion
+
         #region Ctor
 
         /// <summary>
@@ -15,9 +23,10 @@ namespace Nop.Web.Framework.DataTables
         /// </summary>
         public DataTablesModel()
         {
-            this.Dom = "lrtip";
+            this.Dom = DEFAULT_DOM;
             this.Ordering = false;
-            this.Paging = true;            
+            this.Paging = true;
+            this.PagingType = DEFAULT_PAGING_TYPE;
         }
 
         #endregion
@@ -64,6 +73,10 @@ namespace Nop.Web.Framework.DataTables
         /// Enable or disable table pagination.
         /// </summary>
         public bool Paging { get; set; }
+        /// <summary>
+        /// Pagination button display options.
+        /// </summary>
+        public string PagingType { get; set; }
         /// <summary>
         /// This parameter allows you to readily specify the entries in the length drop down select list that DataTables shows when pagination is enabled.
         /// </summary>
