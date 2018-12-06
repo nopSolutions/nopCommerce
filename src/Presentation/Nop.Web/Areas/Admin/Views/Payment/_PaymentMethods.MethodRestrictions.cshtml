@@ -41,7 +41,7 @@
                     });
                 </script>
                 <table class="table table-hover table-bordered">
-                    <tbody>
+                    <thead>
                         <tr>
                             <th scope="col" style="padding-top: 14px;">
                                 <strong>@T("Admin.Configuration.Payment.MethodRestrictions.Country")</strong>
@@ -59,6 +59,8 @@
                                 </th>
                             }
                         </tr>
+                    </thead>
+                    <tbody>
                         @foreach (var c in Model.PaymentMethodRestriction.AvailableCountries)
                         {
                             <tr>

@@ -79,7 +79,8 @@
                 </text>
             }
             paging: @Model.Paging.ToString().ToLower(),
-            language: @await Html.PartialAsync("_GridLocalization"),
+            pagingType: "full_numbers",
+            language: @await Html.PartialAsync("_GridLocalization"),            
             lengthMenu: [@Model.LengthMenu],
             ordering: @Model.Ordering.ToString().ToLower(),
             fixedHeader: @Model.FixedHeader.ToString().ToLower(),
