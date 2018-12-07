@@ -1311,8 +1311,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 searchModel.LoadNotShipped,
                 startDateValue,
                 endDateValue,
-                (searchModel.Start / searchModel.Length),
-                searchModel.Length);
+                searchModel.Page - 1,
+                searchModel.PageSize);
 
             //prepare list model
             var model = new ShipmentListModel

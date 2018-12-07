@@ -860,7 +860,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 warehouseId: searchModel.SearchWarehouseId,
                 productType: searchModel.SearchProductTypeId > 0 ? (ProductType?)searchModel.SearchProductTypeId : null,
                 keywords: searchModel.SearchProductName,
-                pageIndex: (searchModel.Start / searchModel.Length), pageSize: searchModel.Length,
+                pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize,
                 overridePublished: overridePublished);
 
             //prepare list model

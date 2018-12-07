@@ -14,8 +14,8 @@ namespace Nop.Web.Framework.Models
         public BaseSearchModel()
         {
             //set the default values
-            this.Page = 1;
-            this.PageSize = 10;
+            this.Start = 0;
+            this.Length = 10;
         }
 
         #endregion
@@ -25,12 +25,20 @@ namespace Nop.Web.Framework.Models
         /// <summary>
         /// Gets or sets a page number
         /// </summary>
-        public int Page { get; set; }
+        public int Page
+        {
+            set { }
+            get => (this.Start / this.Length) + 1;
+        }
 
         /// <summary>
         /// Gets or sets a page size
         /// </summary>
-        public int PageSize { get; set; }
+        public int PageSize
+        {
+            set { }
+            get => this.Length;
+        }
 
         /// <summary>
         /// Gets or sets a comma-separated list of available page sizes
@@ -68,8 +76,8 @@ namespace Nop.Web.Framework.Models
         {
             var adminAreaSettings = EngineContext.Current.Resolve<AdminAreaSettings>();
 
-            this.Page = 1;
-            this.PageSize = adminAreaSettings.DefaultGridPageSize;
+            this.Start = 0;
+            this.Length = adminAreaSettings.DefaultGridPageSize;
             this.AvailablePageSizes = adminAreaSettings.GridPageSizes;
         }
 
@@ -80,8 +88,8 @@ namespace Nop.Web.Framework.Models
         {
             var adminAreaSettings = EngineContext.Current.Resolve<AdminAreaSettings>();
 
-            this.Page = 1;
-            this.PageSize = adminAreaSettings.PopupGridPageSize;
+            this.Start = 0;
+            this.Length = adminAreaSettings.PopupGridPageSize;
             this.AvailablePageSizes = adminAreaSettings.GridPageSizes;
         }
 
