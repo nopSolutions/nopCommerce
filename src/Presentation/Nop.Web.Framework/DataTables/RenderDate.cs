@@ -13,6 +13,7 @@
 
         /// <summary>
         /// Gets or sets format date (moment.js)
+        /// See also "http://momentjs.com/"
         /// </summary>
         public string Format { get; set; }
     }

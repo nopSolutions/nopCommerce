@@ -5,6 +5,9 @@
     /// </summary>
     public abstract class Render
     {
+        /// <summary>
+        /// Gets or sets type of render
+        /// </summary>
         public RenderType Type { get; set; }
     };    
 }
