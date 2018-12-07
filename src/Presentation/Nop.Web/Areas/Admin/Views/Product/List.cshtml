@@ -1,5 +1,7 @@
 ﻿@model ProductSearchModel
 
+@using Nop.Core.Domain.Catalog;
+
 @{
     //page title
     ViewBag.Title = T("Admin.Catalog.Products").Text;
@@ -190,117 +192,125 @@
 
                 <div class="panel panel-default">
                     <div class="panel-body">
+
+                        <script>
+                            function renderColumnPrice(data, type, row, meta) {
+                                return (row.ProductTypeId != @((int)ProductType.GroupedProduct) ) ? data : null;
+                            }
+                        </script>
+
                         @await Html.PartialAsync("Table", Model.Grid)
+
 
                         @*<div id="products-grid"></div>*@
 
                         @*<script>
-                            $(document).ready(function() {
-                                $("#products-grid").kendoGrid({
-                                    dataSource: {
-                                        type: "json",
-                                        transport: {
-                                            read: {
-                                                url: "@Html.Raw(Url.Action("ProductList", "Product"))",
-                                                type: "POST",
-                                                dataType: "json",
-                                                data: function() {
-                                                    var data = {
-                                                        SearchProductName: $('#@Html.IdFor(model => model.SearchProductName)').val(),
-                                                        SearchCategoryId: $('#SearchCategoryId').val(),
-                                                        SearchIncludeSubCategories: $('#@Html.IdFor(model => model.SearchIncludeSubCategories)').is(':checked'),
-                                                        SearchManufacturerId: $('#SearchManufacturerId').val(),
-                                                        SearchStoreId: $('#SearchStoreId').val(),
-                                                        SearchWarehouseId: $('#SearchWarehouseId').val(),
-                                                        SearchVendorId: $('#SearchVendorId').val(),
-                                                        SearchProductTypeId: $('#SearchProductTypeId').val(),
-                                                        SearchPublishedId: $('#SearchPublishedId').val()
-                                                    };
-                                                    addAntiForgeryToken(data);
-                                                    return data;
-                                                }
-                                            }
-                                        },
-                                        schema: {
-                                            data: "Data",
-                                            total: "Total",
-                                            errors: "Errors"
-                                        },
-                                        error: function(e) {
-                                            display_kendoui_grid_error(e);
-                                            // Cancel the changes
-                                            this.cancelChanges();
-                                        },
-                                        pageSize: @(Model.PageSize),
-                                        serverPaging: true,
-                                        serverFiltering: true,
-                                        serverSorting: true
-                                    },
-                                    pageable: {
-                                        refresh: true,
-                                        pageSizes: [@(Model.AvailablePageSizes)],
-                                        @await Html.PartialAsync("_GridPagerMessages")
-                                    },
-                                    editable: {
-                                        confirmation: "@T("Admin.Common.DeleteConfirmation")",
-                                        mode: "inline"
-                                    },
-                                    scrollable: false,
-                                    dataBound: onDataBound,
-                                    columns: [
-                                        {
-                                            field: "Id",
-                                            headerTemplate: "<input id='mastercheckbox' type='checkbox'/>",
-                                            headerAttributes: { style: "text-align:center" },
-                                            attributes: { style: "text-align:center" },
-                                            template: "<input type='checkbox' value='#=Id#' class='checkboxGroups'/>",
-                                            width: 50
-                                        },
-                                        {
-                                            field: "PictureThumbnailUrl",
-                                            title: "@T("Admin.Catalog.Products.Fields.PictureThumbnailUrl")",
-                                            template: '<img src="#=PictureThumbnailUrl#" />',
-                                            width: 100
-                                        },
-                                        {
-                                            field: "Name",
-                                            title: "@T("Admin.Catalog.Products.Fields.Name")",
-                                            width: 300
-                                        }, {
-                                            field: "Sku",
-                                            title: "@T("Admin.Catalog.Products.Fields.Sku")",
-                                            width: 100
-                                        }, {
-                                            field: "Price",
-                                            title: "@T("Admin.Catalog.Products.Fields.Price")",
-                                            width: 150,
-                                            //if not a grouped product, then display
-                                            template: "# if(ProductTypeId != @((int) ProductType.GroupedProduct)) {# #:Price# #}  #"
-                                        }, {
-                                            field: "StockQuantityStr",
-                                            title: "@T("Admin.Catalog.Products.Fields.StockQuantity")",
-                                            width: 100
-                                        }, {
-                                            field: "ProductTypeName",
-                                            title: "@T("Admin.Catalog.Products.Fields.ProductType")",
-                                            width: 100
-                                        }, {
-                                            field: "Published",
-                                            title: "@T("Admin.Catalog.Products.Fields.Published")",
-                                            width: 100,
-                                            template: '# if(Published) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
-                                        }, {
-                                            field: "Id",
-                                            title: "@T("Admin.Common.Edit")",
-                                            width: 100,
-                                            headerAttributes: { style: "text-align:center" },
-                                            attributes: { style: "text-align:center" },
-                                            template: '<a class="btn btn-default" href="Edit/#=Id#"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>'
-                                        }
-                                    ]
-                                });
-                            });
-                        </script>*@
+            $(document).ready(function() {
+                $("#products-grid").kendoGrid({
+                    dataSource: {
+                        type: "json",
+                        transport: {
+                            read: {
+                                url: "@Html.Raw(Url.Action("ProductList", "Product"))",
+                                type: "POST",
+                                dataType: "json",
+                                data: function() {
+                                    var data = {
+                                        SearchProductName: $('#@Html.IdFor(model => model.SearchProductName)').val(),
+                                        SearchCategoryId: $('#SearchCategoryId').val(),
+                                        SearchIncludeSubCategories: $('#@Html.IdFor(model => model.SearchIncludeSubCategories)').is(':checked'),
+                                        SearchManufacturerId: $('#SearchManufacturerId').val(),
+                                        SearchStoreId: $('#SearchStoreId').val(),
+                                        SearchWarehouseId: $('#SearchWarehouseId').val(),
+                                        SearchVendorId: $('#SearchVendorId').val(),
+                                        SearchProductTypeId: $('#SearchProductTypeId').val(),
+                                        SearchPublishedId: $('#SearchPublishedId').val()
+                                    };
+                                    addAntiForgeryToken(data);
+                                    return data;
+                                }
+                            }
+                        },
+                        schema: {
+                            data: "Data",
+                            total: "Total",
+                            errors: "Errors"
+                        },
+                        error: function(e) {
+                            display_kendoui_grid_error(e);
+                            // Cancel the changes
+                            this.cancelChanges();
+                        },
+                        pageSize: @(Model.PageSize),
+                        serverPaging: true,
+                        serverFiltering: true,
+                        serverSorting: true
+                    },
+                    pageable: {
+                        refresh: true,
+                        pageSizes: [@(Model.AvailablePageSizes)],
+                        @await Html.PartialAsync("_GridPagerMessages")
+                    },
+                    editable: {
+                        confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                        mode: "inline"
+                    },
+                    scrollable: false,
+                    dataBound: onDataBound,
+                    columns: [
+                        {
+                            field: "Id",
+                            headerTemplate: "<input id='mastercheckbox' type='checkbox'/>",
+                            headerAttributes: { style: "text-align:center" },
+                            attributes: { style: "text-align:center" },
+                            template: "<input type='checkbox' value='#=Id#' class='checkboxGroups'/>",
+                            width: 50
+                        },
+                        {
+                            field: "PictureThumbnailUrl",
+                            title: "@T("Admin.Catalog.Products.Fields.PictureThumbnailUrl")",
+                            template: '<img src="#=PictureThumbnailUrl#" />',
+                            width: 100
+                        },
+                        {
+                            field: "Name",
+                            title: "@T("Admin.Catalog.Products.Fields.Name")",
+                            width: 300
+                        }, {
+                            field: "Sku",
+                            title: "@T("Admin.Catalog.Products.Fields.Sku")",
+                            width: 100
+                        }, {
+                            field: "Price",
+                            title: "@T("Admin.Catalog.Products.Fields.Price")",
+                            width: 150,
+                            //if not a grouped product, then display
+                            template: "# if(ProductTypeId != @((int) ProductType.GroupedProduct)) {# #:Price# #}  #"
+                        }, {
+                            field: "StockQuantityStr",
+                            title: "@T("Admin.Catalog.Products.Fields.StockQuantity")",
+                            width: 100
+                        }, {
+                            field: "ProductTypeName",
+                            title: "@T("Admin.Catalog.Products.Fields.ProductType")",
+                            width: 100
+                        }, {
+                            field: "Published",
+                            title: "@T("Admin.Catalog.Products.Fields.Published")",
+                            width: 100,
+                            template: '# if(Published) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
+                        }, {
+                            field: "Id",
+                            title: "@T("Admin.Common.Edit")",
+                            width: 100,
+                            headerAttributes: { style: "text-align:center" },
+                            attributes: { style: "text-align:center" },
+                            template: '<a class="btn btn-default" href="Edit/#=Id#"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>'
+                        }
+                    ]
+                });
+            });
+        </script>*@
                     </div>
                 </div>
             </div>

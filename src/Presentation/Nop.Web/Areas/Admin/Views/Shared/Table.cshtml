@@ -152,15 +152,15 @@
                                     case RenderType.Link:
                                         var link = (RenderLink)@column.Render;
                                         <Text>
-                                            render: function (data, type, full, meta) {
-                                                return '<a href="@GetUrl(@link.Url)' + full.@link.Url.DataId + '">' + @link.Title + '</a>'
+                                            render: function (data, type, row, meta) {
+                                                return '<a href="@GetUrl(@link.Url)' + row.@link.Url.DataId + '">' + @link.Title + '</a>'
                                             }
                                         </text>
                                         break;
                                     case RenderType.Date:
                                         var date = (RenderDate)@column.Render;
                                         <Text>
-                                            render: function (data, type, full, meta) {
+                                            render: function (data, type, row, meta) {
                                                 return moment(data).locale("@locate").format("@date.Format");
                                             }
                                         </text>
@@ -168,7 +168,7 @@
                                     case RenderType.Button:
                                         var button = (RenderButton)@column.Render;
                                         <Text>
-                                            render : function(data, type, full, meta) {
+                                            render: function (data, type, row, meta) {
                                                 return '<a href="#" class="@GetEnumValue(typeof(StyleButton), button.Style)" onclick=ActionData("' + data + '");>@button.Title</a>'
                                             }
                                         </text>
@@ -177,7 +177,7 @@
                                         var buttonEdit = (RenderButtonEdit)@column.Render;
 
                                         <Text>
-                                            render : function(data, type, full, meta) {
+                                            render: function (data, type, row, meta) {
                                                 return '<a class="@GetEnumValue(typeof(StyleButton), buttonEdit.Style)" href="@GetUrl(buttonEdit.Url)' + data + '"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>'
                                             }
                                         </text>
@@ -185,7 +185,7 @@
                                     case RenderType.Picture:
                                         var picture = (RenderPicture)@column.Render;
                                         <Text>
-                                            render : function(data, type, full, meta) {
+                                            render: function (data, type, row, meta) {
                                                 return '<img src="' + @picture.Src + '" />'
                                             }
                                         </text>
@@ -193,7 +193,7 @@
                                     case RenderType.Checkbox:
                                         var checkBox = (RenderCheckBox)@column.Render;
                                         <text>
-                                            render: function (data, type, row) {
+                                            render: function (data, type, row, meta) {
                                                 return (data == "true") ? "<input name='@checkBox.Name' value='" + row.Id + "' type='checkbox' class='checkboxGroups' checked='checked'/>"
                                                     : "<input name='@checkBox.Name' value='" + row.Id + "' type='checkbox' class='checkboxGroups'/>";
                                             }
@@ -209,7 +209,9 @@
                                     case RenderType.Custom:
                                         var custom = (RenderCustom)@column.Render;
                                         <Text>
-                                            render : @(Html.Raw(JavaScriptEncoder.Default.Encode(custom.Function)))
+                                            render: function (data, type, row, meta) {
+                                                return @(custom.FunctionName)(data, type, row, meta)
+                                            }
                                         </text>
                                         break;
                                 }

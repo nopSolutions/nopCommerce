@@ -5,15 +5,16 @@
     /// </summary>
     public partial class RenderCustom : Render
     {
-        public RenderCustom(string function)
+        public RenderCustom(string functionName)
         {
             this.Type = RenderType.Custom;
-            this.Function = function;
+            this.FunctionName = functionName;
         }
 
         /// <summary>
-        /// Gets or sets custom render function (js)
+        /// Gets or sets custom render function name(js)
+        /// See also https://datatables.net/reference/option/columns.render
         /// </summary>
-        public string Function { get; set; }
+        public string FunctionName { get; set; }
     }
 }

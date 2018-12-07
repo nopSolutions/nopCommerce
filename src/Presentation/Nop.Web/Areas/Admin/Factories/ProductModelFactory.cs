@@ -710,7 +710,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     Data = nameof(dataModel.Price),
                     Title = _localizationService.GetResource("Admin.Catalog.Products.Fields.Price"),
                     Width = "150",
-                    Render = new RenderCustom("function(data, type, row) { return (row.ProductTypeId != " + ((int)ProductType.GroupedProduct) + ") ? data : null; }")
+                    Render = new RenderCustom("renderColumnPrice")
                 },
                 new ColumnProperty()
                 {
