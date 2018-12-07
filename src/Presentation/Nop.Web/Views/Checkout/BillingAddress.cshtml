@@ -32,6 +32,12 @@
                         <div class="title">
                             <strong>@T("Checkout.SelectBillingAddress")</strong>
                         </div>
+                         @if (Model.InvalidExistingAddresses.Count > 0)
+                         {
+                             <label class="min-amount-warning">
+                                 @string.Format(T("Checkout.Addresses.Invalid").Text, Model.InvalidExistingAddresses.Count)
+                             </label>
+                         }
                         <div class="address-grid">
                             @foreach (var item in Model.ExistingAddresses)
                             {
@@ -76,18 +82,18 @@
                                                 @item.Address2
                                             </li>
                                         }
-                                        @if (item.CityEnabled && !string.IsNullOrEmpty(item.City)|| 
-                                            item.CountyEnabled && !string.IsNullOrEmpty(item.County) || 
-                                            item.StateProvinceEnabled && !string.IsNullOrEmpty(item.StateProvinceName) || 
-                                            item.ZipPostalCodeEnabled && !string.IsNullOrEmpty(item.ZipPostalCode))
+                                        @if (item.CityEnabled && !string.IsNullOrEmpty(item.City) ||
+                                          item.CountyEnabled && !string.IsNullOrEmpty(item.County) ||
+                                          item.StateProvinceEnabled && !string.IsNullOrEmpty(item.StateProvinceName) ||
+                                          item.ZipPostalCodeEnabled && !string.IsNullOrEmpty(item.ZipPostalCode))
                                         {
                                             <li class="city-state-zip">
                                                 @if (item.CityEnabled && !string.IsNullOrEmpty(item.City))
                                                 {
                                                     @item.City
-                                                    @if (item.CountyEnabled && !string.IsNullOrEmpty(item.County) || 
-                                                        item.StateProvinceEnabled && !string.IsNullOrEmpty(item.StateProvinceName) || 
-                                                        item.ZipPostalCodeEnabled && !string.IsNullOrEmpty(item.ZipPostalCode))
+                                                    @if (item.CountyEnabled && !string.IsNullOrEmpty(item.County) ||
+                                                      item.StateProvinceEnabled && !string.IsNullOrEmpty(item.StateProvinceName) ||
+                                                      item.ZipPostalCodeEnabled && !string.IsNullOrEmpty(item.ZipPostalCode))
                                                     {
                                                         <text>,</text>
                                                     }
@@ -95,8 +101,8 @@
                                                 @if (item.CountyEnabled && !string.IsNullOrEmpty(item.County))
                                                 {
                                                     @item.County
-                                                    @if (item.StateProvinceEnabled && !string.IsNullOrEmpty(item.StateProvinceName) || 
-                                                        item.ZipPostalCodeEnabled && !string.IsNullOrEmpty(item.ZipPostalCode))
+                                                    @if (item.StateProvinceEnabled && !string.IsNullOrEmpty(item.StateProvinceName) ||
+                                                      item.ZipPostalCodeEnabled && !string.IsNullOrEmpty(item.ZipPostalCode))
                                                     {
                                                         <text>,</text>
                                                     }
@@ -129,7 +135,7 @@
                                         }
                                     </ul>
                                     <div class="select-button">
-                                        <input type="button" value="@T("Checkout.BillToThisAddress")" class="button-1 select-billing-address-button" onclick="selectBillingAddress@(item.Id)()"/>
+                                        <input type="button" value="@T("Checkout.BillToThisAddress")" class="button-1 select-billing-address-button" onclick="selectBillingAddress@(item.Id)()" />
                                         <script asp-location="Footer">
                                             function selectBillingAddress@(item.Id)() {
                                                 if ($('#@Html.IdFor(model => model.ShipToSameAddress)')

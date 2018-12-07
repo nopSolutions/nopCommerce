@@ -14469,6 +14469,9 @@
   <LocaleResource Name="Checkout">
     <Value>Checkout</Value>
   </LocaleResource>
+  <LocaleResource Name="Checkout.Addresses.Invalid">
+    <Value>You have {0} invalid address(es)</Value>
+  </LocaleResource>
   <LocaleResource Name="Checkout.BillingAddress">
     <Value>Billing address</Value>
   </LocaleResource>

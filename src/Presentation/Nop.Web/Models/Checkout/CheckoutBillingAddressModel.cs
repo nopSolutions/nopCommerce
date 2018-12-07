@@ -9,10 +9,12 @@ namespace Nop.Web.Models.Checkout
         public CheckoutBillingAddressModel()
         {
             ExistingAddresses = new List<AddressModel>();
+            InvalidExistingAddresses = new List<AddressModel>();
             BillingNewAddress = new AddressModel();
         }
-        
+
         public IList<AddressModel> ExistingAddresses { get; set; }
+        public IList<AddressModel> InvalidExistingAddresses { get; set; }
 
         public AddressModel BillingNewAddress { get; set; }
 

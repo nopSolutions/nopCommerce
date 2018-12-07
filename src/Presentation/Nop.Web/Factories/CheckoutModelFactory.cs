@@ -30,6 +30,7 @@ namespace Nop.Web.Factories
         private readonly AddressSettings _addressSettings;
         private readonly CommonSettings _commonSettings;
         private readonly IAddressModelFactory _addressModelFactory;
+        private readonly IAddressService _addressService;
         private readonly ICountryService _countryService;
         private readonly ICurrencyService _currencyService;
         private readonly IGenericAttributeService _genericAttributeService;
@@ -58,6 +59,7 @@ namespace Nop.Web.Factories
         public CheckoutModelFactory(AddressSettings addressSettings,
             CommonSettings commonSettings,
             IAddressModelFactory addressModelFactory,
+            IAddressService addressService,
             ICountryService countryService,
             ICurrencyService currencyService,
             IGenericAttributeService genericAttributeService,
@@ -82,6 +84,7 @@ namespace Nop.Web.Factories
             this._addressSettings = addressSettings;
             this._commonSettings = commonSettings;
             this._addressModelFactory = addressModelFactory;
+            this._addressService = addressService;
             this._countryService = countryService;
             this._currencyService = currencyService;
             this._genericAttributeService = genericAttributeService;
@@ -145,7 +148,15 @@ namespace Nop.Web.Factories
                     address: address,
                     excludeProperties: false,
                     addressSettings: _addressSettings);
-                model.ExistingAddresses.Add(addressModel);
+
+                if (_addressService.IsAddressValid(address))
+                {
+                    model.ExistingAddresses.Add(addressModel);
+                }
+                else
+                {
+                    model.InvalidExistingAddresses.Add(addressModel);
+                }
             }
 
             //new address
@@ -254,7 +265,15 @@ namespace Nop.Web.Factories
                     address: address,
                     excludeProperties: false,
                     addressSettings: _addressSettings);
-                model.ExistingAddresses.Add(addressModel);
+
+                if (_addressService.IsAddressValid(address))
+                {
+                    model.ExistingAddresses.Add(addressModel);
+                }
+                else
+                {
+                    model.InvalidExistingAddresses.Add(addressModel);
+                }
             }
 
             //new address
