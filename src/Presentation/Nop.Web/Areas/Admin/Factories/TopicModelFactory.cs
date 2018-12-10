@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Nop.Core;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Topics;
 using Nop.Services.Localization;
 using Nop.Services.Seo;
@@ -22,6 +23,7 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
+        private readonly CatalogSettings _catalogSettings;
         private readonly IAclSupportedModelFactory _aclSupportedModelFactory;
         private readonly IActionContextAccessor _actionContextAccessor;
         private readonly IBaseAdminModelFactory _baseAdminModelFactory;
@@ -37,7 +39,8 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #region Ctor
 
-        public TopicModelFactory(IAclSupportedModelFactory aclSupportedModelFactory,
+        public TopicModelFactory(CatalogSettings catalogSettings,
+            IAclSupportedModelFactory aclSupportedModelFactory,
             IActionContextAccessor actionContextAccessor,
             IBaseAdminModelFactory baseAdminModelFactory,
             ILocalizationService localizationService,
@@ -48,6 +51,7 @@ namespace Nop.Web.Areas.Admin.Factories
             IUrlRecordService urlRecordService,
             IWebHelper webHelper)
         {
+            this._catalogSettings = catalogSettings;
             this._aclSupportedModelFactory = aclSupportedModelFactory;
             this._actionContextAccessor = actionContextAccessor;
             this._baseAdminModelFactory = baseAdminModelFactory;
@@ -76,6 +80,8 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare available stores
             _baseAdminModelFactory.PrepareStores(searchModel.AvailableStores);
+
+            searchModel.HideStoresList = _catalogSettings.IgnoreStoreLimitations || searchModel.AvailableStores.SelectionIsNotPossible();
 
             //prepare page parameters
             searchModel.SetGridPageSize();
