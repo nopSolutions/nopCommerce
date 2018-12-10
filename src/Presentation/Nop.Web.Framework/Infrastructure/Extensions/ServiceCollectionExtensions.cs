@@ -244,8 +244,11 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             //add basic MVC feature
             var mvcBuilder = services.AddMvc();
 
-            //sets the default value of settings on MvcOptions to match the behavior of asp.net core mvc 2.1
-            mvcBuilder.SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            //we use legacy (from previous versions) routing logic
+            mvcBuilder.AddMvcOptions(options => options.EnableEndpointRouting = false);
+
+            //sets the default value of settings on MvcOptions to match the behavior of asp.net core mvc 2.2
+            mvcBuilder.SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             var nopConfig = services.BuildServiceProvider().GetRequiredService<NopConfig>();
             if (nopConfig.UseSessionStateTempDataProvider)
