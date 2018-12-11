@@ -1233,3 +1233,11 @@ GO
 DELETE FROM [Setting]
 WHERE [Name] = N'adminareasettings.usenestedsetting'
 GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'commonsettings.minificationenabled')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'commonsettings.minificationenabled', N'true', 0)
+END
+GO

@@ -4479,7 +4479,7 @@ namespace Nop.Services.Installation
             //__searchEngineUser.CustomerCustomerRoleMappings.Add(new CustomerCustomerRoleMapping { CustomerRole = crGuests });
             searchEngineUser.AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerRole = crGuests });
             _customerRepository.Insert(searchEngineUser);
-            
+
             //built-in user for background tasks
             var backgroundTaskUser = new Customer
             {
@@ -4670,7 +4670,7 @@ namespace Nop.Services.Installation
                 Note = "Order paid",
                 Order = firstOrder
             });
-            
+
             //second order
             var secondCustomer = _customerRepository.Table.First(c => c.Email.Equals("arthur_holmes@nopCommerce.com"));
             var secondOrder = new Order
@@ -4788,7 +4788,7 @@ namespace Nop.Services.Installation
                 RentalEndDateUtc = null
             };
             _orderItemRepository.Insert(secondOrderItem2);
-            
+
             //third order
             var thirdCustomer = _customerRepository.Table.First(c => c.Email.Equals("james_pan@nopCommerce.com"));
             var thirdOrder = new Order
@@ -5982,7 +5982,8 @@ namespace Nop.Services.Installation
                 SupportPreviousNopcommerceVersions = true,
                 UseResponseCompression = false,
                 StaticFilesCacheControl = "public,max-age=604800",
-                FaviconAndAppIconsHeadCode = "<link rel=\"apple-touch-icon\" sizes=\"180x180\" href=\"/icons/icons_0/apple-touch-icon.png\"><link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"/icons/icons_0/favicon-32x32.png\"><link rel=\"icon\" type=\"image/png\" sizes=\"192x192\" href=\"/icons/icons_0/android-chrome-192x192.png\"><link rel=\"icon\" type=\"image/png\" sizes=\"16x16\" href=\"/icons/icons_0/favicon-16x16.png\"><link rel=\"manifest\" href=\"/icons/icons_0/site.webmanifest\"><link rel=\"mask-icon\" href=\"/icons/icons_0/safari-pinned-tab.svg\" color=\"#5bbad5\"><link rel=\"shortcut icon\" href=\"/icons/icons_0/favicon.ico\"><meta name=\"msapplication-TileColor\" content=\"#2d89ef\"><meta name=\"msapplication-TileImage\" content=\"/icons/icons_0/mstile-144x144.png\"><meta name=\"msapplication-config\" content=\"/icons/icons_0/browserconfig.xml\"><meta name=\"theme-color\" content=\"#ffffff\">"
+                FaviconAndAppIconsHeadCode = "<link rel=\"apple-touch-icon\" sizes=\"180x180\" href=\"/icons/icons_0/apple-touch-icon.png\"><link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"/icons/icons_0/favicon-32x32.png\"><link rel=\"icon\" type=\"image/png\" sizes=\"192x192\" href=\"/icons/icons_0/android-chrome-192x192.png\"><link rel=\"icon\" type=\"image/png\" sizes=\"16x16\" href=\"/icons/icons_0/favicon-16x16.png\"><link rel=\"manifest\" href=\"/icons/icons_0/site.webmanifest\"><link rel=\"mask-icon\" href=\"/icons/icons_0/safari-pinned-tab.svg\" color=\"#5bbad5\"><link rel=\"shortcut icon\" href=\"/icons/icons_0/favicon.ico\"><meta name=\"msapplication-TileColor\" content=\"#2d89ef\"><meta name=\"msapplication-TileImage\" content=\"/icons/icons_0/mstile-144x144.png\"><meta name=\"msapplication-config\" content=\"/icons/icons_0/browserconfig.xml\"><meta name=\"theme-color\" content=\"#ffffff\">",
+                MinificationEnabled = true
             });
 
             settingService.SaveSetting(new SeoSettings
@@ -6829,7 +6830,7 @@ namespace Nop.Services.Installation
                 .Table.FirstOrDefault(pt => pt.Name == "Products in Grid or Lines");
             if (categoryTemplateInGridAndLines == null)
                 throw new Exception("Category template cannot be loaded");
-            
+
             //categories
             var allCategories = new List<Category>();
             var categoryComputers = new Category
@@ -8329,7 +8330,7 @@ namespace Nop.Services.Installation
                 }
             });
         }
-        
+
         protected virtual void InstallElectronics(ProductTemplate productTemplateSimple, ProductTemplate productTemplateGrouped, List<Product> allProducts, string sampleImagesPath, IPictureService pictureService, List<RelatedProduct> relatedProducts)
         {
             //this one is a grouped product with two associated ones
@@ -9703,7 +9704,7 @@ namespace Nop.Services.Installation
             AddProductTag(productLeviJeans, "jeans");
             AddProductTag(productLeviJeans, "apparel");
 
-             var productObeyHat = new Product
+            var productObeyHat = new Product
             {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
@@ -10770,7 +10771,7 @@ namespace Nop.Services.Installation
             InstallJewelry(productTemplateSimple, allProducts, sampleImagesPath, pictureService, relatedProducts);
             //gift cards
             InstallGiftCards(productTemplateSimple, allProducts, sampleImagesPath, pictureService, relatedProducts, deliveryDate);
-            
+
             //search engine names
             foreach (var product in allProducts)
             {
@@ -10786,7 +10787,7 @@ namespace Nop.Services.Installation
 
             //related products
             _relatedProductRepository.Insert(relatedProducts);
-           
+
             //reviews
             var random = new Random();
             foreach (var product in allProducts)
@@ -10819,7 +10820,7 @@ namespace Nop.Services.Installation
             }
 
             _productRepository.Update(allProducts);
-            
+
             //stock quantity history
             foreach (var product in allProducts)
             {
@@ -12293,7 +12294,7 @@ namespace Nop.Services.Installation
         private void AddProductTag(Product product, string tag)
         {
             var productTag = _productTagRepository.Table.FirstOrDefault(pt => pt.Name == tag);
-            bool exist = productTag != null;
+            var exist = productTag != null;
             if (productTag == null)
             {
                 productTag = new ProductTag
@@ -12354,7 +12355,7 @@ namespace Nop.Services.Installation
             InstallReturnRequestReasons();
             InstallReturnRequestActions();
 
-            if (!installSampleData) 
+            if (!installSampleData)
                 return;
 
             InstallCheckoutAttributes();
