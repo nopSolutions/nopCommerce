@@ -340,7 +340,7 @@ namespace Nop.Web.Factories
                     //we also ensure this it's not free shipping
                     priceModel.DisplayTaxShippingInfo = _catalogSettings.DisplayTaxShippingInfoProductBoxes && product.IsShipEnabled && !product.IsFreeShipping;
 
-                    //PAngV baseprice (used in Germany)
+                    //PAngV default baseprice (used in Germany)
                     priceModel.BasePricePAngV = _priceFormatter.FormatBasePrice(product, finalPriceWithDiscount);
                 }
             }
@@ -420,7 +420,7 @@ namespace Nop.Web.Factories
                     priceModel.Price = string.Format(_localizationService.GetResource("Products.PriceRangeFrom"),_priceFormatter.FormatPrice(finalPrice));
                     priceModel.PriceValue = finalPrice;
 
-                    //PAngV baseprice (used in Germany)
+                    //PAngV default baseprice (used in Germany)
                     priceModel.BasePricePAngV = _priceFormatter.FormatBasePrice(product, finalPriceBase);
                 }
             }
