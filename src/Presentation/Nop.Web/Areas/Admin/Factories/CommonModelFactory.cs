@@ -15,6 +15,7 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Security;
 using Nop.Core.Infrastructure;
 using Nop.Services.Authentication.External;
 using Nop.Services.Catalog;
@@ -80,6 +81,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IWorkContext _workContext;
         private readonly MeasureSettings _measureSettings;
         private readonly NopHttpClient _nopHttpClient;
+        private readonly ProxySettings _proxySettings;
 
         #endregion
 
@@ -117,7 +119,8 @@ namespace Nop.Web.Areas.Admin.Factories
             IWidgetPluginManager widgetPluginManager,
             IWorkContext workContext,
             MeasureSettings measureSettings,
-            NopHttpClient nopHttpClient)
+            NopHttpClient nopHttpClient,
+            ProxySettings proxySettings)
         {
             _adminAreaSettings = adminAreaSettings;
             _catalogSettings = catalogSettings;
@@ -152,6 +155,7 @@ namespace Nop.Web.Areas.Admin.Factories
             _workContext = workContext;
             _measureSettings = measureSettings;
             _nopHttpClient = nopHttpClient;
+            _proxySettings = proxySettings;
         }
 
         #endregion
@@ -659,6 +663,37 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
+        /// Prepare proxy connection warning model
+        /// </summary>
+        /// <param name="models">List of system warning models</param>
+        protected virtual void PrepareProxyConnectionWarningModel(IList<SystemWarningModel> models)
+        {
+            if (models == null)
+                throw new ArgumentNullException(nameof(models));
+
+            //whether proxy is enabled
+            if (!_proxySettings.Enabled)
+                return;
+
+            if (_webHelper.IsProxySettingsValid())
+            {
+                models.Add(new SystemWarningModel
+                {
+                    Level = SystemWarningLevel.Pass,
+                    Text = _localizationService.GetResource("Admin.System.Warnings.ProxyConnection.OK")
+                });
+            }
+            else
+            {
+                models.Add(new SystemWarningModel
+                {
+                    Level = SystemWarningLevel.Fail,
+                    Text = _localizationService.GetResource("Admin.System.Warnings.ProxyConnection.Failed")
+                });
+            }
+        }
+
+        /// <summary>
         /// Prepare system warning models
         /// </summary>
         /// <returns>List of system warning models</returns>
@@ -698,6 +733,9 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //not active plugins
             PreparePluginsEnabledWarningModel(models);
+
+            //proxy connection
+            PrepareProxyConnectionWarningModel(models);
 
             return models;
         }
