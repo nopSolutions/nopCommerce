@@ -102,7 +102,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 HideAdvertisements = _adminAreaSettings.HideAdvertisementsOnAdminArea
             };
 
-            var rssData = _cacheManager.Get(ModelCacheEventConsumer.OFFICIAL_NEWS_MODEL_KEY, () =>
+            var rssData = _cacheManager.Get(NopModelCacheDefaults.OfficialNewsModelKey, () =>
             {
                 //compose nopCommerce news RSS feed URL
                 var nopCommerceNewsUrl = string.Format(NOP_COMMERCE_NEWS_URL,

@@ -346,7 +346,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             foreach (var attribute in attributes)
             {
-                var controlId = $"product_attribute_{attribute.Id}";
+                var controlId = $"{NopAttributePrefixDefaults.Product}{attribute.Id}";
                 StringValues ctrlAttributes;
 
                 switch (attribute.AttributeControlType)
@@ -605,7 +605,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 var attribute = _productAttributeService.GetProductAttributeMappingById(model.SelectedProductAttributeId);
                 if (attribute != null)
                 {
-                    var controlId = $"product_attribute_{attribute.Id}";
+                    var controlId = $"{NopAttributePrefixDefaults.Product}{attribute.Id}";
                     switch (attribute.AttributeControlType)
                     {
                         case AttributeControlType.DropdownList:
@@ -2079,7 +2079,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 var xml = _exportManager.ExportProductsToXml(products);
 
-                return File(Encoding.UTF8.GetBytes(xml), "application/xml", "products.xml");
+                return File(Encoding.UTF8.GetBytes(xml), MimeTypes.ApplicationXml, "products.xml");
             }
             catch (Exception exc)
             {
@@ -2111,7 +2111,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             var xml = _exportManager.ExportProductsToXml(products);
 
-            return File(Encoding.UTF8.GetBytes(xml), "application/xml", "products.xml");
+            return File(Encoding.UTF8.GetBytes(xml), MimeTypes.ApplicationXml, "products.xml");
         }
 
         [HttpPost, ActionName("List")]

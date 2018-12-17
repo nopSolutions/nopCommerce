@@ -821,7 +821,7 @@ namespace Nop.Web.Areas.Admin.Factories
             model.BaseWeightIn = _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId).Name;
             model.BaseDimensionIn = _measureService.GetMeasureDimensionById(_measureSettings.BaseDimensionId).Name;
             model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
-            model.HasAvailableSpecificationAttributes = _cacheManager.Get(ModelCacheEventConsumer.SPEC_ATTRIBUTES_MODEL_KEY,
+            model.HasAvailableSpecificationAttributes = _cacheManager.Get(NopModelCacheDefaults.SpecAttributesModelKey,
                     () => _specificationAttributeService.GetSpecificationAttributesWithOptions()).Any();
 
             //prepare localized models
@@ -1433,7 +1433,7 @@ namespace Nop.Web.Areas.Admin.Factories
             {
                 return new AddSpecificationAttributeModel
                 {
-                    AvailableAttributes = _cacheManager.Get(ModelCacheEventConsumer.SPEC_ATTRIBUTES_MODEL_KEY,
+                    AvailableAttributes = _cacheManager.Get(NopModelCacheDefaults.SpecAttributesModelKey,
                             () => _specificationAttributeService.GetSpecificationAttributesWithOptions())
                         .Select(sa => new SelectListItem {Text = sa.Name, Value = sa.Id.ToString()})
                         .ToList(),
@@ -1459,7 +1459,7 @@ namespace Nop.Web.Areas.Admin.Factories
             model.AttributeTypeName = _localizationService.GetLocalizedEnum(attribute.AttributeType);
             model.AttributeName = attribute.SpecificationAttributeOption.SpecificationAttribute.Name;
 
-            model.AvailableAttributes = _cacheManager.Get(ModelCacheEventConsumer.SPEC_ATTRIBUTES_MODEL_KEY,
+            model.AvailableAttributes = _cacheManager.Get(NopModelCacheDefaults.SpecAttributesModelKey,
                     () => _specificationAttributeService.GetSpecificationAttributesWithOptions())
                 .Select(sa => new SelectListItem {Text = sa.Name, Value = sa.Id.ToString()})
                 .ToList();

@@ -29,14 +29,14 @@ namespace Nop.Web.Framework.Mvc.Rss
         /// <param name="item">XML view of rss item</param>
         public RssItem(XContainer item)
         {
-            var title = item.Element("title")?.Value ?? string.Empty;
-            var content = item.Element("content")?.Value ?? string.Empty;
+            var title = item.Element(NopRssDefaults.Title)?.Value ?? string.Empty;
+            var content = item.Element(NopRssDefaults.Content)?.Value ?? string.Empty;
             if (string.IsNullOrEmpty(content))
-                content = item.Element("description")?.Value ?? string.Empty;
-            var link = new Uri(item.Element("link")?.Value ?? string.Empty);
-            var pubDateValue = item.Element("pubDate")?.Value;
+                content = item.Element(NopRssDefaults.Description)?.Value ?? string.Empty;
+            var link = new Uri(item.Element(NopRssDefaults.Link)?.Value ?? string.Empty);
+            var pubDateValue = item.Element(NopRssDefaults.PubDate)?.Value;
             var pubDate = pubDateValue == null ? DateTimeOffset.Now : DateTimeOffset.ParseExact(pubDateValue, "r", null);
-            var id = item.Element("guid")?.Value ?? string.Empty;
+            var id = item.Element(NopRssDefaults.Guid)?.Value ?? string.Empty;
 
             Init(title, content, link, id, pubDate);
         }
@@ -51,11 +51,11 @@ namespace Nop.Web.Framework.Mvc.Rss
         /// <param name="pubDate">Last build date</param>
         private void Init(string title, string content, Uri link, string id, DateTimeOffset pubDate)
         {
-            this.Title = new XElement("title", title);
-            this.Content = new XElement("description", content);
-            this.Link = new XElement("link", link);
-            this.Id = new XElement("guid", new XAttribute("isPermaLink", false), id);
-            this.PubDate = new XElement("pubDate", pubDate.ToString("r"));
+            this.Title = new XElement(NopRssDefaults.Title, title);
+            this.Content = new XElement(NopRssDefaults.Description, content);
+            this.Link = new XElement(NopRssDefaults.Link, link);
+            this.Id = new XElement(NopRssDefaults.Guid, new XAttribute("isPermaLink", false), id);
+            this.PubDate = new XElement(NopRssDefaults.PubDate, pubDate.ToString("r"));
         }
 
         /// <summary>
@@ -64,7 +64,7 @@ namespace Nop.Web.Framework.Mvc.Rss
         /// <returns></returns>
         public XElement ToXElement()
         {
-            var element = new XElement("item", Id, Link, Title, Content);
+            var element = new XElement(NopRssDefaults.Item, Id, Link, Title, Content);  //__"item"
 
             foreach (var elementExtensions in ElementExtensions)
             {

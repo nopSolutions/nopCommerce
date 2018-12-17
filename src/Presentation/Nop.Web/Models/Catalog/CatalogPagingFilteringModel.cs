@@ -381,7 +381,7 @@ namespace Nop.Web.Models.Catalog
                 Enabled = false;
                 var optionIds = filterableSpecificationAttributeOptionIds != null
                     ? string.Join(",", filterableSpecificationAttributeOptionIds) : string.Empty;
-                var cacheKey = string.Format(ModelCacheEventConsumer.SPECS_FILTER_MODEL_KEY, optionIds, workContext.WorkingLanguage.Id);
+                var cacheKey = string.Format(NopModelCacheDefaults.SpecsFilterModelKey, optionIds, workContext.WorkingLanguage.Id);
 
                 var allOptions = specificationAttributeService.GetSpecificationAttributeOptionsByIds(filterableSpecificationAttributeOptionIds);
                 var allFilters = cacheManager.Get(cacheKey, () => allOptions.Select(sao =>
