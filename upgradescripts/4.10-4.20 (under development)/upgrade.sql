@@ -278,6 +278,9 @@ set @resources='
   <LocaleResource Name="Admin.DT.ZeroRecords">
     <Value>No matching records found</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.DT.LoaderIcon">
+    <Value><![CDATA[<i class=''fa fa-refresh fa-spin''></i>]]></Value>
+  </LocaleResource>
 </Language>
 '
 
