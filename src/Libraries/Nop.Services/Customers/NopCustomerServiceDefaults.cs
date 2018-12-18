@@ -90,5 +90,10 @@
         /// Gets a max username length
         /// </summary>
         public static int CustomerUsernameLength => 100;
+
+        /// <summary>
+        /// Default hash format for customer password
+        /// </summary>
+        public static string HashedPasswordFormat => "SHA512";
     }
 }

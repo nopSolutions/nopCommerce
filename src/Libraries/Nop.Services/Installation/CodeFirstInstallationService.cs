@@ -4206,7 +4206,7 @@ namespace Nop.Services.Installation
             //set hashed admin password
             var customerRegistrationService = EngineContext.Current.Resolve<ICustomerRegistrationService>();
             customerRegistrationService.ChangePassword(new ChangePasswordRequest(defaultUserEmail, false,
-                 PasswordFormat.Hashed, defaultUserPassword));
+                 PasswordFormat.Hashed, defaultUserPassword, true));
 
             //second user
             var secondUserEmail = "steve_gates@nopCommerce.com";
@@ -6192,7 +6192,7 @@ namespace Nop.Services.Installation
                 CheckUsernameAvailabilityEnabled = false,
                 AllowUsersToChangeUsernames = false,
                 DefaultPasswordFormat = PasswordFormat.Hashed,
-                HashedPasswordFormat = "SHA512",
+                HashedPasswordFormat = NopCustomerServiceDefaults.HashedPasswordFormat,
                 PasswordMinLength = 6,
                 PasswordRequireDigit = false,
                 PasswordRequireLowercase = false,

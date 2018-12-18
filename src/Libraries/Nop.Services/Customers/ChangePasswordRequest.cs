@@ -33,6 +33,11 @@ namespace Nop.Services.Customers
         public string OldPassword { get; set; }
 
         /// <summary>
+        /// Is first installation started
+        /// </summary>
+        public bool IsFirstInstall { get; set; }
+
+        /// <summary>
         /// Ctor
         /// </summary>
         /// <param name="email">Email</param>
@@ -48,6 +53,24 @@ namespace Nop.Services.Customers
             this.NewPasswordFormat = newPasswordFormat;
             this.NewPassword = newPassword;
             this.OldPassword = oldPassword;
+        }
+
+        /// <summary>
+        /// Ctor to use during first installation
+        /// </summary>
+        /// <param name="email">Email</param>
+        /// <param name="validateRequest">A value indicating whether we should validate request</param>
+        /// <param name="newPasswordFormat">Password format</param>
+        /// <param name="newPassword">New password</param>
+        /// <param name="isFirstInstall">A value indicating is first installation started</param>
+        public ChangePasswordRequest(string email, bool validateRequest,
+            PasswordFormat newPasswordFormat, string newPassword, bool isFirstInstall)
+        {
+            this.Email = email;
+            this.ValidateRequest = validateRequest;
+            this.NewPasswordFormat = newPasswordFormat;
+            this.NewPassword = newPassword;
+            this.IsFirstInstall = isFirstInstall;
         }
     }
 }
