@@ -366,7 +366,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost, ActionName("List")]
-        [FormValueRequired("plugin-applay-changes")]
+        [FormValueRequired("plugin-apply-changes")]
         public virtual IActionResult ApplyChanges()
         {
             return UninstallAndDeletePluginsIfNeed();

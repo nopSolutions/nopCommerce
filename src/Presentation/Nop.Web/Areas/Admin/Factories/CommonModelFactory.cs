@@ -438,7 +438,7 @@ namespace Nop.Web.Areas.Admin.Factories
             foreach (var collision in collisions)
             {
                 var pluginReferences = collision.GetCollision
-                    .Select(item=>string.Format(_localizationService.GetResource("Admin.System.Warnings.PluginrRequiredAssembly"), item.Key, item.Value))
+                    .Select(item=>string.Format(_localizationService.GetResource("Admin.System.Warnings.PluginRequiredAssembly"), item.Key, item.Value))
                     .Aggregate("", (curent, all) => all + ", " + curent).TrimEnd(',', ' ');
 
                 models.Add(new SystemWarningModel
