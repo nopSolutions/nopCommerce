@@ -21,7 +21,7 @@ namespace Nop.Services.Directory
 
         private readonly CurrencySettings _currencySettings;
         private readonly IEventPublisher _eventPublisher;
-        private readonly IPluginFinder _pluginFinder;
+        private readonly IPluginService _pluginService;
         private readonly IRepository<Currency> _currencyRepository;
         private readonly IStaticCacheManager _cacheManager;
         private readonly IStoreMappingService _storeMappingService;
@@ -32,14 +32,14 @@ namespace Nop.Services.Directory
 
         public CurrencyService(CurrencySettings currencySettings,
             IEventPublisher eventPublisher,
-            IPluginFinder pluginFinder,
+            IPluginService pluginService,
             IRepository<Currency> currencyRepository,
             IStaticCacheManager cacheManager,
             IStoreMappingService storeMappingService)
         {
             this._currencySettings = currencySettings;
             this._eventPublisher = eventPublisher;
-            this._pluginFinder = pluginFinder;
+            this._pluginService = pluginService;
             this._currencyRepository = currencyRepository;
             this._cacheManager = cacheManager;
             this._storeMappingService = storeMappingService;
@@ -355,7 +355,7 @@ namespace Nop.Services.Directory
         public virtual IExchangeRateProvider LoadActiveExchangeRateProvider(Customer customer = null)
         {
             var exchangeRateProvider = LoadExchangeRateProviderBySystemName(_currencySettings.ActiveExchangeRateProviderSystemName);
-            if (exchangeRateProvider == null || !_pluginFinder.AuthorizedForUser(exchangeRateProvider.PluginDescriptor, customer))
+            if (exchangeRateProvider == null || !_pluginService.AuthorizedForUser(exchangeRateProvider.PluginDescriptor, customer))
                 exchangeRateProvider = LoadAllExchangeRateProviders(customer).FirstOrDefault();
 
             return exchangeRateProvider;
@@ -368,7 +368,7 @@ namespace Nop.Services.Directory
         /// <returns>Found exchange rate provider</returns>
         public virtual IExchangeRateProvider LoadExchangeRateProviderBySystemName(string systemName)
         {
-            var descriptor = _pluginFinder.GetPluginDescriptorBySystemName<IExchangeRateProvider>(systemName);
+            var descriptor = _pluginService.GetPluginDescriptorBySystemName<IExchangeRateProvider>(systemName);
             return descriptor?.Instance<IExchangeRateProvider>();
         }
 
@@ -379,7 +379,7 @@ namespace Nop.Services.Directory
         /// <returns>Exchange rate providers</returns>
         public virtual IList<IExchangeRateProvider> LoadAllExchangeRateProviders(Customer customer = null)
         {
-            var exchangeRateProviders = _pluginFinder.GetPlugins<IExchangeRateProvider>(customer: customer);
+            var exchangeRateProviders = _pluginService.GetPlugins<IExchangeRateProvider>(customer: customer);
 
             return exchangeRateProviders.OrderBy(tp => tp.PluginDescriptor).ToList();
         }

@@ -78,9 +78,9 @@ namespace Nop.Services.Tests.Catalog
             _eventPublisher = new Mock<IEventPublisher>();
             _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
 
-            var pluginFinder = new PluginFinder(_eventPublisher.Object);
+            var pluginService = new PluginService(_eventPublisher.Object);
 
-            _currencyService = new CurrencyService(_currencySettings, null, pluginFinder, _currencyRepo.Object, cacheManager, _storeMappingService.Object);
+            _currencyService = new CurrencyService(_currencySettings, null, pluginService, _currencyRepo.Object, cacheManager, _storeMappingService.Object);
 
             _taxSettings = new TaxSettings();
 

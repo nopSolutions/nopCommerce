@@ -46,7 +46,7 @@ namespace Nop.Web.Controllers
         private readonly IOrderProcessingService _orderProcessingService;
         private readonly IOrderService _orderService;
         private readonly IPaymentService _paymentService;
-        private readonly IPluginFinder _pluginFinder;
+        private readonly IPluginService _pluginService;
         private readonly IShippingService _shippingService;
         private readonly IShoppingCartService _shoppingCartService;
         private readonly IStateProvinceService _stateProvinceService;
@@ -75,7 +75,7 @@ namespace Nop.Web.Controllers
             IOrderProcessingService orderProcessingService,
             IOrderService orderService,
             IPaymentService paymentService,
-            IPluginFinder pluginFinder,
+            IPluginService pluginService,
             IShippingService shippingService,
             IShoppingCartService shoppingCartService,
             IStateProvinceService stateProvinceService,
@@ -100,7 +100,7 @@ namespace Nop.Web.Controllers
             this._orderProcessingService = orderProcessingService;
             this._orderService = orderService;
             this._paymentService = paymentService;
-            this._pluginFinder = pluginFinder;
+            this._pluginService = pluginService;
             this._shippingService = shippingService;
             this._shoppingCartService = shoppingCartService;
             this._stateProvinceService = stateProvinceService;
@@ -748,8 +748,8 @@ namespace Nop.Web.Controllers
             var paymentMethodInst = _paymentService.LoadPaymentMethodBySystemName(paymentmethod);
             if (paymentMethodInst == null ||
                 !_paymentService.IsPaymentMethodActive(paymentMethodInst) ||
-                !_pluginFinder.AuthenticateStore(paymentMethodInst.PluginDescriptor, _storeContext.CurrentStore.Id) ||
-                !_pluginFinder.AuthorizedForUser(paymentMethodInst.PluginDescriptor, _workContext.CurrentCustomer))
+                !_pluginService.AuthenticateStore(paymentMethodInst.PluginDescriptor, _storeContext.CurrentStore.Id) ||
+                !_pluginService.AuthorizedForUser(paymentMethodInst.PluginDescriptor, _workContext.CurrentCustomer))
                 return PaymentMethod();
 
             //save
@@ -1019,8 +1019,8 @@ namespace Nop.Web.Controllers
                     var paymentMethodInst = _paymentService.LoadPaymentMethodBySystemName(selectedPaymentMethodSystemName);
                     if (paymentMethodInst == null ||
                         !_paymentService.IsPaymentMethodActive(paymentMethodInst) ||
-                        !_pluginFinder.AuthenticateStore(paymentMethodInst.PluginDescriptor, _storeContext.CurrentStore.Id) ||
-                        !_pluginFinder.AuthorizedForUser(paymentMethodInst.PluginDescriptor, _workContext.CurrentCustomer))
+                        !_pluginService.AuthenticateStore(paymentMethodInst.PluginDescriptor, _storeContext.CurrentStore.Id) ||
+                        !_pluginService.AuthorizedForUser(paymentMethodInst.PluginDescriptor, _workContext.CurrentCustomer))
                         throw new Exception("Selected payment method can't be parsed");
 
                     return OpcLoadStepAfterPaymentMethod(paymentMethodInst, cart);
@@ -1515,8 +1515,8 @@ namespace Nop.Web.Controllers
                 var paymentMethodInst = _paymentService.LoadPaymentMethodBySystemName(paymentmethod);
                 if (paymentMethodInst == null ||
                     !_paymentService.IsPaymentMethodActive(paymentMethodInst) ||
-                    !_pluginFinder.AuthenticateStore(paymentMethodInst.PluginDescriptor, _storeContext.CurrentStore.Id) ||
-                    !_pluginFinder.AuthorizedForUser(paymentMethodInst.PluginDescriptor, _workContext.CurrentCustomer))
+                    !_pluginService.AuthenticateStore(paymentMethodInst.PluginDescriptor, _storeContext.CurrentStore.Id) ||
+                    !_pluginService.AuthorizedForUser(paymentMethodInst.PluginDescriptor, _workContext.CurrentCustomer))
                     throw new Exception("Selected payment method can't be parsed");
 
                 //save

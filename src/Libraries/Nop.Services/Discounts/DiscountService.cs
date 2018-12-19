@@ -28,7 +28,7 @@ namespace Nop.Services.Discounts
         private readonly ICustomerService _customerService;
         private readonly IEventPublisher _eventPublisher;
         private readonly ILocalizationService _localizationService;
-        private readonly IPluginFinder _pluginFinder;
+        private readonly IPluginService _pluginService;
         private readonly IRepository<Category> _categoryRepository;
         private readonly IRepository<Discount> _discountRepository;
         private readonly IRepository<DiscountRequirement> _discountRequirementRepository;
@@ -46,7 +46,7 @@ namespace Nop.Services.Discounts
             ICustomerService customerService,
             IEventPublisher eventPublisher,
             ILocalizationService localizationService,
-            IPluginFinder pluginFinder,
+            IPluginService pluginService,
             IRepository<Category> categoryRepository,
             IRepository<Discount> discountRepository,
             IRepository<DiscountRequirement> discountRequirementRepository,
@@ -60,7 +60,7 @@ namespace Nop.Services.Discounts
             this._customerService = customerService;
             this._eventPublisher = eventPublisher;
             this._localizationService = localizationService;
-            this._pluginFinder = pluginFinder;
+            this._pluginService = pluginService;
             this._categoryRepository = categoryRepository;
             this._discountRepository = discountRepository;
             this._discountRequirementRepository = discountRequirementRepository;
@@ -148,10 +148,10 @@ namespace Nop.Services.Discounts
                     if (requirementRulePlugin == null)
                         continue;
 
-                    if (!_pluginFinder.AuthorizedForUser(requirementRulePlugin.PluginDescriptor, customer))
+                    if (!_pluginService.AuthorizedForUser(requirementRulePlugin.PluginDescriptor, customer))
                         continue;
 
-                    if (!_pluginFinder.AuthenticateStore(requirementRulePlugin.PluginDescriptor, _storeContext.CurrentStore.Id))
+                    if (!_pluginService.AuthenticateStore(requirementRulePlugin.PluginDescriptor, _storeContext.CurrentStore.Id))
                         continue;
 
                     var ruleResult = requirementRulePlugin.CheckRequirement(new DiscountRequirementValidationRequest
@@ -651,7 +651,7 @@ namespace Nop.Services.Discounts
         /// <returns>Found discount requirement rule</returns>
         public virtual IDiscountRequirementRule LoadDiscountRequirementRuleBySystemName(string systemName)
         {
-            var descriptor = _pluginFinder.GetPluginDescriptorBySystemName<IDiscountRequirementRule>(systemName);
+            var descriptor = _pluginService.GetPluginDescriptorBySystemName<IDiscountRequirementRule>(systemName);
             return descriptor?.Instance<IDiscountRequirementRule>();
         }
 
@@ -662,7 +662,7 @@ namespace Nop.Services.Discounts
         /// <returns>Discount requirement rules</returns>
         public virtual IList<IDiscountRequirementRule> LoadAllDiscountRequirementRules(Customer customer = null)
         {
-            return _pluginFinder.GetPlugins<IDiscountRequirementRule>(customer: customer).ToList();
+            return _pluginService.GetPlugins<IDiscountRequirementRule>(customer: customer).ToList();
         }
 
         #endregion

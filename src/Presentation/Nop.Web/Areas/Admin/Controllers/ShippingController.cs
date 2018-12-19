@@ -35,7 +35,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly ILocalizedEntityService _localizedEntityService;
         private readonly INotificationService _notificationService;
         private readonly IPermissionService _permissionService;
-        private readonly IPluginFinder _pluginFinder;
+        private readonly IPluginService _pluginService;
         private readonly ISettingService _settingService;
         private readonly IShippingModelFactory _shippingModelFactory;
         private readonly IShippingService _shippingService;
@@ -53,7 +53,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             ILocalizedEntityService localizedEntityService,
             INotificationService notificationService,
             IPermissionService permissionService,
-            IPluginFinder pluginFinder,
+            IPluginService pluginService,
             ISettingService settingService,
             IShippingModelFactory shippingModelFactory,
             IShippingService shippingService,
@@ -67,7 +67,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             this._localizedEntityService = localizedEntityService;
             this._notificationService = notificationService;
             this._permissionService = permissionService;
-            this._pluginFinder = pluginFinder;
+            this._pluginService = pluginService;
             this._settingService = settingService;
             this._shippingModelFactory = shippingModelFactory;
             this._shippingService = shippingService;
@@ -165,7 +165,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             pluginDescriptor.Save();
 
             //reset plugin cache
-            _pluginFinder.ReloadPlugins(pluginDescriptor);
+            _pluginService.ReloadPlugins(pluginDescriptor);
 
             return new NullJsonResult();
         }
@@ -230,7 +230,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             pluginDescriptor.Save();
 
             //reset plugin cache
-            _pluginFinder.ReloadPlugins(pluginDescriptor);
+            _pluginService.ReloadPlugins(pluginDescriptor);
 
             return new NullJsonResult();
         }

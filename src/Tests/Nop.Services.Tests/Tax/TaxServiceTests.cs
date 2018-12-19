@@ -57,7 +57,7 @@ namespace Nop.Services.Tests.Tax
             _eventPublisher = new Mock<IEventPublisher>();
             _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
 
-            var pluginFinder = new PluginFinder(_eventPublisher.Object);
+            var pluginService = new PluginService(_eventPublisher.Object);
 
             _geoLookupService = new Mock<IGeoLookupService>();
             _countryService = new Mock<ICountryService>();
@@ -77,7 +77,7 @@ namespace Nop.Services.Tests.Tax
                 _genericAttributeService.Object,
                 _geoLookupService.Object,
                 _logger.Object,
-                pluginFinder,
+                pluginService,
                 _stateProvinceService.Object,
                 _storeContext.Object,
                 _webHelper.Object,

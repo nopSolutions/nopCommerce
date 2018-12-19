@@ -34,12 +34,12 @@ namespace Nop.Services.Tests.Payments
             _eventPublisher = new Mock<IEventPublisher>();
             _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
 
-            var pluginFinder = new PluginFinder(_eventPublisher.Object);
+            var pluginService = new PluginService(_eventPublisher.Object);
 
             _shoppingCartSettings = new ShoppingCartSettings();
             _settingService = new Mock<ISettingService>();
 
-            _paymentService = new PaymentService(pluginFinder, _settingService.Object, _paymentSettings, _shoppingCartSettings);
+            _paymentService = new PaymentService(pluginService, _settingService.Object, _paymentSettings, _shoppingCartSettings);
         }
 
         [Test]

@@ -22,7 +22,7 @@ namespace Nop.Services.Tests
     {
         private readonly List<DiscountForCaching> _discountForCaching;
 
-        public TestDiscountService(ICategoryService categoryService, ICustomerService customerService, IEventPublisher eventPublisher, ILocalizationService localizationService, IPluginFinder pluginFinder, IRepository<Category> categoryRepository, IRepository<Discount> discountRepository, IRepository<DiscountRequirement> discountRequirementRepository, IRepository<DiscountUsageHistory> discountUsageHistoryRepository, IRepository<Manufacturer> manufacturerRepository, IRepository<Product> productRepository, IStaticCacheManager cacheManager, IStoreContext storeContext) : base(categoryService, customerService, eventPublisher, localizationService, pluginFinder, categoryRepository, discountRepository, discountRequirementRepository, discountUsageHistoryRepository, manufacturerRepository, productRepository, cacheManager, storeContext)
+        public TestDiscountService(ICategoryService categoryService, ICustomerService customerService, IEventPublisher eventPublisher, ILocalizationService localizationService, IPluginService pluginService, IRepository<Category> categoryRepository, IRepository<Discount> discountRepository, IRepository<DiscountRequirement> discountRequirementRepository, IRepository<DiscountUsageHistory> discountUsageHistoryRepository, IRepository<Manufacturer> manufacturerRepository, IRepository<Product> productRepository, IStaticCacheManager cacheManager, IStoreContext storeContext) : base(categoryService, customerService, eventPublisher, localizationService, pluginService, categoryRepository, discountRepository, discountRequirementRepository, discountUsageHistoryRepository, manufacturerRepository, productRepository, cacheManager, storeContext)
         {
             _discountForCaching = new List<DiscountForCaching>();
         }
@@ -87,7 +87,7 @@ namespace Nop.Services.Tests
             var _customerService = new Mock<ICustomerService>();
             var _localizationService = new Mock<ILocalizationService>();
             var _eventPublisher = new Mock<IEventPublisher>();
-            var pluginFinder = new PluginFinder(_eventPublisher.Object);
+            var pluginService = new PluginService(_eventPublisher.Object);
             var _categoryService = new Mock<ICategoryService>();
 
             var _store = new Store {Id = 1};
@@ -98,7 +98,7 @@ namespace Nop.Services.Tests
                 _customerService.Object,
                 _eventPublisher.Object,
                 _localizationService.Object,
-                pluginFinder,
+                pluginService,
                 _categoryRepo.Object,
                 _discountRepo.Object,
                 _discountRequirementRepo.Object,

@@ -84,7 +84,7 @@ namespace Nop.Services.Tests.Discounts
             _discountRequirementRepo.Setup(x => x.Table).Returns(new List<DiscountRequirement>().AsQueryable());
 
             _discountUsageHistoryRepo = new Mock<IRepository<DiscountUsageHistory>>();
-            var pluginFinder = new PluginFinder(_eventPublisher.Object);
+            var pluginService = new PluginService(_eventPublisher.Object);
             _localizationService = new Mock<ILocalizationService>();
             _categoryService = new Mock<ICategoryService>();
 
@@ -92,7 +92,7 @@ namespace Nop.Services.Tests.Discounts
                 _customerService.Object,
                 _eventPublisher.Object,
                 _localizationService.Object,
-                pluginFinder,
+                pluginService,
                 _categoryRepo.Object,
                 _discountRepo.Object,
                 _discountRequirementRepo.Object,

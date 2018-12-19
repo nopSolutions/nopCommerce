@@ -28,7 +28,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly IPaymentModelFactory _paymentModelFactory;
         private readonly IPaymentService _paymentService;
         private readonly IPermissionService _permissionService;
-        private readonly IPluginFinder _pluginFinder;
+        private readonly IPluginService _pluginService;
         private readonly ISettingService _settingService;
         private readonly PaymentSettings _paymentSettings;
 
@@ -42,7 +42,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             IPaymentModelFactory paymentModelFactory,
             IPaymentService paymentService,
             IPermissionService permissionService,
-            IPluginFinder pluginFinder,
+            IPluginService pluginService,
             ISettingService settingService,
             PaymentSettings paymentSettings)
         {
@@ -52,7 +52,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             this._paymentModelFactory = paymentModelFactory;
             this._paymentService = paymentService;
             this._permissionService = permissionService;
-            this._pluginFinder = pluginFinder;
+            this._pluginService = pluginService;
             this._settingService = settingService;
             this._paymentSettings = paymentSettings;
         }
@@ -118,7 +118,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             pluginDescriptor.Save();
 
             //reset plugin cache
-            _pluginFinder.ReloadPlugins(pluginDescriptor);
+            _pluginService.ReloadPlugins(pluginDescriptor);
 
             return new NullJsonResult();
         }

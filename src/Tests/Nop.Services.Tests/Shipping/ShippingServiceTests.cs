@@ -63,7 +63,7 @@ namespace Nop.Services.Tests.Shipping
             _eventPublisher = new Mock<IEventPublisher>();
             _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
 
-            var pluginFinder = new PluginFinder(_eventPublisher.Object);
+            var pluginService = new PluginService(_eventPublisher.Object);
 
             _localizationService = new Mock<ILocalizationService>();
             _addressService = new Mock<IAddressService>();
@@ -83,7 +83,7 @@ namespace Nop.Services.Tests.Shipping
                 _genericAttributeService.Object,
                 _localizationService.Object,
                 _logger,
-                pluginFinder,
+                pluginService,
                 _priceCalcService.Object,
                 _productAttributeParser.Object,
                 _productService.Object,

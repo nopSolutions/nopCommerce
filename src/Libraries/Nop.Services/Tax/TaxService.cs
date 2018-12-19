@@ -31,7 +31,7 @@ namespace Nop.Services.Tax
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IGeoLookupService _geoLookupService;
         private readonly ILogger _logger;
-        private readonly IPluginFinder _pluginFinder;
+        private readonly IPluginService _pluginService;
         private readonly IStateProvinceService _stateProvinceService;
         private readonly IStoreContext _storeContext;
         private readonly IWebHelper _webHelper;
@@ -50,7 +50,7 @@ namespace Nop.Services.Tax
             IGenericAttributeService genericAttributeService,
             IGeoLookupService geoLookupService,
             ILogger logger,
-            IPluginFinder pluginFinder,
+            IPluginService pluginService,
             IStateProvinceService stateProvinceService,
             IStoreContext storeContext,
             IWebHelper webHelper,
@@ -65,7 +65,7 @@ namespace Nop.Services.Tax
             this._genericAttributeService = genericAttributeService;
             this._geoLookupService = geoLookupService;
             this._logger = logger;
-            this._pluginFinder = pluginFinder;
+            this._pluginService = pluginService;
             this._stateProvinceService = stateProvinceService;
             this._storeContext = storeContext;
             this._webHelper = webHelper;
@@ -323,7 +323,7 @@ namespace Nop.Services.Tax
         /// <returns>Found tax provider</returns>
         public virtual ITaxProvider LoadTaxProviderBySystemName(string systemName)
         {
-            var descriptor = _pluginFinder.GetPluginDescriptorBySystemName<ITaxProvider>(systemName);
+            var descriptor = _pluginService.GetPluginDescriptorBySystemName<ITaxProvider>(systemName);
             return descriptor?.Instance<ITaxProvider>();
         }
 
@@ -334,7 +334,7 @@ namespace Nop.Services.Tax
         /// <returns>Tax providers</returns>
         public virtual IList<ITaxProvider> LoadAllTaxProviders(Customer customer = null)
         {
-            return _pluginFinder.GetPlugins<ITaxProvider>(customer: customer).ToList();
+            return _pluginService.GetPlugins<ITaxProvider>(customer: customer).ToList();
         }
 
         #endregion

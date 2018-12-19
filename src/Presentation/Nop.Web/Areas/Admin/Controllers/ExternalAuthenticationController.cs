@@ -18,7 +18,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly IExternalAuthenticationMethodModelFactory _externalAuthenticationMethodModelFactory;
         private readonly IExternalAuthenticationService _externalAuthenticationService;
         private readonly IPermissionService _permissionService;
-        private readonly IPluginFinder _pluginFinder;
+        private readonly IPluginService _pluginService;
         private readonly ISettingService _settingService;
 
         #endregion
@@ -29,14 +29,14 @@ namespace Nop.Web.Areas.Admin.Controllers
             IExternalAuthenticationMethodModelFactory externalAuthenticationMethodModelFactory,
             IExternalAuthenticationService externalAuthenticationService,
             IPermissionService permissionService,
-            IPluginFinder pluginFinder,
+            IPluginService pluginService,
             ISettingService settingService)
         {
             this._externalAuthenticationSettings = externalAuthenticationSettings;
             this._externalAuthenticationMethodModelFactory = externalAuthenticationMethodModelFactory;
             this._externalAuthenticationService = externalAuthenticationService;
             this._permissionService = permissionService;
-            this._pluginFinder = pluginFinder;
+            this._pluginService = pluginService;
             this._settingService = settingService;
         }
 
@@ -101,7 +101,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             pluginDescriptor.Save();
 
             //reset plugin cache
-            _pluginFinder.ReloadPlugins(pluginDescriptor);
+            _pluginService.ReloadPlugins(pluginDescriptor);
 
             return new NullJsonResult();
         }

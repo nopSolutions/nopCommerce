@@ -51,7 +51,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly ILocalizationService _localizationService;
         private readonly IManufacturerService _manufacturerService;
         private readonly IManufacturerTemplateService _manufacturerTemplateService;
-        private readonly IPluginFinder _pluginFinder;
+        private readonly IPluginService _pluginService;
         private readonly IProductTemplateService _productTemplateService;
         private readonly IShippingService _shippingService;
         private readonly IStateProvinceService _stateProvinceService;
@@ -78,7 +78,7 @@ namespace Nop.Web.Areas.Admin.Factories
             ILocalizationService localizationService,
             IManufacturerService manufacturerService,
             IManufacturerTemplateService manufacturerTemplateService,
-            IPluginFinder pluginFinder,
+            IPluginService pluginService,
             IProductTemplateService productTemplateService,
             IShippingService shippingService,
             IStateProvinceService stateProvinceService,
@@ -101,7 +101,7 @@ namespace Nop.Web.Areas.Admin.Factories
             this._localizationService = localizationService;
             this._manufacturerService = manufacturerService;
             this._manufacturerTemplateService = manufacturerTemplateService;
-            this._pluginFinder = pluginFinder;
+            this._pluginService = pluginService;
             this._productTemplateService = productTemplateService;
             this._shippingService = shippingService;
             this._stateProvinceService = stateProvinceService;
@@ -697,7 +697,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(items));
 
             //prepare available plugin groups
-            var availablePluginGroups = _pluginFinder.GetPluginGroups();
+            var availablePluginGroups = _pluginService.GetPluginGroups();
             foreach (var group in availablePluginGroups)
             {
                 items.Add(new SelectListItem { Value = group, Text = group });

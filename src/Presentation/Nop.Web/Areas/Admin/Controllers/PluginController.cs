@@ -42,7 +42,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly INotificationService _notificationService;
         private readonly IPaymentService _paymentService;
         private readonly IPermissionService _permissionService;
-        private readonly IPluginFinder _pluginFinder;
+        private readonly IPluginService _pluginService;
         private readonly IPluginModelFactory _pluginModelFactory;
         private readonly IPluginService _pluginService;
         private readonly ISettingService _settingService;
@@ -69,7 +69,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             INotificationService notificationService,
             IPaymentService paymentService,
             IPermissionService permissionService,
-            IPluginFinder pluginFinder,
+            IPluginService pluginService,
             IPluginModelFactory pluginModelFactory,
             IPluginService pluginService,
             ISettingService settingService,
@@ -92,7 +92,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             this._notificationService = notificationService;
             this._paymentService = paymentService;
             this._permissionService = permissionService;
-            this._pluginFinder = pluginFinder;
+            this._pluginService = pluginService;
             this._pluginModelFactory = pluginModelFactory;
             this._pluginService = pluginService;
             this._settingService = settingService;
@@ -230,7 +230,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     if (formValue.StartsWith("install-plugin-link-", StringComparison.InvariantCultureIgnoreCase))
                         systemName = formValue.Substring("install-plugin-link-".Length);
 
-                var pluginDescriptor = _pluginFinder.GetPluginDescriptorBySystemName(systemName, LoadPluginsMode.All);
+                var pluginDescriptor = _pluginService.GetPluginDescriptorBySystemName(systemName, LoadPluginsMode.All);
                 if (pluginDescriptor == null)
                     //No plugin found with the specified id
                     return RedirectToAction("List");
@@ -266,7 +266,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     if (formValue.StartsWith("uninstall-plugin-link-", StringComparison.InvariantCultureIgnoreCase))
                         systemName = formValue.Substring("uninstall-plugin-link-".Length);
 
-                var pluginDescriptor = _pluginFinder.GetPluginDescriptorBySystemName(systemName, LoadPluginsMode.All);
+                var pluginDescriptor = _pluginService.GetPluginDescriptorBySystemName(systemName, LoadPluginsMode.All);
                 if (pluginDescriptor == null)
                     //No plugin found with the specified id
                     return RedirectToAction("List");
@@ -302,7 +302,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     if (formValue.StartsWith("delete-plugin-link-", StringComparison.InvariantCultureIgnoreCase))
                         systemName = formValue.Substring("delete-plugin-link-".Length);
 
-                var pluginDescriptor = _pluginFinder.GetPluginDescriptorBySystemName(systemName, LoadPluginsMode.All);
+                var pluginDescriptor = _pluginService.GetPluginDescriptorBySystemName(systemName, LoadPluginsMode.All);
 
                 //check whether plugin is not installed
                 if (pluginDescriptor.Installed)
@@ -361,7 +361,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             //try to get a plugin with the specified system name
-            var pluginDescriptor = _pluginFinder.GetPluginDescriptorBySystemName(systemName, LoadPluginsMode.All);
+            var pluginDescriptor = _pluginService.GetPluginDescriptorBySystemName(systemName, LoadPluginsMode.All);
             if (pluginDescriptor == null)
                 return RedirectToAction("List");
 
@@ -378,7 +378,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             //try to get a plugin with the specified system name
-            var pluginDescriptor = _pluginFinder.GetPluginDescriptorBySystemName(model.SystemName, LoadPluginsMode.All);
+            var pluginDescriptor = _pluginService.GetPluginDescriptorBySystemName(model.SystemName, LoadPluginsMode.All);
             if (pluginDescriptor == null)
                 return RedirectToAction("List");
 
@@ -398,7 +398,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 pluginDescriptor.Save();
 
                 //reset plugin cache
-                _pluginFinder.ReloadPlugins(pluginDescriptor);
+                _pluginService.ReloadPlugins(pluginDescriptor);
 
                 //locales
                 foreach (var localized in model.Locales)

@@ -15,7 +15,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Fields
 
         private readonly IPermissionService _permissionService;
-        private readonly IPluginFinder _pluginFinder;
+        private readonly IPluginService _pluginService;
         private readonly ISettingService _settingService;
         private readonly IWidgetModelFactory _widgetModelFactory;
         private readonly IWidgetService _widgetService;
@@ -26,14 +26,14 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Ctor
 
         public WidgetController(IPermissionService permissionService,
-            IPluginFinder pluginFinder,
+            IPluginService pluginService,
             ISettingService settingService,
             IWidgetModelFactory widgetModelFactory,
             IWidgetService widgetService,
             WidgetSettings widgetSettings)
         {
             this._permissionService = permissionService;
-            this._pluginFinder = pluginFinder;
+            this._pluginService = pluginService;
             this._settingService = settingService;
             this._widgetModelFactory = widgetModelFactory;
             this._widgetService = widgetService;
@@ -107,7 +107,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             pluginDescriptor.Save();
 
             //reset plugin cache
-            _pluginFinder.ReloadPlugins(pluginDescriptor);
+            _pluginService.ReloadPlugins(pluginDescriptor);
 
             return new NullJsonResult();
         }

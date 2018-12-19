@@ -35,7 +35,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly ILocalizedModelFactory _localizedModelFactory;
         private readonly IOfficialFeedManager _officialFeedManager;
         private readonly IPaymentService _paymentService;
-        private readonly IPluginFinder _pluginFinder;
+        private readonly IPluginService _pluginService;
         private readonly IShippingService _shippingService;
         private readonly IStoreMappingSupportedModelFactory _storeMappingSupportedModelFactory;
         private readonly IWidgetService _widgetService;
@@ -53,7 +53,7 @@ namespace Nop.Web.Areas.Admin.Factories
             ILocalizedModelFactory localizedModelFactory,
             IOfficialFeedManager officialFeedManager,
             IPaymentService paymentService,
-            IPluginFinder pluginFinder,
+            IPluginService pluginService,
             IShippingService shippingService,
             IStoreMappingSupportedModelFactory storeMappingSupportedModelFactory,
             IWidgetService widgetService,
@@ -67,7 +67,7 @@ namespace Nop.Web.Areas.Admin.Factories
             this._localizedModelFactory = localizedModelFactory;
             this._officialFeedManager = officialFeedManager;
             this._paymentService = paymentService;
-            this._pluginFinder = pluginFinder;
+            this._pluginService = pluginService;
             this._shippingService = shippingService;
             this._storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
             this._widgetService = widgetService;
@@ -173,7 +173,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var loadMode = (LoadPluginsMode)searchModel.SearchLoadModeId;
 
             //get plugins
-            var plugins = _pluginFinder.GetPluginDescriptors(group: group, loadMode: loadMode)
+            var plugins = _pluginService.GetPluginDescriptors(group: group, loadMode: loadMode)
                 .Where(p=>p.ShowInPluginsList)
                 .OrderBy(plugin => plugin.Group).ToList();
 

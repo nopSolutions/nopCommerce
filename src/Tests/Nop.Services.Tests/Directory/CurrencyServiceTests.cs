@@ -90,8 +90,8 @@ namespace Nop.Services.Tests.Directory
             _eventPublisher = new Mock<IEventPublisher>();
             _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
             
-            var pluginFinder = new PluginFinder(_eventPublisher.Object);
-            _currencyService = new CurrencyService(_currencySettings, _eventPublisher.Object, pluginFinder, _currencyRepository.Object, cacheManager, _storeMappingService.Object);
+            var pluginService = new PluginService(_eventPublisher.Object);
+            _currencyService = new CurrencyService(_currencySettings, _eventPublisher.Object, pluginService, _currencyRepository.Object, cacheManager, _storeMappingService.Object);
         }
         
         [Test]

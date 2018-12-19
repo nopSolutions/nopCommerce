@@ -33,7 +33,7 @@ namespace Nop.Services.Authentication.External
         private readonly IEventPublisher _eventPublisher;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
-        private readonly IPluginFinder _pluginFinder;
+        private readonly IPluginService _pluginService;
         private readonly IRepository<ExternalAuthenticationRecord> _externalAuthenticationRecordRepository;
         private readonly IShoppingCartService _shoppingCartService;
         private readonly IStoreContext _storeContext;
@@ -54,7 +54,7 @@ namespace Nop.Services.Authentication.External
             IEventPublisher eventPublisher,
             IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
-            IPluginFinder pluginFinder,
+            IPluginService pluginService,
             IRepository<ExternalAuthenticationRecord> externalAuthenticationRecordRepository,
             IShoppingCartService shoppingCartService,
             IStoreContext storeContext,
@@ -71,7 +71,7 @@ namespace Nop.Services.Authentication.External
             this._eventPublisher = eventPublisher;
             this._genericAttributeService = genericAttributeService;
             this._localizationService = localizationService;
-            this._pluginFinder = pluginFinder;
+            this._pluginService = pluginService;
             this._externalAuthenticationRecordRepository = externalAuthenticationRecordRepository;
             this._shoppingCartService = shoppingCartService;
             this._storeContext = storeContext;
@@ -280,7 +280,7 @@ namespace Nop.Services.Authentication.External
         /// <returns>Found external authentication method</returns>
         public virtual IExternalAuthenticationMethod LoadExternalAuthenticationMethodBySystemName(string systemName)
         {
-            var descriptor = _pluginFinder.GetPluginDescriptorBySystemName<IExternalAuthenticationMethod>(systemName);
+            var descriptor = _pluginService.GetPluginDescriptorBySystemName<IExternalAuthenticationMethod>(systemName);
             return descriptor?.Instance<IExternalAuthenticationMethod>();
         }
 
@@ -292,7 +292,7 @@ namespace Nop.Services.Authentication.External
         /// <returns>External authentication methods</returns>
         public virtual IList<IExternalAuthenticationMethod> LoadAllExternalAuthenticationMethods(Customer customer = null, int storeId = 0)
         {
-            return _pluginFinder.GetPlugins<IExternalAuthenticationMethod>(customer: customer, storeId: storeId).ToList();
+            return _pluginService.GetPlugins<IExternalAuthenticationMethod>(customer: customer, storeId: storeId).ToList();
         }
 
         /// <summary>
@@ -308,8 +308,8 @@ namespace Nop.Services.Authentication.External
             return authenticationMethod != null &&
                 this.IsExternalAuthenticationMethodActive(authenticationMethod) &&
                 authenticationMethod.PluginDescriptor.Installed &&
-                _pluginFinder.AuthenticateStore(authenticationMethod.PluginDescriptor, _storeContext.CurrentStore.Id) &&
-                _pluginFinder.AuthorizedForUser(authenticationMethod.PluginDescriptor, _workContext.CurrentCustomer);
+                _pluginService.AuthenticateStore(authenticationMethod.PluginDescriptor, _storeContext.CurrentStore.Id) &&
+                _pluginService.AuthorizedForUser(authenticationMethod.PluginDescriptor, _workContext.CurrentCustomer);
         }
 
         /// <summary>
