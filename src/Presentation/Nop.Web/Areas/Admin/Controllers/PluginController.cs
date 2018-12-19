@@ -42,7 +42,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly INotificationService _notificationService;
         private readonly IPaymentService _paymentService;
         private readonly IPermissionService _permissionService;
-        private readonly IPluginService _pluginService;
         private readonly IPluginModelFactory _pluginModelFactory;
         private readonly IPluginService _pluginService;
         private readonly ISettingService _settingService;
@@ -69,7 +68,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             INotificationService notificationService,
             IPaymentService paymentService,
             IPermissionService permissionService,
-            IPluginService pluginService,
             IPluginModelFactory pluginModelFactory,
             IPluginService pluginService,
             ISettingService settingService,
@@ -92,7 +90,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             this._notificationService = notificationService;
             this._paymentService = paymentService;
             this._permissionService = permissionService;
-            this._pluginService = pluginService;
             this._pluginModelFactory = pluginModelFactory;
             this._pluginService = pluginService;
             this._settingService = settingService;

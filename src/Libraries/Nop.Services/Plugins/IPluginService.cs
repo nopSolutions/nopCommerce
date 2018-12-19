@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Plugins;
 
@@ -89,5 +90,18 @@ namespace Nop.Services.Plugins
         /// </summary>
         /// <param name="pluginDescriptor">Updated plugin descriptor</param>
         void ReloadPlugins(PluginDescriptor pluginDescriptor);
+
+        /// <summary>
+        /// Find a plugin descriptor by some type which is located into the same assembly as plugin
+        /// </summary>
+        /// <param name="typeInAssembly">Type</param>
+        /// <returns>Plugin descriptor if exists; otherwise null</returns>
+        PluginDescriptor FindPlugin(Type typeInAssembly);
+
+        void InstallPlugins();
+
+        void UninstallPlugins();
+
+        void DeletePlugins();
     }
 }
