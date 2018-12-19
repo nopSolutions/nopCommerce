@@ -28,7 +28,6 @@ namespace Nop.Core.Plugins
         private static string _shadowCopyFolder;
         private static string _reserveShadowCopyFolder;
         private static NopConfig _config;
-        private static List<PluginsInfo.PluginToInstall> _lastInstalledPluginSystemNames;
         private static readonly Dictionary<string, PluginLoadedAssemblyInfo> _assemblyLoadedSeveralTimes = new Dictionary<string, PluginLoadedAssemblyInfo>();
 
         #endregion
@@ -89,6 +88,9 @@ namespace Nop.Core.Plugins
             //sort list by display order. NOTE: Lowest DisplayOrder will be first i.e 0 , 1, 1, 1, 5, 10
             //it's required: https://www.nopcommerce.com/boards/t/17455/load-plugins-based-on-their-displayorder-on-startup.aspx
             result.Sort((firstPair, nextPair) => firstPair.Value.DisplayOrder.CompareTo(nextPair.Value.DisplayOrder));
+
+            PluginDescriptors = result.Select(pair => pair.Value);
+
             return result;
         }
 
@@ -488,145 +490,6 @@ namespace Nop.Core.Plugins
             }
         }
         
-        /// <summary>
-        /// Find a plugin descriptor by some type which is located into the same assembly as plugin
-        /// </summary>
-        /// <param name="typeInAssembly">Type</param>
-        /// <returns>Plugin descriptor if exists; otherwise null</returns>
-        public static PluginDescriptor FindPlugin(Type typeInAssembly)
-        {
-            if (typeInAssembly == null)
-                throw new ArgumentNullException(nameof(typeInAssembly));
-
-            return ReferencedPlugins?.FirstOrDefault(plugin =>
-                plugin.ReferencedAssembly != null &&
-                plugin.ReferencedAssembly.FullName.Equals(typeInAssembly.Assembly.FullName, StringComparison.InvariantCultureIgnoreCase));
-        }
-        
-        /// <summary>
-        /// Uninstall plugins if need
-        /// </summary>
-        /// <returns>List of uninstalled plugin system names</returns>
-        public static List<string> UninstallPluginsIfNeed()
-        {
-            var uninstalledPluginSystemNames = new List<string>();
-
-            //uninstall plugins
-            foreach (var pluginDescriptor in ReferencedPlugins)
-            {
-                if (!pluginDescriptor.Installed || !PluginsInfo.PluginNamesToUninstall.Any(systemName => systemName.Equals(pluginDescriptor.SystemName, StringComparison.CurrentCultureIgnoreCase))) 
-                    continue;
-
-                try
-                {
-                    pluginDescriptor.Instance().Uninstall();
-
-                    //remove plugin system name from the list if exists
-                    var alreadyMarkedAsInstalled = PluginsInfo.InstalledPluginNames.Any(pluginName => pluginName.Equals(pluginDescriptor.SystemName, StringComparison.InvariantCultureIgnoreCase));
-                    if (alreadyMarkedAsInstalled)
-                        PluginsInfo.InstalledPluginNames.Remove(pluginDescriptor.SystemName);
-
-                    PluginsInfo.PluginNamesToUninstall.Remove(pluginDescriptor.SystemName);
-
-                    uninstalledPluginSystemNames.Add(pluginDescriptor.SystemName);
-
-                    pluginDescriptor.Installed = false;
-                    pluginDescriptor.ShowInPluginsList = true;
-                }
-                catch (Exception ex)
-                {
-                    pluginDescriptor.Error = ex;
-                }
-            }
-
-            PluginsInfo.Save();
-
-            return uninstalledPluginSystemNames;
-        }
-
-        /// <summary>
-        /// Delete plugins if need
-        /// </summary>
-        /// <returns>List of deleted plugin system names</returns>
-        public static List<string> DeletePluginsIfNeed()
-        {
-            var deletedPluginSystemNames = new List<string>();
-
-            //delete plugins
-            foreach (var dfd in GetDescriptionFilesAndDescriptors(_fileProvider.MapPath(NopPluginDefaults.Path)))
-            {
-                var pluginDescriptor = ReferencedPlugins.FirstOrDefault(p=>p.SystemName.Equals(dfd.Value.SystemName, StringComparison.CurrentCultureIgnoreCase));
-
-                if(pluginDescriptor == null)
-                    continue;
-
-                if (pluginDescriptor.Installed || !PluginsInfo.PluginNamesToDelete.Any(systemName => systemName.Equals(pluginDescriptor.SystemName, StringComparison.CurrentCultureIgnoreCase))) 
-                    continue;
-
-                try
-                {
-                    if (pluginDescriptor.DeletePlugin())
-                    {
-                        PluginsInfo.PluginNamesToDelete.Remove(pluginDescriptor.SystemName);
-                        deletedPluginSystemNames.Add(pluginDescriptor.SystemName);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    pluginDescriptor.Error = ex;
-                }
-            }
-            
-            PluginsInfo.Save();
-
-            return deletedPluginSystemNames;
-        }
-
-        /// <summary>
-        /// Install plugins if need
-        /// </summary>
-        /// <returns></returns>
-        public static void InstallPluginsIfNeed()
-        {
-            _lastInstalledPluginSystemNames = new List<PluginsInfo.PluginToInstall>();
-
-            foreach (var dfd in GetDescriptionFilesAndDescriptors(_fileProvider.MapPath(NopPluginDefaults.Path)))
-            {
-                var pluginDescriptor = dfd.Value;
-
-                if (pluginDescriptor.Installed || !PluginsInfo.IsPluginNeedToInstall(pluginDescriptor.SystemName)) 
-                    continue;
-
-                var loadedDescriptor = ReferencedPlugins.FirstOrDefault(p =>
-                    p.SystemName.Equals(pluginDescriptor.SystemName, StringComparison.CurrentCultureIgnoreCase));
-
-                if(loadedDescriptor == null)
-                    continue;
-
-                try
-                {
-                    loadedDescriptor.Instance().Install();
-
-                    //add plugin system name to the list if doesn't already exist
-                    var alreadyMarkedAsInstalled = PluginsInfo.InstalledPluginNames.Any(pluginName => pluginName.Equals(pluginDescriptor.SystemName, StringComparison.InvariantCultureIgnoreCase));
-                    if (!alreadyMarkedAsInstalled)
-                    {
-                        PluginsInfo.InstalledPluginNames.Add(pluginDescriptor.SystemName);
-                    }
-
-                    _lastInstalledPluginSystemNames.Add(PluginsInfo.RemoveFromToInstallList(loadedDescriptor.SystemName));
-
-                    loadedDescriptor.Installed = true;
-                }
-                catch (Exception ex)
-                {
-                    loadedDescriptor.Error = ex;
-                }
-            }
-
-            PluginsInfo.Save();
-        }
-
         #endregion
 
         #region Properties
@@ -640,6 +503,11 @@ namespace Nop.Core.Plugins
         /// Returns a collection of all plugin which are not compatible with the current version
         /// </summary>
         public static IEnumerable<string> IncompatiblePlugins { get; set; }
+
+        /// <summary>
+        /// Returns a collection of all plugin descriptors
+        /// </summary>
+        public static IEnumerable<PluginDescriptor> PluginDescriptors { get; set; }
 
         /// <summary>
         /// Indicates whether to restart the application to update the plugins
@@ -660,20 +528,6 @@ namespace Nop.Core.Plugins
             {
                 return _assemblyLoadedSeveralTimes.Select(item => item.Value)
                     .Where(loadedAssemblyInfo => loadedAssemblyInfo.IsCollisionExists).ToList();
-            }
-        }
-
-        /// <summary>
-        /// Gets a list of system names of last time installed plugins 
-        /// </summary>
-        public static IReadOnlyCollection<PluginsInfo.PluginToInstall> GetLastInstalledPlugins
-        {
-            get
-            {
-                if(!_lastInstalledPluginSystemNames?.Any() ?? true)
-                    InstallPluginsIfNeed();
-
-                return _lastInstalledPluginSystemNames;
             }
         }
 

@@ -21,6 +21,7 @@ using Nop.Data;
 using Nop.Services.Authentication;
 using Nop.Services.Authentication.External;
 using Nop.Services.Logging;
+using Nop.Services.Plugins;
 using Nop.Services.Security;
 using Nop.Services.Tasks;
 using Nop.Web.Framework.FluentValidation;
@@ -66,6 +67,9 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
 
             //log application start
             engine.Resolve<ILogger>().Information("Application started");
+
+            //install plugins
+            engine.Resolve<IPluginService>().InstallPlugins();
 
             return serviceProvider;
         }

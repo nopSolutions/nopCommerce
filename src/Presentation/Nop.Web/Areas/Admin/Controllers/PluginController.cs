@@ -44,6 +44,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly IPermissionService _permissionService;
         private readonly IPluginFinder _pluginFinder;
         private readonly IPluginModelFactory _pluginModelFactory;
+        private readonly IPluginService _pluginService;
         private readonly ISettingService _settingService;
         private readonly IShippingService _shippingService;
         private readonly IUploadService _uploadService;
@@ -70,6 +71,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             IPermissionService permissionService,
             IPluginFinder pluginFinder,
             IPluginModelFactory pluginModelFactory,
+            IPluginService pluginService,
             ISettingService settingService,
             IShippingService shippingService,
             IUploadService uploadService,
@@ -92,6 +94,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             this._permissionService = permissionService;
             this._pluginFinder = pluginFinder;
             this._pluginModelFactory = pluginModelFactory;
+            this._pluginService = pluginService;
             this._settingService = settingService;
             this._shippingService = shippingService;
             this._uploadService = uploadService;
@@ -105,48 +108,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         #endregion
-
-        #region Utilities
-
-        protected virtual IActionResult UninstallAndDeletePluginsIfNeed()
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
-                return AccessDeniedView();
-
-            //uninstall plugins
-            foreach (var uninstalledPluginSystemName in PluginManager.UninstallPluginsIfNeed())
-            {
-                _customerActivityService.InsertActivity("UninstallPlugin", string.Format(_localizationService.GetResource("ActivityLog.UninstallPlugin"), uninstalledPluginSystemName));
-            }
-
-            //log plugin uninstallation errors
-            foreach (var descriptor in PluginManager.ReferencedPlugins.Where(pluginDescriptor=>pluginDescriptor.Error != null))
-            {
-                _logger.Error(string.Format(_localizationService.GetResource("ActivityLog.NotUninstalledPluginError"), descriptor.SystemName), descriptor.Error);
-                descriptor.Error = null;
-            }
-
-            //uninstall plugins
-            foreach (var deletedPluginSystemName in PluginManager.DeletePluginsIfNeed())
-            {
-                _customerActivityService.InsertActivity("DeletePlugin", string.Format(_localizationService.GetResource("ActivityLog.DeletePlugin"), deletedPluginSystemName));
-            }
-
-            //log plugin deletion errors
-            foreach (var descriptor in PluginManager.ReferencedPlugins.Where(pluginDescriptor=>pluginDescriptor.Error != null))
-            {
-                _logger.Error(string.Format(_localizationService.GetResource("ActivityLog.NotDeletedPluginError"), descriptor.SystemName), descriptor.Error);
-                descriptor.Error = null;
-            }
-
-            //restart application
-            _webHelper.RestartAppDomain();
-
-            return RedirectToAction("List");
-        }
-
-        #endregion
-
+        
         #region Methods
 
         public virtual IActionResult Index()
@@ -362,14 +324,23 @@ namespace Nop.Web.Areas.Admin.Controllers
         [FormValueRequired("plugin-reload-grid")]
         public virtual IActionResult ReloadList()
         {
-            return UninstallAndDeletePluginsIfNeed();
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
+                return AccessDeniedView();
+
+            _pluginService.UninstallPlugins();
+            _pluginService.DeletePlugins();
+
+            //restart application
+            _webHelper.RestartAppDomain();
+
+            return RedirectToAction("List");
         }
 
         [HttpPost, ActionName("List")]
         [FormValueRequired("plugin-apply-changes")]
         public virtual IActionResult ApplyChanges()
         {
-            return UninstallAndDeletePluginsIfNeed();
+            return ReloadList();
         }
 
         [HttpPost, ActionName("List")]
