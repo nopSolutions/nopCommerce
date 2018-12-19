@@ -8,6 +8,8 @@ using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
 using Nop.Core.Plugins;
 using Nop.Services.Events;
+using Nop.Services.Logging;
+using Nop.Tests;
 using NUnit.Framework;
 
 namespace Nop.Web.MVC.Tests.Events
@@ -26,10 +28,12 @@ namespace Nop.Web.MVC.Tests.Events
             CommonHelper.DefaultFileProvider = new NopFileProvider(hostingEnvironment.Object);
             PluginManager.Initialize(new ApplicationPartManager(), new NopConfig());
 
-            var subscriptionService = new Mock<ISubscriptionService>();
-            var consumers = new List<IConsumer<DateTime>> {new DateTimeConsumer()};
-            subscriptionService.Setup(c => c.GetSubscriptions<DateTime>()).Returns(consumers);
-            _eventPublisher = new EventPublisher(subscriptionService.Object);
+            var nopEngine = new Mock<NopEngine>();
+            var serviceProvider = new TestServiceProvider();
+            nopEngine.Setup(x => x.ServiceProvider).Returns(serviceProvider);
+            nopEngine.Setup(x => x.ResolveAll<IConsumer<DateTime>>()).Returns(new List<IConsumer<DateTime>> { new DateTimeConsumer() });
+            EngineContext.Replace(nopEngine.Object);
+            _eventPublisher = new EventPublisher();
         }
 
         [Test]
