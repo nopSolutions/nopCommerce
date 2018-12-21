@@ -178,7 +178,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     Data = nameof(dataModel.CustomerEmail),
                     Title = _localizationService.GetResource("Admin.Configuration.ActivityLog.ActivityLog.Fields.Customer"),
                     Width = "100",
-                    Render = new RenderLink(new DataUrl("~/Admin/Customer/Edit/", "CustomerId"), "data")
+                    Render = new RenderLink(new DataUrl("~/Admin/Customer/Edit", "CustomerId"), "data")
                 },
                 new ColumnProperty()
                 {

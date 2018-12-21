@@ -44,6 +44,20 @@
 <script>
     $(document).ready(function () {
         var table = $('#@Model.Name').DataTable({
+            @if (!string.IsNullOrEmpty(Model.HeaderCallback))
+            {
+                <text>footerCallback: function (tfoot, data, start, end, display) {
+                    return @(Model.HeaderCallback)(tfoot, data, start, end, display)
+                },
+                </text>
+            }
+            @if (!string.IsNullOrEmpty(Model.FooterCallback))
+            {
+                <text>headerCallback: function (tfoot, data, start, end, display) {
+                    return @(Model.FooterCallback)(tfoot, data, start, end, display)
+                },
+                </text>
+            }
             @if (Model.Processing)
             {
                 <text>processing: @Model.Processing.ToString().ToLower(),
@@ -80,7 +94,7 @@
             }
             paging: @Model.Paging.ToString().ToLower(),
             pagingType: "@Model.PagingType",
-            language: @await Html.PartialAsync("_GridLocalization"),            
+            language: @await Html.PartialAsync("_GridLocalization"),
             lengthMenu: [@Model.LengthMenu],
             ordering: @Model.Ordering.ToString().ToLower(),
             fixedHeader: @Model.FixedHeader.ToString().ToLower(),

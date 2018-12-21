@@ -36,6 +36,7 @@ using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Areas.Admin.Models.Orders;
 using Nop.Web.Areas.Admin.Models.Reports;
+using Nop.Web.Framework.DataTables;
 using Nop.Web.Framework.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
@@ -788,6 +789,159 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Methods
 
         /// <summary>
+        /// Prepare oreder datatables model
+        /// </summary>
+        /// <param name="searchModel">Order search model</param>
+        /// <returns>Order datatables model</returns>
+        public virtual DataTablesModel PrepareOrderGridModel(OrderSearchModel searchModel)
+        {
+            //prepare page parameters
+            searchModel.SetGridPageSize();
+
+            List<string> Filters = new List<string>()
+            {
+                nameof(searchModel.StartDate),
+                nameof(searchModel.EndDate),
+                nameof(searchModel.OrderStatusIds),
+                nameof(searchModel.PaymentStatusIds),
+                nameof(searchModel.ShippingStatusIds),
+                nameof(searchModel.StoreId),
+                nameof(searchModel.VendorId),
+                nameof(searchModel.WarehouseId),
+                nameof(searchModel.BillingEmail),
+                nameof(searchModel.BillingPhone),
+                nameof(searchModel.BillingLastName),
+                nameof(searchModel.BillingCountryId),
+                nameof(searchModel.PaymentMethodSystemName),
+                nameof(searchModel.ProductId),
+                nameof(searchModel.OrderNotes)
+            };
+
+            var dataModel = new OrderModel();
+
+            
+            List<ColumnProperty> columns = new List<ColumnProperty>();
+            columns.Add(new ColumnProperty()
+            {
+                Data = nameof(dataModel.CustomerId)
+            });
+            columns.Add(new ColumnProperty()
+            {
+                Data = nameof(dataModel.OrderStatusId)
+            });
+            columns.Add(new ColumnProperty()
+            {
+                Data = nameof(dataModel.Id),
+                IsMasterCheckBox = true,
+                Render = new RenderCheckBox("checkbox_orders"),
+                Width = "50",
+            });
+            columns.Add(new ColumnProperty()
+            {
+                Data = nameof(dataModel.CustomOrderNumber),
+                Title = _localizationService.GetResource("Admin.Orders.Fields.CustomOrderNumber"),
+                Width = "80"
+            });
+            //a vendor does not have access to this functionality
+            if (!searchModel.IsLoggedInAsVendor)
+            {
+                columns.Add(new ColumnProperty()
+                {
+                    Data = nameof(dataModel.OrderStatus),
+                    Title = _localizationService.GetResource("Admin.Orders.Fields.OrderStatus"),
+                    Width = "100",
+                    Render = new RenderCustom("renderColumnOrderStatus")
+                });
+            }                
+            columns.Add(new ColumnProperty()
+            {
+                Data = nameof(dataModel.PaymentStatus),
+                Title = _localizationService.GetResource("Admin.Orders.Fields.PaymentStatus"),
+                Width = "150"
+            });
+            //a vendor does not have access to this functionality
+            if (!searchModel.IsLoggedInAsVendor)
+            {
+                columns.Add(new ColumnProperty()
+                {
+                    Data = nameof(dataModel.ShippingStatus),
+                    Title = _localizationService.GetResource("Admin.Orders.Fields.ShippingStatus"),
+                    Width = "150"
+                });
+            }
+            columns.Add(new ColumnProperty()
+            {
+                Data = nameof(dataModel.CustomerEmail),
+                Title = _localizationService.GetResource("Admin.Orders.Fields.Customer"),
+                Width = "250",
+                Render = new RenderLink(new DataUrl("~/Admin/Customer/Edit", "CustomerId"), "data")
+            });
+            columns.Add(new ColumnProperty()
+            {
+                Data = nameof(dataModel.StoreName),
+                Title = _localizationService.GetResource("Admin.Orders.Fields.Store"),
+                Width = "100"
+            });
+            columns.Add(new ColumnProperty()
+            {
+                Data = nameof(dataModel.CreatedOn),
+                Title = _localizationService.GetResource("Admin.Orders.Fields.CreatedOn"),
+                Width = "100",
+                Render = new RenderDate("MM-DD-YYYY HH:mm:ss")
+            });
+            //a vendor does not have access to this functionality
+            if (!searchModel.IsLoggedInAsVendor)
+            {
+                columns.Add(new ColumnProperty()
+                {
+                    Data = nameof(dataModel.OrderTotal),
+                    Title = _localizationService.GetResource("Admin.Orders.Fields.OrderTotal"),
+                    Width = "100",
+                });
+            }                
+            columns.Add(new ColumnProperty()
+            {
+                Data = nameof(dataModel.Id),
+                Title = _localizationService.GetResource("Admin.Common.View"),
+                Width = "50",
+                Render = new RenderButtonEdit(new DataUrl("Edit"))
+            });            
+
+            List<ColumnDefinition> ColDef = new List<ColumnDefinition>
+            {
+                new ColumnDefinition()
+                {
+                    Targets = "[0,1]",
+                    Visible = false
+                },
+                new ColumnDefinition()
+                {
+                    Targets = "2",
+                    ClassName =  StyleColumn.centerAll,
+                    Width = "50"
+                },
+                new ColumnDefinition()
+                {
+                    Targets = "-1",
+                    ClassName =  StyleColumn.centerAll
+                }
+            };
+
+            return new DataTablesModel
+            {
+                Name = "orders-grid",
+                ServerSide = true,
+                Processing = true,
+                UrlRead = new DataUrl("OrderList", "Order"),
+                LengthMenu = searchModel.AvailablePageSizes,
+                SearchButtonId = "search-orders",
+                Filters = Filters,
+                ColumnCollection = columns,
+                ColumnDefs = ColDef
+            };
+        }
+
+        /// <summary>
         /// Prepare order search model
         /// </summary>
         /// <param name="searchModel">Order search model</param>
@@ -859,8 +1013,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 .Select(country => new SelectListItem { Text = country.Name, Value = country.Id.ToString() }).ToList();
             searchModel.AvailableCountries.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
 
-            //prepare page parameters
-            searchModel.SetGridPageSize();
+            searchModel.Grid = PrepareOrderGridModel(searchModel);
 
             return searchModel;
         }
@@ -922,6 +1075,7 @@ namespace Nop.Web.Areas.Admin.Factories
                         ShippingStatusId = order.ShippingStatusId,
                         CustomerEmail = order.BillingAddress.Email,
                         CustomerFullName = $"{order.BillingAddress.FirstName} {order.BillingAddress.LastName}",
+                        CustomerId = order.CustomerId,
                         CustomOrderNumber = order.CustomOrderNumber
                     };
 
@@ -937,7 +1091,9 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     return orderModel;
                 }),
-                Total = orders.TotalCount
+                Draw = searchModel.Draw,
+                RecordsTotal = orders.TotalCount,
+                RecordsFiltered = orders.TotalCount
             };
 
             return model;

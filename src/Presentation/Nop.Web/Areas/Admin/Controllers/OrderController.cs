@@ -446,7 +446,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //prepare model
             var model = _orderModelFactory.PrepareOrderListModel(searchModel);
 
-            return Json(model);
+            return JsonDataTable(model);
         }
 
         [HttpPost]

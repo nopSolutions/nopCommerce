@@ -94,6 +94,16 @@ namespace Nop.Web.Framework.DataTables
         /// </summary>
         public string Dom { get; set; }
         /// <summary>
+        /// Gets or sets custom render header function name(js)
+        /// See also https://datatables.net/reference/option/headerCallback
+        /// </summary>
+        public string HeaderCallback { get; set; }
+        /// <summary>
+        /// Gets or sets custom render footer function name(js)
+        /// See also https://datatables.net/reference/option/footerCallback
+        /// </summary>
+        public string FooterCallback { get; set; }
+        /// <summary>
         /// Gets or set column collection 
         /// </summary>
         public List<ColumnProperty> ColumnCollection { get; set; }
