@@ -242,6 +242,9 @@ set @resources='
   <LocaleResource Name="Checkout.Addresses.Invalid">
     <Value>You have {0} invalid address(es)</Value>
   </LocaleResource>  
+  <LocaleResource Name="Admin.Catalog.Products.Fields.LowStockActivity.Hint">
+    <Value>Action to be taken when your current stock quantity falls below (reaches) the ''Minimum stock quantity''. Activation of the action will occur only after an order is placed.</Value>
+  </LocaleResource>
 </Language>
 '
 
