@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
+using System.Text;
 using Newtonsoft.Json;
 using Nop.Core.Infrastructure;
 
@@ -11,6 +13,12 @@ namespace Nop.Core.Plugins
     /// </summary>
     public class PluginDescriptor : IDescriptor, IComparable<PluginDescriptor>
     {
+        #region Fields
+
+        private static readonly INopFileProvider _fileProvider;
+
+        #endregion
+
         #region Ctor
 
         public PluginDescriptor()
@@ -27,6 +35,12 @@ namespace Nop.Core.Plugins
         public PluginDescriptor(Assembly referencedAssembly) : this()
         {
             this.ReferencedAssembly = referencedAssembly;
+        }
+
+        static PluginDescriptor()
+        {
+            //we use the default file provider, since the DI isn't initialized yet
+            _fileProvider = CommonHelper.DefaultFileProvider;
         }
 
         #endregion
@@ -82,7 +96,7 @@ namespace Nop.Core.Plugins
             if (DisplayOrder != other.DisplayOrder)
                 return DisplayOrder.CompareTo(other.DisplayOrder);
 
-            return FriendlyName.CompareTo(other.FriendlyName);
+            return string.Compare(FriendlyName, other.FriendlyName, StringComparison.InvariantCultureIgnoreCase);
         }
 
         /// <summary>
@@ -111,6 +125,94 @@ namespace Nop.Core.Plugins
         public override int GetHashCode()
         {
             return SystemName.GetHashCode();
+        }
+
+        /// <summary>
+        /// Delete plugin directory from disk storage
+        /// </summary>
+        /// <returns>True if plugin directory is deleted, false if not</returns>
+        public bool DeletePlugin()
+        {
+           //check whether plugin is installed
+            if (Installed)
+                return false;
+
+            var directoryName = _fileProvider.GetDirectoryName(OriginalAssemblyFile);
+
+            if (_fileProvider.DirectoryExists(directoryName))
+                _fileProvider.DeleteDirectory(directoryName);
+
+            return true;
+        }
+
+        /// <summary>
+        /// Save plugin descriptor to the plugin description file
+        /// </summary>
+        public void Save()
+        {
+            //get the description file path
+            if (OriginalAssemblyFile == null)
+                throw new Exception($"Cannot load original assembly path for {SystemName} plugin.");
+
+            var filePath = _fileProvider.Combine(_fileProvider.GetDirectoryName(OriginalAssemblyFile), NopPluginDefaults.DescriptionFileName);
+            if (!_fileProvider.FileExists(filePath))
+                throw new Exception($"Description file for {SystemName} plugin does not exist. {filePath}");
+
+            //save the file
+            var text = JsonConvert.SerializeObject(this, Formatting.Indented);
+            _fileProvider.WriteAllText(filePath, text, Encoding.UTF8);
+        }
+
+        /// <summary>
+        /// Get plugin logo URL
+        /// </summary>
+        /// <returns>Logo URL</returns>
+        public string GetLogoUrl()
+        {
+            var pluginDirectory = _fileProvider.GetDirectoryName(OriginalAssemblyFile);
+            if (string.IsNullOrEmpty(pluginDirectory))
+                return null;
+
+            var logoExtension = NopPluginDefaults.SupportedLogoImageExtensions
+                .FirstOrDefault(ext => _fileProvider.FileExists(_fileProvider.Combine(pluginDirectory, $"{NopPluginDefaults.LogoFileName}.{ext}")));
+            if (string.IsNullOrWhiteSpace(logoExtension))
+                return null; //No logo file was found with any of the supported extensions.
+
+            var webHelper = EngineContext.Current.Resolve<IWebHelper>();
+            var logoUrl = $"{webHelper.GetStoreLocation()}plugins/{_fileProvider.GetDirectoryNameOnly(pluginDirectory)}/{NopPluginDefaults.LogoFileName}.{logoExtension}";
+            return logoUrl;
+        }
+
+        /// <summary>
+        /// Get plugin descriptor from the plugin description file
+        /// </summary>
+        /// <param name="filePath">Path to the description file</param>
+        /// <returns>Plugin descriptor</returns>
+        public static PluginDescriptor GetPluginDescriptorFromFile(string filePath)
+        {
+            var text = _fileProvider.ReadAllText(filePath, Encoding.UTF8);
+
+            return GetPluginDescriptorFromText(text);
+        }
+
+        /// <summary>
+        /// Get plugin descriptor from the description text
+        /// </summary>
+        /// <param name="text">Description text</param>
+        /// <returns>Plugin descriptor</returns>
+        public static PluginDescriptor GetPluginDescriptorFromText(string text)
+        {
+            if (string.IsNullOrEmpty(text))
+                return new PluginDescriptor();
+
+            //get plugin descriptor from the JSON file
+            var descriptor = JsonConvert.DeserializeObject<PluginDescriptor>(text);
+
+            //nopCommerce 2.00 didn't have 'SupportedVersions' parameter, so let's set it to "2.00"
+            if (!descriptor.SupportedVersions.Any())
+                descriptor.SupportedVersions.Add("2.00");
+
+            return descriptor;
         }
 
         #endregion
@@ -206,6 +308,18 @@ namespace Nop.Core.Plugins
         /// </summary>
         [JsonIgnore]
         public virtual Assembly ReferencedAssembly { get; internal set; }
+
+        /// <summary>
+        /// Gets or sets the value indicating whether need to show the plugin on plugins page
+        /// </summary>
+        [JsonIgnore]
+        public virtual bool ShowInPluginsList { get; set; } = true;
+
+        /// <summary>
+        /// Gets or sets the last error
+        /// </summary>
+        [JsonIgnore]
+        public virtual Exception Error { get; set; }
 
         #endregion
     }

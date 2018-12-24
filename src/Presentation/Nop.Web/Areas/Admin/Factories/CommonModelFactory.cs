@@ -416,15 +416,35 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(models));
 
             //check whether there are incompatible plugins
-            if (!PluginManager.IncompatiblePlugins?.Any() ?? true)
+            if (PluginManager.IncompatiblePlugins?.Any() ?? false)
+            {
+                foreach (var pluginName in PluginManager.IncompatiblePlugins)
+                {
+                    models.Add(new SystemWarningModel
+                    {
+                        Level = SystemWarningLevel.Warning,
+                        Text = string.Format(_localizationService.GetResource("Admin.System.Warnings.PluginNotLoaded"),
+                            pluginName)
+                    });
+                }
+            }
+
+            
+            var collisions = PluginManager.GetAssemblyLoadedCollision;
+            //check whether there are any collision of loaded assembly
+            if (!collisions.Any()) 
                 return;
 
-            foreach (var pluginName in PluginManager.IncompatiblePlugins)
+            foreach (var collision in collisions)
             {
+                var pluginReferences = collision.GetCollision
+                    .Select(item=>string.Format(_localizationService.GetResource("Admin.System.Warnings.PluginrRequiredAssembly"), item.Key, item.Value))
+                    .Aggregate("", (curent, all) => all + ", " + curent).TrimEnd(',', ' ');
+
                 models.Add(new SystemWarningModel
                 {
                     Level = SystemWarningLevel.Warning,
-                    Text = string.Format(_localizationService.GetResource("Admin.System.Warnings.PluginNotLoaded"), pluginName)
+                    Text = string.Format(_localizationService.GetResource("Admin.System.Warnings.AssemblyHasCollision"), collision.ShortName, collision.AssemblyFullNameInMemory, pluginReferences)
                 });
             }
         }

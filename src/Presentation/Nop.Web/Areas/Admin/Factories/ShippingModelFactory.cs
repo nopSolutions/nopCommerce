@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Shipping;
-using Nop.Core.Plugins;
 using Nop.Services.Common;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
@@ -162,7 +161,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     //fill in additional values (not existing in the entity)
                     shippingProviderModel.IsActive = _shippingService.IsShippingRateComputationMethodActive(provider);
                     shippingProviderModel.ConfigurationUrl = provider.GetConfigurationPageUrl();
-                    shippingProviderModel.LogoUrl = PluginManager.GetLogoUrl(provider.PluginDescriptor);
+                    shippingProviderModel.LogoUrl = provider.PluginDescriptor.GetLogoUrl();
 
                     return shippingProviderModel;
                 }),
@@ -212,7 +211,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     //fill in additional values (not existing in the entity)
                     pickupPointProviderModel.IsActive = _shippingService.IsPickupPointProviderActive(provider);
                     pickupPointProviderModel.ConfigurationUrl = provider.GetConfigurationPageUrl();
-                    pickupPointProviderModel.LogoUrl = PluginManager.GetLogoUrl(provider.PluginDescriptor);
+                    pickupPointProviderModel.LogoUrl = provider.PluginDescriptor.GetLogoUrl();
 
                     return pickupPointProviderModel;
                 }),

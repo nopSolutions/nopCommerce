@@ -6,12 +6,30 @@
 <form asp-controller="Plugin" asp-action="List" method="post" id="plugins-form-local">
     <div class="content-header clearfix">
         <div class="pull-right">
+            @if (Model.NeedToRestart)
+            {
+                <button type="submit" name="plugin-applay-changes" class="btn bg-green">@T("Admin.Configuration.Plugins.ApplyChanges")</button>
+                <button type="submit" name="plugin-discard-changes" class="btn bg-red">@T("Admin.Configuration.Plugins.DiscardChanges")</button>
+            }
+
             <button type="submit" name="plugin-reload-grid" class="btn bg-blue">@T("Admin.Configuration.Plugins.ReloadList")</button>
             <script>
                 $(document).ready(function() {
-                    $("button[name='plugin-reload-grid']").on("click", function (e) {
-                        showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Admin.Configuration.Plugins.ReloadList.Progress").Text))');
-                    });
+                    $("button[name='plugin-reload-grid']").on("click",
+                        function(e) {
+                            showThrobber(
+                                '@Html.Raw(JavaScriptEncoder.Default.Encode(T("Admin.Configuration.Plugins.ReloadList.Progress").Text))');
+                        });
+                    $("button[name='plugin-applay-changes']").on("click",
+                        function(e) {
+                            showThrobber(
+                                '@Html.Raw(JavaScriptEncoder.Default.Encode(T("Admin.Configuration.Plugins.ApplyChanges.Progress").Text))');
+                        });
+                    $("button[name='plugin-discard-changes']").on("click",
+                        function(e) {
+                            showThrobber(
+                                '@Html.Raw(JavaScriptEncoder.Default.Encode(T("Admin.Configuration.Plugins.DiscardChanges.Progress").Text))');
+                        });
                 });
             </script>
             <button type="button" name="uploadplugin" class="btn bg-olive" data-toggle="modal" data-target="#uploadplugin-window">

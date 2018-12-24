@@ -354,13 +354,13 @@ namespace Nop.Web.Controllers
                     //reset cache
                     DataSettingsManager.ResetCache();
 
-                    //install plugins
-                    PluginManager.MarkAllPluginsAsUninstalled();
+                    //add plugins to install list
+                    PluginManager.PluginsInfo.InstalledPluginNames.Clear();
                     var pluginFinder = EngineContext.Current.Resolve<IPluginFinder>();
-                    var plugins = pluginFinder.GetPlugins<IPlugin>(LoadPluginsMode.All)
+                    var plugins = pluginFinder.GetPluginDescriptors(LoadPluginsMode.All)
                         .ToList()
-                        .OrderBy(x => x.PluginDescriptor.Group)
-                        .ThenBy(x => x.PluginDescriptor.DisplayOrder)
+                        .OrderBy(x => x.Group)
+                        .ThenBy(x => x.DisplayOrder)
                         .ToList();
                     var pluginsIgnoredDuringInstallation = string.IsNullOrEmpty(_config.PluginsIgnoredDuringInstallation) ?
                         new List<string>() :
@@ -370,10 +370,10 @@ namespace Nop.Web.Controllers
                         .ToList();
                     foreach (var plugin in plugins)
                     {
-                        if (pluginsIgnoredDuringInstallation.Contains(plugin.PluginDescriptor.SystemName))
+                        if (pluginsIgnoredDuringInstallation.Contains(plugin.SystemName))
                             continue;
 
-                        plugin.Install();
+                        PluginManager.PluginsInfo.AddToInstall(plugin.SystemName);
                     }
 
                     //register default permissions
