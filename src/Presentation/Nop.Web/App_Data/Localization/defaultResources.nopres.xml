@@ -1077,15 +1077,6 @@
   <LocaleResource Name="ActivityLog.InstallNewPlugin">
     <Value>Installed a new plugin (FriendlyName: '{0}')</Value>
   </LocaleResource>
-  <LocaleResource Name="ActivityLog.NotDeletedPluginError">
-    <Value>The plugin "{0}" not deleted</Value>
-  </LocaleResource> 
-  <LocaleResource Name="ActivityLog.NotInstalledNewPluginError">
-    <Value>The plugin "{0}" not installed</Value>
-  </LocaleResource>  
-  <LocaleResource Name="ActivityLog.NotUninstalledPluginError">
-    <Value>The plugin "{0}" not uninstalled</Value>
-  </LocaleResource>
   <LocaleResource Name="ActivityLog.PublicStore.AddBlogComment">
     <Value>Added a blog comment</Value>
   </LocaleResource>
@@ -12224,6 +12215,15 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Plugins">
     <Value>Plugins</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Plugins.Errors.NotDeleted">
+    <Value>The plugin "{0}" not deleted</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Plugins.Errors.NotInstalled">
+    <Value>The plugin "{0}" not installed</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Plugins.Errors.NotUninstalled">
+    <Value>The plugin "{0}" not uninstalled</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Plugins.Saved">
     <Value>The plugin has been updated successfully.</Value>

@@ -102,7 +102,7 @@ namespace Nop.Services.Directory
                 return _currencyRepository.GetById(currencyId);
             }
 
-            if (!loadCacheableCopy) 
+            if (!loadCacheableCopy)
                 return LoadCurrencyFunc();
 
             //cacheable copy
@@ -252,7 +252,7 @@ namespace Nop.Services.Directory
             if (sourceCurrencyCode.Id == targetCurrencyCode.Id)
                 return result;
 
-            if (result == decimal.Zero || sourceCurrencyCode.Id == targetCurrencyCode.Id) 
+            if (result == decimal.Zero || sourceCurrencyCode.Id == targetCurrencyCode.Id)
                 return result;
 
             result = ConvertToPrimaryExchangeRateCurrency(result, sourceCurrencyCode);
@@ -303,7 +303,7 @@ namespace Nop.Services.Directory
                 throw new Exception("Primary exchange rate currency cannot be loaded");
 
             var result = amount;
-            if (result == decimal.Zero || targetCurrencyCode.Id == primaryExchangeRateCurrency.Id) 
+            if (result == decimal.Zero || targetCurrencyCode.Id == primaryExchangeRateCurrency.Id)
                 return result;
 
             var exchangeRate = targetCurrencyCode.Rate;
@@ -354,9 +354,8 @@ namespace Nop.Services.Directory
         /// <returns>Active exchange rate provider</returns>
         public virtual IExchangeRateProvider LoadActiveExchangeRateProvider(Customer customer = null)
         {
-            var exchangeRateProvider = LoadExchangeRateProviderBySystemName(_currencySettings.ActiveExchangeRateProviderSystemName);
-            if (exchangeRateProvider == null || !_pluginService.AuthorizedForUser(exchangeRateProvider.PluginDescriptor, customer))
-                exchangeRateProvider = LoadAllExchangeRateProviders(customer).FirstOrDefault();
+            var exchangeRateProvider = LoadExchangeRateProviderBySystemName(_currencySettings.ActiveExchangeRateProviderSystemName, customer)
+                ?? LoadAllExchangeRateProviders(customer).FirstOrDefault();
 
             return exchangeRateProvider;
         }
@@ -365,10 +364,11 @@ namespace Nop.Services.Directory
         /// Load exchange rate provider by system name
         /// </summary>
         /// <param name="systemName">System name</param>
+        /// <param name="customer">Load records allowed only to a specified customer; pass null to ignore ACL permissions</param>
         /// <returns>Found exchange rate provider</returns>
-        public virtual IExchangeRateProvider LoadExchangeRateProviderBySystemName(string systemName)
+        public virtual IExchangeRateProvider LoadExchangeRateProviderBySystemName(string systemName, Customer customer = null)
         {
-            var descriptor = _pluginService.GetPluginDescriptorBySystemName<IExchangeRateProvider>(systemName);
+            var descriptor = _pluginService.GetPluginDescriptorBySystemName<IExchangeRateProvider>(systemName, customer: customer);
             return descriptor?.Instance<IExchangeRateProvider>();
         }
 

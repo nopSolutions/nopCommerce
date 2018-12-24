@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 using Newtonsoft.Json;
-using Nop.Core.Domain.Customers;
 using Nop.Core.Infrastructure;
 
 namespace Nop.Core.Plugins
@@ -12,25 +10,19 @@ namespace Nop.Core.Plugins
     /// <summary>
     /// Represents an information about plugins
     /// </summary>
-    public class PluginsInfo
+    public partial class PluginsInfo
     {
-        #region Fields
-
-        private INopFileProvider _fileProvider;
-
-        #endregion
-
         #region Utilities
-        
+
         /// <summary>
         /// Get system names of installed plugins from obsolete file
         /// </summary>
-        /// <param name="filePath">Path to the file</param>
         /// <param name="fileProvider">File provider</param>
         /// <returns>List of plugin system names</returns>
-        private static IList<string> GetObsoleteInstalledPluginNames(string filePath, INopFileProvider fileProvider)
+        private static IList<string> GetObsoleteInstalledPluginNames(INopFileProvider fileProvider)
         {
             //check whether file exists
+            var filePath = fileProvider.MapPath(NopPluginDefaults.InstalledPluginsFilePath);
             if (!fileProvider.FileExists(filePath))
             {
                 //if not, try to parse the file that was used in previous nopCommerce versions
@@ -72,32 +64,15 @@ namespace Nop.Core.Plugins
         #region Methods
 
         /// <summary>
-        /// Checks whether to perform a plugin
-        /// </summary>
-        /// <param name="pluginSystemName">Plugin system name</param>
-        /// <returns>True if need to perform a plugin, False - otherwise</returns>
-        public bool NeedToPerform(string pluginSystemName)
-        {
-            var needToPerform = InstalledPluginNames.Any(systemName =>
-                systemName.Equals(pluginSystemName, StringComparison.CurrentCultureIgnoreCase));
-
-            needToPerform = needToPerform || IsPluginNeedToInstall(pluginSystemName);
-
-            needToPerform = needToPerform && !PluginNamesToDelete.Any(systemName =>
-                                systemName.Equals(pluginSystemName, StringComparison.CurrentCultureIgnoreCase));
-
-            return needToPerform;
-        }
-
-        /// <summary>
         /// Save plugins info to the file
         /// </summary>
-        public void Save()
+        /// <param name="fileProvider">File provider</param>
+        public void Save(INopFileProvider fileProvider)
         {
             //save the file
+            var filePath = fileProvider.MapPath(NopPluginDefaults.PluginsInfoFilePath);
             var text = JsonConvert.SerializeObject(this, Formatting.Indented);
-            _fileProvider.WriteAllText(_fileProvider.MapPath(NopPluginDefaults.PluginsInfoFilePath), text,
-                Encoding.UTF8);
+            fileProvider.WriteAllText(filePath, text, Encoding.UTF8);
         }
 
         /// <summary>
@@ -106,165 +81,66 @@ namespace Nop.Core.Plugins
         /// <returns>Plugins info</returns>
         public static PluginsInfo LoadPluginInfo(INopFileProvider fileProvider)
         {
+            //check whether plugins info file exists
             var filePath = fileProvider.MapPath(NopPluginDefaults.PluginsInfoFilePath);
-
-            //check whether file exists
-            PluginsInfo info;
             if (!fileProvider.FileExists(filePath))
             {
-                info = new PluginsInfo
+                //file doesn't exist, so try to get only installed plugin names from the obsolete file
+                var pluginsInfo = new PluginsInfo
                 {
-                    InstalledPluginNames =
-                        GetObsoleteInstalledPluginNames(
-                            fileProvider.MapPath(NopPluginDefaults.InstalledPluginsFilePath), fileProvider),
-                    _fileProvider = fileProvider
+                    InstalledPluginNames = GetObsoleteInstalledPluginNames(fileProvider)
                 };
 
-                info.Save();
-                return info;
+                //and save info into a new file
+                pluginsInfo.Save(fileProvider);
+
+                return pluginsInfo;
             }
 
+            //try to get plugin info from the JSON file
             var text = fileProvider.ReadAllText(filePath, Encoding.UTF8);
+            if (string.IsNullOrEmpty(text))
+                return new PluginsInfo();
 
-            //get plugin info from the JSON file
-            info = string.IsNullOrEmpty(text) ? new PluginsInfo() : JsonConvert.DeserializeObject<PluginsInfo>(text);
-            info._fileProvider = fileProvider;
-
-            return info;
+            return JsonConvert.DeserializeObject<PluginsInfo>(text);
         }
 
-        /// <summary>
-        /// Add plugin to the installations list
-        /// </summary>
-        /// <param name="systemName">Plugin system name</param>
-        /// <param name="customer">Customer</param>
-        public void AddToInstall(string systemName, Customer customer = null)
-        {
-            if (IsPluginNeedToInstall(systemName))
-                return;
-
-            PluginNamesToInstall.Add(new PluginToInstall
-            {
-                SystemName = systemName,
-                CustomerGuid = customer?.CustomerGuid
-            });
-
-            Save();
-        }
-
-        /// <summary>
-        /// Remove plugin from "to the installations" list
-        /// </summary>
-        /// <param name="systemName">Plugin system name</param>
-        public PluginToInstall RemoveFromToInstallList(string systemName)
-        {
-            var info = PluginNamesToInstall.FirstOrDefault(pluginName =>
-                pluginName.SystemName.Equals(systemName, StringComparison.CurrentCultureIgnoreCase));
-
-            PluginNamesToInstall.Remove(info);
-
-            Save();
-
-            return info;
-        }
-
-        /// <summary>
-        /// Add plugin to the uninstallations list
-        /// </summary>
-        /// <param name="systemName">Plugin system name</param>
-        public void AddToUnInstall(string systemName)
-        {
-            if (PluginNamesToUninstall.Any(p =>
-                p.Equals(systemName, StringComparison.CurrentCultureIgnoreCase)))
-                return;
-
-            PluginNamesToUninstall.Add(systemName);
-
-            Save();
-        }
-
-        /// <summary>
-        /// Add plugin to the deletions list
-        /// </summary>
-        /// <param name="systemName">Plugin system name</param>
-        public void AddToDelete(string systemName)
-        {
-            if (PluginNamesToDelete.Any(p =>
-                p.Equals(systemName, StringComparison.CurrentCultureIgnoreCase)))
-                return;
-
-            PluginNamesToDelete.Add(systemName);
-
-            Save();
-        }
-        
-        /// <summary>
-        /// Reset changes
-        /// </summary>
-        public void ResetChanges()
-        {
-            PluginNamesToDelete.Clear();
-            PluginNamesToInstall.Clear();
-            PluginNamesToUninstall.Clear();
-
-            foreach (var pluginDescriptor in PluginManager.ReferencedPlugins.Where(p => !p.ShowInPluginsList))
-            {
-                pluginDescriptor.ShowInPluginsList = true;
-            }
-
-            Save();
-        }
-
-        /// <summary>
-        /// Check is the plugin need to be installed
-        /// </summary>
-        /// <param name="systemName">Plugin system name</param>
-        /// <returns>True if plugin need to be installed, else false</returns>
-        public bool IsPluginNeedToInstall(string systemName)
-        {
-            return PluginNamesToInstall.Any(pluginName => pluginName.SystemName.Equals(systemName, StringComparison.CurrentCultureIgnoreCase));
-        }
-        
         #endregion
 
         #region Properties
 
         /// <summary>
-        /// Installed plugin names
+        /// Gets or sets the list of all installed plugin names
         /// </summary>
         public IList<string> InstalledPluginNames { get; set; } = new List<string>();
 
         /// <summary>
-        /// List of plugin names which will be installed
-        /// </summary>
-        public IList<PluginToInstall> PluginNamesToInstall { get; set; } = new List<PluginToInstall>();
-
-        /// <summary>
-        /// List of plugin names which will be uninstalled
+        /// Gets or sets the list of plugin names which will be uninstalled
         /// </summary>
         public IList<string> PluginNamesToUninstall { get; set; } = new List<string>();
 
         /// <summary>
-        /// List of plugin names which will be deleted
+        /// Gets or sets the list of plugin names which will be deleted
         /// </summary>
         public IList<string> PluginNamesToDelete { get; set; } = new List<string>();
 
-        #endregion
+        /// <summary>
+        /// Gets or sets the list of plugin names which will be installed
+        /// </summary>
+        public IList<(string SystemName, Guid? CustomerGuid)> PluginNamesToInstall { get; set; } = new List<(string SystemName, Guid? CustomerGuid)>();
 
         /// <summary>
-        /// Represents a plugin to install info
+        /// Gets or sets the list of plugin names which are not compatible with the current version
         /// </summary>
-        public class PluginToInstall
-        {
-            /// <summary>
-            /// Plugin's system name
-            /// </summary>
-            public string SystemName { get; set; }
+        [JsonIgnore]
+        public IList<string> IncompatiblePlugins { get; set; }
 
-            /// <summary>
-            /// Customer's GUID, who install this plugin
-            /// </summary>
-            public Guid? CustomerGuid { get; set; }
-        }
+        /// <summary>
+        /// Gets or sets the list of assembly loaded collisions
+        /// </summary>
+        [JsonIgnore]
+        public IList<PluginLoadedAssemblyInfo> AssemblyLoadedCollision { get; set; }
+
+        #endregion
     }
 }

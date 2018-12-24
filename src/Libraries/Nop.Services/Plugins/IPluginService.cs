@@ -6,102 +6,122 @@ using Nop.Core.Plugins;
 namespace Nop.Services.Plugins
 {
     /// <summary>
-    /// Plugin finder
+    /// Represents a plugin service
     /// </summary>
-    public interface IPluginService
+    public partial interface IPluginService
     {
         /// <summary>
-        /// Check whether the plugin is available in a certain store
+        /// Get plugin descriptors
         /// </summary>
-        /// <param name="pluginDescriptor">Plugin descriptor to check</param>
-        /// <param name="storeId">Store identifier to check</param>
-        /// <returns>true - available; false - no</returns>
-        bool AuthenticateStore(PluginDescriptor pluginDescriptor, int storeId);
+        /// <typeparam name="TPlugin">The type of plugins to get</typeparam>
+        /// <param name="loadMode">Filter by load plugins mode</param>
+        /// <param name="customer">Filter by  customer; pass null to load all records</param>
+        /// <param name="storeId">Filter by store; pass 0 to load all records</param>
+        /// <param name="group">Filter by plugin group; pass null to load all records</param>
+        /// <returns>Plugin descriptors</returns>
+        IEnumerable<PluginDescriptor> GetPluginDescriptors<TPlugin>(LoadPluginsMode loadMode = LoadPluginsMode.InstalledOnly,
+            Customer customer = null, int storeId = 0, string group = null) where TPlugin : class, IPlugin;
 
         /// <summary>
-        /// Check that plugin is authorized for the specified customer
+        /// Get a plugin descriptor by the system name
         /// </summary>
-        /// <param name="pluginDescriptor">Plugin descriptor to check</param>
-        /// <param name="customer">Customer</param>
-        /// <returns>True if authorized; otherwise, false</returns>
-        bool AuthorizedForUser(PluginDescriptor pluginDescriptor, Customer customer);
-
-        /// <summary>
-        /// Gets plugin groups
-        /// </summary>
-        /// <returns>Plugins groups</returns>
-        IEnumerable<string> GetPluginGroups();
-
-        /// <summary>
-        /// Gets plugins
-        /// </summary>
-        /// <typeparam name="T">The type of plugins to get.</typeparam>
+        /// <typeparam name="TPlugin">The type of plugin to get</typeparam>
+        /// <param name="systemName">Plugin system name</param>
         /// <param name="loadMode">Load plugins mode</param>
-        /// <param name="customer">Load records allowed only to a specified customer; pass null to ignore ACL permissions</param>
-        /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
+        /// <param name="customer">Filter by  customer; pass null to load all records</param>
+        /// <param name="storeId">Filter by store; pass 0 to load all records</param>
+        /// <param name="group">Filter by plugin group; pass null to load all records</param>
+        /// <returns>>Plugin descriptor</returns>
+        PluginDescriptor GetPluginDescriptorBySystemName<TPlugin>(string systemName,
+            LoadPluginsMode loadMode = LoadPluginsMode.InstalledOnly,
+            Customer customer = null, int storeId = 0, string group = null) where TPlugin : class, IPlugin;
+
+        /// <summary>
+        /// Get plugins
+        /// </summary>
+        /// <typeparam name="TPlugin">The type of plugins to get</typeparam>
+        /// <param name="loadMode">Filter by load plugins mode</param>
+        /// <param name="customer">Filter by  customer; pass null to load all records</param>
+        /// <param name="storeId">Filter by store; pass 0 to load all records</param>
         /// <param name="group">Filter by plugin group; pass null to load all records</param>
         /// <returns>Plugins</returns>
-        IEnumerable<T> GetPlugins<T>(LoadPluginsMode loadMode = LoadPluginsMode.InstalledOnly,
-            Customer customer = null, int storeId = 0, string group = null) where T : class, IPlugin;
+        IEnumerable<TPlugin> GetPlugins<TPlugin>(LoadPluginsMode loadMode = LoadPluginsMode.InstalledOnly,
+            Customer customer = null, int storeId = 0, string group = null) where TPlugin : class, IPlugin;
 
         /// <summary>
-        /// Get plugin descriptors
-        /// </summary>
-        /// <param name="loadMode">Load plugins mode</param>
-        /// <param name="customer">Load records allowed only to a specified customer; pass null to ignore ACL permissions</param>
-        /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
-        /// <param name="group">Filter by plugin group; pass null to load all records</param>
-        /// <returns>Plugin descriptors</returns>
-        IEnumerable<PluginDescriptor> GetPluginDescriptors(LoadPluginsMode loadMode = LoadPluginsMode.InstalledOnly,
-            Customer customer = null, int storeId = 0, string group = null);
-
-        /// <summary>
-        /// Get plugin descriptors
-        /// </summary>
-        /// <typeparam name="T">The type of plugin to get.</typeparam>
-        /// <param name="loadMode">Load plugins mode</param>
-        /// <param name="customer">Load records allowed only to a specified customer; pass null to ignore ACL permissions</param>
-        /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
-        /// <param name="group">Filter by plugin group; pass null to load all records</param>
-        /// <returns>Plugin descriptors</returns>
-        IEnumerable<PluginDescriptor> GetPluginDescriptors<T>(LoadPluginsMode loadMode = LoadPluginsMode.InstalledOnly,
-            Customer customer = null, int storeId = 0, string group = null) where T : class, IPlugin;
-
-        /// <summary>
-        /// Get a plugin descriptor by its system name
-        /// </summary>
-        /// <param name="systemName">Plugin system name</param>
-        /// <param name="loadMode">Load plugins mode</param>
-        /// <returns>>Plugin descriptor</returns>
-        PluginDescriptor GetPluginDescriptorBySystemName(string systemName, LoadPluginsMode loadMode = LoadPluginsMode.InstalledOnly);
-
-        /// <summary>
-        /// Get a plugin descriptor by its system name
-        /// </summary>
-        /// <typeparam name="T">The type of plugin to get.</typeparam>
-        /// <param name="systemName">Plugin system name</param>
-        /// <param name="loadMode">Load plugins mode</param>
-        /// <returns>>Plugin descriptor</returns>
-        PluginDescriptor GetPluginDescriptorBySystemName<T>(string systemName, LoadPluginsMode loadMode = LoadPluginsMode.InstalledOnly)
-            where T : class, IPlugin;
-
-        /// <summary>
-        /// Reload plugins after updating
-        /// </summary>
-        /// <param name="pluginDescriptor">Updated plugin descriptor</param>
-        void ReloadPlugins(PluginDescriptor pluginDescriptor);
-
-        /// <summary>
-        /// Find a plugin descriptor by some type which is located into the same assembly as plugin
+        /// Find a plugin by the type which is located into the same assembly as a plugin
         /// </summary>
         /// <param name="typeInAssembly">Type</param>
-        /// <returns>Plugin descriptor if exists; otherwise null</returns>
-        PluginDescriptor FindPlugin(Type typeInAssembly);
+        /// <returns>Plugin</returns>
+        IPlugin FindPluginByTypeInAssembly(Type typeInAssembly);
 
+        /// <summary>
+        /// Get plugin logo URL
+        /// </summary>
+        /// <param name="pluginDescriptor">Plugin descriptor</param>
+        /// <returns>Logo URL</returns>
+        string GetPluginLogoUrl(PluginDescriptor pluginDescriptor);
+
+        /// <summary>
+        /// Prepare plugin to the installation
+        /// </summary>
+        /// <param name="systemName">Plugin system name</param>
+        /// <param name="customer">Customer</param>
+        void PreparePluginToInstall(string systemName, Customer customer = null);
+
+        /// <summary>
+        /// Prepare plugin to the uninstallation
+        /// </summary>
+        /// <param name="systemName">Plugin system name</param>
+        void PreparePluginToUninstall(string systemName);
+
+        /// <summary>
+        /// Prepare plugin to the removing
+        /// </summary>
+        /// <param name="systemName">Plugin system name</param>
+        void PreparePluginToDelete(string systemName);
+
+        /// <summary>
+        /// Reset changes
+        /// </summary>
+        void ResetChanges();
+
+        /// <summary>
+        /// Clear installed plugins list
+        /// </summary>
+        void ClearInstalledPluginsList();
+
+        /// <summary>
+        /// Install plugins
+        /// </summary>
         void InstallPlugins();
 
+        /// <summary>
+        /// Uninstall plugins
+        /// </summary>
         void UninstallPlugins();
 
+        /// <summary>
+        /// Delete plugins
+        /// </summary>
         void DeletePlugins();
+
+        /// <summary>
+        /// Check whether application restart is required to apply changes to plugins
+        /// </summary>
+        /// <returns>Result of check</returns>
+        bool IsRestartRequired();
+
+        /// <summary>
+        /// Get names of incompatible plugins
+        /// </summary>
+        /// <returns>List of plugin names</returns>
+        IList<string> GetIncompatiblePlugins();
+
+        /// <summary>
+        /// Get all assembly loaded collisions
+        /// </summary>
+        /// <returns>List of plugin loaded assembly info</returns>
+        IList<PluginLoadedAssemblyInfo> GetAssemblyCollisions();
     }
 }

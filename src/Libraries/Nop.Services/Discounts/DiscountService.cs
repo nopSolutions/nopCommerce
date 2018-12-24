@@ -144,14 +144,9 @@ namespace Nop.Services.Discounts
                 else
                 {
                     //or try to get validation result for the requirement
-                    var requirementRulePlugin = LoadDiscountRequirementRuleBySystemName(requirement.SystemName);
+                    var requirementRulePlugin = LoadDiscountRequirementRuleBySystemName(requirement.SystemName,
+                        customer, _storeContext.CurrentStore.Id);
                     if (requirementRulePlugin == null)
-                        continue;
-
-                    if (!_pluginService.AuthorizedForUser(requirementRulePlugin.PluginDescriptor, customer))
-                        continue;
-
-                    if (!_pluginService.AuthenticateStore(requirementRulePlugin.PluginDescriptor, _storeContext.CurrentStore.Id))
                         continue;
 
                     var ruleResult = requirementRulePlugin.CheckRequirement(new DiscountRequirementValidationRequest
@@ -555,7 +550,7 @@ namespace Nop.Services.Discounts
             foreach (var discount in discounts)
             {
                 var currentDiscountValue = GetDiscountAmount(discount, amount);
-                if (currentDiscountValue <= discountAmount) 
+                if (currentDiscountValue <= discountAmount)
                     continue;
 
                 discountAmount = currentDiscountValue;
@@ -567,11 +562,11 @@ namespace Nop.Services.Discounts
             //right now we calculate discount values based on the original amount value
             //please keep it in mind if you're going to use discounts with "percentage"
             var cumulativeDiscounts = discounts.Where(x => x.IsCumulative).OrderBy(x => x.Name).ToList();
-            if (cumulativeDiscounts.Count <= 1) 
+            if (cumulativeDiscounts.Count <= 1)
                 return result;
 
             var cumulativeDiscountAmount = cumulativeDiscounts.Sum(d => GetDiscountAmount(d, amount));
-            if (cumulativeDiscountAmount <= discountAmount) 
+            if (cumulativeDiscountAmount <= discountAmount)
                 return result;
 
             discountAmount = cumulativeDiscountAmount;
@@ -648,10 +643,14 @@ namespace Nop.Services.Discounts
         /// Load discount requirement rule by system name
         /// </summary>
         /// <param name="systemName">System name</param>
+        /// <param name="customer">Load records allowed only to a specified customer; pass null to ignore ACL permissions</param>
+        /// <param name="storeId">Load records allowed only on the specified store; pass 0 to ignore store mappings</param>
         /// <returns>Found discount requirement rule</returns>
-        public virtual IDiscountRequirementRule LoadDiscountRequirementRuleBySystemName(string systemName)
+        public virtual IDiscountRequirementRule LoadDiscountRequirementRuleBySystemName(string systemName,
+            Customer customer = null, int storeId = 0)
         {
-            var descriptor = _pluginService.GetPluginDescriptorBySystemName<IDiscountRequirementRule>(systemName);
+            var descriptor = _pluginService.GetPluginDescriptorBySystemName<IDiscountRequirementRule>(systemName,
+                customer: customer, storeId: storeId);
             return descriptor?.Instance<IDiscountRequirementRule>();
         }
 
@@ -795,7 +794,7 @@ namespace Nop.Services.Discounts
                         var usedTimes = GetAllDiscountUsageHistory(discount.Id, null, null, 0, 1).TotalCount;
                         if (usedTimes >= discount.LimitationTimes)
                             return result;
-                    } 
+                    }
 
                     break;
                 case DiscountLimitationType.NTimesPerCustomer:
@@ -809,7 +808,7 @@ namespace Nop.Services.Discounts
                                 return result;
                             }
                         }
-                    } 
+                    }
 
                     break;
                 case DiscountLimitationType.Unlimited:

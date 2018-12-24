@@ -2,6 +2,7 @@
 using Nop.Core.Domain.Cms;
 using Nop.Services.Cms;
 using Nop.Services.Configuration;
+using Nop.Services.Events;
 using Nop.Services.Plugins;
 using Nop.Services.Security;
 using Nop.Web.Areas.Admin.Factories;
@@ -14,8 +15,8 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
+        private readonly IEventPublisher _eventPublisher;
         private readonly IPermissionService _permissionService;
-        private readonly IPluginService _pluginService;
         private readonly ISettingService _settingService;
         private readonly IWidgetModelFactory _widgetModelFactory;
         private readonly IWidgetService _widgetService;
@@ -25,15 +26,15 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Ctor
 
-        public WidgetController(IPermissionService permissionService,
-            IPluginService pluginService,
+        public WidgetController(IEventPublisher eventPublisher,
+            IPermissionService permissionService,
             ISettingService settingService,
             IWidgetModelFactory widgetModelFactory,
             IWidgetService widgetService,
             WidgetSettings widgetSettings)
         {
+            this._eventPublisher = eventPublisher;
             this._permissionService = permissionService;
-            this._pluginService = pluginService;
             this._settingService = settingService;
             this._widgetModelFactory = widgetModelFactory;
             this._widgetService = widgetService;
@@ -106,8 +107,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             //update the description file
             pluginDescriptor.Save();
 
-            //reset plugin cache
-            _pluginService.ReloadPlugins(pluginDescriptor);
+            //raise event
+            _eventPublisher.Publish(new PluginUpdatedEvent(pluginDescriptor));
 
             return new NullJsonResult();
         }

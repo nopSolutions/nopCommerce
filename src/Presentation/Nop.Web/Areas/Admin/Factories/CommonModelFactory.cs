@@ -416,35 +416,29 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(models));
 
             //check whether there are incompatible plugins
-            if (PluginManager.IncompatiblePlugins?.Any() ?? false)
+            foreach (var pluginName in _pluginService.GetIncompatiblePlugins())
             {
-                foreach (var pluginName in PluginManager.IncompatiblePlugins)
+                models.Add(new SystemWarningModel
                 {
-                    models.Add(new SystemWarningModel
-                    {
-                        Level = SystemWarningLevel.Warning,
-                        Text = string.Format(_localizationService.GetResource("Admin.System.Warnings.PluginNotLoaded"),
-                            pluginName)
-                    });
-                }
+                    Level = SystemWarningLevel.Warning,
+                    Text = string.Format(_localizationService.GetResource("Admin.System.Warnings.PluginNotLoaded"), pluginName)
+                });
             }
 
-            
-            var collisions = PluginManager.GetAssemblyLoadedCollision;
             //check whether there are any collision of loaded assembly
-            if (!collisions.Any()) 
-                return;
-
-            foreach (var collision in collisions)
+            foreach (var assembly in _pluginService.GetAssemblyCollisions())
             {
-                var pluginReferences = collision.GetCollision
-                    .Select(item=>string.Format(_localizationService.GetResource("Admin.System.Warnings.PluginRequiredAssembly"), item.Key, item.Value))
+                //get plugin references message
+                var message = assembly.Collisions
+                    .Select(item => string.Format(_localizationService
+                        .GetResource("Admin.System.Warnings.PluginRequiredAssembly"), item.PluginName, item.AssemblyName))
                     .Aggregate("", (curent, all) => all + ", " + curent).TrimEnd(',', ' ');
 
                 models.Add(new SystemWarningModel
                 {
                     Level = SystemWarningLevel.Warning,
-                    Text = string.Format(_localizationService.GetResource("Admin.System.Warnings.AssemblyHasCollision"), collision.ShortName, collision.AssemblyFullNameInMemory, pluginReferences)
+                    Text = string.Format(_localizationService.GetResource("Admin.System.Warnings.AssemblyHasCollision"),
+                        assembly.ShortName, assembly.AssemblyFullNameInMemory, message)
                 });
             }
         }
@@ -561,11 +555,11 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="models">List of system warning models</param>
         protected virtual void PreparePluginsEnabledWarningModel(List<SystemWarningModel> models)
         {
-            var pluginDescriptors = _pluginService.GetPluginDescriptors();
+            var plugins = _pluginService.GetPlugins<IPlugin>();
 
             var notEnabled = new List<string>();
 
-            foreach (var plugin in pluginDescriptors.Select(pd => pd.Instance()))
+            foreach (var plugin in plugins)
             {
                 var isEnabled = true;
 

@@ -3,49 +3,39 @@ using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Infrastructure;
 using Nop.Core.Plugins;
 using Nop.Services.Customers;
-using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 
 namespace Nop.Services.Plugins
 {
     /// <summary>
-    /// Plugin finder
+    /// Represents the plugin service implementation
     /// </summary>
-    public class PluginService : IPluginService
+    public partial class PluginService : IPluginService
     {
         #region Fields
 
-        private readonly ICustomerActivityService _customerActivityService;
         private readonly ICustomerService _customerService;
-        private readonly IEventPublisher _eventPublisher;
-        private readonly ILocalizationService _localizationService;
         private readonly ILogger _logger;
-        private readonly IWorkContext _workContext;
-
-        private IList<PluginDescriptor> _plugins;
-        private bool _arePluginsLoaded;
-        private List<PluginsInfo.PluginToInstall> _lastInstalledPluginSystemNames;
+        private readonly INopFileProvider _fileProvider;
+        private readonly IWebHelper _webHelper;
 
         #endregion
 
         #region Ctor
 
-        public PluginService(ICustomerActivityService customerActivityService,
-            ICustomerService customerService,
-            IEventPublisher eventPublisher,
-            ILocalizationService localizationService,
+        public PluginService(ICustomerService customerService,
             ILogger logger,
-            IWorkContext workContext)
+            INopFileProvider fileProvider,
+            IWebHelper webHelper)
         {
-            this._customerActivityService = customerActivityService;
             this._customerService = customerService;
-            this._eventPublisher = eventPublisher;
-            this._localizationService = localizationService;
             this._logger = logger;
-            this._workContext = workContext;
+            this._fileProvider = fileProvider;
+            this._webHelper = webHelper;
         }
 
         #endregion
@@ -53,27 +43,12 @@ namespace Nop.Services.Plugins
         #region Utilities
 
         /// <summary>
-        /// Ensure plugins are loaded
-        /// </summary>
-        protected virtual void EnsurePluginsAreLoaded()
-        {
-            if (_arePluginsLoaded) 
-                return;
-
-            var foundPlugins = PluginManager.ReferencedPlugins.ToList();
-            foundPlugins.Sort();
-            _plugins = foundPlugins.ToList();
-
-            _arePluginsLoaded = true;
-        }
-
-        /// <summary>
-        /// Check whether the plugin is available in a certain store
+        /// Check whether to load the plugin based on the load mode passed
         /// </summary>
         /// <param name="pluginDescriptor">Plugin descriptor to check</param>
         /// <param name="loadMode">Load plugins mode</param>
-        /// <returns>true - available; false - no</returns>
-        protected virtual bool CheckLoadMode(PluginDescriptor pluginDescriptor, LoadPluginsMode loadMode)
+        /// <returns>Result of check</returns>
+        protected virtual bool FilterByLoadMode(PluginDescriptor pluginDescriptor, LoadPluginsMode loadMode)
         {
             if (pluginDescriptor == null)
                 throw new ArgumentNullException(nameof(pluginDescriptor));
@@ -81,24 +56,26 @@ namespace Nop.Services.Plugins
             switch (loadMode)
             {
                 case LoadPluginsMode.All:
-                    //no filtering
                     return true;
+
                 case LoadPluginsMode.InstalledOnly:
                     return pluginDescriptor.Installed;
+
                 case LoadPluginsMode.NotInstalledOnly:
                     return !pluginDescriptor.Installed;
+
                 default:
-                    throw new Exception("Not supported LoadPluginsMode");
+                    throw new NotSupportedException(nameof(loadMode));
             }
         }
 
         /// <summary>
-        /// Check whether the plugin is in a certain group
+        /// Check whether to load the plugin based on the plugin group passed
         /// </summary>
         /// <param name="pluginDescriptor">Plugin descriptor to check</param>
-        /// <param name="group">Group</param>
-        /// <returns>true - available; false - no</returns>
-        protected virtual bool CheckGroup(PluginDescriptor pluginDescriptor, string group)
+        /// <param name="group">Group name</param>
+        /// <returns>Result of check</returns>
+        protected virtual bool FilterByPluginGroup(PluginDescriptor pluginDescriptor, string group)
         {
             if (pluginDescriptor == null)
                 throw new ArgumentNullException(nameof(pluginDescriptor));
@@ -110,140 +87,31 @@ namespace Nop.Services.Plugins
         }
 
         /// <summary>
-        /// Uninstall plugins if need
-        /// </summary>
-        /// <returns>List of uninstalled plugin system names</returns>
-        protected virtual List<string> UninstallPluginsIfNeed()
-        {
-            var uninstalledPluginSystemNames = new List<string>();
-
-            //uninstall plugins
-            foreach (var pluginDescriptor in PluginManager.ReferencedPlugins)
-            {
-                if (!pluginDescriptor.Installed || !PluginManager.PluginsInfo.PluginNamesToUninstall.Any(systemName => systemName.Equals(pluginDescriptor.SystemName, StringComparison.CurrentCultureIgnoreCase)))
-                    continue;
-
-                try
-                {
-                    pluginDescriptor.Instance().Uninstall();
-
-                    //remove plugin system name from the list if exists
-                    var alreadyMarkedAsInstalled = PluginManager.PluginsInfo.InstalledPluginNames.Any(pluginName => pluginName.Equals(pluginDescriptor.SystemName, StringComparison.InvariantCultureIgnoreCase));
-                    if (alreadyMarkedAsInstalled)
-                        PluginManager.PluginsInfo.InstalledPluginNames.Remove(pluginDescriptor.SystemName);
-
-                    PluginManager.PluginsInfo.PluginNamesToUninstall.Remove(pluginDescriptor.SystemName);
-
-                    uninstalledPluginSystemNames.Add(pluginDescriptor.SystemName);
-
-                    pluginDescriptor.Installed = false;
-                    pluginDescriptor.ShowInPluginsList = true;
-                }
-                catch (Exception ex)
-                {
-                    pluginDescriptor.Error = ex;
-                }
-            }
-
-            PluginManager.PluginsInfo.Save();
-
-            return uninstalledPluginSystemNames;
-        }
-
-        /// <summary>
-        /// Delete plugins if need
-        /// </summary>
-        /// <returns>List of deleted plugin system names</returns>
-        protected virtual List<string> DeletePluginsIfNeed()
-        {
-            var deletedPluginSystemNames = new List<string>();
-
-            //delete plugins
-            foreach (var dfd in PluginManager.PluginDescriptors)
-            {
-                var pluginDescriptor = PluginManager.ReferencedPlugins.FirstOrDefault(p => p.SystemName.Equals(dfd.SystemName, StringComparison.CurrentCultureIgnoreCase));
-
-                if (pluginDescriptor == null)
-                    continue;
-
-                if (pluginDescriptor.Installed || !PluginManager.PluginsInfo.PluginNamesToDelete.Any(systemName => systemName.Equals(pluginDescriptor.SystemName, StringComparison.CurrentCultureIgnoreCase)))
-                    continue;
-
-                try
-                {
-                    if (pluginDescriptor.DeletePlugin())
-                    {
-                        PluginManager.PluginsInfo.PluginNamesToDelete.Remove(pluginDescriptor.SystemName);
-                        deletedPluginSystemNames.Add(pluginDescriptor.SystemName);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    pluginDescriptor.Error = ex;
-                }
-            }
-
-            PluginManager.PluginsInfo.Save();
-
-            return deletedPluginSystemNames;
-        }
-
-        /// <summary>
-        /// Install plugins if need
-        /// </summary>
-        /// <returns></returns>
-        protected virtual void InstallPluginsIfNeed()
-        {
-            _lastInstalledPluginSystemNames = new List<PluginsInfo.PluginToInstall>();
-
-            foreach (var dfd in PluginManager.PluginDescriptors)
-            {
-                var pluginDescriptor = dfd;
-
-                if (pluginDescriptor.Installed || !PluginManager.PluginsInfo.IsPluginNeedToInstall(pluginDescriptor.SystemName))
-                    continue;
-
-                var loadedDescriptor = PluginManager.ReferencedPlugins.FirstOrDefault(p =>
-                    p.SystemName.Equals(pluginDescriptor.SystemName, StringComparison.CurrentCultureIgnoreCase));
-
-                if (loadedDescriptor == null)
-                    continue;
-
-                try
-                {
-                    loadedDescriptor.Instance().Install();
-
-                    //add plugin system name to the list if doesn't already exist
-                    var alreadyMarkedAsInstalled = PluginManager.PluginsInfo.InstalledPluginNames.Any(pluginName => pluginName.Equals(pluginDescriptor.SystemName, StringComparison.InvariantCultureIgnoreCase));
-                    if (!alreadyMarkedAsInstalled)
-                    {
-                        PluginManager.PluginsInfo.InstalledPluginNames.Add(pluginDescriptor.SystemName);
-                    }
-
-                    _lastInstalledPluginSystemNames.Add(PluginManager.PluginsInfo.RemoveFromToInstallList(loadedDescriptor.SystemName));
-
-                    loadedDescriptor.Installed = true;
-                }
-                catch (Exception ex)
-                {
-                    loadedDescriptor.Error = ex;
-                }
-            }
-
-            PluginManager.PluginsInfo.Save();
-        }
-
-        #endregion
-
-        #region Methods
-
-        /// <summary>
-        /// Check whether the plugin is available in a certain store
+        /// Check whether to load the plugin based on the customer passed
         /// </summary>
         /// <param name="pluginDescriptor">Plugin descriptor to check</param>
-        /// <param name="storeId">Store identifier to check</param>
-        /// <returns>true - available; false - no</returns>
-        public virtual bool AuthenticateStore(PluginDescriptor pluginDescriptor, int storeId)
+        /// <param name="customer">Customer</param>
+        /// <returns>Result of check</returns>
+        protected virtual bool FilterByCustomer(PluginDescriptor pluginDescriptor, Customer customer)
+        {
+            if (pluginDescriptor == null)
+                throw new ArgumentNullException(nameof(pluginDescriptor));
+
+            if (customer == null || !pluginDescriptor.LimitedToCustomerRoles.Any())
+                return true;
+
+            var customerRoleIds = customer.CustomerRoles.Where(role => role.Active).Select(role => role.Id);
+
+            return pluginDescriptor.LimitedToCustomerRoles.Intersect(customerRoleIds).Any();
+        }
+
+        /// <summary>
+        /// Check whether to load the plugin based on the store identifier passed
+        /// </summary>
+        /// <param name="pluginDescriptor">Plugin descriptor to check</param>
+        /// <param name="storeId">Store identifier</param>
+        /// <returns>Result of check</returns>
+        protected virtual bool FilterByStore(PluginDescriptor pluginDescriptor, int storeId)
         {
             if (pluginDescriptor == null)
                 throw new ArgumentNullException(nameof(pluginDescriptor));
@@ -258,198 +126,360 @@ namespace Nop.Services.Plugins
             return pluginDescriptor.LimitedToStores.Contains(storeId);
         }
 
+        #endregion
+
+        #region Methods
+
         /// <summary>
-        /// Check that plugin is available for the specified customer
+        /// Get plugin descriptors
         /// </summary>
-        /// <param name="pluginDescriptor">Plugin descriptor to check</param>
-        /// <param name="customer">Customer</param>
-        /// <returns>True if authorized; otherwise, false</returns>
-        public virtual bool AuthorizedForUser(PluginDescriptor pluginDescriptor, Customer customer)
+        /// <typeparam name="TPlugin">The type of plugins to get</typeparam>
+        /// <param name="loadMode">Filter by load plugins mode</param>
+        /// <param name="customer">Filter by  customer; pass null to load all records</param>
+        /// <param name="storeId">Filter by store; pass 0 to load all records</param>
+        /// <param name="group">Filter by plugin group; pass null to load all records</param>
+        /// <returns>Plugin descriptors</returns>
+        public virtual IEnumerable<PluginDescriptor> GetPluginDescriptors<TPlugin>(LoadPluginsMode loadMode = LoadPluginsMode.InstalledOnly,
+            Customer customer = null, int storeId = 0, string group = null) where TPlugin : class, IPlugin
         {
-            if (pluginDescriptor == null)
-                throw new ArgumentNullException(nameof(pluginDescriptor));
+            var pluginDescriptors = PluginManager.PluginDescriptors;
 
-            if (customer == null || !pluginDescriptor.LimitedToCustomerRoles.Any())
-                return true;
+            //filter plugins
+            pluginDescriptors = pluginDescriptors.Where(descriptor =>
+                FilterByLoadMode(descriptor, loadMode) &&
+                FilterByCustomer(descriptor, customer) &&
+                FilterByStore(descriptor, storeId) &&
+                FilterByPluginGroup(descriptor, group));
 
-            var customerRoleIds = customer.CustomerRoles.Where(role => role.Active).Select(role => role.Id);
+            //filter by the passed type
+            if (typeof(TPlugin) != typeof(IPlugin))
+                pluginDescriptors = pluginDescriptors.Where(descriptor => typeof(TPlugin).IsAssignableFrom(descriptor.PluginType));
 
-            return pluginDescriptor.LimitedToCustomerRoles.Intersect(customerRoleIds).Any();
+            //order by group name
+            pluginDescriptors = pluginDescriptors.OrderBy(descriptor => descriptor.Group).ToList();
+
+            return pluginDescriptors;
         }
 
         /// <summary>
-        /// Gets plugin groups
+        /// Get a plugin descriptor by the system name
         /// </summary>
-        /// <returns>Plugins groups</returns>
-        public virtual IEnumerable<string> GetPluginGroups()
-        {
-            return GetPluginDescriptors(LoadPluginsMode.All).Select(x => x.Group).Distinct().OrderBy(x => x);
-        }
-
-        /// <summary>
-        /// Gets plugins
-        /// </summary>
-        /// <typeparam name="T">The type of plugins to get.</typeparam>
+        /// <typeparam name="TPlugin">The type of plugin to get</typeparam>
+        /// <param name="systemName">Plugin system name</param>
         /// <param name="loadMode">Load plugins mode</param>
-        /// <param name="customer">Load records allowed only to a specified customer; pass null to ignore ACL permissions</param>
-        /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
+        /// <param name="customer">Filter by  customer; pass null to load all records</param>
+        /// <param name="storeId">Filter by store; pass 0 to load all records</param>
+        /// <param name="group">Filter by plugin group; pass null to load all records</param>
+        /// <returns>>Plugin descriptor</returns>
+        public virtual PluginDescriptor GetPluginDescriptorBySystemName<TPlugin>(string systemName,
+            LoadPluginsMode loadMode = LoadPluginsMode.InstalledOnly,
+            Customer customer = null, int storeId = 0, string group = null) where TPlugin : class, IPlugin
+        {
+            return GetPluginDescriptors<TPlugin>(loadMode, customer, storeId, group)
+                .FirstOrDefault(descriptor => descriptor.SystemName.Equals(systemName, StringComparison.InvariantCultureIgnoreCase));
+        }
+
+        /// <summary>
+        /// Get plugins
+        /// </summary>
+        /// <typeparam name="TPlugin">The type of plugins to get</typeparam>
+        /// <param name="loadMode">Filter by load plugins mode</param>
+        /// <param name="customer">Filter by customer; pass null to load all records</param>
+        /// <param name="storeId">Filter by store; pass 0 to load all records</param>
         /// <param name="group">Filter by plugin group; pass null to load all records</param>
         /// <returns>Plugins</returns>
-        public virtual IEnumerable<T> GetPlugins<T>(LoadPluginsMode loadMode = LoadPluginsMode.InstalledOnly,
-            Customer customer = null, int storeId = 0, string group = null) where T : class, IPlugin
+        public virtual IEnumerable<TPlugin> GetPlugins<TPlugin>(LoadPluginsMode loadMode = LoadPluginsMode.InstalledOnly,
+            Customer customer = null, int storeId = 0, string group = null) where TPlugin : class, IPlugin
         {
-            return GetPluginDescriptors<T>(loadMode, customer, storeId, group).Select(p => p.Instance<T>());
+            return GetPluginDescriptors<TPlugin>(loadMode, customer, storeId, group)
+                .Select(descriptor => descriptor.Instance<TPlugin>());
         }
 
         /// <summary>
-        /// Get plugin descriptors
-        /// </summary>
-        /// <param name="loadMode">Load plugins mode</param>
-        /// <param name="customer">Load records allowed only to a specified customer; pass null to ignore ACL permissions</param>
-        /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
-        /// <param name="group">Filter by plugin group; pass null to load all records</param>
-        /// <returns>Plugin descriptors</returns>
-        public virtual IEnumerable<PluginDescriptor> GetPluginDescriptors(LoadPluginsMode loadMode = LoadPluginsMode.InstalledOnly,
-            Customer customer = null, int storeId = 0, string group = null)
-        {
-            //ensure plugins are loaded
-            EnsurePluginsAreLoaded();
-
-            return _plugins.Where(p => CheckLoadMode(p, loadMode) && AuthorizedForUser(p, customer) && AuthenticateStore(p, storeId) && CheckGroup(p, group));
-        }
-
-        /// <summary>
-        /// Get plugin descriptors
-        /// </summary>
-        /// <typeparam name="T">The type of plugin to get.</typeparam>
-        /// <param name="loadMode">Load plugins mode</param>
-        /// <param name="customer">Load records allowed only to a specified customer; pass null to ignore ACL permissions</param>
-        /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
-        /// <param name="group">Filter by plugin group; pass null to load all records</param>
-        /// <returns>Plugin descriptors</returns>
-        public virtual IEnumerable<PluginDescriptor> GetPluginDescriptors<T>(LoadPluginsMode loadMode = LoadPluginsMode.InstalledOnly,
-            Customer customer = null, int storeId = 0, string group = null) 
-            where T : class, IPlugin
-        {
-            return GetPluginDescriptors(loadMode, customer, storeId, group)
-                .Where(p => typeof(T).IsAssignableFrom(p.PluginType));
-        }
-
-        /// <summary>
-        /// Get a plugin descriptor by its system name
-        /// </summary>
-        /// <param name="systemName">Plugin system name</param>
-        /// <param name="loadMode">Load plugins mode</param>
-        /// <returns>>Plugin descriptor</returns>
-        public virtual PluginDescriptor GetPluginDescriptorBySystemName(string systemName, LoadPluginsMode loadMode = LoadPluginsMode.InstalledOnly)
-        {
-            return GetPluginDescriptors(loadMode)
-                .SingleOrDefault(p => p.SystemName.Equals(systemName, StringComparison.InvariantCultureIgnoreCase));
-        }
-
-        /// <summary>
-        /// Get a plugin descriptor by its system name
-        /// </summary>
-        /// <typeparam name="T">The type of plugin to get.</typeparam>
-        /// <param name="systemName">Plugin system name</param>
-        /// <param name="loadMode">Load plugins mode</param>
-        /// <returns>>Plugin descriptor</returns>
-        public virtual PluginDescriptor GetPluginDescriptorBySystemName<T>(string systemName, LoadPluginsMode loadMode = LoadPluginsMode.InstalledOnly)
-            where T : class, IPlugin
-        {
-            return GetPluginDescriptors<T>(loadMode)
-                .SingleOrDefault(p => p.SystemName.Equals(systemName, StringComparison.InvariantCultureIgnoreCase));
-        }
-
-        /// <summary>
-        /// Reload plugins after updating
-        /// </summary>
-        /// <param name="pluginDescriptor">Updated plugin descriptor</param>
-        public virtual void ReloadPlugins(PluginDescriptor pluginDescriptor)
-        {
-            _arePluginsLoaded = false;
-            EnsurePluginsAreLoaded();
-
-            //raise event
-            _eventPublisher.Publish(new PluginUpdatedEvent(pluginDescriptor));
-        }
-
-        /// <summary>
-        /// Find a plugin descriptor by some type which is located into the same assembly as plugin
+        /// Find a plugin by the type which is located into the same assembly as a plugin
         /// </summary>
         /// <param name="typeInAssembly">Type</param>
-        /// <returns>Plugin descriptor if exists; otherwise null</returns>
-        public virtual PluginDescriptor FindPlugin(Type typeInAssembly)
+        /// <returns>Plugin</returns>
+        public virtual IPlugin FindPluginByTypeInAssembly(Type typeInAssembly)
         {
             if (typeInAssembly == null)
                 throw new ArgumentNullException(nameof(typeInAssembly));
 
-            return PluginManager.ReferencedPlugins?.FirstOrDefault(plugin =>
-                plugin.ReferencedAssembly != null &&
-                plugin.ReferencedAssembly.FullName.Equals(typeInAssembly.Assembly.FullName, StringComparison.InvariantCultureIgnoreCase));
+            //try to do magic
+            var pluginDescriptor = PluginManager.PluginDescriptors.FirstOrDefault(descriptor =>
+               descriptor.ReferencedAssembly?.FullName.Equals(typeInAssembly.Assembly.FullName, StringComparison.InvariantCultureIgnoreCase) ?? false);
+
+            return pluginDescriptor?.Instance<IPlugin>();
         }
 
-        public virtual void InstallPlugins()
+        /// <summary>
+        /// Get plugin logo URL
+        /// </summary>
+        /// <param name="pluginDescriptor">Plugin descriptor</param>
+        /// <returns>Logo URL</returns>
+        public virtual string GetPluginLogoUrl(PluginDescriptor pluginDescriptor)
         {
-            foreach (var installedPlugin in this.GetLastInstalledPlugins)
-            {
-                var customer = (installedPlugin.CustomerGuid.HasValue ? _customerService.GetCustomerByGuid(installedPlugin.CustomerGuid.Value) : null) ?? _workContext.CurrentCustomer;
-                _customerActivityService.InsertActivity(customer, "InstallNewPlugin", string.Format(_localizationService.GetResource("ActivityLog.InstallNewPlugin"), installedPlugin.SystemName));
-            }
+            var pluginDirectory = _fileProvider.GetDirectoryName(pluginDescriptor.OriginalAssemblyFile);
+            if (string.IsNullOrEmpty(pluginDirectory))
+                return null;
 
-            //log plugin installation errors
-            foreach (var descriptor in PluginManager.ReferencedPlugins.Where(pluginDescriptor => pluginDescriptor.Error != null))
-            {
-                _logger.Error(string.Format(_localizationService.GetResource("ActivityLog.NotInstalledNewPluginError"), descriptor.SystemName), descriptor.Error);
-                descriptor.Error = null;
-            }
+            //check for supported extensions
+            var logoExtension = NopPluginDefaults.SupportedLogoImageExtensions
+                .FirstOrDefault(ext => _fileProvider.FileExists(_fileProvider.Combine(pluginDirectory, $"{NopPluginDefaults.LogoFileName}.{ext}")));
+            if (string.IsNullOrWhiteSpace(logoExtension))
+                return null;
+
+            var storeLocation = _webHelper.GetStoreLocation();
+            var logoUrl = $"{storeLocation}{NopPluginDefaults.PathName}/" +
+                $"{_fileProvider.GetDirectoryNameOnly(pluginDirectory)}/{NopPluginDefaults.LogoFileName}.{logoExtension}";
+
+            return logoUrl;
         }
 
-        public virtual void UninstallPlugins()
+        /// <summary>
+        /// Prepare plugin to the installation
+        /// </summary>
+        /// <param name="systemName">Plugin system name</param>
+        /// <param name="customer">Customer</param>
+        public virtual void PreparePluginToInstall(string systemName, Customer customer = null)
         {
-            //uninstall plugins
-            foreach (var uninstalledPluginSystemName in this.UninstallPluginsIfNeed())
+            //add plugin name to the appropriate list (if not yet contained) and save changes
+            if (!PluginManager.PluginsInfo.PluginNamesToInstall.Any(item => item.SystemName == systemName))
             {
-                _customerActivityService.InsertActivity("UninstallPlugin", string.Format(_localizationService.GetResource("ActivityLog.UninstallPlugin"), uninstalledPluginSystemName));
-            }
-
-            //log plugin uninstallation errors
-            foreach (var descriptor in PluginManager.ReferencedPlugins.Where(pluginDescriptor => pluginDescriptor.Error != null))
-            {
-                _logger.Error(string.Format(_localizationService.GetResource("ActivityLog.NotUninstalledPluginError"), descriptor.SystemName), descriptor.Error);
-                descriptor.Error = null;
-            }
-
-        }
-
-        public virtual void DeletePlugins()
-        {
-            //delete plugins
-            foreach (var deletedPluginSystemName in this.DeletePluginsIfNeed())
-            {
-                _customerActivityService.InsertActivity("DeletePlugin", string.Format(_localizationService.GetResource("ActivityLog.DeletePlugin"), deletedPluginSystemName));
-            }
-
-            //log plugin deletion errors
-            foreach (var descriptor in PluginManager.ReferencedPlugins.Where(pluginDescriptor => pluginDescriptor.Error != null))
-            {
-                _logger.Error(string.Format(_localizationService.GetResource("ActivityLog.NotDeletedPluginError"), descriptor.SystemName), descriptor.Error);
-                descriptor.Error = null;
+                PluginManager.PluginsInfo.PluginNamesToInstall.Add((systemName, customer?.CustomerGuid));
+                PluginManager.PluginsInfo.Save(_fileProvider);
             }
         }
 
         /// <summary>
-        /// Gets a list of system names of last time installed plugins 
+        /// Prepare plugin to the uninstallation
         /// </summary>
-        public virtual IReadOnlyCollection<PluginsInfo.PluginToInstall> GetLastInstalledPlugins
+        /// <param name="systemName">Plugin system name</param>
+        public virtual void PreparePluginToUninstall(string systemName)
         {
-            get
+            //add plugin name to the appropriate list (if not yet contained) and save changes
+            if (!PluginManager.PluginsInfo.PluginNamesToUninstall.Contains(systemName))
             {
-                if (!_lastInstalledPluginSystemNames?.Any() ?? true)
-                    InstallPluginsIfNeed();
-
-                return _lastInstalledPluginSystemNames;
+                PluginManager.PluginsInfo.PluginNamesToUninstall.Add(systemName);
+                PluginManager.PluginsInfo.Save(_fileProvider);
             }
+        }
+
+        /// <summary>
+        /// Prepare plugin to the removing
+        /// </summary>
+        /// <param name="systemName">Plugin system name</param>
+        public virtual void PreparePluginToDelete(string systemName)
+        {
+            //add plugin name to the appropriate list (if not yet contained) and save changes
+            if (!PluginManager.PluginsInfo.PluginNamesToDelete.Contains(systemName))
+            {
+                PluginManager.PluginsInfo.PluginNamesToDelete.Add(systemName);
+                PluginManager.PluginsInfo.Save(_fileProvider);
+            }
+        }
+
+        /// <summary>
+        /// Reset changes
+        /// </summary>
+        public virtual void ResetChanges()
+        {
+            //clear lists and save changes
+            PluginManager.PluginsInfo.PluginNamesToDelete.Clear();
+            PluginManager.PluginsInfo.PluginNamesToInstall.Clear();
+            PluginManager.PluginsInfo.PluginNamesToUninstall.Clear();
+            PluginManager.PluginsInfo.Save(_fileProvider);
+
+            //display all plugins on the plugin list page
+            PluginManager.PluginDescriptors.ToList().ForEach(pluginDescriptor => pluginDescriptor.ShowInPluginsList = true);
+        }
+
+        /// <summary>
+        /// Clear installed plugins list
+        /// </summary>
+        public virtual void ClearInstalledPluginsList()
+        {
+            PluginManager.PluginsInfo.InstalledPluginNames.Clear();
+        }
+
+        /// <summary>
+        /// Install plugins
+        /// </summary>
+        public virtual void InstallPlugins()
+        {
+            //get all uninstalled plugins
+            var pluginDescriptors = PluginManager.PluginDescriptors.Where(descriptor => !descriptor.Installed);
+
+            //filter plugins need to install
+            pluginDescriptors = pluginDescriptors.Where(descriptor => PluginManager.PluginsInfo.PluginNamesToInstall
+                .Any(item => item.SystemName.Equals(descriptor.SystemName))).ToList();
+            if (!pluginDescriptors.Any())
+                return;
+
+            //do not inject services via constructor because it'll cause circular references
+            var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
+            var customerActivityService = EngineContext.Current.Resolve<ICustomerActivityService>();
+
+            //install plugins
+            foreach (var descriptor in pluginDescriptors)
+            {
+                try
+                {
+                    //try to install an instance
+                    descriptor.Instance<IPlugin>().Install();
+
+                    //remove and add plugin system name to appropriate lists
+                    var pluginToInstall = PluginManager.PluginsInfo.PluginNamesToInstall
+                        .FirstOrDefault(plugin => plugin.SystemName.Equals(descriptor.SystemName));
+                    PluginManager.PluginsInfo.InstalledPluginNames.Add(descriptor.SystemName);
+                    PluginManager.PluginsInfo.PluginNamesToInstall.Remove(pluginToInstall);
+
+                    //activity log
+                    var customer = _customerService.GetCustomerByGuid(pluginToInstall.CustomerGuid ?? Guid.Empty);
+                    customerActivityService.InsertActivity(customer, "InstallNewPlugin",
+                        string.Format(localizationService.GetResource("ActivityLog.InstallNewPlugin"), descriptor.SystemName));
+
+                    //mark the plugin as installed
+                    descriptor.Installed = true;
+                    descriptor.ShowInPluginsList = true;
+                }
+                catch (Exception exception)
+                {
+                    //log error
+                    var message = string.Format(localizationService.GetResource("Admin.Plugins.Errors.NotInstalled"), descriptor.SystemName);
+                    _logger.Error(message, exception);
+                }
+            }
+
+            //save changes
+            PluginManager.PluginsInfo.Save(_fileProvider);
+        }
+
+        /// <summary>
+        /// Uninstall plugins
+        /// </summary>
+        public virtual void UninstallPlugins()
+        {
+            //get all installed plugins
+            var pluginDescriptors = PluginManager.PluginDescriptors.Where(descriptor => descriptor.Installed);
+
+            //filter plugins need to uninstall
+            pluginDescriptors = pluginDescriptors
+                .Where(descriptor => PluginManager.PluginsInfo.PluginNamesToUninstall.Contains(descriptor.SystemName)).ToList();
+            if (!pluginDescriptors.Any())
+                return;
+
+            //do not inject services via constructor because it'll cause circular references
+            var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
+            var customerActivityService = EngineContext.Current.Resolve<ICustomerActivityService>();
+
+            //uninstall plugins
+            foreach (var descriptor in pluginDescriptors)
+            {
+                try
+                {
+                    //try to uninstall an instance
+                    descriptor.Instance<IPlugin>().Uninstall();
+
+                    //remove plugin system name from appropriate lists
+                    PluginManager.PluginsInfo.InstalledPluginNames.Remove(descriptor.SystemName);
+                    PluginManager.PluginsInfo.PluginNamesToUninstall.Remove(descriptor.SystemName);
+
+                    //activity log
+                    customerActivityService.InsertActivity("UninstallPlugin",
+                        string.Format(localizationService.GetResource("ActivityLog.UninstallPlugin"), descriptor.SystemName));
+
+                    //mark the plugin as uninstalled
+                    descriptor.Installed = false;
+                    descriptor.ShowInPluginsList = true;
+                }
+                catch (Exception exception)
+                {
+                    //log error
+                    var message = string.Format(localizationService.GetResource("Admin.Plugins.Errors.NotUninstalled"), descriptor.SystemName);
+                    _logger.Error(message, exception);
+                }
+            }
+
+            //save changes
+            PluginManager.PluginsInfo.Save(_fileProvider);
+        }
+
+        /// <summary>
+        /// Delete plugins
+        /// </summary>
+        public virtual void DeletePlugins()
+        {
+            //get all uninstalled plugins (delete plugin only previously uninstalled)
+            var pluginDescriptors = PluginManager.PluginDescriptors.Where(descriptor => !descriptor.Installed);
+
+            //filter plugins need to delete
+            pluginDescriptors = pluginDescriptors
+                .Where(descriptor => PluginManager.PluginsInfo.PluginNamesToDelete.Contains(descriptor.SystemName)).ToList();
+            if (!pluginDescriptors.Any())
+                return;
+
+            //do not inject services via constructor because it'll cause circular references
+            var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
+            var customerActivityService = EngineContext.Current.Resolve<ICustomerActivityService>();
+
+            //delete plugins
+            foreach (var descriptor in pluginDescriptors)
+            {
+                try
+                {
+                    //try to delete a plugin directory from disk storage
+                    var pluginDirectory = _fileProvider.GetDirectoryName(descriptor.OriginalAssemblyFile);
+                    if (_fileProvider.DirectoryExists(pluginDirectory))
+                        _fileProvider.DeleteDirectory(pluginDirectory);
+
+                    //remove plugin system name from the appropriate list
+                    PluginManager.PluginsInfo.PluginNamesToDelete.Remove(descriptor.SystemName);
+
+                    //activity log
+                    customerActivityService.InsertActivity("DeletePlugin",
+                        string.Format(localizationService.GetResource("ActivityLog.DeletePlugin"), descriptor.SystemName));
+                }
+                catch (Exception exception)
+                {
+                    //log error
+                    var message = string.Format(localizationService.GetResource("Admin.Plugins.Errors.NotDeleted"), descriptor.SystemName);
+                    _logger.Error(message, exception);
+                }
+            }
+
+            //save changes
+            PluginManager.PluginsInfo.Save(_fileProvider);
+        }
+
+        /// <summary>
+        /// Check whether application restart is required to apply changes to plugins
+        /// </summary>
+        /// <returns>Result of check</returns>
+        public virtual bool IsRestartRequired()
+        {
+            //return true if any of lists contains items
+            return PluginManager.PluginsInfo.PluginNamesToInstall.Any()
+                || PluginManager.PluginsInfo.PluginNamesToUninstall.Any()
+                || PluginManager.PluginsInfo.PluginNamesToDelete.Any();
+        }
+
+        /// <summary>
+        /// Get names of incompatible plugins
+        /// </summary>
+        /// <returns>List of plugin names</returns>
+        public virtual IList<string> GetIncompatiblePlugins()
+        {
+            return PluginManager.PluginsInfo.IncompatiblePlugins;
+        }
+
+        /// <summary>
+        /// Get all assembly loaded collisions
+        /// </summary>
+        /// <returns>List of plugin loaded assembly info</returns>
+        public virtual IList<PluginLoadedAssemblyInfo> GetAssemblyCollisions()
+        {
+            return PluginManager.PluginsInfo.AssemblyLoadedCollision;
         }
 
         #endregion

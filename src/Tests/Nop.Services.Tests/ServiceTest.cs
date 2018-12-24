@@ -30,7 +30,7 @@ namespace Nop.Services.Tests
             hostingEnvironment.Setup(x => x.WebRootPath).Returns(System.IO.Directory.GetCurrentDirectory());
             CommonHelper.DefaultFileProvider = new NopFileProvider(hostingEnvironment.Object);
 
-            PluginManager.ReferencedPlugins = new List<PluginDescriptor>
+            PluginManager.PluginDescriptors = new List<PluginDescriptor>
             {
                 new PluginDescriptor(typeof(FixedRateTestTaxProvider).Assembly)
                 {

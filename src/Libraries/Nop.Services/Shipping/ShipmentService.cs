@@ -308,22 +308,16 @@ namespace Nop.Services.Shipping
         {
             if (!shipment.Order.PickUpInStore)
             {
-                var shippingRateComputationMethod = _shippingService.LoadShippingRateComputationMethodBySystemName(shipment.Order.ShippingRateComputationMethodSystemName);
-                if (shippingRateComputationMethod != null &&
-                    shippingRateComputationMethod.PluginDescriptor.Installed)
-                    //shippingRateComputationMethod.IsShippingRateComputationMethodActive(shippingSettings))
-                    return shippingRateComputationMethod.ShipmentTracker;
+                var shippingRateComputationMethod = _shippingService
+                    .LoadShippingRateComputationMethodBySystemName(shipment.Order.ShippingRateComputationMethodSystemName);
+                return shippingRateComputationMethod?.ShipmentTracker;
             }
             else
             {
-                var pickupPointProvider = _shippingService.LoadPickupPointProviderBySystemName(shipment.Order.ShippingRateComputationMethodSystemName);
-                if (pickupPointProvider != null &&
-                    pickupPointProvider.PluginDescriptor.Installed)
-                    //pickupPointProvider.IsPickupPointProviderActive(shippingSettings))
-                    return pickupPointProvider.ShipmentTracker;
+                var pickupPointProvider = _shippingService
+                    .LoadPickupPointProviderBySystemName(shipment.Order.ShippingRateComputationMethodSystemName);
+                return pickupPointProvider?.ShipmentTracker;
             }
-
-            return null;
         }
 
         #endregion

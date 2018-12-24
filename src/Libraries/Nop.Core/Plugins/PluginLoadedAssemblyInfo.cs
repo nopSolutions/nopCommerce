@@ -7,46 +7,47 @@ namespace Nop.Core.Plugins
     /// <summary>
     /// Represents an information about assembly which loaded by plugins
     /// </summary>
-    public class PluginLoadedAssemblyInfo
+    public partial class PluginLoadedAssemblyInfo
     {
+        #region Ctor
+
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="shortName">Assembly short name</param>
+        /// <param name="assemblyInMemory">Assembly full name</param>
         public PluginLoadedAssemblyInfo(string shortName, string assemblyInMemory)
         {
             this.ShortName = shortName;
-            this.OtherReferences = new List<KeyValuePair<string, string>>();
+            this.References = new List<(string PluginName, string AssemblyName)>();
             this.AssemblyFullNameInMemory = assemblyInMemory;
         }
 
+        #endregion
+
+        #region Properties
+
         /// <summary>
-        /// The short assembly name
+        /// Gets the short assembly name
         /// </summary>
         public string ShortName { get; }
 
         /// <summary>
-        /// The full assembly name
+        /// Gets the full assembly name loaded in memory
         /// </summary>
         public string AssemblyFullNameInMemory { get; }
 
         /// <summary>
-        /// Other assembly versions needed for plugins
+        /// Gets a list of all mentioned plugin-assembly pairs
         /// </summary>
-        public List<KeyValuePair<string, string>> OtherReferences { get; }
+        public List<(string PluginName, string AssemblyName)> References { get; }
 
         /// <summary>
-        /// Returns a list of plugins that conflict with the loaded assembly version.
+        /// Gets a list of plugins that conflict with the loaded assembly version
         /// </summary>
-        public IList<KeyValuePair<string, string>> GetCollision
-        {
-            get
-            {
-                return OtherReferences.Where(assemblyFullName =>
-                    !assemblyFullName.Value.Equals(AssemblyFullNameInMemory,
-                        StringComparison.CurrentCultureIgnoreCase)).ToList();
-            }
-        }
+        public IList<(string PluginName, string AssemblyName)> Collisions =>
+            References.Where(reference => !reference.AssemblyName.Equals(AssemblyFullNameInMemory, StringComparison.CurrentCultureIgnoreCase)).ToList();
 
-        /// <summary>
-        /// Checks if a collision exists
-        /// </summary>
-        public bool IsCollisionExists => GetCollision.Any();
+        #endregion
     }
 }

@@ -6,6 +6,7 @@ using Nop.Core.Domain.Shipping;
 using Nop.Services.Common;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
+using Nop.Services.Plugins;
 using Nop.Services.Shipping;
 using Nop.Services.Shipping.Date;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
@@ -30,6 +31,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IDateRangeService _dateRangeService;
         private readonly ILocalizationService _localizationService;
         private readonly ILocalizedModelFactory _localizedModelFactory;
+        private readonly IPluginService _pluginService;
         private readonly IShippingService _shippingService;
 
         #endregion
@@ -42,6 +44,7 @@ namespace Nop.Web.Areas.Admin.Factories
             IDateRangeService dateRangeService,
             ILocalizationService localizationService,
             ILocalizedModelFactory localizedModelFactory,
+            IPluginService pluginService,
             IShippingService shippingService)
         {
             this._addressService = addressService;
@@ -50,6 +53,7 @@ namespace Nop.Web.Areas.Admin.Factories
             this._dateRangeService = dateRangeService;
             this._localizationService = localizationService;
             this._localizedModelFactory = localizedModelFactory;
+            this._pluginService = pluginService;
             this._shippingService = shippingService;
         }
 
@@ -161,7 +165,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     //fill in additional values (not existing in the entity)
                     shippingProviderModel.IsActive = _shippingService.IsShippingRateComputationMethodActive(provider);
                     shippingProviderModel.ConfigurationUrl = provider.GetConfigurationPageUrl();
-                    shippingProviderModel.LogoUrl = provider.PluginDescriptor.GetLogoUrl();
+                    shippingProviderModel.LogoUrl = _pluginService.GetPluginLogoUrl(provider.PluginDescriptor);
 
                     return shippingProviderModel;
                 }),
@@ -211,7 +215,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     //fill in additional values (not existing in the entity)
                     pickupPointProviderModel.IsActive = _shippingService.IsPickupPointProviderActive(provider);
                     pickupPointProviderModel.ConfigurationUrl = provider.GetConfigurationPageUrl();
-                    pickupPointProviderModel.LogoUrl = provider.PluginDescriptor.GetLogoUrl();
+                    pickupPointProviderModel.LogoUrl = _pluginService.GetPluginLogoUrl(provider.PluginDescriptor);
 
                     return pickupPointProviderModel;
                 }),

@@ -7,7 +7,6 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
-using Nop.Core.Plugins;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Directory;
@@ -15,6 +14,7 @@ using Nop.Services.Discounts;
 using Nop.Services.Localization;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
+using Nop.Services.Plugins;
 using Nop.Services.Shipping;
 using Nop.Services.Stores;
 using Nop.Services.Tax;
@@ -38,6 +38,7 @@ namespace Nop.Web.Factories
         private readonly IOrderProcessingService _orderProcessingService;
         private readonly IOrderTotalCalculationService _orderTotalCalculationService;
         private readonly IPaymentService _paymentService;
+        private readonly IPluginService _pluginService;
         private readonly IPriceFormatter _priceFormatter;
         private readonly IRewardPointService _rewardPointService;
         private readonly IShippingService _shippingService;
@@ -67,6 +68,7 @@ namespace Nop.Web.Factories
             IOrderProcessingService orderProcessingService,
             IOrderTotalCalculationService orderTotalCalculationService,
             IPaymentService paymentService,
+            IPluginService pluginService,
             IPriceFormatter priceFormatter,
             IRewardPointService rewardPointService,
             IShippingService shippingService,
@@ -92,6 +94,7 @@ namespace Nop.Web.Factories
             this._orderProcessingService = orderProcessingService;
             this._orderTotalCalculationService = orderTotalCalculationService;
             this._paymentService = paymentService;
+            this._pluginService = pluginService;
             this._priceFormatter = priceFormatter;
             this._rewardPointService = rewardPointService;
             this._shippingService = shippingService;
@@ -221,7 +224,7 @@ namespace Nop.Web.Factories
                                 OpeningHours = point.OpeningHours
                             };
                             if (point.PickupFee > 0)
-                            {                                
+                            {
                                 var amount = _taxService.GetShippingPrice(point.PickupFee, _workContext.CurrentCustomer);
                                 amount = _currencyService.ConvertFromPrimaryStoreCurrency(amount, _workContext.WorkingCurrency);
                                 pickupPointModel.PickupFee = _priceFormatter.FormatShippingPrice(amount, true);
@@ -417,7 +420,7 @@ namespace Nop.Web.Factories
                     Name = _localizationService.GetLocalizedFriendlyName(pm, _workContext.WorkingLanguage.Id),
                     Description = _paymentSettings.ShowPaymentMethodDescriptions ? pm.PaymentMethodDescription : string.Empty,
                     PaymentMethodSystemName = pm.PluginDescriptor.SystemName,
-                    LogoUrl = pm.PluginDescriptor.GetLogoUrl()
+                    LogoUrl = _pluginService.GetPluginLogoUrl(pm.PluginDescriptor)
                 };
                 //payment method additional fee
                 var paymentMethodAdditionalFee = _paymentService.GetAdditionalHandlingFee(cart, pm.PluginDescriptor.SystemName);

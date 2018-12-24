@@ -277,10 +277,14 @@ namespace Nop.Services.Authentication.External
         /// Load external authentication method by system name
         /// </summary>
         /// <param name="systemName">System name</param>
+        /// <param name="customer">Load records allowed only to a specified customer; pass null to ignore ACL permissions</param>
+        /// <param name="storeId">Load records allowed only on the specified store; pass 0 to ignore store mappings</param>
         /// <returns>Found external authentication method</returns>
-        public virtual IExternalAuthenticationMethod LoadExternalAuthenticationMethodBySystemName(string systemName)
+        public virtual IExternalAuthenticationMethod LoadExternalAuthenticationMethodBySystemName(string systemName,
+            Customer customer = null, int storeId = 0)
         {
-            var descriptor = _pluginService.GetPluginDescriptorBySystemName<IExternalAuthenticationMethod>(systemName);
+            var descriptor = _pluginService.GetPluginDescriptorBySystemName<IExternalAuthenticationMethod>(systemName,
+                customer: customer, storeId: storeId);
             return descriptor?.Instance<IExternalAuthenticationMethod>();
         }
 
@@ -303,13 +307,13 @@ namespace Nop.Services.Authentication.External
         public virtual bool ExternalAuthenticationMethodIsAvailable(string systemName)
         {
             //load method
-            var authenticationMethod = LoadExternalAuthenticationMethodBySystemName(systemName);
+            var authenticationMethod = LoadExternalAuthenticationMethodBySystemName(systemName,
+                _workContext.CurrentCustomer, _storeContext.CurrentStore.Id);
 
-            return authenticationMethod != null &&
-                this.IsExternalAuthenticationMethodActive(authenticationMethod) &&
-                authenticationMethod.PluginDescriptor.Installed &&
-                _pluginService.AuthenticateStore(authenticationMethod.PluginDescriptor, _storeContext.CurrentStore.Id) &&
-                _pluginService.AuthorizedForUser(authenticationMethod.PluginDescriptor, _workContext.CurrentCustomer);
+            if (authenticationMethod == null)
+                return false;
+
+            return this.IsExternalAuthenticationMethodActive(authenticationMethod);
         }
 
         /// <summary>
