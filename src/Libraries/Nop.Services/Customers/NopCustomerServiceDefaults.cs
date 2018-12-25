@@ -92,8 +92,8 @@
         public static int CustomerUsernameLength => 100;
 
         /// <summary>
-        /// Default hash format for customer password
+        /// Gets a default hash format for customer password
         /// </summary>
-        public static string HashedPasswordFormat => "SHA512";
+        public static string DefaultHashedPasswordFormat => "SHA512";
     }
 }

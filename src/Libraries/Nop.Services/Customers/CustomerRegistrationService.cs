@@ -350,14 +350,9 @@ namespace Nop.Services.Customers
                     break;
                 case PasswordFormat.Hashed:
                     var saltKey = _encryptionService.CreateSaltKey(NopCustomerServiceDefaults.PasswordSaltKeySize);
-
-                    //set defaul hash formar for password during first install
-                    var hashedPasswordFormat = request.IsFirstInstall 
-                        ? NopCustomerServiceDefaults.HashedPasswordFormat 
-                        : _customerSettings.HashedPasswordFormat;
-
                     customerPassword.PasswordSalt = saltKey;
-                    customerPassword.Password = _encryptionService.CreatePasswordHash(request.NewPassword, saltKey, hashedPasswordFormat);
+                    customerPassword.Password = _encryptionService.CreatePasswordHash(request.NewPassword, saltKey,
+                        request.HashedPasswordFormat ?? _customerSettings.HashedPasswordFormat);
                     break;
             }
 

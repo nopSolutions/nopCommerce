@@ -33,9 +33,9 @@ namespace Nop.Services.Customers
         public string OldPassword { get; set; }
 
         /// <summary>
-        /// Is first installation started
+        /// Hashed password format (e.g. SHA1, SHA512)
         /// </summary>
-        public bool IsFirstInstall { get; set; }
+        public string HashedPasswordFormat { get; set; }
 
         /// <summary>
         /// Ctor
@@ -45,32 +45,17 @@ namespace Nop.Services.Customers
         /// <param name="newPasswordFormat">Password format</param>
         /// <param name="newPassword">New password</param>
         /// <param name="oldPassword">Old password</param>
-        public ChangePasswordRequest(string email, bool validateRequest, 
-            PasswordFormat newPasswordFormat, string newPassword, string oldPassword = "")
+        /// <param name="hashedPasswordFormat">Hashed password format</param>
+        public ChangePasswordRequest(string email, bool validateRequest,
+            PasswordFormat newPasswordFormat, string newPassword, string oldPassword = "",
+            string hashedPasswordFormat = null)
         {
             this.Email = email;
             this.ValidateRequest = validateRequest;
             this.NewPasswordFormat = newPasswordFormat;
             this.NewPassword = newPassword;
             this.OldPassword = oldPassword;
-        }
-
-        /// <summary>
-        /// Ctor to use during first installation
-        /// </summary>
-        /// <param name="email">Email</param>
-        /// <param name="validateRequest">A value indicating whether we should validate request</param>
-        /// <param name="newPasswordFormat">Password format</param>
-        /// <param name="newPassword">New password</param>
-        /// <param name="isFirstInstall">A value indicating is first installation started</param>
-        public ChangePasswordRequest(string email, bool validateRequest,
-            PasswordFormat newPasswordFormat, string newPassword, bool isFirstInstall)
-        {
-            this.Email = email;
-            this.ValidateRequest = validateRequest;
-            this.NewPasswordFormat = newPasswordFormat;
-            this.NewPassword = newPassword;
-            this.IsFirstInstall = isFirstInstall;
+            this.HashedPasswordFormat = hashedPasswordFormat;
         }
     }
 }
