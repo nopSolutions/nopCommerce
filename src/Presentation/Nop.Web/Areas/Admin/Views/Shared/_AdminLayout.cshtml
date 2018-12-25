@@ -106,6 +106,8 @@
         @Html.NopHeadCustom()
         @Html.NopCssFiles(this.Url, ResourceLocation.Head, false)
         @Html.NopScripts(this.Url, ResourceLocation.Head, false)
+        @*Insert favicon and app icons head code*@
+        @await Component.InvokeAsync("Favicon")
     </head>
     <body class="hold-transition skin-blue sidebar-mini @if (hideSidebar) 
                                                     {<text>sidebar-collapse</text>}">

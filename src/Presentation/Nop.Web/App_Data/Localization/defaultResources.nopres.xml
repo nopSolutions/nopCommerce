@@ -1122,6 +1122,9 @@
   <LocaleResource Name="ActivityLog.UninstallPlugin">
     <Value>Uninstalled a plugin (FriendlyName: '{0}')</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.UploadNewIconsArchive">
+    <Value>Uploaded a new favicon and app icons archive for store (ID = '{0}')</Value>
+  </LocaleResource>
   <LocaleResource Name="ActivityLog.UploadNewPlugin">
     <Value>Uploaded a new plugin (FriendlyName: '{0}')</Value>
   </LocaleResource>
@@ -6267,6 +6270,9 @@
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.ZipPostalCodeRequired.Hint">
     <Value>Check if 'Zip / postal code' is required.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.FaviconAndAppIcons.Uploaded">
+    <Value>Favicon and app icons have been uploaded</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Forums">
     <Value>Forum settings</Value>
   </LocaleResource>
@@ -6542,6 +6548,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.BlockTitle.Common">
     <Value>Common</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.BlockTitle.FaviconAndAppIcons">
+    <Value>Favicon and app icons</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.BlockTitle.FooterItems">
     <Value>Footer items</Value>
@@ -6872,6 +6881,18 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.FacebookLink.Hint">
     <Value>Specify your Facebook page URL. Leave empty if you have no such page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.FaviconAndAppIcons.Description">
+    <Value>Favicon and app icons are small pictures associated with a particular website or web page. They are displayed by the browser in the tab before the page title, and as a picture next to a bookmark, in tabs and in other interface elements. You can see an example of the favicon and app icons archive in /icons/samples in the root of the site.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.FaviconAndAppIcons.MissingFile">
+    <Value>Could not find file {0}. This file is required. It contains the code for the page head element.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.FaviconAndAppIcons.UploadIconsArchive">
+    <Value>Upload icons archive</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.FaviconAndAppIcons.UploadIconsArchive.Hint">
+    <Value>Upload archive with favicon and app icons for different operating systems and devices. You can see an example of the favicon and app icons archive in /icons/samples in the root of the site. Your favicon and app icons path is "icons/icons_{0}"</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.ForceSslForAllPages">
     <Value>Force SSL for all site pages</Value>

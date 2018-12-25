@@ -21,6 +21,11 @@
         /// <summary>
         /// Type
         /// </summary>
+        public const string ApplicationManifestJson = "application/manifest+json";
+
+        /// <summary>
+        /// Type
+        /// </summary>
         public const string ApplicationOctetStream = "application/octet-stream";
 
         /// <summary>

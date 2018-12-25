@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
@@ -60,7 +59,6 @@ namespace Nop.Web.Factories
         private readonly ICustomerService _customerService;
         private readonly IForumService _forumService;
         private readonly IGenericAttributeService _genericAttributeService;
-        private readonly IHostingEnvironment _hostingEnvironment;
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
         private readonly IManufacturerService _manufacturerService;
@@ -103,7 +101,6 @@ namespace Nop.Web.Factories
             ICustomerService customerService,
             IForumService forumService,
             IGenericAttributeService genericAttributeService,
-            IHostingEnvironment hostingEnvironment,
             ILanguageService languageService,
             ILocalizationService localizationService,
             IManufacturerService manufacturerService,
@@ -142,7 +139,6 @@ namespace Nop.Web.Factories
             this._customerService = customerService;
             this._forumService = forumService;
             this._genericAttributeService = genericAttributeService;
-            this._hostingEnvironment = hostingEnvironment;
             this._languageService = languageService;
             this._localizationService = localizationService;
             this._manufacturerService = manufacturerService;
@@ -720,26 +716,13 @@ namespace Nop.Web.Factories
         /// Prepare the favicon model
         /// </summary>
         /// <returns>Favicon model</returns>
-        public virtual FaviconModel PrepareFaviconModel()
+        public virtual FaviconAndAppIconsModel PrepareFaviconAndAppIconsModel()
         {
-            var model = new FaviconModel();
-
-            //try loading a store specific favicon
-
-            var faviconFileName = $"favicon-{_storeContext.CurrentStore.Id}.ico";
-            var localFaviconPath = _fileProvider.Combine(_hostingEnvironment.WebRootPath, faviconFileName);
-            if (!_fileProvider.FileExists(localFaviconPath))
+            var model = new FaviconAndAppIconsModel
             {
-                //try loading a generic favicon
-                faviconFileName = "favicon.ico";
-                localFaviconPath = _fileProvider.Combine(_hostingEnvironment.WebRootPath, faviconFileName);
-                if (!_fileProvider.FileExists(localFaviconPath))
-                {
-                    return model;
-                }
-            }
+                HeadCode = _commonSettings.FaviconAndAppIconsHeadCode
+            };
 
-            model.FaviconUrl = _webHelper.GetStoreLocation() + faviconFileName;
             return model;
         }
 
