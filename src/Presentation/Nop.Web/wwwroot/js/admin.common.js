@@ -226,4 +226,26 @@ $(document).ajaxStart(function () {
     $('#ajaxBusy').show();
 }).ajaxStop(function () {
     $('#ajaxBusy').hide();
+    });
+
+//no-tabs solution
+$(document).ready(function () {
+    $(".panel.collapsible-panel >.panel-heading").click(WrapAndSaveBlockData);
 });
+
+function WrapAndSaveBlockData() {
+    $(this).parents(".panel").find(">.panel-container").slideToggle();
+
+    var icon = $(this).find("i");
+    if ($(this).hasClass("opened")) {
+        icon.removeClass("fa-minus");
+        icon.addClass("fa-plus");
+        saveUserPreferences(rootAppPath + 'admin/preferences/savepreference', $(this).attr("data-hideAttribute"), true);
+    } else {
+        icon.addClass("fa-minus");
+        icon.removeClass("fa-plus");
+        saveUserPreferences(rootAppPath + 'admin/preferences/savepreference', $(this).attr("data-hideAttribute"), false);
+    }
+
+    $(this).toggleClass("opened");
+}

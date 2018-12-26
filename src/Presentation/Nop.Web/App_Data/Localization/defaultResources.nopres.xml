@@ -2052,6 +2052,9 @@
   <LocaleResource Name="Admin.Catalog.Categories.Deleted">
     <Value>The category has been deleted successfully.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Display">
+    <Value>Display</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.EditCategoryDetails">
     <Value>Edit category details</Value>
   </LocaleResource>
@@ -2222,6 +2225,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Manage">
     <Value>Manage Categories</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Mappings">
+    <Value>Mappings</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Products">
     <Value>Products</Value>

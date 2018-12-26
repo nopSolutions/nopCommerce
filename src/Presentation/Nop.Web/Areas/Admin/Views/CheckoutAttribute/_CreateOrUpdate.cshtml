@@ -1,6 +1,22 @@
-﻿@model CheckoutAttributeModel
+﻿@using Nop.Core
+@using Nop.Core.Domain.Catalog
+@using Nop.Services
+@model CheckoutAttributeModel
 
 @inject IEventPublisher eventPublisher
+@inject Nop.Services.Common.IGenericAttributeService genericAttributeService
+@inject IWorkContext workContext
+@{
+
+    const string hideInfoBlockAttributeName = "CheckoutAttributePage.HideInfoBlock";
+    var hideInfoBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideInfoBlockAttributeName);
+
+    const string hideValuesBlockAttributeName = "CheckoutAttributePage.HideValuesBlock";
+    var hideValuesBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideValuesBlockAttributeName);
+
+    const string hideConditionBlockAttributeName = "CheckoutAttributePage.HideConditionBlock";
+    var hideConditionBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideConditionBlockAttributeName);
+}
 
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
@@ -14,24 +30,548 @@
                 </div>
             </div>
         </div>
-        
-        <nop-tabs id="checkoutattribute-edit">
-            <nop-tab asp-name="tab-info" asp-title="@T("Admin.Catalog.Attributes.CheckoutAttributes.Info")" asp-default="true">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-tab>
-            <nop-tab asp-name="tab-values" asp-title="@T("Admin.Catalog.Attributes.CheckoutAttributes.Values")">@await Html.PartialAsync("_CreateOrUpdate.Values", Model)</nop-tab>
-            @if (Model.ConditionAllowed)
+
+        <div class="panel panel-default collapsible-panel">
+            <div class="panel-heading @if (!hideInfoBlock){<text>opened</text>}" data-hideAttribute="@hideInfoBlockAttributeName">
+                <span>@T("Admin.Catalog.Attributes.CheckoutAttributes.Info")</span>
+                <i class="fa @if (hideInfoBlock){<text>fa-plus</text>} else {<text>fa-minus</text>}"></i>
+            </div>
+
+            <div class="panel-body @if (hideInfoBlock){<text>collapsed</text>}">
+                @(Html.LocalizedEditor<CheckoutAttributeModel, CheckoutAttributeLocalizedModel>("checkoutattribute-localized",
+                @<div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="@Model.Locales[item].Name" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="@Model.Locales[item].Name" />
+                            <span asp-validation-for="@Model.Locales[item].Name"></span>
+                        </div>
+                    </div>
+                    <div class="form-group advanced-setting">
+                        <div class="col-md-3">
+                            <nop-label asp-for="@Model.Locales[item].TextPrompt" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="@Model.Locales[item].TextPrompt" />
+                            <span asp-validation-for="@Model.Locales[item].TextPrompt"></span>
+                        </div>
+                    </div>
+                    <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
+                </div>
+,
+                @<div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="Name" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="Name" asp-required="true" />
+                            <span asp-validation-for="Name"></span>
+                        </div>
+                    </div>
+                    <div class="form-group advanced-setting">
+                        <div class="col-md-3">
+                            <nop-label asp-for="TextPrompt" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="TextPrompt" />
+                            <span asp-validation-for="TextPrompt"></span>
+                        </div>
+                    </div>
+                </div>))
+
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="IsRequired" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="IsRequired" />
+                        <span asp-validation-for="IsRequired"></span>
+                    </div>
+                </div>
+                <div class="form-group advanced-setting">
+                    <div class="col-md-3">
+                        <nop-label asp-for="ShippableProductRequired" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="ShippableProductRequired" />
+                        <span asp-validation-for="ShippableProductRequired"></span>
+                    </div>
+                </div>
+                <div class="form-group advanced-setting">
+                    <div class="col-md-3">
+                        <nop-label asp-for="IsTaxExempt" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="IsTaxExempt" />
+                        <span asp-validation-for="IsTaxExempt"></span>
+                    </div>
+                </div>
+                <div class="form-group advanced-setting" id="pnlTaxCategory">
+                    <div class="col-md-3">
+                        <nop-label asp-for="TaxCategoryId" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-select asp-for="TaxCategoryId" asp-items="Model.AvailableTaxCategories" />
+                        <span asp-validation-for="TaxCategoryId"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="AttributeControlTypeId" />
+                    </div>
+                    <div class="col-md-9">
+                        @{
+                            var attributeControlTypes = ((AttributeControlType)Model.AttributeControlTypeId)
+                                .ToSelectList(valuesToExclude:
+                                    //these attributes don't support some control types
+                                    new[] { (int)AttributeControlType.ImageSquares });
+                        }
+                        <nop-select asp-for="AttributeControlTypeId" asp-items="@attributeControlTypes" />
+                        <span asp-validation-for="AttributeControlTypeId"></span>
+                    </div>
+                </div>
+                
+                @(Html.LocalizedEditor<CheckoutAttributeModel, CheckoutAttributeLocalizedModel>("pnlDefaultValueLocalized",
+                @<div>
+                    <div class="form-group advanced-setting">
+                        <div class="col-md-3">
+                            <nop-label asp-for="@Model.Locales[item].DefaultValue" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="@Model.Locales[item].DefaultValue" />
+                            <span asp-validation-for="@Model.Locales[item].DefaultValue"></span>
+                        </div>
+                    </div>
+                    <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
+                </div>
+,
+                @<div>
+                    <div class="form-group advanced-setting">
+                        <div class="col-md-3">
+                            <nop-label asp-for="DefaultValue" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="DefaultValue" />
+                            <span asp-validation-for="DefaultValue"></span>
+                        </div>
+                    </div>
+                </div>))
+                
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="DisplayOrder" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="DisplayOrder" />
+                        <span asp-validation-for="DisplayOrder"></span>
+                    </div>
+                </div>
+                <div class="form-group advanced-setting" id="pnlValidationMinLength">
+                    <div class="col-md-3">
+                        <nop-label asp-for="ValidationMinLength" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="ValidationMinLength" />
+                        <span asp-validation-for="ValidationMinLength"></span>
+                    </div>
+                </div>
+                <div class="form-group advanced-setting" id="pnlValidationMaxLength">
+                    <div class="col-md-3">
+                        <nop-label asp-for="ValidationMaxLength" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="ValidationMaxLength" />
+                        <span asp-validation-for="ValidationMaxLength"></span>
+                    </div>
+                </div>
+                <div class="form-group advanced-setting" id="pnlValidationFileAllowedExtensions">
+                    <div class="col-md-3">
+                        <nop-label asp-for="ValidationFileAllowedExtensions" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="ValidationFileAllowedExtensions" />
+                        <span asp-validation-for="ValidationFileAllowedExtensions"></span>
+                    </div>
+                </div>
+                <div class="form-group advanced-setting" id="pnlValidationFileMaximumSize">
+                    <div class="col-md-3">
+                        <nop-label asp-for="ValidationFileMaximumSize" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="ValidationFileMaximumSize" />
+                        <span asp-validation-for="ValidationFileMaximumSize"></span>
+                    </div>
+                </div>
+                <div class="form-group advanced-setting">
+                    <div class="col-md-3">
+                        <nop-label asp-for="SelectedStoreIds" />
+                    </div>
+                    <div class="col-md-9">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <nop-select asp-for="SelectedStoreIds" asp-items="Model.AvailableStores" asp-multiple="true" />
+                                <script>
+                                $(document).ready(function() {
+                                    var storesIdsInput = $('#@Html.IdFor(model => model.SelectedStoreIds)')
+                                        .data("kendoMultiSelect");
+                                    storesIdsInput.setOptions({
+                                        autoClose: false,
+                                        filter: "contains"
+                                    });
+
+                                    @if (Model.AvailableStores.Count == 0)
+                                    {
+                                        <text>
+                                            storesIdsInput.setOptions({
+                                                enable: false,
+                                                placeholder: 'No stores available'
+                                            });
+                                            storesIdsInput._placeholder();
+                                            storesIdsInput._enable();
+                                        </text>
+                                    }
+                                });
+                                </script>
+                            </div>
+                            <div class="col-md-8">
+                                @await Component.InvokeAsync("MultistoreDisabledWarning")
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-default collapsible-panel">
+            <div class="panel-heading @if (!hideValuesBlock){<text>opened</text>}" data-hideAttribute="@hideValuesBlockAttributeName">
+                <span>@T("Admin.Catalog.Attributes.CheckoutAttributes.Values")</span>
+                <i class="fa @if (hideValuesBlock){<text>fa-plus</text>} else {<text>fa-minus</text>}"></i>
+            </div>
+
+            @if (Model.Id > 0)
             {
-                <nop-tab asp-name="tab-condition" asp-title="@T("Admin.Catalog.Attributes.CheckoutAttributes.Condition")">@await Html.PartialAsync("_CreateOrUpdate.Condition", Model)</nop-tab>
+                <div class="panel-body @if (hideValuesBlock){<text>collapsed</text>}">
+                    @*TODO display the following warning if values are not supported by selected attribute control type - 'Values are not required for this attribute control type'*@
+                    <div id="checkoutattributevalues-grid"></div>
+
+                    <script>
+                        $(document).ready(function () {
+                            $("#checkoutattributevalues-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("ValueList", "CheckoutAttribute"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: function() {
+                                                var data = {
+                                                    CheckoutAttributeId: '@(Model.Id)'
+                                                };
+                                                addAntiForgeryToken(data);
+                                                return data;
+                                            }
+                                        },
+                                        destroy: {
+                                            url: "@Html.Raw(Url.Action("ValueDelete", "CheckoutAttribute"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors",
+                                        model: {
+                                            id: "Id"
+                                        }
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    pageSize: @(Model.CheckoutAttributeValueSearchModel.PageSize),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(Model.CheckoutAttributeValueSearchModel.AvailablePageSizes)],
+                                    @await Html.PartialAsync("_GridPagerMessages")
+                                },
+                                editable: {
+                                    confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                                    mode: "inline"
+                                },
+                                scrollable: false,
+                                columns: [{
+                                    field: "Name",
+                                    title: "@T("Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.Name")"
+                                }, {
+                                    field: "PriceAdjustment",
+                                    title: "@T("Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.PriceAdjustment")",
+                                    width: 200
+                                }, {
+                                    field: "WeightAdjustment",
+                                    title: "@T("Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.WeightAdjustment")",
+                                    width: 200
+                                }, {
+                                    field: "IsPreSelected",
+                                    title: "@T("Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.IsPreSelected")",
+                                    width: 100,
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" },
+                                    template: '# if(IsPreSelected) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
+                                }, {
+                                    field: "DisplayOrder",
+                                    title: "@T("Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.DisplayOrder")",
+                                    width: 100
+                                },{
+                                    field: "Id",
+                                    title: "@T("Admin.Common.Edit")",
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" },
+                                    width: 100,
+                                    template: "<button onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/CheckoutAttribute/ValueEditPopup/")#=Id#?btnId=btnRefresh&formId=checkoutattribute-form', 800, 500, true); return false;\" class='btn btn-default'><i class=\"fa fa-pencil\"></i>@T("Admin.Common.Edit")</button>"
+                                }, {
+                                    command: {name: "destroy", text: "@T("Admin.Common.Delete")"},
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" },
+                                    title: "@T("Admin.Common.Delete")",
+                                    width: 100
+                                }]
+                            });
+                        });
+                    </script>
+                </div>
+
+                <div class="panel-footer @if (hideValuesBlock){<text>collapsed</text>}">
+                    <button type="submit" id="btnAddNewValue"
+                            onclick="javascript:OpenWindow('@(Url.Action("ValueCreatePopup", "CheckoutAttribute", new { checkoutAttributeId = Model.Id, btnId = "btnRefresh", formId = "checkoutattribute-form" }))', 800, 500, true); return false;"
+                            class="btn btn-primary">
+                        @T("Admin.Catalog.Attributes.CheckoutAttributes.Values.AddNew")
+                    </button>
+                    <input type="submit" id="btnRefresh" style="display: none" />
+                    <script>
+                        $(document).ready(function () {
+                            $('#btnRefresh').click(function () {
+                                //refresh grid
+                                var grid = $("#checkoutattributevalues-grid").data('kendoGrid');
+                                grid.dataSource.read();
+
+                                //return false to don't reload a page
+                                return false;
+                            });
+                        });
+                    </script>
+                </div>
+            }           
+            else
+            {
+                <div class="panel-body @if (hideValuesBlock){<text>collapsed</text>}">
+                    @T("Admin.Catalog.Attributes.CheckoutAttributes.Values.SaveBeforeEdit")
+                </div>
             }
-        </nop-tabs>
+        </div>
+
+        <div class="panel panel-default collapsible-panel">
+            <div class="panel-heading @if (!hideConditionBlock){<text>opened</text>}" data-hideAttribute="@hideConditionBlockAttributeName">
+                <span>@T("Admin.Catalog.Attributes.CheckoutAttributes.Condition")</span>
+                <i class="fa @if (hideConditionBlock){<text>fa-plus</text>} else {<text>fa-minus</text>}"></i>
+            </div>
+
+            @if (Model.Id > 0)
+            {
+                <script>
+                    $(document).ready(function () {
+                        $("#@Html.IdFor(model => model.ConditionModel.EnableCondition)").click(toggleEnableCondition);
+                        toggleEnableCondition();
+                    });
+
+                    function toggleEnableCondition() {
+                        if ($('#@Html.IdFor(model => model.ConditionModel.EnableCondition)').is(':checked')) {
+                            $('#pnlAttributes').show();
+                        } else {
+                            $('#pnlAttributes').hide();
+                        }
+                    }
+                </script>
+
+                <div class="panel-body @if (hideConditionBlock){<text>collapsed</text>}">
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="ConditionModel.EnableCondition" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="ConditionModel.EnableCondition" />
+                            <span asp-validation-for="ConditionModel.EnableCondition"></span>
+                        </div>
+                    </div>
+                    <nop-nested-setting asp-for="ConditionModel.EnableCondition" id="pnlAttributes">
+                        @if (Model.ConditionModel.ConditionAttributes.Count > 0)
+                        {
+                            <div class="form-group">
+                                <div class="col-md-3">
+                                    <nop-label asp-for="ConditionModel.SelectedAttributeId" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-select asp-for="ConditionModel.SelectedAttributeId" asp-items="@(Model.ConditionModel.ConditionAttributes.Select(x => new SelectListItem() {Text = x.Name, Value = x.Id.ToString()}))" />
+
+                                    <script>
+                                        $(document).ready(function() {
+                                            $("#@Html.IdFor(model => model.ConditionModel.SelectedAttributeId)")
+                                                .change(toggleConditionAttributes);
+
+                                            toggleConditionAttributes();
+                                        });
+
+                                        function toggleConditionAttributes() {
+                                            var selectedCheckoutAttributeId =
+                                                $("#@Html.IdFor(model => model.ConditionModel.SelectedAttributeId)").val();
+                                            $('[id^="pnl_attribute_values_"]').hide();
+                                            $('#pnl_attribute_values_' + selectedCheckoutAttributeId).show();
+                                        }
+                                    </script>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-3">&nbsp;</div>
+                                <div class="col-md-9">
+                                    @for (var i = 0; i < Model.ConditionModel.ConditionAttributes.Count; i++)
+                                    {
+                                        <input type="hidden" asp-for="@Model.ConditionModel.ConditionAttributes[i].Id" />
+                                        <div id="@($"pnl_attribute_values_{Model.ConditionModel.ConditionAttributes[i].Id}")">
+                                            @switch (Model.ConditionModel.ConditionAttributes[i].AttributeControlType)
+                                            {
+                                                case AttributeControlType.DropdownList:
+                                                    <nop-select asp-for="@Model.ConditionModel.ConditionAttributes[i].SelectedValueId" asp-items="Model.ConditionModel.ConditionAttributes[i].Values" />
+                                                    break;
+                                                case AttributeControlType.RadioList:
+                                                case AttributeControlType.ColorSquares:
+                                                case AttributeControlType.ImageSquares:
+                                                    foreach (var value in Model.ConditionModel.ConditionAttributes[i].Values)
+                                                    {
+                                                        <div class="radio">
+                                                            <label>
+                                                                <input type="radio" asp-for="@Model.ConditionModel.ConditionAttributes[i].SelectedValueId" value="@value.Value" checked="@value.Selected" />
+                                                                @value.Text
+                                                            </label>
+                                                        </div>
+                                                    }
+                                                    break;
+                                                case AttributeControlType.Checkboxes:
+                                                    for (var j = 0; j < Model.ConditionModel.ConditionAttributes[i].Values.Count; j++)
+                                                    {
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input type="hidden" asp-for="@Model.ConditionModel.ConditionAttributes[i].Values[j].Value" />
+                                                                <nop-editor asp-for="@Model.ConditionModel.ConditionAttributes[i].Values[j].Selected" />
+                                                                @Model.ConditionModel.ConditionAttributes[i].Values[j].Text
+                                                            </label>
+                                                        </div>
+                                                    }
+                                                    break;
+                                                case AttributeControlType.ReadonlyCheckboxes:
+                                                case AttributeControlType.TextBox:
+                                                case AttributeControlType.MultilineTextbox:
+                                                case AttributeControlType.Datepicker:
+                                                case AttributeControlType.FileUpload:
+                                                default:
+                                                    //not supported as conditions
+                                                    break;
+                                            }
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="form-group">
+                                <div class="col-md-9 col-md-offset-3">
+                                    @T("Admin.Catalog.Attributes.CheckoutAttributes.Condition.NoAttributeExists")
+                                </div>
+                            </div>
+                        }
+                    </nop-nested-setting>
+                </div>
+            }
+            else
+            {
+                <div class="panel-body @if (hideConditionBlock){<text>collapsed</text>}">
+                    @T("Admin.Catalog.Attributes.CheckoutAttributes.Condition.SaveBeforeEdit")
+                </div>
+            }
+        </div>
+        
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CheckoutAttributeDetailsBlock, additionalData = Model })
     </div>
 </div>
 
-@{
-    //custom tabs
-    var eventMessage = new AdminTabStripCreated(this.Html, "checkoutattribute-edit");
-    eventPublisher.Publish(eventMessage);
-    foreach (var eventBlock in eventMessage.BlocksToRender)
-    {
-        @eventBlock
+@* Service scripts *@
+<script>
+    $(document).ready(function() {
+
+        $("#@Html.IdFor(model => model.IsTaxExempt)").click(toggleTax);
+        $("#@Html.IdFor(model => model.AttributeControlTypeId)").change(toggleAttributeControlType);
+
+        toggleTax();
+        toggleAttributeControlType();
+    });
+
+    function toggleTax() {
+        if ($('#@Html.IdFor(model => model.IsTaxExempt)').is(':checked')) {
+            $('#pnlTaxCategory').hide();
+        } else {
+            $('#pnlTaxCategory').show();
+        }
     }
-}
+
+    function toggleAttributeControlType() {
+        var selectedAttributeControlTypeId = $("#@Html.IdFor(model => model.AttributeControlTypeId)").val();
+        //validation
+        if (selectedAttributeControlTypeId == @(((int) AttributeControlType.TextBox).ToString())) {
+            $('#pnlValidationMinLength').show();
+            $('#pnlValidationMaxLength').show();
+            $('#pnlValidationFileMaximumSize').hide();
+            $('#pnlValidationFileAllowedExtensions').hide();
+            $('#pnlDefaultValueLocalized').show();
+        } else if (selectedAttributeControlTypeId == @(((int) AttributeControlType.MultilineTextbox).ToString())) {
+            $('#pnlValidationMinLength').show();
+            $('#pnlValidationMaxLength').show();
+            $('#pnlValidationFileMaximumSize').hide();
+            $('#pnlValidationFileAllowedExtensions').hide();
+            $('#pnlDefaultValueLocalized').show();
+        } else if (selectedAttributeControlTypeId == @(((int) AttributeControlType.FileUpload).ToString())) {
+            $('#pnlValidationMinLength').hide();
+            $('#pnlValidationMaxLength').hide();
+            $('#pnlValidationFileMaximumSize').show();
+            $('#pnlValidationFileAllowedExtensions').show();
+            $('#pnlDefaultValueLocalized').hide();
+        } else {
+            $('#pnlValidationMinLength').hide();
+            $('#pnlValidationMaxLength').hide();
+            $('#pnlValidationFileMaximumSize').hide();
+            $('#pnlValidationFileAllowedExtensions').hide();
+            $('#pnlDefaultValueLocalized').hide();
+        }
+
+        //values
+        if (selectedAttributeControlTypeId == @(((int) AttributeControlType.DropdownList).ToString()) ||
+            selectedAttributeControlTypeId == @(((int) AttributeControlType.RadioList).ToString()) ||
+            selectedAttributeControlTypeId == @(((int) AttributeControlType.Checkboxes).ToString()) ||
+            selectedAttributeControlTypeId == @(((int) AttributeControlType.ColorSquares).ToString()) ||
+            selectedAttributeControlTypeId == @(((int) AttributeControlType.ImageSquares).ToString()) ||
+            selectedAttributeControlTypeId == @(((int) AttributeControlType.ReadonlyCheckboxes).ToString())) {
+                $('[data-tab-name=tab-values]').show();
+        } else {
+            $('[data-tab-name=tab-values]').hide();
+        }
+    }
+</script>

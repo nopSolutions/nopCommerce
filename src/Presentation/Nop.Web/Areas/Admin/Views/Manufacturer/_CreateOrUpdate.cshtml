@@ -1,6 +1,27 @@
-﻿@model ManufacturerModel
+﻿@using Nop.Core
+@model ManufacturerModel
 
 @inject IEventPublisher eventPublisher
+@inject Nop.Services.Common.IGenericAttributeService genericAttributeService
+@inject IWorkContext workContext
+
+@{
+
+	const string hideInfoBlockAttributeName = "ManufacturerPage.HideInfoBlock";
+	var hideInfoBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideInfoBlockAttributeName);
+
+	const string hideDisplayBlockAttributeName = "ManufacturerPage.HideDisplayBlock";
+	var hideDisplayBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideDisplayBlockAttributeName);
+
+	const string hideMappingsBlockAttributeName = "ManufacturerPage.HideMappingsBlock";
+	var hideMappingsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideMappingsBlockAttributeName);
+
+	const string hideSeoBlockAttributeName = "ManufacturerPage.HideSEOBlock";
+	var hideSeoBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSeoBlockAttributeName);
+
+	const string hideProductsBlockAttributeName = "ManufacturerPage.HideProductsBlock";
+	var hideProductsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideProductsBlockAttributeName);
+}
 
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
@@ -14,20 +35,534 @@
                 </div>
             </div>
         </div>
-        <nop-tabs id="manufacturer-edit">
-            <nop-tab asp-name="tab-info" asp-title="@T("Admin.Catalog.Manufacturers.Info")" asp-default="true">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-tab>
-            <nop-tab asp-name="tab-seo" asp-title="@T("Admin.Common.SEO")">@await Html.PartialAsync("_CreateOrUpdate.SEO", Model)</nop-tab>
-            <nop-tab asp-name="tab-products" asp-title="@T("Admin.Catalog.Manufacturers.Products")">@await Html.PartialAsync("_CreateOrUpdate.Products", Model)</nop-tab>
-        </nop-tabs>
+        <div class="panel panel-default collapsible-panel">
+            <div class="panel-heading @if (!hideInfoBlock){<text>opened</text>}" data-hideAttribute="@hideInfoBlockAttributeName">
+                <span>@T("Admin.Catalog.Categories.Info")</span>
+                <i class="fa @if (hideInfoBlock){<text>fa-plus</text>} else {<text>fa-minus</text>}"></i>
+            </div>
+            <div class="panel-body @if (hideInfoBlock){<text>collapsed</text>}">
+                @(Html.LocalizedEditor<ManufacturerModel, ManufacturerLocalizedModel>("manufacturer-name-localized",
+                @<div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="@Model.Locales[item].Name" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="@Model.Locales[item].Name" />
+                            <span asp-validation-for="@Model.Locales[item].Name"></span>
+                        </div>
+                    </div>
+                    <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
+                </div>
+,
+                @<div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="Name" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="Name" asp-required="true" />
+                            <span asp-validation-for="Name"></span>
+                        </div>
+                    </div>
+                </div>))
+            </div>
+        </div>
+
+        <div class="panel panel-default collapsible-panel">
+            <div class="panel-heading @if (!hideDisplayBlock){<text>opened</text>}" data-hideAttribute="@hideDisplayBlockAttributeName">
+                <span>@T("Admin.Catalog.Categories.Display")</span>
+                <i class="fa @if (hideDisplayBlock){<text>fa-plus</text>} else {<text>fa-minus</text>}"></i>
+            </div>
+            <div class="panel-body @if (hideDisplayBlock){<text>collapsed</text>}">
+                @(Html.LocalizedEditor<ManufacturerModel, ManufacturerLocalizedModel>("manufacturer-description-localized",
+                @<div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="@Model.Locales[item].Description" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="@Model.Locales[item].Description" asp-template="RichEditor" />
+                            <span asp-validation-for="@Model.Locales[item].Description"></span>
+                        </div>
+                    </div>
+                    <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
+                </div>
+,
+                @<div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="Description" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="Description" asp-template="RichEditor" />
+                            <span asp-validation-for="Description"></span>
+                        </div>
+                    </div>
+                </div>))
+
+                <div class="form-group advanced-setting">
+                    <div class="col-md-3">
+                        <nop-label asp-for="Published" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="Published" />
+                        <span asp-validation-for="Published"></span>
+                    </div>
+                </div>
+
+                <div class="form-group advanced-setting">
+                    <div class="col-md-3">
+                        <nop-label asp-for="AllowCustomersToSelectPageSize" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="AllowCustomersToSelectPageSize" />
+                        <span asp-validation-for="AllowCustomersToSelectPageSize"></span>
+                    </div>
+                </div>
+
+                <nop-nested-setting asp-for="AllowCustomersToSelectPageSize">
+                    <div id="pnlPageSize" class="form-group advanced-setting">
+                        <div class="col-md-3">
+                            <nop-label asp-for="PageSize" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="PageSize" />
+                            <span asp-validation-for="PageSize"></span>
+                        </div>
+                    </div>
+                    <div id="pnlPageSizeOptions" class="form-group advanced-setting">
+                        <div class="col-md-3">
+                            <nop-label asp-for="PageSizeOptions" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="PageSizeOptions" />
+                            <span asp-validation-for="PageSizeOptions"></span>
+                        </div>
+                    </div>
+                </nop-nested-setting>
+
+                <div class="form-group advanced-setting">
+                    <div class="col-md-3">
+                        <nop-label asp-for="PriceRanges" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="PriceRanges" />
+                        <span asp-validation-for="PriceRanges"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="DisplayOrder" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="DisplayOrder" />
+                        <span asp-validation-for="DisplayOrder"></span>
+                    </div>
+                </div>
+
+                <div class="form-group" @(Model.AvailableManufacturerTemplates.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
+                    <div class="col-md-3">
+                        <nop-label asp-for="ManufacturerTemplateId" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-select asp-for="ManufacturerTemplateId" asp-items="Model.AvailableManufacturerTemplates" />
+                        <span asp-validation-for="ManufacturerTemplateId"></span>
+                    </div>
+                </div>
+
+                <div class="form-group advanced-setting">
+                    <div class="col-md-3">
+                        <nop-label asp-for="PictureId" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="PictureId" />
+                        <span asp-validation-for="PictureId"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-default advanced-setting collapsible-panel">
+            <div class="panel-heading @if (!hideMappingsBlock){<text>opened</text>}" data-hideAttribute="@hideMappingsBlockAttributeName">
+                <span>@T("Admin.Catalog.Categories.Mappings")</span>
+                <i class="fa @if (hideMappingsBlock){<text>fa-plus</text>} else {<text>fa-minus</text>}"></i>
+            </div>
+            <div class="panel-body @if (hideMappingsBlock){<text>collapsed</text>}">
+                <div class="form-group advanced-setting">
+                    <div class="col-md-3">
+                        <nop-label asp-for="SelectedDiscountIds" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-select asp-for="SelectedDiscountIds" asp-items="Model.AvailableDiscounts" asp-multiple="true" />
+                        <script>
+                    		$(document).ready(function() {
+                    			var discountsIdsInput = $('#@Html.IdFor(model => model.SelectedDiscountIds)').data("kendoMultiSelect");
+			                    discountsIdsInput.setOptions({
+			                        autoClose: false,
+			                        filter: "contains"
+			                    });
+
+			                    @if (Model.AvailableDiscounts.Count == 0)
+			                    {
+			                        <text>
+                                    	discountsIdsInput.setOptions({
+                                    		enable: false,
+                                    		placeholder: '@T("Admin.Catalog.Manufacturers.Fields.Discounts.NoDiscounts")'
+                                    	});
+                                    	discountsIdsInput._placeholder();
+                                    	discountsIdsInput._enable();
+                                	</text>
+			                    }
+                    		});
+                        </script>
+                    </div>
+                </div>
+
+                <div class="form-group advanced-setting">
+                    <div class="col-md-3">
+                        <nop-label asp-for="SelectedCustomerRoleIds" />
+                    </div>
+                    <div class="col-md-9">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <nop-select asp-for="SelectedCustomerRoleIds" asp-items="Model.AvailableCustomerRoles" asp-multiple="true" />
+                                <script>
+                            		$(document).ready(function() {
+                            			var rolesIdsInput = $('#@Html.IdFor(model => model.SelectedCustomerRoleIds)').data("kendoMultiSelect");
+			                            rolesIdsInput.setOptions({
+			                                autoClose: false,
+			                                filter: "contains"
+			                            });
+
+			                            @if (Model.AvailableCustomerRoles.Count == 0)
+			                            {
+			                                <text>
+                                            	rolesIdsInput.setOptions({
+                                            		enable: false,
+                                            		placeholder: 'No customer roles available'
+                                            	});
+                                            	rolesIdsInput._placeholder();
+                                            	rolesIdsInput._enable();
+                                        	</text>
+			                            }
+                            		});
+                                </script>
+                            </div>
+                            <div class="col-md-8">
+                                @await Component.InvokeAsync("AclDisabledWarning")
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group advanced-setting">
+                    <div class="col-md-3">
+                        <nop-label asp-for="SelectedStoreIds" />
+                    </div>
+                    <div class="col-md-9">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <nop-select asp-for="SelectedStoreIds" asp-items="Model.AvailableStores" asp-multiple="true" />
+                                <script>
+                            		$(document).ready(function() {
+                            			var storesIdsInput = $('#@Html.IdFor(model => model.SelectedStoreIds)').data("kendoMultiSelect");
+			                            storesIdsInput.setOptions({
+			                                autoClose: false,
+			                                filter: "contains"
+			                            });
+
+			                            @if (Model.AvailableStores.Count == 0)
+			                            {
+			                                <text>
+                                            	storesIdsInput.setOptions({
+                                            		enable: false,
+                                            		placeholder: 'No stores available'
+                                            	});
+                                            	storesIdsInput._placeholder();
+                                            	storesIdsInput._enable();
+                                        	</text>
+			                            }
+                            		});
+                                </script>
+                            </div>
+                            <div class="col-md-8">
+                                @await Component.InvokeAsync("MultistoreDisabledWarning")
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <div class="panel panel-default advanced-setting collapsible-panel">
+            <div class="panel-heading @if (!hideSeoBlock){<text>opened</text>}" data-hideAttribute="@hideSeoBlockAttributeName">
+                <span>@T("Admin.Common.SEO")</span>
+                <i class="fa @if (hideSeoBlock){<text>fa-plus</text>} else {<text>fa-minus</text>}"></i>
+            </div>
+            <div class="panel-body @if (hideSeoBlock){<text>collapsed</text>}">
+                @(Html.LocalizedEditor<ManufacturerModel, ManufacturerLocalizedModel>("manufacturer-seo-localized",
+                @<div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="@Model.Locales[item].SeName" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="@Model.Locales[item].SeName" />
+                            <span asp-validation-for="@Model.Locales[item].SeName"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="@Model.Locales[item].MetaTitle" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="@Model.Locales[item].MetaTitle" />
+                            <span asp-validation-for="@Model.Locales[item].MetaTitle"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="@Model.Locales[item].MetaKeywords" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="@Model.Locales[item].MetaKeywords" />
+                            <span asp-validation-for="@Model.Locales[item].MetaKeywords"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="@Model.Locales[item].MetaDescription" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-textarea asp-for="@Model.Locales[item].MetaDescription"></nop-textarea>
+                            <span asp-validation-for="@Model.Locales[item].MetaDescription"></span>
+                        </div>
+                    </div>
+                    <script>
+                        $(document).ready(function () {
+                            $('#@Html.IdFor(model => model.Locales[item].SeName)').on('input change', function () {
+                                var parameters = {
+                                    entityId: '@Model.Id',
+                                    entityName: 'Manufacturer',
+                                    seName: $(this).val()
+                                };
+                                warningValidation('@Url.Action("UrlReservedWarning", "Common")', '@Html.NameFor(model => model.Locales[item].SeName)', parameters);
+                            });
+                        });
+                    </script>
+                    <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
+                </div>
+,
+                @<div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="SeName" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="SeName" />
+                            <span asp-validation-for="SeName"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="MetaTitle" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="MetaTitle" />
+                            <span asp-validation-for="MetaTitle"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="MetaKeywords" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="MetaKeywords" />
+                            <span asp-validation-for="MetaKeywords"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="MetaDescription" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-textarea asp-for="MetaDescription"></nop-textarea>
+                            <span asp-validation-for="MetaDescription"></span>
+                        </div>
+                    </div>
+                    <script>
+                          $(document).ready(function () {
+                              $('#@Html.IdFor(model => model.SeName)').on('input change', function () {
+                                  var parameters = {
+                                      entityId: '@Model.Id',
+                                      entityName: 'Manufacturer',
+                                      seName: $(this).val()
+                                  };
+                                  warningValidation('@Url.Action("UrlReservedWarning", "Common")', '@Html.NameFor(model => model.SeName)', parameters);
+                              });
+                          });
+                    </script>
+                </div>))
+            </div>
+        </div>
+        
+        <div class="panel panel-default advanced-setting collapsible-panel">
+            <div class="panel-heading @if (!hideProductsBlock){<text>opened</text>}" data-hideAttribute="@hideProductsBlockAttributeName">
+                <span>@T("Admin.Catalog.Manufacturers.Products")</span>
+                <i class="fa @if (hideProductsBlock){<text>fa-plus</text>} else {<text>fa-minus</text>}"></i>
+            </div>
+            @if (Model.Id > 0)
+            {
+                <div class="panel-body @if (hideProductsBlock){<text>collapsed</text>}">
+                    <div id="products-grid"></div>
+
+                    <script>
+                        $(document).ready(function() {
+                            $("#products-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("ProductList", "Manufacturer"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: function() {
+                                                var data = {
+                                                    ManufacturerId: '@(Model.Id)'
+                                                };
+                                                addAntiForgeryToken(data);
+                                                return data;
+                                            }
+                                        },
+                                        update: {
+                                            url: "@Html.Raw(Url.Action("ProductUpdate", "Manufacturer"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        },
+                                        destroy: {
+                                            url: "@Html.Raw(Url.Action("ProductDelete", "Manufacturer"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors",
+                                        model: {
+                                            id: "Id",
+                                            fields: {
+                                                ProductName: { editable: false, type: "string" },
+                                                IsFeaturedProduct: { editable: true, type: "boolean" },
+                                                DisplayOrder: { editable: true, type: "number" },
+                                                ProductId: { editable: false, type: "number" }
+                                            }
+                                        }
+                                    },
+                                    requestEnd: function(e) {
+                                        if (e.type == "update") {
+                                            this.read();
+                                        }
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    pageSize: @(Model.ManufacturerProductSearchModel.PageSize),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(Model.ManufacturerProductSearchModel.AvailablePageSizes)],
+                                    @await Html.PartialAsync("_GridPagerMessages")
+                                },
+                                editable: {
+                                    confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                                    mode: "inline"
+                                },
+                                scrollable: false,
+                                columns: [
+                                    {
+                                        field: "ProductName",
+                                        editable: false,
+                                        type: "string",
+                                        title: "@T("Admin.Catalog.Manufacturers.Products.Fields.Product")"
+                                    }, {
+                                        field: "IsFeaturedProduct",
+                                        title: "@T("Admin.Catalog.Manufacturers.Products.Fields.IsFeaturedProduct")",
+                                        width: 150,
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" },
+                                        template: '# if(IsFeaturedProduct) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
+                                    }, {
+                                        field: "DisplayOrder",
+                                        title: "@T("Admin.Catalog.Manufacturers.Products.Fields.DisplayOrder")",
+                                        //integer format
+                                        format: "{0:0}",
+                                        width: 150
+                                    }, {
+                                        field: "ProductId",
+                                        title: "@T("Admin.Common.View")",
+                                        width: 100,
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" },
+                                        template: '<a class="btn btn-default" href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#"><i class="fa fa-eye"></i>@T("Admin.Common.View")</a>'
+                                    }, {
+                                        command: [
+                                            {
+                                                name: "edit",
+                                                text: {
+                                                    edit: "@T("Admin.Common.Edit")",
+                                                    update: "@T("Admin.Common.Update")",
+                                                    cancel: "@T("Admin.Common.Cancel")"
+                                                }
+                                            }, {
+                                                name: "destroy",
+                                                text: "@T("Admin.Common.Delete")"
+                                            }
+                                        ],
+                                        width: 200
+                                    }
+                                ]
+                            });
+                        });
+                    </script>
+                </div>
+
+                <div class="panel-footer @if (hideProductsBlock){<text>collapsed</text>}">
+                    <button type="submit" id="btnAddNewProduct" onclick="javascript:OpenWindow('@(Url.Action("ProductAddPopup", "Manufacturer", new { manufacturerId = Model.Id, btnId = "btnRefreshProducts", formId = "manufacturer-form" }))', 800, 800, true); return false;" class="btn btn-primary">
+                        @T("Admin.Catalog.Manufacturers.Products.AddNew")
+                    </button>
+                    <input type="submit" id="btnRefreshProducts" style="display: none" />
+                    <script>
+                        $(document).ready(function () {
+                            $('#btnRefreshProducts').click(function () {
+                                //refresh grid
+                                var grid = $("#products-grid").data('kendoGrid');
+                                grid.dataSource.read();
+
+                                //return false to don't reload a page
+                                return false;
+                            });
+                        });
+                    </script>
+                </div>
+            }
+            else
+            {
+                <div class="panel-body @if (hideProductsBlock){<text>collapsed</text>}">
+                    @T("Admin.Catalog.Manufacturers.Products.SaveBeforeEdit")
+                </div>
+            }
+        </div>
+        
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ManufacturerDetailsBlock, additionalData = Model })
     </div>
 </div>
-
-@{
-    //custom tabs
-    var eventMessage = new AdminTabStripCreated(this.Html, "manufacturer-edit");
-    eventPublisher.Publish(eventMessage);
-    foreach (var eventBlock in eventMessage.BlocksToRender)
-    {
-        @eventBlock
-    }
-}
