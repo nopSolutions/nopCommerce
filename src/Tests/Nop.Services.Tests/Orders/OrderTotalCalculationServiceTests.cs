@@ -15,6 +15,7 @@ using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Tax;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
+using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Discounts;
 using Nop.Services.Events;
@@ -117,7 +118,10 @@ namespace Nop.Services.Tests.Orders
             
             _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
 
-            var pluginService = new PluginService(_eventPublisher.Object);
+            var customerService = new Mock<ICustomerService>();
+            var loger = new Mock<ILogger>();
+
+            var pluginService = new PluginService(customerService.Object, loger.Object , CommonHelper.DefaultFileProvider, _webHelper.Object);
 
             //shipping
             _shippingSettings = new ShippingSettings

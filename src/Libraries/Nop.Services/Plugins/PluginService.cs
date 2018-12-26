@@ -22,6 +22,7 @@ namespace Nop.Services.Plugins
         private readonly ILogger _logger;
         private readonly INopFileProvider _fileProvider;
         private readonly IWebHelper _webHelper;
+        private readonly PluginsInfo _pluginsInfo;
 
         #endregion
 
@@ -36,6 +37,7 @@ namespace Nop.Services.Plugins
             this._logger = logger;
             this._fileProvider = fileProvider;
             this._webHelper = webHelper;
+            this._pluginsInfo = Singleton<PluginsInfo>.Instance;
         }
 
         #endregion
@@ -142,7 +144,7 @@ namespace Nop.Services.Plugins
         public virtual IEnumerable<PluginDescriptor> GetPluginDescriptors<TPlugin>(LoadPluginsMode loadMode = LoadPluginsMode.InstalledOnly,
             Customer customer = null, int storeId = 0, string group = null) where TPlugin : class, IPlugin
         {
-            var pluginDescriptors = PluginManager.PluginDescriptors;
+            var pluginDescriptors = _pluginsInfo.PluginDescriptors;
 
             //filter plugins
             pluginDescriptors = pluginDescriptors.Where(descriptor =>
@@ -206,7 +208,7 @@ namespace Nop.Services.Plugins
                 throw new ArgumentNullException(nameof(typeInAssembly));
 
             //try to do magic
-            var pluginDescriptor = PluginManager.PluginDescriptors.FirstOrDefault(descriptor =>
+            var pluginDescriptor = _pluginsInfo.PluginDescriptors.FirstOrDefault(descriptor =>
                descriptor.ReferencedAssembly?.FullName.Equals(typeInAssembly.Assembly.FullName, StringComparison.InvariantCultureIgnoreCase) ?? false);
 
             return pluginDescriptor?.Instance<IPlugin>();
@@ -244,10 +246,10 @@ namespace Nop.Services.Plugins
         public virtual void PreparePluginToInstall(string systemName, Customer customer = null)
         {
             //add plugin name to the appropriate list (if not yet contained) and save changes
-            if (!PluginManager.PluginsInfo.PluginNamesToInstall.Any(item => item.SystemName == systemName))
+            if (!_pluginsInfo.PluginNamesToInstall.Any(item => item.SystemName == systemName))
             {
-                PluginManager.PluginsInfo.PluginNamesToInstall.Add((systemName, customer?.CustomerGuid));
-                PluginManager.PluginsInfo.Save(_fileProvider);
+                _pluginsInfo.PluginNamesToInstall.Add((systemName, customer?.CustomerGuid));
+                _pluginsInfo.Save(_fileProvider);
             }
         }
 
@@ -258,10 +260,10 @@ namespace Nop.Services.Plugins
         public virtual void PreparePluginToUninstall(string systemName)
         {
             //add plugin name to the appropriate list (if not yet contained) and save changes
-            if (!PluginManager.PluginsInfo.PluginNamesToUninstall.Contains(systemName))
+            if (!_pluginsInfo.PluginNamesToUninstall.Contains(systemName))
             {
-                PluginManager.PluginsInfo.PluginNamesToUninstall.Add(systemName);
-                PluginManager.PluginsInfo.Save(_fileProvider);
+                _pluginsInfo.PluginNamesToUninstall.Add(systemName);
+                _pluginsInfo.Save(_fileProvider);
             }
         }
 
@@ -272,10 +274,10 @@ namespace Nop.Services.Plugins
         public virtual void PreparePluginToDelete(string systemName)
         {
             //add plugin name to the appropriate list (if not yet contained) and save changes
-            if (!PluginManager.PluginsInfo.PluginNamesToDelete.Contains(systemName))
+            if (!_pluginsInfo.PluginNamesToDelete.Contains(systemName))
             {
-                PluginManager.PluginsInfo.PluginNamesToDelete.Add(systemName);
-                PluginManager.PluginsInfo.Save(_fileProvider);
+                _pluginsInfo.PluginNamesToDelete.Add(systemName);
+                _pluginsInfo.Save(_fileProvider);
             }
         }
 
@@ -285,13 +287,13 @@ namespace Nop.Services.Plugins
         public virtual void ResetChanges()
         {
             //clear lists and save changes
-            PluginManager.PluginsInfo.PluginNamesToDelete.Clear();
-            PluginManager.PluginsInfo.PluginNamesToInstall.Clear();
-            PluginManager.PluginsInfo.PluginNamesToUninstall.Clear();
-            PluginManager.PluginsInfo.Save(_fileProvider);
+            _pluginsInfo.PluginNamesToDelete.Clear();
+            _pluginsInfo.PluginNamesToInstall.Clear();
+            _pluginsInfo.PluginNamesToUninstall.Clear();
+            _pluginsInfo.Save(_fileProvider);
 
             //display all plugins on the plugin list page
-            PluginManager.PluginDescriptors.ToList().ForEach(pluginDescriptor => pluginDescriptor.ShowInPluginsList = true);
+            _pluginsInfo.PluginDescriptors.ToList().ForEach(pluginDescriptor => pluginDescriptor.ShowInPluginsList = true);
         }
 
         /// <summary>
@@ -299,7 +301,7 @@ namespace Nop.Services.Plugins
         /// </summary>
         public virtual void ClearInstalledPluginsList()
         {
-            PluginManager.PluginsInfo.InstalledPluginNames.Clear();
+            _pluginsInfo.InstalledPluginNames.Clear();
         }
 
         /// <summary>
@@ -308,10 +310,10 @@ namespace Nop.Services.Plugins
         public virtual void InstallPlugins()
         {
             //get all uninstalled plugins
-            var pluginDescriptors = PluginManager.PluginDescriptors.Where(descriptor => !descriptor.Installed);
+            var pluginDescriptors = _pluginsInfo.PluginDescriptors.Where(descriptor => !descriptor.Installed);
 
             //filter plugins need to install
-            pluginDescriptors = pluginDescriptors.Where(descriptor => PluginManager.PluginsInfo.PluginNamesToInstall
+            pluginDescriptors = pluginDescriptors.Where(descriptor => _pluginsInfo.PluginNamesToInstall
                 .Any(item => item.SystemName.Equals(descriptor.SystemName))).ToList();
             if (!pluginDescriptors.Any())
                 return;
@@ -329,10 +331,10 @@ namespace Nop.Services.Plugins
                     descriptor.Instance<IPlugin>().Install();
 
                     //remove and add plugin system name to appropriate lists
-                    var pluginToInstall = PluginManager.PluginsInfo.PluginNamesToInstall
+                    var pluginToInstall = _pluginsInfo.PluginNamesToInstall
                         .FirstOrDefault(plugin => plugin.SystemName.Equals(descriptor.SystemName));
-                    PluginManager.PluginsInfo.InstalledPluginNames.Add(descriptor.SystemName);
-                    PluginManager.PluginsInfo.PluginNamesToInstall.Remove(pluginToInstall);
+                    _pluginsInfo.InstalledPluginNames.Add(descriptor.SystemName);
+                    _pluginsInfo.PluginNamesToInstall.Remove(pluginToInstall);
 
                     //activity log
                     var customer = _customerService.GetCustomerByGuid(pluginToInstall.CustomerGuid ?? Guid.Empty);
@@ -352,7 +354,7 @@ namespace Nop.Services.Plugins
             }
 
             //save changes
-            PluginManager.PluginsInfo.Save(_fileProvider);
+            _pluginsInfo.Save(_fileProvider);
         }
 
         /// <summary>
@@ -361,11 +363,11 @@ namespace Nop.Services.Plugins
         public virtual void UninstallPlugins()
         {
             //get all installed plugins
-            var pluginDescriptors = PluginManager.PluginDescriptors.Where(descriptor => descriptor.Installed);
+            var pluginDescriptors = _pluginsInfo.PluginDescriptors.Where(descriptor => descriptor.Installed);
 
             //filter plugins need to uninstall
             pluginDescriptors = pluginDescriptors
-                .Where(descriptor => PluginManager.PluginsInfo.PluginNamesToUninstall.Contains(descriptor.SystemName)).ToList();
+                .Where(descriptor => _pluginsInfo.PluginNamesToUninstall.Contains(descriptor.SystemName)).ToList();
             if (!pluginDescriptors.Any())
                 return;
 
@@ -382,8 +384,8 @@ namespace Nop.Services.Plugins
                     descriptor.Instance<IPlugin>().Uninstall();
 
                     //remove plugin system name from appropriate lists
-                    PluginManager.PluginsInfo.InstalledPluginNames.Remove(descriptor.SystemName);
-                    PluginManager.PluginsInfo.PluginNamesToUninstall.Remove(descriptor.SystemName);
+                    _pluginsInfo.InstalledPluginNames.Remove(descriptor.SystemName);
+                    _pluginsInfo.PluginNamesToUninstall.Remove(descriptor.SystemName);
 
                     //activity log
                     customerActivityService.InsertActivity("UninstallPlugin",
@@ -402,7 +404,7 @@ namespace Nop.Services.Plugins
             }
 
             //save changes
-            PluginManager.PluginsInfo.Save(_fileProvider);
+            _pluginsInfo.Save(_fileProvider);
         }
 
         /// <summary>
@@ -411,11 +413,11 @@ namespace Nop.Services.Plugins
         public virtual void DeletePlugins()
         {
             //get all uninstalled plugins (delete plugin only previously uninstalled)
-            var pluginDescriptors = PluginManager.PluginDescriptors.Where(descriptor => !descriptor.Installed);
+            var pluginDescriptors = _pluginsInfo.PluginDescriptors.Where(descriptor => !descriptor.Installed);
 
             //filter plugins need to delete
             pluginDescriptors = pluginDescriptors
-                .Where(descriptor => PluginManager.PluginsInfo.PluginNamesToDelete.Contains(descriptor.SystemName)).ToList();
+                .Where(descriptor => _pluginsInfo.PluginNamesToDelete.Contains(descriptor.SystemName)).ToList();
             if (!pluginDescriptors.Any())
                 return;
 
@@ -434,7 +436,7 @@ namespace Nop.Services.Plugins
                         _fileProvider.DeleteDirectory(pluginDirectory);
 
                     //remove plugin system name from the appropriate list
-                    PluginManager.PluginsInfo.PluginNamesToDelete.Remove(descriptor.SystemName);
+                    _pluginsInfo.PluginNamesToDelete.Remove(descriptor.SystemName);
 
                     //activity log
                     customerActivityService.InsertActivity("DeletePlugin",
@@ -449,7 +451,7 @@ namespace Nop.Services.Plugins
             }
 
             //save changes
-            PluginManager.PluginsInfo.Save(_fileProvider);
+            _pluginsInfo.Save(_fileProvider);
         }
 
         /// <summary>
@@ -459,9 +461,9 @@ namespace Nop.Services.Plugins
         public virtual bool IsRestartRequired()
         {
             //return true if any of lists contains items
-            return PluginManager.PluginsInfo.PluginNamesToInstall.Any()
-                || PluginManager.PluginsInfo.PluginNamesToUninstall.Any()
-                || PluginManager.PluginsInfo.PluginNamesToDelete.Any();
+            return _pluginsInfo.PluginNamesToInstall.Any()
+                || _pluginsInfo.PluginNamesToUninstall.Any()
+                || _pluginsInfo.PluginNamesToDelete.Any();
         }
 
         /// <summary>
@@ -470,7 +472,7 @@ namespace Nop.Services.Plugins
         /// <returns>List of plugin names</returns>
         public virtual IList<string> GetIncompatiblePlugins()
         {
-            return PluginManager.PluginsInfo.IncompatiblePlugins;
+            return _pluginsInfo.IncompatiblePlugins;
         }
 
         /// <summary>
@@ -479,7 +481,7 @@ namespace Nop.Services.Plugins
         /// <returns>List of plugin loaded assembly info</returns>
         public virtual IList<PluginLoadedAssemblyInfo> GetAssemblyCollisions()
         {
-            return PluginManager.PluginsInfo.AssemblyLoadedCollision;
+            return _pluginsInfo.AssemblyLoadedCollision;
         }
 
         #endregion

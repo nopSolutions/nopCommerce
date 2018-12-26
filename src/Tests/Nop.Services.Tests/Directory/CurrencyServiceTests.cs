@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Caching.Memory;
 using Moq;
-using Nop.Core.Caching;
+using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain.Directory;
+using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Events;
+using Nop.Services.Logging;
 using Nop.Services.Plugins;
 using Nop.Services.Stores;
 using Nop.Tests;
@@ -90,7 +92,11 @@ namespace Nop.Services.Tests.Directory
             _eventPublisher = new Mock<IEventPublisher>();
             _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
             
-            var pluginService = new PluginService(_eventPublisher.Object);
+            var customerService = new Mock<ICustomerService>();
+            var loger = new Mock<ILogger>();
+            var webHelper = new Mock<IWebHelper>();
+
+            var pluginService = new PluginService(customerService.Object, loger.Object , CommonHelper.DefaultFileProvider, webHelper.Object);
             _currencyService = new CurrencyService(_currencySettings, _eventPublisher.Object, pluginService, _currencyRepository.Object, cacheManager, _storeMappingService.Object);
         }
         

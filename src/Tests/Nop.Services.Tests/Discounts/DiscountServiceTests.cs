@@ -13,6 +13,7 @@ using Nop.Services.Customers;
 using Nop.Services.Discounts;
 using Nop.Services.Events;
 using Nop.Services.Localization;
+using Nop.Services.Logging;
 using Nop.Services.Plugins;
 using Nop.Tests;
 using NUnit.Framework;
@@ -84,7 +85,12 @@ namespace Nop.Services.Tests.Discounts
             _discountRequirementRepo.Setup(x => x.Table).Returns(new List<DiscountRequirement>().AsQueryable());
 
             _discountUsageHistoryRepo = new Mock<IRepository<DiscountUsageHistory>>();
-            var pluginService = new PluginService(_eventPublisher.Object);
+            
+            var loger = new Mock<ILogger>();
+            var webHelper = new Mock<IWebHelper>();
+
+            var pluginService = new PluginService(_customerService.Object, loger.Object , CommonHelper.DefaultFileProvider, webHelper.Object);
+            
             _localizationService = new Mock<ILocalizationService>();
             _categoryService = new Mock<ICategoryService>();
 

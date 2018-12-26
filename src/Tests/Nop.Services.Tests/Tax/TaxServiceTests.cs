@@ -9,6 +9,7 @@ using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Tax;
 using Nop.Services.Common;
+using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Events;
 using Nop.Services.Logging;
@@ -56,9 +57,7 @@ namespace Nop.Services.Tests.Tax
 
             _eventPublisher = new Mock<IEventPublisher>();
             _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
-
-            var pluginService = new PluginService(_eventPublisher.Object);
-
+            
             _geoLookupService = new Mock<IGeoLookupService>();
             _countryService = new Mock<ICountryService>();
             _stateProvinceService = new Mock<IStateProvinceService>();
@@ -70,6 +69,11 @@ namespace Nop.Services.Tests.Tax
             _shippingSettings = new ShippingSettings();
             _addressSettings = new AddressSettings();
 
+            var customerService = new Mock<ICustomerService>();
+            var loger = new Mock<ILogger>();
+
+            var pluginService = new PluginService(customerService.Object, loger.Object , CommonHelper.DefaultFileProvider, _webHelper.Object);
+            
             _taxService = new TaxService(_addressSettings,
                 _customerSettings,
                 _addressService.Object,

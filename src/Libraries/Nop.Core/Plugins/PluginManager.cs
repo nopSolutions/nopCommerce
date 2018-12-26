@@ -65,16 +65,15 @@ namespace Nop.Core.Plugins
         #endregion
 
         #region Properties
-
-        /// <summary>
-        /// Gets a collection of plugin descriptors of all deployed plugins
-        /// </summary>
-        public static IEnumerable<PluginDescriptor> PluginDescriptors { get; set; }
-
+        
         /// <summary>
         /// Gets access to information about plugins
         /// </summary>
-        public static PluginsInfo PluginsInfo { get; }
+        protected static PluginsInfo PluginsInfo
+        {
+            get => Singleton<PluginsInfo>.Instance;
+            set => Singleton<PluginsInfo>.Instance = value;
+        }
 
         #endregion
 
@@ -530,7 +529,7 @@ namespace Nop.Core.Plugins
                 }
 
                 //set plugin descriptor list
-                PluginDescriptors = pluginDescriptors;
+                PluginsInfo.PluginDescriptors = pluginDescriptors;
 
                 //set additional information to plugins info object and save changes
                 PluginsInfo.IncompatiblePlugins = incompatiblePlugins;

@@ -249,7 +249,7 @@ namespace Nop.Core.Infrastructure
         /// </summary>
         /// <typeparam name="T">Type of resolved services</typeparam>
         /// <returns>Collection of resolved services</returns>
-        public IEnumerable<T> ResolveAll<T>()
+        public virtual IEnumerable<T> ResolveAll<T>()
         {
             return (IEnumerable<T>)GetServiceProvider().GetServices(typeof(T));
         }

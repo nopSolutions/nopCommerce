@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Moq;
 using Nop.Core;
-using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
-using Nop.Core.Plugins;
 using Nop.Services.Events;
-using Nop.Services.Logging;
 using Nop.Tests;
 using NUnit.Framework;
 
@@ -26,7 +22,6 @@ namespace Nop.Web.MVC.Tests.Events
             hostingEnvironment.Setup(x => x.ContentRootPath).Returns(System.Reflection.Assembly.GetExecutingAssembly().Location);
             hostingEnvironment.Setup(x => x.WebRootPath).Returns(System.IO.Directory.GetCurrentDirectory());
             CommonHelper.DefaultFileProvider = new NopFileProvider(hostingEnvironment.Object);
-            PluginManager.Initialize(new ApplicationPartManager(), new NopConfig());
 
             var nopEngine = new Mock<NopEngine>();
             var serviceProvider = new TestServiceProvider();

@@ -141,6 +141,12 @@ namespace Nop.Core.Plugins
         [JsonIgnore]
         public IList<PluginLoadedAssemblyInfo> AssemblyLoadedCollision { get; set; }
 
+        /// <summary>
+        /// Gets or sets a collection of plugin descriptors of all deployed plugins
+        /// </summary>
+        [JsonIgnore]
+        public IEnumerable<PluginDescriptor> PluginDescriptors { get; set; }
+
         #endregion
     }
 }
