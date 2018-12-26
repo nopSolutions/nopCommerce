@@ -13,8 +13,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure.DependencyManagement;
+using Nop.Core.Infrastructure.Extensions;
 using Nop.Core.Infrastructure.Mapper;
-using Nop.Core.Plugins;
 
 namespace Nop.Core.Infrastructure
 {
@@ -150,7 +150,7 @@ namespace Nop.Core.Infrastructure
             //initialize plugins
             var nopConfig = provider.GetRequiredService<NopConfig>();
             var mvcCoreBuilder = services.AddMvcCore();
-            PluginManager.Initialize(mvcCoreBuilder.PartManager, nopConfig);
+            mvcCoreBuilder.PartManager.InitializePlugins(nopConfig);
         }
 
         private Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
