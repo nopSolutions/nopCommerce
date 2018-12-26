@@ -139,6 +139,27 @@ ul.common-list {
     overflow-x: scroll;
 }
 
+/*CATEGORY*/
+#category-form .panel {
+    margin-bottom: 5px;
+}
+
+#category-form .panel .panel-heading {
+    padding-right: 30px;
+    position: relative;
+    cursor: pointer;
+}
+
+#category-form .panel .panel-heading i {
+    position: absolute;
+    right: 5px;
+    top: 14px;
+}
+
+#category-form .panel .panel-body.collapsed, .panel-footer.collapsed {
+    display: none;
+}
+
 /*DISCOUNT*/
 .requirement-container {
     margin-bottom: 5px;

@@ -2049,8 +2049,14 @@
   <LocaleResource Name="Admin.Catalog.Categories.Breadcrumb">
     <Value>Breadcrumb</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.CategoryInfo">
+    <Value>Category info</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Deleted">
     <Value>The category has been deleted successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Display">
+    <Value>Display</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.EditCategoryDetails">
     <Value>Edit category details</Value>
@@ -2202,9 +2208,6 @@
   <LocaleResource Name="Admin.Catalog.Categories.Imported">
     <Value>Categories have been imported successfully.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Categories.Info">
-    <Value>Category info</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.List.ImportFromExcelTip">
     <Value>Imported categories are distinguished by ID. If the ID already exists, then its corresponding category will be updated. You should not specify ID (leave 0) for new categories.</Value>
   </LocaleResource>
@@ -2223,6 +2226,9 @@
   <LocaleResource Name="Admin.Catalog.Categories.Manage">
     <Value>Manage Categories</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Mappings">
+    <Value>Mappings</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Products">
     <Value>Products</Value>
   </LocaleResource>
@@ -2240,6 +2246,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Products.SaveBeforeEdit">
     <Value>You need to save the category before you can add products for this category page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.SEO">
+    <Value>SEO</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.SwitchToListView">
     <Value>switch to list view</Value>

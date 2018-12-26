@@ -40,6 +40,7 @@
         public static string CatalogSettingsBottom => "admin_catalog_settings_bottom";
         public static string CatalogSettingsButtons => "admin_catalog_settings_buttons";
         public static string CatalogSettingsTop => "admin_catalog_settings_top";
+        public static string CategoryBlock => "admin_category_block";
         public static string CategoryDetailsButtons => "admin_category_details_buttons";
         public static string CategoryDetailsInfoBottom => "admin_category_details_info_bottom";
         public static string CategoryDetailsInfoTop => "admin_category_details_info_top";
