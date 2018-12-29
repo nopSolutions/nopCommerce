@@ -40,14 +40,8 @@
         public static string CatalogSettingsBottom => "admin_catalog_settings_bottom";
         public static string CatalogSettingsButtons => "admin_catalog_settings_buttons";
         public static string CatalogSettingsTop => "admin_catalog_settings_top";
-        public static string CategoryBlock => "admin_category_block";
+        public static string CategoryDetailsBlock => "admin_category_details_block";
         public static string CategoryDetailsButtons => "admin_category_details_buttons";
-        public static string CategoryDetailsInfoBottom => "admin_category_details_info_bottom";
-        public static string CategoryDetailsInfoTop => "admin_category_details_info_top";
-        public static string CategoryDetailsProductsBottom => "admin_category_details_products_bottom";
-        public static string CategoryDetailsProductsTop => "admin_category_details_products_top";
-        public static string CategoryDetailsSeoBottom => "admin_category_details_seo_bottom";
-        public static string CategoryDetailsSeoTop => "admin_category_details_seo_top";
         public static string CategoryListButtons => "admin_category_list_buttons";
         public static string CategoryTemplateListButtons => "admin_category_template_list_buttons";
         public static string CheckoutAttributeDetailsButtons => "admin_checkout_attribute_details_buttons";
@@ -75,7 +69,6 @@
         public static string CurrencyDetailsTop => "admin_currency_details_top";
         public static string CurrencyListButtons => "admin_currency_list_buttons";
         public static string CurrentShoppingCartListButtons => "admin_current_shopping_cart_list_buttons";
-        public static string CurrentWishlistListButtons => "admin_current_wishlist_list_buttons";
         public static string CustomerAddressDetailsBottom => "admin_customer_address_details_bottom";
         public static string CustomerAddressDetailsButtons => "admin_customer_address_details_buttons";
         public static string CustomerAddressDetailsTop => "admin_customer_address_details_top";
@@ -104,8 +97,6 @@
         public static string CustomerDetailsRewardPointsTop => "admin_customer_details_reward_points_top";
         public static string CustomerDetailsShoppingCartBottom => "admin_customer_details_shopping_cart_bottom";
         public static string CustomerDetailsShoppingCartTop => "admin_customer_details_shopping_cart_top";
-        public static string CustomerDetailsWishlistBottom => "admin_customer_details_wishlist_bottom";
-        public static string CustomerDetailsWishlistTop => "admin_customer_details_wishlist_top";
         public static string CustomerListButtons => "admin_customer_list_buttons";
         public static string CustomerReportsButtons => "admin_customer_reports_buttons";
         public static string CustomerRoleDetailsBottom => "admin_customer_role_details_bottom";

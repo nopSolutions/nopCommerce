@@ -230,7 +230,7 @@ $(document).ajaxStart(function () {
 
 //no-tabs solution
 $(document).ready(function () {
-    $("#category-form .panel .panel-heading").click(WrapAndSaveBlockData);
+    $(".panel.collapsible-panel .panel-heading").click(WrapAndSaveBlockData);
 });
 
 function WrapAndSaveBlockData() {

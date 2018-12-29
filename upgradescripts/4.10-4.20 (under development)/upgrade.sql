@@ -245,17 +245,11 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.Fields.LowStockActivity.Hint">
     <Value>Action to be taken when your current stock quantity falls below (reaches) the ''Minimum stock quantity''. Activation of the action will occur only after an order is placed.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Categories.CategoryInfo">
-    <Value>Category info</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Display">
     <Value>Display</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Mappings">
     <Value>Mappings</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Categories.SEO">
-    <Value>SEO</Value>
   </LocaleResource>
 </Language>
 '
