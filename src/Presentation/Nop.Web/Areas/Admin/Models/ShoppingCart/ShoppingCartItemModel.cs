@@ -14,10 +14,10 @@ namespace Nop.Web.Areas.Admin.Models.ShoppingCart
         [NopResourceDisplayName("Admin.CurrentCarts.Store")]
         public string Store { get; set; }
 
-        [NopResourceDisplayName("Admin.CurrentCarts.Product")]
+        [NopResourceDisplayName("Admin.CurrentCarts.ProductId")]
         public int ProductId { get; set; }
 
-        [NopResourceDisplayName("Admin.CurrentCarts.Product")]
+        [NopResourceDisplayName("Admin.CurrentCarts.ProductName")]
         public string ProductName { get; set; }
 
         public string AttributeInfo { get; set; }
