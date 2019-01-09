@@ -170,6 +170,9 @@ namespace Nop.Web.Areas.Admin.Factories
                     //fill in model values from the entity
                     var itemModel = item.ToModel<ShoppingCartItemModel>();
 
+                    //set product name since it does not survive mapping
+                    itemModel.ProductName = item?.Product?.Name;
+
                     //convert dates to the user time
                     itemModel.UpdatedOn = _dateTimeHelper.ConvertToUserTime(item.UpdatedOnUtc, DateTimeKind.Utc);
 
