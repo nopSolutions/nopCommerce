@@ -39,7 +39,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Square.Connect" Version="2.11.1" />
+    <PackageReference Include="Square.Connect" Version="2.13.0" />
   </ItemGroup>
   
   <ItemGroup>
