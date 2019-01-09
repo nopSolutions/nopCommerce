@@ -332,18 +332,26 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get plugins
-            var plugins = _officialFeedManager.GetAllPlugins(categoryId: searchModel.SearchCategoryId,
-            versionId: searchModel.SearchVersionId,
-            price: searchModel.SearchPriceId,
-            searchTerm: searchModel.SearchName,
-            pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);                
-            
+            IPagedList<OfficialFeedPlugin> plugins = null;
+            try
+            {
+                //ensure that no exception is thrown when www.nopcommerce.com website is not available
+                plugins = _officialFeedManager.GetAllPlugins(categoryId: searchModel.SearchCategoryId,
+                    versionId: searchModel.SearchVersionId,
+                    price: searchModel.SearchPriceId,
+                    searchTerm: searchModel.SearchName,
+                    pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error("No access to the list of plugins. Website www.nopcommerce.com is not available.", ex);
+            }
 
             //prepare list model
             var model = new OfficialFeedPluginListModel
             {
                 //fill in model values from the entity
-                Data = plugins.Select(plugin => new OfficialFeedPluginModel
+                Data = plugins?.Select(plugin => new OfficialFeedPluginModel
                 {
                     Url = plugin.Url,
                     Name = plugin.Name,
@@ -351,8 +359,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     SupportedVersions = plugin.SupportedVersions,
                     PictureUrl = plugin.PictureUrl,
                     Price = plugin.Price
-                }),
-                Total = plugins.TotalCount
+                }) ?? new List<OfficialFeedPluginModel>(),
+                Total = plugins?.TotalCount ?? 0
             };
 
             return model;
