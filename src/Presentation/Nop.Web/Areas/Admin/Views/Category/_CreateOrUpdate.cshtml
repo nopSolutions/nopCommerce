@@ -6,8 +6,8 @@
 @inject IWorkContext workContext
 @{
 
-    const string hideInfoBlockAttributeName = "CategoryPage.HideInfoCategoryBlock";
-    var hideInfoCategoryBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideInfoBlockAttributeName);
+    const string hideInfoBlockAttributeName = "CategoryPage.HideInfoBlock";
+    var hideInfoBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideInfoBlockAttributeName);
 
     const string hideDisplayBlockAttributeName = "CategoryPage.HideDisplayBlock";
     var hideDisplayBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideDisplayBlockAttributeName);
@@ -36,11 +36,11 @@
         </div>
                
         <div class="panel panel-default collapsible-panel">
-            <div class="panel-heading @if (!hideInfoCategoryBlock){<text>opened</text>}" data-hideAttribute="@hideInfoBlockAttributeName">
+            <div class="panel-heading @if (!hideInfoBlock){<text>opened</text>}" data-hideAttribute="@hideInfoBlockAttributeName">
                 <span>@T("Admin.Catalog.Categories.Info")</span>
-                <i class="fa @if (hideInfoCategoryBlock){<text>fa-plus</text>} @if (!hideInfoCategoryBlock){<text>fa-minus</text>}"></i>
+                <i class="fa @if (hideInfoBlock){<text>fa-plus</text>} else {<text>fa-minus</text>}"></i>
             </div>
-            <div class="panel-body @if (hideInfoCategoryBlock){<text>collapsed</text>}">
+            <div class="panel-body @if (hideInfoBlock){<text>collapsed</text>}">
                 @(Html.LocalizedEditor<CategoryModel, CategoryLocalizedModel>("category-name-localized",
                 @<div>
                     <div class="form-group">
@@ -82,7 +82,7 @@
         <div class="panel panel-default collapsible-panel">
             <div class="panel-heading @if (!hideDisplayBlock){<text>opened</text>}" data-hideAttribute="@hideDisplayBlockAttributeName">
                 <span>@T("Admin.Catalog.Categories.Display")</span>
-                <i class="fa @if (hideDisplayBlock){<text>fa-plus</text>} @if (!hideDisplayBlock){<text>fa-minus</text>}"></i>
+                <i class="fa @if (hideDisplayBlock){<text>fa-plus</text>} else {<text>fa-minus</text>}"></i>
             </div>
             <div class="panel-body @if (hideDisplayBlock){<text>collapsed</text>}">
                 @(Html.LocalizedEditor<CategoryModel, CategoryLocalizedModel>("category-description-localized",
@@ -185,6 +185,15 @@
                         <span asp-validation-for="DisplayOrder"></span>
                     </div>
                 </div>
+                <div class="form-group" @(Model.AvailableCategoryTemplates.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
+                    <div class="col-md-3">
+                        <nop-label asp-for="CategoryTemplateId" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-select asp-for="CategoryTemplateId" asp-items="Model.AvailableCategoryTemplates" />
+                        <span asp-validation-for="CategoryTemplateId"></span>
+                    </div>
+                </div>
                 <div class="form-group advanced-setting">
                     <div class="col-md-3">
                         <nop-label asp-for="PictureId" />
@@ -200,7 +209,7 @@
         <div class="panel panel-default advanced-setting collapsible-panel">
             <div class="panel-heading @if (!hideMappingsBlock){<text>opened</text>}" data-hideAttribute="@hideMappingsBlockAttributeName">
                 <span>@T("Admin.Catalog.Categories.Mappings")</span>
-                <i class="fa @if (hideMappingsBlock){<text>fa-plus</text>} @if (!hideMappingsBlock){<text>fa-minus</text>}"></i>
+                <i class="fa @if (hideMappingsBlock){<text>fa-plus</text>} else {<text>fa-minus</text>}"></i>
             </div>
             <div class="panel-body @if (hideMappingsBlock){<text>collapsed</text>}">
                 <div class="form-group advanced-setting">
@@ -312,7 +321,7 @@
         <div class="panel panel-default advanced-setting collapsible-panel">
             <div class="panel-heading @if (!hideSeoBlock){<text>opened</text>}" data-hideAttribute="@hideSeoBlockAttributeName">
                 <span>@T("Admin.Common.SEO")</span>
-                <i class="fa @if (hideSeoBlock){<text>fa-plus</text>} @if (!hideSeoBlock){<text>fa-minus</text>}"></i>
+                <i class="fa @if (hideSeoBlock){<text>fa-plus</text>} else {<text>fa-minus</text>}"></i>
             </div>
             <div class="panel-body @if (hideSeoBlock){<text>collapsed</text>}">
                 @(Html.LocalizedEditor<CategoryModel, CategoryLocalizedModel>("category-info-localized",
@@ -424,7 +433,7 @@
         <div class="panel panel-default advanced-setting collapsible-panel">
             <div class="panel-heading @if (!hideProductsBlock){<text>opened</text>}" data-hideAttribute="@hideProductsBlockAttributeName">
                 <span>@T("Admin.Catalog.Categories.Products")</span>
-                <i class="fa @if (hideProductsBlock){<text>fa-plus</text>} @if (!hideProductsBlock){<text>fa-minus</text>}"></i>
+                <i class="fa @if (hideProductsBlock){<text>fa-plus</text>} else {<text>fa-minus</text>}"></i>
             </div>
 
             @if (Model.Id > 0)
@@ -578,7 +587,7 @@
 
         </div>
     
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CategoryDetailsBlock })
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CategoryDetailsBlock, additionalData = Model })
     </div>
 </div>
 
