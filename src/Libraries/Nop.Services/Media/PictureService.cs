@@ -21,7 +21,6 @@ using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
-using SixLabors.ImageSharp.Processing.Transforms;
 using SixLabors.Primitives;
 using static SixLabors.ImageSharp.Configuration;
 
@@ -355,7 +354,7 @@ namespace Nop.Services.Media
                         break;
 
                     case PngEncoder pngEncoder:
-                        pngEncoder.PngColorType = PngColorType.RgbWithAlpha;
+                        pngEncoder.ColorType = PngColorType.RgbWithAlpha;
                         pngEncoder.Encode(image, stream);
                         break;
 
