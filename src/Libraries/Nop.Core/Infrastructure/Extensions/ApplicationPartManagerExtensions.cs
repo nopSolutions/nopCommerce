@@ -188,7 +188,17 @@ namespace Nop.Core.Infrastructure.Extensions
 
             //whether to copy plugins assemblies to the bin directory, if not load assembly from the original file
             if (!config.UsePluginsShadowCopy)
-                return AddApplicationParts(applicationPartManager, assemblyFile, config.UseUnsafeLoadAssembly);
+            {
+                var assembly = AddApplicationParts(applicationPartManager, assemblyFile, config.UseUnsafeLoadAssembly);
+
+                // delete the .deps file
+                if (assemblyFile.EndsWith(".dll"))
+                {
+                    _fileProvider.DeleteFile(assemblyFile.Substring(0, assemblyFile.Length - 4) + ".deps.json");
+                } 
+
+                return assembly;
+            }
 
             //or try to shadow copy first
             fileProvider.CreateDirectory(shadowCopyDirectory);
@@ -199,6 +209,15 @@ namespace Nop.Core.Infrastructure.Extensions
             {
                 //and load assembly from the shadow copy
                 shadowCopiedAssembly = AddApplicationParts(applicationPartManager, shadowCopiedFile, config.UseUnsafeLoadAssembly);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                //suppress exceptions for "locked" assemblies, try load them from another directory
+                if (!config.CopyLockedPluginAssembilesToSubdirectoriesOnStartup ||
+                    !shadowCopyDirectory.Equals(fileProvider.MapPath(NopPluginDefaults.ShadowCopyPath)))
+                {
+                    throw;
+                }
             }
             catch (FileLoadException)
             {
