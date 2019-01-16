@@ -1,0 +1,120 @@
+﻿@model CategoryModel
+
+@inject Nop.Services.Common.IGenericAttributeService genericAttributeService
+@inject IWorkContext workContext
+@{
+    const string hideMappingsBlockAttributeName = "CategoryPage.HideMappingsBlock";
+    var hideMappingsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideMappingsBlockAttributeName);
+}
+            
+<div class="panel panel-default advanced-setting collapsible-panel">
+    <div class="panel-heading @if (!hideMappingsBlock){<text>opened</text>}" data-hideAttribute="@hideMappingsBlockAttributeName">
+        <span>@T("Admin.Catalog.Categories.Mappings")</span>
+        <i class="fa @if (hideMappingsBlock){<text>fa-plus</text>} else {<text>fa-minus</text>}"></i>
+    </div>
+    <div class="panel-body @if (hideMappingsBlock){<text>collapsed</text>}">
+        <div class="form-group advanced-setting">
+            <div class="col-md-3">
+                <nop-label asp-for="SelectedDiscountIds" />
+            </div>
+            <div class="col-md-9">
+                <nop-select asp-for="SelectedDiscountIds" asp-items="Model.AvailableDiscounts" asp-multiple="true" />
+                <script>
+					$(document).ready(function() {
+						var discountsIdsInput = $('#@Html.IdFor(model => model.SelectedDiscountIds)').data("kendoMultiSelect");
+						discountsIdsInput.setOptions({
+						    autoClose: false,
+						    filter: "contains"
+						});
+
+						@if (Model.AvailableDiscounts.Count == 0)
+						{
+							<text>
+								discountsIdsInput.setOptions({
+									enable: false,
+									placeholder: '@T("Admin.Catalog.Categories.Fields.Discounts.NoDiscounts")'
+								});
+								discountsIdsInput._placeholder();
+								discountsIdsInput._enable();
+							</text>
+						}
+					});
+                </script>
+            </div>
+        </div>
+        <div class="form-group advanced-setting">
+            <div class="col-md-3">
+                <nop-label asp-for="SelectedCustomerRoleIds" />
+            </div>
+            <div class="col-md-9">
+                <div class="row">
+                    <div class="col-md-4">
+                        <nop-select asp-for="SelectedCustomerRoleIds" asp-items="Model.AvailableCustomerRoles" asp-multiple="true" />
+                        <script>
+							$(document).ready(function() {
+								var rolesIdsInput = $('#@Html.IdFor(model => model.SelectedCustomerRoleIds)')
+								    .data("kendoMultiSelect");
+								rolesIdsInput.setOptions({
+								    autoClose: false,
+								    filter: "contains"
+								});
+
+								@if (Model.AvailableCustomerRoles.Count == 0)
+					{
+						<text>
+							rolesIdsInput.setOptions({
+								enable: false,
+								placeholder: 'No customer roles available'
+							});
+							rolesIdsInput._placeholder();
+							rolesIdsInput._enable();
+						</text>
+					}
+							});
+                        </script>
+                    </div>
+                    <div class="col-md-8">
+                        @await Component.InvokeAsync("AclDisabledWarning")
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group advanced-setting">
+            <div class="col-md-3">
+                <nop-label asp-for="SelectedStoreIds" />
+            </div>
+            <div class="col-md-9">
+                <div class="row">
+                    <div class="col-md-4">
+                        <nop-select asp-for="SelectedStoreIds" asp-items="Model.AvailableStores" asp-multiple="true" />
+                        <script>
+							$(document).ready(function() {
+								var storesIdsInput = $('#@Html.IdFor(model => model.SelectedStoreIds)')
+								    .data("kendoMultiSelect");
+								storesIdsInput.setOptions({
+								    autoClose: false,
+								    filter: "contains"
+								});
+
+								@if (Model.AvailableStores.Count == 0)
+							{
+								<text>
+									storesIdsInput.setOptions({
+										enable: false,
+										placeholder: 'No stores available'
+									});
+									storesIdsInput._placeholder();
+									storesIdsInput._enable();
+								</text>
+							}
+							});
+                        </script>
+                    </div>
+                    <div class="col-md-8">
+                        @await Component.InvokeAsync("MultistoreDisabledWarning")
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
