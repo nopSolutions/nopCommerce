@@ -13,11 +13,11 @@
             </div>
         </div>
 
-        @await Html.PartialAsync("_CreateOrUpdate.Info")
-        @await Html.PartialAsync("_CreateOrUpdate.Display")
-        @await Html.PartialAsync("_CreateOrUpdate.Mappings")
-        @await Html.PartialAsync("_CreateOrUpdate.Seo")
-        @await Html.PartialAsync("_CreateOrUpdate.Products")
+        @await Html.PartialAsync("_CreateOrUpdate.Info", Model)
+        @await Html.PartialAsync("_CreateOrUpdate.Display", Model)
+        @await Html.PartialAsync("_CreateOrUpdate.Mappings", Model)
+        @await Html.PartialAsync("_CreateOrUpdate.Seo", Model)
+        @await Html.PartialAsync("_CreateOrUpdate.Products", Model)
 
         @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CategoryDetailsBlock, additionalData = Model })
     </div>
