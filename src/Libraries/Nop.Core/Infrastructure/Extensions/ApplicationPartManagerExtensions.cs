@@ -171,13 +171,14 @@ namespace Nop.Core.Infrastructure.Extensions
         /// <summary>
         /// Perform file deploy and return loaded assembly
         /// </summary>
+        /// <param name="applicationPartManager">Application part manager</param>
         /// <param name="assemblyFile">Path to the plugin assembly file</param>
         /// <param name="shadowCopyDirectory">Path to the shadow copy directory</param>
-        /// <param name="applicationPartManager">Application part manager</param>
         /// <param name="config">Nop config</param>
         /// <param name="fileProvider">Nop file provider</param>
         /// <returns>Assembly</returns>
-        private static Assembly PerformFileDeploy(this ApplicationPartManager applicationPartManager, string assemblyFile, string shadowCopyDirectory, NopConfig config, INopFileProvider fileProvider)
+        private static Assembly PerformFileDeploy(this ApplicationPartManager applicationPartManager, 
+            string assemblyFile, string shadowCopyDirectory, NopConfig config, INopFileProvider fileProvider)
         {
             //ensure for proper directory structure
             if (string.IsNullOrEmpty(assemblyFile) || string.IsNullOrEmpty(fileProvider.GetParentDirectory(assemblyFile)))
