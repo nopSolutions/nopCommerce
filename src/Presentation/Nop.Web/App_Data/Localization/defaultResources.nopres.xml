@@ -4962,9 +4962,15 @@
   <LocaleResource Name="Admin.Configuration.Plugins.AdditionalInfo">
     <Value>Additional info</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Plugins.Deleted">
-    <Value>The plugin has been deleted.</Value>
+  <LocaleResource Name="Admin.Configuration.Plugins.ApplyChanges">
+    <Value>Restart application to apply changes</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.ApplyChanges.Progress">
+    <Value>Applying changes on plugins...</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.ChangesApplyAfterReboot">
+    <Value>Changes will be apply after restart application</Value>
+  </LocaleResource> 
   <LocaleResource Name="Admin.Configuration.Plugins.Description">
     <Value>Manual plugin installation</Value>
   </LocaleResource>
@@ -4982,6 +4988,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Plugins.Description.Step4">
     <Value>Click on the 'Install' link to install the plugin.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.DiscardChanges">
+    <Value>Discard changes</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.DiscardChanges.Progress">
+    <Value>Discarding changes on plugins...</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Plugins.EditDetails">
     <Value>Edit plugin details</Value>
@@ -5070,9 +5082,6 @@
   <LocaleResource Name="Admin.Configuration.Plugins.Info">
     <Value>Plugin Info</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Plugins.Installed">
-    <Value>The plugin has been installed.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Plugins.LoadMode">
     <Value>Load mode</Value>
   </LocaleResource>
@@ -5138,9 +5147,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Plugins.ReloadList.Progress">
     <Value>Reloading plugin list...</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Plugins.Uninstalled">
-    <Value>The plugin has been uninstalled.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Plugins.Upload">
     <Value>Upload plugin or theme</Value>
@@ -12210,6 +12216,15 @@
   <LocaleResource Name="Admin.Plugins">
     <Value>Plugins</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Plugins.Errors.NotDeleted">
+    <Value>The plugin "{0}" not deleted</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Plugins.Errors.NotInstalled">
+    <Value>The plugin "{0}" not installed</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Plugins.Errors.NotUninstalled">
+    <Value>The plugin "{0}" not uninstalled</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Plugins.Saved">
     <Value>The plugin has been updated successfully.</Value>
   </LocaleResource>
@@ -14028,6 +14043,9 @@
   <LocaleResource Name="Admin.System.Warnings">
     <Value>Warnings</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.Warnings.AssemblyHasCollision">
+    <Value>The '{0}' assembly has collision, application loaded the '{1}' assembly, but {2}</Value>
+  </LocaleResource>  
   <LocaleResource Name="Admin.System.Warnings.DefaultDimension.NotSet">
     <Value>Default dimension is not set</Value>
   </LocaleResource>
@@ -14094,6 +14112,9 @@
   <LocaleResource Name="Admin.System.Warnings.PluginNotLoaded">
     <Value>'{0}' plugin is not compatible or cannot be loaded.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.Warnings.PluginRequiredAssembly">
+    <Value>the '{0}' plugin required the '{1}' assembly</Value>
+  </LocaleResource>  
   <LocaleResource Name="Admin.System.Warnings.PrimaryCurrency.NotSet">
     <Value>Primary store currency is not set</Value>
   </LocaleResource>

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
+using System.Text;
 using Newtonsoft.Json;
 using Nop.Core.Infrastructure;
 
@@ -9,7 +11,7 @@ namespace Nop.Core.Plugins
     /// <summary>
     /// Represents a plugin descriptor
     /// </summary>
-    public class PluginDescriptor : IDescriptor, IComparable<PluginDescriptor>
+    public partial class PluginDescriptor : IDescriptor, IComparable<PluginDescriptor>
     {
         #region Ctor
 
@@ -36,36 +38,25 @@ namespace Nop.Core.Plugins
         /// <summary>
         /// Get the instance of the plugin
         /// </summary>
+        /// <typeparam name="TPlugin">Type of the plugin</typeparam>
         /// <returns>Plugin instance</returns>
-        public IPlugin Instance()
-        {
-            return Instance<IPlugin>();
-        }
-
-        /// <summary>
-        /// Get the instance of the plugin
-        /// </summary>
-        /// <typeparam name="T">Type of the plugin</typeparam>
-        /// <returns>Plugin instance</returns>
-        public virtual T Instance<T>() where T : class, IPlugin
+        public virtual TPlugin Instance<TPlugin>() where TPlugin : class, IPlugin
         {
             object instance = null;
+
+            //try to resolve plugin
             try
             {
                 instance = EngineContext.Current.Resolve(PluginType);
             }
-            catch
-            {
-                //try resolve
-            }
+            catch { }
 
+            //not resolved, so try to resolve plugin as unregistered service
             if (instance == null)
-            {
-                //not resolved
                 instance = EngineContext.Current.ResolveUnregistered(PluginType);
-            }
 
-            var typedInstance = instance as T;
+            //try to get typed instance
+            var typedInstance = instance as TPlugin;
             if (typedInstance != null)
                 typedInstance.PluginDescriptor = this;
 
@@ -82,7 +73,7 @@ namespace Nop.Core.Plugins
             if (DisplayOrder != other.DisplayOrder)
                 return DisplayOrder.CompareTo(other.DisplayOrder);
 
-            return FriendlyName.CompareTo(other.FriendlyName);
+            return string.Compare(FriendlyName, other.FriendlyName, StringComparison.InvariantCultureIgnoreCase);
         }
 
         /// <summary>
@@ -111,6 +102,46 @@ namespace Nop.Core.Plugins
         public override int GetHashCode()
         {
             return SystemName.GetHashCode();
+        }
+
+        /// <summary>
+        /// Save plugin descriptor to the plugin description file
+        /// </summary>
+        public virtual void Save()
+        {
+            var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
+
+            //get the description file path
+            if (OriginalAssemblyFile == null)
+                throw new Exception($"Cannot load original assembly path for {SystemName} plugin.");
+
+            var filePath = fileProvider.Combine(fileProvider.GetDirectoryName(OriginalAssemblyFile), NopPluginDefaults.DescriptionFileName);
+            if (!fileProvider.FileExists(filePath))
+                throw new Exception($"Description file for {SystemName} plugin does not exist. {filePath}");
+
+            //save the file
+            var text = JsonConvert.SerializeObject(this, Formatting.Indented);
+            fileProvider.WriteAllText(filePath, text, Encoding.UTF8);
+        }
+
+        /// <summary>
+        /// Get plugin descriptor from the description text
+        /// </summary>
+        /// <param name="text">Description text</param>
+        /// <returns>Plugin descriptor</returns>
+        public static PluginDescriptor GetPluginDescriptorFromText(string text)
+        {
+            if (string.IsNullOrEmpty(text))
+                return new PluginDescriptor();
+
+            //get plugin descriptor from the JSON file
+            var descriptor = JsonConvert.DeserializeObject<PluginDescriptor>(text);
+
+            //nopCommerce 2.00 didn't have 'SupportedVersions' parameter, so let's set it to "2.00"
+            if (!descriptor.SupportedVersions.Any())
+                descriptor.SupportedVersions.Add("2.00");
+
+            return descriptor;
         }
 
         #endregion
@@ -206,6 +237,12 @@ namespace Nop.Core.Plugins
         /// </summary>
         [JsonIgnore]
         public virtual Assembly ReferencedAssembly { get; internal set; }
+
+        /// <summary>
+        /// Gets or sets the value indicating whether need to show the plugin on plugins page
+        /// </summary>
+        [JsonIgnore]
+        public virtual bool ShowInPluginsList { get; set; } = true;
 
         #endregion
     }

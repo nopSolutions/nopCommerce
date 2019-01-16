@@ -33,7 +33,7 @@ namespace Nop.Services.Authentication.External
         private readonly IEventPublisher _eventPublisher;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
-        private readonly IPluginFinder _pluginFinder;
+        private readonly IPluginService _pluginService;
         private readonly IRepository<ExternalAuthenticationRecord> _externalAuthenticationRecordRepository;
         private readonly IShoppingCartService _shoppingCartService;
         private readonly IStoreContext _storeContext;
@@ -54,7 +54,7 @@ namespace Nop.Services.Authentication.External
             IEventPublisher eventPublisher,
             IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
-            IPluginFinder pluginFinder,
+            IPluginService pluginService,
             IRepository<ExternalAuthenticationRecord> externalAuthenticationRecordRepository,
             IShoppingCartService shoppingCartService,
             IStoreContext storeContext,
@@ -71,7 +71,7 @@ namespace Nop.Services.Authentication.External
             this._eventPublisher = eventPublisher;
             this._genericAttributeService = genericAttributeService;
             this._localizationService = localizationService;
-            this._pluginFinder = pluginFinder;
+            this._pluginService = pluginService;
             this._externalAuthenticationRecordRepository = externalAuthenticationRecordRepository;
             this._shoppingCartService = shoppingCartService;
             this._storeContext = storeContext;
@@ -277,10 +277,14 @@ namespace Nop.Services.Authentication.External
         /// Load external authentication method by system name
         /// </summary>
         /// <param name="systemName">System name</param>
+        /// <param name="customer">Load records allowed only to a specified customer; pass null to ignore ACL permissions</param>
+        /// <param name="storeId">Load records allowed only on the specified store; pass 0 to ignore store mappings</param>
         /// <returns>Found external authentication method</returns>
-        public virtual IExternalAuthenticationMethod LoadExternalAuthenticationMethodBySystemName(string systemName)
+        public virtual IExternalAuthenticationMethod LoadExternalAuthenticationMethodBySystemName(string systemName,
+            Customer customer = null, int storeId = 0)
         {
-            var descriptor = _pluginFinder.GetPluginDescriptorBySystemName<IExternalAuthenticationMethod>(systemName);
+            var descriptor = _pluginService.GetPluginDescriptorBySystemName<IExternalAuthenticationMethod>(systemName,
+                customer: customer, storeId: storeId);
             return descriptor?.Instance<IExternalAuthenticationMethod>();
         }
 
@@ -292,7 +296,7 @@ namespace Nop.Services.Authentication.External
         /// <returns>External authentication methods</returns>
         public virtual IList<IExternalAuthenticationMethod> LoadAllExternalAuthenticationMethods(Customer customer = null, int storeId = 0)
         {
-            return _pluginFinder.GetPlugins<IExternalAuthenticationMethod>(customer: customer, storeId: storeId).ToList();
+            return _pluginService.GetPlugins<IExternalAuthenticationMethod>(customer: customer, storeId: storeId).ToList();
         }
 
         /// <summary>
@@ -303,13 +307,13 @@ namespace Nop.Services.Authentication.External
         public virtual bool ExternalAuthenticationMethodIsAvailable(string systemName)
         {
             //load method
-            var authenticationMethod = LoadExternalAuthenticationMethodBySystemName(systemName);
+            var authenticationMethod = LoadExternalAuthenticationMethodBySystemName(systemName,
+                _workContext.CurrentCustomer, _storeContext.CurrentStore.Id);
 
-            return authenticationMethod != null &&
-                this.IsExternalAuthenticationMethodActive(authenticationMethod) &&
-                authenticationMethod.PluginDescriptor.Installed &&
-                _pluginFinder.AuthenticateStore(authenticationMethod.PluginDescriptor, _storeContext.CurrentStore.Id) &&
-                _pluginFinder.AuthorizedForUser(authenticationMethod.PluginDescriptor, _workContext.CurrentCustomer);
+            if (authenticationMethod == null)
+                return false;
+
+            return this.IsExternalAuthenticationMethodActive(authenticationMethod);
         }
 
         /// <summary>

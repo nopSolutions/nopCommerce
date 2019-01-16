@@ -35,7 +35,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly ILocalizedModelFactory _localizedModelFactory;
         private readonly IOfficialFeedManager _officialFeedManager;
         private readonly IPaymentService _paymentService;
-        private readonly IPluginFinder _pluginFinder;
+        private readonly IPluginService _pluginService;
         private readonly IShippingService _shippingService;
         private readonly IStoreMappingSupportedModelFactory _storeMappingSupportedModelFactory;
         private readonly IWidgetService _widgetService;
@@ -53,7 +53,7 @@ namespace Nop.Web.Areas.Admin.Factories
             ILocalizedModelFactory localizedModelFactory,
             IOfficialFeedManager officialFeedManager,
             IPaymentService paymentService,
-            IPluginFinder pluginFinder,
+            IPluginService pluginService,
             IShippingService shippingService,
             IStoreMappingSupportedModelFactory storeMappingSupportedModelFactory,
             IWidgetService widgetService,
@@ -67,7 +67,7 @@ namespace Nop.Web.Areas.Admin.Factories
             this._localizedModelFactory = localizedModelFactory;
             this._officialFeedManager = officialFeedManager;
             this._paymentService = paymentService;
-            this._pluginFinder = pluginFinder;
+            this._pluginService = pluginService;
             this._shippingService = shippingService;
             this._storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
             this._widgetService = widgetService;
@@ -153,6 +153,8 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare page parameters
             searchModel.SetGridPageSize();
 
+            searchModel.NeedToRestart = _pluginService.IsRestartRequired();
+
             return searchModel;
         }
 
@@ -170,8 +172,9 @@ namespace Nop.Web.Areas.Admin.Factories
             var group = string.IsNullOrEmpty(searchModel.SearchGroup) || searchModel.SearchGroup.Equals("0") ? null : searchModel.SearchGroup;
             var loadMode = (LoadPluginsMode)searchModel.SearchLoadModeId;
 
-            //get plugins
-            var plugins = _pluginFinder.GetPluginDescriptors(group: group, loadMode: loadMode)
+            //filter visible plugins
+            var plugins = _pluginService.GetPluginDescriptors<IPlugin>(group: group, loadMode: loadMode)
+                .Where(p => p.ShowInPluginsList)
                 .OrderBy(plugin => plugin.Group).ToList();
 
             //prepare list model
@@ -183,9 +186,9 @@ namespace Nop.Web.Areas.Admin.Factories
                     var pluginModel = pluginDescriptor.ToPluginModel<PluginModel>();
 
                     //fill in additional values (not existing in the entity)
-                    pluginModel.LogoUrl = PluginManager.GetLogoUrl(pluginDescriptor);
+                    pluginModel.LogoUrl = _pluginService.GetPluginLogoUrl(pluginDescriptor);
                     if (pluginDescriptor.Installed)
-                        PrepareInstalledPluginModel(pluginModel, pluginDescriptor.Instance());
+                        PrepareInstalledPluginModel(pluginModel, pluginDescriptor.Instance<IPlugin>());
 
                     return pluginModel;
                 }),
@@ -211,16 +214,16 @@ namespace Nop.Web.Areas.Admin.Factories
                 //fill in model values from the entity
                 model = model ?? pluginDescriptor.ToPluginModel(model);
 
-                model.LogoUrl = PluginManager.GetLogoUrl(pluginDescriptor);
+                model.LogoUrl = _pluginService.GetPluginLogoUrl(pluginDescriptor);
                 model.SelectedStoreIds = pluginDescriptor.LimitedToStores;
                 model.SelectedCustomerRoleIds = pluginDescriptor.LimitedToCustomerRoles;
+                var plugin = pluginDescriptor.Instance<IPlugin>();
                 if (pluginDescriptor.Installed)
-                    PrepareInstalledPluginModel(model, pluginDescriptor.Instance());
+                    PrepareInstalledPluginModel(model, plugin);
 
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>
                 {
-                    var plugin = pluginDescriptor.Instance();
                     locale.FriendlyName = _localizationService.GetLocalizedFriendlyName(plugin, languageId, false);
                 };
             }

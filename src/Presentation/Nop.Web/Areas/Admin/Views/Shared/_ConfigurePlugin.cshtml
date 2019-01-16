@@ -9,10 +9,10 @@
 @using Nop.Services.Shipping
 @using Nop.Services.Shipping.Pickup
 @using Nop.Services.Tax
-@inject IPluginFinder pluginFinder
+@inject IPluginService pluginService
 @inject IWebHelper webHelper
 @{
-    var plugin = PluginManager.FindPlugin((this.ViewContext.ActionDescriptor as ControllerActionDescriptor).ControllerTypeInfo).Instance();
+    var plugin = pluginService.FindPluginByTypeInAssembly((this.ViewContext.ActionDescriptor as ControllerActionDescriptor).ControllerTypeInfo);
 
     //friendly name
     var friendlyName = plugin?.PluginDescriptor.FriendlyName;

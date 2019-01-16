@@ -5,10 +5,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Shipping;
-using Nop.Core.Plugins;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Directory;
+using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Messages;
@@ -32,11 +32,11 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly ICountryService _countryService;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IDateRangeService _dateRangeService;
+        private readonly IEventPublisher _eventPublisher;
         private readonly ILocalizationService _localizationService;
         private readonly ILocalizedEntityService _localizedEntityService;
         private readonly INotificationService _notificationService;
         private readonly IPermissionService _permissionService;
-        private readonly IPluginFinder _pluginFinder;
         private readonly ISettingService _settingService;
         private readonly IShippingModelFactory _shippingModelFactory;
         private readonly IShippingService _shippingService;
@@ -50,11 +50,11 @@ namespace Nop.Web.Areas.Admin.Controllers
             ICountryService countryService,
             ICustomerActivityService customerActivityService,
             IDateRangeService dateRangeService,
+            IEventPublisher eventPublisher,
             ILocalizationService localizationService,
             ILocalizedEntityService localizedEntityService,
             INotificationService notificationService,
             IPermissionService permissionService,
-            IPluginFinder pluginFinder,
             ISettingService settingService,
             IShippingModelFactory shippingModelFactory,
             IShippingService shippingService,
@@ -64,11 +64,11 @@ namespace Nop.Web.Areas.Admin.Controllers
             this._countryService = countryService;
             this._customerActivityService = customerActivityService;
             this._dateRangeService = dateRangeService;
+            this._eventPublisher = eventPublisher;
             this._localizationService = localizationService;
             this._localizedEntityService = localizedEntityService;
             this._notificationService = notificationService;
             this._permissionService = permissionService;
-            this._pluginFinder = pluginFinder;
             this._settingService = settingService;
             this._shippingModelFactory = shippingModelFactory;
             this._shippingService = shippingService;
@@ -163,10 +163,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             pluginDescriptor.DisplayOrder = model.DisplayOrder;
 
             //update the description file
-            PluginManager.SavePluginDescriptor(pluginDescriptor);
+            pluginDescriptor.Save();
 
-            //reset plugin cache
-            _pluginFinder.ReloadPlugins(pluginDescriptor);
+            //raise event
+            _eventPublisher.Publish(new PluginUpdatedEvent(pluginDescriptor));
 
             return new NullJsonResult();
         }
@@ -228,10 +228,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             pluginDescriptor.DisplayOrder = model.DisplayOrder;
 
             //update the description file
-            PluginManager.SavePluginDescriptor(pluginDescriptor);
+            pluginDescriptor.Save();
 
-            //reset plugin cache
-            _pluginFinder.ReloadPlugins(pluginDescriptor);
+            //raise event
+            _eventPublisher.Publish(new PluginUpdatedEvent(pluginDescriptor));
 
             return new NullJsonResult();
         }
@@ -666,7 +666,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _addressService.InsertAddress(address);
 
                 //fill entity from model
-                var warehouse = model.ToEntity<Warehouse>(); 
+                var warehouse = model.ToEntity<Warehouse>();
                 warehouse.AddressId = address.Id;
 
                 _shippingService.InsertWarehouse(warehouse);
@@ -729,7 +729,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 //fill entity from model
                 warehouse = model.ToEntity(warehouse);
-                
+
                 warehouse.AddressId = address.Id;
 
                 _shippingService.UpdateWarehouse(warehouse);

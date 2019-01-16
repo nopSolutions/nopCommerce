@@ -11,9 +11,9 @@ using Nop.Core.Domain.Polls;
 using Nop.Core.Domain.Topics;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Events;
-using Nop.Core.Plugins;
 using Nop.Services.Cms;
 using Nop.Services.Events;
+using Nop.Services.Plugins;
 
 namespace Nop.Web.Infrastructure.Cache
 {
@@ -735,7 +735,7 @@ namespace Nop.Web.Infrastructure.Cache
         /// <param name="eventMessage">Event message</param>
         public void HandleEvent(PluginUpdatedEvent eventMessage)
         {
-            if (eventMessage.Plugin?.Instance() is IWidgetPlugin)
+            if (eventMessage?.Plugin?.Instance<IWidgetPlugin>() != null)
                 _cacheManager.RemoveByPattern(NopModelCacheDefaults.WidgetPatternKey);
         }
 

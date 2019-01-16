@@ -12,9 +12,11 @@ using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Infrastructure;
 using Nop.Services.Catalog;
+using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Events;
 using Nop.Services.Localization;
+using Nop.Services.Logging;
 using Nop.Services.Plugins;
 using Nop.Services.Stores;
 using Nop.Tests;
@@ -78,9 +80,13 @@ namespace Nop.Services.Tests.Catalog
             _eventPublisher = new Mock<IEventPublisher>();
             _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
 
-            var pluginFinder = new PluginFinder(_eventPublisher.Object);
+            var customerService = new Mock<ICustomerService>();
+            var loger = new Mock<ILogger>();
+            var webHelper = new Mock<IWebHelper>();
 
-            _currencyService = new CurrencyService(_currencySettings, null, pluginFinder, _currencyRepo.Object, cacheManager, _storeMappingService.Object);
+            var pluginService = new PluginService(customerService.Object, loger.Object , CommonHelper.DefaultFileProvider, webHelper.Object);
+
+            _currencyService = new CurrencyService(_currencySettings, null, pluginService, _currencyRepo.Object, cacheManager, _storeMappingService.Object);
 
             _taxSettings = new TaxSettings();
 

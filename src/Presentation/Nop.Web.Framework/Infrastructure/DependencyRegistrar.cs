@@ -89,7 +89,7 @@ namespace Nop.Web.Framework.Infrastructure
             builder.RegisterGeneric(typeof(EfRepository<>)).As(typeof(IRepository<>)).InstancePerLifetimeScope();
 
             //plugins
-            builder.RegisterType<PluginFinder>().As<IPluginFinder>().InstancePerLifetimeScope();
+            builder.RegisterType<PluginService>().As<IPluginService>().InstancePerLifetimeScope();
             builder.RegisterType<OfficialFeedManager>().As<IOfficialFeedManager>().InstancePerLifetimeScope();
 
             //cache manager
@@ -224,7 +224,6 @@ namespace Nop.Web.Framework.Infrastructure
             builder.RegisterType<RoutePublisher>().As<IRoutePublisher>().SingleInstance();
             builder.RegisterType<ReviewTypeService>().As<IReviewTypeService>().SingleInstance();
             builder.RegisterType<EventPublisher>().As<IEventPublisher>().SingleInstance();
-            builder.RegisterType<SubscriptionService>().As<ISubscriptionService>().SingleInstance();
             builder.RegisterType<SettingService>().As<ISettingService>().InstancePerLifetimeScope();
 
 
