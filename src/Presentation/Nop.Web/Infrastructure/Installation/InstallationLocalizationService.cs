@@ -131,7 +131,7 @@ namespace Nop.Web.Infrastructure.Installation
                 return _availableLanguages;
 
             _availableLanguages = new List<InstallationLanguage>();
-            foreach (var filePath in _fileProvider.EnumerateFiles(_fileProvider.MapPath("~/App_Data/Localization/Installation/"), "*.xml"))
+            foreach (var filePath in _fileProvider.EnumerateFiles(_fileProvider.MapPath("~/App_Data/Localization/Installation/").Replace('\\', '/'), "*.xml"))
             {
                 var xmlDocument = new XmlDocument();
                 xmlDocument.Load(filePath);
