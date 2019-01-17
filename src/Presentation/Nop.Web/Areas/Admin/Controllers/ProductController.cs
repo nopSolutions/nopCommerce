@@ -1326,6 +1326,9 @@ namespace Nop.Web.Areas.Admin.Controllers
                     if (_productService.FindRelatedProduct(existingRelatedProducts, model.ProductId, product.Id) != null)
                         continue;
 
+                    if (model.ProductId == product.Id)
+                        continue;
+
                     _productService.InsertRelatedProduct(new RelatedProduct
                     {
                         ProductId1 = model.ProductId,
