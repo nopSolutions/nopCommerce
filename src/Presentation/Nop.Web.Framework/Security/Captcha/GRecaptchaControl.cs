@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Web.Framework.Extensions;
@@ -10,12 +11,18 @@ namespace Nop.Web.Framework.Security.Captcha
     /// </summary>
     public class GRecaptchaControl
     {
-        private const string RECAPTCHA_API_URL = "https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit";
+        /// <summary>
+        /// Recaptcha Api url address
+        /// </summary>
+        /// <remarks>
+        /// {0} : Id of recaptcha instance on page
+        /// </remarks>
+        private const string RECAPTCHA_API_URL = "https://www.google.com/recaptcha/api.js?onload=onloadCallback{0}&render=explicit";
 
         /// <summary>
         /// Identifier
         /// </summary>
-        public string Id { get; set; }
+        public Guid Id { get; set; }
         /// <summary>
         /// reCAPTCHA theme
         /// </summary>
@@ -37,24 +44,30 @@ namespace Nop.Web.Framework.Security.Captcha
         {
             SetTheme();
 
+            //id for js code
+            var id = "Recaptcha_" + Id.ToString("N");
+
             var scriptCallbackTag = new TagBuilder("script")
             {
                 TagRenderMode = TagRenderMode.Normal
             };
             scriptCallbackTag.InnerHtml.AppendHtml(
-                $"var onloadCallback = function() {{grecaptcha.render('{Id}', {{'sitekey' : '{PublicKey}', 'theme' : '{Theme}' }});}};");
+                $"var onloadCallback{id} = function() {{grecaptcha.render('{id}', {{'sitekey' : '{PublicKey}', 'theme' : '{Theme}' }});}};");
 
             var captchaTag = new TagBuilder("div")
             {
                 TagRenderMode = TagRenderMode.Normal
             };
-            captchaTag.Attributes.Add("id", Id);
+            captchaTag.Attributes.Add("id", id);
 
             var scriptLoadApiTag = new TagBuilder("script")
             {
                 TagRenderMode = TagRenderMode.Normal
             };
-            scriptLoadApiTag.Attributes.Add("src", RECAPTCHA_API_URL + (string.IsNullOrEmpty(Language) ? "" : $"&hl={Language}"
+
+            var recaptchaApiUrl = string.Format(RECAPTCHA_API_URL, id);
+
+            scriptLoadApiTag.Attributes.Add("src", recaptchaApiUrl + (string.IsNullOrEmpty(Language) ? "" : $"&hl={Language}"
                                                    ));
             scriptLoadApiTag.Attributes.Add("async", null);
             scriptLoadApiTag.Attributes.Add("defer", null);

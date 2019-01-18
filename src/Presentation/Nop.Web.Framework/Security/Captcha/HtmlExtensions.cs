@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
@@ -42,7 +43,7 @@ namespace Nop.Web.Framework.Security.Captcha
             var captchaControl = new GRecaptchaControl
             {
                 Theme = captchaSettings.ReCaptchaTheme,
-                Id = "recaptcha",
+                Id = Guid.NewGuid(),
                 PublicKey = captchaSettings.ReCaptchaPublicKey,
                 Language =  lang
             };
