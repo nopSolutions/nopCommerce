@@ -807,6 +807,7 @@ namespace Nop.Web.Factories
                     "/returnrequest",
                     "/returnrequest/history",
                     "/rewardpoints/history",
+                    "/search",
                     "/sendpm",
                     "/sentupdate",
                     "/shoppingcart/*",
