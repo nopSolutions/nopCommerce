@@ -230,7 +230,8 @@ namespace Nop.Services.Messages
                     "%Order.CustomValues%",
                     "%Order.Product(s)%",
                     "%Order.CreatedOn%",
-                    "%Order.OrderURLForCustomer%"
+                    "%Order.OrderURLForCustomer%",
+                    "%Order.PickUpInStore%"
                 });
 
                 //shipment tokens
@@ -935,6 +936,7 @@ namespace Nop.Services.Messages
 
             tokens.Add(new Token("Order.Shippable", !string.IsNullOrEmpty(order.ShippingMethod)));
             tokens.Add(new Token("Order.ShippingMethod", order.ShippingMethod));
+            tokens.Add(new Token("Order.PickUpInStore", order.PickUpInStore));
             tokens.Add(new Token("Order.ShippingFirstName", orderAddress(order)?.FirstName ?? string.Empty));
             tokens.Add(new Token("Order.ShippingLastName", orderAddress(order)?.LastName ?? string.Empty));
             tokens.Add(new Token("Order.ShippingPhoneNumber", orderAddress(order)?.PhoneNumber ?? string.Empty));
