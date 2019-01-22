@@ -21,5 +21,10 @@ namespace Nop.Core.Domain.Gdpr
         /// Gets or sets a value indicating whether we should log "newsletter" consent
         /// </summary>
         public bool LogNewsletterConsent { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether we should log changes in user profile
+        /// </summary>
+        public bool LogUserProfileChanges { get; set; }
     }
 }
