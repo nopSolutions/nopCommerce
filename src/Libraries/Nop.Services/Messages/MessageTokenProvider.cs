@@ -231,7 +231,8 @@ namespace Nop.Services.Messages
                     "%Order.Product(s)%",
                     "%Order.CreatedOn%",
                     "%Order.OrderURLForCustomer%",
-                    "%Order.PickUpInStore%"
+                    "%Order.PickUpInStore%",
+                    "%Order.OrderId%"
                 });
 
                 //shipment tokens
@@ -914,6 +915,7 @@ namespace Nop.Services.Messages
             //lambda expression for choosing correct order address
             Address orderAddress(Order o) => o.PickUpInStore ? o.PickupAddress : o.ShippingAddress;
 
+            tokens.Add(new Token("Order.OrderId", order.Id));
             tokens.Add(new Token("Order.OrderNumber", order.CustomOrderNumber));
 
             tokens.Add(new Token("Order.CustomerFullName", $"{order.BillingAddress.FirstName} {order.BillingAddress.LastName}"));
