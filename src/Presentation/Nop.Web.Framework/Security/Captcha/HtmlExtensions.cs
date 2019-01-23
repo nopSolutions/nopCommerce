@@ -39,11 +39,13 @@ namespace Nop.Web.Framework.Security.Captcha
                 lang = supportedLanguageCodes.Contains(twoLetterIsoCode) ? twoLetterIsoCode : lang;
             }
 
+            var randomNumber = CommonHelper.GenerateRandomInteger();
+
             //generate captcha control
             var captchaControl = new GRecaptchaControl
             {
                 Theme = captchaSettings.ReCaptchaTheme,
-                Id = Guid.NewGuid(),
+                Id = randomNumber,
                 PublicKey = captchaSettings.ReCaptchaPublicKey,
                 Language =  lang
             };

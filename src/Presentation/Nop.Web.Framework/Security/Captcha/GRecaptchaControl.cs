@@ -22,7 +22,7 @@ namespace Nop.Web.Framework.Security.Captcha
         /// <summary>
         /// Identifier
         /// </summary>
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         /// <summary>
         /// reCAPTCHA theme
         /// </summary>
@@ -45,7 +45,7 @@ namespace Nop.Web.Framework.Security.Captcha
             SetTheme();
 
             //id for js code
-            var id = "Recaptcha_" + Id.ToString("N");
+            var id = "captcha_" + Id;
 
             var scriptCallbackTag = new TagBuilder("script")
             {
