@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Shipping;
+using Nop.Core.Plugins;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Directory;
@@ -16,6 +17,7 @@ using Nop.Services.Plugins;
 using Nop.Services.Security;
 using Nop.Services.Shipping;
 using Nop.Services.Shipping.Date;
+using Nop.Services.Shipping.Pickup;
 using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Shipping;
@@ -37,6 +39,8 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly ILocalizedEntityService _localizedEntityService;
         private readonly INotificationService _notificationService;
         private readonly IPermissionService _permissionService;
+        private readonly IProviderManager<IPickupPointProvider> _pickUpProviderManager;
+        private readonly IProviderManager<IShippingRateComputationMethod> _shippingProviderManager;
         private readonly ISettingService _settingService;
         private readonly IShippingModelFactory _shippingModelFactory;
         private readonly IShippingService _shippingService;
@@ -55,6 +59,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             ILocalizedEntityService localizedEntityService,
             INotificationService notificationService,
             IPermissionService permissionService,
+            IProviderManager<IPickupPointProvider> pickUpProviderManager,
+            IProviderManager<IShippingRateComputationMethod> shippingProviderManager,
             ISettingService settingService,
             IShippingModelFactory shippingModelFactory,
             IShippingService shippingService,
@@ -69,6 +75,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             _localizedEntityService = localizedEntityService;
             _notificationService = notificationService;
             _permissionService = permissionService;
+            _shippingProviderManager = shippingProviderManager;
+            _pickUpProviderManager = pickUpProviderManager;
             _settingService = settingService;
             _shippingModelFactory = shippingModelFactory;
             _shippingService = shippingService;
@@ -137,7 +145,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
-            var srcm = _shippingService.LoadShippingRateComputationMethodBySystemName(model.SystemName);
+            var srcm = _shippingProviderManager.LoadProviderBySystemName(model.SystemName);
             if (_shippingService.IsShippingRateComputationMethodActive(srcm))
             {
                 if (!model.IsActive)
@@ -204,7 +212,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
-            var pickupPointProvider = _shippingService.LoadPickupPointProviderBySystemName(model.SystemName);
+            var pickupPointProvider = _pickUpProviderManager.LoadProviderBySystemName(model.SystemName);
             if (_shippingService.IsPickupPointProviderActive(pickupPointProvider))
             {
                 if (!model.IsActive)

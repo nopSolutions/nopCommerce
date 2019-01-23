@@ -6,7 +6,7 @@ namespace Nop.Services.Shipping
     /// <summary>
     /// Provides an interface of shipping rate computation method
     /// </summary>
-    public partial interface IShippingRateComputationMethod : IPlugin
+    public partial interface IShippingRateComputationMethod : IProvider
     {
         /// <summary>
         /// Gets a shipping rate computation method type

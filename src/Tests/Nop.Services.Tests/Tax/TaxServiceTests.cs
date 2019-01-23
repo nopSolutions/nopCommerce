@@ -28,6 +28,7 @@ namespace Nop.Services.Tests.Tax
         private Mock<IStoreContext> _storeContext;
         private TaxSettings _taxSettings;
         private Mock<IEventPublisher> _eventPublisher;
+        private ProviderManager<ITaxProvider> _taxProviderManager;
         private ITaxService _taxService;
         private Mock<IGeoLookupService> _geoLookupService;
         private Mock<ICountryService> _countryService;
@@ -73,7 +74,8 @@ namespace Nop.Services.Tests.Tax
             var loger = new Mock<ILogger>();
 
             var pluginService = new PluginService(customerService.Object, loger.Object , CommonHelper.DefaultFileProvider, _webHelper.Object);
-            
+            _taxProviderManager = new ProviderManager<ITaxProvider>(pluginService);
+
             _taxService = new TaxService(_addressSettings,
                 _customerSettings,
                 _addressService.Object,
@@ -82,6 +84,7 @@ namespace Nop.Services.Tests.Tax
                 _geoLookupService.Object,
                 _logger.Object,
                 pluginService,
+                _taxProviderManager,
                 _stateProvinceService.Object,
                 _storeContext.Object,
                 _webHelper.Object,
@@ -93,7 +96,7 @@ namespace Nop.Services.Tests.Tax
         [Test]
         public void Can_load_taxProviders()
         {
-            var providers = _taxService.LoadAllTaxProviders();
+            var providers = _taxProviderManager.LoadAllProviders();
             providers.ShouldNotBeNull();
             providers.Any().ShouldBeTrue();
         }
@@ -101,14 +104,14 @@ namespace Nop.Services.Tests.Tax
         [Test]
         public void Can_load_taxProvider_by_systemKeyword()
         {
-            var provider = _taxService.LoadTaxProviderBySystemName("FixedTaxRateTest");
+            var provider = _taxProviderManager.LoadProviderBySystemName("FixedTaxRateTest");
             provider.ShouldNotBeNull();
         }
 
         [Test]
         public void Can_load_active_taxProvider()
         {
-            var provider = _taxService.LoadActiveTaxProvider();
+            var provider = _taxProviderManager.LoadActiveProvider(string.Empty);
             provider.ShouldNotBeNull();
         }
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Nop.Core.Domain.Tax;
+using Nop.Core.Plugins;
 using Nop.Services.Tax;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Tax;
@@ -15,6 +16,7 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
+        private readonly IProviderManager<ITaxProvider> _taxProviderManager;
         private readonly ITaxCategoryService _taxCategoryService;
         private readonly ITaxService _taxService;
         private readonly TaxSettings _taxSettings;
@@ -23,10 +25,12 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #region Ctor
 
-        public TaxModelFactory(ITaxCategoryService taxCategoryService,
+        public TaxModelFactory(IProviderManager<ITaxProvider> taxProviderManager,
+            ITaxCategoryService taxCategoryService,
             ITaxService taxService,
             TaxSettings taxSettings)
         {
+            _taxProviderManager = taxProviderManager;
             _taxCategoryService = taxCategoryService;
             _taxService = taxService;
             _taxSettings = taxSettings;
@@ -80,7 +84,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get tax providers
-            var taxProviders = _taxService.LoadAllTaxProviders();
+            var taxProviders = _taxProviderManager.LoadAllProviders();
 
             //prepare grid model
             var model = new TaxProviderListModel

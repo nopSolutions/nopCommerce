@@ -7,6 +7,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
+using Nop.Core.Plugins;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Directory;
@@ -16,6 +17,7 @@ using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Plugins;
 using Nop.Services.Shipping;
+using Nop.Services.Shipping.Pickup;
 using Nop.Services.Stores;
 using Nop.Services.Tax;
 using Nop.Web.Models.Checkout;
@@ -40,6 +42,8 @@ namespace Nop.Web.Factories
         private readonly IPaymentService _paymentService;
         private readonly IPluginService _pluginService;
         private readonly IPriceFormatter _priceFormatter;
+        private readonly IProviderManager<IPickupPointProvider> _pickUpProviderManager;
+        private readonly IProviderManager<IShippingRateComputationMethod> _shippingProviderManager;
         private readonly IRewardPointService _rewardPointService;
         private readonly IShippingService _shippingService;
         private readonly IShoppingCartService _shoppingCartService;
@@ -70,6 +74,8 @@ namespace Nop.Web.Factories
             IPaymentService paymentService,
             IPluginService pluginService,
             IPriceFormatter priceFormatter,
+            IProviderManager<IPickupPointProvider> pickUpProviderManager,
+            IProviderManager<IShippingRateComputationMethod> shippingProviderManager,
             IRewardPointService rewardPointService,
             IShippingService shippingService,
             IShoppingCartService shoppingCartService,
@@ -96,6 +102,8 @@ namespace Nop.Web.Factories
             _paymentService = paymentService;
             _pluginService = pluginService;
             _priceFormatter = priceFormatter;
+            _pickUpProviderManager = pickUpProviderManager;
+            _shippingProviderManager = shippingProviderManager;
             _rewardPointService = rewardPointService;
             _shippingService = shippingService;
             _shoppingCartService = shoppingCartService;
@@ -195,7 +203,7 @@ namespace Nop.Web.Factories
             {
                 model.DisplayPickupPointsOnMap = _shippingSettings.DisplayPickupPointsOnMap;
                 model.GoogleMapsApiKey = _shippingSettings.GoogleMapsApiKey;
-                var pickupPointProviders = _shippingService.LoadActivePickupPointProviders(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id);
+                var pickupPointProviders = _pickUpProviderManager.LoadActiveProviders(_shippingSettings.ActivePickupPointProviderSystemNames, _workContext.CurrentCustomer, _storeContext.CurrentStore.Id);
                 if (pickupPointProviders.Any())
                 {
                     var languageId = _workContext.WorkingLanguage.Id;
@@ -238,7 +246,7 @@ namespace Nop.Web.Factories
                 }
 
                 //only available pickup points
-                if (!_shippingService.LoadActiveShippingRateComputationMethods(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id).Any())
+                if (!_shippingProviderManager.LoadActiveProviders(_shippingSettings.ActiveShippingRateComputationMethodSystemNames, _workContext.CurrentCustomer, _storeContext.CurrentStore.Id).Any())
                 {
                     if (!pickupPointProviders.Any())
                     {

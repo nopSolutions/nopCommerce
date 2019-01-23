@@ -7,7 +7,7 @@ namespace Nop.Services.Shipping.Pickup
     /// <summary>
     /// Represents an interface of pickup point provider
     /// </summary>
-    public partial interface IPickupPointProvider : IPlugin
+    public partial interface IPickupPointProvider : IProvider
     {
         #region Properties
 

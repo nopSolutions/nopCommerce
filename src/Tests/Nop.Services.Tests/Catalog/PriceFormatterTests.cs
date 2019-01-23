@@ -30,6 +30,7 @@ namespace Nop.Services.Tests.Catalog
         private Mock<IEventPublisher> _eventPublisher;
         private Mock<IStoreMappingService> _storeMappingService;
         private Mock<IMeasureService> _measureService;
+        private ProviderManager<IExchangeRateProvider> _exchangeRateProviderManager;
         private ICurrencyService _currencyService;
         private CurrencySettings _currencySettings;
         private Mock<IWorkContext> _workContext;
@@ -84,8 +85,8 @@ namespace Nop.Services.Tests.Catalog
             var webHelper = new Mock<IWebHelper>();
 
             var pluginService = new PluginService(customerService.Object, loger.Object , CommonHelper.DefaultFileProvider, webHelper.Object);
-
-            _currencyService = new CurrencyService(_currencySettings, null, pluginService, _currencyRepo.Object, cacheManager, _storeMappingService.Object);
+            _exchangeRateProviderManager = new ProviderManager<IExchangeRateProvider>(pluginService);
+            _currencyService = new CurrencyService(_currencySettings, null, pluginService, _exchangeRateProviderManager, _currencyRepo.Object, cacheManager, _storeMappingService.Object);
 
             _taxSettings = new TaxSettings();
 

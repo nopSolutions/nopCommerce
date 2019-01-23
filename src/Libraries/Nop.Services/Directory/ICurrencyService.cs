@@ -116,31 +116,5 @@ namespace Nop.Services.Directory
         decimal ConvertFromPrimaryStoreCurrency(decimal amount, Currency targetCurrencyCode);
 
         #endregion
-
-        #region Exchange rate providers
-
-        /// <summary>
-        /// Load active exchange rate provider
-        /// </summary>
-        /// <param name="customer">Load records allowed only to a specified customer; pass null to ignore ACL permissions</param>
-        /// <returns>Active exchange rate provider</returns>
-        IExchangeRateProvider LoadActiveExchangeRateProvider(Customer customer = null);
-
-        /// <summary>
-        /// Load exchange rate provider by system name
-        /// </summary>
-        /// <param name="systemName">System name</param>
-        /// <param name="customer">Load records allowed only to a specified customer; pass null to ignore ACL permissions</param>
-        /// <returns>Found exchange rate provider</returns>
-        IExchangeRateProvider LoadExchangeRateProviderBySystemName(string systemName, Customer customer = null);
-
-        /// <summary>
-        /// Load all exchange rate providers
-        /// </summary>
-        /// <param name="customer">Load records allowed only to a specified customer; pass null to ignore ACL permissions</param>
-        /// <returns>Exchange rate providers</returns>
-        IList<IExchangeRateProvider> LoadAllExchangeRateProviders(Customer customer = null);
-
-        #endregion
     }
 }

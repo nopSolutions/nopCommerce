@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Domain.Directory;
+using Nop.Core.Plugins;
 using Nop.Services.Directory;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
@@ -26,6 +27,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ILocalizationService _localizationService;
         private readonly ILocalizedModelFactory _localizedModelFactory;
+        private readonly IProviderManager<IExchangeRateProvider> _exchangeRateProviderManager;
         private readonly IStoreMappingSupportedModelFactory _storeMappingSupportedModelFactory;
         private readonly IWorkContext _workContext;
 
@@ -38,6 +40,7 @@ namespace Nop.Web.Areas.Admin.Factories
             IDateTimeHelper dateTimeHelper,
             ILocalizationService localizationService,
             ILocalizedModelFactory localizedModelFactory,
+            IProviderManager<IExchangeRateProvider> exchangeRateProviderManager,
             IStoreMappingSupportedModelFactory storeMappingSupportedModelFactory,
             IWorkContext workContext)
         {
@@ -46,6 +49,7 @@ namespace Nop.Web.Areas.Admin.Factories
             _dateTimeHelper = dateTimeHelper;
             _localizationService = localizationService;
             _localizedModelFactory = localizedModelFactory;
+            _exchangeRateProviderManager = exchangeRateProviderManager;
             _storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
             _workContext = workContext;
         }
@@ -67,7 +71,8 @@ namespace Nop.Web.Areas.Admin.Factories
             model.AutoUpdateEnabled = _currencySettings.AutoUpdateEnabled;
 
             //prepare available exchange rate providers
-            var availableExchangeRateProviders = _currencyService.LoadAllExchangeRateProviders(_workContext.CurrentCustomer);
+            var availableExchangeRateProviders = _exchangeRateProviderManager.LoadAllProviders(customer: _workContext.CurrentCustomer)
+                .OrderBy(tp => tp.PluginDescriptor).ToList();
             model.ExchangeRateProviders = availableExchangeRateProviders.Select(provider => new SelectListItem
             {
                 Text = provider.PluginDescriptor.FriendlyName,

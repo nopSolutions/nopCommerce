@@ -16,29 +16,6 @@ namespace Nop.Services.Shipping
         #region Shipping rate computation methods
 
         /// <summary>
-        /// Load active shipping rate computation methods
-        /// </summary>
-        /// <param name="customer">Load records allowed only to a specified customer; pass null to ignore ACL permissions</param>
-        /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
-        /// <returns>Shipping rate computation methods</returns>
-        IList<IShippingRateComputationMethod> LoadActiveShippingRateComputationMethods(Customer customer = null, int storeId = 0);
-
-        /// <summary>
-        /// Load shipping rate computation method by system name
-        /// </summary>
-        /// <param name="systemName">System name</param>
-        /// <returns>Found Shipping rate computation method</returns>
-        IShippingRateComputationMethod LoadShippingRateComputationMethodBySystemName(string systemName);
-
-        /// <summary>
-        /// Load all shipping rate computation methods
-        /// </summary>
-        /// <param name="customer">Load records allowed only to a specified customer; pass null to ignore ACL permissions</param>
-        /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
-        /// <returns>Shipping rate computation methods</returns>
-        IList<IShippingRateComputationMethod> LoadAllShippingRateComputationMethods(Customer customer = null, int storeId = 0);
-
-        /// <summary>
         /// Is shipping rate computation method active
         /// </summary>
         /// <param name="srcm">Shipping rate computation method</param>
@@ -127,29 +104,6 @@ namespace Nop.Services.Shipping
         #endregion
 
         #region Pickup points
-
-        /// <summary>
-        /// Load active pickup point providers
-        /// </summary>
-        /// <param name="customer">Load records allowed only to a specified customer; pass null to ignore ACL permissions</param>
-        /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
-        /// <returns>Pickup point providers</returns>
-        IList<IPickupPointProvider> LoadActivePickupPointProviders(Customer customer = null, int storeId = 0);
-
-        /// <summary>
-        /// Load pickup point provider by system name
-        /// </summary>
-        /// <param name="systemName">System name</param>
-        /// <returns>Found pickup point provider</returns>
-        IPickupPointProvider LoadPickupPointProviderBySystemName(string systemName);
-
-        /// <summary>
-        /// Load all pickup point providers
-        /// </summary>
-        /// <param name="customer">Load records allowed only to a specified customer; pass null to ignore ACL permissions</param>
-        /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
-        /// <returns>Pickup point providers</returns>
-        IList<IPickupPointProvider> LoadAllPickupPointProviders(Customer customer = null, int storeId = 0);
 
         /// <summary>
         /// Is pickup point provider active

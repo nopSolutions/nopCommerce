@@ -5,7 +5,7 @@ namespace Nop.Services.Tax
     /// <summary>
     /// Provides an interface for creating tax providers
     /// </summary>
-    public partial interface ITaxProvider : IPlugin
+    public partial interface ITaxProvider : IProvider
     {
         /// <summary>
         /// Gets tax rate

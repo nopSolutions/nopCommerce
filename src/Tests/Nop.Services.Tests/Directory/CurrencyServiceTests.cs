@@ -6,6 +6,7 @@ using Moq;
 using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain.Directory;
+using Nop.Core.Plugins;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Events;
@@ -25,6 +26,7 @@ namespace Nop.Services.Tests.Directory
         private CurrencySettings _currencySettings;
         private Mock<IEventPublisher> _eventPublisher;
         private ICurrencyService _currencyService;
+        private IProviderManager<IExchangeRateProvider> _exchangeRateProviderManager;
 
         private Currency currencyUSD, currencyRUR, currencyEUR;
         
@@ -97,13 +99,14 @@ namespace Nop.Services.Tests.Directory
             var webHelper = new Mock<IWebHelper>();
 
             var pluginService = new PluginService(customerService.Object, loger.Object , CommonHelper.DefaultFileProvider, webHelper.Object);
-            _currencyService = new CurrencyService(_currencySettings, _eventPublisher.Object, pluginService, _currencyRepository.Object, cacheManager, _storeMappingService.Object);
+            _exchangeRateProviderManager = new ProviderManager<IExchangeRateProvider>(pluginService);
+            _currencyService = new CurrencyService(_currencySettings, _eventPublisher.Object, pluginService, _exchangeRateProviderManager, _currencyRepository.Object, cacheManager, _storeMappingService.Object);
         }
         
         [Test]
         public void Can_load_exchangeRateProviders()
         {
-            var providers = _currencyService.LoadAllExchangeRateProviders();
+            var providers = _exchangeRateProviderManager.LoadAllProviders();
             providers.ShouldNotBeNull();
             providers.Any().ShouldBeTrue();
         }
@@ -111,14 +114,14 @@ namespace Nop.Services.Tests.Directory
         [Test]
         public void Can_load_exchangeRateProvider_by_systemKeyword()
         {
-            var provider = _currencyService.LoadExchangeRateProviderBySystemName("CurrencyExchange.TestProvider");
+            var provider = _exchangeRateProviderManager.LoadProviderBySystemName("CurrencyExchange.TestProvider");
             provider.ShouldNotBeNull();
         }
 
         [Test]
         public void Can_load_active_exchangeRateProvider()
         {
-            var provider = _currencyService.LoadActiveExchangeRateProvider();
+            var provider = _exchangeRateProviderManager.LoadActiveProvider(string.Empty);
             provider.ShouldNotBeNull();
         }
 

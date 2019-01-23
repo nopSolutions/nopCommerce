@@ -226,6 +226,7 @@ namespace Nop.Web.Framework.Infrastructure
             builder.RegisterType<EventPublisher>().As<IEventPublisher>().SingleInstance();
             builder.RegisterType<SettingService>().As<ISettingService>().InstancePerLifetimeScope();
 
+            builder.RegisterGeneric(typeof(ProviderManager<>)).As(typeof(IProviderManager<>)).InstancePerLifetimeScope();
 
             builder.RegisterType<ActionContextAccessor>().As<IActionContextAccessor>().InstancePerLifetimeScope();
 

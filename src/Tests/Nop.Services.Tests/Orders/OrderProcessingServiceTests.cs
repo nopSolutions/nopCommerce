@@ -28,6 +28,7 @@ using Nop.Services.Payments;
 using Nop.Services.Plugins;
 using Nop.Services.Security;
 using Nop.Services.Shipping;
+using Nop.Services.Shipping.Pickup;
 using Nop.Services.Tax;
 using Nop.Services.Vendors;
 using Nop.Tests;
@@ -93,6 +94,9 @@ namespace Nop.Services.Tests.Orders
         private Mock<IPdfService> _pdfService;
         private Mock<ICustomNumberFormatter> _customNumberFormatter;
         private OrderProcessingService _orderProcessingService;
+        private ProviderManager<IPickupPointProvider> _pickUpProviderManager;
+        private ProviderManager<IShippingRateComputationMethod> _shippingProviderManager;
+        private ProviderManager<ITaxProvider> _taxProviderManager;
 
         [SetUp]
         public new void SetUp()
@@ -159,7 +163,9 @@ namespace Nop.Services.Tests.Orders
             var loger = new Mock<ILogger>();
            
             var pluginService = new PluginService(_customerService.Object, loger.Object , CommonHelper.DefaultFileProvider, _webHelper.Object);
-
+            _pickUpProviderManager = new ProviderManager<IPickupPointProvider>(pluginService);
+            _shippingProviderManager = new ProviderManager<IShippingRateComputationMethod>(pluginService);
+            _taxProviderManager = new ProviderManager<ITaxProvider>(pluginService);
 
             //shipping
             _shippingSettings = new ShippingSettings
@@ -183,6 +189,8 @@ namespace Nop.Services.Tests.Orders
                 _priceCalcService,
                 _productAttributeParser.Object,
                 _productService.Object,
+                _pickUpProviderManager,
+                _shippingProviderManager,
                 _shippingMethodRepository.Object,
                 _warehouseRepository.Object,
                 _storeContext.Object,
@@ -207,6 +215,7 @@ namespace Nop.Services.Tests.Orders
                 _geoLookupService.Object,
                 _logger,
                 pluginService,
+                _taxProviderManager,
                 _stateProvinceService.Object,
                 _storeContext.Object,
                 _webHelper.Object,
@@ -223,6 +232,7 @@ namespace Nop.Services.Tests.Orders
                 _giftCardService.Object,
                 _paymentService.Object,
                 _priceCalcService,
+                _shippingProviderManager,
                 _rewardPointService.Object,
                 _shippingService,
                 _shoppingCartService.Object,
@@ -272,6 +282,7 @@ namespace Nop.Services.Tests.Orders
                 _productAttributeFormatter.Object,
                 _productAttributeParser.Object,
                 _productService.Object,
+                _shippingProviderManager,
                 _rewardPointService.Object,
                 _shipmentService.Object,
                 _shippingService,

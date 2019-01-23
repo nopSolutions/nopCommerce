@@ -7,7 +7,7 @@ namespace Nop.Services.Directory
     /// <summary>
     /// Exchange rate provider interface
     /// </summary>
-    public partial interface IExchangeRateProvider : IPlugin
+    public partial interface IExchangeRateProvider : IProvider
     {
         /// <summary>
         /// Gets currency live rates

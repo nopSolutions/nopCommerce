@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Tax;
+using Nop.Core.Plugins;
 using Nop.Services.Configuration;
 using Nop.Services.Security;
 using Nop.Services.Tax;
@@ -17,6 +18,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Fields
 
         private readonly IPermissionService _permissionService;
+        private readonly IProviderManager<ITaxProvider> _taxProviderManager;
         private readonly ISettingService _settingService;
         private readonly ITaxCategoryService _taxCategoryService;
         private readonly ITaxModelFactory _taxModelFactory;
@@ -28,6 +30,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Ctor
 
         public TaxController(IPermissionService permissionService,
+            IProviderManager<ITaxProvider> taxProviderManager,
             ISettingService settingService,
             ITaxCategoryService taxCategoryService,
             ITaxModelFactory taxModelFactory,
@@ -35,6 +38,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             TaxSettings taxSettings)
         {
             _permissionService = permissionService;
+            _taxProviderManager = taxProviderManager;
             _settingService = settingService;
             _taxCategoryService = taxCategoryService;
             _taxModelFactory = taxModelFactory;
@@ -84,7 +88,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (string.IsNullOrEmpty(systemName))
                 return RedirectToAction("Providers");
 
-            var taxProvider = _taxService.LoadTaxProviderBySystemName(systemName);
+            var taxProvider = _taxProviderManager.LoadProviderBySystemName(systemName);
             if (taxProvider == null)
                 return RedirectToAction("Providers");
 

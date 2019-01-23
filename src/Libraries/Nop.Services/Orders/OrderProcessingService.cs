@@ -15,6 +15,7 @@ using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
+using Nop.Core.Plugins;
 using Nop.Services.Affiliates;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
@@ -65,6 +66,7 @@ namespace Nop.Services.Orders
         private readonly IProductAttributeFormatter _productAttributeFormatter;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly IProductService _productService;
+        private readonly IProviderManager<IShippingRateComputationMethod> _shippingProviderManager;
         private readonly IRewardPointService _rewardPointService;
         private readonly IShipmentService _shipmentService;
         private readonly IShippingService _shippingService;
@@ -112,6 +114,7 @@ namespace Nop.Services.Orders
             IProductAttributeFormatter productAttributeFormatter,
             IProductAttributeParser productAttributeParser,
             IProductService productService,
+            IProviderManager<IShippingRateComputationMethod> shippingProviderManager,
             IRewardPointService rewardPointService,
             IShipmentService shipmentService,
             IShippingService shippingService,
@@ -155,6 +158,7 @@ namespace Nop.Services.Orders
             _productAttributeFormatter = productAttributeFormatter;
             _productAttributeParser = productAttributeParser;
             _productService = productService;
+            _shippingProviderManager = shippingProviderManager;
             _rewardPointService = rewardPointService;
             _shipmentService = shipmentService;
             _shippingService = shippingService;
@@ -548,7 +552,7 @@ namespace Nop.Services.Orders
                 details.ShippingStatus = ShippingStatus.ShippingNotRequired;
 
             //LoadAllShippingRateComputationMethods
-            var shippingRateComputationMethods = _shippingService.LoadActiveShippingRateComputationMethods(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id);
+            var shippingRateComputationMethods = _shippingProviderManager.LoadActiveProviders(_shippingSettings.ActiveShippingRateComputationMethodSystemNames, _workContext.CurrentCustomer, _storeContext.CurrentStore.Id);
 
             //shipping total
             var orderShippingTotalInclTax = _orderTotalCalculationService.GetShoppingCartShippingTotal(details.Cart, true, shippingRateComputationMethods, out var _, out var shippingTotalDiscounts);
