@@ -1,5 +1,25 @@
 ﻿@model CategoryModel
 
+@inject Nop.Services.Common.IGenericAttributeService genericAttributeService
+@inject IWorkContext workContext
+@{
+    const string hideInfoBlockAttributeName = "CategoryPage.HideInfoBlock";
+    var hideInfoBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideInfoBlockAttributeName);
+
+    const string hideDisplayBlockAttributeName = "CategoryPage.HideDisplayBlock";
+    var hideDisplayBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideDisplayBlockAttributeName);
+
+    const string hideMappingsBlockAttributeName = "CategoryPage.HideMappingsBlock";
+    var hideMappingsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideMappingsBlockAttributeName);
+
+    const string hideSeoBlockAttributeName = "CategoryPage.HideSEOBlock";
+    var hideSeoBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSeoBlockAttributeName);
+
+    const string hideProductsBlockAttributeName = "CategoryPage.HideProductsBlock";
+    var hideProductsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideProductsBlockAttributeName);
+
+}
+
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
 
@@ -13,11 +33,13 @@
             </div>
         </div>
 
-        @await Html.PartialAsync("_CreateOrUpdate.Info", Model)
-        @await Html.PartialAsync("_CreateOrUpdate.Display", Model)
-        @await Html.PartialAsync("_CreateOrUpdate.Mappings", Model)
-        @await Html.PartialAsync("_CreateOrUpdate.Seo", Model)
-        @await Html.PartialAsync("_CreateOrUpdate.Products", Model)
+        <nop-panels id="category-panels">
+            <nop-panel asp-name="category-info" asp-title="@T("Admin.Catalog.Categories.Info")" asp-hide-block-attribute-name="@hideInfoBlockAttributeName" asp-hide="@hideInfoBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-panel>
+            <nop-panel asp-name="category-display" asp-title="@T("Admin.Catalog.Categories.Display")" asp-hide-block-attribute-name="@hideDisplayBlockAttributeName" asp-hide="@hideDisplayBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.Display", Model)</nop-panel>
+            <nop-panel asp-name="category-mappings" asp-title="@T("Admin.Catalog.Categories.Mappings")" asp-hide-block-attribute-name="@hideMappingsBlockAttributeName" asp-hide="@hideMappingsBlock" asp-advanced="true">@await Html.PartialAsync("_CreateOrUpdate.Mappings", Model)</nop-panel>
+            <nop-panel asp-name="category-seo" asp-title="@T("Admin.Common.SEO")" asp-hide-block-attribute-name="@hideSeoBlockAttributeName" asp-hide="@hideSeoBlock" asp-advanced="true">@await Html.PartialAsync("_CreateOrUpdate.Seo", Model)</nop-panel>
+            <nop-panel asp-name="category-products" asp-title="@T("Admin.Catalog.Categories.Products")" asp-hide-block-attribute-name="@hideProductsBlockAttributeName" asp-hide="@hideProductsBlock" asp-advanced="true">@await Html.PartialAsync("_CreateOrUpdate.Products", Model)</nop-panel>
+        </nop-panels>
 
         @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CategoryDetailsBlock, additionalData = Model })
     </div>

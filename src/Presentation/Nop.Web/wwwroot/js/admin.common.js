@@ -230,12 +230,11 @@ $(document).ajaxStart(function () {
 
 //no-tabs solution
 $(document).ready(function () {
-    $(".panel.collapsible-panel .panel-heading").click(WrapAndSaveBlockData);
+    $(".panel.collapsible-panel >.panel-heading").click(WrapAndSaveBlockData);
 });
 
 function WrapAndSaveBlockData() {
-    $(this).parents(".panel").find(".panel-body").slideToggle();
-    $(this).parents(".panel").find(".panel-footer").slideToggle();
+    $(this).parents(".panel").find(">.panel-container").slideToggle();
 
     var icon = $(this).find("i");
     if ($(this).hasClass("opened")) {

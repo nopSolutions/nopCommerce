@@ -154,7 +154,7 @@ ul.common-list {
     right: 5px;
     top: 14px;
 }
-.panel.collapsible-panel .panel-body.collapsed, .panel-footer.collapsed {
+.panel.collapsible-panel .panel-container.collapsed {
     display: none;
 }
 
