@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
@@ -8,64 +7,48 @@ using Nop.Web.Framework.Extensions;
 namespace Nop.Web.Framework.TagHelpers.Admin
 {
     /// <summary>
-    /// nop-panel tag helper
-    /// </summary>
-    [HtmlTargetElement("nop-panels", Attributes = IdAttributeName)]
-    public class NopPanelsTagHelper : TagHelper
-    {
-        private const string IdAttributeName = "id";
-
-        /// <summary>
-        /// ViewContext
-        /// </summary>
-        [HtmlAttributeNotBound]
-        [ViewContext]
-        public ViewContext ViewContext { get; set; }
-    }
-
-    /// <summary>
     /// "nop-panel tag helper
     /// </summary>
-    [HtmlTargetElement("nop-panel", ParentTag = "nop-panels", Attributes = NameAttributeName)]
+    [HtmlTargetElement("nop-panel", ParentTag = "nop-panels", Attributes = NAME_ATTRIBUTE_NAME)]
     public class NopPanelTagHelper : TagHelper
     {
-        private const string NameAttributeName = "asp-name";
-        private const string TitleAttributeName = "asp-title";
-        private const string HideBlockAttributeNameAttributeName = "asp-hide-block-attribute-name";
-        private const string IsHideAttributeName = "asp-hide";
-        private const string IsAdvancedAttributeName = "asp-advanced";
+        private const string NAME_ATTRIBUTE_NAME = "asp-name";
+        private const string TITLE_ATTRIBUTE_NAME = "asp-title";
+        private const string HIDE_BLOCK_ATTRIBUTE_NAME_ATTRIBUTE_NAME = "asp-hide-block-attribute-name";
+        private const string IS_HIDE_ATTRIBUTE_NAME = "asp-hide";
+        private const string IS_ADVANCED_ATTRIBUTE_NAME = "asp-advanced";
 
         private readonly IHtmlHelper _htmlHelper;
 
         /// <summary>
         /// Title of the panel
         /// </summary>
-        [HtmlAttributeName(TitleAttributeName)]
-        public string Title { set; get; }
+        [HtmlAttributeName(TITLE_ATTRIBUTE_NAME)]
+        public string Title { get; set; }
 
         /// <summary>
         /// Name of the panel
         /// </summary>
-        [HtmlAttributeName(NameAttributeName)]
-        public string Name { set; get; }
+        [HtmlAttributeName(NAME_ATTRIBUTE_NAME)]
+        public string Name { get; set; }
 
         /// <summary>
         /// Name of the hide attribute of the panel
         /// </summary>
-        [HtmlAttributeName(HideBlockAttributeNameAttributeName)]
-        public string HideBlockAttributeName { set; get; }
+        [HtmlAttributeName(HIDE_BLOCK_ATTRIBUTE_NAME_ATTRIBUTE_NAME)]
+        public string HideBlockAttributeName { get; set; }
 
         /// <summary>
         /// Indicates whether a block is hidden or not
         /// </summary>
-        [HtmlAttributeName(IsHideAttributeName)]
-        public bool IsHide { set; get; }
+        [HtmlAttributeName(IS_HIDE_ATTRIBUTE_NAME)]
+        public bool IsHide { get; set; }
 
         /// <summary>
         /// Indicates whether a panel is advanced or not
         /// </summary>
-        [HtmlAttributeName(IsAdvancedAttributeName)]
-        public bool IsAdvanced { set; get; }
+        [HtmlAttributeName(IS_ADVANCED_ATTRIBUTE_NAME)]
+        public bool IsAdvanced { get; set; }
 
         /// <summary>
         /// ViewContext
