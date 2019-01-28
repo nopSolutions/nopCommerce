@@ -238,6 +238,15 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 ContentTypeProvider = provider
             });
 
+            //add support for webmanifest files
+            provider.Mappings[".webmanifest"] = MimeTypes.ApplicationManifestJson;
+
+            application.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(fileProvider.GetAbsolutePath("icons")),
+                RequestPath = "/icons",
+                ContentTypeProvider = provider
+            });
         }
 
         /// <summary>

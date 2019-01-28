@@ -1216,9 +1216,10 @@ namespace Nop.Services.ExportImport
                 Dictionary<CategoryKey, Category> allCategories;
                 try
                 {
-                    allCategories = _categoryService
-                        .GetAllCategories(showHidden: true, loadCacheableCopy: false)
-                        .ToDictionary(c => new CategoryKey(c, _categoryService, _storeMappingService), c => c);
+                    var allCategoryList = _categoryService.GetAllCategories(showHidden: true, loadCacheableCopy: false);
+                    
+                    allCategories = allCategoryList
+                        .ToDictionary(c => new CategoryKey(c, _categoryService, allCategoryList, _storeMappingService), c => c);
                 }
                 catch (ArgumentException)
                 {
@@ -2157,9 +2158,9 @@ namespace Nop.Services.ExportImport
 
         public class CategoryKey
         {
-            public CategoryKey(Category category, ICategoryService categoryService, IStoreMappingService storeMappingService)
+            public CategoryKey(Category category, ICategoryService categoryService, IList<Category> allCategories, IStoreMappingService storeMappingService)
             {
-                Key = categoryService.GetFormattedBreadCrumb(category);
+                Key = categoryService.GetFormattedBreadCrumb(category, allCategories);
                 StoresIds = category.LimitedToStores ? storeMappingService.GetStoresIdsWithAccess(category).ToList() : new List<int>();
                 Category = category;
             }

@@ -4206,7 +4206,7 @@ namespace Nop.Services.Installation
             //set hashed admin password
             var customerRegistrationService = EngineContext.Current.Resolve<ICustomerRegistrationService>();
             customerRegistrationService.ChangePassword(new ChangePasswordRequest(defaultUserEmail, false,
-                 PasswordFormat.Hashed, defaultUserPassword));
+                 PasswordFormat.Hashed, defaultUserPassword, null, NopCustomerServiceDefaults.DefaultHashedPasswordFormat));
 
             //second user
             var secondUserEmail = "steve_gates@nopCommerce.com";
@@ -5981,7 +5981,8 @@ namespace Nop.Services.Installation
                 JqueryMigrateScriptLoggingActive = false,
                 SupportPreviousNopcommerceVersions = true,
                 UseResponseCompression = false,
-                StaticFilesCacheControl = "public,max-age=604800"
+                StaticFilesCacheControl = "public,max-age=604800",
+                FaviconAndAppIconsHeadCode = "<link rel=\"apple-touch-icon\" sizes=\"180x180\" href=\"/icons/icons_0/apple-touch-icon.png\"><link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"/icons/icons_0/favicon-32x32.png\"><link rel=\"icon\" type=\"image/png\" sizes=\"192x192\" href=\"/icons/icons_0/android-chrome-192x192.png\"><link rel=\"icon\" type=\"image/png\" sizes=\"16x16\" href=\"/icons/icons_0/favicon-16x16.png\"><link rel=\"manifest\" href=\"/icons/icons_0/site.webmanifest\"><link rel=\"mask-icon\" href=\"/icons/icons_0/safari-pinned-tab.svg\" color=\"#5bbad5\"><link rel=\"shortcut icon\" href=\"/icons/icons_0/favicon.ico\"><meta name=\"msapplication-TileColor\" content=\"#2d89ef\"><meta name=\"msapplication-TileImage\" content=\"/icons/icons_0/mstile-144x144.png\"><meta name=\"msapplication-config\" content=\"/icons/icons_0/browserconfig.xml\"><meta name=\"theme-color\" content=\"#ffffff\">"
             });
 
             settingService.SaveSetting(new SeoSettings
@@ -6191,7 +6192,7 @@ namespace Nop.Services.Installation
                 CheckUsernameAvailabilityEnabled = false,
                 AllowUsersToChangeUsernames = false,
                 DefaultPasswordFormat = PasswordFormat.Hashed,
-                HashedPasswordFormat = "SHA512",
+                HashedPasswordFormat = NopCustomerServiceDefaults.DefaultHashedPasswordFormat,
                 PasswordMinLength = 6,
                 PasswordRequireDigit = false,
                 PasswordRequireLowercase = false,

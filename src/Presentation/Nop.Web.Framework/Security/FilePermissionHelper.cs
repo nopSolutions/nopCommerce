@@ -157,6 +157,7 @@ namespace Nop.Web.Framework.Security
                 fileProvider.Combine(rootDir, "wwwroot\\bundles"),
                 fileProvider.Combine(rootDir, "wwwroot\\db_backups"),
                 fileProvider.Combine(rootDir, "wwwroot\\files\\exportimport"),
+                fileProvider.Combine(rootDir, "wwwroot\\icons"),
                 fileProvider.Combine(rootDir, "wwwroot\\images"),
                 fileProvider.Combine(rootDir, "wwwroot\\images\\thumbs"),
                 fileProvider.Combine(rootDir, "wwwroot\\images\\uploaded")

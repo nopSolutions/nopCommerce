@@ -57,8 +57,8 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
 
         private bool IsPluginEnabled()
         {
-            var plugin = _widgetService.LoadWidgetBySystemName("Widgets.GoogleAnalytics") as GoogleAnalyticsPlugin;
-            return plugin != null && _widgetService.IsWidgetActive(plugin) && plugin.PluginDescriptor.Installed;
+            return _widgetService.LoadWidgetBySystemName("Widgets.GoogleAnalytics") is GoogleAnalyticsPlugin plugin
+                && _widgetService.IsWidgetActive(plugin);
         }
 
         private void ProcessOrderEvent(Order order, bool add)
@@ -109,7 +109,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
                     var sku = _productService.FormatSku(item.Product, item.AttributesXml);
                     if (String.IsNullOrEmpty(sku))
                         sku = item.Product.Id.ToString();
-                    var product = new TransactionItem(FixIllegalJavaScriptChars(orderId), 
+                    var product = new TransactionItem(FixIllegalJavaScriptChars(orderId),
                       FixIllegalJavaScriptChars(sku),
                       FixIllegalJavaScriptChars(item.Product.Name),
                       unitPrice,
@@ -191,7 +191,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
             if (sendRequest)
                 ProcessOrderEvent(order, false);
         }
-        
+
         /// <summary>
         /// Handles the event
         /// </summary>

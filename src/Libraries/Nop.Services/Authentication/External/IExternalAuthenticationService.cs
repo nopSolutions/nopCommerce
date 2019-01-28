@@ -23,8 +23,11 @@ namespace Nop.Services.Authentication.External
         /// Load external authentication method by system name
         /// </summary>
         /// <param name="systemName">System name</param>
+        /// <param name="customer">Load records allowed only to a specified customer; pass null to ignore ACL permissions</param>
+        /// <param name="storeId">Load records allowed only on the specified store; pass 0 to ignore store mappings</param>
         /// <returns>Found external authentication method</returns>
-        IExternalAuthenticationMethod LoadExternalAuthenticationMethodBySystemName(string systemName);
+        IExternalAuthenticationMethod LoadExternalAuthenticationMethodBySystemName(string systemName,
+            Customer customer = null, int storeId = 0);
 
         /// <summary>
         /// Load all external authentication methods

@@ -157,7 +157,10 @@ namespace Nop.Services.Tests.Orders
             
             _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
 
-            var pluginFinder = new PluginFinder(_eventPublisher.Object);
+            var loger = new Mock<ILogger>();
+           
+            var pluginService = new PluginService(_customerService.Object, loger.Object , CommonHelper.DefaultFileProvider, _webHelper.Object);
+
 
             //shipping
             _shippingSettings = new ShippingSettings
@@ -177,7 +180,7 @@ namespace Nop.Services.Tests.Orders
                 _genericAttributeService.Object,
                 _localizationService.Object,
                 _logger,
-                pluginFinder,
+                pluginService,
                 _priceCalcService,
                 _productAttributeParser.Object,
                 _productService.Object,
@@ -204,7 +207,7 @@ namespace Nop.Services.Tests.Orders
                 _genericAttributeService.Object,
                 _geoLookupService.Object,
                 _logger,
-                pluginFinder,
+                pluginService,
                 _stateProvinceService.Object,
                 _storeContext.Object,
                 _webHelper.Object,

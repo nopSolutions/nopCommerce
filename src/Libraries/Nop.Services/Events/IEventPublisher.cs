@@ -1,15 +1,15 @@
 ﻿namespace Nop.Services.Events
 {
     /// <summary>
-    /// Event publisher
+    /// Represents an event publisher
     /// </summary>
-    public interface IEventPublisher
+    public partial interface IEventPublisher
     {
         /// <summary>
-        /// Publish event
+        /// Publish event to consumers
         /// </summary>
-        /// <typeparam name="T">Type</typeparam>
-        /// <param name="eventMessage">Event message</param>
-        void Publish<T>(T eventMessage);
+        /// <typeparam name="TEvent">Type of event</typeparam>
+        /// <param name="event">Event object</param>
+        void Publish<TEvent>(TEvent @event);
     }
 }

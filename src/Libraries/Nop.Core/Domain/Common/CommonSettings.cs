@@ -134,5 +134,10 @@ namespace Nop.Core.Domain.Common
         /// Gets or sets a value of "Cache-Control" header value for static content
         /// </summary>
         public string StaticFilesCacheControl { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value of favicon and app icons <head/> code
+        /// </summary>
+        public string FaviconAndAppIconsHeadCode { get; set; }
     }
 }

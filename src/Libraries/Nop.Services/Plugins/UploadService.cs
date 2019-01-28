@@ -10,28 +10,32 @@ using Newtonsoft.Json.Converters;
 using Nop.Core;
 using Nop.Core.Infrastructure;
 using Nop.Core.Plugins;
+using Nop.Services.Common;
 using Nop.Services.Themes;
 
 namespace Nop.Services.Plugins
 {
     /// <summary>
-    /// Represents the implementation of a service for uploading application extensions (plugins or themes)
+    /// Represents the implementation of a service for uploading application extensions (plugins or themes) and favicon and app icons
     /// </summary>
     public class UploadService : IUploadService
     {
         #region Fields
 
-        protected readonly INopFileProvider _fileProvider;
-        protected readonly IThemeProvider _themeProvider;
+        private readonly INopFileProvider _fileProvider;
+        private readonly IStoreContext _storeContext;
+        private readonly IThemeProvider _themeProvider;
 
         #endregion
 
         #region Ctor
 
         public UploadService(INopFileProvider fileProvider,
+            IStoreContext storeContext,
             IThemeProvider themeProvider)
         {
             this._fileProvider = fileProvider;
+            this._storeContext = storeContext;
             this._themeProvider = themeProvider;
         }
 
@@ -114,7 +118,7 @@ namespace Nop.Services.Plugins
                             //whether a plugin is upload 
                             if (isPluginDescriptor)
                             {
-                                descriptor = PluginManager.GetPluginDescriptorFromText(reader.ReadToEnd());
+                                descriptor = PluginDescriptor.GetPluginDescriptorFromText(reader.ReadToEnd());
 
                                 //ensure that the plugin current version is supported
                                 if (!((PluginDescriptor)descriptor).SupportedVersions.Contains(NopVersion.CurrentVersion))
@@ -206,7 +210,7 @@ namespace Nop.Services.Plugins
                         {
                             //whether a plugin is upload 
                             if (item.Type == UploadedItemType.Plugin)
-                                descriptor = PluginManager.GetPluginDescriptorFromText(reader.ReadToEnd());
+                                descriptor = PluginDescriptor.GetPluginDescriptorFromText(reader.ReadToEnd());
 
                             //or whether a theme is upload 
                             if (item.Type == UploadedItemType.Theme)
@@ -310,6 +314,51 @@ namespace Nop.Services.Plugins
             }
 
             return descriptors;
+        }
+
+        /// <summary>
+        /// Upload favicon and app icons archive
+        /// </summary>
+        /// <param name="archivefile">Archive file which contains a set of special icons for different OS and devices</param>
+        public virtual void UploadIconsArchive(IFormFile archivefile)
+        {
+            if (archivefile == null)
+                throw new ArgumentNullException(nameof(archivefile));
+
+            var zipFilePath = string.Empty;
+            try
+            {
+                //only zip archives are supported
+                if (!_fileProvider.GetFileExtension(archivefile.FileName)?.Equals(".zip", StringComparison.InvariantCultureIgnoreCase) ?? true)
+                    throw new Exception("Only zip archives are supported");
+
+                //check if there is a folder for favicon and app icons for the current store (all store icons folders are in wwwroot/icons and are called icons_{storeId})
+                //if the folder does not exist, create it
+                //if the folder is already there - we delete it (since the pictures in the folder are in the unpacked version, there will be many files and it is easier for us to delete the folder than to delete all the files one by one) and create anew
+                var storeIconsPath = _fileProvider.GetAbsolutePath(string.Format(NopCommonDefaults.FaviconAndAppIconsPath, _storeContext.ActiveStoreScopeConfiguration));
+
+                if (!_fileProvider.DirectoryExists(storeIconsPath))
+                {
+                    _fileProvider.CreateDirectory(storeIconsPath);
+                }
+                else
+                {
+                    _fileProvider.DeleteDirectory(storeIconsPath);
+                    _fileProvider.CreateDirectory(storeIconsPath);
+                }
+
+                zipFilePath = _fileProvider.Combine(storeIconsPath, archivefile.FileName);
+                using (var fileStream = new FileStream(zipFilePath, FileMode.Create))
+                    archivefile.CopyTo(fileStream);
+
+                ZipFile.ExtractToDirectory(zipFilePath, storeIconsPath);
+            }
+            finally
+            {
+                //delete the zip file and leave only unpacked files in the folder
+                if (!string.IsNullOrEmpty(zipFilePath))
+                    _fileProvider.DeleteFile(zipFilePath);
+            }
         }
 
         #endregion

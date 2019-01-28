@@ -104,5 +104,24 @@
         public static string DbBackupFileExtension => "bak";
 
         #endregion
+
+        #region Favicon and app icons
+
+        /// <summary>
+        /// Gets a name of the file with code for the head element
+        /// </summary>
+        public static string HeadCodeFileName => "html_code.html";
+
+        /// <summary>
+        /// Gets a path to the favicon and app icons
+        /// </summary>
+        public static string FaviconAndAppIconsPath => "icons\\icons_{0}";
+
+        /// <summary>
+        /// Gets a name of the old favicon icon for current store
+        /// </summary>
+        public static string OldFaviconIconName => "favicon-{0}.ico";
+
+        #endregion
     }
 }

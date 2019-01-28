@@ -351,7 +351,8 @@ namespace Nop.Services.Customers
                 case PasswordFormat.Hashed:
                     var saltKey = _encryptionService.CreateSaltKey(NopCustomerServiceDefaults.PasswordSaltKeySize);
                     customerPassword.PasswordSalt = saltKey;
-                    customerPassword.Password = _encryptionService.CreatePasswordHash(request.NewPassword, saltKey, _customerSettings.HashedPasswordFormat);
+                    customerPassword.Password = _encryptionService.CreatePasswordHash(request.NewPassword, saltKey,
+                        request.HashedPasswordFormat ?? _customerSettings.HashedPasswordFormat);
                     break;
             }
 

@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Customers;
-using Nop.Core.Plugins;
 using Nop.Services.Authentication.External;
 using Nop.Services.Configuration;
+using Nop.Services.Events;
 using Nop.Services.Plugins;
 using Nop.Services.Security;
 using Nop.Web.Areas.Admin.Factories;
@@ -16,10 +16,10 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Fields
 
         private readonly ExternalAuthenticationSettings _externalAuthenticationSettings;
+        private readonly IEventPublisher _eventPublisher;
         private readonly IExternalAuthenticationMethodModelFactory _externalAuthenticationMethodModelFactory;
         private readonly IExternalAuthenticationService _externalAuthenticationService;
         private readonly IPermissionService _permissionService;
-        private readonly IPluginFinder _pluginFinder;
         private readonly ISettingService _settingService;
 
         #endregion
@@ -27,17 +27,17 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Ctor
 
         public ExternalAuthenticationController(ExternalAuthenticationSettings externalAuthenticationSettings,
+            IEventPublisher eventPublisher,
             IExternalAuthenticationMethodModelFactory externalAuthenticationMethodModelFactory,
             IExternalAuthenticationService externalAuthenticationService,
             IPermissionService permissionService,
-            IPluginFinder pluginFinder,
             ISettingService settingService)
         {
             this._externalAuthenticationSettings = externalAuthenticationSettings;
+            this._eventPublisher = eventPublisher;
             this._externalAuthenticationMethodModelFactory = externalAuthenticationMethodModelFactory;
             this._externalAuthenticationService = externalAuthenticationService;
             this._permissionService = permissionService;
-            this._pluginFinder = pluginFinder;
             this._settingService = settingService;
         }
 
@@ -99,10 +99,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             pluginDescriptor.DisplayOrder = model.DisplayOrder;
 
             //update the description file
-            PluginManager.SavePluginDescriptor(pluginDescriptor);
+            pluginDescriptor.Save();
 
-            //reset plugin cache
-            _pluginFinder.ReloadPlugins(pluginDescriptor);
+            //raise event
+            _eventPublisher.Publish(new PluginUpdatedEvent(pluginDescriptor));
 
             return new NullJsonResult();
         }

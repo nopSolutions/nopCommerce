@@ -49,9 +49,9 @@ namespace Nop.Plugin.Payments.Square.Services
             if (eventMessage?.Helper?.ViewContext?.ActionDescriptor == null)
                 return;
 
-            //check whether the plugin is installed and is active
+            //check whether the plugin is active
             var squarePaymentMethod = _paymentService.LoadPaymentMethodBySystemName(SquarePaymentDefaults.SystemName);
-            if (!(squarePaymentMethod?.PluginDescriptor?.Installed ?? false) || !_paymentService.IsPaymentMethodActive(squarePaymentMethod))
+            if (!_paymentService.IsPaymentMethodActive(squarePaymentMethod))
                 return;
 
             //add js script to one page checkout
@@ -74,10 +74,6 @@ namespace Nop.Plugin.Payments.Square.Services
             //whether renew access token task is changed
             var scheduleTask = _scheduleTaskService.GetTaskById(scheduleTaskModel.Id);
             if (!scheduleTask?.Type.Equals(SquarePaymentDefaults.RenewAccessTokenTask) ?? true)
-                return;
-
-            //check whether the plugin is installed
-            if (!(_paymentService.LoadPaymentMethodBySystemName(SquarePaymentDefaults.SystemName)?.PluginDescriptor?.Installed ?? false))
                 return;
 
             //check token renewal limit

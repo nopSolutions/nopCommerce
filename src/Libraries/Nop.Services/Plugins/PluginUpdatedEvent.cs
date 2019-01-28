@@ -1,4 +1,6 @@
-namespace Nop.Core.Plugins
+using Nop.Core.Plugins;
+
+namespace Nop.Services.Plugins
 {
     /// <summary>
     /// Represents the plugin updated event

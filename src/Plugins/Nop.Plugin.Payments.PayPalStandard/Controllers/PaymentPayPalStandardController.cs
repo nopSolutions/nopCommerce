@@ -174,10 +174,11 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
         {
             var tx = _webHelper.QueryString<string>("tx");
 
-            var processor = _paymentService.LoadPaymentMethodBySystemName("Payments.PayPalStandard") as PayPalStandardPaymentProcessor;
-            if (processor == null ||
-                !_paymentService.IsPaymentMethodActive(processor) || !processor.PluginDescriptor.Installed)
+            if (!(_paymentService.LoadPaymentMethodBySystemName("Payments.PayPalStandard") is PayPalStandardPaymentProcessor processor)
+                || !_paymentService.IsPaymentMethodActive(processor))
+            {
                 throw new NopException("PayPal Standard module cannot be loaded");
+            }
 
             if (processor.GetPdtDetails(tx, out Dictionary<string, string> values, out string response))
             {
@@ -312,10 +313,11 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
             }
             var strRequest = Encoding.ASCII.GetString(parameters);
 
-            var processor = _paymentService.LoadPaymentMethodBySystemName("Payments.PayPalStandard") as PayPalStandardPaymentProcessor;
-            if (processor == null ||
-                !_paymentService.IsPaymentMethodActive(processor) || !processor.PluginDescriptor.Installed)
+            if (!(_paymentService.LoadPaymentMethodBySystemName("Payments.PayPalStandard") is PayPalStandardPaymentProcessor processor)
+                || !_paymentService.IsPaymentMethodActive(processor))
+            {
                 throw new NopException("PayPal Standard module cannot be loaded");
+            }
 
             if (processor.VerifyIpn(strRequest, out Dictionary<string, string> values))
             {

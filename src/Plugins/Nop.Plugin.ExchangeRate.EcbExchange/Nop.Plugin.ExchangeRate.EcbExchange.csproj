@@ -9,6 +9,8 @@
     <PackageProjectUrl>http://www.nopcommerce.com/</PackageProjectUrl> 
     <RepositoryUrl>https://github.com/nopSolutions/nopCommerce</RepositoryUrl> 
     <RepositoryType>Git</RepositoryType>
+    <OutputPath>..\..\Presentation\Nop.Web\Plugins\ExchangeRate.EcbExchange</OutputPath>
+    <OutDir>$(OutputPath)</OutDir>
     <!--Set this parameter to true to get the dlls copied from the NuGet cache to the output of your project.
     You need to set this parameter to true if your plugin has a nuget package 
     to ensure that the dlls copied from the NuGet cache to the output of your project-->
@@ -19,16 +21,6 @@
     <None Remove="logo.jpg" />
     <None Remove="plugin.json" />
   </ItemGroup>
-  
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <OutputPath>..\..\Presentation\Nop.Web\Plugins\ExchangeRate.EcbExchange</OutputPath>
-    <OutDir>$(OutputPath)</OutDir>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutputPath>..\..\Presentation\Nop.Web\Plugins\ExchangeRate.EcbExchange</OutputPath>
-    <OutDir>$(OutputPath)</OutDir>
-  </PropertyGroup>
 
   <ItemGroup>
     <Content Include="logo.jpg">

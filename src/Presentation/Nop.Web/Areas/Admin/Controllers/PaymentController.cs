@@ -4,9 +4,9 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using Nop.Core.Domain.Payments;
-using Nop.Core.Plugins;
 using Nop.Services.Configuration;
 using Nop.Services.Directory;
+using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
 using Nop.Services.Payments;
@@ -24,12 +24,12 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Fields
 
         private readonly ICountryService _countryService;
+        private readonly IEventPublisher _eventPublisher;
         private readonly ILocalizationService _localizationService;
         private readonly INotificationService _notificationService;
         private readonly IPaymentModelFactory _paymentModelFactory;
         private readonly IPaymentService _paymentService;
         private readonly IPermissionService _permissionService;
-        private readonly IPluginFinder _pluginFinder;
         private readonly ISettingService _settingService;
         private readonly PaymentSettings _paymentSettings;
 
@@ -38,22 +38,22 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Ctor
 
         public PaymentController(ICountryService countryService,
+            IEventPublisher eventPublisher,
             ILocalizationService localizationService,
             INotificationService notificationService,
             IPaymentModelFactory paymentModelFactory,
             IPaymentService paymentService,
             IPermissionService permissionService,
-            IPluginFinder pluginFinder,
             ISettingService settingService,
             PaymentSettings paymentSettings)
         {
             this._countryService = countryService;
+            this._eventPublisher = eventPublisher;
             this._localizationService = localizationService;
             this._notificationService = notificationService;
             this._paymentModelFactory = paymentModelFactory;
             this._paymentService = paymentService;
             this._permissionService = permissionService;
-            this._pluginFinder = pluginFinder;
             this._settingService = settingService;
             this._paymentSettings = paymentSettings;
         }
@@ -116,10 +116,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             pluginDescriptor.DisplayOrder = model.DisplayOrder;
 
             //update the description file
-            PluginManager.SavePluginDescriptor(pluginDescriptor);
+            pluginDescriptor.Save();
 
-            //reset plugin cache
-            _pluginFinder.ReloadPlugins(pluginDescriptor);
+            //raise event
+            _eventPublisher.Publish(new PluginUpdatedEvent(pluginDescriptor));
 
             return new NullJsonResult();
         }

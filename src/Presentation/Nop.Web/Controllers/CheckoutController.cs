@@ -46,7 +46,7 @@ namespace Nop.Web.Controllers
         private readonly IOrderProcessingService _orderProcessingService;
         private readonly IOrderService _orderService;
         private readonly IPaymentService _paymentService;
-        private readonly IPluginFinder _pluginFinder;
+        private readonly IPluginService _pluginService;
         private readonly IShippingService _shippingService;
         private readonly IShoppingCartService _shoppingCartService;
         private readonly IStateProvinceService _stateProvinceService;
@@ -75,7 +75,7 @@ namespace Nop.Web.Controllers
             IOrderProcessingService orderProcessingService,
             IOrderService orderService,
             IPaymentService paymentService,
-            IPluginFinder pluginFinder,
+            IPluginService pluginService,
             IShippingService shippingService,
             IShoppingCartService shoppingCartService,
             IStateProvinceService stateProvinceService,
@@ -100,7 +100,7 @@ namespace Nop.Web.Controllers
             this._orderProcessingService = orderProcessingService;
             this._orderService = orderService;
             this._paymentService = paymentService;
-            this._pluginFinder = pluginFinder;
+            this._pluginService = pluginService;
             this._shippingService = shippingService;
             this._shoppingCartService = shoppingCartService;
             this._stateProvinceService = stateProvinceService;
@@ -299,7 +299,7 @@ namespace Nop.Web.Controllers
             //by default Shipping is available if the country is not specified
             var isAllowsShipping = (address.Country != null) && address.Country.AllowsShipping;
             isAllowsShipping = _addressSettings.CountryEnabled ? isAllowsShipping : true;
-                        
+
             if (_shippingSettings.ShipToSameAddress && shipToSameAddress && _shoppingCartService.ShoppingCartRequiresShipping(cart) && isAllowsShipping)
             {
                 _workContext.CurrentCustomer.ShippingAddress = _workContext.CurrentCustomer.BillingAddress;
@@ -745,11 +745,9 @@ namespace Nop.Web.Controllers
             if (string.IsNullOrEmpty(paymentmethod))
                 return PaymentMethod();
 
-            var paymentMethodInst = _paymentService.LoadPaymentMethodBySystemName(paymentmethod);
-            if (paymentMethodInst == null ||
-                !_paymentService.IsPaymentMethodActive(paymentMethodInst) ||
-                !_pluginFinder.AuthenticateStore(paymentMethodInst.PluginDescriptor, _storeContext.CurrentStore.Id) ||
-                !_pluginFinder.AuthorizedForUser(paymentMethodInst.PluginDescriptor, _workContext.CurrentCustomer))
+            var paymentMethodInst = _paymentService.LoadPaymentMethodBySystemName(paymentmethod,
+                _workContext.CurrentCustomer, _storeContext.CurrentStore.Id);
+            if (paymentMethodInst == null || !_paymentService.IsPaymentMethodActive(paymentMethodInst))
                 return PaymentMethod();
 
             //save
@@ -1016,11 +1014,9 @@ namespace Nop.Web.Controllers
                         NopCustomerDefaults.SelectedPaymentMethodAttribute,
                         selectedPaymentMethodSystemName, _storeContext.CurrentStore.Id);
 
-                    var paymentMethodInst = _paymentService.LoadPaymentMethodBySystemName(selectedPaymentMethodSystemName);
-                    if (paymentMethodInst == null ||
-                        !_paymentService.IsPaymentMethodActive(paymentMethodInst) ||
-                        !_pluginFinder.AuthenticateStore(paymentMethodInst.PluginDescriptor, _storeContext.CurrentStore.Id) ||
-                        !_pluginFinder.AuthorizedForUser(paymentMethodInst.PluginDescriptor, _workContext.CurrentCustomer))
+                    var paymentMethodInst = _paymentService.LoadPaymentMethodBySystemName(selectedPaymentMethodSystemName,
+                        _workContext.CurrentCustomer, _storeContext.CurrentStore.Id);
+                    if (paymentMethodInst == null || !_paymentService.IsPaymentMethodActive(paymentMethodInst))
                         throw new Exception("Selected payment method can't be parsed");
 
                     return OpcLoadStepAfterPaymentMethod(paymentMethodInst, cart);
@@ -1512,11 +1508,9 @@ namespace Nop.Web.Controllers
                     });
                 }
 
-                var paymentMethodInst = _paymentService.LoadPaymentMethodBySystemName(paymentmethod);
-                if (paymentMethodInst == null ||
-                    !_paymentService.IsPaymentMethodActive(paymentMethodInst) ||
-                    !_pluginFinder.AuthenticateStore(paymentMethodInst.PluginDescriptor, _storeContext.CurrentStore.Id) ||
-                    !_pluginFinder.AuthorizedForUser(paymentMethodInst.PluginDescriptor, _workContext.CurrentCustomer))
+                var paymentMethodInst = _paymentService.LoadPaymentMethodBySystemName(paymentmethod,
+                    _workContext.CurrentCustomer, _storeContext.CurrentStore.Id);
+                if (paymentMethodInst == null || !_paymentService.IsPaymentMethodActive(paymentMethodInst))
                     throw new Exception("Selected payment method can't be parsed");
 
                 //save
