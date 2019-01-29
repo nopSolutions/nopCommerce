@@ -12,6 +12,7 @@
 
 # Build results
 
+.idea/
 .vs/
 [Dd]ebug/
 [Rr]elease/

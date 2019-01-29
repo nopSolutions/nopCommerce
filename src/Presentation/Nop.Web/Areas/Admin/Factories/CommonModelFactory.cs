@@ -460,66 +460,6 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
-        /// Prepare file permissions warning model
-        /// </summary>
-        /// <param name="models">List of system warning models</param>
-        protected virtual void PrepareFilePermissionsWarningModel(IList<SystemWarningModel> models)
-        {
-            if (models == null)
-                throw new ArgumentNullException(nameof(models));
-
-            var dirPermissionsOk = true;
-            var dirsToCheck = FilePermissionHelper.GetDirectoriesWrite();
-            foreach (var dir in dirsToCheck)
-            {
-                if (FilePermissionHelper.CheckPermissions(dir, false, true, true, false))
-                    continue;
-
-                models.Add(new SystemWarningModel
-                {
-                    Level = SystemWarningLevel.Warning,
-                    Text = string.Format(_localizationService.GetResource("Admin.System.Warnings.DirectoryPermission.Wrong"),
-                        WindowsIdentity.GetCurrent().Name, dir)
-                });
-                dirPermissionsOk = false;
-            }
-
-            if (dirPermissionsOk)
-            {
-                models.Add(new SystemWarningModel
-                {
-                    Level = SystemWarningLevel.Pass,
-                    Text = _localizationService.GetResource("Admin.System.Warnings.DirectoryPermission.OK")
-                });
-            }
-
-            var filePermissionsOk = true;
-            var filesToCheck = FilePermissionHelper.GetFilesWrite();
-            foreach (var file in filesToCheck)
-            {
-                if (FilePermissionHelper.CheckPermissions(file, false, true, true, true))
-                    continue;
-
-                models.Add(new SystemWarningModel
-                {
-                    Level = SystemWarningLevel.Warning,
-                    Text = string.Format(_localizationService.GetResource("Admin.System.Warnings.FilePermission.Wrong"),
-                        WindowsIdentity.GetCurrent().Name, file)
-                });
-                filePermissionsOk = false;
-            }
-
-            if (filePermissionsOk)
-            {
-                models.Add(new SystemWarningModel
-                {
-                    Level = SystemWarningLevel.Pass,
-                    Text = _localizationService.GetResource("Admin.System.Warnings.FilePermission.OK")
-                });
-            }
-        }
-
-        /// <summary>
         /// Prepare backup file search model
         /// </summary>
         /// <param name="searchModel">Backup file search model</param>
@@ -698,9 +638,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //performance settings
             PreparePerformanceSettingsWarningModel(models);
-
-            //validate write permissions (the same procedure like during installation)
-            PrepareFilePermissionsWarningModel(models);
 
             //not active plugins
             PreparePluginsEnabledWarningModel(models);
