@@ -1641,7 +1641,22 @@ namespace Nop.Services.ExportImport
 
                         var importedCategories = categoryList.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
                             .Select(categoryName => new CategoryKey(categoryName))
-                            .Select(categoryKey => allCategories.ContainsKey(categoryKey) ? allCategories[categoryKey].Id : allCategories.Values.FirstOrDefault(c => c.Name == categoryKey.Key)?.Id ?? int.Parse(categoryKey.Key)).ToList();
+                            .Select(categoryKey =>
+                            {
+                                var rez = allCategories.ContainsKey(categoryKey) ? allCategories[categoryKey].Id : allCategories.Values.FirstOrDefault(c => c.Name == categoryKey.Key)?.Id;
+
+                                if (!rez.HasValue && int.TryParse(categoryKey.Key, out var id))
+                                {
+                                    rez = id;
+                                }
+                                else
+                                {
+                                    //database doesn't contain the imported category
+                                    throw new ArgumentException(string.Format(_localizationService.GetResource("Admin.Catalog.Products.Import.DatabaseNotContainCategory"), categoryKey.Key));
+                                }
+
+                                return rez.Value;
+                            }).ToList();
 
                         foreach (var categoryId in importedCategories)
                         {

@@ -305,6 +305,9 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Plugins.Uninstalled">
     <Value></Value>
   </LocaleResource>   
+  <LocaleResource Name="Admin.Catalog.Products.Import.DatabaseNotContainCategory">
+    <Value>Database doesn''t contain the ''{0}'' category</Value>
+  </LocaleResource>
 </Language>'
 
 CREATE TABLE #LocaleStringResourceTmp
