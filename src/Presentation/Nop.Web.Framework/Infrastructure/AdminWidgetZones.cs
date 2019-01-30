@@ -154,11 +154,8 @@
         public static string GeneralCommonSettingsBottom => "admin_general_common_settings_bottom";
         public static string GeneralCommonSettingsButtons => "admin_general_common_settings_buttons";
         public static string GeneralCommonSettingsTop => "admin_general_common_settings_top";
+        public static string GiftCardDetailsBlock => "admin_gift_card_details_block";
         public static string GiftCardDetailsButtons => "admin_gift_card_details_buttons";
-        public static string GiftCardDetailsHistoryBottom => "admin_gift_card_details_history_bottom";
-        public static string GiftCardDetailsHistoryTop => "admin_gift_card_details_history_top";
-        public static string GiftCardDetailsInfoBottom => "admin_gift_card_details_info_bottom";
-        public static string GiftCardDetailsInfoTop => "admin_gift_card_details_info_top";
         public static string GiftCardListButtons => "admin_gift_card_list_buttons";
         public static string HeaderAfter => "admin_header_after";
         public static string HeaderBefore => "admin_header_before";

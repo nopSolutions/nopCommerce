@@ -1,0 +1,133 @@
+﻿@model ProductAttributeModel
+
+@if (Model.Id > 0)
+{
+    <div class="panel-body">
+        <p>
+            @T("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Hint")
+        </p>
+        <div id="productattributevalues-grid"></div>
+
+        <script>
+            $(document).ready(function() {
+                $("#productattributevalues-grid").kendoGrid({
+                    dataSource: {
+                        type: "json",
+                        transport: {
+                            read: {
+                                url: "@Html.Raw(Url.Action("PredefinedProductAttributeValueList", "ProductAttribute"))",
+                                type: "POST",
+                                dataType: "json",
+                                data: function() {
+                                    var data = {
+                                        ProductAttributeId: '@(Model.Id)'
+                                    };
+                                    addAntiForgeryToken(data);
+                                    return data;
+                                }
+                            },
+                            destroy: {
+                                url: "@Html.Raw(Url.Action("PredefinedProductAttributeValueDelete", "ProductAttribute"))",
+                                type: "POST",
+                                dataType: "json",
+                                data: addAntiForgeryToken
+                            }
+                        },
+                        schema: {
+                            data: "Data",
+                            total: "Total",
+                            errors: "Errors",
+                            model: {
+                                id: "Id",
+                                fields: {
+                                    Product2Name: { editable: false, type: "string" },
+                                    ProductId2: { editable: false, type: "number" }
+                                }
+                            }
+                        },
+                        error: function(e) {
+                            display_kendoui_grid_error(e);
+                            // Cancel the changes
+                            this.cancelChanges();
+                        },
+                        pageSize: @(Model.PredefinedProductAttributeValueSearchModel.PageSize),
+                        serverPaging: true,
+                        serverFiltering: true,
+                        serverSorting: true
+                    },
+                    pageable: {
+                        refresh: true,
+                        pageSizes: [@(Model.PredefinedProductAttributeValueSearchModel.AvailablePageSizes)],
+                        @await Html.PartialAsync("_GridPagerMessages")
+                    },
+                    editable: {
+                        confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                        mode: "inline"
+                    },
+                    scrollable: false,
+                    columns: [
+                        {
+                            field: "Name",
+                            title: "@T("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.Name")",
+                            width: 200
+                        }, {
+                            field: "PriceAdjustmentStr",
+                            title: "@T("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.PriceAdjustment")",
+                            width: 150
+                        }, {
+                            field: "WeightAdjustmentStr",
+                            title: "@T("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.WeightAdjustment")",
+                            width: 150
+                        }, {
+                            field: "IsPreSelected",
+                            title: "@T("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.IsPreSelected")",
+                            width: 100,
+                            headerAttributes: { style: "text-align:center" },
+                            attributes: { style: "text-align:center" },
+                            template: '# if(IsPreSelected) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
+                        }, {
+                            field: "DisplayOrder",
+                            title: "@T("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.DisplayOrder")",
+                            width: 100
+                        }, {
+                            field: "Id",
+                            title: "@T("Admin.Common.Edit")",
+                            width: 100,
+                            headerAttributes: { style: "text-align:center" },
+                            attributes: { style: "text-align:center" },
+                            template: "<button onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/ProductAttribute/PredefinedProductAttributeValueEditPopup/")#=Id#?btnId=btnRefresh&formId=productattribute-form', 800, 550, true); return false;\" class='btn btn-default'><i class=\"fa fa-pencil\"></i>@T("Admin.Common.Edit")</button>"
+                        }, {
+                            command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
+                            title: "@T("Admin.Common.Delete")",
+                            width: 200
+                        }
+                    ]
+                });
+            });
+        </script>
+    </div>
+    <div class="panel-footer">
+        <button type="submit" id="btnAddNewValue" onclick="javascript:OpenWindow('@(Url.Action("PredefinedProductAttributeValueCreatePopup", "ProductAttribute", new { productAttributeId = Model.Id, btnId = "btnRefresh", formId = "productattribute-form" }))', 800, 550, true); return false;" class="btn btn-primary">
+            @T("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.AddNew")
+        </button>
+        <input type="submit" id="btnRefresh" style="display:none" />
+        <script>
+            $(document).ready(function () {
+                $('#btnRefresh').click(function () {
+                    //refresh grid
+                    var grid = $("#productattributevalues-grid").data('kendoGrid');
+                    grid.dataSource.read();
+
+                    //return false to don't reload a page
+                    return false;
+                });
+            });
+        </script>
+    </div>
+}
+else
+{
+    <div class="panel-body">
+        @T("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.SaveBeforeEdit")
+    </div>
+}
