@@ -10,13 +10,13 @@
 }
 
 @{
-    const string hideBestByOrderTotalBlockAttributeName = "CategoryPage.HideInfoBlock";
+    const string hideBestByOrderTotalBlockAttributeName = "CustomerReportsPage.HideBestByOrderTotalBlock";
     var hideBestByOrderTotalBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideBestByOrderTotalBlockAttributeName);
 
-    const string hideBestByNumberOfOrdersBlockAttributeName = "CategoryPage.HideInfoBlock";
+    const string hideBestByNumberOfOrdersBlockAttributeName = "CustomerReportsPage.HideBestByNumberOfOrdersBlock";
     var hideBestByNumberOfOrdersBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideBestByNumberOfOrdersBlockAttributeName);
 
-    const string hideRegisteredCustomersBlockAttributeName = "CategoryPage.HideInfoBlock";
+    const string hideRegisteredCustomersBlockAttributeName = "CustomerReportsPage.HideRegisteredCustomersBlock";
     var hideRegisteredCustomersBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideRegisteredCustomersBlockAttributeName);
 }
 
@@ -35,9 +35,9 @@
 <div class="content">
     <div class="form-horizontal">
         <nop-panels id="customer-reports">
-            <nop-panel asp-name="ordertotal" asp-title="@T("Admin.Reports.Customers.BestBy.BestByOrderTotal")" asp-hide-block-attribute-name="@hideBestByOrderTotalBlockAttributeName" asp-hide="@hideBestByOrderTotalBlock" asp-advanced="false">@await Html.PartialAsync("_Customers.BestCustomersByOrderTotal", Model)</nop-panel>
-            <nop-panel asp-name="numberoforders" asp-title="@T("Admin.Reports.Customers.BestBy.BestByNumberOfOrders")" asp-hide-block-attribute-name="@hideBestByNumberOfOrdersBlockAttributeName" asp-hide="@hideBestByNumberOfOrdersBlock" asp-advanced="false">@await Html.PartialAsync("_Customers.BestCustomersByNumberOfOrders", Model)</nop-panel>
-            <nop-panel asp-name="registeredcustomers" asp-title="@T("Admin.Reports.Customers.RegisteredCustomers")" asp-hide-block-attribute-name="@hideRegisteredCustomersBlockAttributeName" asp-hide="@hideRegisteredCustomersBlock" asp-advanced="false">@await Html.PartialAsync("_Customers.RegisteredCustomers", Model)</nop-panel>
+            <nop-panel asp-name="ordertotal" asp-title="@T("Admin.Reports.Customers.BestBy.BestByOrderTotal")" asp-hide-block-attribute-name="@hideBestByOrderTotalBlockAttributeName" asp-hide="@hideBestByOrderTotalBlock">@await Html.PartialAsync("_Customers.BestCustomersByOrderTotal", Model)</nop-panel>
+            <nop-panel asp-name="numberoforders" asp-title="@T("Admin.Reports.Customers.BestBy.BestByNumberOfOrders")" asp-hide-block-attribute-name="@hideBestByNumberOfOrdersBlockAttributeName" asp-hide="@hideBestByNumberOfOrdersBlock">@await Html.PartialAsync("_Customers.BestCustomersByNumberOfOrders", Model)</nop-panel>
+            <nop-panel asp-name="registeredcustomers" asp-title="@T("Admin.Reports.Customers.RegisteredCustomers")" asp-hide-block-attribute-name="@hideRegisteredCustomersBlockAttributeName" asp-hide="@hideRegisteredCustomersBlock">@await Html.PartialAsync("_Customers.RegisteredCustomers", Model)</nop-panel>
         </nop-panels>
 
         @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerReportsBlock, additionalData = Model })
