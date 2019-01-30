@@ -90,7 +90,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
             //create panel
             var panel = new TagBuilder("div");
             panel.AddCssClass("panel panel-default collapsible-panel");
-            if (context.AllAttributes["asp-advanced"].Value.Equals(true))
+            if (context.AllAttributes[IS_ADVANCED_ATTRIBUTE_NAME].Value.Equals(true))
             {
                 panel.AddCssClass("advanced-setting");
             }
@@ -98,24 +98,24 @@ namespace Nop.Web.Framework.TagHelpers.Admin
             //create panel heading and append title and icon to it
             var panelHeading = new TagBuilder("div");
             panelHeading.AddCssClass("panel-heading");
-            panelHeading.Attributes.Add("data-hideAttribute", context.AllAttributes["asp-hide-block-attribute-name"].Value.ToString());
+            panelHeading.Attributes.Add("data-hideAttribute", context.AllAttributes[HIDE_BLOCK_ATTRIBUTE_NAME_ATTRIBUTE_NAME].Value.ToString());
 
-            if (context.AllAttributes["asp-hide"].Value.Equals(false))
+            if (context.AllAttributes[IS_HIDE_ATTRIBUTE_NAME].Value.Equals(false))
             {
                 panelHeading.AddCssClass("opened");
             }
 
-            panelHeading.InnerHtml.AppendHtml($"<span>{context.AllAttributes["asp-title"].Value}</span>");
+            panelHeading.InnerHtml.AppendHtml($"<span>{context.AllAttributes[TITLE_ATTRIBUTE_NAME].Value}</span>");
 
             var collapseIcon = new TagBuilder("i");
             collapseIcon.AddCssClass("fa");
-            collapseIcon.AddCssClass(context.AllAttributes["asp-hide"].Value.Equals(true) ? "fa-plus" : "fa-minus");
+            collapseIcon.AddCssClass(context.AllAttributes[IS_HIDE_ATTRIBUTE_NAME].Value.Equals(true) ? "fa-plus" : "fa-minus");
             panelHeading.InnerHtml.AppendHtml(collapseIcon);
 
             //create inner panel container to toggle on click and add data to it
             var panelContainer = new TagBuilder("div");
             panelContainer.AddCssClass("panel-container");
-            if (context.AllAttributes["asp-hide"].Value.Equals(true))
+            if (context.AllAttributes[IS_HIDE_ATTRIBUTE_NAME].Value.Equals(true))
             {
                 panelContainer.AddCssClass("collapsed");
             }
