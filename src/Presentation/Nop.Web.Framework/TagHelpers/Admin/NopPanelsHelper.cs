@@ -90,7 +90,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
             //create panel
             var panel = new TagBuilder("div");
             panel.AddCssClass("panel panel-default collapsible-panel");
-            if (context.AllAttributes[IS_ADVANCED_ATTRIBUTE_NAME].Value.Equals(true))
+            if (context.AllAttributes.ContainsName(IS_ADVANCED_ATTRIBUTE_NAME) && context.AllAttributes[IS_ADVANCED_ATTRIBUTE_NAME].Value.Equals(true))
             {
                 panel.AddCssClass("advanced-setting");
             }
