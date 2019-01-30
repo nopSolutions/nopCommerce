@@ -1649,7 +1649,8 @@ namespace Nop.Services.ExportImport
                                 {
                                     rez = id;
                                 }
-                                else
+                                
+                                if(!rez.HasValue)
                                 {
                                     //database doesn't contain the imported category
                                     throw new ArgumentException(string.Format(_localizationService.GetResource("Admin.Catalog.Products.Import.DatabaseNotContainCategory"), categoryKey.Key));
