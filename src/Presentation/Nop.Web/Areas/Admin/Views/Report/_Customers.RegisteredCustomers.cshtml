@@ -1,10 +1,11 @@
 ﻿@model CustomerReportsSearchModel
 
-<div class="panel-group">
-    <div class="panel panel-default">
-        <div class="panel-body">
-            <div id="registered-customers-grid"></div>
-            <script>
+<div class="panel-body">
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div id="registered-customers-grid"></div>
+                <script>
                 $(document).ready(function () {
                     $("#registered-customers-grid").kendoGrid({
                         dataSource: {
@@ -52,7 +53,8 @@
                         }]
                     });
                 });
-            </script> 
+                </script>
+            </div>
         </div>
     </div>
 </div>

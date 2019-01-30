@@ -40,7 +40,7 @@
         public static string CatalogSettingsBottom => "admin_catalog_settings_bottom";
         public static string CatalogSettingsButtons => "admin_catalog_settings_buttons";
         public static string CatalogSettingsTop => "admin_catalog_settings_top";
-        public static string CategoryDetailsBlock => "admin_category_details_block";
+        public static string CategoryDetailsBlock => "admin_category_details_block"; 
         public static string CategoryDetailsButtons => "admin_category_details_buttons";
         public static string CategoryListButtons => "admin_category_list_buttons";
         public static string CategoryTemplateListButtons => "admin_category_template_list_buttons";
@@ -93,6 +93,7 @@
         public static string CustomerDetailsShoppingCartBottom => "admin_customer_details_shopping_cart_bottom";
         public static string CustomerDetailsShoppingCartTop => "admin_customer_details_shopping_cart_top";
         public static string CustomerListButtons => "admin_customer_list_buttons";
+        public static string CustomerReportsBlock => "admin_customer_reports_block";
         public static string CustomerReportsButtons => "admin_customer_reports_buttons";
         public static string CustomerRoleDetailsBottom => "admin_customer_role_details_bottom";
         public static string CustomerRoleDetailsButtons => "admin_customer_role_details_buttons";

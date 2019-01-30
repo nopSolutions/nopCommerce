@@ -1,64 +1,66 @@
 ﻿@model CustomerReportsSearchModel
 
-<div class="panel-group">
-    <div class="panel panel-default">
-        <div class="panel-body">
-            <div class="form-group">
-                <div class="col-md-3">
-                    <nop-label asp-for="BestCustomersByOrderTotal.StartDate"/>
+<div class="panel-body">
+
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="BestCustomersByOrderTotal.StartDate" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="BestCustomersByOrderTotal.StartDate" />
+                    </div>
                 </div>
-                <div class="col-md-9">
-                    <nop-editor asp-for="BestCustomersByOrderTotal.StartDate"/>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="BestCustomersByOrderTotal.EndDate" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="BestCustomersByOrderTotal.EndDate" />
+                    </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <div class="col-md-3">
-                    <nop-label asp-for="BestCustomersByOrderTotal.EndDate"/>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="BestCustomersByOrderTotal.OrderStatusId" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-select asp-for="BestCustomersByOrderTotal.OrderStatusId" asp-items="Model.BestCustomersByOrderTotal.AvailableOrderStatuses" />
+                    </div>
                 </div>
-                <div class="col-md-9">
-                    <nop-editor asp-for="BestCustomersByOrderTotal.EndDate"/>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="BestCustomersByOrderTotal.PaymentStatusId" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-select asp-for="BestCustomersByOrderTotal.PaymentStatusId" asp-items="Model.BestCustomersByOrderTotal.AvailablePaymentStatuses" />
+                    </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <div class="col-md-3">
-                    <nop-label asp-for="BestCustomersByOrderTotal.OrderStatusId"/>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="BestCustomersByOrderTotal.ShippingStatusId" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-select asp-for="BestCustomersByOrderTotal.ShippingStatusId" asp-items="Model.BestCustomersByOrderTotal.AvailableShippingStatuses" />
+                    </div>
                 </div>
-                <div class="col-md-9">
-                    <nop-select asp-for="BestCustomersByOrderTotal.OrderStatusId" asp-items="Model.BestCustomersByOrderTotal.AvailableOrderStatuses"/>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-md-3">
-                    <nop-label asp-for="BestCustomersByOrderTotal.PaymentStatusId"/>
-                </div>
-                <div class="col-md-9">
-                    <nop-select asp-for="BestCustomersByOrderTotal.PaymentStatusId" asp-items="Model.BestCustomersByOrderTotal.AvailablePaymentStatuses"/>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-md-3">
-                    <nop-label asp-for="BestCustomersByOrderTotal.ShippingStatusId"/>
-                </div>
-                <div class="col-md-9">
-                    <nop-select asp-for="BestCustomersByOrderTotal.ShippingStatusId" asp-items="Model.BestCustomersByOrderTotal.AvailableShippingStatuses"/>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-md-9 col-md-offset-3">
-                    <button type="button" id="search-best-customers-ordertotal" class="btn btn-primary btn-search">
-                        <i class="fa fa-line-chart"></i>
-                        @T("Admin.Reports.Customers.RunReport")
-                    </button>
+                <div class="form-group">
+                    <div class="col-md-9 col-md-offset-3">
+                        <button type="button" id="search-best-customers-ordertotal" class="btn btn-primary btn-search">
+                            <i class="fa fa-line-chart"></i>
+                            @T("Admin.Reports.Customers.RunReport")
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="panel panel-default">
-        <div class="panel-body">
-            <div id="best-customers-ordertotal-grid"></div>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div id="best-customers-ordertotal-grid"></div>
 
-            <script>
+                <script>
                 $(document).ready(function() {
                     $("#best-customers-ordertotal-grid").kendoGrid({
                         dataSource: {
@@ -128,18 +130,20 @@
                         ]
                     });
                 });
-            </script>
+                </script>
 
-            <script>
-                $(document).ready(function() {
-                    $('#search-best-customers-ordertotal').click(function() {
-                        var grid = $('#best-customers-ordertotal-grid').data('kendoGrid');
-                        grid.dataSource.page(1); //new search. Set page size to 1
-                        //grid.dataSource.read(); we already loaded the grid above using "page" function
-                        return false;
+                <script>
+                    $(document).ready(function () {
+                        $('#search-best-customers-ordertotal').click(function () {
+                            var grid = $('#best-customers-ordertotal-grid').data('kendoGrid');
+                            grid.dataSource.page(1); //new search. Set page size to 1
+                            //grid.dataSource.read(); we already loaded the grid above using "page" function
+                            return false;
+                        });
                     });
-                });
-            </script>
+                </script>
+            </div>
         </div>
     </div>
+    
 </div>
