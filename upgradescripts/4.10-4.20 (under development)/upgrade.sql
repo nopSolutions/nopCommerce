@@ -251,6 +251,12 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Categories.Mappings">
     <Value>Mappings</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Display">
+    <Value>Display</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Mappings">
+    <Value>Mappings</Value>
+  </LocaleResource>
 </Language>
 '
 
