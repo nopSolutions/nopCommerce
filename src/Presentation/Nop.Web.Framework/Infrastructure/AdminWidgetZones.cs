@@ -93,8 +93,6 @@
         public static string CustomerDetailsShoppingCartBottom => "admin_customer_details_shopping_cart_bottom";
         public static string CustomerDetailsShoppingCartTop => "admin_customer_details_shopping_cart_top";
         public static string CustomerListButtons => "admin_customer_list_buttons";
-        public static string CustomerReportsBlock => "admin_customer_reports_block";
-        public static string CustomerReportsButtons => "admin_customer_reports_buttons";
         public static string CustomerRoleDetailsBottom => "admin_customer_role_details_bottom";
         public static string CustomerRoleDetailsButtons => "admin_customer_role_details_buttons";
         public static string CustomerRoleDetailsTop => "admin_customer_role_details_top";
