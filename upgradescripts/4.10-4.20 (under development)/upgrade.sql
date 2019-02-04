@@ -257,6 +257,9 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Manufacturers.Mappings">
     <Value>Mappings</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins">
+    <Value></Value>
+  </LocaleResource>  
 </Language>
 '
 

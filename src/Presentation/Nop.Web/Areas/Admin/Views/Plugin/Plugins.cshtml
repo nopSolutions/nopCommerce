@@ -3,13 +3,27 @@
 @using System.Text.Encodings.Web
 @using Nop.Core.Plugins
 
-<form asp-controller="Plugin" asp-action="List" method="post" id="plugins-form-local">
+@{
+    //page title
+    ViewBag.Title = T("Admin.Configuration.Plugins.Local").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Local plugins");
+}
+
+<nop-antiforgery-token />
+<form asp-controller="Plugin" asp-action="List" id="plugins-form-local">
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.Configuration.Plugins.Local")
+        </h1>
+    </div>
+
     <div class="content-header clearfix">
         <div class="pull-right">
             @if (Model.NeedToRestart)
             {
-                <button type="submit" name="plugin-apply-changes" class="btn bg-green">@T("Admin.Configuration.Plugins.ApplyChanges")</button>
-                <button type="submit" name="plugin-discard-changes" class="btn bg-red">@T("Admin.Configuration.Plugins.DiscardChanges")</button>
+            <button type="submit" name="plugin-apply-changes" class="btn bg-green">@T("Admin.Configuration.Plugins.ApplyChanges")</button>
+            <button type="submit" name="plugin-discard-changes" class="btn bg-red">@T("Admin.Configuration.Plugins.DiscardChanges")</button>
             }
 
             <button type="submit" name="plugin-reload-grid" class="btn bg-blue">@T("Admin.Configuration.Plugins.ReloadList")</button>
@@ -280,8 +294,9 @@
             </div>
         </div>
     </div>
-</form>
 
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.PluginDetailsBlock, additionalData = Model })
+</form>
 
 @*upload plugin form*@
 <div id="uploadplugin-window" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="uploadplugin-window-title">

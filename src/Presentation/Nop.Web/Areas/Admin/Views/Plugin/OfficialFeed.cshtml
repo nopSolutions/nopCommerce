@@ -1,0 +1,198 @@
+﻿@model OfficialFeedPluginSearchModel
+
+@{
+    //page title
+    ViewBag.Title = T("Admin.Configuration.Plugins.OfficialFeed").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("All plugins and themes");
+}
+
+<nop-antiforgery-token />
+<form asp-controller="Plugin" asp-action="OfficialFeed" id="plugins-form-official-feed">
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.Configuration.Plugins.OfficialFeed")
+        </h1>
+    </div>
+
+    <div class="content">
+        <div class="form-horizontal">
+            <div class="panel-group">
+                <div class="panel panel-default panel-search">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p>
+                                    @T("Admin.Configuration.Plugins.OfficialFeed.Instructions")
+                                </p>
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="SearchName" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-editor asp-for="SearchName" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="SearchVersionId" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-select asp-for="SearchVersionId" asp-items="Model.AvailableVersions" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="SearchCategoryId" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-select asp-for="SearchCategoryId" asp-items="Model.AvailableCategories" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="SearchPriceId" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-select asp-for="SearchPriceId" asp-items="Model.AvailablePrices" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-8 col-md-offset-4">
+                                        <button type="button" id="search-plugins" class="btn btn-primary btn-search">
+                                            <i class="fa fa-search"></i>
+                                            @T("Admin.Common.Search")
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div id="plugins-grid"></div>
+
+                        <script>
+                $(document).ready(function() {
+                    $("#plugins-grid").kendoGrid({
+                        dataSource: {
+                            type: "json",
+                            transport: {
+                                read: {
+                                    url: "@Html.Raw(Url.Action("OfficialFeedSelect", "Plugin"))",
+                                    type: "POST",
+                                    dataType: "json",
+                                    data: function() {
+                                        var data = {
+                                            SearchName: $('#@Html.IdFor(model => model.SearchName)').val(),
+                                            SearchVersionId: $('#SearchVersionId').val(),
+                                            SearchCategoryId: $('#SearchCategoryId').val(),
+                                            SearchPriceId: $('#SearchPriceId').val()
+                                        };
+                                        addAntiForgeryToken(data);
+                                        return data;
+                                    }
+                                }
+                            },
+                            schema: {
+                                data: "Data",
+                                total: "Total",
+                                errors: "Errors"
+                            },
+                            error: function(e) {
+                                display_kendoui_grid_error(e);
+                                // Cancel the changes
+                                this.cancelChanges();
+                            },
+                            pageSize: @(Model.PageSize),
+                            serverPaging: true,
+                            serverFiltering: true,
+                            serverSorting: true
+                        },
+                        pageable: {
+                            refresh: true,
+                            pageSizes: [@(Model.AvailablePageSizes)],
+                            @await Html.PartialAsync("_GridPagerMessages")
+                        },
+                        editable: {
+                            confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                            mode: "inline"
+                        },
+                        scrollable: false,
+                        columns: [
+                            {
+                                field: "PictureUrl",
+                                title: "@T("Admin.Configuration.Plugins.OfficialFeed.Picture")",
+                                width: 150,
+                                template: '<img src="#=PictureUrl#" width="125" />',
+                                headerAttributes: { style: "text-align:center" },
+                                attributes: { style: "text-align:center" }
+                            }, {
+                                field: "Name",
+                                title: "@T("Admin.Configuration.Plugins.OfficialFeed.Name")",
+                                width: 500
+                            }, {
+                                field: "Price",
+                                title: "@T("Admin.Configuration.Plugins.OfficialFeed.Price")",
+                                width: 70
+                            }, {
+                                field: "Url",
+                                width: 150,
+                                title: "@T("Admin.Configuration.Plugins.OfficialFeed.Download")",
+                                template: '<a class="btn btn-default" href="#=Url#?utm_source=admin-panel&utm_medium=official-plugins&utm_campaign=admin-panel" target="_blank"><i class="fa fa-download"></i>@T("Admin.Configuration.Plugins.OfficialFeed.Download")</a>',
+                                headerAttributes: { style: "text-align:center" },
+                                attributes: { style: "text-align:center" }
+                            },
+                            {
+                                field: "CategoryName",
+                                title: "@T("Admin.Configuration.Plugins.OfficialFeed.Category")",
+                                width: 200
+                            }, {
+                                field: "SupportedVersions",
+                                title: "@T("Admin.Configuration.Plugins.OfficialFeed.SupportedVersions")",
+                                width: 200
+                            }
+                        ]
+                    });
+                });
+                        </script>
+                    </div>
+
+                    <div>
+                        <input type="submit" id="btnRefresh" style="display: none" />
+                        <script>
+                            $(document).ready(function () {
+                                $('#btnRefresh').click(function () {
+                                    //refresh grid
+                                    var grid = $("#plugins-grid").data('kendoGrid');
+                                    grid.dataSource.page(1); //new search. Set page size to 1
+                                    //grid.dataSource.read(); we already loaded the grid above using "page" function
+
+                                    //return false to don't reload a page
+                                    return false;
+                                });
+                            });
+                        </script>
+                        <script>
+                            $(document).ready(function () {
+                                //search button
+                                $('#search-plugins').click(function () {
+                                    //search
+                                    var grid = $('#plugins-grid').data('kendoGrid');
+                                    grid.dataSource.page(1); //new search. Set page size to 1
+                                    //grid.dataSource.read(); we already loaded the grid above using "page" function
+
+                                    return false;
+                                });
+                            });
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+

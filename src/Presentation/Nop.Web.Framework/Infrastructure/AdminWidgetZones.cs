@@ -228,6 +228,7 @@
         public static string PaymentMethodRestrictionsBottom => "admin_payment_method_restrictions_bottom";
         public static string PermissionListButtons => "admin_permission_list_buttons";
         public static string PickupPointProviderListButtons => "admin_pickup_point_provider_list_buttons";
+        public static string PluginDetailsBlock => "admin_plugin_details_block";
         public static string PluginDetailsBottom => "admin_plugin_details_bottom";
         public static string PluginDetailsButtons => "admin_plugin_details_buttons";
         public static string PluginDetailsTop => "admin_plugin_details_top";
