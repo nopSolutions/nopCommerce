@@ -8925,9 +8925,6 @@
   <LocaleResource Name="Admin.Configuration.Stores.Updated">
     <Value>The store has been updated successfully.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Tax">
-    <Value>Tax</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Tax.Categories">
     <Value>Tax categories</Value>
   </LocaleResource>
