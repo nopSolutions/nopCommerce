@@ -260,6 +260,9 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Plugins">
     <Value></Value>
   </LocaleResource>  
+  <LocaleResource Name="Admin.Configuration.Tax">
+    <Value></Value>
+  </LocaleResource>  
 </Language>
 '
 
