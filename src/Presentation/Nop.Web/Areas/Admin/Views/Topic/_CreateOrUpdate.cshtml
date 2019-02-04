@@ -25,5 +25,8 @@
             <nop-panel asp-name="topic-details-info" asp-title="@T("Admin.ContentManagement.Topics.Info")" asp-hide-block-attribute-name="@hideInfoBlockAttributeName" asp-hide="@hideInfoBlock">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-panel>
             <nop-panel asp-name="topic-details-seo" asp-title="@T("Admin.Common.SEO")" asp-hide-block-attribute-name="@hideSeoBlockAttributeName" asp-hide="@hideSeoBlock" asp-advanced="true">@await Html.PartialAsync("_CreateOrUpdate.Seo", Model)</nop-panel>
         </nop-panels>
+        
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.TopicDetailsBlock, additionalData = Model })
+
     </div>
 </div>

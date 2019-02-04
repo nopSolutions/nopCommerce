@@ -32,5 +32,7 @@
                 <nop-panel asp-name="vendor-products" asp-title="@T("Admin.Vendors.VendorNotes")" asp-hide-block-attribute-name="@hideVendorNotesBlockAttributeName" asp-hide="@hideVendorNotesBlock" asp-advanced="true">@await Html.PartialAsync("_CreateOrUpdate.Notes", Model)</nop-panel>
             }
         </nop-panels>
+        
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.VendorDetailsBlock, additionalData = Model })
     </div>
 </div>

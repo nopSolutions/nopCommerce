@@ -1,7 +1,5 @@
 ﻿@model CategoryModel
 
-@inject Nop.Services.Common.IGenericAttributeService genericAttributeService
-@inject IWorkContext workContext
 @{
     const string hideInfoBlockAttributeName = "CategoryPage.HideInfoBlock";
     var hideInfoBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideInfoBlockAttributeName);

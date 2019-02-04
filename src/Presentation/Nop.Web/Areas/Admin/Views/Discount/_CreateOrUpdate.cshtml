@@ -36,5 +36,7 @@
                 <nop-panel asp-name="discount-usage-history" asp-title="@T("Admin.Promotions.Discounts.History")" asp-hide-block-attribute-name="@hideUsageHistoryBlockAttributeName" asp-hide="@hideUsageHistoryBlock">@await Html.PartialAsync("_CreateOrUpdate.History", Model)</nop-panel>
             }
         </nop-panels>
+        
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.DiscountDetailsBlock, additionalData = Model })
     </div>
 </div>

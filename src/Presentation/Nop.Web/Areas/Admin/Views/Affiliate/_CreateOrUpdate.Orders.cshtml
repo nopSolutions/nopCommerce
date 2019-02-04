@@ -1,7 +1,6 @@
 @model AffiliateModel
 
 <div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.AffiliateDetailsOrdersTop, additionalData = Model })
     <div class="sub-panel panel-search">
         <div class="panel-body">
             <div class="row">
@@ -168,5 +167,4 @@
             </script>
         </div>
     </div>
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.AffiliateDetailsOrdersBottom, additionalData = Model })
 </div>

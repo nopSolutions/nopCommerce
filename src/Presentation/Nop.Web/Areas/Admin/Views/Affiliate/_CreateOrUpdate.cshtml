@@ -24,5 +24,7 @@
                 <nop-panel asp-name="affiliate-orders" asp-title="@T("Admin.Affiliates.Orders")" asp-hide-block-attribute-name="@hideOrdersBlockAttributeName" asp-hide="@hideOrdersBlock">@await Html.PartialAsync("_CreateOrUpdate.Orders", Model)</nop-panel>
             }
         </nop-panels>
+        
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.AffiliateDetailsBlock, additionalData = Model })
     </div>
 </div>
