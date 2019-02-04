@@ -4965,9 +4965,6 @@
   <LocaleResource Name="Admin.Configuration.PaymentMethodsAndRestrictions">
     <Value>Payment methods and restrictions</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Plugins">
-    <Value>Plugins</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Plugins.AdditionalInfo">
     <Value>Additional info</Value>
   </LocaleResource>

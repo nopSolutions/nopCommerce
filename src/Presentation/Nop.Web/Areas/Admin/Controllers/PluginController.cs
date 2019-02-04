@@ -104,19 +104,19 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual IActionResult Index()
         {
-            return RedirectToAction("List");
+            return RedirectToAction("Plugins");
         }
 
-        public virtual IActionResult List()
+        public virtual IActionResult Plugins()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
                 return AccessDeniedView();
 
-            var model = _pluginModelFactory.PreparePluginsConfigurationModel(new PluginsConfigurationModel());
+            var model = _pluginModelFactory.PreparePluginSearchModel(new PluginSearchModel());
 
             return View(model);
         }
-
+        
         [HttpPost]
         public virtual IActionResult ListSelect(PluginSearchModel searchModel)
         {
