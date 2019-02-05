@@ -182,7 +182,7 @@ namespace Nop.Services.Authentication.External
                 _authenticationService.SignIn(_workContext.CurrentCustomer, false);
                 _workflowMessageService.SendCustomerWelcomeMessage(_workContext.CurrentCustomer, _workContext.WorkingLanguage.Id);
 
-                return new RedirectToRouteResult("RegisterResult", new { resultId = (int)UserRegistrationType.Standard });
+                return new RedirectToRouteResult("RegisterResult", new { resultId = (int)UserRegistrationType.Standard, returnUrl });
             }
 
             //registration is succeeded but isn't activated
