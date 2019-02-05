@@ -22,9 +22,7 @@ namespace Nop.Web.Areas.Admin.Models.Blogs
         #endregion
 
         #region Properties
-
-        [NopResourceDisplayName("Admin.ContentManagement.Blog.Comments.List.BlogPostId")]
-        [UIHint("Int32Nullable")]
+        
         public int? BlogPostId { get; set; }
 
         [NopResourceDisplayName("Admin.ContentManagement.Blog.Comments.List.CreatedOnFrom")]

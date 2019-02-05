@@ -9129,12 +9129,6 @@
   <LocaleResource Name="Admin.ContentManagement.Blog.Comments.Fields.StoreName">
     <Value>Store name</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Blog.Comments.List.BlogPostId">
-    <Value>Blog post ID</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Blog.Comments.List.BlogPostId.Hint">
-    <Value>Search by blog post ID.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Blog.Comments.List.CreatedOnFrom">
     <Value>Created from</Value>
   </LocaleResource>
@@ -9590,12 +9584,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.News.Comments.List.CreatedOnTo.Hint">
     <Value>The creation to date for the search.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.News.Comments.List.NewsItemId">
-    <Value>News item ID</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.News.Comments.List.NewsItemId.Hint">
-    <Value>Search by news item ID.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.News.Comments.List.SearchApproved">
     <Value>Approved</Value>
