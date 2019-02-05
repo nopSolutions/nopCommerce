@@ -10,9 +10,9 @@ namespace Nop.Core.Caching
     /// <summary>
     ///     Represents a manager for caching during an HTTP request (short term caching)
     /// </summary>
-    public class PerRequestCacheManager : ICacheManager
+    public partial class PerRequestCacheManager : ICacheManager
     {
-        private static TimeSpan s_lockTimeout = TimeSpan.FromMinutes(2);
+        private static readonly TimeSpan s_lockTimeout = TimeSpan.FromMinutes(2);
         
         #region Ctor
 
@@ -28,7 +28,7 @@ namespace Nop.Core.Caching
         #region Utilities
 
         /// <summary>
-        ///     Gets a key/value collection that can be used to share data within the scope of this request
+        /// Gets a key/value collection that can be used to share data within the scope of this request
         /// </summary>
         protected virtual IDictionary<object, object> GetItems()
         {
@@ -47,7 +47,7 @@ namespace Nop.Core.Caching
         #region Methods
 
         /// <summary>
-        ///     Get a cached item. If it's not in the cache yet, then load and cache it
+        /// Get a cached item. If it's not in the cache yet, then load and cache it
         /// </summary>
         /// <typeparam name="T">Type of cached item</typeparam>
         /// <param name="key">Cache key</param>
@@ -90,7 +90,7 @@ namespace Nop.Core.Caching
         }
 
         /// <summary>
-        ///     Adds the specified key and object to the cache
+        /// Adds the specified key and object to the cache
         /// </summary>
         /// <param name="key">Key of cached item</param>
         /// <param name="data">Value for caching</param>
@@ -119,7 +119,7 @@ namespace Nop.Core.Caching
         }
 
         /// <summary>
-        ///     Gets a value indicating whether the value associated with the specified key is cached
+        /// Gets a value indicating whether the value associated with the specified key is cached
         /// </summary>
         /// <param name="key">Key of cached item</param>
         /// <returns>True if item already is in cache; otherwise false</returns>
@@ -140,7 +140,7 @@ namespace Nop.Core.Caching
         }
 
         /// <summary>
-        ///     Removes the value with the specified key from the cache
+        /// Removes the value with the specified key from the cache
         /// </summary>
         /// <param name="key">Key of cached item</param>
         public virtual void Remove(string key)
@@ -160,7 +160,7 @@ namespace Nop.Core.Caching
         }
 
         /// <summary>
-        ///     Removes items by key pattern
+        /// Removes items by key pattern
         /// </summary>
         /// <param name="pattern">String key pattern</param>
         public virtual void RemoveByPattern(string pattern)
@@ -193,7 +193,7 @@ namespace Nop.Core.Caching
         }
 
         /// <summary>
-        ///     Clear all cache data
+        /// Clear all cache data
         /// </summary>
         public virtual void Clear()
         {
