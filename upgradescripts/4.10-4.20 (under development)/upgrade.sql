@@ -266,8 +266,10 @@ set @resources='
   <LocaleResource Name="Admin.Vendors.Display">
     <Value>Display</Value>
   </LocaleResource>
-</Language>
-'
+  <LocaleResource Name="Admin.Catalog.Products.Import.DatabaseNotContainCategory">
+    <Value>Database doesn''t contain the ''{0}'' category</Value>
+  </LocaleResource>  
+</Language>'
 
 CREATE TABLE #LocaleStringResourceTmp
 	(
