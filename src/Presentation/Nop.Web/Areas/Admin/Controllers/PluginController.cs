@@ -38,7 +38,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly IEventPublisher _eventPublisher;
         private readonly IExternalAuthenticationService _externalAuthenticationService;
         private readonly ILocalizationService _localizationService;
-        private readonly ILogger _logger;
         private readonly INotificationService _notificationService;
         private readonly IPaymentService _paymentService;
         private readonly IPermissionService _permissionService;
@@ -64,7 +63,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             IEventPublisher eventPublisher,
             IExternalAuthenticationService externalAuthenticationService,
             ILocalizationService localizationService,
-            ILogger logger,
             INotificationService notificationService,
             IPaymentService paymentService,
             IPermissionService permissionService,
@@ -86,7 +84,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             this._eventPublisher = eventPublisher;
             this._externalAuthenticationService = externalAuthenticationService;
             this._localizationService = localizationService;
-            this._logger = logger;
             this._notificationService = notificationService;
             this._paymentService = paymentService;
             this._permissionService = permissionService;
