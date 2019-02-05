@@ -5,7 +5,10 @@
 }
 
 <nop-antiforgery-token/>
-<div class="content-header clearfix">   
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        @T("Admin.ContentManagement.Blog.Comments")
+    </h1>
     <div class="pull-right">
         <button type="button" id="approve-selected" class="btn bg-green">
             <i class="fa fa-check-square-o"></i>
@@ -19,8 +22,8 @@
             <i class="fa fa-trash-o"></i>
             @T("Admin.ContentManagement.Blog.Comments.DeleteSelected")
         </button>
-        <nop-action-confirmation asp-button-id="delete-selected" />
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.BlogCommentListButtons })
+        <nop-action-confirmation asp-button-id="delete-selected"/>
+        @await Component.InvokeAsync("AdminWidget", new {widgetZone = AdminWidgetZones.BlogCommentListButtons})
     </div>
 </div>
 

@@ -1,72 +1,77 @@
 @model ActivityLogSearchModel
 
 <nop-antiforgery-token/>
-<div class="content-header clearfix">    
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        @T("Admin.Configuration.ActivityLog.ActivityLog")
+    </h1>
     <div class="pull-right">
         <a asp-action="ClearAll" class="btn bg-red">
             <i class="fa fa-trash-o"></i>
             @T("Admin.Common.Clear")
         </a>
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ActivityLogListButtons })
+        @await Component.InvokeAsync("AdminWidget", new {widgetZone = AdminWidgetZones.ActivityLogListButtons})
     </div>
+
 </div>
 
-<div class="form-horizontal">
-    <div class="panel-group">
-        <div class="sub-panel">
-            <div class="panel-body">
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <div class="col-md-4">
-                                <nop-label asp-for="CreatedOnFrom" />
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    <nop-label asp-for="CreatedOnFrom" />
+                                </div>
+                                <div class="col-md-8">
+                                    <nop-editor asp-for="CreatedOnFrom" />
+                                </div>
                             </div>
-                            <div class="col-md-8">
-                                <nop-editor asp-for="CreatedOnFrom" />
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    <nop-label asp-for="CreatedOnTo" />
+                                </div>
+                                <div class="col-md-8">
+                                    <nop-editor asp-for="CreatedOnTo" />
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-4">
-                                <nop-label asp-for="CreatedOnTo" />
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    <nop-label asp-for="IpAddress" />
+                                </div>
+                                <div class="col-md-8">
+                                    <nop-editor asp-for="IpAddress" />
+                                </div>
                             </div>
-                            <div class="col-md-8">
-                                <nop-editor asp-for="CreatedOnTo" />
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    <nop-label asp-for="ActivityLogTypeId" />
+                                </div>
+                                <div class="col-md-8">
+                                    <nop-select asp-for="ActivityLogTypeId" asp-items="Model.ActivityLogType" />
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-4">
-                                <nop-label asp-for="IpAddress" />
-                            </div>
-                            <div class="col-md-8">
-                                <nop-editor asp-for="IpAddress" />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-4">
-                                <nop-label asp-for="ActivityLogTypeId" />
-                            </div>
-                            <div class="col-md-8">
-                                <nop-select asp-for="ActivityLogTypeId" asp-items="Model.ActivityLogType"/>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-8 col-md-offset-4">
-                                <button type="button" id="search-log" class="btn btn-primary btn-search">
-                                    <i class="fa fa-search"></i>
-                                    @T("Admin.Common.Search")
-                                </button>
+                            <div class="form-group">
+                                <div class="col-md-8 col-md-offset-4">
+                                    <button type="button" id="search-log" class="btn btn-primary btn-search">
+                                        <i class="fa fa-search"></i>
+                                        @T("Admin.Common.Search")
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="sub-panel">
-            <div class="panel-body">
-                <div id="activityLog-grid"></div>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="activityLog-grid"></div>
 
-                <script>
+                    <script>
                     $(document).ready(function() {
                         $("#activityLog-grid").kendoGrid({
                             dataSource: {
@@ -88,7 +93,7 @@
                                         }
                                     },
                                     destroy: {
-                                        url: "@Html.Raw(Url.Action("AcivityLogDelete", "ActivityLog"))",
+                                        url: "@Html.Raw(Url.Action("ActivityLogDelete", "ActivityLog"))",
                                         type: "POST",
                                         dataType: "json",
                                         data: addAntiForgeryToken
@@ -159,17 +164,18 @@
                             ]
                         });
                     });
-                </script>
-                <script>
-                    $(document).ready(function() {
-                        $('#search-log').click(function() {
-                            var grid = $('#activityLog-grid').data('kendoGrid');
-                            grid.dataSource.page(1); //new search. Set page size to 1
-                            //grid.dataSource.read(); we already loaded the grid above using "page" function
-                            return false;
+                    </script>
+                    <script>
+                        $(document).ready(function () {
+                            $('#search-log').click(function () {
+                                var grid = $('#activityLog-grid').data('kendoGrid');
+                                grid.dataSource.page(1); //new search. Set page size to 1
+                                //grid.dataSource.read(); we already loaded the grid above using "page" function
+                                return false;
+                            });
                         });
-                    });
-                </script>
+                    </script>
+                </div>
             </div>
         </div>
     </div>
