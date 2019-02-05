@@ -1,7 +1,5 @@
 ﻿@model CategoryModel
 
-@inject Nop.Services.Common.IGenericAttributeService genericAttributeService
-@inject IWorkContext workContext
 @{
     const string hideInfoBlockAttributeName = "CategoryPage.HideInfoBlock";
     var hideInfoBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideInfoBlockAttributeName);
@@ -17,7 +15,6 @@
 
     const string hideProductsBlockAttributeName = "CategoryPage.HideProductsBlock";
     var hideProductsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideProductsBlockAttributeName);
-
 }
 
 <div asp-validation-summary="All"></div>
