@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading;
 using Microsoft.AspNetCore.Http;
 
 namespace Nop.Core.Caching
@@ -12,7 +13,9 @@ namespace Nop.Core.Caching
     public partial class PerRequestCacheManager : ICacheManager
     {
         #region Fields
+        private static readonly TimeSpan s_lockTimeout = TimeSpan.FromMinutes(2);
 
+        private readonly ReaderWriterLock _lock;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
         #endregion
@@ -22,6 +25,7 @@ namespace Nop.Core.Caching
         public PerRequestCacheManager(IHttpContextAccessor httpContextAccessor)
         {
             this._httpContextAccessor = httpContextAccessor;
+            _lock = new ReaderWriterLock();
         }
 
         #endregion
@@ -50,22 +54,30 @@ namespace Nop.Core.Caching
         /// <returns>The cached value associated with the specified key</returns>
         public virtual T Get<T>(string key, Func<T> acquire, int? cacheTime = null)
         {
-            var items = GetItems();
-            if (items == null)
-                return acquire();
+            _lock.AcquireReaderLock(s_lockTimeout);
+            try
+            {
+                var items = GetItems();
+                if (items == null)
+                    return acquire();
 
-            //item already is in cache, so return it
-            if (items[key] != null)
-                return (T)items[key];
+                //item already is in cache, so return it
+                if (items[key] != null)
+                    return (T) items[key];
 
-            //or create it using passed function
-            var result = acquire();
+                //or create it using passed function
+                var result = acquire();
 
-            //and set in cache (if cache time is defined)
-            if (result != null && (cacheTime ?? NopCachingDefaults.CacheTime) > 0)
-                items[key] = result;
+                //and set in cache (if cache time is defined)
+                if (result != null && (cacheTime ?? NopCachingDefaults.CacheTime) > 0)
+                    items[key] = result;
 
-            return result;
+                return result;
+            }
+            finally
+            {
+                _lock.ReleaseReaderLock();
+            }
         }
 
         /// <summary>
@@ -76,12 +88,21 @@ namespace Nop.Core.Caching
         /// <param name="cacheTime">Cache time in minutes</param>
         public virtual void Set(string key, object data, int cacheTime)
         {
-            var items = GetItems();
-            if (items == null)
-                return;
+            _lock.AcquireWriterLock(s_lockTimeout);
 
-            if (data != null)
-                items[key] = data;
+            try
+            {
+                var items = GetItems();
+                if (items == null)
+                    return;
+
+                if (data != null)
+                    items[key] = data;
+            }
+            finally
+            {
+                _lock.ReleaseWriterLock();
+            }
         }
 
         /// <summary>
@@ -91,9 +112,18 @@ namespace Nop.Core.Caching
         /// <returns>True if item already is in cache; otherwise false</returns>
         public virtual bool IsSet(string key)
         {
-            var items = GetItems();
+            _lock.AcquireReaderLock(s_lockTimeout);
 
-            return items?[key] != null;
+            try
+            {
+                var items = GetItems();
+
+                return items?[key] != null;
+            }
+            finally
+            {
+                _lock.ReleaseReaderLock();
+            }
         }
 
         /// <summary>
@@ -102,9 +132,18 @@ namespace Nop.Core.Caching
         /// <param name="key">Key of cached item</param>
         public virtual void Remove(string key)
         {
-            var items = GetItems();
+            _lock.AcquireWriterLock(s_lockTimeout);
 
-            items?.Remove(key);
+            try
+            {
+                var items = GetItems();
+
+                items?.Remove(key);
+            }
+            finally
+            {
+                _lock.ReleaseWriterLock();
+            }
         }
 
         /// <summary>
@@ -113,18 +152,30 @@ namespace Nop.Core.Caching
         /// <param name="pattern">String key pattern</param>
         public virtual void RemoveByPattern(string pattern)
         {
-            var items = GetItems();
-            if (items == null)
-                return;
+            _lock.AcquireWriterLock(s_lockTimeout);
 
-            //get cache keys that matches pattern
-            var regex = new Regex(pattern, RegexOptions.Singleline | RegexOptions.Compiled | RegexOptions.IgnoreCase);
-            var matchesKeys = items.Keys.Select(p => p.ToString()).Where(key => regex.IsMatch(key)).ToList();
-
-            //remove matching values
-            foreach (var key in matchesKeys)
+            try
             {
-                items.Remove(key);
+                var items = GetItems();
+                if (items == null)
+                {
+                    return;
+                }
+
+                //get cache keys that matches pattern
+                var regex = new Regex(pattern,
+                    RegexOptions.Singleline | RegexOptions.Compiled | RegexOptions.IgnoreCase);
+                var matchesKeys = items.Keys.Select(p => p.ToString()).Where(key => regex.IsMatch(key)).ToList();
+
+                //remove matching values
+                foreach (var key in matchesKeys)
+                {
+                    items.Remove(key);
+                }
+            }
+            finally
+            {
+                _lock.ReleaseWriterLock();
             }
         }
 
@@ -133,9 +184,18 @@ namespace Nop.Core.Caching
         /// </summary>
         public virtual void Clear()
         {
-            var items = GetItems();
+            _lock.AcquireWriterLock(s_lockTimeout);
 
-            items?.Clear();
+            try
+            {
+                var items = GetItems();
+
+                items?.Clear();
+            }
+            finally
+            {
+                _lock.ReleaseWriterLock();
+            }
         }
 
         /// <summary>
