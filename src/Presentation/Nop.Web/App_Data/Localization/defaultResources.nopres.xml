@@ -14262,6 +14262,9 @@
   <LocaleResource Name="Admin.Vendors.Fields.SeName.Hint">
     <Value>Set a search engine friendly page name e.g. 'the-best-vendor' to make your page URL 'http://www.yourStore.com/the-best-vendor'. Leave empty to generate it automatically based on the name of the vendor.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Display">
+    <Value>Display</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Vendors.Info">
     <Value>Vendor Info</Value>
   </LocaleResource>

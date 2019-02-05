@@ -4,10 +4,13 @@
     const string hideInfoBlockAttributeName = "VendorPage.HideInfoBlock";
     var hideInfoBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideInfoBlockAttributeName);
 
+    const string hideDisplayBlockAttributeName = "VendorPage.HideDisplayBlock";
+    var hideDisplayBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideDisplayBlockAttributeName);
+
     const string hideSeoBlockAttributeName = "VendorPage.HideSEOBlock";
     var hideSeoBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSeoBlockAttributeName);
 
-    const string hideVendorNotesBlockAttributeName = "VendorPage.HideMappingsBlock";
+    const string hideVendorNotesBlockAttributeName = "VendorPage.HideNotesBlock";
     var hideVendorNotesBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideVendorNotesBlockAttributeName);
 }
 
@@ -26,6 +29,7 @@
 
         <nop-panels id="vendor-panels">
             <nop-panel asp-name="vendor-info" asp-title="@T("Admin.Vendors.Info")" asp-hide-block-attribute-name="@hideInfoBlockAttributeName" asp-hide="@hideInfoBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-panel>
+            <nop-panel asp-name="vendor-display" asp-title="@T("Admin.Vendors.Display")" asp-hide-block-attribute-name="@hideDisplayBlockAttributeName" asp-hide="@hideDisplayBlock" asp-advanced="true">@await Html.PartialAsync("_CreateOrUpdate.Display", Model)</nop-panel>
             <nop-panel asp-name="vendor-seo" asp-title="@T("Admin.Common.SEO")" asp-hide-block-attribute-name="@hideSeoBlockAttributeName" asp-hide="@hideSeoBlock" asp-advanced="true">@await Html.PartialAsync("_CreateOrUpdate.Seo", Model)</nop-panel>
             @if (Model.Id > 0)
             {

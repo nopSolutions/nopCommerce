@@ -263,6 +263,9 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Tax">
     <Value></Value>
   </LocaleResource>  
+  <LocaleResource Name="Admin.Vendors.Display">
+    <Value>Display</Value>
+  </LocaleResource>
 </Language>
 '
 
