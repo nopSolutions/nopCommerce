@@ -1,0 +1,38 @@
+@model PluginsConfigurationModel
+
+@inject IEventPublisher eventPublisher
+
+@{
+    //page title
+    ViewBag.Title = T("Admin.Configuration.Plugins").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Plugins");
+}
+
+<nop-antiforgery-token />
+<form asp-controller="Plugin" asp-action="List" id="plugins-form-list">
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.Configuration.Plugins")
+        </h1>
+    </div>
+
+    <div class="content">
+        <div class="form-horizontal">
+            <nop-tabs id="plugins-tabs">
+                <nop-tab asp-name="tab-local-plugins" asp-title="@T("Admin.Configuration.Plugins.Local")" asp-default="true">@await Html.PartialAsync("_List.Plugins", Model.PluginsLocal)</nop-tab>
+                <nop-tab asp-name="tab-all-plugins-and-themes" asp-title="@T("Admin.Configuration.Plugins.OfficialFeed")">@await Html.PartialAsync("_List.OfficialFeed", Model.AllPluginsAndThemes)</nop-tab>
+            </nop-tabs>
+        </div>
+    </div>
+
+    @{
+        //custom tabs
+        var eventMessage = new AdminTabStripCreated(this.Html, "plugins-tabs");
+        eventPublisher.Publish(eventMessage);
+        foreach (var eventBlock in eventMessage.BlocksToRender)
+        {
+        @eventBlock
+        }
+    }
+</form>

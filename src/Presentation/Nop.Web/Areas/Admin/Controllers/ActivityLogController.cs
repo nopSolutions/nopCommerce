@@ -43,7 +43,18 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Methods
 
-        public virtual IActionResult ActivityTypes()
+        public virtual  IActionResult List()
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActivityLog))
+                return AccessDeniedView();
+
+            //prepare model
+            var model = _activityLogModelFactory.PrepareActivityLogContainerModel(new ActivityLogContainerModel());
+
+            return View(model);
+        }
+
+        public virtual IActionResult ListTypes()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageActivityLog))
                 return AccessDeniedView();
@@ -54,7 +65,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             return View(model);
         }
 
-        [HttpPost, ActionName("SaveTypes")]
+        [HttpPost, ActionName("ListTypes")]
         public virtual IActionResult SaveTypes(IFormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageActivityLog))
@@ -82,10 +93,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             //selected tab
             SaveSelectedTabName();
 
-            return RedirectToAction("ActivityTypes");
+            return RedirectToAction("List");
         }
 
-        public virtual IActionResult ActivityLogs()
+        public virtual IActionResult ListLogs()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageActivityLog))
                 return AccessDeniedView();
@@ -108,7 +119,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             return Json(model);
         }
 
-        public virtual IActionResult ActivityLogDelete(int id)
+        public virtual IActionResult AcivityLogDelete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageActivityLog))
                 return AccessDeniedView();
@@ -136,7 +147,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //activity log
             _customerActivityService.InsertActivity("DeleteActivityLog", _localizationService.GetResource("ActivityLog.DeleteActivityLog"));
 
-            return RedirectToAction("ActivityLogs");
+            return RedirectToAction("List");
         }
 
         #endregion

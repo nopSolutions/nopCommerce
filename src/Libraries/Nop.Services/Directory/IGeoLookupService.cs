@@ -6,7 +6,7 @@ namespace Nop.Services.Directory
     public partial interface IGeoLookupService
     {
         /// <summary>
-        /// Get country ISO code
+        /// Get country name
         /// </summary>
         /// <param name="ipAddress">IP address</param>
         /// <returns>Country name</returns>

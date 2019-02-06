@@ -1,0 +1,39 @@
+@model BlogContentModel
+
+@inject IEventPublisher eventPublisher
+
+@{
+    //page title
+    ViewBag.Title = T("Admin.ContentManagement.Blog").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Blog");
+}
+
+<nop-antiforgery-token />
+
+<form asp-controller="Blog" asp-action="List" method="post">
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.ContentManagement.Blog")
+        </h1>
+    </div>
+
+    <div class="content">
+        <div class="form-horizontal">
+            <nop-tabs id="blog-tabs">
+                <nop-tab asp-name="blog-posts" asp-title="@T("Admin.ContentManagement.Blog.BlogPosts")" asp-default="true">@await Html.PartialAsync("_List.BlogPosts", Model.BlogPosts)</nop-tab>
+                <nop-tab asp-name="blog-comments" asp-title="@T("Admin.ContentManagement.Blog.Comments")">@await Html.PartialAsync("_List.Comments", Model.BlogComments)</nop-tab>
+            </nop-tabs>
+        </div>
+    </div>
+
+    @{
+        //custom tabs
+        var eventMessage = new AdminTabStripCreated(this.Html, "blog-tabs");
+        eventPublisher.Publish(eventMessage);
+        foreach (var eventBlock in eventMessage.BlocksToRender)
+        {
+        @eventBlock
+        }
+    }
+</form>
