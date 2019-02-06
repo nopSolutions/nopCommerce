@@ -45,7 +45,7 @@
             <div class="panel panel-default panel-search">
                 <div class="panel-body">
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-5">
                             <div class="form-group">
                                 <div class="col-md-4">
                                     <nop-label asp-for="CreatedOnFrom" />
@@ -70,6 +70,8 @@
                                     <nop-editor asp-for="SearchText" />
                                 </div>
                             </div>
+                        </div>
+                        <div class="col-md-7">
                             <div class="form-group">
                                 <div class="col-md-4">
                                     <nop-label asp-for="SearchApprovedId" />
@@ -80,57 +82,57 @@
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4">
-                                    <nop-label asp-for="SearchProductId" />
+                                    <nop-label asp-for="SearchProductId"/>
                                 </div>
                                 <div class="col-md-8">
-                                    <input type="text" class="form-control" id="search-product-name" autocomplete="off" />
+                                    <input type="text" class="form-control" id="search-product-name" autocomplete="off"/>
                                     <script>
-                                    $(document).ready(function() {
-                                        $('#search-product-name').autocomplete({
-                                            delay: 500,
-                                            minLength: 3,
-                                            source: '@(Url.Action("ProductSearchAutoComplete"))',
-                                            select: function(event, ui) {
-                                                $('#@Html.IdFor(model => model.SearchProductId)').val(ui.item.productid);
-                                                $('#search-product-friendly-name').text(ui.item.label);
-                                                $('#search-product-clear').show();
-                                                return false;
-                                            }
+                                        $(document).ready(function() {
+                                            $('#search-product-name').autocomplete({
+                                                delay: 500,
+                                                minLength: 3,
+                                                source: '@(Url.Action("ProductSearchAutoComplete"))',
+                                                select: function(event, ui) {
+                                                    $('#@Html.IdFor(model => model.SearchProductId)').val(ui.item.productid);
+                                                    $('#search-product-friendly-name').text(ui.item.label);
+                                                    $('#search-product-clear').show();
+                                                    return false;
+                                                }
+                                            });
                                         });
-                                    });
                                     </script>
 
                                     <span id="search-product-friendly-name"></span>
                                     <button type="button" id="search-product-clear" class="btn bg-gray" style="display: none; margin-top: 5px;">@T("Admin.Common.Clear")</button>
-                                    <input asp-for="SearchProductId" autocomplete = "off" style = "display:none;" />
+                                    <input asp-for="SearchProductId" autocomplete="off" style="display: none;"/>
 
                                     <script>
-                                    //remove button
-                                    $('#search-product-clear').click(function() {
-                                        $('#@Html.IdFor(model => model.SearchProductId)').val('0');
-                                        $('#search-product-friendly-name').text('');
-                                        $('#search-product-clear').hide();
-                                        return false;
-                                    });
+                                        //remove button
+                                        $('#search-product-clear').click(function() {
+                                            $('#@Html.IdFor(model => model.SearchProductId)').val('0');
+                                            $('#search-product-friendly-name').text('');
+                                            $('#search-product-clear').hide();
+                                            return false;
+                                        });
                                     </script>
                                 </div>
                             </div>
                             <div class="form-group" @(Model.HideStoresList ? Html.Raw("style=\"display:none\"") : null)>
                                 <div class="col-md-4">
-                                    <nop-label asp-for="SearchStoreId" />
+                                    <nop-label asp-for="SearchStoreId"/>
                                 </div>
                                 <div class="col-md-8">
-                                    <nop-select asp-for="SearchStoreId" asp-items="Model.AvailableStores" />
+                                    <nop-select asp-for="SearchStoreId" asp-items="Model.AvailableStores"/>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <div class="col-md-8 col-md-offset-4">
-                                    <button type="button" id="search-productreviews" class="btn btn-primary btn-search">
-                                        <i class="fa fa-search"></i>
-                                        @T("Admin.Common.Search")
-                                    </button>
-                                </div>
-                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-7 col-md-offset-5">
+                            <button type="button" id="search-productreviews" class="btn btn-primary btn-search">
+                                <i class="fa fa-search"></i>
+                                @T("Admin.Common.Search")
+                            </button>
                         </div>
                     </div>
                 </div>

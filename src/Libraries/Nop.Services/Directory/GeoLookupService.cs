@@ -84,7 +84,7 @@ namespace Nop.Services.Directory
         #region Methods
 
         /// <summary>
-        /// Get country name
+        /// Get country ISO code
         /// </summary>
         /// <param name="ipAddress">IP address</param>
         /// <returns>Country name</returns>

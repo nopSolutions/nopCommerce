@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Net.Http.Headers;
 using Nop.Core;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
@@ -193,6 +194,11 @@ namespace Nop.Plugin.Payments.PayPalStandard
             //get store location
             var storeLocation = _webHelper.GetStoreLocation();
 
+            //choosing correct order address
+            var orderAddress = postProcessPaymentRequest.Order.PickUpInStore
+                    ? postProcessPaymentRequest.Order.PickupAddress
+                    : postProcessPaymentRequest.Order.ShippingAddress;
+
             //create query parameters
             return new Dictionary<string, string>
             {
@@ -220,15 +226,15 @@ namespace Nop.Plugin.Payments.PayPalStandard
                 //shipping address, if exists
                 ["no_shipping"] = postProcessPaymentRequest.Order.ShippingStatus == ShippingStatus.ShippingNotRequired ? "1" : "2",
                 ["address_override"] = postProcessPaymentRequest.Order.ShippingStatus == ShippingStatus.ShippingNotRequired ? "0" : "1",
-                ["first_name"] = postProcessPaymentRequest.Order.ShippingAddress?.FirstName,
-                ["last_name"] = postProcessPaymentRequest.Order.ShippingAddress?.LastName,
-                ["address1"] = postProcessPaymentRequest.Order.ShippingAddress?.Address1,
-                ["address2"] = postProcessPaymentRequest.Order.ShippingAddress?.Address2,
-                ["city"] = postProcessPaymentRequest.Order.ShippingAddress?.City,
-                ["state"] = postProcessPaymentRequest.Order.ShippingAddress?.StateProvince?.Abbreviation,
-                ["country"] = postProcessPaymentRequest.Order.ShippingAddress?.Country?.TwoLetterIsoCode,
-                ["zip"] = postProcessPaymentRequest.Order.ShippingAddress?.ZipPostalCode,
-                ["email"] = postProcessPaymentRequest.Order.ShippingAddress?.Email
+                ["first_name"] = orderAddress?.FirstName,
+                ["last_name"] = orderAddress?.LastName,
+                ["address1"] = orderAddress?.Address1,
+                ["address2"] = orderAddress?.Address2,
+                ["city"] = orderAddress?.City,
+                ["state"] = orderAddress?.StateProvince?.Abbreviation,
+                ["country"] = orderAddress?.Country?.TwoLetterIsoCode,
+                ["zip"] = orderAddress?.ZipPostalCode,
+                ["email"] = orderAddress?.Email
             };
         }
 
