@@ -138,29 +138,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Customer reports
 
-        public virtual IActionResult RegisteredCustomers()
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedView();
-
-            //prepare model
-            var model = _reportModelFactory.PrepareCustomerReportsSearchModel(new CustomerReportsSearchModel());
-
-            return View(model);
-        }
-
-        public virtual IActionResult BestCustomersByOrderTotal()
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedView();
-
-            //prepare model
-            var model = _reportModelFactory.PrepareCustomerReportsSearchModel(new CustomerReportsSearchModel());
-
-            return View(model);
-        }
-
-        public virtual IActionResult BestCustomersByNumberOfOrders()
+        public virtual IActionResult Customers()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();

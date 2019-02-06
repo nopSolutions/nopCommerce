@@ -373,6 +373,10 @@ namespace Nop.Web.Factories
                 return;
 
             //we have at least one associated product
+            //compare products
+            priceModel.DisableAddToCompareListButton = !_catalogSettings.CompareProductsEnabled;
+            //priceModel.AvailableForPreOrder = false;
+
             if (_permissionService.Authorize(StandardPermissionProvider.DisplayPrices))
             {
                 //find a minimum possible price

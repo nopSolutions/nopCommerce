@@ -42,8 +42,18 @@ namespace Nop.Core.Plugins
         /// <returns>Plugin instance</returns>
         public virtual TPlugin Instance<TPlugin>() where TPlugin : class, IPlugin
         {
-            //try to resolve plugin as unregistered service
-            var instance = EngineContext.Current.ResolveUnregistered(PluginType);
+            object instance = null;
+
+            //try to resolve plugin
+            try
+            {
+                instance = EngineContext.Current.Resolve(PluginType);
+            }
+            catch { }
+
+            //not resolved, so try to resolve plugin as unregistered service
+            if (instance == null)
+                instance = EngineContext.Current.ResolveUnregistered(PluginType);
 
             //try to get typed instance
             var typedInstance = instance as TPlugin;

@@ -11,8 +11,6 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
 
         public int ProductReviewId { get; set; }
 
-        public bool IsAnyReviewTypes { get; set; }
-
         #endregion
     }
 }

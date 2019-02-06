@@ -212,8 +212,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
             searchModel.ProductReviewId = productReview.Id;
 
-            searchModel.IsAnyReviewTypes = productReview.ProductReviewReviewTypeMappingEntries.Any();
-
             //prepare page parameters
             searchModel.SetGridPageSize();
 

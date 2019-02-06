@@ -231,7 +231,7 @@ namespace Nop.Core.Infrastructure
         /// <returns>Resolved service</returns>
         public T Resolve<T>() where T : class
         {
-            return (T)Resolve(typeof(T));
+            return (T)GetServiceProvider().GetRequiredService(typeof(T));
         }
 
         /// <summary>
@@ -241,7 +241,7 @@ namespace Nop.Core.Infrastructure
         /// <returns>Resolved service</returns>
         public object Resolve(Type type)
         {
-            return GetServiceProvider().GetService(type);
+            return GetServiceProvider().GetRequiredService(type);
         }
 
         /// <summary>
