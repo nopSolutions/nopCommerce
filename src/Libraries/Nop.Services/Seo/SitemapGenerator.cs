@@ -206,6 +206,7 @@ namespace Nop.Services.Seo
                 sitemapUrls.Add(GetLocalizedSitemapUrl("Boards"));
             }
 
+            /*
             //categories
             if (_commonSettings.SitemapIncludeCategories)
                 sitemapUrls.AddRange(GetCategoryUrls());
@@ -221,6 +222,7 @@ namespace Nop.Services.Seo
             //product tags
             if (_commonSettings.SitemapIncludeProductTags)
                 sitemapUrls.AddRange(GetProductTagUrls());
+            */
 
             //topics
             sitemapUrls.AddRange(GetTopicUrls());

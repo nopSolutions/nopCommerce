@@ -398,6 +398,39 @@ set @resources='
   <LocaleResource Name="Admin.Vendors.Fields.PageSizeOptions">
     <Value>Page Size options</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.IncludeInSitemap">
+    <Value>Include in sitemap</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.IncludeInSitemap.Hint">
+    <Value>Check to include this blog post in the sitemap.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SitemapIncludeBlogPosts">
+    <Value>Sitemap includes blog posts</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SitemapIncludeBlogPosts.Hint">
+    <Value>Check if you want to include blog posts in sitemap.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SitemapIncludeTopics">
+    <Value>Sitemap includes topics</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SitemapIncludeTopics.Hint">
+    <Value>Check if you want to include topics in sitemap.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Sitemap.BlogPosts">
+    <Value>Blog posts</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SitemapIncludeNews">
+    <Value>Sitemap includes news items</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SitemapIncludeNews.Hint">
+    <Value>Check if you want to include news items in sitemap.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Sitemap.News">
+    <Value>News</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.Sitemap.Instructions">
+    <Value><![CDATA[<p>These settings do not apply to sitemap.xml, only for your site map. You can configure generation for sitemap.xml on all settings page.</p>]]></Value>
+  </LocaleResource> 
 </Language>'
 
 CREATE TABLE #LocaleStringResourceTmp
@@ -482,6 +515,23 @@ WHERE [Title] IS NULL OR [Title] = ''
 GO
 
 ALTER TABLE [Topic] ALTER COLUMN [Title] nvarchar(max) NOT NULL
+GO
+
+-- #3236
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[BlogPost]') and NAME='IncludeInSitemap')
+BEGIN
+	ALTER TABLE [BlogPost]
+	ADD [IncludeInSitemap] bit NULL
+END
+GO
+
+UPDATE [BlogPost]
+SET [IncludeInSitemap] = 0
+WHERE [IncludeInSitemap] IS NULL
+GO
+
+ALTER TABLE [BlogPost]
+ALTER COLUMN [IncludeInSitemap] bit NOT NULL
 GO
 
 -- update the "ProductLoadAllPaged" stored procedure
@@ -1188,6 +1238,79 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'catalogsettings.useajaxl
 BEGIN
     INSERT [Setting] ([Name], [Value], [StoreId])
     VALUES (N'catalogsettings.useajaxloadmenu', N'False', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'sitemapsettings.sitemapincludetopics')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'sitemapsettings.sitemapincludetopics', N'True', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'sitemapsettings.sitemapincludeblogposts')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'sitemapsettings.sitemapincludeblogposts', N'True', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'sitemapsettings.sitemapincludenews')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'sitemapsettings.sitemapincludenews', N'True', 0)
+END
+GO
+
+--update old settings (#3236)
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'sitemapsettings.sitemapenabled')
+BEGIN
+	UPDATE [Setting] 
+	SET [Name] = 'sitemapsettings.sitemapenabled'
+	WHERE [Name] = 'commonsettings.sitemapenabled'
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'sitemapsettings.sitemapincludecategories')
+BEGIN
+	UPDATE [Setting]
+	SET [Name] = 'sitemapsettings.sitemapincludecategories'
+	WHERE [Name] = 'commonsettings.sitemapincludecategories'
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'sitemapsettings.sitemapincludemanufacturers')
+BEGIN
+	UPDATE [Setting]
+	SET [Name] = 'sitemapsettings.sitemapincludemanufacturers'
+	WHERE [Name] = 'commonsettings.sitemapincludemanufacturers'
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'sitemapsettings.sitemapincludeproducts')
+BEGIN
+	UPDATE [Setting]
+	SET [Name] = 'sitemapsettings.sitemapincludeproducts'
+	WHERE [Name] = 'commonsettings.sitemapincludeproducts'
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'sitemapsettings.sitemapincludeproducttags')
+BEGIN
+	UPDATE [Setting]
+	SET [Name] = 'sitemapsettings.sitemapincludeproducttags'
+	WHERE [Name] = 'commonsettings.sitemapincludeproducttags'
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'sitemapsettings.sitemappagesize')
+BEGIN
+	UPDATE [Setting]
+	SET [Name] = 'sitemapsettings.sitemappagesize'
+	WHERE [Name] = 'commonsettings.sitemappagesize'
 END
 GO
 

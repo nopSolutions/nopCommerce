@@ -20,6 +20,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Infrastructure;
+using Nop.Services.Blogs;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -27,6 +28,7 @@ using Nop.Services.Directory;
 using Nop.Services.Forums;
 using Nop.Services.Localization;
 using Nop.Services.Media;
+using Nop.Services.News;
 using Nop.Services.Orders;
 using Nop.Services.Security;
 using Nop.Services.Seo;
@@ -54,6 +56,7 @@ namespace Nop.Web.Factories
         private readonly DisplayDefaultFooterItemSettings _displayDefaultFooterItemSettings;
         private readonly ForumSettings _forumSettings;
         private readonly IActionContextAccessor _actionContextAccessor;
+        private readonly IBlogService _blogService;
         private readonly ICategoryService _categoryService;
         private readonly ICurrencyService _currencyService;
         private readonly ICustomerService _customerService;
@@ -62,14 +65,15 @@ namespace Nop.Web.Factories
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
         private readonly IManufacturerService _manufacturerService;
+        private readonly INewsService _newsService;
         private readonly INopFileProvider _fileProvider;
         private readonly IPageHeadBuilder _pageHeadBuilder;
         private readonly IPermissionService _permissionService;
         private readonly IPictureService _pictureService;
         private readonly IProductService _productService;
         private readonly IProductTagService _productTagService;
-        private readonly ISitemapGenerator _sitemapGenerator;
         private readonly IShoppingCartService _shoppingCartService;
+        private readonly ISitemapGenerator _sitemapGenerator;
         private readonly IStaticCacheManager _cacheManager;
         private readonly IStoreContext _storeContext;
         private readonly IThemeContext _themeContext;
@@ -81,6 +85,7 @@ namespace Nop.Web.Factories
         private readonly IWorkContext _workContext;
         private readonly LocalizationSettings _localizationSettings;
         private readonly NewsSettings _newsSettings;
+        private readonly SitemapSettings _sitemapSettings;
         private readonly StoreInformationSettings _storeInformationSettings;
         private readonly VendorSettings _vendorSettings;
 
@@ -88,7 +93,8 @@ namespace Nop.Web.Factories
 
         #region Ctor
 
-        public CommonModelFactory(BlogSettings blogSettings,
+        public CommonModelFactory(
+            BlogSettings blogSettings,
             CaptchaSettings captchaSettings,
             CatalogSettings catalogSettings,
             CommonSettings commonSettings,
@@ -96,6 +102,7 @@ namespace Nop.Web.Factories
             DisplayDefaultFooterItemSettings displayDefaultFooterItemSettings,
             ForumSettings forumSettings,
             IActionContextAccessor actionContextAccessor,
+            IBlogService blogService,
             ICategoryService categoryService,
             ICurrencyService currencyService,
             ICustomerService customerService,
@@ -104,14 +111,15 @@ namespace Nop.Web.Factories
             ILanguageService languageService,
             ILocalizationService localizationService,
             IManufacturerService manufacturerService,
+            INewsService newsService,
             INopFileProvider fileProvider,
             IPageHeadBuilder pageHeadBuilder,
             IPermissionService permissionService,
             IPictureService pictureService,
             IProductService productService,
             IProductTagService productTagService,
-            ISitemapGenerator sitemapGenerator,
             IShoppingCartService shoppingCartService,
+            ISitemapGenerator sitemapGenerator,
             IStaticCacheManager cacheManager,
             IStoreContext storeContext,
             IThemeContext themeContext,
@@ -123,46 +131,52 @@ namespace Nop.Web.Factories
             IWorkContext workContext,
             LocalizationSettings localizationSettings,
             NewsSettings newsSettings,
+            SitemapSettings sitemapSettings,
             StoreInformationSettings storeInformationSettings,
             VendorSettings vendorSettings)
         {
+            _actionContextAccessor = actionContextAccessor;
+            _blogService = blogService;
             _blogSettings = blogSettings;
+            _cacheManager = cacheManager;
             _captchaSettings = captchaSettings;
             _catalogSettings = catalogSettings;
-            _commonSettings = commonSettings;
-            _customerSettings = customerSettings;
-            _displayDefaultFooterItemSettings = displayDefaultFooterItemSettings;
-            _forumSettings = forumSettings;
-            _actionContextAccessor = actionContextAccessor;
             _categoryService = categoryService;
+            _commonSettings = commonSettings;
             _currencyService = currencyService;
             _customerService = customerService;
+            _customerSettings = customerSettings;
+            _displayDefaultFooterItemSettings = displayDefaultFooterItemSettings;
+            _fileProvider = fileProvider;
             _forumService = forumService;
+            _forumSettings = forumSettings;
             _genericAttributeService = genericAttributeService;
             _languageService = languageService;
             _localizationService = localizationService;
+            _localizationSettings = localizationSettings;
             _manufacturerService = manufacturerService;
-            _fileProvider = fileProvider;
+            _newsService = newsService;
+            _newsSettings = newsSettings;
             _pageHeadBuilder = pageHeadBuilder;
             _permissionService = permissionService;
             _pictureService = pictureService;
             _productService = productService;
             _productTagService = productTagService;
+            _shoppingCartService = shoppingCartService;
             _sitemapGenerator = sitemapGenerator;
+            _sitemapSettings = sitemapSettings;
             _shoppingCartService = shoppingCartService;
             _cacheManager = cacheManager;
             _storeContext = storeContext;
+            _storeInformationSettings = storeInformationSettings;
             _themeContext = themeContext;
             _themeProvider = themeProvider;
             _topicService = topicService;
             _urlHelperFactory = urlHelperFactory;
             _urlRecordService = urlRecordService;
+            _vendorSettings = vendorSettings;
             _webHelper = webHelper;
             _workContext = workContext;
-            _localizationSettings = localizationSettings;
-            _newsSettings = newsSettings;
-            _storeInformationSettings = storeInformationSettings;
-            _vendorSettings = vendorSettings;
         }
 
         #endregion
@@ -427,7 +441,7 @@ namespace Nop.Web.Factories
                 StoreName = _localizationService.GetLocalized(_storeContext.CurrentStore, x => x.Name),
                 WishlistEnabled = _permissionService.Authorize(StandardPermissionProvider.EnableWishlist),
                 ShoppingCartEnabled = _permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart),
-                SitemapEnabled = _commonSettings.SitemapEnabled,
+                SitemapEnabled = _sitemapSettings.SitemapEnabled,
                 WorkingLanguageId = _workContext.WorkingLanguage.Id,
                 BlogEnabled = _blogSettings.Enabled,
                 CompareProductsEnabled = _catalogSettings.CompareProductsEnabled,
@@ -599,16 +613,49 @@ namespace Nop.Web.Factories
                 });
 
                 //at the moment topics are in general category too
-                var topics = _topicService.GetAllTopics(_storeContext.CurrentStore.Id).Where(topic => topic.IncludeInSitemap);
-                model.Items.AddRange(topics.Select(topic => new SitemapModel.SitemapItemModel
+                if (_sitemapSettings.SitemapIncludeTopics)
                 {
-                    GroupTitle = commonGroupTitle,
-                    Name = _localizationService.GetLocalized(topic, x => x.Title),
-                    Url = urlHelper.RouteUrl("Topic", new { SeName = _urlRecordService.GetSeName(topic) })
-                }));
+                    var topics = _topicService.GetAllTopics(storeId: _storeContext.CurrentStore.Id)
+                        .Where(topic => topic.IncludeInSitemap);
+
+                    model.Items.AddRange(topics.Select(topic => new SitemapModel.SitemapItemModel
+                    {
+                        GroupTitle = commonGroupTitle,
+                        Name = _localizationService.GetLocalized(topic, x => x.Title),
+                        Url = urlHelper.RouteUrl("Topic", new { SeName = _urlRecordService.GetSeName(topic) })
+                    }));
+                }
+
+                //blog posts
+                if (_sitemapSettings.SitemapIncludeBlogPosts && _blogSettings.Enabled)
+                {
+                    var blogPostsGroupTitle = _localizationService.GetResource("Sitemap.BlogPosts");
+                    var blogPosts = _blogService.GetAllBlogPosts(storeId: _storeContext.CurrentStore.Id)
+                        .Where(p => p.IncludeInSitemap);
+
+                    model.Items.AddRange(blogPosts.Select(post => new SitemapModel.SitemapItemModel
+                    {
+                        GroupTitle = blogPostsGroupTitle,
+                        Name = post.Title,
+                        Url = urlHelper.RouteUrl("BlogPost", new { SeName = _urlRecordService.GetSeName(post) })
+                    }));
+                }
+
+                //news
+                if (_sitemapSettings.SitemapIncludeNews && _newsSettings.Enabled)
+                {
+                    var newsGroupTitle = _localizationService.GetResource("Sitemap.News");
+                    var news = _newsService.GetAllNews(storeId: _storeContext.CurrentStore.Id);
+                    model.Items.AddRange(news.Select(newsItem => new SitemapModel.SitemapItemModel
+                    {
+                        GroupTitle = newsGroupTitle,
+                        Name = newsItem.Title,
+                        Url = urlHelper.RouteUrl("NewsItem", new { SeName = _urlRecordService.GetSeName(newsItem) })
+                    }));
+                }
 
                 //categories
-                if (_commonSettings.SitemapIncludeCategories)
+                if (_sitemapSettings.SitemapIncludeCategories)
                 {
                     var categoriesGroupTitle = _localizationService.GetResource("Sitemap.Categories");
                     var categories = _categoryService.GetAllCategories(storeId: _storeContext.CurrentStore.Id);
@@ -621,7 +668,7 @@ namespace Nop.Web.Factories
                 }
 
                 //manufacturers
-                if (_commonSettings.SitemapIncludeManufacturers)
+                if (_sitemapSettings.SitemapIncludeManufacturers)
                 {
                     var manufacturersGroupTitle = _localizationService.GetResource("Sitemap.Manufacturers");
                     var manufacturers = _manufacturerService.GetAllManufacturers(storeId: _storeContext.CurrentStore.Id);
@@ -634,7 +681,7 @@ namespace Nop.Web.Factories
                 }
 
                 //products
-                if (_commonSettings.SitemapIncludeProducts)
+                if (_sitemapSettings.SitemapIncludeProducts)
                 {
                     var productsGroupTitle = _localizationService.GetResource("Sitemap.Products");
                     var products = _productService.SearchProducts(storeId: _storeContext.CurrentStore.Id, visibleIndividuallyOnly: true);
@@ -647,7 +694,7 @@ namespace Nop.Web.Factories
                 }
 
                 //product tags
-                if (_commonSettings.SitemapIncludeProductTags)
+                if (_sitemapSettings.SitemapIncludeProductTags)
                 {
                     var productTagsGroupTitle = _localizationService.GetResource("Sitemap.ProductTags");
                     var productTags = _productTagService.GetAllProductTags();
@@ -663,7 +710,7 @@ namespace Nop.Web.Factories
             });
 
             //prepare model with pagination
-            pageModel.PageSize = Math.Max(pageModel.PageSize, _commonSettings.SitemapPageSize);
+            pageModel.PageSize = Math.Max(pageModel.PageSize, _sitemapSettings.SitemapPageSize);
             pageModel.PageNumber = Math.Max(pageModel.PageNumber, 1);
 
             var pagedItems = new PagedList<SitemapModel.SitemapItemModel>(cachedModel.Items, pageModel.PageNumber - 1, pageModel.PageSize);
@@ -825,7 +872,7 @@ namespace Nop.Web.Factories
                 sb.Append("User-agent: *");
                 sb.Append(newLine);
                 //sitemaps
-                if (_commonSettings.SitemapEnabled)
+                if (_sitemapSettings.SitemapEnabled)
                 {
                     if (_localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
                     {

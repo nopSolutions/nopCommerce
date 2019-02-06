@@ -73,30 +73,6 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public bool PopupForTermsOfServiceLinks { get; set; }
         public bool PopupForTermsOfServiceLinks_OverrideForStore { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.SitemapEnabled")]
-        public bool SitemapEnabled { get; set; }
-        public bool SitemapEnabled_OverrideForStore { get; set; }
-
-        [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.SitemapPageSize")]
-        public int SitemapPageSize { get; set; }
-        public bool SitemapPageSize_OverrideForStore { get; set; }
-
-        [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.SitemapIncludeCategories")]
-        public bool SitemapIncludeCategories { get; set; }
-        public bool SitemapIncludeCategories_OverrideForStore { get; set; }
-
-        [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.SitemapIncludeManufacturers")]
-        public bool SitemapIncludeManufacturers { get; set; }
-        public bool SitemapIncludeManufacturers_OverrideForStore { get; set; }
-
-        [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.SitemapIncludeProducts")]
-        public bool SitemapIncludeProducts { get; set; }
-        public bool SitemapIncludeProducts_OverrideForStore { get; set; }
-
-        [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.SitemapIncludeProductTags")]
-        public bool SitemapIncludeProductTags { get; set; }
-        public bool SitemapIncludeProductTags_OverrideForStore { get; set; }
-
         [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.UseResponseCompression")]
         public bool UseResponseCompression { get; set; }
         public bool UseResponseCompression_OverrideForStore { get; set; }

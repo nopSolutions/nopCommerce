@@ -30,36 +30,6 @@ namespace Nop.Core.Domain.Common
         public bool UseStoredProcedureForLoadingCategories { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether sitemap is enabled
-        /// </summary>
-        public bool SitemapEnabled { get; set; }
-
-        /// <summary>
-        /// Gets or sets the page size for sitemap
-        /// </summary>
-        public int SitemapPageSize { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether to include categories to sitemap
-        /// </summary>
-        public bool SitemapIncludeCategories { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether to include manufacturers to sitemap
-        /// </summary>
-        public bool SitemapIncludeManufacturers { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether to include products to sitemap
-        /// </summary>
-        public bool SitemapIncludeProducts { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether to include product tags to sitemap
-        /// </summary>
-        public bool SitemapIncludeProductTags { get; set; }
-
-        /// <summary>
         /// A list of custom URLs to be added to sitemap.xml (include page names only)
         /// </summary>
         public List<string> SitemapCustomUrls { get; set; }

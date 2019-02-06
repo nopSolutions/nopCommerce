@@ -43,6 +43,7 @@ namespace Nop.Web.Controllers
         private readonly IWorkContext _workContext;
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly LocalizationSettings _localizationSettings;
+        private readonly SitemapSettings _sitemapSettings;
         private readonly StoreInformationSettings _storeInformationSettings;
         private readonly VendorSettings _vendorSettings;
         
@@ -65,6 +66,7 @@ namespace Nop.Web.Controllers
             IWorkContext workContext,
             IWorkflowMessageService workflowMessageService,
             LocalizationSettings localizationSettings,
+            SitemapSettings sitemapSettings,
             StoreInformationSettings storeInformationSettings,
             VendorSettings vendorSettings)
         {
@@ -83,6 +85,7 @@ namespace Nop.Web.Controllers
             _workContext = workContext;
             _workflowMessageService = workflowMessageService;
             _localizationSettings = localizationSettings;
+            _sitemapSettings = sitemapSettings;
             _storeInformationSettings = storeInformationSettings;
             _vendorSettings = vendorSettings;
         }
@@ -283,7 +286,7 @@ namespace Nop.Web.Controllers
         [HttpsRequirement(SslRequirement.No)]
         public virtual IActionResult Sitemap(SitemapPageModel pageModel)
         {
-            if (!_commonSettings.SitemapEnabled)
+            if (!_sitemapSettings.SitemapEnabled)
                 return RedirectToRoute("HomePage");
 
             var model = _commonModelFactory.PrepareSitemapModel(pageModel);
@@ -296,7 +299,7 @@ namespace Nop.Web.Controllers
         [CheckAccessClosedStore(true)]
         public virtual IActionResult SitemapXml(int? id)
         {
-            if (!_commonSettings.SitemapEnabled)
+            if (!_sitemapSettings.SitemapEnabled)
                 return RedirectToRoute("HomePage");
 
             var siteMap = _commonModelFactory.PrepareSitemapXml(id);
