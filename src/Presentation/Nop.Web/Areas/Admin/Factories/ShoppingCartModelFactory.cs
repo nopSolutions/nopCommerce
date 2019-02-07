@@ -170,9 +170,6 @@ namespace Nop.Web.Areas.Admin.Factories
                     //fill in model values from the entity
                     var itemModel = item.ToModel<ShoppingCartItemModel>();
 
-                    //set product name since it does not survive mapping
-                    itemModel.ProductName = item?.Product?.Name;
-
                     //convert dates to the user time
                     itemModel.UpdatedOn = _dateTimeHelper.ConvertToUserTime(item.UpdatedOnUtc, DateTimeKind.Utc);
 
@@ -183,6 +180,9 @@ namespace Nop.Web.Areas.Admin.Factories
                     itemModel.UnitPrice = _priceFormatter.FormatPrice(_taxService.GetProductPrice(item.Product, unitPrice, out var _));
                     var subTotal = _priceCalculationService.GetSubTotal(item);
                     itemModel.Total = _priceFormatter.FormatPrice(_taxService.GetProductPrice(item.Product, subTotal, out _));
+
+                    //set product name since it does not survive mapping
+                    itemModel.ProductName = item?.Product?.Name;
 
                     return itemModel;
                 }),
