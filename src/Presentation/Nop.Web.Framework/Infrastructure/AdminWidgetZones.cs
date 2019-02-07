@@ -274,11 +274,8 @@
         public static string QueuedEmailDetailsButtons => "admin_queued_email_details_buttons";
         public static string QueuedEmailDetailsTop => "admin_queued_email_details_top";
         public static string QueuedEmailListButtons => "admin_queued_email_list_buttons";
+        public static string ReccuringPaymentDetailBlock => "admin_reccuring_payment_details_block";
         public static string ReccuringPaymentDetailsButtons => "admin_reccuring_payment_details_buttons";
-        public static string ReccuringPaymentDetailsHistoryBottom => "admin_reccuring_payment_details_history_bottom";
-        public static string ReccuringPaymentDetailsHistoryTop => "admin_reccuring_payment_details_history_top";
-        public static string ReccuringPaymentDetailsInfoBottom => "admin_reccuring_payment_details_info_bottom";
-        public static string ReccuringPaymentDetailsInfoTop => "admin_reccuring_payment_details_info_top";
         public static string ReccuringPaymentListButtons => "admin_reccuring_payment_list_buttons";
         public static string ReturnRequestActionDetailsButtons => "admin_return_request_action_details_buttons";
         public static string ReturnRequestActionSettingsBottom => "admin_return_request_action_settings_bottom";
