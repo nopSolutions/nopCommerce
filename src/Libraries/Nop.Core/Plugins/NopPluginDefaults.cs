@@ -18,6 +18,11 @@ namespace Nop.Core.Plugins
         public static string InstalledPluginsFilePath => "~/App_Data/installedPlugins.json";
 
         /// <summary>
+        /// Gets the path to file that contains installed plugin system names
+        /// </summary>
+        public static string PluginsInfoFilePath => "~/App_Data/plugins.json";
+
+        /// <summary>
         /// Gets the path to plugins folder
         /// </summary>
         public static string Path => "~/Plugins";

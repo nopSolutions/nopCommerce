@@ -17,11 +17,11 @@ using Nop.Core.Domain;
 using Nop.Core.Domain.Security;
 using Nop.Core.Http;
 using Nop.Core.Infrastructure;
-using Nop.Core.Plugins;
 using Nop.Data;
 using Nop.Services.Authentication;
 using Nop.Services.Authentication.External;
 using Nop.Services.Logging;
+using Nop.Services.Plugins;
 using Nop.Services.Security;
 using Nop.Services.Tasks;
 using Nop.Web.Framework.FluentValidation;
@@ -57,16 +57,19 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             engine.Initialize(services);
             var serviceProvider = engine.ConfigureServices(services, configuration);
 
-            if (DataSettingsManager.DatabaseIsInstalled)
-            {
-                //implement schedule tasks
-                //database is already installed, so start scheduled tasks
-                TaskManager.Instance.Initialize();
-                TaskManager.Instance.Start();
+            if (!DataSettingsManager.DatabaseIsInstalled) 
+                return serviceProvider;
 
-                //log application start
-                EngineContext.Current.Resolve<ILogger>().Information("Application started", null, null);
-            }
+            //implement schedule tasks
+            //database is already installed, so start scheduled tasks
+            TaskManager.Instance.Initialize();
+            TaskManager.Instance.Start();
+
+            //log application start
+            engine.Resolve<ILogger>().Information("Application started");
+
+            //install plugins
+            engine.Resolve<IPluginService>().InstallPlugins();
 
             return serviceProvider;
         }
@@ -227,7 +230,6 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             var typeFinder = new WebAppTypeFinder();
             var externalAuthConfigurations = typeFinder.FindClassesOfType<IExternalAuthenticationRegistrar>();
             var externalAuthInstances = externalAuthConfigurations
-                .Where(x => PluginManager.FindPlugin(x)?.Installed ?? true) //ignore not installed plugins
                 .Select(x => (IExternalAuthenticationRegistrar)Activator.CreateInstance(x));
 
             foreach (var instance in externalAuthInstances)
@@ -324,7 +326,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             services.AddMiniProfiler(miniProfilerOptions =>
             {
                 //use memory cache provider for storing each result
-                (miniProfilerOptions.Storage as MemoryCacheStorage).CacheDuration = TimeSpan.FromMinutes(60);
+                ((MemoryCacheStorage)miniProfilerOptions.Storage).CacheDuration = TimeSpan.FromMinutes(60);
 
                 //whether MiniProfiler should be displayed
                 miniProfilerOptions.ShouldProfile = request =>

@@ -139,6 +139,27 @@ ul.common-list {
     overflow-x: scroll;
 }
 
+/*COLLAPSIBLE BLOCKS*/
+.panel.collapsible-panel {
+    margin-bottom: 5px;
+}
+
+.panel.collapsible-panel .panel-heading {
+    padding-right: 30px;
+    position: relative;
+    cursor: pointer;
+}
+
+.panel.collapsible-panel .panel-heading i {
+    position: absolute;
+    right: 5px;
+    top: 14px;
+}
+
+.panel.collapsible-panel .panel-container.collapsed {
+    display: none;
+}
+
 /*DISCOUNT*/
 .requirement-container {
     margin-bottom: 5px;

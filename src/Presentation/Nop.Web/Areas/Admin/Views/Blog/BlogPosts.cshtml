@@ -1,13 +1,16 @@
-@model BlogPostSearchModel
+@model BlogContentModel
 
 <nop-antiforgery-token/>
 <div class="content-header clearfix">
+    <h1 class="pull-left">
+        @T("Admin.ContentManagement.Blog.BlogPosts")
+    </h1>
     <div class="pull-right">
         <a asp-action="BlogPostCreate" class="btn bg-blue">
             <i class="fa fa-plus-square"></i>
             @T("Admin.Common.AddNew")
         </a>
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.BlogListButtons })
+        @await Component.InvokeAsync("AdminWidget", new {widgetZone = AdminWidgetZones.BlogListButtons})
     </div>
 </div>
 
@@ -16,16 +19,16 @@
         <div class="panel-group">
 
             @*hide the entire search block if no elements are displayed*@
-            <div class="panel panel-default panel-search" @(Model.HideStoresList ? Html.Raw("style=\"display:none\"") : null)>
+            <div class="panel panel-default panel-search" @(Model.BlogPosts.HideStoresList ? Html.Raw("style=\"display:none\"") : null)>
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
                                 <div class="col-md-4">
-                                    <nop-label asp-for="SearchStoreId" />
+                                    <nop-label asp-for="BlogPosts.SearchStoreId" />
                                 </div>
                                 <div class="col-md-8">
-                                    <nop-select asp-for="SearchStoreId" asp-items="Model.AvailableStores" />
+                                    <nop-select asp-for="BlogPosts.SearchStoreId" asp-items="Model.BlogPosts.AvailableStores" />
                                 </div>
                             </div>
                             <div class="form-group">
@@ -74,14 +77,14 @@
                                         // Cancel the changes
                                         this.cancelChanges();
                                     },
-                                    pageSize: @(Model.PageSize),
+                                    pageSize: @(Model.BlogPosts.PageSize),
                                     serverPaging: true,
                                     serverFiltering: true,
                                     serverSorting: true
                                 },
                                 pageable: {
                                     refresh: true,
-                                    pageSizes: [@(Model.AvailablePageSizes)],
+                                    pageSizes: [@(Model.BlogPosts.AvailablePageSizes)],
                                     @await Html.PartialAsync("_GridPagerMessages")
                                 },
                                 editable: {
@@ -100,7 +103,7 @@
                                     title: "@T("Admin.ContentManagement.Blog.BlogPosts.Fields.Comments")",
                                     headerAttributes: { style: "text-align:center" },
                                     attributes: { style: "text-align:center" },
-                                    template: '<a class="btn btn-default" href="List?tabNameToSelect=blog-comments&filterByBlogPostId=#=Id#">@T("Admin.ContentManagement.Blog.BlogPosts.Fields.Comments") - #=ApprovedComments + NotApprovedComments# (#=NotApprovedComments#)</a>'
+                                    template: '<a class="btn btn-default" href="BlogComments?filterByBlogPostId=#=Id#">@T("Admin.ContentManagement.Blog.BlogPosts.Fields.Comments") - #=ApprovedComments + NotApprovedComments# (#=NotApprovedComments#)</a>'
                                 }, {
                                     field: "StartDateUtc",
                                     title: "@T("Admin.ContentManagement.Blog.BlogPosts.Fields.StartDate")",

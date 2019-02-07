@@ -1,9 +1,8 @@
-@model ProductAttributeModel
+﻿@model ProductAttributeModel
 
-<div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductAttributeDetailsUsedByProductsTop, additionalData = Model })
-    <div class="panel panel-default">
-        <div class="panel-body">
+@if (Model.Id > 0)
+{
+    <div class="panel-body">
             <p>
                 @T("Admin.Catalog.Attributes.ProductAttributes.UsedByProducts.Hint")
             </p>
@@ -77,6 +76,4 @@
                 });
             </script>
         </div>
-    </div>
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductAttributeDetailsUsedByProductsBottom, additionalData = Model })
-</div>
+}

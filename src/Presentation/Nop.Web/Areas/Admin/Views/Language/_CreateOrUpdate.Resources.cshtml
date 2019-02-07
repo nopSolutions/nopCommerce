@@ -1,8 +1,7 @@
 @model LanguageModel
 
 <div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.LanguageDetailsResourcesTop, additionalData = Model })
-    <div class="panel panel-default panel-search">
+    <div class="sub-panel">
         <div class="panel-body">
             <div class="row">
                 <div class="col-md-6">
@@ -48,7 +47,7 @@
 
     @if (Model.Id > 0)
     {
-        <div class="panel panel-default">
+        <div class="sub-panel">
             <div class="panel-body">
                 <div id="resources-grid"></div>
 
@@ -173,5 +172,4 @@
             </div>
         </div>
     }
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.LanguageDetailsResourcesBottom, additionalData = Model })
 </div>

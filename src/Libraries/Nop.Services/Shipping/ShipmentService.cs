@@ -89,14 +89,23 @@ namespace Nop.Services.Shipping
             var query = _shipmentRepository.Table;
             if (!string.IsNullOrEmpty(trackingNumber))
                 query = query.Where(s => s.TrackingNumber.Contains(trackingNumber));
+
             if (shippingCountryId > 0)
-                query = query.Where(s => s.Order.ShippingAddress.CountryId == shippingCountryId);
+                query = query.Where(s => s.Order.PickUpInStore ? s.Order.PickupAddress.CountryId == shippingCountryId
+                                                               : s.Order.ShippingAddress.CountryId == shippingCountryId);
+
             if (shippingStateId > 0)
-                query = query.Where(s => s.Order.ShippingAddress.StateProvinceId == shippingStateId);
+                query = query.Where(s => s.Order.PickUpInStore ? s.Order.PickupAddress.StateProvinceId == shippingStateId
+                                                               : s.Order.ShippingAddress.StateProvinceId == shippingStateId);
+
             if (!string.IsNullOrWhiteSpace(shippingCounty))
-                query = query.Where(s => s.Order.ShippingAddress.County.Contains(shippingCounty));
+                query = query.Where(s => s.Order.PickUpInStore ? s.Order.PickupAddress.County.Contains(shippingCounty)
+                                                               : s.Order.ShippingAddress.County.Contains(shippingCounty));
+
             if (!string.IsNullOrWhiteSpace(shippingCity))
-                query = query.Where(s => s.Order.ShippingAddress.City.Contains(shippingCity));
+                query = query.Where(s => s.Order.PickUpInStore ? s.Order.PickupAddress.City.Contains(shippingCity)
+                                                               : s.Order.ShippingAddress.City.Contains(shippingCity));
+
             if (loadNotShipped)
                 query = query.Where(s => !s.ShippedDateUtc.HasValue);
             if (createdFromUtc.HasValue)
@@ -308,22 +317,16 @@ namespace Nop.Services.Shipping
         {
             if (!shipment.Order.PickUpInStore)
             {
-                var shippingRateComputationMethod = _shippingService.LoadShippingRateComputationMethodBySystemName(shipment.Order.ShippingRateComputationMethodSystemName);
-                if (shippingRateComputationMethod != null &&
-                    shippingRateComputationMethod.PluginDescriptor.Installed)
-                    //shippingRateComputationMethod.IsShippingRateComputationMethodActive(shippingSettings))
-                    return shippingRateComputationMethod.ShipmentTracker;
+                var shippingRateComputationMethod = _shippingService
+                    .LoadShippingRateComputationMethodBySystemName(shipment.Order.ShippingRateComputationMethodSystemName);
+                return shippingRateComputationMethod?.ShipmentTracker;
             }
             else
             {
-                var pickupPointProvider = _shippingService.LoadPickupPointProviderBySystemName(shipment.Order.ShippingRateComputationMethodSystemName);
-                if (pickupPointProvider != null &&
-                    pickupPointProvider.PluginDescriptor.Installed)
-                    //pickupPointProvider.IsPickupPointProviderActive(shippingSettings))
-                    return pickupPointProvider.ShipmentTracker;
+                var pickupPointProvider = _shippingService
+                    .LoadPickupPointProviderBySystemName(shipment.Order.ShippingRateComputationMethodSystemName);
+                return pickupPointProvider?.ShipmentTracker;
             }
-
-            return null;
         }
 
         #endregion

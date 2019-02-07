@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Cms;
-using Nop.Core.Plugins;
 using Nop.Services.Cms;
 using Nop.Services.Configuration;
+using Nop.Services.Events;
 using Nop.Services.Plugins;
 using Nop.Services.Security;
 using Nop.Web.Areas.Admin.Factories;
@@ -15,8 +15,8 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
+        private readonly IEventPublisher _eventPublisher;
         private readonly IPermissionService _permissionService;
-        private readonly IPluginFinder _pluginFinder;
         private readonly ISettingService _settingService;
         private readonly IWidgetModelFactory _widgetModelFactory;
         private readonly IWidgetService _widgetService;
@@ -26,15 +26,15 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Ctor
 
-        public WidgetController(IPermissionService permissionService,
-            IPluginFinder pluginFinder,
+        public WidgetController(IEventPublisher eventPublisher,
+            IPermissionService permissionService,
             ISettingService settingService,
             IWidgetModelFactory widgetModelFactory,
             IWidgetService widgetService,
             WidgetSettings widgetSettings)
         {
+            this._eventPublisher = eventPublisher;
             this._permissionService = permissionService;
-            this._pluginFinder = pluginFinder;
             this._settingService = settingService;
             this._widgetModelFactory = widgetModelFactory;
             this._widgetService = widgetService;
@@ -105,10 +105,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             pluginDescriptor.DisplayOrder = model.DisplayOrder;
 
             //update the description file
-            PluginManager.SavePluginDescriptor(pluginDescriptor);
+            pluginDescriptor.Save();
 
-            //reset plugin cache
-            _pluginFinder.ReloadPlugins(pluginDescriptor);
+            //raise event
+            _eventPublisher.Publish(new PluginUpdatedEvent(pluginDescriptor));
 
             return new NullJsonResult();
         }

@@ -33,7 +33,7 @@ namespace Nop.Web.Controllers
 
         #region Ctor
 
-        public InstallController(IInstallationLocalizationService locService, 
+        public InstallController(IInstallationLocalizationService locService,
             INopFileProvider fileProvider,
             NopConfig config)
         {
@@ -41,9 +41,9 @@ namespace Nop.Web.Controllers
             this._fileProvider = fileProvider;
             this._config = config;
         }
-        
+
         #endregion
-        
+
         #region Utilities
 
         /// <summary>
@@ -172,9 +172,9 @@ namespace Nop.Web.Controllers
             }
             return builder.ConnectionString;
         }
-        
+
         #endregion
-        
+
         #region Methods
 
         public virtual IActionResult Index()
@@ -354,26 +354,25 @@ namespace Nop.Web.Controllers
                     //reset cache
                     DataSettingsManager.ResetCache();
 
-                    //install plugins
-                    PluginManager.MarkAllPluginsAsUninstalled();
-                    var pluginFinder = EngineContext.Current.Resolve<IPluginFinder>();
-                    var plugins = pluginFinder.GetPlugins<IPlugin>(LoadPluginsMode.All)
-                        .ToList()
-                        .OrderBy(x => x.PluginDescriptor.Group)
-                        .ThenBy(x => x.PluginDescriptor.DisplayOrder)
+                    //prepare plugins to install
+                    var pluginService = EngineContext.Current.Resolve<IPluginService>();
+                    pluginService.ClearInstalledPluginsList();
+
+                    var pluginsIgnoredDuringInstallation = new List<string>();
+                    if (!string.IsNullOrEmpty(_config.PluginsIgnoredDuringInstallation))
+                    {
+                        pluginsIgnoredDuringInstallation = _config.PluginsIgnoredDuringInstallation
+                            .Split(',', StringSplitOptions.RemoveEmptyEntries).Select(pluginName => pluginName.Trim()).ToList();
+                    }
+
+                    var plugins = pluginService.GetPluginDescriptors<IPlugin>(LoadPluginsMode.All)
+                        .Where(pluginDescriptor => !pluginsIgnoredDuringInstallation.Contains(pluginDescriptor.SystemName))
+                        .OrderBy(pluginDescriptor => pluginDescriptor.Group).ThenBy(pluginDescriptor => pluginDescriptor.DisplayOrder)
                         .ToList();
-                    var pluginsIgnoredDuringInstallation = string.IsNullOrEmpty(_config.PluginsIgnoredDuringInstallation) ?
-                        new List<string>() :
-                        _config.PluginsIgnoredDuringInstallation
-                        .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                        .Select(x => x.Trim())
-                        .ToList();
+
                     foreach (var plugin in plugins)
                     {
-                        if (pluginsIgnoredDuringInstallation.Contains(plugin.PluginDescriptor.SystemName))
-                            continue;
-
-                        plugin.Install();
+                        pluginService.PreparePluginToInstall(plugin.SystemName);
                     }
 
                     //register default permissions
@@ -395,7 +394,7 @@ namespace Nop.Web.Controllers
                 {
                     //reset cache
                     DataSettingsManager.ResetCache();
-                    
+
                     var cacheManager = EngineContext.Current.Resolve<IStaticCacheManager>();
                     cacheManager.Clear();
 
@@ -432,7 +431,7 @@ namespace Nop.Web.Controllers
             //Redirect to home page
             return RedirectToRoute("HomePage");
         }
-        
+
         #endregion
     }
 }

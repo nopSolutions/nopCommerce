@@ -2,7 +2,6 @@
 using System.Linq;
 using Microsoft.AspNetCore.Routing;
 using Nop.Core.Infrastructure;
-using Nop.Core.Plugins;
 
 namespace Nop.Web.Framework.Mvc.Routing
 {
@@ -46,7 +45,6 @@ namespace Nop.Web.Framework.Mvc.Routing
 
             //create and sort instances of route providers
             var instances = routeProviders
-                .Where(routeProvider => PluginManager.FindPlugin(routeProvider)?.Installed ?? true) //ignore not installed plugins
                 .Select(routeProvider => (IRouteProvider)Activator.CreateInstance(routeProvider))
                 .OrderByDescending(routeProvider => routeProvider.Priority);
 
