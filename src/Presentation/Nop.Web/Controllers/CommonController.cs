@@ -44,6 +44,7 @@ namespace Nop.Web.Controllers
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly LocalizationSettings _localizationSettings;
         private readonly SitemapSettings _sitemapSettings;
+        private readonly SitemapXmlSettings _sitemapXmlSettings;
         private readonly StoreInformationSettings _storeInformationSettings;
         private readonly VendorSettings _vendorSettings;
         
@@ -67,27 +68,29 @@ namespace Nop.Web.Controllers
             IWorkflowMessageService workflowMessageService,
             LocalizationSettings localizationSettings,
             SitemapSettings sitemapSettings,
+            SitemapXmlSettings sitemapXmlSettings,
             StoreInformationSettings storeInformationSettings,
             VendorSettings vendorSettings)
         {
             _captchaSettings = captchaSettings;
-            _commonSettings = commonSettings;
             _commonModelFactory = commonModelFactory;
+            _commonSettings = commonSettings;
             _currencyService = currencyService;
             _customerActivityService = customerActivityService;
             _genericAttributeService = genericAttributeService;
             _languageService = languageService;
             _localizationService = localizationService;
+            _localizationSettings = localizationSettings;
             _logger = logger;
+            _sitemapSettings = sitemapSettings;
+            _sitemapXmlSettings = sitemapXmlSettings;
             _storeContext = storeContext;
+            _storeInformationSettings = storeInformationSettings;
             _themeContext = themeContext;
             _vendorService = vendorService;
+            _vendorSettings = vendorSettings;
             _workContext = workContext;
             _workflowMessageService = workflowMessageService;
-            _localizationSettings = localizationSettings;
-            _sitemapSettings = sitemapSettings;
-            _storeInformationSettings = storeInformationSettings;
-            _vendorSettings = vendorSettings;
         }
 
         #endregion
@@ -299,9 +302,6 @@ namespace Nop.Web.Controllers
         [CheckAccessClosedStore(true)]
         public virtual IActionResult SitemapXml(int? id)
         {
-            if (!_sitemapSettings.SitemapEnabled)
-                return RedirectToRoute("HomePage");
-
             var siteMap = _commonModelFactory.PrepareSitemapXml(id);
             return Content(siteMap, "text/xml");
         }

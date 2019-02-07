@@ -10,7 +10,6 @@ namespace Nop.Core.Domain.Common
     {
         public CommonSettings()
         {
-            SitemapCustomUrls = new List<string>();
             IgnoreLogWordlist = new List<string>();
         }
 
@@ -28,11 +27,6 @@ namespace Nop.Core.Domain.Common
         /// Gets or sets a value indicating whether to use stored procedure (if supported) for loading categories (it's much faster in admin area with a large number of categories than the LINQ implementation)
         /// </summary>
         public bool UseStoredProcedureForLoadingCategories { get; set; }
-
-        /// <summary>
-        /// A list of custom URLs to be added to sitemap.xml (include page names only)
-        /// </summary>
-        public List<string> SitemapCustomUrls { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to display a warning if java-script is disabled

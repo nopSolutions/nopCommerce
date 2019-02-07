@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -1651,14 +1652,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             return RedirectToAction("GeneralCommon");
         }
 
-
-        public virtual IActionResult AllSettings()
+        public virtual IActionResult AllSettings(string name = "")
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
             //prepare model
-            var model = _settingModelFactory.PrepareSettingSearchModel(new SettingSearchModel());
+            var model = _settingModelFactory.PrepareSettingSearchModel(new SettingSearchModel() { SearchSettingName = WebUtility.HtmlEncode(name) });
 
             return View(model);
         }

@@ -17,8 +17,10 @@ using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.News;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Seo;
+using Nop.Services.Blogs;
 using Nop.Services.Catalog;
 using Nop.Services.Localization;
+using Nop.Services.News;
 using Nop.Services.Topics;
 
 namespace Nop.Services.Seo
@@ -31,12 +33,13 @@ namespace Nop.Services.Seo
         #region Fields
 
         private readonly BlogSettings _blogSettings;
-        private readonly CommonSettings _commonSettings;
         private readonly ForumSettings _forumSettings;
         private readonly IActionContextAccessor _actionContextAccessor;
+        private readonly IBlogService _blogService;
         private readonly ICategoryService _categoryService;
         private readonly ILanguageService _languageService;
         private readonly IManufacturerService _manufacturerService;
+        private readonly INewsService _newsService;
         private readonly IProductService _productService;
         private readonly IProductTagService _productTagService;
         private readonly IStoreContext _storeContext;
@@ -47,6 +50,7 @@ namespace Nop.Services.Seo
         private readonly LocalizationSettings _localizationSettings;
         private readonly NewsSettings _newsSettings;
         private readonly SecuritySettings _securitySettings;
+        private readonly SitemapXmlSettings _sitemapXmlSettings;
 
 
         #endregion
@@ -54,12 +58,13 @@ namespace Nop.Services.Seo
         #region Ctor
 
         public SitemapGenerator(BlogSettings blogSettings,
-            CommonSettings commonSettings,
             ForumSettings forumSettings,
             IActionContextAccessor actionContextAccessor,
+            IBlogService blogService,
             ICategoryService categoryService,
             ILanguageService languageService,
             IManufacturerService manufacturerService,
+            INewsService newsService,
             IProductService productService,
             IProductTagService productTagService,
             IStoreContext storeContext,
@@ -69,25 +74,28 @@ namespace Nop.Services.Seo
             IWebHelper webHelper,
             LocalizationSettings localizationSettings,
             NewsSettings newsSettings,
-            SecuritySettings securitySettings)
+            SecuritySettings securitySettings,
+            SitemapXmlSettings sitemapSettings)
         {
-            _blogSettings = blogSettings;
-            _commonSettings = commonSettings;
-            _forumSettings = forumSettings;
             _actionContextAccessor = actionContextAccessor;
+            _blogService = blogService;
+            _blogSettings = blogSettings;
             _categoryService = categoryService;
+            _forumSettings = forumSettings;
             _languageService = languageService;
+            _localizationSettings = localizationSettings;
             _manufacturerService = manufacturerService;
+            _newsService = newsService;
+            _newsSettings = newsSettings;
             _productService = productService;
             _productTagService = productTagService;
+            _securitySettings = securitySettings;
+            _sitemapXmlSettings = sitemapSettings;
             _storeContext = storeContext;
             _topicService = topicService;
             _urlHelperFactory = urlHelperFactory;
             _urlRecordService = urlRecordService;
             _webHelper = webHelper;
-            _localizationSettings = localizationSettings;
-            _newsSettings = newsSettings;
-            _securitySettings = securitySettings;
         }
 
         #endregion
@@ -179,58 +187,72 @@ namespace Nop.Services.Seo
             var sitemapUrls = new List<SitemapUrl>
             {
                 //home page
-                GetLocalizedSitemapUrl("HomePage"),
+                GetLocalizedSitemapUrl("HomePage")
+            };           
 
+            if (_sitemapXmlSettings.SitemapXmlEnabled)
+            {
                 //search products
-                GetLocalizedSitemapUrl("ProductSearch"),
-
+                sitemapUrls.Add(GetLocalizedSitemapUrl("ProductSearch"));
                 //contact us
-                GetLocalizedSitemapUrl("ContactUs")
-            };
+                sitemapUrls.Add(GetLocalizedSitemapUrl("ContactUs"));
 
-            //news
-            if (_newsSettings.Enabled)
-            {
-                sitemapUrls.Add(GetLocalizedSitemapUrl("NewsArchive"));
+                //news
+                if (_newsSettings.Enabled)
+                    sitemapUrls.Add(GetLocalizedSitemapUrl("NewsArchive"));
+
+                //blog
+                if (_blogSettings.Enabled)
+                    sitemapUrls.Add(GetLocalizedSitemapUrl("Blog"));
+
+                //forum
+                if (_forumSettings.ForumsEnabled)
+                    sitemapUrls.Add(GetLocalizedSitemapUrl("Boards"));
+
+                //news
+                if (_sitemapXmlSettings.SitemapXmlIncludeNews)
+                    sitemapUrls.AddRange(GetNewsItemUrls());
+
+                //categories
+                if (_sitemapXmlSettings.SitemapXmlIncludeCategories)
+                    sitemapUrls.AddRange(GetCategoryUrls());
+
+                //manufacturers
+                if (_sitemapXmlSettings.SitemapXmlIncludeManufacturers)
+                    sitemapUrls.AddRange(GetManufacturerUrls());
+
+                //products
+                if (_sitemapXmlSettings.SitemapXmlIncludeProducts)
+                    sitemapUrls.AddRange(GetProductUrls());
+
+                //product tags
+                if (_sitemapXmlSettings.SitemapXmlIncludeProductTags)
+                    sitemapUrls.AddRange(GetProductTagUrls());
+
+                //blog posts
+                if (_sitemapXmlSettings.SitemapXmlIncludeBlogPosts)
+                    sitemapUrls.AddRange(GetBlogPostUrls());
+
+                //topics
+                if (_sitemapXmlSettings.SitemapXmlIncludeTopics)
+                    sitemapUrls.AddRange(GetTopicUrls());
+
+                //custom URLs
+                if (_sitemapXmlSettings.SitemapXmlIncludeCustomUrls)
+                    sitemapUrls.AddRange(GetCustomUrls());
             }
-
-            //blog
-            if (_blogSettings.Enabled)
-            {
-                sitemapUrls.Add(GetLocalizedSitemapUrl("Blog"));
-            }
-
-            //forum
-            if (_forumSettings.ForumsEnabled)
-            {
-                sitemapUrls.Add(GetLocalizedSitemapUrl("Boards"));
-            }
-
-            /*
-            //categories
-            if (_commonSettings.SitemapIncludeCategories)
-                sitemapUrls.AddRange(GetCategoryUrls());
-
-            //manufacturers
-            if (_commonSettings.SitemapIncludeManufacturers)
-                sitemapUrls.AddRange(GetManufacturerUrls());
-
-            //products
-            if (_commonSettings.SitemapIncludeProducts)
-                sitemapUrls.AddRange(GetProductUrls());
-
-            //product tags
-            if (_commonSettings.SitemapIncludeProductTags)
-                sitemapUrls.AddRange(GetProductTagUrls());
-            */
-
-            //topics
-            sitemapUrls.AddRange(GetTopicUrls());
-
-            //custom URLs
-            sitemapUrls.AddRange(GetCustomUrls());
 
             return sitemapUrls;
+        }
+
+        /// <summary>
+        /// Get news item URLs for the sitemap
+        /// </summary>
+        /// <returns>Sitemap URLs</returns>
+        protected virtual IEnumerable<SitemapUrl> GetNewsItemUrls()
+        {
+            return _newsService.GetAllNews(storeId: _storeContext.CurrentStore.Id)
+                .Select(news => GetLocalizedSitemapUrl("NewsItem", GetSeoRouteParams(news), news.CreatedOnUtc));
         }
 
         /// <summary>
@@ -285,6 +307,17 @@ namespace Nop.Services.Seo
         }
 
         /// <summary>
+        /// Get blog post URLs for the sitemap
+        /// </summary>
+        /// <returns>Sitemap URLs</returns>
+        protected virtual IEnumerable<SitemapUrl> GetBlogPostUrls()
+        {
+            return _blogService.GetAllBlogPosts(_storeContext.CurrentStore.Id)
+                .Where(p => p.IncludeInSitemap)
+                .Select(post => GetLocalizedSitemapUrl("BlogPost", GetSeoRouteParams(post)));
+        }
+
+        /// <summary>
         /// Get custom URLs for the sitemap
         /// </summary>
         /// <returns>Sitemap URLs</returns>
@@ -292,7 +325,7 @@ namespace Nop.Services.Seo
         {
             var storeLocation = _webHelper.GetStoreLocation();
 
-            return _commonSettings.SitemapCustomUrls.Select(customUrl =>
+            return _sitemapXmlSettings.SitemapCustomUrls.Select(customUrl =>
                 new SitemapUrl(string.Concat(storeLocation, customUrl), new List<string>(), UpdateFrequency.Weekly, DateTime.UtcNow));
         }
 
@@ -437,6 +470,9 @@ namespace Nop.Services.Seo
         /// <param name="sitemapUrl">Sitemap URL</param>
         protected virtual void WriteSitemapUrl(XmlTextWriter writer, SitemapUrl sitemapUrl)
         {
+            if (string.IsNullOrEmpty(sitemapUrl.Location))
+                return;
+
             writer.WriteStartElement("url");
 
             var loc = XmlHelper.XmlEncode(sitemapUrl.Location);

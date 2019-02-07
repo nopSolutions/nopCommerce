@@ -5972,6 +5972,19 @@ namespace Nop.Services.Installation
                 SitemapIncludeTopics = true
             });
 
+            settingService.SaveSetting(new SitemapXmlSettings
+            {
+                SitemapXmlEnabled = true,
+                SitemapXmlIncludeBlogPosts = true,
+                SitemapXmlIncludeCategories = true,
+                SitemapXmlIncludeManufacturers = true,
+                SitemapXmlIncludeNews = true,
+                SitemapXmlIncludeProducts = true,
+                SitemapXmlIncludeProductTags = true,
+                SitemapXmlIncludeCustomUrls = true,
+                SitemapXmlIncludeTopics = true,
+            });
+
             settingService.SaveSetting(new CommonSettings
             {
                 UseSystemEmailForContactUsForm = true,
