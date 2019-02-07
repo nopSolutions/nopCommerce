@@ -17,7 +17,7 @@ namespace Nop.Web.Areas.Admin.Models.ShoppingCart
         [NopResourceDisplayName("Admin.CurrentCarts.ProductId")]
         public int ProductId { get; set; }
 
-        [NopResourceDisplayName("Admin.CurrentCarts.ProductName")]
+        [NopResourceDisplayName("Admin.CurrentCarts.Product")]
         public string ProductName { get; set; }
 
         public string AttributeInfo { get; set; }
