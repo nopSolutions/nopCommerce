@@ -1,15 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Moq;
+using Nop.Core;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Services.Configuration;
+using Nop.Services.Customers;
 using Nop.Services.Events;
+using Nop.Services.Logging;
 using Nop.Services.Payments;
 using Nop.Services.Plugins;
 using Nop.Tests;
 using NUnit.Framework;
-
 
 namespace Nop.Services.Tests.Payments
 {
@@ -34,12 +36,16 @@ namespace Nop.Services.Tests.Payments
             _eventPublisher = new Mock<IEventPublisher>();
             _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
 
-            var pluginFinder = new PluginFinder(_eventPublisher.Object);
+            var customerService = new Mock<ICustomerService>();
+            var loger = new Mock<ILogger>();
+            var webHelper = new Mock<IWebHelper>();
+
+            var pluginService = new PluginService(customerService.Object, loger.Object , CommonHelper.DefaultFileProvider, webHelper.Object);
 
             _shoppingCartSettings = new ShoppingCartSettings();
             _settingService = new Mock<ISettingService>();
 
-            _paymentService = new PaymentService(pluginFinder, _settingService.Object, _paymentSettings, _shoppingCartSettings);
+            _paymentService = new PaymentService(pluginService, _settingService.Object, _paymentSettings, _shoppingCartSettings);
         }
 
         [Test]

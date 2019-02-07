@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Nop.Core.Plugins;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Services.Payments;
+using Nop.Services.Plugins;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Directory;
 using Nop.Web.Areas.Admin.Models.Payments;
@@ -22,6 +22,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly ICountryService _countryService;
         private readonly ILocalizationService _localizationService;
         private readonly IPaymentService _paymentService;
+        private readonly IPluginService _pluginService;
 
         #endregion
 
@@ -29,11 +30,13 @@ namespace Nop.Web.Areas.Admin.Factories
 
         public PaymentModelFactory(ICountryService countryService,
             ILocalizationService localizationService,
-            IPaymentService paymentService)
+            IPaymentService paymentService,
+            IPluginService pluginService)
         {
             this._countryService = countryService;
             this._localizationService = localizationService;
             this._paymentService = paymentService;
+            this._pluginService = pluginService;
         }
 
         #endregion
@@ -97,7 +100,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     //fill in additional values (not existing in the entity)
                     paymentMethodModel.IsActive = _paymentService.IsPaymentMethodActive(method);
                     paymentMethodModel.ConfigurationUrl = method.GetConfigurationPageUrl();
-                    paymentMethodModel.LogoUrl = PluginManager.GetLogoUrl(method.PluginDescriptor);
+                    paymentMethodModel.LogoUrl = _pluginService.GetPluginLogoUrl(method.PluginDescriptor);
                     paymentMethodModel.RecurringPaymentType = _localizationService.GetLocalizedEnum(method.RecurringPaymentType);
 
                     return paymentMethodModel;

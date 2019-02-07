@@ -23,7 +23,7 @@ namespace Nop.Services.Payments
     {
         #region Fields
 
-        private readonly IPluginFinder _pluginFinder;
+        private readonly IPluginService _pluginService;
         private readonly ISettingService _settingService;
         private readonly PaymentSettings _paymentSettings;
         private readonly ShoppingCartSettings _shoppingCartSettings;
@@ -32,12 +32,12 @@ namespace Nop.Services.Payments
 
         #region Ctor
 
-        public PaymentService(IPluginFinder pluginFinder,
+        public PaymentService(IPluginService pluginService,
             ISettingService settingService,
             PaymentSettings paymentSettings,
             ShoppingCartSettings shoppingCartSettings)
         {
-            this._pluginFinder = pluginFinder;
+            this._pluginService = pluginService;
             this._settingService = settingService;
             this._paymentSettings = paymentSettings;
             this._shoppingCartSettings = shoppingCartSettings;
@@ -67,10 +67,12 @@ namespace Nop.Services.Payments
         /// Load payment provider by system name
         /// </summary>
         /// <param name="systemName">System name</param>
+        /// <param name="customer">Load records allowed only to a specified customer; pass null to ignore ACL permissions</param>
+        /// <param name="storeId">Load records allowed only on the specified store; pass 0 to ignore store mappings</param>
         /// <returns>Found payment provider</returns>
-        public virtual IPaymentMethod LoadPaymentMethodBySystemName(string systemName)
+        public virtual IPaymentMethod LoadPaymentMethodBySystemName(string systemName, Customer customer = null, int storeId = 0)
         {
-            var descriptor = _pluginFinder.GetPluginDescriptorBySystemName<IPaymentMethod>(systemName);
+            var descriptor = _pluginService.GetPluginDescriptorBySystemName<IPaymentMethod>(systemName, customer: customer, storeId: storeId);
             return descriptor?.Instance<IPaymentMethod>();
         }
 
@@ -83,7 +85,7 @@ namespace Nop.Services.Payments
         /// <returns>Payment providers</returns>
         public virtual IList<IPaymentMethod> LoadAllPaymentMethods(Customer customer = null, int storeId = 0, int filterByCountryId = 0)
         {
-            var paymentMethods = _pluginFinder.GetPlugins<IPaymentMethod>(customer: customer, storeId: storeId).ToList();
+            var paymentMethods = _pluginService.GetPlugins<IPaymentMethod>(customer: customer, storeId: storeId).ToList();
             if (filterByCountryId == 0)
                 return paymentMethods;
 
@@ -257,7 +259,7 @@ namespace Nop.Services.Payments
             if (result < decimal.Zero)
                 result = decimal.Zero;
 
-            if (!_shoppingCartSettings.RoundPricesDuringCalculation) 
+            if (!_shoppingCartSettings.RoundPricesDuringCalculation)
                 return result;
 
             var priceCalculationService = EngineContext.Current.Resolve<IPriceCalculationService>();

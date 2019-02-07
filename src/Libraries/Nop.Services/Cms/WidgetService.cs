@@ -14,17 +14,17 @@ namespace Nop.Services.Cms
     {
         #region Fields
 
-        private readonly IPluginFinder _pluginFinder;
+        private readonly IPluginService _pluginService;
         private readonly WidgetSettings _widgetSettings;
 
         #endregion
 
         #region Ctor
 
-        public WidgetService(IPluginFinder pluginFinder,
+        public WidgetService(IPluginService pluginService,
             WidgetSettings widgetSettings)
         {
-            this._pluginFinder = pluginFinder;
+            this._pluginService = pluginService;
             this._widgetSettings = widgetSettings;
         }
 
@@ -67,7 +67,7 @@ namespace Nop.Services.Cms
         /// <returns>Found widget</returns>
         public virtual IWidgetPlugin LoadWidgetBySystemName(string systemName)
         {
-            var descriptor = _pluginFinder.GetPluginDescriptorBySystemName<IWidgetPlugin>(systemName);
+            var descriptor = _pluginService.GetPluginDescriptorBySystemName<IWidgetPlugin>(systemName);
             return descriptor?.Instance<IWidgetPlugin>();
         }
 
@@ -79,7 +79,7 @@ namespace Nop.Services.Cms
         /// <returns>Widgets</returns>
         public virtual IList<IWidgetPlugin> LoadAllWidgets(Customer customer = null, int storeId = 0)
         {
-            return _pluginFinder.GetPlugins<IWidgetPlugin>(customer: customer, storeId: storeId).ToList();
+            return _pluginService.GetPlugins<IWidgetPlugin>(customer: customer, storeId: storeId).ToList();
         }
 
         /// <summary>

@@ -1481,6 +1481,9 @@ namespace Nop.Services.ExportImport
             //a vendor should have access only to part of order information
             var ignore = _workContext.CurrentVendor != null;
 
+            //lambda expression for choosing correct order address
+            Address orderAddress(Order o) => o.PickUpInStore ? o.PickupAddress : o.ShippingAddress;
+
             //property array
             var properties = new[]
             {
@@ -1527,19 +1530,19 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Order>("BillingZipPostalCode", p => p.BillingAddress?.ZipPostalCode ?? string.Empty),
                 new PropertyByName<Order>("BillingPhoneNumber", p => p.BillingAddress?.PhoneNumber ?? string.Empty),
                 new PropertyByName<Order>("BillingFaxNumber", p => p.BillingAddress?.FaxNumber ?? string.Empty),
-                new PropertyByName<Order>("ShippingFirstName", p => p.ShippingAddress?.FirstName ?? string.Empty),
-                new PropertyByName<Order>("ShippingLastName", p => p.ShippingAddress?.LastName ?? string.Empty),
-                new PropertyByName<Order>("ShippingEmail", p => p.ShippingAddress?.Email ?? string.Empty),
-                new PropertyByName<Order>("ShippingCompany", p => p.ShippingAddress?.Company ?? string.Empty),
-                new PropertyByName<Order>("ShippingCountry", p => p.ShippingAddress?.Country?.Name ?? string.Empty),
-                new PropertyByName<Order>("ShippingStateProvince", p => p.ShippingAddress?.StateProvince?.Name ?? string.Empty),
-                new PropertyByName<Order>("ShippingCounty", p => p.ShippingAddress?.County ?? string.Empty),
-                new PropertyByName<Order>("ShippingCity", p => p.ShippingAddress?.City ?? string.Empty),
-                new PropertyByName<Order>("ShippingAddress1", p => p.ShippingAddress?.Address1 ?? string.Empty),
-                new PropertyByName<Order>("ShippingAddress2", p => p.ShippingAddress?.Address2 ?? string.Empty),
-                new PropertyByName<Order>("ShippingZipPostalCode", p => p.ShippingAddress?.ZipPostalCode ?? string.Empty),
-                new PropertyByName<Order>("ShippingPhoneNumber", p => p.ShippingAddress?.PhoneNumber ?? string.Empty),
-                new PropertyByName<Order>("ShippingFaxNumber", p => p.ShippingAddress?.FaxNumber ?? string.Empty)
+                new PropertyByName<Order>("ShippingFirstName", p => orderAddress(p)?.FirstName?? string.Empty),
+                new PropertyByName<Order>("ShippingLastName", p =>orderAddress(p)?.LastName ?? string.Empty),
+                new PropertyByName<Order>("ShippingEmail", p => orderAddress(p)?.Email ?? string.Empty),
+                new PropertyByName<Order>("ShippingCompany", p => orderAddress(p)?.Company ?? string.Empty),
+                new PropertyByName<Order>("ShippingCountry", p => orderAddress(p)?.Country?.Name ?? string.Empty),
+                new PropertyByName<Order>("ShippingStateProvince", p => orderAddress(p)?.StateProvince?.Name ?? string.Empty),
+                new PropertyByName<Order>("ShippingCounty", p => orderAddress(p)?.County ?? string.Empty),
+                new PropertyByName<Order>("ShippingCity", p => orderAddress(p)?.City ?? string.Empty),
+                new PropertyByName<Order>("ShippingAddress1", p => orderAddress(p)?.Address1 ?? string.Empty),
+                new PropertyByName<Order>("ShippingAddress2", p => orderAddress(p)?.Address2 ?? string.Empty),
+                new PropertyByName<Order>("ShippingZipPostalCode", p => orderAddress(p)?.ZipPostalCode ?? string.Empty),
+                new PropertyByName<Order>("ShippingPhoneNumber", p => orderAddress(p)?.PhoneNumber ?? string.Empty),
+                new PropertyByName<Order>("ShippingFaxNumber", p => orderAddress(p)?.FaxNumber ?? string.Empty)
             };
 
             return _orderSettings.ExportWithProducts
@@ -1748,6 +1751,9 @@ namespace Nop.Services.ExportImport
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
 
+            //lambda expression for choosing correct order address
+            Address orderAddress(Order o) => o.PickUpInStore ? o.PickupAddress : o.ShippingAddress;
+
             //customer info and customer attributes
             var customerManager = new PropertyManager<Customer>(new[]
             {
@@ -1792,20 +1798,20 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Order>("Billing zip postal code", p => p.BillingAddress?.ZipPostalCode ?? string.Empty, !_addressSettings.ZipPostalCodeEnabled),
                 new PropertyByName<Order>("Billing phone number", p => p.BillingAddress?.PhoneNumber ?? string.Empty, !_addressSettings.PhoneEnabled),
                 new PropertyByName<Order>("Billing fax number", p => p.BillingAddress?.FaxNumber ?? string.Empty, !_addressSettings.FaxEnabled),
-                new PropertyByName<Order>("Shipping first name", p => p.ShippingAddress?.FirstName ?? string.Empty),
-                new PropertyByName<Order>("Shipping last name", p => p.ShippingAddress?.LastName ?? string.Empty),
-                new PropertyByName<Order>("Shipping email", p => p.ShippingAddress?.Email ?? string.Empty),
-                new PropertyByName<Order>("Shipping company", p => p.ShippingAddress?.Company ?? string.Empty, !_addressSettings.CompanyEnabled),
-                new PropertyByName<Order>("Shipping country", p => p.ShippingAddress?.Country != null ? _localizationService.GetLocalized(p.ShippingAddress.Country, c => c.Name) : string.Empty, !_addressSettings.CountryEnabled),
-                new PropertyByName<Order>("Shipping state province", p => p.ShippingAddress?.StateProvince != null ? _localizationService.GetLocalized(p.ShippingAddress.StateProvince, sp => sp.Name) : string.Empty, !_addressSettings.StateProvinceEnabled),
-                new PropertyByName<Order>("Shipping county", p => p.ShippingAddress?.County ?? string.Empty, !_addressSettings.CountyEnabled),
-                new PropertyByName<Order>("Shipping city", p => p.ShippingAddress?.City ?? string.Empty, !_addressSettings.CityEnabled),
-                new PropertyByName<Order>("Shipping address 1", p => p.ShippingAddress?.Address1 ?? string.Empty, !_addressSettings.StreetAddressEnabled),
-                new PropertyByName<Order>("Shipping address 2", p => p.ShippingAddress?.Address2 ?? string.Empty, !_addressSettings.StreetAddress2Enabled),
+                new PropertyByName<Order>("Shipping first name", p => orderAddress(p)?.FirstName ?? string.Empty),
+                new PropertyByName<Order>("Shipping last name", p => orderAddress(p)?.LastName ?? string.Empty),
+                new PropertyByName<Order>("Shipping email", p => orderAddress(p)?.Email ?? string.Empty),
+                new PropertyByName<Order>("Shipping company", p => orderAddress(p)?.Company ?? string.Empty, !_addressSettings.CompanyEnabled),
+                new PropertyByName<Order>("Shipping country", p => orderAddress(p)?.Country != null ? _localizationService.GetLocalized(orderAddress(p).Country, c => c.Name) : string.Empty, !_addressSettings.CountryEnabled),
+                new PropertyByName<Order>("Shipping state province", p => orderAddress(p)?.StateProvince != null ? _localizationService.GetLocalized(orderAddress(p).StateProvince, sp => sp.Name) : string.Empty, !_addressSettings.StateProvinceEnabled),
+                new PropertyByName<Order>("Shipping county", p => orderAddress(p)?.County ?? string.Empty, !_addressSettings.CountyEnabled),
+                new PropertyByName<Order>("Shipping city", p => orderAddress(p)?.City ?? string.Empty, !_addressSettings.CityEnabled),
+                new PropertyByName<Order>("Shipping address 1", p => orderAddress(p)?.Address1 ?? string.Empty, !_addressSettings.StreetAddressEnabled),
+                new PropertyByName<Order>("Shipping address 2", p => orderAddress(p)?.Address2 ?? string.Empty, !_addressSettings.StreetAddress2Enabled),
                 new PropertyByName<Order>("Shipping zip postal code",
-                    p => p.ShippingAddress?.ZipPostalCode ?? string.Empty, !_addressSettings.ZipPostalCodeEnabled),
-                new PropertyByName<Order>("Shipping phone number", p => p.ShippingAddress?.PhoneNumber ?? string.Empty, !_addressSettings.PhoneEnabled),
-                new PropertyByName<Order>("Shipping fax number", p => p.ShippingAddress?.FaxNumber ?? string.Empty, !_addressSettings.FaxEnabled)
+                    p => orderAddress(p)?.ZipPostalCode ?? string.Empty, !_addressSettings.ZipPostalCodeEnabled),
+                new PropertyByName<Order>("Shipping phone number", p => orderAddress(p)?.PhoneNumber ?? string.Empty, !_addressSettings.PhoneEnabled),
+                new PropertyByName<Order>("Shipping fax number", p => orderAddress(p)?.FaxNumber ?? string.Empty, !_addressSettings.FaxEnabled)
             }, _catalogSettings);
 
             var orderItemsManager = new PropertyManager<OrderItem>(new[]

@@ -34,7 +34,7 @@ namespace Nop.Services.Shipping
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
         private readonly ILogger _logger;
-        private readonly IPluginFinder _pluginFinder;
+        private readonly IPluginService _pluginService;
         private readonly IPriceCalculationService _priceCalculationService;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly IProductService _productService;
@@ -55,7 +55,7 @@ namespace Nop.Services.Shipping
             IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
             ILogger logger,
-            IPluginFinder pluginFinder,
+            IPluginService pluginService,
             IPriceCalculationService priceCalculationService,
             IProductAttributeParser productAttributeParser,
             IProductService productService,
@@ -72,7 +72,7 @@ namespace Nop.Services.Shipping
             this._genericAttributeService = genericAttributeService;
             this._localizationService = localizationService;
             this._logger = logger;
-            this._pluginFinder = pluginFinder;
+            this._pluginService = pluginService;
             this._priceCalculationService = priceCalculationService;
             this._productAttributeParser = productAttributeParser;
             this._productService = productService;
@@ -148,7 +148,7 @@ namespace Nop.Services.Shipping
         /// <returns>Found Shipping rate computation method</returns>
         public virtual IShippingRateComputationMethod LoadShippingRateComputationMethodBySystemName(string systemName)
         {
-            var descriptor = _pluginFinder.GetPluginDescriptorBySystemName<IShippingRateComputationMethod>(systemName);
+            var descriptor = _pluginService.GetPluginDescriptorBySystemName<IShippingRateComputationMethod>(systemName);
             return descriptor?.Instance<IShippingRateComputationMethod>();
         }
 
@@ -160,7 +160,7 @@ namespace Nop.Services.Shipping
         /// <returns>Shipping rate computation methods</returns>
         public virtual IList<IShippingRateComputationMethod> LoadAllShippingRateComputationMethods(Customer customer = null, int storeId = 0)
         {
-            return _pluginFinder.GetPlugins<IShippingRateComputationMethod>(customer: customer, storeId: storeId).ToList();
+            return _pluginService.GetPlugins<IShippingRateComputationMethod>(customer: customer, storeId: storeId).ToList();
         }
 
         /// <summary>
@@ -408,7 +408,7 @@ namespace Nop.Services.Shipping
         /// <returns>Found pickup point provider</returns>
         public virtual IPickupPointProvider LoadPickupPointProviderBySystemName(string systemName)
         {
-            var descriptor = _pluginFinder.GetPluginDescriptorBySystemName<IPickupPointProvider>(systemName);
+            var descriptor = _pluginService.GetPluginDescriptorBySystemName<IPickupPointProvider>(systemName);
             return descriptor?.Instance<IPickupPointProvider>();
         }
 
@@ -420,7 +420,7 @@ namespace Nop.Services.Shipping
         /// <returns>Pickup point providers</returns>
         public virtual IList<IPickupPointProvider> LoadAllPickupPointProviders(Customer customer = null, int storeId = 0)
         {
-            return _pluginFinder.GetPlugins<IPickupPointProvider>(customer: customer, storeId: storeId).ToList();
+            return _pluginService.GetPlugins<IPickupPointProvider>(customer: customer, storeId: storeId).ToList();
         }
 
         /// <summary>

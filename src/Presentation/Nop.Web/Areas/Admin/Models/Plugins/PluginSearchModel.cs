@@ -34,6 +34,8 @@ namespace Nop.Web.Areas.Admin.Models.Plugins
         [NopResourceDisplayName("Admin.Configuration.Plugins.Group")]
         public IList<SelectListItem> AvailableGroups { get; set; }
 
+        public bool NeedToRestart { get; set; }
+
         #endregion
     }
 }

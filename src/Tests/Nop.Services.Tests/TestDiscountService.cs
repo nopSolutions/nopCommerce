@@ -14,6 +14,7 @@ using Nop.Services.Customers;
 using Nop.Services.Discounts;
 using Nop.Services.Events;
 using Nop.Services.Localization;
+using Nop.Services.Logging;
 using Nop.Services.Plugins;
 
 namespace Nop.Services.Tests
@@ -22,7 +23,7 @@ namespace Nop.Services.Tests
     {
         private readonly List<DiscountForCaching> _discountForCaching;
 
-        public TestDiscountService(ICategoryService categoryService, ICustomerService customerService, IEventPublisher eventPublisher, ILocalizationService localizationService, IPluginFinder pluginFinder, IRepository<Category> categoryRepository, IRepository<Discount> discountRepository, IRepository<DiscountRequirement> discountRequirementRepository, IRepository<DiscountUsageHistory> discountUsageHistoryRepository, IRepository<Manufacturer> manufacturerRepository, IRepository<Product> productRepository, IStaticCacheManager cacheManager, IStoreContext storeContext) : base(categoryService, customerService, eventPublisher, localizationService, pluginFinder, categoryRepository, discountRepository, discountRequirementRepository, discountUsageHistoryRepository, manufacturerRepository, productRepository, cacheManager, storeContext)
+        public TestDiscountService(ICategoryService categoryService, ICustomerService customerService, IEventPublisher eventPublisher, ILocalizationService localizationService, IPluginService pluginService, IRepository<Category> categoryRepository, IRepository<Discount> discountRepository, IRepository<DiscountRequirement> discountRequirementRepository, IRepository<DiscountUsageHistory> discountUsageHistoryRepository, IRepository<Manufacturer> manufacturerRepository, IRepository<Product> productRepository, IStaticCacheManager cacheManager, IStoreContext storeContext) : base(categoryService, customerService, eventPublisher, localizationService, pluginService, categoryRepository, discountRepository, discountRequirementRepository, discountUsageHistoryRepository, manufacturerRepository, productRepository, cacheManager, storeContext)
         {
             _discountForCaching = new List<DiscountForCaching>();
         }
@@ -73,40 +74,43 @@ namespace Nop.Services.Tests
 
         public static IDiscountService Init()
         {
-            var _cacheManager = new TestMemoryCacheManager(new Mock<IMemoryCache>().Object);
-            var _discountRepo = new Mock<IRepository<Discount>>();
-            var _discountRequirementRepo = new Mock<IRepository<DiscountRequirement>>();
-            _discountRequirementRepo.Setup(x => x.Table).Returns(new List<DiscountRequirement>().AsQueryable());
-            var _discountUsageHistoryRepo = new Mock<IRepository<DiscountUsageHistory>>();
-            var _categoryRepo = new Mock<IRepository<Category>>();
-            _categoryRepo.Setup(x => x.Table).Returns(new List<Category>().AsQueryable());
-            var _manufacturerRepo = new Mock<IRepository<Manufacturer>>();
-            _manufacturerRepo.Setup(x => x.Table).Returns(new List<Manufacturer>().AsQueryable());
-            var _productRepo = new Mock<IRepository<Product>>();
-            _productRepo.Setup(x => x.Table).Returns(new List<Product>().AsQueryable());
-            var _customerService = new Mock<ICustomerService>();
-            var _localizationService = new Mock<ILocalizationService>();
-            var _eventPublisher = new Mock<IEventPublisher>();
-            var pluginFinder = new PluginFinder(_eventPublisher.Object);
-            var _categoryService = new Mock<ICategoryService>();
+            var cacheManager = new TestMemoryCacheManager(new Mock<IMemoryCache>().Object);
+            var discountRepo = new Mock<IRepository<Discount>>();
+            var discountRequirementRepo = new Mock<IRepository<DiscountRequirement>>();
+            discountRequirementRepo.Setup(x => x.Table).Returns(new List<DiscountRequirement>().AsQueryable());
+            var discountUsageHistoryRepo = new Mock<IRepository<DiscountUsageHistory>>();
+            var categoryRepo = new Mock<IRepository<Category>>();
+            categoryRepo.Setup(x => x.Table).Returns(new List<Category>().AsQueryable());
+            var manufacturerRepo = new Mock<IRepository<Manufacturer>>();
+            manufacturerRepo.Setup(x => x.Table).Returns(new List<Manufacturer>().AsQueryable());
+            var productRepo = new Mock<IRepository<Product>>();
+            productRepo.Setup(x => x.Table).Returns(new List<Product>().AsQueryable());
+            var customerService = new Mock<ICustomerService>();
+            var localizationService = new Mock<ILocalizationService>();
+            var eventPublisher = new Mock<IEventPublisher>();
+            var loger = new Mock<ILogger>();
+            var webHelper = new Mock<IWebHelper>();
 
-            var _store = new Store {Id = 1};
-            var _storeContext = new Mock<IStoreContext>();
-            _storeContext.Setup(x => x.CurrentStore).Returns(_store);
+            var pluginService = new PluginService(customerService.Object, loger.Object , CommonHelper.DefaultFileProvider, webHelper.Object);
+            var categoryService = new Mock<ICategoryService>();
 
-            var discountService = new TestDiscountService(_categoryService.Object,
-                _customerService.Object,
-                _eventPublisher.Object,
-                _localizationService.Object,
-                pluginFinder,
-                _categoryRepo.Object,
-                _discountRepo.Object,
-                _discountRequirementRepo.Object,
-                _discountUsageHistoryRepo.Object,
-                _manufacturerRepo.Object,
-                _productRepo.Object,
-                _cacheManager,
-                _storeContext.Object);
+            var store = new Store {Id = 1};
+            var storeContext = new Mock<IStoreContext>();
+            storeContext.Setup(x => x.CurrentStore).Returns(store);
+
+            var discountService = new TestDiscountService(categoryService.Object,
+                customerService.Object,
+                eventPublisher.Object,
+                localizationService.Object,
+                pluginService,
+                categoryRepo.Object,
+                discountRepo.Object,
+                discountRequirementRepo.Object,
+                discountUsageHistoryRepo.Object,
+                manufacturerRepo.Object,
+                productRepo.Object,
+                cacheManager,
+                storeContext.Object);
 
             return discountService;
         }

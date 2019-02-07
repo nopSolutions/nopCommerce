@@ -1,26 +1,29 @@
-@model BlogCommentSearchModel
+@model NewsCommentSearchModel
 
 @{
-    int? filterByBlogPostId = ViewBag.FilterByBlogPostId;
+    int? filterByNewsItemId = ViewBag.FilterByNewsItemId;
 }
 
-<nop-antiforgery-token/>
-<div class="content-header clearfix">   
+<nop-antiforgery-token />
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        @T("Admin.ContentManagement.News.Comments")
+    </h1>
     <div class="pull-right">
         <button type="button" id="approve-selected" class="btn bg-green">
             <i class="fa fa-check-square-o"></i>
-            @T("Admin.ContentManagement.Blog.Comments.ApproveSelected")
+            @T("Admin.ContentManagement.News.Comments.ApproveSelected")
         </button>
         <button type="button" id="disapprove-selected" class="btn bg-navy">
             <i class="fa fa-minus-square-o"></i>
-            @T("Admin.ContentManagement.Blog.Comments.DisapproveSelected")
+            @T("Admin.ContentManagement.News.Comments.DisapproveSelected")
         </button>
         <button type="button" id="delete-selected" class="btn bg-red">
             <i class="fa fa-trash-o"></i>
-            @T("Admin.ContentManagement.Blog.Comments.DeleteSelected")
+            @T("Admin.ContentManagement.News.Comments.DeleteSelected")
         </button>
-        <nop-action-confirmation asp-button-id="delete-selected" />
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.BlogCommentListButtons })
+        <nop-action-confirmation asp-button-id="delete-selected"/>
+        @await Component.InvokeAsync("AdminWidget", new {widgetZone = AdminWidgetZones.NewsCommentListButtons})
     </div>
 </div>
 
@@ -62,18 +65,8 @@
                                 <div class="col-md-8">
                                     <nop-editor asp-for="SearchText" />
                                 </div>
-                            </div>                            
-                            @if ((Model.BlogPostId ?? 0) > 0)
-                            {
-                                <div class="form-group">
-                                    <div class="col-md-4">
-                                        <nop-label asp-for="BlogPostId" />
-                                    </div>
-                                    <div class="col-md-8">
-                                        <nop-editor asp-for="BlogPostId" />
-                                    </div>
-                                </div>
-                            }
+                            </div>
+
                             <div class="form-group">
                                 <div class="col-md-8 col-md-offset-4">
                                     <button type="button" id="search-comments" class="btn btn-primary btn-search">
@@ -97,7 +90,7 @@
                                     type: "json",
                                     transport: {
                                         read: {
-                                            url: "@Url.Action("Comments", "Blog")",
+                                            url: "@Url.Action("Comments", "News")",
                                             type: "POST",
                                             dataType: "json",
                                             data: function() {
@@ -106,20 +99,20 @@
                                                     CreatedOnTo: $('#@Html.IdFor(model => model.CreatedOnTo)').val(),
                                                     SearchText: $('#@Html.IdFor(model => model.SearchText)').val(),
                                                     SearchApprovedId: $('#SearchApprovedId').val(),
-                                                    BlogPostId: $('#BlogPostId').val()
+                                                    NewsItemId: '@Model.NewsItemId'
                                                 };
                                                 addAntiForgeryToken(data);
                                                 return data;
                                             }
                                         },
                                         update: {
-                                            url: "@Html.Raw(Url.Action("CommentUpdate", "Blog"))",
+                                            url: "@Html.Raw(Url.Action("CommentUpdate", "News"))",
                                             type: "POST",
                                             dataType: "json",
                                             data: addAntiForgeryToken
                                         },
                                         destroy: {
-                                            url: "@Html.Raw(Url.Action("CommentDelete", "Blog"))",
+                                            url: "@Html.Raw(Url.Action("CommentDelete", "News"))",
                                             type: "POST",
                                             dataType: "json",
                                             data: addAntiForgeryToken
@@ -133,12 +126,13 @@
                                             id: "Id",
                                             fields: {
                                                 Id: { editable: false, type: "number" },
-                                                BlogPostTitle: { editable: false, type: "string" },
+                                                NewsItemTitle: { editable: false, type: "string" },
                                                 StoreName: { editable: false, type: "string" },
                                                 StoreId: { editable: false, type: "number" },
                                                 CustomerInfo: { editable: false, type: "string" },
                                                 CustomerId: { editable: false, type: "number" },
-                                                Comment: { editable: false, type: "string" },                                              
+                                                CommentTitle: { editable: false, type: "string" },
+                                                CommentText: { editable: false, type: "string" },
                                                 IsApproved: { editable: true, type: "boolean" },
                                                 CreatedOn: { editable: false, type: "date" }
                                             }
@@ -179,35 +173,38 @@
                                         template: "<input type='checkbox' value='#=Id#' class='checkboxGroups'/>",
                                         width: 50
                                     }, {
-                                        field: "BlogPostTitle",
-                                        title: "@T("Admin.ContentManagement.Blog.Comments.Fields.BlogPost")",
+                                        field: "NewsItemTitle",
+                                        title: "@T("Admin.ContentManagement.News.Comments.Fields.NewsItem")",
                                         width: 200,
-                                        template: '<a href="@Url.Content("~/Admin/Blog/BlogPostEdit/")#=BlogPostId#">#:BlogPostTitle#</a>'
+                                        template: '<a href="@Url.Content("~/Admin/News/Edit/")#=NewsItemId#">#:NewsItemTitle#</a>'
                                     }, {
                                         field: "StoreId",
-                                        title: "@T("Admin.ContentManagement.Blog.Comments.Fields.StoreName")",
+                                        title: "@T("Admin.ContentManagement.News.Comments.Fields.StoreName")",
                                         width: 150,
                                         template: "#:StoreName#"
                                     }, {
                                         field: "CustomerId",
-                                        title: "@T("Admin.ContentManagement.Blog.Comments.Fields.Customer")",
-                                        width: 200,
+                                        title: "@T("Admin.ContentManagement.News.Comments.Fields.Customer")",
+                                        width: 150,
                                         template: '<a href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#">#:CustomerInfo#</a>'
                                     }, {
-                                        field: "Comment",
-                                        title: "@T("Admin.ContentManagement.Blog.Comments.Fields.Comment")",
+                                        field: "CommentTitle",
+                                        title: "@T("Admin.ContentManagement.News.Comments.Fields.CommentTitle")"
+                                    }, {
+                                        field: "CommentText",
+                                        title: "@T("Admin.ContentManagement.News.Comments.Fields.CommentText")",
                                         encoded: false
                                     }, {
                                         field: "IsApproved",
-                                        title: "@T("Admin.ContentManagement.Blog.Comments.Fields.IsApproved")",
+                                        title: "@T("Admin.ContentManagement.News.Comments.Fields.IsApproved")",
                                         width: 100,
                                         headerAttributes: { style: "text-align:center" },
                                         attributes: { style: "text-align:center" },
                                         template: '# if(IsApproved) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
                                     }, {
                                         field: "CreatedOn",
-                                        title: "@T("Admin.ContentManagement.Blog.Comments.Fields.CreatedOn")",
-                                        width: 200,
+                                        title: "@T("Admin.ContentManagement.News.Comments.Fields.CreatedOn")",
+                                        width: 100,
                                         type: "date",
                                         format: "{0:G}"
                                     }, {
@@ -257,7 +254,7 @@
                                 $.ajax({
                                     cache: false,
                                     type: "POST",
-                                    url: "@(Url.Action("DeleteSelectedComments", "Blog"))",
+                                    url: "@(Url.Action("DeleteSelectedComments", "News"))",
                                     data: postData,
                                     complete: function (data) {
                                         //reload grid
@@ -266,12 +263,13 @@
                                     },
                                     error: function (xhr, ajaxOptions, thrownError) {
                                         $('#deleteSelectedCommentsFailed-info').html(thrownError);
-                                        $("#deleteSelectedCommentsFailed").click(); 
-                                    }
+                                        $("#deleteSelectedCommentsFailed").click();
+                                    },
+                                    traditional: true
                                 });
                                 $('#delete-selected-action-confirmation').modal('toggle');
                                 return false;
-                            });                            
+                            });
 
                             //"approve selected" button
                             $('#approve-selected')
@@ -286,7 +284,7 @@
                                     $.ajax({
                                         cache: false,
                                         type: "POST",
-                                        url: "@(Url.Action("ApproveSelected", "Blog"))",
+                                        url: "@(Url.Action("ApproveSelected", "News"))",
                                         data: postData,
                                         complete: function(data) {
                                             //reload grid
@@ -315,7 +313,7 @@
                                     $.ajax({
                                         cache: false,
                                         type: "POST",
-                                        url: "@(Url.Action("DisapproveSelected", "Blog"))",
+                                        url: "@(Url.Action("DisapproveSelected", "News"))",
                                         data: postData,
                                         complete: function(data) {
                                             //reload grid
@@ -330,7 +328,7 @@
                                     });
                                     return false;
                                 });
-                            
+
                             $('#mastercheckbox').click(function() {
                                 $('.checkboxGroups').attr('checked', $(this).is(':checked')).change();
                             });
@@ -355,7 +353,6 @@
                         });
 
                         function onDataBound(e) {
-
                             $('#comments-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]').each(function() {
                                 var currentId = $(this).val();
                                 var checked = jQuery.inArray(currentId, selectedIds);
@@ -377,6 +374,6 @@
         </div>
     </div>
 </div>
-<nop-alert asp-alert-id="deleteSelectedCommentsFailed "/>
+<nop-alert asp-alert-id="deleteSelectedCommentsFailed" />
 <nop-alert asp-alert-id="approveSelectedFailed" />
 <nop-alert asp-alert-id="disapproveSelectedFailed" />

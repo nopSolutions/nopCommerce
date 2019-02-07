@@ -79,7 +79,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly INopFileProvider _fileProvider;
         private readonly IOrderService _orderService;
         private readonly IPaymentService _paymentService;
-        private readonly IPluginFinder _pluginFinder;
+        private readonly IPluginService _pluginService;
         private readonly IProductService _productService;
         private readonly IReturnRequestService _returnRequestService;
         private readonly ISearchTermService _searchTermService;
@@ -114,7 +114,7 @@ namespace Nop.Web.Areas.Admin.Factories
             IMeasureService measureService,
             IOrderService orderService,
             IPaymentService paymentService,
-            IPluginFinder pluginFinder,
+            IPluginService pluginService,
             IProductService productService,
             IReturnRequestService returnRequestService,
             ISearchTermService searchTermService,
@@ -145,7 +145,7 @@ namespace Nop.Web.Areas.Admin.Factories
             this._measureService = measureService;
             this._orderService = orderService;
             this._paymentService = paymentService;
-            this._pluginFinder = pluginFinder;
+            this._pluginService = pluginService;
             this._productService = productService;
             this._returnRequestService = returnRequestService;
             this._searchTermService = searchTermService;
@@ -416,15 +416,29 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(models));
 
             //check whether there are incompatible plugins
-            if (!PluginManager.IncompatiblePlugins?.Any() ?? true)
-                return;
-
-            foreach (var pluginName in PluginManager.IncompatiblePlugins)
+            foreach (var pluginName in _pluginService.GetIncompatiblePlugins())
             {
                 models.Add(new SystemWarningModel
                 {
                     Level = SystemWarningLevel.Warning,
                     Text = string.Format(_localizationService.GetResource("Admin.System.Warnings.PluginNotLoaded"), pluginName)
+                });
+            }
+
+            //check whether there are any collision of loaded assembly
+            foreach (var assembly in _pluginService.GetAssemblyCollisions())
+            {
+                //get plugin references message
+                var message = assembly.Collisions
+                    .Select(item => string.Format(_localizationService
+                        .GetResource("Admin.System.Warnings.PluginRequiredAssembly"), item.PluginName, item.AssemblyName))
+                    .Aggregate("", (curent, all) => all + ", " + curent).TrimEnd(',', ' ');
+
+                models.Add(new SystemWarningModel
+                {
+                    Level = SystemWarningLevel.Warning,
+                    Text = string.Format(_localizationService.GetResource("Admin.System.Warnings.AssemblyHasCollision"),
+                        assembly.ShortName, assembly.AssemblyFullNameInMemory, message)
                 });
             }
         }
@@ -541,11 +555,11 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="models">List of system warning models</param>
         protected virtual void PreparePluginsEnabledWarningModel(List<SystemWarningModel> models)
         {
-            var pluginDescriptors = _pluginFinder.GetPluginDescriptors();
+            var plugins = _pluginService.GetPlugins<IPlugin>();
 
             var notEnabled = new List<string>();
 
-            foreach (var plugin in pluginDescriptors.Select(pd => pd.Instance()))
+            foreach (var plugin in plugins)
             {
                 var isEnabled = true;
 
