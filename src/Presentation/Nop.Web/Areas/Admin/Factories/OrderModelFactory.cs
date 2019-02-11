@@ -1039,14 +1039,14 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     Id = order.Id,
                     OrderStatusId = order.OrderStatusId,
-                    OrderGuid = order.OrderGuid,
-                    CustomOrderNumber = order.CustomOrderNumber,
                     CustomerId = order.CustomerId,
-                    CustomerIp = order.CustomerIp,
                     VatNumber = order.VatNumber,
                     CheckoutAttributeInfo = order.CheckoutAttributeDescription
                 };
 
+                model.OrderGuid = order.OrderGuid;
+                model.CustomOrderNumber = order.CustomOrderNumber;
+                model.CustomerIp = order.CustomerIp;
                 model.OrderStatus = _localizationService.GetLocalizedEnum(order.OrderStatus);
                 model.StoreName = _storeService.GetStoreById(order.StoreId)?.Name ?? "Deleted";
                 model.CustomerInfo = order.Customer.IsRegistered() ? order.Customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
