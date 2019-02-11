@@ -8,24 +8,17 @@ using Microsoft.AspNetCore.Http;
 namespace Nop.Core.Caching
 {
     /// <summary>
-    /// Represents a manager for caching during an HTTP request (short term caching)
+    ///     Represents a manager for caching during an HTTP request (short term caching)
     /// </summary>
     public partial class PerRequestCacheManager : ICacheManager
     {
-        #region Fields
-        private static readonly TimeSpan s_lockTimeout = TimeSpan.FromMinutes(2);
-
-        private readonly ReaderWriterLock _lock;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-
-        #endregion
-
         #region Ctor
 
         public PerRequestCacheManager(IHttpContextAccessor httpContextAccessor)
         {
-            this._httpContextAccessor = httpContextAccessor;
-            _lock = new ReaderWriterLock();
+            _httpContextAccessor = httpContextAccessor;
+
+            _lock = new ReaderWriterLockSlim();
         }
 
         #endregion
@@ -33,12 +26,19 @@ namespace Nop.Core.Caching
         #region Utilities
 
         /// <summary>
-        /// Gets a key/value collection that can be used to share data within the scope of this request 
+        /// Gets a key/value collection that can be used to share data within the scope of this request
         /// </summary>
         protected virtual IDictionary<object, object> GetItems()
         {
             return _httpContextAccessor.HttpContext?.Items;
         }
+
+        #endregion
+
+        #region Fields
+
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly ReaderWriterLockSlim _lock;
 
         #endregion
 
@@ -54,29 +54,36 @@ namespace Nop.Core.Caching
         /// <returns>The cached value associated with the specified key</returns>
         public virtual T Get<T>(string key, Func<T> acquire, int? cacheTime = null)
         {
-            _lock.AcquireReaderLock(s_lockTimeout);
+            _lock.EnterReadLock();
+
             try
             {
                 var items = GetItems();
                 if (items == null)
+                {
                     return acquire();
+                }
 
                 //item already is in cache, so return it
                 if (items[key] != null)
+                {
                     return (T) items[key];
+                }
 
                 //or create it using passed function
                 var result = acquire();
 
                 //and set in cache (if cache time is defined)
                 if (result != null && (cacheTime ?? NopCachingDefaults.CacheTime) > 0)
+                {
                     items[key] = result;
+                }
 
                 return result;
             }
             finally
             {
-                _lock.ReleaseReaderLock();
+                _lock.ExitReadLock();
             }
         }
 
@@ -88,20 +95,24 @@ namespace Nop.Core.Caching
         /// <param name="cacheTime">Cache time in minutes</param>
         public virtual void Set(string key, object data, int cacheTime)
         {
-            _lock.AcquireWriterLock(s_lockTimeout);
+            _lock.EnterWriteLock();
 
             try
             {
                 var items = GetItems();
                 if (items == null)
+                {
                     return;
+                }
 
                 if (data != null)
+                {
                     items[key] = data;
+                }
             }
             finally
             {
-                _lock.ReleaseWriterLock();
+                _lock.ExitWriteLock();
             }
         }
 
@@ -112,7 +123,7 @@ namespace Nop.Core.Caching
         /// <returns>True if item already is in cache; otherwise false</returns>
         public virtual bool IsSet(string key)
         {
-            _lock.AcquireReaderLock(s_lockTimeout);
+            _lock.EnterReadLock();
 
             try
             {
@@ -122,7 +133,7 @@ namespace Nop.Core.Caching
             }
             finally
             {
-                _lock.ReleaseReaderLock();
+                _lock.ExitReadLock();
             }
         }
 
@@ -132,7 +143,7 @@ namespace Nop.Core.Caching
         /// <param name="key">Key of cached item</param>
         public virtual void Remove(string key)
         {
-            _lock.AcquireWriterLock(s_lockTimeout);
+            _lock.EnterWriteLock();
 
             try
             {
@@ -142,7 +153,7 @@ namespace Nop.Core.Caching
             }
             finally
             {
-                _lock.ReleaseWriterLock();
+                _lock.ExitWriteLock();
             }
         }
 
@@ -152,7 +163,7 @@ namespace Nop.Core.Caching
         /// <param name="pattern">String key pattern</param>
         public virtual void RemoveByPattern(string pattern)
         {
-            _lock.AcquireWriterLock(s_lockTimeout);
+            _lock.EnterWriteLock();
 
             try
             {
@@ -175,7 +186,7 @@ namespace Nop.Core.Caching
             }
             finally
             {
-                _lock.ReleaseWriterLock();
+                _lock.ExitWriteLock();
             }
         }
 
@@ -184,7 +195,7 @@ namespace Nop.Core.Caching
         /// </summary>
         public virtual void Clear()
         {
-            _lock.AcquireWriterLock(s_lockTimeout);
+            _lock.EnterWriteLock();
 
             try
             {
@@ -194,12 +205,12 @@ namespace Nop.Core.Caching
             }
             finally
             {
-                _lock.ReleaseWriterLock();
+                _lock.ExitWriteLock();
             }
         }
 
         /// <summary>
-        /// Dispose cache manager
+        ///     Dispose cache manager
         /// </summary>
         public virtual void Dispose()
         {
