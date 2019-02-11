@@ -2601,6 +2601,9 @@
   <LocaleResource Name="Admin.Catalog.Products.AssociatedProducts.SaveBeforeEdit">
     <Value>You need to save the product before you can add associated products for this product page.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.AssociatedProducts.TryToAddSelfGroupedProduct">
+    <Value>You cannot add current group product to related ones. This group product was ignored while adding.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.BackToList">
     <Value>back to product list</Value>
   </LocaleResource>
