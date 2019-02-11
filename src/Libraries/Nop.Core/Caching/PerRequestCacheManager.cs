@@ -2,35 +2,23 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading;
 using Microsoft.AspNetCore.Http;
 
 namespace Nop.Core.Caching
 {
     /// <summary>
-    /// Represents a manager for caching during an HTTP request (short term caching)
+    ///     Represents a manager for caching during an HTTP request (short term caching)
     /// </summary>
     public partial class PerRequestCacheManager : ICacheManager
     {
-<<<<<<< HEAD
-=======
-        #region Fields
-
-        private readonly IHttpContextAccessor _httpContextAccessor;
-
-        #endregion
-
->>>>>>> parent of 6c7715ddd... Update PerRequestCacheManager.cs
         #region Ctor
 
         public PerRequestCacheManager(IHttpContextAccessor httpContextAccessor)
         {
-<<<<<<< HEAD
             _httpContextAccessor = httpContextAccessor;
 
             _lock = new ReaderWriterLockSlim();
-=======
-            this._httpContextAccessor = httpContextAccessor;
->>>>>>> parent of 6c7715ddd... Update PerRequestCacheManager.cs
         }
 
         #endregion
@@ -38,11 +26,7 @@ namespace Nop.Core.Caching
         #region Utilities
 
         /// <summary>
-<<<<<<< HEAD
         /// Gets a key/value collection that can be used to share data within the scope of this request
-=======
-        /// Gets a key/value collection that can be used to share data within the scope of this request 
->>>>>>> parent of 6c7715ddd... Update PerRequestCacheManager.cs
         /// </summary>
         protected virtual IDictionary<object, object> GetItems()
         {
@@ -51,7 +35,6 @@ namespace Nop.Core.Caching
 
         #endregion
 
-<<<<<<< HEAD
         #region Fields
 
         private readonly IHttpContextAccessor _httpContextAccessor;
@@ -59,8 +42,6 @@ namespace Nop.Core.Caching
 
         #endregion
 
-=======
->>>>>>> parent of 6c7715ddd... Update PerRequestCacheManager.cs
         #region Methods
 
         /// <summary>
@@ -73,7 +54,6 @@ namespace Nop.Core.Caching
         /// <returns>The cached value associated with the specified key</returns>
         public virtual T Get<T>(string key, Func<T> acquire, int? cacheTime = null)
         {
-<<<<<<< HEAD
             _lock.EnterReadLock();
 
             try
@@ -105,24 +85,6 @@ namespace Nop.Core.Caching
             {
                 _lock.ExitReadLock();
             }
-=======
-            var items = GetItems();
-            if (items == null)
-                return acquire();
-
-            //item already is in cache, so return it
-            if (items[key] != null)
-                return (T)items[key];
-
-            //or create it using passed function
-            var result = acquire();
-
-            //and set in cache (if cache time is defined)
-            if (result != null && (cacheTime ?? NopCachingDefaults.CacheTime) > 0)
-                items[key] = result;
-
-            return result;
->>>>>>> parent of 6c7715ddd... Update PerRequestCacheManager.cs
         }
 
         /// <summary>
@@ -133,7 +95,6 @@ namespace Nop.Core.Caching
         /// <param name="cacheTime">Cache time in minutes</param>
         public virtual void Set(string key, object data, int cacheTime)
         {
-<<<<<<< HEAD
             _lock.EnterWriteLock();
 
             try
@@ -153,14 +114,6 @@ namespace Nop.Core.Caching
             {
                 _lock.ExitWriteLock();
             }
-=======
-            var items = GetItems();
-            if (items == null)
-                return;
-
-            if (data != null)
-                items[key] = data;
->>>>>>> parent of 6c7715ddd... Update PerRequestCacheManager.cs
         }
 
         /// <summary>
@@ -170,7 +123,6 @@ namespace Nop.Core.Caching
         /// <returns>True if item already is in cache; otherwise false</returns>
         public virtual bool IsSet(string key)
         {
-<<<<<<< HEAD
             _lock.EnterReadLock();
 
             try
@@ -183,11 +135,6 @@ namespace Nop.Core.Caching
             {
                 _lock.ExitReadLock();
             }
-=======
-            var items = GetItems();
-
-            return items?[key] != null;
->>>>>>> parent of 6c7715ddd... Update PerRequestCacheManager.cs
         }
 
         /// <summary>
@@ -196,7 +143,6 @@ namespace Nop.Core.Caching
         /// <param name="key">Key of cached item</param>
         public virtual void Remove(string key)
         {
-<<<<<<< HEAD
             _lock.EnterWriteLock();
 
             try
@@ -209,11 +155,6 @@ namespace Nop.Core.Caching
             {
                 _lock.ExitWriteLock();
             }
-=======
-            var items = GetItems();
-
-            items?.Remove(key);
->>>>>>> parent of 6c7715ddd... Update PerRequestCacheManager.cs
         }
 
         /// <summary>
@@ -222,26 +163,30 @@ namespace Nop.Core.Caching
         /// <param name="pattern">String key pattern</param>
         public virtual void RemoveByPattern(string pattern)
         {
-<<<<<<< HEAD
             _lock.EnterWriteLock();
-=======
-            var items = GetItems();
-            if (items == null)
-                return;
->>>>>>> parent of 6c7715ddd... Update PerRequestCacheManager.cs
 
-            //get cache keys that matches pattern
-            var regex = new Regex(pattern, RegexOptions.Singleline | RegexOptions.Compiled | RegexOptions.IgnoreCase);
-            var matchesKeys = items.Keys.Select(p => p.ToString()).Where(key => regex.IsMatch(key)).ToList();
-
-            //remove matching values
-            foreach (var key in matchesKeys)
+            try
             {
-<<<<<<< HEAD
+                var items = GetItems();
+                if (items == null)
+                {
+                    return;
+                }
+
+                //get cache keys that matches pattern
+                var regex = new Regex(pattern,
+                    RegexOptions.Singleline | RegexOptions.Compiled | RegexOptions.IgnoreCase);
+                var matchesKeys = items.Keys.Select(p => p.ToString()).Where(key => regex.IsMatch(key)).ToList();
+
+                //remove matching values
+                foreach (var key in matchesKeys)
+                {
+                    items.Remove(key);
+                }
+            }
+            finally
+            {
                 _lock.ExitWriteLock();
-=======
-                items.Remove(key);
->>>>>>> parent of 6c7715ddd... Update PerRequestCacheManager.cs
             }
         }
 
@@ -250,7 +195,6 @@ namespace Nop.Core.Caching
         /// </summary>
         public virtual void Clear()
         {
-<<<<<<< HEAD
             _lock.EnterWriteLock();
 
             try
@@ -263,15 +207,10 @@ namespace Nop.Core.Caching
             {
                 _lock.ExitWriteLock();
             }
-=======
-            var items = GetItems();
-
-            items?.Clear();
->>>>>>> parent of 6c7715ddd... Update PerRequestCacheManager.cs
         }
 
         /// <summary>
-        /// Dispose cache manager
+        ///     Dispose cache manager
         /// </summary>
         public virtual void Dispose()
         {
