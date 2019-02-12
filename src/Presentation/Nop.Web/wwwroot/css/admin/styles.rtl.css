@@ -159,6 +159,7 @@ ul.common-list {
     background-color: #3c8dbc;
     color: #fff;
     border-color: #3c8dbc;
+    padding-left: 45px;
 }
 
 .panel.collapsible-panel >.panel-heading span {
@@ -166,11 +167,25 @@ ul.common-list {
     font-weight: bold;
 }
 
-.panel.collapsible-panel .panel-heading i {
+.panel.collapsible-panel .panel-heading i.toggle-icon {
     position: absolute;
     right: 5px;
     top: 14px;
 }
+
+.panel.collapsible-panel .panel-heading div.icon-container {
+    width: 45px;
+    position: absolute;
+    left: 0;
+    top: 12px;
+    text-align: center;
+}
+
+.panel.collapsible-panel .panel-heading i.panel-icon {
+    font-size: 18px;
+    padding-right: 0 !important;
+}
+
 .panel.collapsible-panel .panel-container.collapsed {
     display: none;
 }

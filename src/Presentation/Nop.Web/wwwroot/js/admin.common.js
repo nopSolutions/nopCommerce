@@ -236,7 +236,7 @@ $(document).ready(function () {
 function WrapAndSaveBlockData() {
     $(this).parents(".panel").find(">.panel-container").slideToggle();
 
-    var icon = $(this).find("i");
+    var icon = $(this).find("i.toggle-icon");
     if ($(this).hasClass("opened")) {
         icon.removeClass("fa-minus");
         icon.addClass("fa-plus");

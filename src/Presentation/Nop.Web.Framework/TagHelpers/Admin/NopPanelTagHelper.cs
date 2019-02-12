@@ -17,6 +17,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
         private const string HIDE_BLOCK_ATTRIBUTE_NAME_ATTRIBUTE_NAME = "asp-hide-block-attribute-name";
         private const string IS_HIDE_ATTRIBUTE_NAME = "asp-hide";
         private const string IS_ADVANCED_ATTRIBUTE_NAME = "asp-advanced";
+        private const string PANEL_ICON_ATTRIBUTE_NAME = "asp-icon";
 
         private readonly IHtmlHelper _htmlHelper;
 
@@ -49,6 +50,12 @@ namespace Nop.Web.Framework.TagHelpers.Admin
         /// </summary>
         [HtmlAttributeName(IS_ADVANCED_ATTRIBUTE_NAME)]
         public bool IsAdvanced { get; set; }
+
+        /// <summary>
+        /// Panel icon
+        /// </summary>
+        [HtmlAttributeName(PANEL_ICON_ATTRIBUTE_NAME)]
+        public string PanelIconIsAdvanced { get; set; }
 
         /// <summary>
         /// ViewContext
@@ -105,10 +112,22 @@ namespace Nop.Web.Framework.TagHelpers.Admin
                 panelHeading.AddCssClass("opened");
             }
 
+            if (context.AllAttributes.ContainsName(PANEL_ICON_ATTRIBUTE_NAME))
+            {
+                var panelIcon = new TagBuilder("i");
+                panelIcon.AddCssClass("panel-icon");
+                panelIcon.AddCssClass(context.AllAttributes[PANEL_ICON_ATTRIBUTE_NAME].Value.ToString());
+                var iconContainer = new TagBuilder("div");
+                iconContainer.AddCssClass("icon-container");
+                iconContainer.InnerHtml.AppendHtml(panelIcon);
+                panelHeading.InnerHtml.AppendHtml(iconContainer);
+            }
+
             panelHeading.InnerHtml.AppendHtml($"<span>{context.AllAttributes[TITLE_ATTRIBUTE_NAME].Value}</span>");
 
             var collapseIcon = new TagBuilder("i");
             collapseIcon.AddCssClass("fa");
+            collapseIcon.AddCssClass("toggle-icon");
             collapseIcon.AddCssClass(context.AllAttributes[IS_HIDE_ATTRIBUTE_NAME].Value.Equals(true) ? "fa-plus" : "fa-minus");
             panelHeading.InnerHtml.AppendHtml(collapseIcon);
 
