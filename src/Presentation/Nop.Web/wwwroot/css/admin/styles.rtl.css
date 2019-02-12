@@ -141,7 +141,12 @@ ul.common-list {
 
 /*COLLAPSIBLE BLOCKS*/
 .panel.collapsible-panel {
-    margin-bottom: 5px;
+    margin-bottom: 10px;
+    border-color: #3c8dbc;
+}
+
+.panel.collapsible-panel .sub-panel {
+    margin-bottom: 15px;
 }
 
 .panel.collapsible-panel .panel-heading {
@@ -150,12 +155,22 @@ ul.common-list {
     cursor: pointer;
 }
 
+.panel.collapsible-panel >.panel-heading {
+    background-color: #3c8dbc;
+    color: #fff;
+    border-color: #3c8dbc;
+}
+
+.panel.collapsible-panel >.panel-heading span {
+    font-size: 14px;
+    font-weight: bold;
+}
+
 .panel.collapsible-panel .panel-heading i {
     position: absolute;
     right: 5px;
     top: 14px;
 }
-
 .panel.collapsible-panel .panel-container.collapsed {
     display: none;
 }

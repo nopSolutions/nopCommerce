@@ -470,9 +470,8 @@
 </script>
 
 <div class="raw clearfix">
-    <div class="@(Model.ProductEditorSettingsModel.OneColumnProductPage ? "col-md-12" : "col-md-7")">
+    <div class="col-md-12 panel-body">
         <div class="panel-group">
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductDetailsInfoColumnLeftTop, additionalData = Model })
             <div class="panel panel-default">
                 <div class="panel-heading">
                     @T("Admin.Catalog.Products.CommonInfo")
@@ -588,8 +587,7 @@
                                 <span asp-validation-for="FullDescription"></span>
                             </div>
                         </div>
-                    </div>
-                    ))
+                    </div>))
                     <div class="form-group">
                         <div class="col-md-3">
                             <nop-label asp-for="Sku" />
@@ -1299,8 +1297,8 @@
                         </button>
                         <input type="submit" id="btnRefreshTierPrices" style="display: none" />
                         <script>
-                            $(document).ready(function() {
-                                $('#btnRefreshTierPrices').click(function() {
+                            $(document).ready(function () {
+                                $('#btnRefreshTierPrices').click(function () {
                                     $("#tierprices-grid").data('kendoGrid').dataSource.read();
                                     //return false to don't reload a page
                                     return false;
@@ -1316,16 +1314,10 @@
                     </div>
                 }
             </div>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductDetailsInfoColumnLeftBottom, additionalData = Model })
-        </div>
-    </div>
-    <div class="@(Model.ProductEditorSettingsModel.OneColumnProductPage ? "col-md-12" : "col-md-5")">
-        <div class="panel-group">
             @{
                 var leftColumnClass = Model.ProductEditorSettingsModel.OneColumnProductPage ? "col-md-3" : "col-md-4";
                 var rightColumnClass = Model.ProductEditorSettingsModel.OneColumnProductPage ? "col-md-9" : "col-md-8";
             }
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductDetailsInfoColumnRightTop, additionalData = Model })
             <div class="panel panel-default margin-bottom" id="group-associated-products">
                 <div class="panel-heading">
                     @T("Admin.Catalog.Products.AssociatedProducts")
@@ -1452,8 +1444,8 @@
                         </button>
                         <input type="submit" id="btnRefreshAssociatedProducts" style="display: none" />
                         <script>
-                            $(document).ready(function() {
-                                $('#btnRefreshAssociatedProducts').click(function() {
+                            $(document).ready(function () {
+                                $('#btnRefreshAssociatedProducts').click(function () {
                                     //refresh grid
                                     var grid = $("#associatedproducts-grid").data('kendoGrid');
                                     grid.dataSource.read();
@@ -1472,7 +1464,7 @@
                     </div>
                 }
             </div>
-            <div class="panel panel-default no-margin" id="group-inventory">
+            <div class="panel panel-default" id="group-inventory">
                 <div class="panel-heading">
                     @T("Admin.Catalog.Products.Inventory")
                 </div>
@@ -2122,8 +2114,8 @@
                         </button>
                         <input type="submit" id="btnRefreshRelatedProducts" style="display: none" />
                         <script>
-                            $(document).ready(function() {
-                                $('#btnRefreshRelatedProducts').click(function() {
+                            $(document).ready(function () {
+                                $('#btnRefreshRelatedProducts').click(function () {
                                     //refresh grid
                                     var grid = $("#relatedproducts-grid").data('kendoGrid');
                                     grid.dataSource.read();
@@ -2232,8 +2224,8 @@
                         </button>
                         <input type="submit" id="btnRefreshCrossSellProducts" style="display: none" />
                         <script>
-                            $(document).ready(function() {
-                                $('#btnRefreshCrossSellProducts').click(function() {
+                            $(document).ready(function () {
+                                $('#btnRefreshCrossSellProducts').click(function () {
                                     //refresh grid
                                     var grid = $("#crosssellproducts-grid").data('kendoGrid');
                                     grid.dataSource.read();
@@ -2252,7 +2244,6 @@
                     </div>
                 }
             </div>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductDetailsInfoColumnRightBottom, additionalData = Model })
         </div>
     </div>
 </div>

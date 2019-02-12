@@ -1,106 +1,103 @@
 @model OrderModel
 @using System.Text.Encodings.Web
 
-<div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.OrderDetailsNotesTop, additionalData = Model })
-    <div class="panel panel-default">
-        <div class="panel-body">
-            <div id="ordernotes-grid"></div>
+<div class="panel-body">
+    <div class="sub-panel">
+        <div id="ordernotes-grid"></div>
 
-            <script>
-                $(document).ready(function() {
-                    $("#ordernotes-grid").kendoGrid({
-                        dataSource: {
-                            type: "json",
-                            transport: {
-                                read: {
-                                    url: "@Html.Raw(Url.Action("OrderNotesSelect", "Order"))",
-                                    type: "POST",
-                                    dataType: "json",
-                                    data: function () {
-                                        var data = {
-                                            OrderId: '@(Model.Id)'
-                                        };
-                                        addAntiForgeryToken(data);
-                                        return data;
-                                    }
-                                },
-                                destroy: {
-                                    url: "@Html.Raw(Url.Action("OrderNoteDelete", "Order", new {orderId = Model.Id}))",
-                                    type: "POST",
-                                    dataType: "json",
-                                    data: addAntiForgeryToken
+        <script>
+            $(document).ready(function() {
+                $("#ordernotes-grid").kendoGrid({
+                    dataSource: {
+                        type: "json",
+                        transport: {
+                            read: {
+                                url: "@Html.Raw(Url.Action("OrderNotesSelect", "Order"))",
+                                type: "POST",
+                                dataType: "json",
+                                data: function () {
+                                    var data = {
+                                        OrderId: '@(Model.Id)'
+                                    };
+                                    addAntiForgeryToken(data);
+                                    return data;
                                 }
                             },
-                            schema: {
-                                data: "Data",
-                                total: "Total",
-                                errors: "Errors",
-                                model: {
-                                    id: "Id",
-                                    fields: {
-                                        //do not implicitly specify all fields
-                                        //we do it only for fields which implicitly require it
-                                        //otherwise, they'll be formatted wrong way
-                                        CreatedOn: { type: "date" }
-                                    }
+                            destroy: {
+                                url: "@Html.Raw(Url.Action("OrderNoteDelete", "Order", new {orderId = Model.Id}))",
+                                type: "POST",
+                                dataType: "json",
+                                data: addAntiForgeryToken
+                            }
+                        },
+                        schema: {
+                            data: "Data",
+                            total: "Total",
+                            errors: "Errors",
+                            model: {
+                                id: "Id",
+                                fields: {
+                                    //do not implicitly specify all fields
+                                    //we do it only for fields which implicitly require it
+                                    //otherwise, they'll be formatted wrong way
+                                    CreatedOn: { type: "date" }
                                 }
-                            },
-                            error: function(e) {
-                                display_kendoui_grid_error(e);
-                                // Cancel the changes
-                                this.cancelChanges();
-                            },
-                            pageSize: @(Model.OrderNoteSearchModel.PageSize),
-                            serverPaging: true,
-                            serverFiltering: true,
-                            serverSorting: true
+                            }
                         },
-                        pageable: {
-                            refresh: true,
-                            pageSizes: [@(Model.OrderNoteSearchModel.AvailablePageSizes)],
-                            @await Html.PartialAsync("_GridPagerMessages")
+                        error: function(e) {
+                            display_kendoui_grid_error(e);
+                            // Cancel the changes
+                            this.cancelChanges();
                         },
-                        editable: {
-                            confirmation: "@T("Admin.Common.DeleteConfirmation")",
-                            mode: "inline"
-                        },
-                        scrollable: false,
-                        columns: [
-                        {
-                            field: "CreatedOn",
-                            title: "@T("Admin.Orders.OrderNotes.Fields.CreatedOn")",
-                            width: 200,
-                            type: "date",
-                            format: "{0:G}"
-                        }, {
-                            field: "Note",
-                            title: "@T("Admin.Orders.OrderNotes.Fields.Note")",
-                            encoded: false
-                        }, {
-                            field: "DownloadId",
-                            title: "@T("Admin.Orders.OrderNotes.Fields.Download")",
-                            width: 200,
-                            headerAttributes: { style: "text-align:center" },
-                            attributes: { style: "text-align:center" },
-                            template: '# if(DownloadId > 0) {# <a class="btn btn-default" href="@Url.Content("~/Admin/Download/DownloadFile")?downloadGuid=#=DownloadGuid#"><i class="fa fa-download"></i>@T("Admin.Orders.OrderNotes.Fields.Download.Link")</a> #} else {# @T("Admin.Orders.OrderNotes.Fields.Download.Link.No") #} #'
-                        }, {
-                            field: "DisplayToCustomer",
-                            title: "@T("Admin.Orders.OrderNotes.Fields.DisplayToCustomer")",
-                            width: 150,
-                            headerAttributes: { style: "text-align:center" },
-                            attributes: { style: "text-align:center" },
-                            template: '# if(DisplayToCustomer) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
-                        }, {
-                            command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
-                            title: "@T("Admin.Common.Delete")",
-                            width: 100
-                        }
-                        ]
-                    });
+                        pageSize: @(Model.OrderNoteSearchModel.PageSize),
+                        serverPaging: true,
+                        serverFiltering: true,
+                        serverSorting: true
+                    },
+                    pageable: {
+                        refresh: true,
+                        pageSizes: [@(Model.OrderNoteSearchModel.AvailablePageSizes)],
+                        @await Html.PartialAsync("_GridPagerMessages")
+                    },
+                    editable: {
+                        confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                        mode: "inline"
+                    },
+                    scrollable: false,
+                    columns: [
+                    {
+                        field: "CreatedOn",
+                        title: "@T("Admin.Orders.OrderNotes.Fields.CreatedOn")",
+                        width: 200,
+                        type: "date",
+                        format: "{0:G}"
+                    }, {
+                        field: "Note",
+                        title: "@T("Admin.Orders.OrderNotes.Fields.Note")",
+                        encoded: false
+                    }, {
+                        field: "DownloadId",
+                        title: "@T("Admin.Orders.OrderNotes.Fields.Download")",
+                        width: 200,
+                        headerAttributes: { style: "text-align:center" },
+                        attributes: { style: "text-align:center" },
+                        template: '# if(DownloadId > 0) {# <a class="btn btn-default" href="@Url.Content("~/Admin/Download/DownloadFile")?downloadGuid=#=DownloadGuid#"><i class="fa fa-download"></i>@T("Admin.Orders.OrderNotes.Fields.Download.Link")</a> #} else {# @T("Admin.Orders.OrderNotes.Fields.Download.Link.No") #} #'
+                    }, {
+                        field: "DisplayToCustomer",
+                        title: "@T("Admin.Orders.OrderNotes.Fields.DisplayToCustomer")",
+                        width: 150,
+                        headerAttributes: { style: "text-align:center" },
+                        attributes: { style: "text-align:center" },
+                        template: '# if(DisplayToCustomer) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
+                    }, {
+                        command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
+                        title: "@T("Admin.Common.Delete")",
+                        width: 100
+                    }
+                    ]
                 });
-            </script>
-        </div>
+            });
+        </script>
     </div>
 
     <div class="panel panel-default">
@@ -167,7 +164,6 @@
             </div>
         </div>
     </div>
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.OrderDetailsNotesBottom, additionalData = Model })
 </div>
 
 <script>

@@ -140,7 +140,8 @@ ul.common-list {
 
 /*COLLAPSIBLE BLOCKS*/
 .panel.collapsible-panel {
-    margin-bottom: 5px;
+    margin-bottom: 10px;
+    border-color: #3c8dbc;
 }
 
 .panel.collapsible-panel .sub-panel {
@@ -151,6 +152,17 @@ ul.common-list {
     padding-right: 30px;
     position: relative;
     cursor: pointer;
+}
+
+.panel.collapsible-panel >.panel-heading {
+    background-color: #3c8dbc;
+    color: #fff;
+    border-color: #3c8dbc;
+}
+
+.panel.collapsible-panel >.panel-heading span {
+    font-size: 14px;
+    font-weight: bold;
 }
 
 .panel.collapsible-panel .panel-heading i {
