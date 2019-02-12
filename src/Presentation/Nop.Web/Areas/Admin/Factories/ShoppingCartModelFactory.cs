@@ -181,6 +181,9 @@ namespace Nop.Web.Areas.Admin.Factories
                     var subTotal = _priceCalculationService.GetSubTotal(item);
                     itemModel.Total = _priceFormatter.FormatPrice(_taxService.GetProductPrice(item.Product, subTotal, out _));
 
+                    //set product name since it does not survive mapping
+                    itemModel.ProductName = item?.Product?.Name;
+
                     return itemModel;
                 }),
                 Total = items.Count

@@ -54,7 +54,9 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
         public IList<SelectListItem> AvailableProductTypes { get; set; }
         
         public bool IsLoggedInAsVendor { get; set; }
-        
+
+        public int ProductId { get; set; }
+
         #endregion
     }
 }

@@ -1538,10 +1538,18 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             var selectedProducts = _productService.GetProductsByIds(model.SelectedProductIds.ToArray());
+
+            var tryToAddSelfGroupedProduct = selectedProducts
+                .Select(p => p.Id)
+                .Contains(model.ProductId);
+
             if (selectedProducts.Any())
             {
                 foreach (var product in selectedProducts)
                 {
+                    if (product.Id == model.ProductId)
+                        continue;
+
                     //a vendor should have access only to his products
                     if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                         continue;
@@ -1551,7 +1559,23 @@ namespace Nop.Web.Areas.Admin.Controllers
                 }
             }
 
+            if (tryToAddSelfGroupedProduct)
+            {
+                _notificationService.WarningNotification(_localizationService.GetResource("Admin.Catalog.Products.AssociatedProducts.TryToAddSelfGroupedProduct"));
+
+                var _addAssociatedProductSearchModel = _productModelFactory.PrepareAddAssociatedProductSearchModel(new AddAssociatedProductSearchModel());
+
+                //set current product id
+                _addAssociatedProductSearchModel.ProductId = model.ProductId;
+
+                ViewBag.RefreshPage = true;
+
+                return View(_addAssociatedProductSearchModel);
+            }
+
             ViewBag.RefreshPage = true;
+
+            ViewBag.ClosePage = true;
 
             return View(new AddAssociatedProductSearchModel());
         }
