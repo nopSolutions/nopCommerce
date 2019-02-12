@@ -1072,3 +1072,16 @@ GO
 --updating of indexes in the Picture table for reduced table size after upgrade nopCommerce from 4.00 to 4.10 version
 ALTER INDEX ALL ON [Picture] REBUILD
 GO
+
+--new activity log type
+IF NOT EXISTS (SELECT 1 FROM [ActivityLogType] WHERE [Name] = N'Upload a favicon and app icons archive')
+BEGIN
+	INSERT [dbo].[ActivityLogType] ( [SystemKeyword], [Name], [Enabled]) VALUES ( N'UploadIconsArchive', N'Upload a favicon and app icons archive', 1)
+END
+GO
+
+--new ground shipping description
+UPDATE [ShippingMethod] 
+SET [Description] = 'Shipping by land transport'
+WHERE [Name] = 'Ground'
+GO

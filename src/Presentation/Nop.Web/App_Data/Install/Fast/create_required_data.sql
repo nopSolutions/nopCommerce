@@ -936,7 +936,7 @@ SET IDENTITY_INSERT [dbo].[TaxCategory] OFF
 GO
 
 SET IDENTITY_INSERT [dbo].[ShippingMethod] ON 
-INSERT [dbo].[ShippingMethod] ([Id], [Name], [Description], [DisplayOrder]) VALUES (1, N'Ground', N'Compared to other shipping methods, ground shipping is carried out closer to the earth', 1)
+INSERT [dbo].[ShippingMethod] ([Id], [Name], [Description], [DisplayOrder]) VALUES (1, N'Ground', N'Shipping by land transport', 1)
 INSERT [dbo].[ShippingMethod] ([Id], [Name], [Description], [DisplayOrder]) VALUES (2, N'Next Day Air', N'The one day air shipping', 2)
 INSERT [dbo].[ShippingMethod] ([Id], [Name], [Description], [DisplayOrder]) VALUES (3, N'2nd Day Air', N'The two day air shipping', 3)
 SET IDENTITY_INSERT [dbo].[ShippingMethod] OFF
