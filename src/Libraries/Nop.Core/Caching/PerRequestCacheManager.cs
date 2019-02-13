@@ -18,7 +18,7 @@ namespace Nop.Core.Caching
         {
             _httpContextAccessor = httpContextAccessor;
 
-            _lock = new ReaderWriterLockSlim();
+            _lock = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);
         }
 
         #endregion
