@@ -28,12 +28,12 @@
         </div>
 
         <nop-panels id="vendor-panels">
-            <nop-panel asp-name="vendor-info" asp-title="@T("Admin.Vendors.Info")" asp-hide-block-attribute-name="@hideInfoBlockAttributeName" asp-hide="@hideInfoBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-panel>
-            <nop-panel asp-name="vendor-display" asp-title="@T("Admin.Vendors.Display")" asp-hide-block-attribute-name="@hideDisplayBlockAttributeName" asp-hide="@hideDisplayBlock" asp-advanced="true">@await Html.PartialAsync("_CreateOrUpdate.Display", Model)</nop-panel>
-            <nop-panel asp-name="vendor-seo" asp-title="@T("Admin.Common.SEO")" asp-hide-block-attribute-name="@hideSeoBlockAttributeName" asp-hide="@hideSeoBlock" asp-advanced="true">@await Html.PartialAsync("_CreateOrUpdate.Seo", Model)</nop-panel>
+            <nop-panel asp-name="vendor-info" asp-icon="fa fa-info" asp-title="@T("Admin.Vendors.Info")" asp-hide-block-attribute-name="@hideInfoBlockAttributeName" asp-hide="@hideInfoBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-panel>
+            <nop-panel asp-name="vendor-display" asp-icon="fa fa-television" asp-title="@T("Admin.Vendors.Display")" asp-hide-block-attribute-name="@hideDisplayBlockAttributeName" asp-hide="@hideDisplayBlock" asp-advanced="true">@await Html.PartialAsync("_CreateOrUpdate.Display", Model)</nop-panel>
+            <nop-panel asp-name="vendor-seo" asp-icon="fa fa-search-plus" asp-title="@T("Admin.Common.SEO")" asp-hide-block-attribute-name="@hideSeoBlockAttributeName" asp-hide="@hideSeoBlock" asp-advanced="true">@await Html.PartialAsync("_CreateOrUpdate.Seo", Model)</nop-panel>
             @if (Model.Id > 0)
             {
-                <nop-panel asp-name="vendor-products" asp-title="@T("Admin.Vendors.VendorNotes")" asp-hide-block-attribute-name="@hideVendorNotesBlockAttributeName" asp-hide="@hideVendorNotesBlock" asp-advanced="true">@await Html.PartialAsync("_CreateOrUpdate.Notes", Model)</nop-panel>
+                <nop-panel asp-name="vendor-products" asp-icon="fa fa-th-list" asp-title="@T("Admin.Vendors.VendorNotes")" asp-hide-block-attribute-name="@hideVendorNotesBlockAttributeName" asp-hide="@hideVendorNotesBlock" asp-advanced="true">@await Html.PartialAsync("_CreateOrUpdate.Notes", Model)</nop-panel>
             }
         </nop-panels>
         

@@ -28,9 +28,9 @@
         </div>
 
         <nop-panels id="checkout-attributes-panels">
-            <nop-panel asp-name="checkout-attributes-info" asp-title="@T("Admin.Catalog.Attributes.CheckoutAttributes.Info")" asp-hide-block-attribute-name="@hideInfoBlockAttributeName" asp-hide="@hideInfoBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-panel>
-            <nop-panel asp-name="checkout-attributes-display" asp-title="@T("Admin.Catalog.Attributes.CheckoutAttributes.Values")" asp-hide-block-attribute-name="@hideValuesBlockAttributeName" asp-hide="@hideValuesBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.Values", Model)</nop-panel>
-            <nop-panel asp-name="checkout-attributes-mappings" asp-title="@T("Admin.Catalog.Attributes.CheckoutAttributes.Condition")" asp-hide-block-attribute-name="@hideConditionBlockAttributeName" asp-hide="@hideConditionBlock" asp-advanced="true">@await Html.PartialAsync("_CreateOrUpdate.Condition", Model)</nop-panel>
+            <nop-panel asp-name="checkout-attributes-info" asp-icon="fa fa-info" asp-title="@T("Admin.Catalog.Attributes.CheckoutAttributes.Info")" asp-hide-block-attribute-name="@hideInfoBlockAttributeName" asp-hide="@hideInfoBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-panel>
+            <nop-panel asp-name="checkout-attributes-display" asp-icon="fa fa-television" asp-title="@T("Admin.Catalog.Attributes.CheckoutAttributes.Values")" asp-hide-block-attribute-name="@hideValuesBlockAttributeName" asp-hide="@hideValuesBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.Values", Model)</nop-panel>
+            <nop-panel asp-name="checkout-attributes-mappings" asp-icon="fa fa-bookmark" asp-title="@T("Admin.Catalog.Attributes.CheckoutAttributes.Condition")" asp-hide-block-attribute-name="@hideConditionBlockAttributeName" asp-hide="@hideConditionBlock" asp-advanced="true">@await Html.PartialAsync("_CreateOrUpdate.Condition", Model)</nop-panel>
         </nop-panels>
         
         @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CheckoutAttributeDetailsBlock, additionalData = Model })

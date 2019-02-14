@@ -14,8 +14,8 @@
 <div class="content">
     <div class="form-horizontal">
         <nop-panels id="blog-post-panels">
-            <nop-panel asp-name="blog-post-info" asp-title="@T(" Admin.ContentManagement.Blog.BlogPosts.Info")" asp-hide-block-attribute-name="@hideInfoBlockAttributeName" asp-hide="@hideInfoBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-panel>
-            <nop-panel asp-name="category-seo" asp-title="@T(" Admin.Common.SEO")" asp-hide-block-attribute-name="@hideSeoBlockAttributeName" asp-hide="@hideSeoBlock" asp-advanced="true">@await Html.PartialAsync("_CreateOrUpdate.Seo", Model)</nop-panel>
+            <nop-panel asp-name="blog-post-info" asp-icon="fa fa-info" asp-title="@T(" Admin.ContentManagement.Blog.BlogPosts.Info")" asp-hide-block-attribute-name="@hideInfoBlockAttributeName" asp-hide="@hideInfoBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-panel>
+            <nop-panel asp-name="category-seo" asp-icon="fa fa-search-plus" asp-title="@T(" Admin.Common.SEO")" asp-hide-block-attribute-name="@hideSeoBlockAttributeName" asp-hide="@hideSeoBlock" asp-advanced="true">@await Html.PartialAsync("_CreateOrUpdate.Seo", Model)</nop-panel>
         </nop-panels>
     </div>
 

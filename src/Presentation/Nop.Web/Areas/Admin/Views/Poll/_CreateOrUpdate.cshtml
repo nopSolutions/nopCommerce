@@ -14,8 +14,8 @@
 <div class="content">
     <div class="form-horizontal">
         <nop-panels id="poll-panels">
-            <nop-panel asp-name="poll-info" asp-title="@T("Admin.ContentManagement.Polls.Info")" asp-hide-block-attribute-name="@hideInfoBlockAttributeName" asp-hide="@hideInfoBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-panel>
-            <nop-panel asp-name="poll-display" asp-title="@T("Admin.ContentManagement.Polls.Answers")" asp-hide-block-attribute-name="@hideAnswersBlockAttributeName" asp-hide="@hideAnswersBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.Answers", Model)</nop-panel>
+            <nop-panel asp-name="poll-info" asp-icon="fa fa-info" asp-title="@T("Admin.ContentManagement.Polls.Info")" asp-hide-block-attribute-name="@hideInfoBlockAttributeName" asp-hide="@hideInfoBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-panel>
+            <nop-panel asp-name="poll-answers" asp-icon="fa fa-commenting-o" asp-title="@T("Admin.ContentManagement.Polls.Answers")" asp-hide-block-attribute-name="@hideAnswersBlockAttributeName" asp-hide="@hideAnswersBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.Answers", Model)</nop-panel>
         </nop-panels>
 
         @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.PollDetailsBlock, additionalData = Model })
