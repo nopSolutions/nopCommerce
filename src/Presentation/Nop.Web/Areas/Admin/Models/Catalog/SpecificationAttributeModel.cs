@@ -39,12 +39,4 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
 
         #endregion
     }
-
-    public partial class SpecificationAttributeLocalizedModel : ILocalizedLocaleModel
-    {
-        public int LanguageId { get; set; }
-
-        [NopResourceDisplayName("Admin.Catalog.Attributes.SpecificationAttributes.Fields.Name")]
-        public string Name { get; set; }
-    }
 }

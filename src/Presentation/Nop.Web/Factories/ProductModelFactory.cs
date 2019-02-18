@@ -1624,10 +1624,10 @@ namespace Nop.Web.Factories
                             m.ValueRaw = WebUtility.HtmlEncode(_localizationService.GetLocalized(psa.SpecificationAttributeOption, x => x.Name));
                             break;
                         case SpecificationAttributeType.CustomText:
-                            m.ValueRaw = WebUtility.HtmlEncode(psa.CustomValue);
+                            m.ValueRaw = WebUtility.HtmlEncode(_localizationService.GetLocalized(psa, x => x.CustomValue));
                             break;
                         case SpecificationAttributeType.CustomHtmlText:
-                            m.ValueRaw = psa.CustomValue;
+                            m.ValueRaw = _localizationService.GetLocalized(psa, x => x.CustomValue);
                             break;
                         case SpecificationAttributeType.Hyperlink:
                             m.ValueRaw = $"<a href='{psa.CustomValue}' target='_blank'>{psa.CustomValue}</a>";
