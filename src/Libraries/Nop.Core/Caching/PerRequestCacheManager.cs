@@ -56,9 +56,11 @@ namespace Nop.Core.Caching
         {
             _lock.EnterReadLock();
 
+            IDictionary<object, object> items;
+
             try
             {
-                var items = GetItems();
+                items = GetItems();
                 if (items == null)
                 {
                     return acquire();
@@ -70,21 +72,31 @@ namespace Nop.Core.Caching
                     return (T) items[key];
                 }
 
-                //or create it using passed function
-                var result = acquire();
-
-                //and set in cache (if cache time is defined)
-                if (result != null && (cacheTime ?? NopCachingDefaults.CacheTime) > 0)
-                {
-                    items[key] = result;
-                }
-
-                return result;
             }
             finally
             {
                 _lock.ExitReadLock();
             }
+
+            //or create it using passed function
+            var result = acquire();
+
+            //and set in cache (if cache time is defined)
+            if (result != null && (cacheTime ?? NopCachingDefaults.CacheTime) > 0)
+            {
+                _lock.EnterWriteLock();
+                try
+                {
+                    items[key] = result;
+                }
+                finally
+                {
+                    _lock.ExitWriteLock();
+                }
+            }
+
+            return result;
+            
         }
 
         /// <summary>
@@ -95,6 +107,11 @@ namespace Nop.Core.Caching
         /// <param name="cacheTime">Cache time in minutes</param>
         public virtual void Set(string key, object data, int cacheTime)
         {
+            if (data == null)
+            {
+                return;
+            }
+
             _lock.EnterWriteLock();
 
             try
@@ -105,10 +122,7 @@ namespace Nop.Core.Caching
                     return;
                 }
 
-                if (data != null)
-                {
-                    items[key] = data;
-                }
+                items[key] = data;
             }
             finally
             {
@@ -163,7 +177,7 @@ namespace Nop.Core.Caching
         /// <param name="pattern">String key pattern</param>
         public virtual void RemoveByPattern(string pattern)
         {
-            _lock.EnterWriteLock();
+            _lock.EnterUpgradeableReadLock();
 
             try
             {
@@ -178,15 +192,27 @@ namespace Nop.Core.Caching
                     RegexOptions.Singleline | RegexOptions.Compiled | RegexOptions.IgnoreCase);
                 var matchesKeys = items.Keys.Select(p => p.ToString()).Where(key => regex.IsMatch(key)).ToList();
 
-                //remove matching values
-                foreach (var key in matchesKeys)
+                if (matchesKeys.Any())
                 {
-                    items.Remove(key);
+                    _lock.EnterWriteLock();
+
+                    try
+                    {
+                        //remove matching values
+                        foreach (var key in matchesKeys)
+                        {
+                            items.Remove(key);
+                        }
+                    }
+                    finally
+                    {
+                        _lock.ExitWriteLock();
+                    }
                 }
             }
             finally
             {
-                _lock.ExitWriteLock();
+                _lock.ExitUpgradeableReadLock();
             }
         }
 
