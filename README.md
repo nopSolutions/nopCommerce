@@ -36,7 +36,7 @@ Browse our shopping cart demo store to get a feel for nopCommerce shopping cart.
 
 Front End | Admin area
 ----|------
-[![ScreenShot](https://www.nopcommerce.com/images/demo/demo3.png)](https://demo.nopcommerce.com/) | [![ScreenShot](https://www.nopcommerce.com/images/demo/admindemo_500.png)](https://admin-demo.nopcommerce.com/)
+[![ScreenShot](https://www.nopcommerce.com/images/demo/demo3.png)](https://www.nopcommerce.com/demo.aspx) | [![ScreenShot](https://www.nopcommerce.com/images/demo/admindemo_500.png)](https://admin-demo.nopcommerce.com/)
 
 
 ## Survey for developers and product managers: ##
