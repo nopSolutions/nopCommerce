@@ -1,5 +1,10 @@
 @model NewsContentModel
 
+@{
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("News items");
+}
+
 <nop-antiforgery-token />
 <div class="content-header clearfix">
     <h1 class="pull-left">
@@ -10,7 +15,7 @@
             <i class="fa fa-plus-square"></i>
             @T("Admin.Common.AddNew")
         </a>
-        @await Component.InvokeAsync("AdminWidget", new {widgetZone = AdminWidgetZones.NewsListButtons})
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.NewsListButtons })
     </div>
 </div>
 
@@ -143,9 +148,9 @@
                     </script>
 
                     <script>
-                        $(document).ready(function() {
+                        $(document).ready(function () {
                             //search button
-                            $('#search-newsitem').click(function() {
+                            $('#search-newsitem').click(function () {
                                 //search
                                 var grid = $('#newsitem-grid').data('kendoGrid');
                                 grid.dataSource.page(1); //new search. Set page size to 1

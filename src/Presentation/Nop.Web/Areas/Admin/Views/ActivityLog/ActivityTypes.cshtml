@@ -1,25 +1,30 @@
 ﻿@using System.Text.Encodings.Web
 @model IList<ActivityLogTypeModel>
 
-<form asp-controller="ActivityLog" asp-action="SaveTypes" method="post">
-<div class="content-header clearfix">
-    <h1 class="pull-left">
-        @T("Admin.Configuration.ActivityLog.ActivityLogType")
-    </h1>
-    <div class="pull-right">
-        <button type="submit" name="save" class="btn bg-blue">
-            <i class="fa fa-floppy-o"></i>
-            @T("Admin.Common.Save")
-        </button>
-        @await Component.InvokeAsync("AdminWidget", new {widgetZone = AdminWidgetZones.ActivityTypesListButtons})
-    </div>
-</div>
-<div class="content">
-    <div class="panel panel-default">
-        <div class="panel-body">
-            <div id="activityLogType-grid"></div>
+@{
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Activity types");
+}
 
-            <script>
+<form asp-controller="ActivityLog" asp-action="SaveTypes" method="post">
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.Configuration.ActivityLog.ActivityLogType")
+        </h1>
+        <div class="pull-right">
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ActivityTypesListButtons })
+        </div>
+    </div>
+    <div class="content">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div id="activityLogType-grid"></div>
+
+                <script>
             //local datasource
             var activityLogTypes = [
                 @for (var i = 0; i < Model.Count; i++)
@@ -83,28 +88,28 @@
                 });
             });
 
-            </script>
-            <script>
-                $(document).ready(function () {
-                    updateMasterCheckbox();
-
-                    $('#mastercheckbox').click(function () {
-                        $('.checkboxGroups').attr('checked', $(this).is(':checked')).change();
-                    });
-
-                    //wire up checkboxes.
-                    $('#activityLogType-grid').on('change', 'input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]', function (e) {
+                </script>
+                <script>
+                    $(document).ready(function () {
                         updateMasterCheckbox();
-                    });
-                });
 
-                function updateMasterCheckbox() {
-                    var numChkBoxes = $('#activityLogType-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]').length;
-                    var numChkBoxesChecked = $('#activityLogType-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]:checked').length;
-                    $('#mastercheckbox').attr('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
-                }
-            </script>
+                        $('#mastercheckbox').click(function () {
+                            $('.checkboxGroups').attr('checked', $(this).is(':checked')).change();
+                        });
+
+                        //wire up checkboxes.
+                        $('#activityLogType-grid').on('change', 'input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]', function (e) {
+                            updateMasterCheckbox();
+                        });
+                    });
+
+                    function updateMasterCheckbox() {
+                        var numChkBoxes = $('#activityLogType-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]').length;
+                        var numChkBoxesChecked = $('#activityLogType-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]:checked').length;
+                        $('#mastercheckbox').attr('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
+                    }
+                </script>
+            </div>
         </div>
     </div>
-</div>
 </form>

@@ -1,6 +1,11 @@
 @model BlogContentModel
 
-<nop-antiforgery-token/>
+@{
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Blog posts");
+}
+
+<nop-antiforgery-token />
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.ContentManagement.Blog.BlogPosts")
@@ -10,11 +15,11 @@
             <i class="fa fa-plus-square"></i>
             @T("Admin.Common.AddNew")
         </a>
-        @await Component.InvokeAsync("AdminWidget", new {widgetZone = AdminWidgetZones.BlogListButtons})
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.BlogListButtons })
     </div>
 </div>
 
-<div class="content">    
+<div class="content">
     <div class="form-horizontal">
         <div class="panel-group">
 

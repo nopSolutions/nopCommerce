@@ -145,6 +145,10 @@ ul.common-list {
     border-color: #3c8dbc;
 }
 
+.panel.collapsible-panel textarea {
+    resize: vertical;
+}
+
 .panel.collapsible-panel .sub-panel {
     margin-bottom: 15px;
 }
