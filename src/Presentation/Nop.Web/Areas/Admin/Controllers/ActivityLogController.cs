@@ -49,15 +49,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             //prepare model
-            
-
-            //DT - TODO
-            //var model = new ActivityLogContainerModel();
-            //_activityLogModelFactory.PrepareActivityLogSearchModel(model.ListLogs);
-            //_activityLogModelFactory.PrepareActivityLogTypeSearchModel(model.ListTypes);
-            //DT - TODO
-
-            var model = _activityLogModelFactory.PrepareActivityLogTypeModels();
+            var model = _activityLogModelFactory.PrepareActivityLogTypeSearchModel(new ActivityLogTypeSearchModel());
 
             return View(model);
         }        
