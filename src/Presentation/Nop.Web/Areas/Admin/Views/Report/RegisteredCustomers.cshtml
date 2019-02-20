@@ -1,0 +1,77 @@
+﻿@model CustomerReportsSearchModel
+
+@{
+    //page title
+    ViewBag.Title = T("Admin.Reports.Customers.RegisteredCustomers").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Registered customers");
+}
+
+<nop-antiforgery-token />
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        @T("Admin.Reports.Customers.RegisteredCustomers")
+    </h1>
+</div>
+
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="registered-customers-grid"></div>
+                    <script>
+                        $(document).ready(function () {
+                            $("#registered-customers-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("ReportRegisteredCustomersList", "Report"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    error: function (e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    pageSize: @(Model.RegisteredCustomers.PageSize),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(Model.RegisteredCustomers.AvailablePageSizes)],
+                                    @await Html.PartialAsync("_GridPagerMessages")
+                                },
+                                editable: {
+                                    confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                                    mode: "inline"
+                                },
+                                scrollable: false,
+                                columns: [{
+                                    field: "Period",
+                                    title: "@T("Admin.Reports.Customers.RegisteredCustomers.Fields.Period")"
+                                }, {
+                                    field: "Customers",
+                                    title: "@T("Admin.Reports.Customers.RegisteredCustomers.Fields.Customers")",
+                                    width: 150
+                                }]
+                            });
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

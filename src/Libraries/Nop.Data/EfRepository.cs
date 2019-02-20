@@ -22,7 +22,7 @@ namespace Nop.Data
         #endregion
 
         #region Ctor
-        
+
         public EfRepository(IDbContext context)
         {
             this._context = context;
@@ -31,7 +31,7 @@ namespace Nop.Data
         #endregion
 
         #region Utilities
-        
+
         /// <summary>
         /// Rollback of entity changes and return full error message
         /// </summary>
@@ -57,9 +57,18 @@ namespace Nop.Data
                     }
                 });
             }
-
-            _context.SaveChanges();
-            return exception.ToString();
+            
+            try
+            {
+                _context.SaveChanges();
+                return exception.ToString();
+            }
+            catch (Exception ex)
+            {
+                //if after the rollback of changes the context is still not saving,
+                //return the full text of the exception that occurred when saving
+                return ex.ToString(); 
+            }
         }
 
         #endregion

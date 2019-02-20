@@ -4038,7 +4038,7 @@ namespace Nop.Services.Installation
                 {
                     Name = "Ground",
                     Description =
-                        "Compared to other shipping methods, ground shipping is carried out closer to the earth",
+                        "Shipping by land transport",
                     DisplayOrder = 1
                 },
                 new ShippingMethod

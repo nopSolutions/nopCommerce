@@ -2,7 +2,7 @@
 
 @{
     Layout = "_AdminPopupLayout";
-    
+
     //page title
     ViewBag.Title = T("Admin.Catalog.Products.AssociatedProducts.AddNew").Text;
 }
@@ -12,6 +12,12 @@
     <script>
         try {window.opener.document.forms['@(Context.Request.Query["formId"])'].@(Context.Request.Query["btnId"]).click();}
         catch (e){}
+    </script>
+}
+
+@if (ViewBag.ClosePage == true)
+{
+    <script>
         window.close();
     </script>
 }
@@ -120,7 +126,8 @@
                                                         SearchManufacturerId: $('#SearchManufacturerId').val(),
                                                         SearchStoreId: $('#SearchStoreId').val(),
                                                         SearchVendorId: $('#SearchVendorId').val(),
-                                                        SearchProductTypeId: $('#SearchProductTypeId').val()
+                                                        SearchProductTypeId: $('#SearchProductTypeId').val(),
+                                                        ProductId: @Model.ProductId
                                                     };
                                                     addAntiForgeryToken(data);
                                                     return data;

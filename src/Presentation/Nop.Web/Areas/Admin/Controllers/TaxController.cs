@@ -45,19 +45,13 @@ namespace Nop.Web.Areas.Admin.Controllers
         #endregion
 
         #region Methods
+        
+        #region Tax Providers
 
         public virtual IActionResult List()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
-                return AccessDeniedView();
-
-            //prepare model
-            var model = _taxModelFactory.PrepareTaxConfigurationModel(new TaxConfigurationModel());
-
-            return View(model);
+            return RedirectToAction("Providers");
         }
-
-        #region Tax Providers
 
         public virtual IActionResult Providers()
         {
@@ -88,16 +82,16 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             if (string.IsNullOrEmpty(systemName))
-                return RedirectToAction("List");
+                return RedirectToAction("Providers");
 
             var taxProvider = _taxService.LoadTaxProviderBySystemName(systemName);
             if (taxProvider == null)
-                return RedirectToAction("List");
+                return RedirectToAction("Providers");
 
             _taxSettings.ActiveTaxProviderSystemName = systemName;
             _settingService.SaveSetting(_taxSettings);
 
-            return RedirectToAction("List");
+            return RedirectToAction("Providers");
         }
 
         #endregion

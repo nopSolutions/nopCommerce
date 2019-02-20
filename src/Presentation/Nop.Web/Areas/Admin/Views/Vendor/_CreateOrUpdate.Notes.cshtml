@@ -1,91 +1,88 @@
 @model VendorModel
 
-<div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.VendorDetailsNotesTop, additionalData = Model })
-    <div class="panel panel-default">
-        <div class="panel-body">
-            <div id="vendornotes-grid"></div>
-            
-            <script>
-                $(document).ready(function() {
-                    $("#vendornotes-grid").kendoGrid({
-                        dataSource: {
-                            type: "json",
-                            transport: {
-                                read: {
-                                    url: "@Html.Raw(Url.Action("VendorNotesSelect", "Vendor"))",
-                                    type: "POST",
-                                    dataType: "json",
-                                    data: function() {
-                                        var data = {
-                                            VendorId: '@(Model.Id)'
-                                        };
-                                        addAntiForgeryToken(data);
-                                        return data;
-                                    }
-                                },
-                                destroy: {
-                                    url: "@Html.Raw(Url.Action("VendorNoteDelete", "Vendor", new { vendorId = Model.Id }))",
-                                    type: "POST",
-                                    dataType: "json",
-                                    data: addAntiForgeryToken
+<div class="panel-body">    
+    <div class="sub-panel">
+        <div id="vendornotes-grid"></div>
+        
+        <script>
+            $(document).ready(function() {
+                $("#vendornotes-grid").kendoGrid({
+                    dataSource: {
+                        type: "json",
+                        transport: {
+                            read: {
+                                url: "@Html.Raw(Url.Action("VendorNotesSelect", "Vendor"))",
+                                type: "POST",
+                                dataType: "json",
+                                data: function() {
+                                    var data = {
+                                        VendorId: '@(Model.Id)'
+                                    };
+                                    addAntiForgeryToken(data);
+                                    return data;
                                 }
                             },
-                            schema: {
-                                data: "Data",
-                                total: "Total",
-                                errors: "Errors",
-                                model: {
-                                    id: "Id",
-                                    fields: {
-                                        //do not implicitly specify all fields
-                                        //we do it only for fields which implicitly require it
-                                        //otherwise, they'll be formatted wrong way
-                                        CreatedOn: { type: "date" }
-                                    }
-                                }
-                            },
-                            error: function(e) {
-                                display_kendoui_grid_error(e);
-                                // Cancel the changes
-                                this.cancelChanges();
-                            },
-                            pageSize: @(Model.VendorNoteSearchModel.PageSize),
-                            serverPaging: true,
-                            serverFiltering: true,
-                            serverSorting: true
-                        },
-                        pageable: {
-                            refresh: true,
-                            pageSizes: [@(Model.VendorNoteSearchModel.AvailablePageSizes)],
-                            @await Html.PartialAsync("_GridPagerMessages")
-                        },
-                        editable: {
-                            confirmation: "@T("Admin.Common.DeleteConfirmation")",
-                            mode: "inline"
-                        },
-                        scrollable: false,
-                        columns: [
-                            {
-                                field: "CreatedOn",
-                                title: "@T("Admin.Vendors.VendorNotes.Fields.CreatedOn")",
-                                width: 200,
-                                type: "date",
-                                format: "{0:G}"
-                            }, {
-                                field: "Note",
-                                title: "@T("Admin.Vendors.VendorNotes.Fields.Note")",
-                                encoded: false
-                            }, {
-                                command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
-                                title: "@T("Admin.Common.Delete")",
-                                width: 100
+                            destroy: {
+                                url: "@Html.Raw(Url.Action("VendorNoteDelete", "Vendor", new { vendorId = Model.Id }))",
+                                type: "POST",
+                                dataType: "json",
+                                data: addAntiForgeryToken
                             }
-                        ]
-                    });
+                        },
+                        schema: {
+                            data: "Data",
+                            total: "Total",
+                            errors: "Errors",
+                            model: {
+                                id: "Id",
+                                fields: {
+                                    //do not implicitly specify all fields
+                                    //we do it only for fields which implicitly require it
+                                    //otherwise, they'll be formatted wrong way
+                                    CreatedOn: { type: "date" }
+                                }
+                            }
+                        },
+                        error: function(e) {
+                            display_kendoui_grid_error(e);
+                            // Cancel the changes
+                            this.cancelChanges();
+                        },
+                        pageSize: @(Model.VendorNoteSearchModel.PageSize),
+                        serverPaging: true,
+                        serverFiltering: true,
+                        serverSorting: true
+                    },
+                    pageable: {
+                        refresh: true,
+                        pageSizes: [@(Model.VendorNoteSearchModel.AvailablePageSizes)],
+                        @await Html.PartialAsync("_GridPagerMessages")
+                    },
+                    editable: {
+                        confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                        mode: "inline"
+                    },
+                    scrollable: false,
+                    columns: [
+                        {
+                            field: "CreatedOn",
+                            title: "@T("Admin.Vendors.VendorNotes.Fields.CreatedOn")",
+                            width: 200,
+                            type: "date",
+                            format: "{0:G}"
+                        }, {
+                            field: "Note",
+                            title: "@T("Admin.Vendors.VendorNotes.Fields.Note")",
+                            encoded: false
+                        }, {
+                            command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
+                            title: "@T("Admin.Common.Delete")",
+                            width: 100
+                        }
+                    ]
                 });
-            </script>
-        </div>
+            });
+        </script>
     </div>
 
     <div class="panel panel-default">
@@ -109,7 +106,6 @@
             </div>
         </div>
     </div>
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.VendorDetailsNotesBottom, additionalData = Model })
 </div>
 
 <script>

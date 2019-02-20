@@ -145,7 +145,18 @@ namespace Nop.Core.Caching
         /// <returns>The cached value associated with the specified key</returns>
         public virtual T Get<T>(string key, Func<T> acquire, int? cacheTime = null)
         {
-            return GetAsync(key, () => Task.Run(acquire), cacheTime).Result;
+            //item already is in cache, so return it
+            if (_cache.TryGetValue(key, out T value))
+                return value;
+
+            //or create it using passed function
+            var result = acquire();
+
+            //and set in cache (if cache time is defined)
+            if ((cacheTime ?? NopCachingDefaults.CacheTime) > 0)
+                Set(key, result, cacheTime ?? NopCachingDefaults.CacheTime);
+
+            return result;
         }
 
         /// <summary>

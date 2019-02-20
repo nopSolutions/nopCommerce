@@ -1,149 +1,144 @@
 @model LanguageModel
-<div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.LanguageDetailsInfoTop, additionalData = Model })
-    <div class="panel panel-default">
-        <div class="panel-body">
-            <div class="form-group">
-                <div class="col-md-3">
-                    <nop-label asp-for="Name" />
-                </div>
-                <div class="col-md-9">
-                    <nop-editor asp-for="Name" asp-required="true" />
-                    <span asp-validation-for="Name"></span>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-md-3">
-                    <nop-label asp-for="LanguageCulture" />
-                </div>
-                <div class="col-md-9">
-                    @{
-                        var cultures = System.Globalization.CultureInfo.GetCultures(System.Globalization.CultureTypes.SpecificCultures)
-                            .OrderBy(x => x.EnglishName)
-                            .Select(x => new SelectListItem
-                            {
-                                Value = x.IetfLanguageTag,
-                                Text = $"{x.EnglishName}. {x.IetfLanguageTag}"
-                            });
-                    }
-                    <nop-select asp-for="LanguageCulture" asp-items="@cultures" />
-                    <span asp-validation-for="LanguageCulture"></span>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-md-3">
-                    <nop-label asp-for="UniqueSeoCode" />
-                </div>
-                <div class="col-md-9">
-                    <nop-editor asp-for="UniqueSeoCode" asp-required="true" />
-                    <span asp-validation-for="UniqueSeoCode"></span>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-md-3">
-                    <nop-label asp-for="FlagImageFileName" />
-                </div>
-                <div class="col-md-9">
-                    <nop-editor asp-for="FlagImageFileName" asp-render-form-control-class="false" />
-                    <span asp-validation-for="FlagImageFileName"></span>
-                    <script>
-                        $(function() {
-                            $('#FlagImageFileName').kendoDropDownList({
-                                dataTextField: "Text",
-                                dataValueField: "Value",
-                                valueTemplate:
-                                    '<span class="image" style="background-image: url(\'@Url.Content("~/images/flags/#:data.Text#")\'); width: 16px; height: 11px;"></span><span>#:data.Value#</span>',
-                                template:
-                                    '<span class="image" style="background-image: url(\'@Url.Content("~/images/flags/#:data.Text#")\'); width: 16px; height: 11px;"></span><span>#:data.Value#</span>',
-                                dataSource: {
-                                    transport: {
-                                        type: "json",
-                                        read: {
-                                            url: "@Html.Raw(Url.Action("GetAvailableFlagFileNames", "Language"))",
-                                            type: "POST",
-                                            dataType: "json",
-                                            data: addAntiForgeryToken
-                                        }
-                                    }
+
+<div class="panel-body">
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-label asp-for="Name" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="Name" asp-required="true" />
+            <span asp-validation-for="Name"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-label asp-for="LanguageCulture" />
+        </div>
+        <div class="col-md-9">
+            @{
+                var cultures = System.Globalization.CultureInfo.GetCultures(System.Globalization.CultureTypes.SpecificCultures)
+                    .OrderBy(x => x.EnglishName)
+                    .Select(x => new SelectListItem
+                    {
+                        Value = x.IetfLanguageTag,
+                        Text = $"{x.EnglishName}. {x.IetfLanguageTag}"
+                    });
+            }
+            <nop-select asp-for="LanguageCulture" asp-items="@cultures" />
+            <span asp-validation-for="LanguageCulture"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-label asp-for="UniqueSeoCode" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="UniqueSeoCode" asp-required="true" />
+            <span asp-validation-for="UniqueSeoCode"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-label asp-for="FlagImageFileName" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="FlagImageFileName" asp-render-form-control-class="false" />
+            <span asp-validation-for="FlagImageFileName"></span>
+            <script>
+                $(function() {
+                    $('#FlagImageFileName').kendoDropDownList({
+                        dataTextField: "Text",
+                        dataValueField: "Value",
+                        valueTemplate:
+                            '<span class="image" style="background-image: url(\'@Url.Content("~/images/flags/#:data.Text#")\'); width: 16px; height: 11px;"></span><span>#:data.Value#</span>',
+                        template:
+                            '<span class="image" style="background-image: url(\'@Url.Content("~/images/flags/#:data.Text#")\'); width: 16px; height: 11px;"></span><span>#:data.Value#</span>',
+                        dataSource: {
+                            transport: {
+                                type: "json",
+                                read: {
+                                    url: "@Html.Raw(Url.Action("GetAvailableFlagFileNames", "Language"))",
+                                    type: "POST",
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
                                 }
-                            }).data("kendoDropDownList");
+                            }
+                        }
+                    }).data("kendoDropDownList");
+                });
+            </script>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-label asp-for="Rtl" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="Rtl"/>
+            <span asp-validation-for="Rtl"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-label asp-for="DefaultCurrencyId" />
+        </div>
+        <div class="col-md-9">
+            <nop-select asp-for="DefaultCurrencyId" asp-items="Model.AvailableCurrencies" />
+            <span asp-validation-for="DefaultCurrencyId"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-label asp-for="SelectedStoreIds" />
+        </div>
+        <div class="col-md-9">
+            <div class="row">
+                <div class="col-md-3">
+                    <nop-select asp-for="SelectedStoreIds" asp-items="Model.AvailableStores" asp-multiple="true" />
+                    <script>
+                        $(document).ready(function() {
+                            var storesIdsInput = $('#@Html.IdFor(model => model.SelectedStoreIds)').data("kendoMultiSelect");
+                            storesIdsInput.setOptions({
+                                autoClose: false,
+                                filter: "contains"
+                            });
+
+                            @if (Model.AvailableStores.Count == 0)
+                            {
+                                <text>
+                        storesIdsInput.setOptions({
+                            enable: false,
+                            placeholder: 'No stores available'
+                        });
+                        storesIdsInput._placeholder();
+                        storesIdsInput._enable();
+                        </text>
+                            }
                         });
                     </script>
                 </div>
-            </div>
-            <div class="form-group">
-                <div class="col-md-3">
-                    <nop-label asp-for="Rtl" />
-                </div>
                 <div class="col-md-9">
-                    <nop-editor asp-for="Rtl"/>
-                    <span asp-validation-for="Rtl"></span>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-md-3">
-                    <nop-label asp-for="DefaultCurrencyId" />
-                </div>
-                <div class="col-md-9">
-                    <nop-select asp-for="DefaultCurrencyId" asp-items="Model.AvailableCurrencies" />
-                    <span asp-validation-for="DefaultCurrencyId"></span>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-md-3">
-                    <nop-label asp-for="SelectedStoreIds" />
-                </div>
-                <div class="col-md-9">
-                    <div class="row">
-                        <div class="col-md-3">
-                            <nop-select asp-for="SelectedStoreIds" asp-items="Model.AvailableStores" asp-multiple="true" />
-                            <script>
-                                $(document).ready(function() {
-                                    var storesIdsInput = $('#@Html.IdFor(model => model.SelectedStoreIds)').data("kendoMultiSelect");
-                                    storesIdsInput.setOptions({
-                                        autoClose: false,
-                                        filter: "contains"
-                                    });
-
-                                    @if (Model.AvailableStores.Count == 0)
-                                    {
-                                        <text>
-                                storesIdsInput.setOptions({
-                                    enable: false,
-                                    placeholder: 'No stores available'
-                                });
-                                storesIdsInput._placeholder();
-                                storesIdsInput._enable();
-                                </text>
-                                    }
-                                });
-                            </script>
-                        </div>
-                        <div class="col-md-9">
-                            @await Component.InvokeAsync("MultistoreDisabledWarning")
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-md-3">
-                    <nop-label asp-for="Published" />
-                </div>
-                <div class="col-md-9">
-                    <nop-editor asp-for="Published" />
-                    <span asp-validation-for="Published"></span>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-md-3">
-                    <nop-label asp-for="DisplayOrder" />
-                </div>
-                <div class="col-md-9">
-                    <nop-editor asp-for="DisplayOrder" />
-                    <span asp-validation-for="DisplayOrder"></span>
+                    @await Component.InvokeAsync("MultistoreDisabledWarning")
                 </div>
             </div>
         </div>
     </div>
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.LanguageDetailsInfoBottom, additionalData = Model })
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-label asp-for="Published" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="Published" />
+            <span asp-validation-for="Published"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-label asp-for="DisplayOrder" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="DisplayOrder" />
+            <span asp-validation-for="DisplayOrder"></span>
+        </div>
+    </div>
 </div>

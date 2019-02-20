@@ -2,18 +2,21 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading;
 using Microsoft.AspNetCore.Http;
+using Nop.Core.ComponentModel;
 
 namespace Nop.Core.Caching
 {
     /// <summary>
-    /// Represents a manager for caching during an HTTP request (short term caching)
+    ///     Represents a manager for caching during an HTTP request (short term caching)
     /// </summary>
     public partial class PerRequestCacheManager : ICacheManager
     {
         #region Fields
 
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly ReaderWriterLockSlim _locker;
 
         #endregion
 
@@ -22,6 +25,7 @@ namespace Nop.Core.Caching
         public PerRequestCacheManager(IHttpContextAccessor httpContextAccessor)
         {
             this._httpContextAccessor = httpContextAccessor;
+            this._locker = new ReaderWriterLockSlim();
         }
 
         #endregion
@@ -29,7 +33,7 @@ namespace Nop.Core.Caching
         #region Utilities
 
         /// <summary>
-        /// Gets a key/value collection that can be used to share data within the scope of this request 
+        /// Gets a key/value collection that can be used to share data within the scope of this request
         /// </summary>
         protected virtual IDictionary<object, object> GetItems()
         {
@@ -50,22 +54,31 @@ namespace Nop.Core.Caching
         /// <returns>The cached value associated with the specified key</returns>
         public virtual T Get<T>(string key, Func<T> acquire, int? cacheTime = null)
         {
-            var items = GetItems();
-            if (items == null)
-                return acquire();
+            using (new ReaderWriteLockDisposable(_locker, false))
+            {
+                var items = GetItems();
+                if (items == null)
+                {
+                    return acquire();
+                }
 
-            //item already is in cache, so return it
-            if (items[key] != null)
-                return (T)items[key];
+                //item already is in cache, so return it
+                if (items[key] != null)
+                {
+                    return (T)items[key];
+                }
 
-            //or create it using passed function
-            var result = acquire();
+                //or create it using passed function
+                var result = acquire();
 
-            //and set in cache (if cache time is defined)
-            if (result != null && (cacheTime ?? NopCachingDefaults.CacheTime) > 0)
-                items[key] = result;
+                //and set in cache (if cache time is defined)
+                if (result != null && (cacheTime ?? NopCachingDefaults.CacheTime) > 0)
+                {
+                    items[key] = result;
+                }
 
-            return result;
+                return result;
+            }
         }
 
         /// <summary>
@@ -76,12 +89,19 @@ namespace Nop.Core.Caching
         /// <param name="cacheTime">Cache time in minutes</param>
         public virtual void Set(string key, object data, int cacheTime)
         {
-            var items = GetItems();
-            if (items == null)
-                return;
+            using (new ReaderWriteLockDisposable(_locker, true))
+            {
+                var items = GetItems();
+                if (items == null)
+                {
+                    return;
+                }
 
-            if (data != null)
-                items[key] = data;
+                if (data != null)
+                {
+                    items[key] = data;
+                }
+            }
         }
 
         /// <summary>
@@ -91,9 +111,12 @@ namespace Nop.Core.Caching
         /// <returns>True if item already is in cache; otherwise false</returns>
         public virtual bool IsSet(string key)
         {
-            var items = GetItems();
+            using (new ReaderWriteLockDisposable(_locker, false))
+            {
+                var items = GetItems();
 
-            return items?[key] != null;
+                return items?[key] != null;
+            }
         }
 
         /// <summary>
@@ -102,9 +125,12 @@ namespace Nop.Core.Caching
         /// <param name="key">Key of cached item</param>
         public virtual void Remove(string key)
         {
-            var items = GetItems();
+            using (new ReaderWriteLockDisposable(_locker, true))
+            {
+                var items = GetItems();
 
-            items?.Remove(key);
+                items?.Remove(key);
+            }
         }
 
         /// <summary>
@@ -113,18 +139,24 @@ namespace Nop.Core.Caching
         /// <param name="pattern">String key pattern</param>
         public virtual void RemoveByPattern(string pattern)
         {
-            var items = GetItems();
-            if (items == null)
-                return;
-
-            //get cache keys that matches pattern
-            var regex = new Regex(pattern, RegexOptions.Singleline | RegexOptions.Compiled | RegexOptions.IgnoreCase);
-            var matchesKeys = items.Keys.Select(p => p.ToString()).Where(key => regex.IsMatch(key)).ToList();
-
-            //remove matching values
-            foreach (var key in matchesKeys)
+            using (new ReaderWriteLockDisposable(_locker, true))
             {
-                items.Remove(key);
+                var items = GetItems();
+                if (items == null)
+                {
+                    return;
+                }
+
+                //get cache keys that matches pattern
+                var regex = new Regex(pattern,
+                    RegexOptions.Singleline | RegexOptions.Compiled | RegexOptions.IgnoreCase);
+                var matchesKeys = items.Keys.Select(p => p.ToString()).Where(key => regex.IsMatch(key)).ToList();
+
+                //remove matching values
+                foreach (var key in matchesKeys)
+                {
+                    items.Remove(key);
+                }
             }
         }
 
@@ -133,9 +165,12 @@ namespace Nop.Core.Caching
         /// </summary>
         public virtual void Clear()
         {
-            var items = GetItems();
+            using (new ReaderWriteLockDisposable(_locker, true))
+            {
+                var items = GetItems();
 
-            items?.Clear();
+                items?.Clear();
+            }
         }
 
         /// <summary>

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Moq;
 using Nop.Core;
-using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Orders;

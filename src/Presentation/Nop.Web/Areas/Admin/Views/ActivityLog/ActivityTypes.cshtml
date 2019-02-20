@@ -1,0 +1,115 @@
+﻿@using System.Text.Encodings.Web
+@model IList<ActivityLogTypeModel>
+
+@{
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Activity types");
+}
+
+<form asp-controller="ActivityLog" asp-action="SaveTypes" method="post">
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.Configuration.ActivityLog.ActivityLogType")
+        </h1>
+        <div class="pull-right">
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ActivityTypesListButtons })
+        </div>
+    </div>
+    <div class="content">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div id="activityLogType-grid"></div>
+
+                <script>
+            //local datasource
+            var activityLogTypes = [
+                @for (var i = 0; i < Model.Count; i++)
+                {
+                    var alt = Model[i];
+                    <text>
+                        {
+                            Id: @(alt.Id),
+                            Name: "@(Html.Raw(JavaScriptEncoder.Default.Encode(alt.Name)))",
+                            Enabled: @(alt.Enabled.ToString().ToLowerInvariant())
+                        }
+                    </text>
+                    if (i != Model.Count - 1)
+                    {
+                        <text>,</text>
+                    }
+                }
+            ];
+
+            $(document).ready(function() {
+                $("#activityLogType-grid").kendoGrid({
+                    dataSource: {
+                        data: activityLogTypes,
+                        schema: {
+                            model: {
+                                fields: {
+                                    Id: { type: "number" },
+                                    Name: { type: "string" },
+                                    Enabled: { type: "boolean" }
+                                }
+                            }
+                        },
+                        error: function(e) {
+                            display_kendoui_grid_error(e);
+                            // Cancel the changes
+                            this.cancelChanges();
+                        }
+                    },
+                    pageable: {
+                        refresh: true,
+                        numeric: false,
+                        previousNext: false,
+                        info: false,
+                        @await Html.PartialAsync("_GridPagerMessages")
+                    },
+                    scrollable: false,
+                    columns: [
+                        {
+                            field: "Name",
+                            title: "@T("Admin.Configuration.ActivityLog.ActivityLogType.Fields.Name")",
+                            width: 100
+                        }, {
+                            field: "Enabled",
+                            headerTemplate: "<div class='checkbox'><label><input id='mastercheckbox' type='checkbox'/>@T("Admin.Configuration.ActivityLog.ActivityLogType.Fields.Enabled")</label></div>",
+                            headerAttributes: { style: "text-align:center" },
+                            attributes: { style: "text-align:center" },
+                            template: "<input name='checkbox_activity_types' value='#=Id#' type='checkbox' class='checkboxGroups' # if(Enabled) {# checked='checked' #}  # />",
+                            width: 100
+                        }
+                    ]
+                });
+            });
+
+                </script>
+                <script>
+                    $(document).ready(function () {
+                        updateMasterCheckbox();
+
+                        $('#mastercheckbox').click(function () {
+                            $('.checkboxGroups').attr('checked', $(this).is(':checked')).change();
+                        });
+
+                        //wire up checkboxes.
+                        $('#activityLogType-grid').on('change', 'input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]', function (e) {
+                            updateMasterCheckbox();
+                        });
+                    });
+
+                    function updateMasterCheckbox() {
+                        var numChkBoxes = $('#activityLogType-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]').length;
+                        var numChkBoxesChecked = $('#activityLogType-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]:checked').length;
+                        $('#mastercheckbox').attr('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
+                    }
+                </script>
+            </div>
+        </div>
+    </div>
+</form>
