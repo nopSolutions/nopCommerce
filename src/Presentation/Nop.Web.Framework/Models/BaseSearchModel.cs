@@ -1,5 +1,6 @@
 ﻿using Nop.Core.Domain.Common;
 using Nop.Core.Infrastructure;
+using Nop.Web.Framework.DataTables;
 
 namespace Nop.Web.Framework.Models
 {
@@ -13,8 +14,8 @@ namespace Nop.Web.Framework.Models
         public BaseSearchModel()
         {
             //set the default values
-            this.Page = 1;
-            this.PageSize = 10;
+            this.Start = 0;
+            this.Length = 10;
         }
 
         #endregion
@@ -24,17 +25,45 @@ namespace Nop.Web.Framework.Models
         /// <summary>
         /// Gets or sets a page number
         /// </summary>
-        public int Page { get; set; }
+        public int Page
+        {
+            set { }
+            get => (this.Start / this.Length) + 1;
+        }
 
         /// <summary>
         /// Gets or sets a page size
         /// </summary>
-        public int PageSize { get; set; }
+        public int PageSize
+        {
+            set { }
+            get => this.Length;
+        }
 
         /// <summary>
         /// Gets or sets a comma-separated list of available page sizes
         /// </summary>
         public string AvailablePageSizes { get; set; }
+
+        /// <summary>
+        /// Gets or sets draw. Draw counter. This is used by DataTables to ensure that the Ajax returns from server-side processing requests are drawn in sequence by DataTables (Ajax requests are asynchronous and thus can return out of sequence).
+        /// </summary>
+        public string Draw { get; set; }
+
+        /// <summary>
+        /// Gets or sets skiping number of rows count. Paging first record indicator.
+        /// </summary>
+        public int Start { get; set; }
+
+        /// <summary>
+        /// Gets or sets paging length. Number of records that the table can display in the current draw. 
+        /// </summary>
+        public int Length { get; set; }
+
+        /// <summary>
+        /// Gets or sets grid model (DataTables)
+        /// </summary>
+        public DataTablesModel Grid { get; set; }
 
         #endregion
 
@@ -47,8 +76,8 @@ namespace Nop.Web.Framework.Models
         {
             var adminAreaSettings = EngineContext.Current.Resolve<AdminAreaSettings>();
 
-            this.Page = 1;
-            this.PageSize = adminAreaSettings.DefaultGridPageSize;
+            this.Start = 0;
+            this.Length = adminAreaSettings.DefaultGridPageSize;
             this.AvailablePageSizes = adminAreaSettings.GridPageSizes;
         }
 
@@ -59,8 +88,8 @@ namespace Nop.Web.Framework.Models
         {
             var adminAreaSettings = EngineContext.Current.Resolve<AdminAreaSettings>();
 
-            this.Page = 1;
-            this.PageSize = adminAreaSettings.PopupGridPageSize;
+            this.Start = 0;
+            this.Length = adminAreaSettings.PopupGridPageSize;
             this.AvailablePageSizes = adminAreaSettings.GridPageSizes;
         }
 

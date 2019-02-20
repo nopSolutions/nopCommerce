@@ -49,10 +49,18 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             //prepare model
+            
+
+            //DT - TODO
+            //var model = new ActivityLogContainerModel();
+            //_activityLogModelFactory.PrepareActivityLogSearchModel(model.ListLogs);
+            //_activityLogModelFactory.PrepareActivityLogTypeSearchModel(model.ListTypes);
+            //DT - TODO
+
             var model = _activityLogModelFactory.PrepareActivityLogTypeModels();
 
             return View(model);
-        }
+        }        
 
         [HttpPost, ActionName("SaveTypes")]
         public virtual IActionResult SaveTypes(IFormCollection form)
@@ -105,10 +113,11 @@ namespace Nop.Web.Areas.Admin.Controllers
             //prepare model
             var model = _activityLogModelFactory.PrepareActivityLogListModel(searchModel);
 
-            return Json(model);
+            return JsonDataTable(model);
         }
 
-        public virtual IActionResult ActivityLogDelete(int id)
+        [HttpPost]
+        public virtual IActionResult AcivityLogDelete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageActivityLog))
                 return AccessDeniedView();

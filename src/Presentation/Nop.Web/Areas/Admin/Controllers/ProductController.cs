@@ -751,7 +751,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //prepare model
             var model = _productModelFactory.PrepareProductListModel(searchModel);
 
-            return Json(model);
+            return JsonDataTable(model);
         }
 
         [HttpPost, ActionName("List")]

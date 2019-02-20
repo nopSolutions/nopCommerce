@@ -30,6 +30,7 @@ using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Areas.Admin.Models.Orders;
 using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;
+using Nop.Web.Framework.DataTables;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -612,6 +613,134 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Methods
 
         /// <summary>
+        /// Prepare product datatables model
+        /// </summary>
+        /// <param name="searchModel">Product search model</param>
+        /// <returns>Product datatables model</returns>
+        public virtual DataTablesModel PrepareProductGridModel(ProductSearchModel searchModel)
+        {
+            //prepare page parameters
+            searchModel.SetGridPageSize();
+
+            List<string> Filters = new List<string>()
+            {
+                nameof(searchModel.SearchProductName),
+                nameof(searchModel.SearchCategoryId),
+                nameof(searchModel.SearchIncludeSubCategories),
+                nameof(searchModel.SearchManufacturerId),
+                nameof(searchModel.SearchStoreId),
+                nameof(searchModel.SearchWarehouseId),
+                nameof(searchModel.SearchVendorId),
+                nameof(searchModel.SearchProductTypeId),
+                nameof(searchModel.SearchPublishedId)
+            };
+
+            ProductModel dataModel = new ProductModel();
+
+            List<ColumnProperty> columns = new List<ColumnProperty>
+            {
+                new ColumnProperty()
+                {
+                    Data = nameof(dataModel.ProductTypeId)
+                },
+                new ColumnProperty()
+                {
+                    Data = nameof(dataModel.Id),
+                    IsMasterCheckBox = true,
+                    Render = new RenderCheckBox("checkbox_products"),                    
+                    Width = "50",
+                },
+                new ColumnProperty()
+                {
+                    Data = nameof(dataModel.PictureThumbnailUrl),
+                    Title = _localizationService.GetResource("Admin.Catalog.Products.Fields.PictureThumbnailUrl"),
+                    Width = "100",
+                    Render = new RenderPicture("data")
+                },
+                new ColumnProperty()
+                {
+                    Data = nameof(dataModel.Name),
+                    Title = _localizationService.GetResource("Admin.Catalog.Products.Fields.Name"),
+                    Width = "300"
+                },
+                new ColumnProperty()
+                {
+                    Data = nameof(dataModel.Sku),
+                    Title = _localizationService.GetResource("Admin.Catalog.Products.Fields.Sku"),
+                    Width = "100"
+                },
+                new ColumnProperty()
+                {
+                    Data = nameof(dataModel.Price),
+                    Title = _localizationService.GetResource("Admin.Catalog.Products.Fields.Price"),
+                    Width = "150",
+                    Render = new RenderCustom("renderColumnPrice")
+                },
+                new ColumnProperty()
+                {
+                    Data = nameof(dataModel.StockQuantityStr),
+                    Title = _localizationService.GetResource("Admin.Catalog.Products.Fields.StockQuantity"),
+                    Width = "100"
+                },
+
+                new ColumnProperty()
+                {
+                    Data = nameof(dataModel.ProductTypeName),
+                    Title = _localizationService.GetResource("Admin.Catalog.Products.Fields.ProductType"),
+                    Width = "100"
+                },
+                new ColumnProperty()
+                {
+                    Data = nameof(dataModel.Published),
+                    Title = _localizationService.GetResource("Admin.Catalog.Products.Fields.Published"),
+                    Width = "100",
+                    Render = new RenderBoolean()
+                },
+                new ColumnProperty()
+                {
+                    Data = nameof(dataModel.Id),
+                    Title = _localizationService.GetResource("Admin.Common.Edit"),
+                    Width = "100",
+                    Render = new RenderButtonEdit(new DataUrl("Edit"))
+                }
+            };
+
+            List<ColumnDefinition> ColDef = new List<ColumnDefinition>
+            {
+                new ColumnDefinition()
+                {
+                    Targets = "0",
+                    Visible = false
+                },
+                new ColumnDefinition()
+                {
+                    Targets = "1",
+                    ClassName =  StyleColumn.centerAll,
+                    Width = "50"
+                },
+                new ColumnDefinition()
+                {
+                    Targets = "-1",
+                    ClassName =  StyleColumn.centerAll
+                }
+            };
+
+            return new DataTablesModel
+            {
+                Name = "products-grid",
+                ServerSide = true,
+                Processing = true,
+                UrlRead = new DataUrl("ProductList", "Product"),
+                DeleteSelected = new DataUrl("DeleteSelected", "Product"),
+                LengthMenu = searchModel.AvailablePageSizes,
+                SearchButtonId = "search-products",
+                Filters = Filters,
+                ColumnCollection = columns,
+                ColumnDefs = ColDef
+            };
+        }
+
+        /// <summary>
         /// Prepare product search model
         /// </summary>
         /// <param name="searchModel">Product search model</param>
@@ -662,8 +791,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Text = _localizationService.GetResource("Admin.Catalog.Products.List.SearchPublished.UnpublishedOnly")
             });
 
-            //prepare page parameters
-            searchModel.SetGridPageSize();
+            searchModel.Grid = PrepareProductGridModel(searchModel);
 
             return searchModel;
         }
@@ -722,7 +850,9 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     return productModel;
                 }),
-                Total = products.TotalCount
+                Draw = searchModel.Draw,
+                RecordsTotal = products.TotalCount,
+                RecordsFiltered = products.TotalCount
             };
 
             return model;

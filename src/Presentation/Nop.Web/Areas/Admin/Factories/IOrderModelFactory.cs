@@ -4,6 +4,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Web.Areas.Admin.Models.Orders;
 using Nop.Web.Areas.Admin.Models.Reports;
+using Nop.Web.Framework.DataTables;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -12,6 +13,13 @@ namespace Nop.Web.Areas.Admin.Factories
     /// </summary>
     public partial interface IOrderModelFactory
     {
+        /// <summary>
+        /// Prepare oreder datatables model
+        /// </summary>
+        /// <param name="searchModel">Order search model</param>
+        /// <returns>Order datatables model</returns>
+        DataTablesModel PrepareOrderGridModel(OrderSearchModel searchModel);
+
         /// <summary>
         /// Prepare order search model
         /// </summary>

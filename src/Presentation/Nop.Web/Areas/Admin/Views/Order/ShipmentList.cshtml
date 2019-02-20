@@ -144,171 +144,338 @@
 
                 <div class="panel panel-default">
                     <div class="panel-body">
-                        <div id="shipments-grid"></div>
+                        <table id="shipments-grid" class="table table-bordered table-hover dataTable" width="100%"></table>
 
                         <script>
-                            $(document).ready(function () {
-                                $("#shipments-grid").kendoGrid({
-                                    dataSource: {
-                                        type: "json",
-                                        transport: {
-                                            read: {
-                                                url: "@Html.Raw(Url.Action("ShipmentListSelect", "Order"))",
-                                                type: "POST",
-                                                dataType: "json",
-                                                data: function() {
-                                                    var data = {
-                                                        StartDate: $('#@Html.IdFor(model => model.StartDate)').val(),
-                                                        EndDate: $('#@Html.IdFor(model => model.EndDate)').val(),
-                                                        TrackingNumber: $('#@Html.IdFor(model => model.TrackingNumber)').val(),
-                                                        CountryId: $('#@Html.IdFor(model => model.CountryId)').val(),
-                                                        StateProvinceId: $('#@Html.IdFor(model => model.StateProvinceId)').val(),
-                                                        County: $('#@Html.IdFor(model => model.County)').val(),
-                                                        City: $('#@Html.IdFor(model => model.City)').val(),
-                                                        WarehouseId: $('#@Html.IdFor(model => model.WarehouseId)').val(),
-                                                        LoadNotShipped: $('#@Html.IdFor(model => model.LoadNotShipped)').is(':checked')
-                                                    };
-                                                    addAntiForgeryToken(data);
-                                                    return data;
-                                                }
-                                            }
-                                        },
-                                        schema: {
-                                            data: "Data",
-                                            total: "Total",
-                                            errors: "Errors"
-                                        },
-                                        error: function(e) {
-                                            display_kendoui_grid_error(e);
-                                            // Cancel the changes
-                                            this.cancelChanges();
-                                        },
-                                        pageSize: @(Model.PageSize),
-                                        serverPaging: true,
-                                        serverFiltering: true,
-                                        serverSorting: true
-                                    },
-                                    pageable: {
-                                        refresh: true,
-                                        pageSizes: [@(Model.AvailablePageSizes)],
-                                        @await Html.PartialAsync("_GridPagerMessages")
-                                    },
-                                    //details grid
-                                    detailInit: detailInit,
-                                    scrollable: false,
-                                    dataBound: onDataBound,
-                                    columns: [{
-                                        field: "Id",
-                                        headerTemplate: "<input id='mastercheckbox' type='checkbox'/>",
-                                        headerAttributes: { style: "text-align:center" },
-                                        attributes: { style: "text-align:center" },
-                                        template: "<input type='checkbox' value='#=Id#' class='checkboxGroups'/>",
-                                        width: 50
-                                    }, {
-                                        field: "Id",
-                                        title: "@T("Admin.Orders.Shipments.ID")",
-                                        width: 50
-                                    }, {
-                                        field: "CustomOrderNumber",
-                                        title: "@T("Admin.Orders.Shipments.CustomOrderNumber")",
-                                        width: 100
-                                    }, {
-                                        field: "TrackingNumber",
-                                        title: "@T("Admin.Orders.Shipments.TrackingNumber")",
-                                        width: 100
-                                    }, {
-                                        field: "TotalWeight",
-                                        title: "@T("Admin.Orders.Shipments.TotalWeight")",
-                                        width: 100
-                                    }, {
-                                        field: "ShippedDate",
-                                        title: "@T("Admin.Orders.Shipments.ShippedDate")",
-                                        width: 200,
-                                        type: "date",
-                                        format: "{0:G}"
-                                    }, {
-                                        field: "DeliveryDate",
-                                        title: "@T("Admin.Orders.Shipments.DeliveryDate")",
-                                        width: 200,
-                                        type: "date",
-                                        format: "{0:G}"
-                                    }, {
-                                        field: "Id",
-                                        title: "@T("Admin.Common.View")",
-                                        width: 50,
-                                        headerAttributes: { style: "text-align:center" },
-                                        attributes: { style: "text-align:center" },
-                                        template: '<a class="btn btn-default" href="@Url.Content("~/Admin/Order/ShipmentDetails/")#=Id#"><i class="fa fa-eye"></i>@T("Admin.Common.View")</a>'
-                                    }]
-                                });
-                            });
-
-                            //details grid
-                            function detailInit(e) {
-                                $("<div/>").appendTo(e.detailCell).kendoGrid({
-                                    dataSource: {
-                                        type: "json",
-                                        transport: {
-                                            read: {
-                                                url: "@Html.Raw(Url.Action("ShipmentsItemsByShipmentId", "Order"))",
-                                                type: "POST",
-                                                dataType: "json",
-                                                data: function() {
-                                                    var data = {
-                                                        ShipmentId: e.data.Id
-                                                    };
-                                                    addAntiForgeryToken(data);
-                                                    return data;
-                                                }
-                                            }
-                                        },
-                                        schema: {
-                                            data: "Data",
-                                            total: "Total",
-                                            errors: "Errors"
-                                        },
-                                        error: function(e) {
-                                            display_kendoui_grid_error(e);
-                                            // Cancel the changes
-                                            this.cancelChanges();
-                                        },
-                                        pageSize: @(Model.ShipmentItemSearchModel.PageSize),
-                                        serverPaging: true,
-                                        serverFiltering: true,
-                                        serverSorting: true
-                                    },
-                                    scrollable: false,
-                                    pageable: {
-                                        refresh: true,
-                                        pageSizes: [@(Model.ShipmentItemSearchModel.AvailablePageSizes)],
-                                        @await Html.PartialAsync("_GridPagerMessages")
-                                    },
-                                    columns: [
-                                        {
-                                            field: "ProductName",
-                                            title: "@T("Admin.Orders.Shipments.Products.ProductName")",
-                                            width: 400
-                                        },{
-                                            field: "ShippedFromWarehouse",
-                                            title: "@T("Admin.Orders.Shipments.Products.Warehouse")",
-                                            width: 150
-                                        },{
-                                            field: "QuantityInThisShipment",
-                                            title: "@T("Admin.Orders.Shipments.Products.QtyShipped")",
-                                            width: 150
-                                        },{
-                                            field: "ItemWeight",
-                                            title: "@T("Admin.Orders.Shipments.Products.ItemWeight")",
-                                            width: 150
-                                        },{
-                                            field: "ItemDimensions",
-                                            title: "@T("Admin.Orders.Shipments.Products.ItemDimensions")",
-                                            width: 150
-                                        }
-                                    ]
-                                });
+                            function getdetail(d) {
+                                return '<table id="detail' + d.Id + '" class="table table-bordered table-hover dataTable" width="100%" style="padding-left:2%;"></table>';
                             }
+                            
+                            $(document).ready(function () {
+
+                                var table = $('#shipments-grid').DataTable({
+                                        processing: true,
+                                        serverSide: true,
+                                        ajax: {
+                                            url: "@Html.Raw(Url.Action("ShipmentListSelect", "Order"))",
+                                            type: 'POST',
+                                            dataType: 'json',
+                                            data: function(data) {
+                                                data.StartDate = $('#@Html.IdFor(model => model.StartDate)').val();
+                                                data.EndDate = $('#@Html.IdFor(model => model.EndDate)').val();
+                                                data.TrackingNumber = $('#@Html.IdFor(model => model.TrackingNumber)').val();
+                                                data.CountryId = $('#@Html.IdFor(model => model.CountryId)').val();
+                                                data.StateProvinceId = $('#@Html.IdFor(model => model.StateProvinceId)').val();
+                                                data.County = $('#@Html.IdFor(model => model.County)').val();
+                                                data.City = $('#@Html.IdFor(model => model.City)').val();
+                                                data.WarehouseId = $('#@Html.IdFor(model => model.WarehouseId)').val();
+                                                data.LoadNotShipped = $('#@Html.IdFor(model => model.LoadNotShipped)').is(':checked');
+
+                                                addAntiForgeryToken(data);
+                                                return data;
+                                            }
+                                        },
+                                        paging: true,
+                                        language: @await Html.PartialAsync("_GridLocalization"),
+                                        lengthMenu: [@(Model.AvailablePageSizes)],
+                                        ordering: false,
+                                        fixedHeader: true,
+                                        dom: 'lrtip',
+                                        columnDefs: [
+                                            {
+                                                targets: [0, 1],
+                                                searchable: false
+                                            }, {
+                                                targets: -1,
+                                                className: 'dt-head-center dt-body-center'
+                                            }
+                                        ],
+                                        columns: [
+                                            {
+                                                className: 'details-control',
+                                                orderable: false,
+                                                width: 5,
+                                                data: null,
+                                                render: function () {
+                                                    return '<i class="fa fa-caret-right" aria-hidden="true"></i>';
+                                                },
+                                            },
+                                            {
+                                                data: 'Id',
+                                                title: "<input id='mastercheckbox' type='checkbox'/>",
+                                                width: 10,
+                                                className: 'dt-head-center dt-body-center',
+                                                render: function (data, type, full, meta) {
+                                                    return "<input type='checkbox' value='" + data + "' class='checkboxGroups'/>"
+                                                }
+                                            }, {
+                                                data: 'Id',
+                                                title: "@T("Admin.Orders.Shipments.ID")",
+                                                width: 50
+                                            }, {
+                                                data: 'CustomOrderNumber',
+                                                title: "@T("Admin.Orders.Shipments.CustomOrderNumber")",
+                                                width: 100
+                                            }, {
+                                                data: 'TrackingNumber',
+                                                title: "@T("Admin.Orders.Shipments.TrackingNumber")",
+                                                width: 100
+                                            }, {
+                                                data: 'TotalWeight',
+                                                title: "@T("Admin.Orders.Shipments.TotalWeight")",
+                                                width: 100
+                                            }, {
+                                                data: 'ShippedDate',
+                                                title: "@T("Admin.Orders.Shipments.ShippedDate")",
+                                                width: 200
+                                            }, {
+                                                data: 'DeliveryDate',
+                                                title: "@T("Admin.Orders.Shipments.DeliveryDate")",
+                                                width: 200
+                                            }, {
+                                                data: 'Id',
+                                                title: "@T("Admin.Common.View")",
+                                                width: 50,
+                                                render: function(data, type, row) {
+                                                    return '<a class="btn btn-default" href="@Url.Content("~/Admin/Order/ShipmentDetails/")' + data + '"><i class="fa fa-eye"></i>@T("Admin.Common.View")</a>'
+                                                }
+                                            },
+                                        ]
+                                });
+
+                                // Add event listener for opening and closing details
+                                $('#shipments-grid tbody').on('click', 'td.details-control', function () {
+                                    var tr = $(this).closest('tr');
+                                    var tdi = tr.find('i.fa');
+                                    var row = table.row(tr);
+
+                                    if (row.child.isShown()) {
+                                        // This row is already open - close it
+                                        row.child.hide();
+                                        tr.removeClass('shown');
+                                        tdi.first().removeClass('fa-caret-down');
+                                        tdi.first().addClass('fa-caret-right');
+                                    }
+                                    else {
+                                        // Open this row
+                                        row.child(getdetail(row.data())).show();
+                                        var classid = '#detail' + row.data().Id;
+                                        $(classid).DataTable({
+                                            processing: true,
+                                            serverSide: true,
+                                            ajax: {
+                                                url: "@Html.Raw(Url.Action("ShipmentsItemsByShipmentId", "Order"))",
+                                                type: 'POST',
+                                                dataType: 'json',
+                                                data: function (data) {
+                                                    data.ShipmentId = row.data().Id;
+
+                                                    addAntiForgeryToken(data);
+                                                    return data;
+                                                }
+                                            },
+                                            paging: false,
+                                            dom: 'lrtip',
+                                            language: @await Html.PartialAsync("_GridLocalization"),
+                                            lengthMenu: [@(Model.AvailablePageSizes)],
+                                            ordering: false,
+                                            columns: [
+                                                {
+                                                    data: "ProductName",
+                                                    title: "@T("Admin.Orders.Shipments.Products.ProductName")",
+                                                    width: 400
+                                                }, {
+                                                    data: "ShippedFromWarehouse",
+                                                    title: "@T("Admin.Orders.Shipments.Products.Warehouse")",
+                                                    width: 150
+                                                }, {
+                                                    data: "QuantityInThisShipment",
+                                                    title: "@T("Admin.Orders.Shipments.Products.QtyShipped")",
+                                                    width: 150
+                                                }, {
+                                                    data: "ItemWeight",
+                                                    title: "@T("Admin.Orders.Shipments.Products.ItemWeight")",
+                                                    width: 150
+                                                }, {
+                                                    data: "ItemDimensions",
+                                                    title: "@T("Admin.Orders.Shipments.Products.ItemDimensions")",
+                                                    width: 150
+                                                }
+                                            ]
+                                        }).draw;
+                                        tr.addClass('shown');
+                                        tdi.first().removeClass('fa-caret-right');
+                                        tdi.first().addClass(' fa-caret-down');
+                                    }
+                                });
+                             });
                         </script>
+
+                        @*<div id="shipments-grid"></div>
+        <script>
+            $(document).ready(function () {
+                $("#shipments-grid").kendoGrid({
+                    dataSource: {
+                        type: "json",
+                        transport: {
+                            read: {
+                                url: "@Html.Raw(Url.Action("ShipmentListSelect", "Order"))",
+                                type: "POST",
+                                dataType: "json",
+                                data: function() {
+                                    var data = {
+                                        StartDate: $('#@Html.IdFor(model => model.StartDate)').val(),
+                                        EndDate: $('#@Html.IdFor(model => model.EndDate)').val(),
+                                        TrackingNumber: $('#@Html.IdFor(model => model.TrackingNumber)').val(),
+                                        CountryId: $('#@Html.IdFor(model => model.CountryId)').val(),
+                                        StateProvinceId: $('#@Html.IdFor(model => model.StateProvinceId)').val(),
+                                        County: $('#@Html.IdFor(model => model.County)').val(),
+                                        City: $('#@Html.IdFor(model => model.City)').val(),
+                                        WarehouseId: $('#@Html.IdFor(model => model.WarehouseId)').val(),
+                                        LoadNotShipped: $('#@Html.IdFor(model => model.LoadNotShipped)').is(':checked')
+                                    };
+                                    addAntiForgeryToken(data);
+                                    return data;
+                                }
+                            }
+                        },
+                        schema: {
+                            data: "Data",
+                            total: "Total",
+                            errors: "Errors"
+                        },
+                        error: function(e) {
+                            display_kendoui_grid_error(e);
+                            // Cancel the changes
+                            this.cancelChanges();
+                        },
+                        pageSize: @(Model.PageSize),
+                        serverPaging: true,
+                        serverFiltering: true,
+                        serverSorting: true
+                    },
+                    pageable: {
+                        refresh: true,
+                        pageSizes: [@(Model.AvailablePageSizes)],
+                        @await Html.PartialAsync("_GridPagerMessages")
+                    },
+                    //details grid
+                    detailInit: detailInit,
+                    scrollable: false,
+                    dataBound: onDataBound,
+                    columns: [{
+                        field: "Id",
+                        headerTemplate: "<input id='mastercheckbox' type='checkbox'/>",
+                        headerAttributes: { style: "text-align:center" },
+                        attributes: { style: "text-align:center" },
+                        template: "<input type='checkbox' value='#=Id#' class='checkboxGroups'/>",
+                        width: 50
+                    }, {
+                        field: "Id",
+                        title: "@T("Admin.Orders.Shipments.ID")",
+                        width: 50
+                    }, {
+                        field: "CustomOrderNumber",
+                        title: "@T("Admin.Orders.Shipments.CustomOrderNumber")",
+                        width: 100
+                    }, {
+                        field: "TrackingNumber",
+                        title: "@T("Admin.Orders.Shipments.TrackingNumber")",
+                        width: 100
+                    }, {
+                        field: "TotalWeight",
+                        title: "@T("Admin.Orders.Shipments.TotalWeight")",
+                        width: 100
+                    }, {
+                        field: "ShippedDate",
+                        title: "@T("Admin.Orders.Shipments.ShippedDate")",
+                        width: 200,
+                        type: "date",
+                        format: "{0:G}"
+                    }, {
+                        field: "DeliveryDate",
+                        title: "@T("Admin.Orders.Shipments.DeliveryDate")",
+                        width: 200,
+                        type: "date",
+                        format: "{0:G}"
+                    }, {
+                        field: "Id",
+                        title: "@T("Admin.Common.View")",
+                        width: 50,
+                        headerAttributes: { style: "text-align:center" },
+                        attributes: { style: "text-align:center" },
+                        template: '<a class="btn btn-default" href="@Url.Content("~/Admin/Order/ShipmentDetails/")#=Id#"><i class="fa fa-eye"></i>@T("Admin.Common.View")</a>'
+                    }]
+                });
+            });
+
+            //details grid
+            function detailInit(e) {
+                $("<div/>").appendTo(e.detailCell).kendoGrid({
+                    dataSource: {
+                        type: "json",
+                        transport: {
+                            read: {
+                                url: "@Html.Raw(Url.Action("ShipmentsItemsByShipmentId", "Order"))",
+                                type: "POST",
+                                dataType: "json",
+                                data: function() {
+                                    var data = {
+                                        ShipmentId: e.data.Id
+                                    };
+                                    addAntiForgeryToken(data);
+                                    return data;
+                                }
+                            }
+                        },
+                        schema: {
+                            data: "Data",
+                            total: "Total",
+                            errors: "Errors"
+                        },
+                        error: function(e) {
+                            display_kendoui_grid_error(e);
+                            // Cancel the changes
+                            this.cancelChanges();
+                        },
+                        pageSize: @(Model.ShipmentItemSearchModel.PageSize),
+                        serverPaging: true,
+                        serverFiltering: true,
+                        serverSorting: true
+                    },
+                    scrollable: false,
+                    pageable: {
+                        refresh: true,
+                        pageSizes: [@(Model.ShipmentItemSearchModel.AvailablePageSizes)],
+                        @await Html.PartialAsync("_GridPagerMessages")
+                    },
+                    columns: [
+                        {
+                            field: "ProductName",
+                            title: "@T("Admin.Orders.Shipments.Products.ProductName")",
+                            width: 400
+                        },{
+                            field: "ShippedFromWarehouse",
+                            title: "@T("Admin.Orders.Shipments.Products.Warehouse")",
+                            width: 150
+                        },{
+                            field: "QuantityInThisShipment",
+                            title: "@T("Admin.Orders.Shipments.Products.QtyShipped")",
+                            width: 150
+                        },{
+                            field: "ItemWeight",
+                            title: "@T("Admin.Orders.Shipments.Products.ItemWeight")",
+                            width: 150
+                        },{
+                            field: "ItemDimensions",
+                            title: "@T("Admin.Orders.Shipments.Products.ItemDimensions")",
+                            width: 150
+                        }
+                    ]
+                });
+            }
+        </script>*@
+
                     </div>
                 </div>
 
@@ -336,19 +503,17 @@
                                 }
                             });
                         });
-
+                        
                         //search button
                         $('#search-shipments').click(function() {
                             //search
-                            var grid = $('#shipments-grid').data('kendoGrid');
-                            grid.dataSource.page(1); //new search. Set page size to 1
-                            //grid.dataSource.read(); we already loaded the grid above using "page" function
+                            $('#shipments-grid').DataTable().ajax.reload();                            
                             //clear selected checkboxes
                             $('.checkboxGroups').attr('checked', false).change();
                             selectedIds = [];
                             return false;
                         });
-
+                       
                         //"ship selected" button
                         $('#ship-selected').click(function(e) {
                             e.preventDefault();
@@ -365,8 +530,7 @@
                                 data: postData,
                                 complete: function(data) {
                                     //reload grid
-                                    var grid = $('#shipments-grid').data('kendoGrid');
-                                    grid.dataSource.read();
+                                    $('#shipments-grid').DataTable().draw(false);                                    
                                 },
                                 error: function(xhr, ajaxOptions, thrownError) {
                                     $('#setAsShippedSelectedFailed-info').html(thrownError);
@@ -393,8 +557,7 @@
                                 data: postData,
                                 complete: function(data) {
                                     //reload grid
-                                    var grid = $('#shipments-grid').data('kendoGrid');
-                                    grid.dataSource.read();
+                                    $('#shipments-grid').DataTable().draw(false);
                                 },
                                 error: function(xhr, ajaxOptions, thrownError) {
                                     $('#setAsDeliveredSelectedFailed-info').html(thrownError);

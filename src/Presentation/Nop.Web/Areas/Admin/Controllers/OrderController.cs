@@ -446,7 +446,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //prepare model
             var model = _orderModelFactory.PrepareOrderListModel(searchModel);
 
-            return Json(model);
+            return JsonDataTable(model);
         }
 
         [HttpPost]
@@ -2100,7 +2100,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //prepare model
             var model = _orderModelFactory.PrepareShipmentListModel(searchModel);
 
-            return Json(model);
+            return JsonDataTable(model);
         }
 
         [HttpPost]
@@ -2148,7 +2148,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //prepare model
             var model = _orderModelFactory.PrepareShipmentItemListModel(searchModel, shipment);
 
-            return Json(model);
+            return JsonDataTable(model);
         }
 
         public virtual IActionResult AddShipment(int orderId)
