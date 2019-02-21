@@ -99,33 +99,33 @@ namespace Nop.Web.Areas.Admin.Controllers
             IWorkflowMessageService workflowMessageService,
             OrderSettings orderSettings)
         {
-            this._addressAttributeParser = addressAttributeParser;
-            this._addressService = addressService;
-            this._customerActivityService = customerActivityService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._downloadService = downloadService;
-            this._encryptionService = encryptionService;
-            this._exportManager = exportManager;
-            this._giftCardService = giftCardService;
-            this._localizationService = localizationService;
-            this._notificationService = notificationService;
-            this._orderModelFactory = orderModelFactory;
-            this._orderProcessingService = orderProcessingService;
-            this._orderService = orderService;
-            this._paymentService = paymentService;
-            this._pdfService = pdfService;
-            this._permissionService = permissionService;
-            this._priceCalculationService = priceCalculationService;
-            this._productAttributeFormatter = productAttributeFormatter;
-            this._productAttributeParser = productAttributeParser;
-            this._productAttributeService = productAttributeService;
-            this._productService = productService;
-            this._shipmentService = shipmentService;
-            this._shippingService = shippingService;
-            this._shoppingCartService = shoppingCartService;
-            this._workContext = workContext;
-            this._workflowMessageService = workflowMessageService;
-            this._orderSettings = orderSettings;
+            _addressAttributeParser = addressAttributeParser;
+            _addressService = addressService;
+            _customerActivityService = customerActivityService;
+            _dateTimeHelper = dateTimeHelper;
+            _downloadService = downloadService;
+            _encryptionService = encryptionService;
+            _exportManager = exportManager;
+            _giftCardService = giftCardService;
+            _localizationService = localizationService;
+            _notificationService = notificationService;
+            _orderModelFactory = orderModelFactory;
+            _orderProcessingService = orderProcessingService;
+            _orderService = orderService;
+            _paymentService = paymentService;
+            _pdfService = pdfService;
+            _permissionService = permissionService;
+            _priceCalculationService = priceCalculationService;
+            _productAttributeFormatter = productAttributeFormatter;
+            _productAttributeParser = productAttributeParser;
+            _productAttributeService = productAttributeService;
+            _productService = productService;
+            _shipmentService = shipmentService;
+            _shippingService = shippingService;
+            _shoppingCartService = shoppingCartService;
+            _workContext = workContext;
+            _workflowMessageService = workflowMessageService;
+            _orderSettings = orderSettings;
         }
 
         #endregion

@@ -40,12 +40,12 @@ namespace Nop.Services.Seo
             LocalizationSettings localizationSettings,
             SeoSettings seoSettings)
         {
-            this._languageService = languageService;
-            this._urlRecordRepository = urlRecordRepository;
-            this._cacheManager = cacheManager;
-            this._workContext = workContext;
-            this._localizationSettings = localizationSettings;
-            this._seoSettings = seoSettings;
+            _languageService = languageService;
+            _urlRecordRepository = urlRecordRepository;
+            _cacheManager = cacheManager;
+            _workContext = workContext;
+            _localizationSettings = localizationSettings;
+            _seoSettings = seoSettings;
         }
 
         #endregion

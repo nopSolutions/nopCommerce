@@ -63,23 +63,23 @@ namespace Nop.Services.Forums
             IWorkflowMessageService workflowMessageService,
             SeoSettings seoSettings)
         {
-            this._forumSettings = forumSettings;
-            this._cacheManager = cacheManager;
-            this._customerService = customerService;
-            this._eventPublisher = eventPublisher;
-            this._genericAttributeService = genericAttributeService;
-            this._customerRepository = customerRepository;
-            this._forumRepository = forumRepository;
-            this._forumGroupRepository = forumGroupRepository;
-            this._forumPostRepository = forumPostRepository;
-            this._forumPostVoteRepository = forumPostVoteRepository;
-            this._forumSubscriptionRepository = forumSubscriptionRepository;
-            this._forumTopicRepository = forumTopicRepository;
-            this._forumPrivateMessageRepository = forumPrivateMessageRepository;
-            this._urlRecordService = urlRecordService;
-            this._workContext = workContext;
-            this._workflowMessageService = workflowMessageService;
-            this._seoSettings = seoSettings;
+            _forumSettings = forumSettings;
+            _cacheManager = cacheManager;
+            _customerService = customerService;
+            _eventPublisher = eventPublisher;
+            _genericAttributeService = genericAttributeService;
+            _customerRepository = customerRepository;
+            _forumRepository = forumRepository;
+            _forumGroupRepository = forumGroupRepository;
+            _forumPostRepository = forumPostRepository;
+            _forumPostVoteRepository = forumPostVoteRepository;
+            _forumSubscriptionRepository = forumSubscriptionRepository;
+            _forumTopicRepository = forumTopicRepository;
+            _forumPrivateMessageRepository = forumPrivateMessageRepository;
+            _urlRecordService = urlRecordService;
+            _workContext = workContext;
+            _workflowMessageService = workflowMessageService;
+            _seoSettings = seoSettings;
         }
 
         #endregion
@@ -705,7 +705,7 @@ namespace Nop.Services.Forums
 
             //delete topic if it was the first post
             var deleteTopic = false;
-            var firstPost = this.GetFirstPost(forumTopic);
+            var firstPost = GetFirstPost(forumTopic);
             if (firstPost != null && firstPost.Id == forumPost.Id)
             {
                 deleteTopic = true;
@@ -1581,7 +1581,7 @@ namespace Nop.Services.Forums
             if (forum == null)
                 throw new ArgumentNullException(nameof(forum));
 
-            return this.GetTopicById(forum.LastTopicId);
+            return GetTopicById(forum.LastTopicId);
         }
 
         /// <summary>

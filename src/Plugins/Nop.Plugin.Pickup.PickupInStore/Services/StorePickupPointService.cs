@@ -44,8 +44,8 @@ namespace Nop.Plugin.Pickup.PickupInStore.Services
         public StorePickupPointService(ICacheManager cacheManager,
             IRepository<StorePickupPoint> storePickupPointRepository)
         {
-            this._cacheManager = cacheManager;
-            this._storePickupPointRepository = storePickupPointRepository;
+            _cacheManager = cacheManager;
+            _storePickupPointRepository = storePickupPointRepository;
         }
 
         #endregion

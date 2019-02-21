@@ -31,9 +31,9 @@ namespace Nop.Plugin.Payments.Square.Services
             IPaymentService paymentService,
             IScheduleTaskService scheduleTaskService)
         {
-            this._localizationService = localizationService;
-            this._paymentService = paymentService;
-            this._scheduleTaskService = scheduleTaskService;
+            _localizationService = localizationService;
+            _paymentService = paymentService;
+            _scheduleTaskService = scheduleTaskService;
         }
 
         #endregion

@@ -24,8 +24,8 @@ namespace Nop.Core.Caching
 
         public PerRequestCacheManager(IHttpContextAccessor httpContextAccessor)
         {
-            this._httpContextAccessor = httpContextAccessor;
-            this._locker = new ReaderWriterLockSlim();
+            _httpContextAccessor = httpContextAccessor;
+            _locker = new ReaderWriterLockSlim();
         }
 
         #endregion

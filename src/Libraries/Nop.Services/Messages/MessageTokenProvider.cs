@@ -112,32 +112,32 @@ namespace Nop.Services.Messages
             StoreInformationSettings storeInformationSettings,
             TaxSettings taxSettings)
         {
-            this._catalogSettings = catalogSettings;
-            this._currencySettings = currencySettings;
-            this._actionContextAccessor = actionContextAccessor;
-            this._addressAttributeFormatter = addressAttributeFormatter;
-            this._currencyService = currencyService;
-            this._customerAttributeFormatter = customerAttributeFormatter;
-            this._customerService = customerService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._downloadService = downloadService;
-            this._eventPublisher = eventPublisher;
-            this._genericAttributeService = genericAttributeService;
-            this._languageService = languageService;
-            this._localizationService = localizationService;
-            this._orderService = orderService;
-            this._paymentService = paymentService;
-            this._priceFormatter = priceFormatter;
-            this._storeContext = storeContext;
-            this._storeService = storeService;
-            this._urlHelperFactory = urlHelperFactory;
-            this._urlRecordService = urlRecordService;
-            this._vendorAttributeFormatter = vendorAttributeFormatter;
-            this._workContext = workContext;
-            this._templatesSettings = templatesSettings;
-            this._paymentSettings = paymentSettings;
-            this._storeInformationSettings = storeInformationSettings;
-            this._taxSettings = taxSettings;
+            _catalogSettings = catalogSettings;
+            _currencySettings = currencySettings;
+            _actionContextAccessor = actionContextAccessor;
+            _addressAttributeFormatter = addressAttributeFormatter;
+            _currencyService = currencyService;
+            _customerAttributeFormatter = customerAttributeFormatter;
+            _customerService = customerService;
+            _dateTimeHelper = dateTimeHelper;
+            _downloadService = downloadService;
+            _eventPublisher = eventPublisher;
+            _genericAttributeService = genericAttributeService;
+            _languageService = languageService;
+            _localizationService = localizationService;
+            _orderService = orderService;
+            _paymentService = paymentService;
+            _priceFormatter = priceFormatter;
+            _storeContext = storeContext;
+            _storeService = storeService;
+            _urlHelperFactory = urlHelperFactory;
+            _urlRecordService = urlRecordService;
+            _vendorAttributeFormatter = vendorAttributeFormatter;
+            _workContext = workContext;
+            _templatesSettings = templatesSettings;
+            _paymentSettings = paymentSettings;
+            _storeInformationSettings = storeInformationSettings;
+            _taxSettings = taxSettings;
         }
 
         #endregion

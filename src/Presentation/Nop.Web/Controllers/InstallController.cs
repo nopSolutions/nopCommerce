@@ -37,9 +37,9 @@ namespace Nop.Web.Controllers
             INopFileProvider fileProvider,
             NopConfig config)
         {
-            this._locService = locService;
-            this._fileProvider = fileProvider;
-            this._config = config;
+            _locService = locService;
+            _fileProvider = fileProvider;
+            _config = config;
         }
 
         #endregion
@@ -121,7 +121,7 @@ namespace Nop.Web.Controllers
                         if (i == triesToConnect)
                             throw new Exception("Unable to connect to the new database. Please try one more time");
 
-                        if (!this.SqlServerDatabaseExists(connectionString))
+                        if (!SqlServerDatabaseExists(connectionString))
                             Thread.Sleep(1000);
                         else
                             break;
@@ -162,7 +162,7 @@ namespace Nop.Web.Controllers
                 builder.Password = password;
             }
             builder.PersistSecurityInfo = false;
-            if (this.UseMars)
+            if (UseMars)
             {
                 builder.MultipleActiveResultSets = true;
             }
@@ -304,7 +304,7 @@ namespace Nop.Web.Controllers
                             //we know that MARS option is required when using Entity Framework
                             //let's ensure that it's specified
                             var sqlCsb = new SqlConnectionStringBuilder(model.DatabaseConnectionString);
-                            if (this.UseMars)
+                            if (UseMars)
                             {
                                 sqlCsb.MultipleActiveResultSets = true;
                             }

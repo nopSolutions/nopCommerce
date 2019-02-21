@@ -26,8 +26,8 @@ namespace Nop.Web.Framework.Factories
         public AclSupportedModelFactory(IAclService aclService,
             ICustomerService customerService)
         {
-            this._aclService = aclService;
-            this._customerService = customerService;
+            _aclService = aclService;
+            _customerService = customerService;
         }
 
         #endregion

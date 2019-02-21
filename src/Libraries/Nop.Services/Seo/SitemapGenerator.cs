@@ -71,23 +71,23 @@ namespace Nop.Services.Seo
             NewsSettings newsSettings,
             SecuritySettings securitySettings)
         {
-            this._blogSettings = blogSettings;
-            this._commonSettings = commonSettings;
-            this._forumSettings = forumSettings;
-            this._actionContextAccessor = actionContextAccessor;
-            this._categoryService = categoryService;
-            this._languageService = languageService;
-            this._manufacturerService = manufacturerService;
-            this._productService = productService;
-            this._productTagService = productTagService;
-            this._storeContext = storeContext;
-            this._topicService = topicService;
-            this._urlHelperFactory = urlHelperFactory;
-            this._urlRecordService = urlRecordService;
-            this._webHelper = webHelper;
-            this._localizationSettings = localizationSettings;
-            this._newsSettings = newsSettings;
-            this._securitySettings = securitySettings;
+            _blogSettings = blogSettings;
+            _commonSettings = commonSettings;
+            _forumSettings = forumSettings;
+            _actionContextAccessor = actionContextAccessor;
+            _categoryService = categoryService;
+            _languageService = languageService;
+            _manufacturerService = manufacturerService;
+            _productService = productService;
+            _productTagService = productTagService;
+            _storeContext = storeContext;
+            _topicService = topicService;
+            _urlHelperFactory = urlHelperFactory;
+            _urlRecordService = urlRecordService;
+            _webHelper = webHelper;
+            _localizationSettings = localizationSettings;
+            _newsSettings = newsSettings;
+            _securitySettings = securitySettings;
         }
 
         #endregion

@@ -12,8 +12,8 @@ namespace Nop.Web.Components
 
         public BlogTagsViewComponent(BlogSettings blogSettings, IBlogModelFactory blogModelFactory)
         {
-            this._blogSettings = blogSettings;
-            this._blogModelFactory = blogModelFactory;
+            _blogSettings = blogSettings;
+            _blogModelFactory = blogModelFactory;
         }
 
         public IViewComponentResult Invoke(int currentCategoryId, int currentProductId)

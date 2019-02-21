@@ -16,7 +16,7 @@ namespace Nop.Web.Components
 
         public ExternalMethodsViewComponent(IExternalAuthenticationModelFactory externalAuthenticationModelFactory)
         {
-            this._externalAuthenticationModelFactory = externalAuthenticationModelFactory;
+            _externalAuthenticationModelFactory = externalAuthenticationModelFactory;
         }
 
         #endregion

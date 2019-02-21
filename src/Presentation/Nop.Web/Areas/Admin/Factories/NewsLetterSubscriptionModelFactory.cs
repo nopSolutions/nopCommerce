@@ -37,12 +37,12 @@ namespace Nop.Web.Areas.Admin.Factories
             INewsLetterSubscriptionService newsLetterSubscriptionService,
             IStoreService storeService)
         {
-            this._catalogSettings = catalogSettings;
-            this._baseAdminModelFactory = baseAdminModelFactory;
-            this._dateTimeHelper = dateTimeHelper;
-            this._localizationService = localizationService;
-            this._newsLetterSubscriptionService = newsLetterSubscriptionService;
-            this._storeService = storeService;
+            _catalogSettings = catalogSettings;
+            _baseAdminModelFactory = baseAdminModelFactory;
+            _dateTimeHelper = dateTimeHelper;
+            _localizationService = localizationService;
+            _newsLetterSubscriptionService = newsLetterSubscriptionService;
+            _storeService = storeService;
         }
 
         #endregion

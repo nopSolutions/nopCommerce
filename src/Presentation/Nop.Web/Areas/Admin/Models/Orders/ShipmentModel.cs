@@ -14,8 +14,8 @@ namespace Nop.Web.Areas.Admin.Models.Orders
 
         public ShipmentModel()
         {
-            this.ShipmentStatusEvents = new List<ShipmentStatusEventModel>();
-            this.Items = new List<ShipmentItemModel>();
+            ShipmentStatusEvents = new List<ShipmentStatusEventModel>();
+            Items = new List<ShipmentItemModel>();
         }
 
         #endregion

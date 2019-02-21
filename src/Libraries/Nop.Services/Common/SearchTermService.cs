@@ -24,8 +24,8 @@ namespace Nop.Services.Common
         public SearchTermService(IEventPublisher eventPublisher,
             IRepository<SearchTerm> searchTermRepository)
         {
-            this._eventPublisher = eventPublisher;
-            this._searchTermRepository = searchTermRepository;
+            _eventPublisher = eventPublisher;
+            _searchTermRepository = searchTermRepository;
         }
 
         #endregion

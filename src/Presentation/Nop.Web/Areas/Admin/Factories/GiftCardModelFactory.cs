@@ -39,12 +39,12 @@ namespace Nop.Web.Areas.Admin.Factories
             ILocalizationService localizationService,
             IPriceFormatter priceFormatter)
         {
-            this._currencySettings = currencySettings;
-            this._currencyService = currencyService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._giftCardService = giftCardService;
-            this._localizationService = localizationService;
-            this._priceFormatter = priceFormatter;
+            _currencySettings = currencySettings;
+            _currencyService = currencyService;
+            _dateTimeHelper = dateTimeHelper;
+            _giftCardService = giftCardService;
+            _localizationService = localizationService;
+            _priceFormatter = priceFormatter;
         }
 
         #endregion

@@ -17,8 +17,8 @@ namespace Nop.Web.Framework.Events
         /// <param name="overriddenRouteName">Overridden route name</param>
         public PageRenderingEvent(IHtmlHelper helper, string overriddenRouteName = null)
         {
-            this.Helper = helper;
-            this.OverriddenRouteName = overriddenRouteName;
+            Helper = helper;
+            OverriddenRouteName = overriddenRouteName;
         }
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace Nop.Web.Framework.Events
                 return new List<string>() { OverriddenRouteName };
             }
 
-            var matchedRoutes = this.Helper.ViewContext.RouteData.Routers.OfType<INamedRouter>();
+            var matchedRoutes = Helper.ViewContext.RouteData.Routers.OfType<INamedRouter>();
             return matchedRoutes.Select(r => r.Name);
         }
     }

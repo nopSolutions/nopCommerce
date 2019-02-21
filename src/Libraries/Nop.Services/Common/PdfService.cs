@@ -92,30 +92,30 @@ namespace Nop.Services.Common
             TaxSettings taxSettings,
             VendorSettings vendorSettings)
         {
-            this._addressSettings = addressSettings;
-            this._catalogSettings = catalogSettings;
-            this._currencySettings = currencySettings;
-            this._addressAttributeFormatter = addressAttributeFormatter;
-            this._currencyService = currencyService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._languageService = languageService;
-            this._localizationService = localizationService;
-            this._measureService = measureService;
-            this._fileProvider = fileProvider;
-            this._orderService = orderService;
-            this._paymentService = paymentService;
-            this._pictureService = pictureService;
-            this._priceFormatter = priceFormatter;
-            this._productService = productService;
-            this._settingService = settingService;
-            this._storeContext = storeContext;
-            this._storeService = storeService;
-            this._vendorService = vendorService;
-            this._workContext = workContext;
-            this._measureSettings = measureSettings;
-            this._pdfSettings = pdfSettings;
-            this._taxSettings = taxSettings;
-            this._vendorSettings = vendorSettings;
+            _addressSettings = addressSettings;
+            _catalogSettings = catalogSettings;
+            _currencySettings = currencySettings;
+            _addressAttributeFormatter = addressAttributeFormatter;
+            _currencyService = currencyService;
+            _dateTimeHelper = dateTimeHelper;
+            _languageService = languageService;
+            _localizationService = localizationService;
+            _measureService = measureService;
+            _fileProvider = fileProvider;
+            _orderService = orderService;
+            _paymentService = paymentService;
+            _pictureService = pictureService;
+            _priceFormatter = priceFormatter;
+            _productService = productService;
+            _settingService = settingService;
+            _storeContext = storeContext;
+            _storeService = storeService;
+            _vendorService = vendorService;
+            _workContext = workContext;
+            _measureSettings = measureSettings;
+            _pdfSettings = pdfSettings;
+            _taxSettings = taxSettings;
+            _vendorSettings = vendorSettings;
         }
 
         #endregion

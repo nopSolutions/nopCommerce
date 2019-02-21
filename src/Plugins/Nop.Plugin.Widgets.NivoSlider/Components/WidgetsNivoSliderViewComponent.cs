@@ -25,11 +25,11 @@ namespace Nop.Plugin.Widgets.NivoSlider.Components
             IPictureService pictureService,
             IWebHelper webHelper)
         {
-            this._storeContext = storeContext;
-            this._cacheManager = cacheManager;
-            this._settingService = settingService;
-            this._pictureService = pictureService;
-            this._webHelper = webHelper;
+            _storeContext = storeContext;
+            _cacheManager = cacheManager;
+            _settingService = settingService;
+            _pictureService = pictureService;
+            _webHelper = webHelper;
         }
 
         public IViewComponentResult Invoke(string widgetZone, object additionalData)

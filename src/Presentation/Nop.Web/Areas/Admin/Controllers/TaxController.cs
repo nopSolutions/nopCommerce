@@ -34,12 +34,12 @@ namespace Nop.Web.Areas.Admin.Controllers
             ITaxService taxService,
             TaxSettings taxSettings)
         {
-            this._permissionService = permissionService;
-            this._settingService = settingService;
-            this._taxCategoryService = taxCategoryService;
-            this._taxModelFactory = taxModelFactory;
-            this._taxService = taxService;
-            this._taxSettings = taxSettings;
+            _permissionService = permissionService;
+            _settingService = settingService;
+            _taxCategoryService = taxCategoryService;
+            _taxModelFactory = taxModelFactory;
+            _taxService = taxService;
+            _taxSettings = taxSettings;
         }
 
         #endregion

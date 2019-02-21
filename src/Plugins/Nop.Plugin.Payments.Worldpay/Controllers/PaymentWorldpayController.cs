@@ -51,14 +51,14 @@ namespace Nop.Plugin.Payments.Worldpay.Controllers
             WorldpayPaymentManager worldpayPaymentManager,
             WorldpayPaymentSettings worldpayPaymentSettings)
         {
-            this._customerService = customerService;
-            this._genericAttributeService = genericAttributeService;
-            this._localizationService = localizationService;
-            this._notificationService = notificationService;
-            this._permissionService = permissionService;
-            this._settingService = settingService;
-            this._worldpayPaymentManager = worldpayPaymentManager;
-            this._worldpayPaymentSettings = worldpayPaymentSettings;
+            _customerService = customerService;
+            _genericAttributeService = genericAttributeService;
+            _localizationService = localizationService;
+            _notificationService = notificationService;
+            _permissionService = permissionService;
+            _settingService = settingService;
+            _worldpayPaymentManager = worldpayPaymentManager;
+            _worldpayPaymentSettings = worldpayPaymentSettings;
         }
 
         #endregion

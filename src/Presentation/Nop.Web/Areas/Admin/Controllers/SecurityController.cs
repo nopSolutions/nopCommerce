@@ -40,13 +40,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             ISecurityModelFactory securityModelFactory,
             IWorkContext workContext)
         {
-            this._customerService = customerService;
-            this._localizationService = localizationService;
-            this._logger = logger;
-            this._notificationService = notificationService;
-            this._permissionService = permissionService;
-            this._securityModelFactory = securityModelFactory;
-            this._workContext = workContext;
+            _customerService = customerService;
+            _localizationService = localizationService;
+            _logger = logger;
+            _notificationService = notificationService;
+            _permissionService = permissionService;
+            _securityModelFactory = securityModelFactory;
+            _workContext = workContext;
         }
 
         #endregion

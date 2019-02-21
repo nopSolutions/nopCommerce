@@ -29,9 +29,9 @@ namespace Nop.Services.Messages
             IEventPublisher eventPublisher,
             IRepository<QueuedEmail> queuedEmailRepository)
         {
-            this._dbContext = dbContext;
-            this._eventPublisher = eventPublisher;
-            this._queuedEmailRepository = queuedEmailRepository;
+            _dbContext = dbContext;
+            _eventPublisher = eventPublisher;
+            _queuedEmailRepository = queuedEmailRepository;
         }
 
         #endregion

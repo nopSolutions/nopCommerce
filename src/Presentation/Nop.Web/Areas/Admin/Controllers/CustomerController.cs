@@ -109,37 +109,37 @@ namespace Nop.Web.Areas.Admin.Controllers
             IWorkflowMessageService workflowMessageService,
             TaxSettings taxSettings)
         {
-            this._customerSettings = customerSettings;
-            this._dateTimeSettings = dateTimeSettings;
-            this._emailAccountSettings = emailAccountSettings;
-            this._forumSettings = forumSettings;
-            this._gdprSettings = gdprSettings;
-            this._addressAttributeParser = addressAttributeParser;
-            this._addressService = addressService;
-            this._customerActivityService = customerActivityService;
-            this._customerAttributeParser = customerAttributeParser;
-            this._customerAttributeService = customerAttributeService;
-            this._customerModelFactory = customerModelFactory;
-            this._customerRegistrationService = customerRegistrationService;
-            this._customerService = customerService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._emailAccountService = emailAccountService;
-            this._exportManager = exportManager;
-            this._forumService = forumService;
-            this._gdprService = gdprService;
-            this._genericAttributeService = genericAttributeService;
-            this._localizationService = localizationService;
-            this._newsLetterSubscriptionService = newsLetterSubscriptionService;
-            this._notificationService = notificationService;
-            this._permissionService = permissionService;
-            this._queuedEmailService = queuedEmailService;
-            this._rewardPointService = rewardPointService;
-            this._storeContext = storeContext;
-            this._storeService = storeService;
-            this._taxService = taxService;
-            this._workContext = workContext;
-            this._workflowMessageService = workflowMessageService;
-            this._taxSettings = taxSettings;
+            _customerSettings = customerSettings;
+            _dateTimeSettings = dateTimeSettings;
+            _emailAccountSettings = emailAccountSettings;
+            _forumSettings = forumSettings;
+            _gdprSettings = gdprSettings;
+            _addressAttributeParser = addressAttributeParser;
+            _addressService = addressService;
+            _customerActivityService = customerActivityService;
+            _customerAttributeParser = customerAttributeParser;
+            _customerAttributeService = customerAttributeService;
+            _customerModelFactory = customerModelFactory;
+            _customerRegistrationService = customerRegistrationService;
+            _customerService = customerService;
+            _dateTimeHelper = dateTimeHelper;
+            _emailAccountService = emailAccountService;
+            _exportManager = exportManager;
+            _forumService = forumService;
+            _gdprService = gdprService;
+            _genericAttributeService = genericAttributeService;
+            _localizationService = localizationService;
+            _newsLetterSubscriptionService = newsLetterSubscriptionService;
+            _notificationService = notificationService;
+            _permissionService = permissionService;
+            _queuedEmailService = queuedEmailService;
+            _rewardPointService = rewardPointService;
+            _storeContext = storeContext;
+            _storeService = storeService;
+            _taxService = taxService;
+            _workContext = workContext;
+            _workflowMessageService = workflowMessageService;
+            _taxSettings = taxSettings;
         }
 
         #endregion

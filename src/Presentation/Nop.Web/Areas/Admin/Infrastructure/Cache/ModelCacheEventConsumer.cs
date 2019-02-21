@@ -35,7 +35,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Cache
         
         public ModelCacheEventConsumer(IStaticCacheManager cacheManager)
         {
-            this._cacheManager = cacheManager;
+            _cacheManager = cacheManager;
         }
 
         public void HandleEvent(EntityUpdatedEvent<Setting> eventMessage)

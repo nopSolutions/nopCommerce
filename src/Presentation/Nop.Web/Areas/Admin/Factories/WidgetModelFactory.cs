@@ -24,7 +24,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
         public WidgetModelFactory(IWidgetService widgetService)
         {
-            this._widgetService = widgetService;
+            _widgetService = widgetService;
         }
 
         #endregion

@@ -27,8 +27,8 @@ namespace Nop.Services.Messages
         public EmailSender(IDownloadService downloadService,
             INopFileProvider fileProvider)
         {
-            this._downloadService = downloadService;
-            this._fileProvider = fileProvider;
+            _downloadService = downloadService;
+            _fileProvider = fileProvider;
         }
 
         #endregion

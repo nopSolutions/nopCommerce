@@ -11,7 +11,7 @@ namespace Nop.Core.Domain.Customers
         /// <param name="customer">Customer</param>
         public CustomerLoggedOutEvent(Customer customer)
         {
-            this.Customer = customer;
+            Customer = customer;
         }
 
         /// <summary>

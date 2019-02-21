@@ -111,40 +111,40 @@ namespace Nop.Web.Factories
             TaxSettings taxSettings,
             VendorSettings vendorSettings)
         {
-            this._addressSettings = addressSettings;
-            this._captchaSettings = captchaSettings;
-            this._catalogSettings = catalogSettings;
-            this._commonSettings = commonSettings;
-            this._customerSettings = customerSettings;
-            this._dateTimeSettings = dateTimeSettings;
-            this._externalAuthenticationSettings = externalAuthenticationSettings;
-            this._forumSettings = forumSettings;
-            this._gdprSettings = gdprSettings;
-            this._addressModelFactory = addressModelFactory;
-            this._countryService = countryService;
-            this._customerAttributeParser = customerAttributeParser;
-            this._customerAttributeService = customerAttributeService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._downloadService = downloadService;
-            this._externalAuthenticationService = externalAuthenticationService;
-            this._gdprService = gdprService;
-            this._genericAttributeService = genericAttributeService;
-            this._localizationService = localizationService;
-            this._newsLetterSubscriptionService = newsLetterSubscriptionService;
-            this._orderService = orderService;
-            this._pictureService = pictureService;
-            this._returnRequestService = returnRequestService;
-            this._stateProvinceService = stateProvinceService;
-            this._storeContext = storeContext;
-            this._storeMappingService = storeMappingService;
-            this._urlRecordService = urlRecordService;
-            this._workContext = workContext;
-            this._mediaSettings = mediaSettings;
-            this._orderSettings = orderSettings;
-            this._rewardPointsSettings = rewardPointsSettings;
-            this._securitySettings = securitySettings;
-            this._taxSettings = taxSettings;
-            this._vendorSettings = vendorSettings;
+            _addressSettings = addressSettings;
+            _captchaSettings = captchaSettings;
+            _catalogSettings = catalogSettings;
+            _commonSettings = commonSettings;
+            _customerSettings = customerSettings;
+            _dateTimeSettings = dateTimeSettings;
+            _externalAuthenticationSettings = externalAuthenticationSettings;
+            _forumSettings = forumSettings;
+            _gdprSettings = gdprSettings;
+            _addressModelFactory = addressModelFactory;
+            _countryService = countryService;
+            _customerAttributeParser = customerAttributeParser;
+            _customerAttributeService = customerAttributeService;
+            _dateTimeHelper = dateTimeHelper;
+            _downloadService = downloadService;
+            _externalAuthenticationService = externalAuthenticationService;
+            _gdprService = gdprService;
+            _genericAttributeService = genericAttributeService;
+            _localizationService = localizationService;
+            _newsLetterSubscriptionService = newsLetterSubscriptionService;
+            _orderService = orderService;
+            _pictureService = pictureService;
+            _returnRequestService = returnRequestService;
+            _stateProvinceService = stateProvinceService;
+            _storeContext = storeContext;
+            _storeMappingService = storeMappingService;
+            _urlRecordService = urlRecordService;
+            _workContext = workContext;
+            _mediaSettings = mediaSettings;
+            _orderSettings = orderSettings;
+            _rewardPointsSettings = rewardPointsSettings;
+            _securitySettings = securitySettings;
+            _taxSettings = taxSettings;
+            _vendorSettings = vendorSettings;
         }
 
         #endregion

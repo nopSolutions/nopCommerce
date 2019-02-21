@@ -39,12 +39,12 @@ namespace Nop.Web.Areas.Admin.Factories
             IPaymentService paymentService,
             IWorkContext workContext)
         {
-            this._dateTimeHelper = dateTimeHelper;
-            this._localizationService = localizationService;
-            this._orderProcessingService = orderProcessingService;
-            this._orderService = orderService;
-            this._paymentService = paymentService;
-            this._workContext = workContext;
+            _dateTimeHelper = dateTimeHelper;
+            _localizationService = localizationService;
+            _orderProcessingService = orderProcessingService;
+            _orderService = orderService;
+            _paymentService = paymentService;
+            _workContext = workContext;
         }
 
         #endregion

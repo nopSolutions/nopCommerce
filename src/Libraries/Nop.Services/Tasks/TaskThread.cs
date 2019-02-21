@@ -35,8 +35,8 @@ namespace Nop.Services.Tasks
 
         internal TaskThread()
         {
-            this._tasks = new Dictionary<string, string>();
-            this.Seconds = 10 * 60;
+            _tasks = new Dictionary<string, string>();
+            Seconds = 10 * 60;
         }
 
         #endregion

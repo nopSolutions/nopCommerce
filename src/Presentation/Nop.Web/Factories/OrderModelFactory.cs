@@ -89,32 +89,32 @@ namespace Nop.Web.Factories
             TaxSettings taxSettings,
             VendorSettings vendorSettings)
         {
-            this._addressSettings = addressSettings;
-            this._catalogSettings = catalogSettings;
-            this._addressModelFactory = addressModelFactory;
-            this._countryService = countryService;
-            this._currencyService = currencyService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._downloadService = downloadService;
-            this._localizationService = localizationService;
-            this._orderProcessingService = orderProcessingService;
-            this._orderService = orderService;
-            this._orderTotalCalculationService = orderTotalCalculationService;
-            this._paymentService = paymentService;
-            this._priceFormatter = priceFormatter;
-            this._productService = productService;
-            this._rewardPointService = rewardPointService;
-            this._shipmentService = shipmentService;
-            this._storeContext = storeContext;
-            this._urlRecordService = urlRecordService;
-            this._vendorService = vendorService;
-            this._workContext = workContext;
-            this._orderSettings = orderSettings;
-            this._pdfSettings = pdfSettings;
-            this._rewardPointsSettings = rewardPointsSettings;
-            this._shippingSettings = shippingSettings;
-            this._taxSettings = taxSettings;
-            this._vendorSettings = vendorSettings;
+            _addressSettings = addressSettings;
+            _catalogSettings = catalogSettings;
+            _addressModelFactory = addressModelFactory;
+            _countryService = countryService;
+            _currencyService = currencyService;
+            _dateTimeHelper = dateTimeHelper;
+            _downloadService = downloadService;
+            _localizationService = localizationService;
+            _orderProcessingService = orderProcessingService;
+            _orderService = orderService;
+            _orderTotalCalculationService = orderTotalCalculationService;
+            _paymentService = paymentService;
+            _priceFormatter = priceFormatter;
+            _productService = productService;
+            _rewardPointService = rewardPointService;
+            _shipmentService = shipmentService;
+            _storeContext = storeContext;
+            _urlRecordService = urlRecordService;
+            _vendorService = vendorService;
+            _workContext = workContext;
+            _orderSettings = orderSettings;
+            _pdfSettings = pdfSettings;
+            _rewardPointsSettings = rewardPointsSettings;
+            _shippingSettings = shippingSettings;
+            _taxSettings = taxSettings;
+            _vendorSettings = vendorSettings;
         }
 
         #endregion

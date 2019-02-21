@@ -15,8 +15,8 @@ namespace Nop.Services.Authentication.External
         /// <param name="value">Value</param>
         public ExternalAuthenticationClaim(string type, string value)
         {
-            this.Type = type;
-            this.Value = value;
+            Type = type;
+            Value = value;
         }
 
         /// <summary>

@@ -39,13 +39,13 @@ namespace Nop.Services.Orders
             IRepository<Product> productRepository,
             IRepository<RecurringPayment> recurringPaymentRepository)
         {
-            this._eventPublisher = eventPublisher;
-            this._customerRepository = customerRepository;
-            this._orderRepository = orderRepository;
-            this._orderItemRepository = orderItemRepository;
-            this._orderNoteRepository = orderNoteRepository;
-            this._productRepository = productRepository;
-            this._recurringPaymentRepository = recurringPaymentRepository;
+            _eventPublisher = eventPublisher;
+            _customerRepository = customerRepository;
+            _orderRepository = orderRepository;
+            _orderItemRepository = orderItemRepository;
+            _orderNoteRepository = orderNoteRepository;
+            _productRepository = productRepository;
+            _recurringPaymentRepository = recurringPaymentRepository;
         }
 
         #endregion

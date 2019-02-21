@@ -40,13 +40,13 @@
                                 },
                                 requestEnd: function (e) {
                                     if (e.type == "update") {
-                                        this.read();
+                                        read();
                                     }
                                 },
                                 error: function(e) {
                                     display_kendoui_grid_error(e);
                                     // Cancel the changes
-                                    this.cancelChanges();
+                                    cancelChanges();
                                 },
                                     pageSize: @(defaultGridPageSize),
                                     serverPaging: true,

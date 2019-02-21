@@ -35,12 +35,12 @@ namespace Nop.Web.Areas.Admin.Factories
             IDateTimeHelper dateTimeHelper,
             IMessageTokenProvider messageTokenProvider)
         {
-            this._catalogSettings = catalogSettings;
-            this._emailAccountSettings = emailAccountSettings;
-            this._baseAdminModelFactory = baseAdminModelFactory;
-            this._campaignService = campaignService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._messageTokenProvider = messageTokenProvider;
+            _catalogSettings = catalogSettings;
+            _emailAccountSettings = emailAccountSettings;
+            _baseAdminModelFactory = baseAdminModelFactory;
+            _campaignService = campaignService;
+            _dateTimeHelper = dateTimeHelper;
+            _messageTokenProvider = messageTokenProvider;
         }
 
         #endregion

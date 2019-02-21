@@ -34,12 +34,12 @@ namespace Nop.Services.News
             IRepository<NewsItem> newsItemRepository,
             IRepository<StoreMapping> storeMappingRepository)
         {
-            this._catalogSettings = catalogSettings;
-            this._eventPublisher = eventPublisher;
-            this._newsCommentRepository = newsCommentRepository;
-            this._newsItemRepository = newsItemRepository;
-            this._storeMappingRepository = storeMappingRepository;
-            this._entityName = typeof(NewsItem).Name;
+            _catalogSettings = catalogSettings;
+            _eventPublisher = eventPublisher;
+            _newsCommentRepository = newsCommentRepository;
+            _newsItemRepository = newsItemRepository;
+            _storeMappingRepository = storeMappingRepository;
+            _entityName = typeof(NewsItem).Name;
         }
 
         #endregion

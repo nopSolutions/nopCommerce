@@ -41,10 +41,10 @@ namespace Nop.Web.Framework.Mvc.Rss
         /// <param name="lastBuildDate">Last build date</param>
         private void Init(string title, string description, Uri link, DateTimeOffset lastBuildDate)
         {
-            this.Title = new XElement(NopRssDefaults.Title, title);
-            this.Description = new XElement(NopRssDefaults.Description, description);
-            this.Link = new XElement(NopRssDefaults.Link, link);
-            this.LastBuildDate = new XElement(NopRssDefaults.LastBuildDate, lastBuildDate.ToString("r"));
+            Title = new XElement(NopRssDefaults.Title, title);
+            Description = new XElement(NopRssDefaults.Description, description);
+            Link = new XElement(NopRssDefaults.Link, link);
+            LastBuildDate = new XElement(NopRssDefaults.LastBuildDate, lastBuildDate.ToString("r"));
         }
 
         /// <summary>

@@ -23,9 +23,9 @@ namespace Nop.Services.Messages
             ILogger logger,
             IQueuedEmailService queuedEmailService)
         {
-            this._emailSender = emailSender;
-            this._logger = logger;
-            this._queuedEmailService = queuedEmailService;
+            _emailSender = emailSender;
+            _logger = logger;
+            _queuedEmailService = queuedEmailService;
         }
 
         #endregion

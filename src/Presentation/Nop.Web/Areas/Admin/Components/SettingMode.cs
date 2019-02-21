@@ -19,7 +19,7 @@ namespace Nop.Web.Areas.Admin.Components
 
         public SettingModeViewComponent(ISettingModelFactory settingModelFactory)
         {
-            this._settingModelFactory = settingModelFactory;
+            _settingModelFactory = settingModelFactory;
         }
 
         #endregion

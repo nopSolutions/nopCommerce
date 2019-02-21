@@ -9,7 +9,7 @@ namespace Nop.Core.Domain.Messages
     {
         public AdditionalTokensAddedEvent()
         {
-            this.AdditionalTokens = new List<string>();
+            AdditionalTokens = new List<string>();
         }
 
         /// <summary>

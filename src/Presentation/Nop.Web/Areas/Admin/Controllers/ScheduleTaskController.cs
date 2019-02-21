@@ -35,12 +35,12 @@ namespace Nop.Web.Areas.Admin.Controllers
             IScheduleTaskModelFactory scheduleTaskModelFactory,
             IScheduleTaskService scheduleTaskService)
         {
-            this._customerActivityService = customerActivityService;
-            this._localizationService = localizationService;
-            this._notificationService = notificationService;
-            this._permissionService = permissionService;
-            this._scheduleTaskModelFactory = scheduleTaskModelFactory;
-            this._scheduleTaskService = scheduleTaskService;
+            _customerActivityService = customerActivityService;
+            _localizationService = localizationService;
+            _notificationService = notificationService;
+            _permissionService = permissionService;
+            _scheduleTaskModelFactory = scheduleTaskModelFactory;
+            _scheduleTaskService = scheduleTaskService;
         }
 
         #endregion

@@ -42,13 +42,13 @@ namespace Nop.Web.Areas.Admin.Factories
             IOrderService orderService,
             IPriceFormatter priceFormatter)
         {
-            this._affiliateService = affiliateService;
-            this._baseAdminModelFactory = baseAdminModelFactory;
-            this._customerService = customerService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._localizationService = localizationService;
-            this._orderService = orderService;
-            this._priceFormatter = priceFormatter;
+            _affiliateService = affiliateService;
+            _baseAdminModelFactory = baseAdminModelFactory;
+            _customerService = customerService;
+            _dateTimeHelper = dateTimeHelper;
+            _localizationService = localizationService;
+            _orderService = orderService;
+            _priceFormatter = priceFormatter;
         }
 
         #endregion

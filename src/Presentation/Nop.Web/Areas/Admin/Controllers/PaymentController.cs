@@ -47,15 +47,15 @@ namespace Nop.Web.Areas.Admin.Controllers
             ISettingService settingService,
             PaymentSettings paymentSettings)
         {
-            this._countryService = countryService;
-            this._eventPublisher = eventPublisher;
-            this._localizationService = localizationService;
-            this._notificationService = notificationService;
-            this._paymentModelFactory = paymentModelFactory;
-            this._paymentService = paymentService;
-            this._permissionService = permissionService;
-            this._settingService = settingService;
-            this._paymentSettings = paymentSettings;
+            _countryService = countryService;
+            _eventPublisher = eventPublisher;
+            _localizationService = localizationService;
+            _notificationService = notificationService;
+            _paymentModelFactory = paymentModelFactory;
+            _paymentService = paymentService;
+            _permissionService = permissionService;
+            _settingService = settingService;
+            _paymentSettings = paymentSettings;
         }
 
         #endregion

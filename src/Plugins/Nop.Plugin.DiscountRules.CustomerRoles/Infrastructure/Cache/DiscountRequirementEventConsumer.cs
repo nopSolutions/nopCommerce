@@ -20,7 +20,7 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles.Infrastructure.Cache
 
         public DiscountRequirementEventConsumer(ISettingService settingService)
         {
-            this._settingService = settingService;
+            _settingService = settingService;
         }
 
         #endregion

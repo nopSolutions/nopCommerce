@@ -25,8 +25,8 @@ namespace Nop.Services.Helpers
         /// <param name="fileProvider">File provider</param>
         public BrowscapXmlHelper(string userAgentStringsPath, string crawlerOnlyUserAgentStringsPath, INopFileProvider fileProvider)
         {
-            this._crawlerUserAgentsRegexp = new List<string>();
-            this._fileProvider = fileProvider;
+            _crawlerUserAgentsRegexp = new List<string>();
+            _fileProvider = fileProvider;
 
             Initialize(userAgentStringsPath, crawlerOnlyUserAgentStringsPath);
         }

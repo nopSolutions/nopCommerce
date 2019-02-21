@@ -41,14 +41,14 @@ namespace Nop.Plugin.Pickup.PickupInStore
             StorePickupPointObjectContext objectContext,
             IWebHelper webHelper)
         {
-            this._addressService = addressService;
-            this._countryService = countryService;
-            this._localizationService = localizationService;
-            this._stateProvinceService = stateProvinceService;
-            this._storeContext = storeContext;
-            this._storePickupPointService = storePickupPointService;
-            this._objectContext = objectContext;
-            this._webHelper = webHelper;
+            _addressService = addressService;
+            _countryService = countryService;
+            _localizationService = localizationService;
+            _stateProvinceService = stateProvinceService;
+            _storeContext = storeContext;
+            _storePickupPointService = storePickupPointService;
+            _objectContext = objectContext;
+            _webHelper = webHelper;
         }
 
         #endregion

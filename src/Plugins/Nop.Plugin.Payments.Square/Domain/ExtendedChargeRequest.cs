@@ -38,7 +38,7 @@ namespace Nop.Plugin.Payments.Square.Domain
                 OrderId,
                 AdditionalRecipients)
         {
-            this.IntegrationId = IntegrationId;
+            IntegrationId = IntegrationId;
         }
 
         #endregion

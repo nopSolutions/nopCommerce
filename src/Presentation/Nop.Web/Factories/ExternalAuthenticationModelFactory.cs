@@ -25,9 +25,9 @@ namespace Nop.Web.Factories
             IStoreContext storeContext,
             IWorkContext workContext)
         {
-            this._externalAuthenticationService = externalAuthenticationService;
-            this._storeContext = storeContext;
-            this._workContext = workContext;
+            _externalAuthenticationService = externalAuthenticationService;
+            _storeContext = storeContext;
+            _workContext = workContext;
         }
 
         #endregion

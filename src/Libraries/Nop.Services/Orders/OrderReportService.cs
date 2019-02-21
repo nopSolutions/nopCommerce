@@ -39,13 +39,13 @@ namespace Nop.Services.Orders
             IRepository<Product> productRepository,
             IRepository<StoreMapping> storeMappingRepository)
         {
-            this._catalogSettings = catalogSettings;
-            this._dateTimeHelper = dateTimeHelper;
-            this._orderRepository = orderRepository;
-            this._orderItemRepository = orderItemRepository;
-            this._productRepository = productRepository;
-            this._storeMappingRepository = storeMappingRepository;
-            this._productEntityName = typeof(Product).Name;
+            _catalogSettings = catalogSettings;
+            _dateTimeHelper = dateTimeHelper;
+            _orderRepository = orderRepository;
+            _orderItemRepository = orderItemRepository;
+            _productRepository = productRepository;
+            _storeMappingRepository = storeMappingRepository;
+            _productEntityName = typeof(Product).Name;
         }
 
         #endregion

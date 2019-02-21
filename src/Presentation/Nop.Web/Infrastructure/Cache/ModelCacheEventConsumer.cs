@@ -158,8 +158,8 @@ namespace Nop.Web.Infrastructure.Cache
 
         public ModelCacheEventConsumer(CatalogSettings catalogSettings, IStaticCacheManager cacheManager)
         {
-            this._cacheManager = cacheManager;
-            this._catalogSettings = catalogSettings;
+            _cacheManager = cacheManager;
+            _catalogSettings = catalogSettings;
         }
 
         #endregion

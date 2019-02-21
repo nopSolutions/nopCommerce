@@ -18,7 +18,7 @@ namespace Nop.Services.Caching
 
         public ClearCacheTask(IStaticCacheManager staticCacheManager)
         {
-            this._staticCacheManager = staticCacheManager;
+            _staticCacheManager = staticCacheManager;
         }
 
         #endregion

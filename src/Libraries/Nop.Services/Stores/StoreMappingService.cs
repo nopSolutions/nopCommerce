@@ -34,11 +34,11 @@ namespace Nop.Services.Stores
             IStaticCacheManager cacheManager,
             IStoreContext storeContext)
         {
-            this._catalogSettings = catalogSettings;
-            this._eventPublisher = eventPublisher;
-            this._storeMappingRepository = storeMappingRepository;
-            this._cacheManager = cacheManager;
-            this._storeContext = storeContext;
+            _catalogSettings = catalogSettings;
+            _eventPublisher = eventPublisher;
+            _storeMappingRepository = storeMappingRepository;
+            _cacheManager = cacheManager;
+            _storeContext = storeContext;
         }
 
         #endregion

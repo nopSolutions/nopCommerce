@@ -29,9 +29,9 @@ namespace Nop.Web.Areas.Admin.Factories
             ILocalizationService localizationService,
             IPermissionService permissionService)
         {
-            this._customerService = customerService;
-            this._localizationService = localizationService;
-            this._permissionService = permissionService;
+            _customerService = customerService;
+            _localizationService = localizationService;
+            _permissionService = permissionService;
         }
 
         #endregion

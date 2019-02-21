@@ -25,8 +25,8 @@ namespace Nop.Web.Areas.Admin.Factories
         public MeasureModelFactory(IMeasureService measureService,
             MeasureSettings measureSettings)
         {
-            this._measureService = measureService;
-            this._measureSettings = measureSettings;
+            _measureService = measureService;
+            _measureSettings = measureSettings;
         }
 
         #endregion

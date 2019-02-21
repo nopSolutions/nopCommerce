@@ -38,14 +38,14 @@ namespace Nop.Services.Messages
             IStoreContext storeContext,
             ITokenizer tokenizer)
         {
-            this._customerService = customerService;
-            this._emailSender = emailSender;
-            this._eventPublisher = eventPublisher;
-            this._messageTokenProvider = messageTokenProvider;
-            this._queuedEmailService = queuedEmailService;
-            this._campaignRepository = campaignRepository;
-            this._storeContext = storeContext;
-            this._tokenizer = tokenizer;
+            _customerService = customerService;
+            _emailSender = emailSender;
+            _eventPublisher = eventPublisher;
+            _messageTokenProvider = messageTokenProvider;
+            _queuedEmailService = queuedEmailService;
+            _campaignRepository = campaignRepository;
+            _storeContext = storeContext;
+            _tokenizer = tokenizer;
         }
 
         #endregion

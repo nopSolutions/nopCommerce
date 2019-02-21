@@ -21,7 +21,7 @@ namespace Nop.Web.Framework.Factories
 
         public LocalizedModelFactory(ILanguageService languageService)
         {
-            this._languageService = languageService;
+            _languageService = languageService;
         }
 
         #endregion

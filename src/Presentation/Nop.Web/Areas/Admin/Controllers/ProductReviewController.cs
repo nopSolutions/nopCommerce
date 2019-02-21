@@ -50,17 +50,17 @@ namespace Nop.Web.Areas.Admin.Controllers
             IWorkContext workContext,
             IWorkflowMessageService workflowMessageService)
         {
-            this._catalogSettings = catalogSettings;
-            this._customerActivityService = customerActivityService;
-            this._eventPublisher = eventPublisher;
-            this._genericAttributeService = genericAttributeService;
-            this._localizationService = localizationService;
-            this._notificationService = notificationService;
-            this._permissionService = permissionService;
-            this._productReviewModelFactory = productReviewModelFactory;
-            this._productService = productService;
-            this._workContext = workContext;
-            this._workflowMessageService = workflowMessageService;
+            _catalogSettings = catalogSettings;
+            _customerActivityService = customerActivityService;
+            _eventPublisher = eventPublisher;
+            _genericAttributeService = genericAttributeService;
+            _localizationService = localizationService;
+            _notificationService = notificationService;
+            _permissionService = permissionService;
+            _productReviewModelFactory = productReviewModelFactory;
+            _productService = productService;
+            _workContext = workContext;
+            _workflowMessageService = workflowMessageService;
         }
 
         #endregion

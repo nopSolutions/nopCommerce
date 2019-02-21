@@ -72,24 +72,24 @@ namespace Nop.Web.Areas.Admin.Controllers
             IUrlRecordService urlRecordService,
             IWorkContext workContext)
         {
-            this._aclService = aclService;
-            this._customerActivityService = customerActivityService;
-            this._customerService = customerService;
-            this._discountService = discountService;
-            this._exportManager = exportManager;
-            this._importManager = importManager;
-            this._localizationService = localizationService;
-            this._localizedEntityService = localizedEntityService;
-            this._manufacturerModelFactory = manufacturerModelFactory;
-            this._manufacturerService = manufacturerService;
-            this._notificationService = notificationService;
-            this._permissionService = permissionService;
-            this._pictureService = pictureService;
-            this._productService = productService;
-            this._storeMappingService = storeMappingService;
-            this._storeService = storeService;
-            this._urlRecordService = urlRecordService;
-            this._workContext = workContext;
+            _aclService = aclService;
+            _customerActivityService = customerActivityService;
+            _customerService = customerService;
+            _discountService = discountService;
+            _exportManager = exportManager;
+            _importManager = importManager;
+            _localizationService = localizationService;
+            _localizedEntityService = localizedEntityService;
+            _manufacturerModelFactory = manufacturerModelFactory;
+            _manufacturerService = manufacturerService;
+            _notificationService = notificationService;
+            _permissionService = permissionService;
+            _pictureService = pictureService;
+            _productService = productService;
+            _storeMappingService = storeMappingService;
+            _storeService = storeService;
+            _urlRecordService = urlRecordService;
+            _workContext = workContext;
         }
 
         #endregion

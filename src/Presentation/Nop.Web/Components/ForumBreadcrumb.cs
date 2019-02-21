@@ -10,7 +10,7 @@ namespace Nop.Web.Components
 
         public ForumBreadcrumbViewComponent(IForumModelFactory forumModelFactory)
         {
-            this._forumModelFactory = forumModelFactory;
+            _forumModelFactory = forumModelFactory;
         }
 
         public IViewComponentResult Invoke(int? forumGroupId, int? forumId, int? forumTopicId)

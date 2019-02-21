@@ -41,14 +41,14 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip
             ITaxCategoryService taxCategoryService,
             IWebHelper webHelper)
         {
-            this._objectContext = objectContext;
-            this._countryStateZipSettings = countryStateZipSettings;
-            this._taxRateService = taxRateService;
-            this._localizationService = localizationService;
-            this._settingService = settingService;
-            this._cacheManager = cacheManager;
-            this._taxCategoryService = taxCategoryService;
-            this._webHelper = webHelper;
+            _objectContext = objectContext;
+            _countryStateZipSettings = countryStateZipSettings;
+            _taxRateService = taxRateService;
+            _localizationService = localizationService;
+            _settingService = settingService;
+            _cacheManager = cacheManager;
+            _taxCategoryService = taxCategoryService;
+            _webHelper = webHelper;
         }
 
         #endregion

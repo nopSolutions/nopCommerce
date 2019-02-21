@@ -30,9 +30,9 @@ namespace Nop.Services.Localization
             IStaticCacheManager cacheManager,
             LocalizationSettings localizationSettings)
         {
-            this._localizedPropertyRepository = localizedPropertyRepository;
-            this._cacheManager = cacheManager;
-            this._localizationSettings = localizationSettings;
+            _localizedPropertyRepository = localizedPropertyRepository;
+            _cacheManager = cacheManager;
+            _localizationSettings = localizationSettings;
         }
 
         #endregion

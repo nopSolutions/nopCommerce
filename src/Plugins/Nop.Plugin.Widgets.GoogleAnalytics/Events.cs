@@ -35,14 +35,14 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
             IWebHelper webHelper,
             IWidgetService widgetService)
         {
-            this._logger = logger;
-            this._categoryService = categoryService;
-            this._productService = productService;
-            this._settingService = settingService;
-            this._storeContext = storeContext;
-            this._storeService = storeService;
-            this._webHelper = webHelper;
-            this._widgetService = widgetService;
+            _logger = logger;
+            _categoryService = categoryService;
+            _productService = productService;
+            _settingService = settingService;
+            _storeContext = storeContext;
+            _storeService = storeService;
+            _webHelper = webHelper;
+            _widgetService = widgetService;
         }
 
         private string FixIllegalJavaScriptChars(string text)

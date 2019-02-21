@@ -16,9 +16,9 @@ namespace Nop.Web.Areas.Admin.Components
             ISettingService settingService,
             IStoreService storeService)
         {
-            this._catalogSettings = catalogSettings;
-            this._settingService = settingService;
-            this._storeService = storeService;
+            _catalogSettings = catalogSettings;
+            _settingService = settingService;
+            _storeService = storeService;
         }
 
         public IViewComponentResult Invoke()

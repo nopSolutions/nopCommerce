@@ -27,7 +27,7 @@ namespace Nop.Web.Framework.Mvc.Routing
         /// <param name="typeFinder">Type finder</param>
         public RoutePublisher(ITypeFinder typeFinder)
         {
-            this.typeFinder = typeFinder;
+            typeFinder = typeFinder;
         }
 
         #endregion

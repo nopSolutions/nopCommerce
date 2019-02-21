@@ -40,12 +40,12 @@ namespace Nop.Services.Installation
             IRepository<Store> storeRepository,
             IWebHelper webHelper)
         {
-            this._dbContext = dbContext;
-            this._fileProvider = fileProvider;
-            this._customerRepository = customerRepository;
-            this._languageRepository = languageRepository;
-            this._storeRepository = storeRepository;
-            this._webHelper = webHelper;
+            _dbContext = dbContext;
+            _fileProvider = fileProvider;
+            _customerRepository = customerRepository;
+            _languageRepository = languageRepository;
+            _storeRepository = storeRepository;
+            _webHelper = webHelper;
         }
 
         #endregion

@@ -90,33 +90,33 @@ namespace Nop.Services.Catalog
             IWorkContext workContext,
             LocalizationSettings localizationSettings)
         {
-            this._catalogSettings = catalogSettings;
-            this._commonSettings = commonSettings;
-            this._aclService = aclService;
-            this._cacheManager = cacheManager;
-            this._dataProvider = dataProvider;
-            this._dateRangeService = dateRangeService;
-            this._dbContext = dbContext;
-            this._eventPublisher = eventPublisher;
-            this._languageService = languageService;
-            this._localizationService = localizationService;
-            this._productAttributeParser = productAttributeParser;
-            this._productAttributeService = productAttributeService;
-            this._aclRepository = aclRepository;
-            this._crossSellProductRepository = crossSellProductRepository;
-            this._productRepository = productRepository;
-            this._productPictureRepository = productPictureRepository;
-            this._productReviewRepository = productReviewRepository;
-            this._productWarehouseInventoryRepository = productWarehouseInventoryRepository;
-            this._relatedProductRepository = relatedProductRepository;
-            this._stockQuantityHistoryRepository = stockQuantityHistoryRepository;
-            this._storeMappingRepository = storeMappingRepository;
-            this._tierPriceRepository = tierPriceRepository;
-            this._storeMappingService = storeMappingService;
-            this._storeService = storeService;
-            this._workContext = workContext;
-            this._localizationSettings = localizationSettings;
-            this._entityName = typeof(Product).Name;
+            _catalogSettings = catalogSettings;
+            _commonSettings = commonSettings;
+            _aclService = aclService;
+            _cacheManager = cacheManager;
+            _dataProvider = dataProvider;
+            _dateRangeService = dateRangeService;
+            _dbContext = dbContext;
+            _eventPublisher = eventPublisher;
+            _languageService = languageService;
+            _localizationService = localizationService;
+            _productAttributeParser = productAttributeParser;
+            _productAttributeService = productAttributeService;
+            _aclRepository = aclRepository;
+            _crossSellProductRepository = crossSellProductRepository;
+            _productRepository = productRepository;
+            _productPictureRepository = productPictureRepository;
+            _productReviewRepository = productReviewRepository;
+            _productWarehouseInventoryRepository = productWarehouseInventoryRepository;
+            _relatedProductRepository = relatedProductRepository;
+            _stockQuantityHistoryRepository = stockQuantityHistoryRepository;
+            _storeMappingRepository = storeMappingRepository;
+            _tierPriceRepository = tierPriceRepository;
+            _storeMappingService = storeMappingService;
+            _storeService = storeService;
+            _workContext = workContext;
+            _localizationSettings = localizationSettings;
+            _entityName = typeof(Product).Name;
         }
 
         #endregion
@@ -237,7 +237,7 @@ namespace Nop.Services.Catalog
             if (!product.DisplayStockAvailability)
                 return string.Empty;
 
-            var stockQuantity = this.GetTotalStockQuantity(product);
+            var stockQuantity = GetTotalStockQuantity(product);
             if (stockQuantity > 0)
             {
                 stockMessage = product.DisplayStockQuantity
@@ -1240,7 +1240,7 @@ namespace Nop.Services.Catalog
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            this.GetSkuMpnGtin(product, attributesXml, out var sku, out var _, out var _);
+            GetSkuMpnGtin(product, attributesXml, out var sku, out var _, out var _);
 
             return sku;
         }
@@ -1256,7 +1256,7 @@ namespace Nop.Services.Catalog
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            this.GetSkuMpnGtin(product, attributesXml, out var _, out var manufacturerPartNumber, out var _);
+            GetSkuMpnGtin(product, attributesXml, out var _, out var manufacturerPartNumber, out var _);
 
             return manufacturerPartNumber;
         }
@@ -1272,7 +1272,7 @@ namespace Nop.Services.Catalog
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            this.GetSkuMpnGtin(product, attributesXml, out var _, out var _, out var gtin);
+            GetSkuMpnGtin(product, attributesXml, out var _, out var _, out var gtin);
 
             return gtin;
         }
@@ -1345,7 +1345,7 @@ namespace Nop.Services.Catalog
             if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStock)
             {
                 //previous stock
-                var prevStockQuantity = this.GetTotalStockQuantity(product);
+                var prevStockQuantity = GetTotalStockQuantity(product);
 
                 //update stock quantity
                 if (product.UseMultipleWarehouses)
@@ -1368,7 +1368,7 @@ namespace Nop.Services.Catalog
                 }
 
                 //qty is reduced. check if minimum stock quantity is reached
-                if (quantityToChange < 0 && product.MinStockQuantity >= this.GetTotalStockQuantity(product))
+                if (quantityToChange < 0 && product.MinStockQuantity >= GetTotalStockQuantity(product))
                 {
                     //what should we do now? disable buy button, unpublish the product, or do nothing? check "Low stock activity" property
                     switch (product.LowStockActivity)
@@ -1389,7 +1389,7 @@ namespace Nop.Services.Catalog
                 //qty is increased. product is back in stock (minimum stock quantity is reached again)?
                 if (_catalogSettings.PublishBackProductWhenCancellingOrders)
                 {
-                    if (quantityToChange > 0 && prevStockQuantity <= product.MinStockQuantity && product.MinStockQuantity < this.GetTotalStockQuantity(product))
+                    if (quantityToChange > 0 && prevStockQuantity <= product.MinStockQuantity && product.MinStockQuantity < GetTotalStockQuantity(product))
                     {
                         switch (product.LowStockActivity)
                         {
@@ -1409,7 +1409,7 @@ namespace Nop.Services.Catalog
                 }
 
                 //send email notification
-                if (quantityToChange < 0 && this.GetTotalStockQuantity(product) < product.NotifyAdminForQuantityBelow)
+                if (quantityToChange < 0 && GetTotalStockQuantity(product) < product.NotifyAdminForQuantityBelow)
                 {
                     var workflowMessageService = EngineContext.Current.Resolve<IWorkflowMessageService>();
                     workflowMessageService.SendQuantityBelowStoreOwnerNotification(product, _localizationSettings.DefaultAdminLanguageId);

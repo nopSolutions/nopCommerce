@@ -47,16 +47,16 @@ namespace Nop.Web.Areas.Admin.Factories
             IStoreMappingSupportedModelFactory storeMappingSupportedModelFactory,
             MeasureSettings measureSettings)
         {
-            this._currencySettings = currencySettings;
-            this._baseAdminModelFactory = baseAdminModelFactory;
-            this._checkoutAttributeParser = checkoutAttributeParser;
-            this._checkoutAttributeService = checkoutAttributeService;
-            this._currencyService = currencyService;
-            this._localizationService = localizationService;
-            this._localizedModelFactory = localizedModelFactory;
-            this._measureService = measureService;
-            this._storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
-            this._measureSettings = measureSettings;
+            _currencySettings = currencySettings;
+            _baseAdminModelFactory = baseAdminModelFactory;
+            _checkoutAttributeParser = checkoutAttributeParser;
+            _checkoutAttributeService = checkoutAttributeService;
+            _currencyService = currencyService;
+            _localizationService = localizationService;
+            _localizedModelFactory = localizedModelFactory;
+            _measureService = measureService;
+            _storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
+            _measureSettings = measureSettings;
         }
 
         #endregion

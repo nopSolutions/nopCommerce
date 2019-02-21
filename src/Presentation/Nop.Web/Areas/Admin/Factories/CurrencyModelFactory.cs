@@ -41,13 +41,13 @@ namespace Nop.Web.Areas.Admin.Factories
             IStoreMappingSupportedModelFactory storeMappingSupportedModelFactory,
             IWorkContext workContext)
         {
-            this._currencySettings = currencySettings;
-            this._currencyService = currencyService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._localizationService = localizationService;
-            this._localizedModelFactory = localizedModelFactory;
-            this._storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
-            this._workContext = workContext;
+            _currencySettings = currencySettings;
+            _currencyService = currencyService;
+            _dateTimeHelper = dateTimeHelper;
+            _localizationService = localizationService;
+            _localizedModelFactory = localizedModelFactory;
+            _storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
+            _workContext = workContext;
         }
 
         #endregion

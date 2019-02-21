@@ -56,19 +56,19 @@ namespace Nop.Services.Discounts
             IStaticCacheManager cacheManager,
             IStoreContext storeContext)
         {
-            this._categoryService = categoryService;
-            this._customerService = customerService;
-            this._eventPublisher = eventPublisher;
-            this._localizationService = localizationService;
-            this._pluginService = pluginService;
-            this._categoryRepository = categoryRepository;
-            this._discountRepository = discountRepository;
-            this._discountRequirementRepository = discountRequirementRepository;
-            this._discountUsageHistoryRepository = discountUsageHistoryRepository;
-            this._manufacturerRepository = manufacturerRepository;
-            this._productRepository = productRepository;
-            this._cacheManager = cacheManager;
-            this._storeContext = storeContext;
+            _categoryService = categoryService;
+            _customerService = customerService;
+            _eventPublisher = eventPublisher;
+            _localizationService = localizationService;
+            _pluginService = pluginService;
+            _categoryRepository = categoryRepository;
+            _discountRepository = discountRepository;
+            _discountRequirementRepository = discountRequirementRepository;
+            _discountUsageHistoryRepository = discountUsageHistoryRepository;
+            _manufacturerRepository = manufacturerRepository;
+            _productRepository = productRepository;
+            _cacheManager = cacheManager;
+            _storeContext = storeContext;
         }
 
         #endregion
@@ -679,7 +679,7 @@ namespace Nop.Services.Discounts
             if (discount == null)
                 throw new ArgumentNullException(nameof(discount));
 
-            return ValidateDiscount(this.MapDiscount(discount), customer);
+            return ValidateDiscount(MapDiscount(discount), customer);
         }
 
         /// <summary>
@@ -694,7 +694,7 @@ namespace Nop.Services.Discounts
             if (discount == null)
                 throw new ArgumentNullException(nameof(discount));
 
-            return ValidateDiscount(this.MapDiscount(discount), customer, couponCodesToValidate);
+            return ValidateDiscount(MapDiscount(discount), customer, couponCodesToValidate);
         }
 
         /// <summary>

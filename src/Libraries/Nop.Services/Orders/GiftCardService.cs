@@ -31,10 +31,10 @@ namespace Nop.Services.Orders
             IRepository<GiftCard> giftCardRepository,
             IRepository<GiftCardUsageHistory> giftCardUsageHistoryRepository)
         {
-            this._customerService = customerService;
-            this._eventPublisher = eventPublisher;
-            this._giftCardRepository = giftCardRepository;
-            this._giftCardUsageHistoryRepository = giftCardUsageHistoryRepository;
+            _customerService = customerService;
+            _eventPublisher = eventPublisher;
+            _giftCardRepository = giftCardRepository;
+            _giftCardUsageHistoryRepository = giftCardUsageHistoryRepository;
         }
 
         #endregion
@@ -174,7 +174,7 @@ namespace Nop.Services.Orders
                 var giftCards = GetAllGiftCards(isGiftCardActivated: true, giftCardCouponCode: couponCode);
                 foreach (var gc in giftCards)
                 {
-                    if (this.IsGiftCardValid(gc))
+                    if (IsGiftCardValid(gc))
                         result.Add(gc);
                 }
             }
@@ -244,7 +244,7 @@ namespace Nop.Services.Orders
             if (!giftCard.IsGiftCardActivated)
                 return false;
 
-            var remainingAmount = this.GetGiftCardRemainingAmount(giftCard);
+            var remainingAmount = GetGiftCardRemainingAmount(giftCard);
             if (remainingAmount > decimal.Zero)
                 return true;
 

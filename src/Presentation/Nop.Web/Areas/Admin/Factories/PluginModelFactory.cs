@@ -60,19 +60,19 @@ namespace Nop.Web.Areas.Admin.Factories
             TaxSettings taxSettings,
             ILogger logger)
         {
-            this._aclSupportedModelFactory = aclSupportedModelFactory;
-            this._baseAdminModelFactory = baseAdminModelFactory;
-            this._externalAuthenticationService = externalAuthenticationService;
-            this._localizationService = localizationService;
-            this._localizedModelFactory = localizedModelFactory;
-            this._officialFeedManager = officialFeedManager;
-            this._paymentService = paymentService;
-            this._pluginService = pluginService;
-            this._shippingService = shippingService;
-            this._storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
-            this._widgetService = widgetService;
-            this._taxSettings = taxSettings;
-            this._logger = logger;
+            _aclSupportedModelFactory = aclSupportedModelFactory;
+            _baseAdminModelFactory = baseAdminModelFactory;
+            _externalAuthenticationService = externalAuthenticationService;
+            _localizationService = localizationService;
+            _localizedModelFactory = localizedModelFactory;
+            _officialFeedManager = officialFeedManager;
+            _paymentService = paymentService;
+            _pluginService = pluginService;
+            _shippingService = shippingService;
+            _storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
+            _widgetService = widgetService;
+            _taxSettings = taxSettings;
+            _logger = logger;
         }
 
         #endregion

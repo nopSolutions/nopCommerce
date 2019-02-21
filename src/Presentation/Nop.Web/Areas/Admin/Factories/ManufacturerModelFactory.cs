@@ -49,17 +49,17 @@ namespace Nop.Web.Areas.Admin.Factories
             IStoreMappingSupportedModelFactory storeMappingSupportedModelFactory,
             IUrlRecordService urlRecordService)
         {
-            this._catalogSettings = catalogSettings;
-            this._aclSupportedModelFactory = aclSupportedModelFactory;
-            this._baseAdminModelFactory = baseAdminModelFactory;
-            this._manufacturerService = manufacturerService;
-            this._discountService = discountService;
-            this._discountSupportedModelFactory = discountSupportedModelFactory;
-            this._localizationService = localizationService;
-            this._localizedModelFactory = localizedModelFactory;
-            this._productService = productService;
-            this._storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
-            this._urlRecordService = urlRecordService;
+            _catalogSettings = catalogSettings;
+            _aclSupportedModelFactory = aclSupportedModelFactory;
+            _baseAdminModelFactory = baseAdminModelFactory;
+            _manufacturerService = manufacturerService;
+            _discountService = discountService;
+            _discountSupportedModelFactory = discountSupportedModelFactory;
+            _localizationService = localizationService;
+            _localizedModelFactory = localizedModelFactory;
+            _productService = productService;
+            _storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
+            _urlRecordService = urlRecordService;
         }
 
         #endregion

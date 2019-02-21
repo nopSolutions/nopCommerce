@@ -9,8 +9,8 @@ namespace Nop.Web.Areas.Admin.Models.Common
     {
         public SystemInfoModel()
         {
-            this.Headers = new List<HeaderModel>();
-            this.LoadedAssemblies = new List<LoadedAssembly>();
+            Headers = new List<HeaderModel>();
+            LoadedAssemblies = new List<LoadedAssembly>();
         }
 
         [NopResourceDisplayName("Admin.System.SystemInfo.ASPNETInfo")]

@@ -10,7 +10,7 @@ namespace Nop.Services.Tax
     {
         public CalculateTaxResult()
         {
-            this.Errors = new List<string>();
+            Errors = new List<string>();
         }
 
         /// <summary>

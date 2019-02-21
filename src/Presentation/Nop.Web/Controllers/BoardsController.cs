@@ -42,13 +42,13 @@ namespace Nop.Web.Controllers
             IWebHelper webHelper,
             IWorkContext workContext)
         {
-            this._forumSettings = forumSettings;
-            this._forumModelFactory = forumModelFactory;
-            this._forumService = forumService;
-            this._localizationService = localizationService;
-            this._storeContext = storeContext;
-            this._webHelper = webHelper;
-            this._workContext = workContext;
+            _forumSettings = forumSettings;
+            _forumModelFactory = forumModelFactory;
+            _forumService = forumService;
+            _localizationService = localizationService;
+            _storeContext = storeContext;
+            _webHelper = webHelper;
+            _workContext = workContext;
         }
 
         #endregion

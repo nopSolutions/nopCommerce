@@ -19,7 +19,7 @@ namespace Nop.Web.Areas.Admin.Components
 
         public AdminLanguageSelectorViewComponent(ICommonModelFactory commonModelFactory)
         {
-            this._commonModelFactory = commonModelFactory;
+            _commonModelFactory = commonModelFactory;
         }
 
         #endregion

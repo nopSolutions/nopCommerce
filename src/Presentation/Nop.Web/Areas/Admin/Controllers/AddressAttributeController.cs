@@ -38,13 +38,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             INotificationService notificationService,
             IPermissionService permissionService)
         {
-            this._addressAttributeModelFactory = addressAttributeModelFactory;
-            this._addressAttributeService = addressAttributeService;
-            this._customerActivityService = customerActivityService;
-            this._localizedEntityService = localizedEntityService;
-            this._localizationService = localizationService;
-            this._notificationService = notificationService;
-            this._permissionService = permissionService;
+            _addressAttributeModelFactory = addressAttributeModelFactory;
+            _addressAttributeService = addressAttributeService;
+            _customerActivityService = customerActivityService;
+            _localizedEntityService = localizedEntityService;
+            _localizationService = localizationService;
+            _notificationService = notificationService;
+            _permissionService = permissionService;
         }
 
         #endregion

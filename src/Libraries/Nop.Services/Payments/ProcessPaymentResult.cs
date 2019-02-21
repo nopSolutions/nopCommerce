@@ -11,7 +11,7 @@ namespace Nop.Services.Payments
     {
         public ProcessPaymentResult()
         {
-            this.Errors = new List<string>();
+            Errors = new List<string>();
         }
 
         /// <summary>

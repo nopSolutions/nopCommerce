@@ -79,26 +79,26 @@ namespace Nop.Web.Controllers
             LocalizationSettings localizationSettings,
             ShoppingCartSettings shoppingCartSettings)
         {
-            this._captchaSettings = captchaSettings;
-            this._catalogSettings = catalogSettings;
-            this._aclService = aclService;
-            this._compareProductsService = compareProductsService;
-            this._customerActivityService = customerActivityService;
-            this._eventPublisher = eventPublisher;
-            this._localizationService = localizationService;
-            this._orderService = orderService;
-            this._permissionService = permissionService;
-            this._productModelFactory = productModelFactory;
-            this._productService = productService;
-            this._recentlyViewedProductsService = recentlyViewedProductsService;
-            this._storeContext = storeContext;
-            this._storeMappingService = storeMappingService;
-            this._urlRecordService = urlRecordService;
-            this._webHelper = webHelper;
-            this._workContext = workContext;
-            this._workflowMessageService = workflowMessageService;
-            this._localizationSettings = localizationSettings;
-            this._shoppingCartSettings = shoppingCartSettings;
+            _captchaSettings = captchaSettings;
+            _catalogSettings = catalogSettings;
+            _aclService = aclService;
+            _compareProductsService = compareProductsService;
+            _customerActivityService = customerActivityService;
+            _eventPublisher = eventPublisher;
+            _localizationService = localizationService;
+            _orderService = orderService;
+            _permissionService = permissionService;
+            _productModelFactory = productModelFactory;
+            _productService = productService;
+            _recentlyViewedProductsService = recentlyViewedProductsService;
+            _storeContext = storeContext;
+            _storeMappingService = storeMappingService;
+            _urlRecordService = urlRecordService;
+            _webHelper = webHelper;
+            _workContext = workContext;
+            _workflowMessageService = workflowMessageService;
+            _localizationSettings = localizationSettings;
+            _shoppingCartSettings = shoppingCartSettings;
         }
 
         #endregion

@@ -32,11 +32,11 @@ namespace Nop.Services.Orders
             IRepository<CheckoutAttributeValue> checkoutAttributeValueRepository,
             IStoreMappingService storeMappingService)
         {
-            this._cacheManager = cacheManager;
-            this._eventPublisher = eventPublisher;
-            this._checkoutAttributeRepository = checkoutAttributeRepository;
-            this._checkoutAttributeValueRepository = checkoutAttributeValueRepository;
-            this._storeMappingService = storeMappingService;
+            _cacheManager = cacheManager;
+            _eventPublisher = eventPublisher;
+            _checkoutAttributeRepository = checkoutAttributeRepository;
+            _checkoutAttributeValueRepository = checkoutAttributeValueRepository;
+            _storeMappingService = storeMappingService;
         }
 
         #endregion

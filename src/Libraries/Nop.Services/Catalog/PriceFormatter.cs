@@ -36,12 +36,12 @@ namespace Nop.Services.Catalog
             IWorkContext workContext,
             TaxSettings taxSettings)
         {
-            this._currencySettings = currencySettings;
-            this._currencyService = currencyService;
-            this._localizationService = localizationService;
-            this._measureService = measureService;
-            this._workContext = workContext;
-            this._taxSettings = taxSettings;
+            _currencySettings = currencySettings;
+            _currencyService = currencyService;
+            _localizationService = localizationService;
+            _measureService = measureService;
+            _workContext = workContext;
+            _taxSettings = taxSettings;
         }
 
         #endregion
@@ -451,7 +451,7 @@ namespace Nop.Services.Catalog
                 _measureService.ConvertWeight(productAmount, productUnit, referenceUnit, false) *
                 referenceAmount;
             var basePriceInCurrentCurrency = _currencyService.ConvertFromPrimaryStoreCurrency(basePrice, _workContext.WorkingCurrency);
-            var basePriceStr = this.FormatPrice(basePriceInCurrentCurrency, true, false);
+            var basePriceStr = FormatPrice(basePriceInCurrentCurrency, true, false);
 
             var result = string.Format(_localizationService.GetResource("Products.BasePrice"),
                 basePriceStr, referenceAmount.ToString("G29"), referenceUnit.Name);

@@ -26,8 +26,8 @@ namespace Nop.Web.Areas.Admin.Factories
         public ForumModelFactory(IDateTimeHelper dateTimeHelper,
             IForumService forumService)
         {
-            this._dateTimeHelper = dateTimeHelper;
-            this._forumService = forumService;
+            _dateTimeHelper = dateTimeHelper;
+            _forumService = forumService;
         }
 
         #endregion

@@ -21,7 +21,7 @@ namespace Nop.Services.Security
 
         public EncryptionService(SecuritySettings securitySettings)
         {
-            this._securitySettings = securitySettings;
+            _securitySettings = securitySettings;
         }
 
         #endregion

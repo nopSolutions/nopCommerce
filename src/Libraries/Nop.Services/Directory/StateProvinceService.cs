@@ -30,10 +30,10 @@ namespace Nop.Services.Directory
             ILocalizationService localizationService,
             IRepository<StateProvince> stateProvinceRepository)
         {
-            this._cacheManager = cacheManager;
-            this._eventPublisher = eventPublisher;
-            this._localizationService = localizationService;
-            this._stateProvinceRepository = stateProvinceRepository;
+            _cacheManager = cacheManager;
+            _eventPublisher = eventPublisher;
+            _localizationService = localizationService;
+            _stateProvinceRepository = stateProvinceRepository;
         }
 
         #endregion

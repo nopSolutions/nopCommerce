@@ -65,22 +65,22 @@ namespace Nop.Services.Shipping
             ShippingSettings shippingSettings,
             ShoppingCartSettings shoppingCartSettings)
         {
-            this._addressService = addressService;
-            this._cacheManager = cacheManager;
-            this._checkoutAttributeParser = checkoutAttributeParser;
-            this._eventPublisher = eventPublisher;
-            this._genericAttributeService = genericAttributeService;
-            this._localizationService = localizationService;
-            this._logger = logger;
-            this._pluginService = pluginService;
-            this._priceCalculationService = priceCalculationService;
-            this._productAttributeParser = productAttributeParser;
-            this._productService = productService;
-            this._shippingMethodRepository = shippingMethodRepository;
-            this._storeContext = storeContext;
-            this._warehouseRepository = warehouseRepository;
-            this._shippingSettings = shippingSettings;
-            this._shoppingCartSettings = shoppingCartSettings;
+            _addressService = addressService;
+            _cacheManager = cacheManager;
+            _checkoutAttributeParser = checkoutAttributeParser;
+            _eventPublisher = eventPublisher;
+            _genericAttributeService = genericAttributeService;
+            _localizationService = localizationService;
+            _logger = logger;
+            _pluginService = pluginService;
+            _priceCalculationService = priceCalculationService;
+            _productAttributeParser = productAttributeParser;
+            _productService = productService;
+            _shippingMethodRepository = shippingMethodRepository;
+            _storeContext = storeContext;
+            _warehouseRepository = warehouseRepository;
+            _shippingSettings = shippingSettings;
+            _shoppingCartSettings = shoppingCartSettings;
         }
 
         #endregion

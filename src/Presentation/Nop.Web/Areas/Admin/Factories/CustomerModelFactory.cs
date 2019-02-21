@@ -115,39 +115,39 @@ namespace Nop.Web.Areas.Admin.Factories
             RewardPointsSettings rewardPointsSettings,
             TaxSettings taxSettings)
         {
-            this._addressSettings = addressSettings;
-            this._customerSettings = customerSettings;
-            this._dateTimeSettings = dateTimeSettings;
-            this._gdprSettings = gdprSettings;
-            this._aclSupportedModelFactory = aclSupportedModelFactory;
-            this._addressAttributeFormatter = addressAttributeFormatter;
-            this._addressAttributeModelFactory = addressAttributeModelFactory;
-            this._affiliateService = affiliateService;
-            this._backInStockSubscriptionService = backInStockSubscriptionService;
-            this._baseAdminModelFactory = baseAdminModelFactory;
-            this._customerActivityService = customerActivityService;
-            this._customerAttributeParser = customerAttributeParser;
-            this._customerAttributeService = customerAttributeService;
-            this._customerService = customerService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._externalAuthenticationService = externalAuthenticationService;
-            this._gdprService = gdprService;
-            this._genericAttributeService = genericAttributeService;
-            this._geoLookupService = geoLookupService;
-            this._localizationService = localizationService;
-            this._newsLetterSubscriptionService = newsLetterSubscriptionService;
-            this._orderService = orderService;
-            this._pictureService = pictureService;
-            this._priceCalculationService = priceCalculationService;
-            this._priceFormatter = priceFormatter;
-            this._productAttributeFormatter = productAttributeFormatter;
-            this._rewardPointService = rewardPointService;
-            this._storeContext = storeContext;
-            this._storeService = storeService;
-            this._taxService = taxService;
-            this._mediaSettings = mediaSettings;
-            this._rewardPointsSettings = rewardPointsSettings;
-            this._taxSettings = taxSettings;
+            _addressSettings = addressSettings;
+            _customerSettings = customerSettings;
+            _dateTimeSettings = dateTimeSettings;
+            _gdprSettings = gdprSettings;
+            _aclSupportedModelFactory = aclSupportedModelFactory;
+            _addressAttributeFormatter = addressAttributeFormatter;
+            _addressAttributeModelFactory = addressAttributeModelFactory;
+            _affiliateService = affiliateService;
+            _backInStockSubscriptionService = backInStockSubscriptionService;
+            _baseAdminModelFactory = baseAdminModelFactory;
+            _customerActivityService = customerActivityService;
+            _customerAttributeParser = customerAttributeParser;
+            _customerAttributeService = customerAttributeService;
+            _customerService = customerService;
+            _dateTimeHelper = dateTimeHelper;
+            _externalAuthenticationService = externalAuthenticationService;
+            _gdprService = gdprService;
+            _genericAttributeService = genericAttributeService;
+            _geoLookupService = geoLookupService;
+            _localizationService = localizationService;
+            _newsLetterSubscriptionService = newsLetterSubscriptionService;
+            _orderService = orderService;
+            _pictureService = pictureService;
+            _priceCalculationService = priceCalculationService;
+            _priceFormatter = priceFormatter;
+            _productAttributeFormatter = productAttributeFormatter;
+            _rewardPointService = rewardPointService;
+            _storeContext = storeContext;
+            _storeService = storeService;
+            _taxService = taxService;
+            _mediaSettings = mediaSettings;
+            _rewardPointsSettings = rewardPointsSettings;
+            _taxSettings = taxSettings;
         }
 
         #endregion

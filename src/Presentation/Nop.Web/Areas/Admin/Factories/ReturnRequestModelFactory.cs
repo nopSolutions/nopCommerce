@@ -41,13 +41,13 @@ namespace Nop.Web.Areas.Admin.Factories
             IOrderService orderService,
             IReturnRequestService returnRequestService)
         {
-            this._baseAdminModelFactory = baseAdminModelFactory;
-            this._dateTimeHelper = dateTimeHelper;
-            this._downloadService = downloadService;
-            this._localizationService = localizationService;
-            this._localizedModelFactory = localizedModelFactory;
-            this._orderService = orderService;
-            this._returnRequestService = returnRequestService;
+            _baseAdminModelFactory = baseAdminModelFactory;
+            _dateTimeHelper = dateTimeHelper;
+            _downloadService = downloadService;
+            _localizationService = localizationService;
+            _localizedModelFactory = localizedModelFactory;
+            _orderService = orderService;
+            _returnRequestService = returnRequestService;
         }
 
         #endregion

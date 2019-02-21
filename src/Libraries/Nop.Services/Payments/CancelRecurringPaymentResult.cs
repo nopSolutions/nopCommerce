@@ -10,7 +10,7 @@ namespace Nop.Services.Payments
     {
         public CancelRecurringPaymentResult()
         {
-            this.Errors = new List<string>();
+            Errors = new List<string>();
         }
 
         /// <summary>

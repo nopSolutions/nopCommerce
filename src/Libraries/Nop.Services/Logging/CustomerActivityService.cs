@@ -36,12 +36,12 @@ namespace Nop.Services.Logging
             IWebHelper webHelper,
             IWorkContext workContext)
         {
-            this._dbContext = dbContext;
-            this._activityLogRepository = activityLogRepository;
-            this._activityLogTypeRepository = activityLogTypeRepository;
-            this._cacheManager = cacheManager;
-            this._webHelper = webHelper;
-            this._workContext = workContext;
+            _dbContext = dbContext;
+            _activityLogRepository = activityLogRepository;
+            _activityLogTypeRepository = activityLogTypeRepository;
+            _cacheManager = cacheManager;
+            _webHelper = webHelper;
+            _workContext = workContext;
         }
 
         #endregion

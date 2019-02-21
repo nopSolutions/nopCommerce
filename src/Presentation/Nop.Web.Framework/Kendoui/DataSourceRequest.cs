@@ -10,8 +10,8 @@
         /// </summary>
         public DataSourceRequest()
         {
-            this.Page = 1;
-            this.PageSize = 10;
+            Page = 1;
+            PageSize = 10;
         }
 
         /// <summary>

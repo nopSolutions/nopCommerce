@@ -67,8 +67,8 @@ namespace Nop.Services.Media
                   webHelper,
                   mediaSettings)
         {
-            this._cacheManager = cacheManager;
-            this._mediaSettings = mediaSettings;
+            _cacheManager = cacheManager;
+            _mediaSettings = mediaSettings;
 
             OneTimeInit(config);
         }

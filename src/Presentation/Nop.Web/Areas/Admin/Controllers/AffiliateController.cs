@@ -37,12 +37,12 @@ namespace Nop.Web.Areas.Admin.Controllers
             INotificationService notificationService,
             IPermissionService permissionService)
         {
-            this._affiliateModelFactory = affiliateModelFactory;
-            this._affiliateService = affiliateService;
-            this._customerActivityService = customerActivityService;
-            this._localizationService = localizationService;
-            this._notificationService = notificationService;
-            this._permissionService = permissionService;
+            _affiliateModelFactory = affiliateModelFactory;
+            _affiliateService = affiliateService;
+            _customerActivityService = customerActivityService;
+            _localizationService = localizationService;
+            _notificationService = notificationService;
+            _permissionService = permissionService;
         }
 
         #endregion

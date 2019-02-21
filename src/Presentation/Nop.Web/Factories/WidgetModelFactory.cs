@@ -33,11 +33,11 @@ namespace Nop.Web.Factories
             IWidgetService widgetService,
             IWorkContext workContext)
         {
-            this._cacheManager = cacheManager;
-            this._storeContext = storeContext;
-            this._themeContext = themeContext;
-            this._widgetService = widgetService;
-            this._workContext = workContext;
+            _cacheManager = cacheManager;
+            _storeContext = storeContext;
+            _themeContext = themeContext;
+            _widgetService = widgetService;
+            _workContext = workContext;
         }
 
         #endregion

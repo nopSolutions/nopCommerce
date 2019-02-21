@@ -47,14 +47,14 @@ namespace Nop.Web.Areas.Admin.Factories
             IPluginService pluginService,
             IShippingService shippingService)
         {
-            this._addressService = addressService;
-            this._baseAdminModelFactory = baseAdminModelFactory;
-            this._countryService = countryService;
-            this._dateRangeService = dateRangeService;
-            this._localizationService = localizationService;
-            this._localizedModelFactory = localizedModelFactory;
-            this._pluginService = pluginService;
-            this._shippingService = shippingService;
+            _addressService = addressService;
+            _baseAdminModelFactory = baseAdminModelFactory;
+            _countryService = countryService;
+            _dateRangeService = dateRangeService;
+            _localizationService = localizationService;
+            _localizedModelFactory = localizedModelFactory;
+            _pluginService = pluginService;
+            _shippingService = shippingService;
         }
 
         #endregion

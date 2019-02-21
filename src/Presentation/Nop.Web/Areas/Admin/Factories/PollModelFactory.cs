@@ -37,12 +37,12 @@ namespace Nop.Web.Areas.Admin.Factories
             IPollService pollService,
             IStoreMappingSupportedModelFactory storeMappingSupportedModelFactory)
         {
-            this._catalogSettings = catalogSettings;
-            this._baseAdminModelFactory = baseAdminModelFactory;
-            this._dateTimeHelper = dateTimeHelper;
-            this._languageService = languageService;
-            this._pollService = pollService;
-            this._storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
+            _catalogSettings = catalogSettings;
+            _baseAdminModelFactory = baseAdminModelFactory;
+            _dateTimeHelper = dateTimeHelper;
+            _languageService = languageService;
+            _pollService = pollService;
+            _storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
         }
 
         #endregion

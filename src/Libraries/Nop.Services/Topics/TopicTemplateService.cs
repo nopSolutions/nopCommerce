@@ -24,8 +24,8 @@ namespace Nop.Services.Topics
         public TopicTemplateService(IEventPublisher eventPublisher,
             IRepository<TopicTemplate> topicTemplateRepository)
         {
-            this._eventPublisher = eventPublisher;
-            this._topicTemplateRepository = topicTemplateRepository;
+            _eventPublisher = eventPublisher;
+            _topicTemplateRepository = topicTemplateRepository;
         }
 
         #endregion

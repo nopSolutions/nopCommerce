@@ -37,11 +37,11 @@ namespace Nop.Web.Areas.Admin.Factories
             IUrlRecordService urlRecordService,
             IWorkContext workContext)
         {
-            this._baseAdminModelFactory = baseAdminModelFactory;
-            this._customerService = customerService;
-            this._productService = productService;
-            this._urlRecordService = urlRecordService;
-            this._workContext = workContext;
+            _baseAdminModelFactory = baseAdminModelFactory;
+            _customerService = customerService;
+            _productService = productService;
+            _urlRecordService = urlRecordService;
+            _workContext = workContext;
         }
 
         #endregion

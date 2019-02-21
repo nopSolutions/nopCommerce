@@ -25,9 +25,9 @@ namespace Nop.Plugin.ExternalAuth.Facebook
             ISettingService settingService,
             IWebHelper webHelper)
         {
-            this._localizationService = localizationService;
-            this._settingService = settingService;
-            this._webHelper = webHelper;
+            _localizationService = localizationService;
+            _settingService = settingService;
+            _webHelper = webHelper;
         }
 
         #endregion

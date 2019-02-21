@@ -29,9 +29,9 @@ namespace Nop.Services.Common
             IEventPublisher eventPublisher,
             IRepository<GenericAttribute> genericAttributeRepository)
         {
-            this._cacheManager = cacheManager;
-            this._eventPublisher = eventPublisher;
-            this._genericAttributeRepository = genericAttributeRepository;
+            _cacheManager = cacheManager;
+            _eventPublisher = eventPublisher;
+            _genericAttributeRepository = genericAttributeRepository;
         }
 
         #endregion
@@ -220,7 +220,7 @@ namespace Nop.Services.Common
 
             var keyGroup = entity.GetUnproxiedEntityType().Name;
 
-            var props = this.GetAttributesForEntity(entity.Id, keyGroup);
+            var props = GetAttributesForEntity(entity.Id, keyGroup);
 
             //little hack here (only for unit testing). we should write expect-return rules in unit tests for such cases
             if (props == null)

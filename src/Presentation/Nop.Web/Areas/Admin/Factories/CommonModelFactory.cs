@@ -129,36 +129,36 @@ namespace Nop.Web.Areas.Admin.Factories
             MeasureSettings measureSettings,
             TaxSettings taxSettings)
         {
-            this._adminAreaSettings = adminAreaSettings;
-            this._catalogSettings = catalogSettings;
-            this._currencySettings = currencySettings;
-            this._actionContextAccessor = actionContextAccessor;
-            this._currencyService = currencyService;
-            this._customerService = customerService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._externalAuthenticationService = externalAuthenticationService;
-            this._fileProvider = fileProvider;
-            this._httpContextAccessor = httpContextAccessor;
-            this._languageService = languageService;
-            this._localizationService = localizationService;
-            this._maintenanceService = maintenanceService;
-            this._measureService = measureService;
-            this._orderService = orderService;
-            this._paymentService = paymentService;
-            this._pluginService = pluginService;
-            this._productService = productService;
-            this._returnRequestService = returnRequestService;
-            this._searchTermService = searchTermService;
-            this._shippingService = shippingService;
-            this._storeContext = storeContext;
-            this._storeService = storeService;
-            this._urlHelperFactory = urlHelperFactory;
-            this._urlRecordService = urlRecordService;
-            this._webHelper = webHelper;
-            this._widgetService = widgetService;
-            this._workContext = workContext;
-            this._measureSettings = measureSettings;
-            this._taxSettings = taxSettings;
+            _adminAreaSettings = adminAreaSettings;
+            _catalogSettings = catalogSettings;
+            _currencySettings = currencySettings;
+            _actionContextAccessor = actionContextAccessor;
+            _currencyService = currencyService;
+            _customerService = customerService;
+            _dateTimeHelper = dateTimeHelper;
+            _externalAuthenticationService = externalAuthenticationService;
+            _fileProvider = fileProvider;
+            _httpContextAccessor = httpContextAccessor;
+            _languageService = languageService;
+            _localizationService = localizationService;
+            _maintenanceService = maintenanceService;
+            _measureService = measureService;
+            _orderService = orderService;
+            _paymentService = paymentService;
+            _pluginService = pluginService;
+            _productService = productService;
+            _returnRequestService = returnRequestService;
+            _searchTermService = searchTermService;
+            _shippingService = shippingService;
+            _storeContext = storeContext;
+            _storeService = storeService;
+            _urlHelperFactory = urlHelperFactory;
+            _urlRecordService = urlRecordService;
+            _webHelper = webHelper;
+            _widgetService = widgetService;
+            _workContext = workContext;
+            _measureSettings = measureSettings;
+            _taxSettings = taxSettings;
         }
 
         #endregion

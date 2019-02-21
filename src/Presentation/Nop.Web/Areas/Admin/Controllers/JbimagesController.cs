@@ -34,8 +34,8 @@ namespace Nop.Web.Areas.Admin.Controllers
         public JbimagesController(INopFileProvider fileProvider,
             IPermissionService permissionService)
         {
-            this._fileProvider = fileProvider;
-            this._permissionService = permissionService;
+            _fileProvider = fileProvider;
+            _permissionService = permissionService;
         }
 
         protected virtual IList<string> GetAllowedFileTypes()

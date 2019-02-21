@@ -24,8 +24,8 @@ namespace Nop.Services.Cms
         public WidgetService(IPluginService pluginService,
             WidgetSettings widgetSettings)
         {
-            this._pluginService = pluginService;
-            this._widgetSettings = widgetSettings;
+            _pluginService = pluginService;
+            _widgetSettings = widgetSettings;
         }
 
         #endregion

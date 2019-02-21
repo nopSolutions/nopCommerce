@@ -57,20 +57,20 @@ namespace Nop.Web.Controllers
             LocalizationSettings localizationSettings,
             OrderSettings orderSettings)
         {
-            this._customerService = customerService;
-            this._customNumberFormatter = customNumberFormatter;
-            this._downloadService = downloadService;
-            this._localizationService = localizationService;
-            this._fileProvider = fileProvider;
-            this._orderProcessingService = orderProcessingService;
-            this._orderService = orderService;
-            this._returnRequestModelFactory = returnRequestModelFactory;
-            this._returnRequestService = returnRequestService;
-            this._storeContext = storeContext;
-            this._workContext = workContext;
-            this._workflowMessageService = workflowMessageService;
-            this._localizationSettings = localizationSettings;
-            this._orderSettings = orderSettings;
+            _customerService = customerService;
+            _customNumberFormatter = customNumberFormatter;
+            _downloadService = downloadService;
+            _localizationService = localizationService;
+            _fileProvider = fileProvider;
+            _orderProcessingService = orderProcessingService;
+            _orderService = orderService;
+            _returnRequestModelFactory = returnRequestModelFactory;
+            _returnRequestService = returnRequestService;
+            _storeContext = storeContext;
+            _workContext = workContext;
+            _workflowMessageService = workflowMessageService;
+            _localizationSettings = localizationSettings;
+            _orderSettings = orderSettings;
         }
 
         #endregion

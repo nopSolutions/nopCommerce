@@ -61,19 +61,19 @@ namespace Nop.Web.Areas.Admin.Factories
             IUrlRecordService urlRecordService,
             IWebHelper webHelper)
         {
-            this._currencySettings = currencySettings;
-            this._baseAdminModelFactory = baseAdminModelFactory;
-            this._categoryService = categoryService;
-            this._currencyService = currencyService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._discountService = discountService;
-            this._localizationService = localizationService;
-            this._manufacturerService = manufacturerService;
-            this._orderService = orderService;
-            this._priceFormatter = priceFormatter;
-            this._productService = productService;
-            this._urlRecordService = urlRecordService;
-            this._webHelper = webHelper;
+            _currencySettings = currencySettings;
+            _baseAdminModelFactory = baseAdminModelFactory;
+            _categoryService = categoryService;
+            _currencyService = currencyService;
+            _dateTimeHelper = dateTimeHelper;
+            _discountService = discountService;
+            _localizationService = localizationService;
+            _manufacturerService = manufacturerService;
+            _orderService = orderService;
+            _priceFormatter = priceFormatter;
+            _productService = productService;
+            _urlRecordService = urlRecordService;
+            _webHelper = webHelper;
         }
 
         #endregion

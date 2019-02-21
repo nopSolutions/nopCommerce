@@ -28,10 +28,10 @@ namespace Nop.Services.Common
             ILocalizationService localizationService,
             IWorkContext workContext)
         {
-            this._addressAttributeParser = addressAttributeParser;
-            this._addressAttributeService = addressAttributeService;
-            this._localizationService = localizationService;
-            this._workContext = workContext;
+            _addressAttributeParser = addressAttributeParser;
+            _addressAttributeService = addressAttributeService;
+            _localizationService = localizationService;
+            _workContext = workContext;
         }
 
         #endregion

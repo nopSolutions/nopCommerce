@@ -27,9 +27,9 @@ namespace Nop.Web.Areas.Admin.Factories
             ITaxService taxService,
             TaxSettings taxSettings)
         {
-            this._taxCategoryService = taxCategoryService;
-            this._taxService = taxService;
-            this._taxSettings = taxSettings;
+            _taxCategoryService = taxCategoryService;
+            _taxService = taxService;
+            _taxSettings = taxSettings;
         }
 
         #endregion

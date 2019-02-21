@@ -59,17 +59,17 @@ namespace Nop.Plugin.Payments.PayPalStandard
             IWebHelper webHelper,
             PayPalStandardPaymentSettings paypalStandardPaymentSettings)
         {
-            this._currencySettings = currencySettings;
-            this._checkoutAttributeParser = checkoutAttributeParser;
-            this._currencyService = currencyService;
-            this._genericAttributeService = genericAttributeService;
-            this._httpContextAccessor = httpContextAccessor;
-            this._localizationService = localizationService;
-            this._paymentService = paymentService;
-            this._settingService = settingService;
-            this._taxService = taxService;
-            this._webHelper = webHelper;
-            this._paypalStandardPaymentSettings = paypalStandardPaymentSettings;
+            _currencySettings = currencySettings;
+            _checkoutAttributeParser = checkoutAttributeParser;
+            _currencyService = currencyService;
+            _genericAttributeService = genericAttributeService;
+            _httpContextAccessor = httpContextAccessor;
+            _localizationService = localizationService;
+            _paymentService = paymentService;
+            _settingService = settingService;
+            _taxService = taxService;
+            _webHelper = webHelper;
+            _paypalStandardPaymentSettings = paypalStandardPaymentSettings;
         }
 
         #endregion

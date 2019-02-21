@@ -34,11 +34,11 @@ namespace Nop.Services.Shipping
             IRepository<ShipmentItem> siRepository,
             IShippingService shippingService)
         {
-            this._eventPublisher = eventPublisher;
-            this._orderItemRepository = orderItemRepository;
-            this._shipmentRepository = shipmentRepository;
-            this._siRepository = siRepository;
-            this._shippingService = shippingService;
+            _eventPublisher = eventPublisher;
+            _orderItemRepository = orderItemRepository;
+            _shipmentRepository = shipmentRepository;
+            _siRepository = siRepository;
+            _shippingService = shippingService;
         }
 
         #endregion

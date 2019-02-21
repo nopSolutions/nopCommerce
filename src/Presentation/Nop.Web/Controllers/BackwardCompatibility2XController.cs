@@ -36,15 +36,15 @@ namespace Nop.Web.Controllers
             IUrlRecordService urlRecordService,
             IVendorService vendorService)
         {
-            this._blogService = blogService;
-            this._categoryService = categoryService;
-            this._manufacturerService = manufacturerService;
-            this._newsService = newsService;
-            this._productTagService = productTagService;
-            this._productService = productService;
-            this._topicService = topicService;
-            this._urlRecordService = urlRecordService;
-            this._vendorService = vendorService;
+            _blogService = blogService;
+            _categoryService = categoryService;
+            _manufacturerService = manufacturerService;
+            _newsService = newsService;
+            _productTagService = productTagService;
+            _productService = productService;
+            _topicService = topicService;
+            _urlRecordService = urlRecordService;
+            _vendorService = vendorService;
         }
 
         #endregion

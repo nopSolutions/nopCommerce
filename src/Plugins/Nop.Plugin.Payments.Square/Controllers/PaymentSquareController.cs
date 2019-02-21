@@ -40,12 +40,12 @@ namespace Nop.Plugin.Payments.Square.Controllers
             SquarePaymentManager squarePaymentManager,
             SquarePaymentSettings squarePaymentSettings)
         {
-            this._localizationService = localizationService;
-            this._notificationService = notificationService;
-            this._permissionService = permissionService;
-            this._settingService = settingService;
-            this._squarePaymentManager = squarePaymentManager;
-            this._squarePaymentSettings = squarePaymentSettings;
+            _localizationService = localizationService;
+            _notificationService = notificationService;
+            _permissionService = permissionService;
+            _settingService = settingService;
+            _squarePaymentManager = squarePaymentManager;
+            _squarePaymentSettings = squarePaymentSettings;
         }
 
         #endregion
@@ -171,18 +171,18 @@ namespace Nop.Plugin.Payments.Square.Controllers
                     throw new NopException("Plugin is not configured");
 
                 //check whether there are errors in the request
-                if (this.Request.Query.TryGetValue("error", out StringValues error) |
-                    this.Request.Query.TryGetValue("error_description", out StringValues errorDescription))
+                if (Request.Query.TryGetValue("error", out StringValues error) |
+                    Request.Query.TryGetValue("error_description", out StringValues errorDescription))
                 {
                     throw new NopException($"{error} - {errorDescription}");
                 }
 
                 //validate verification string
-                if (!this.Request.Query.TryGetValue("state", out StringValues verificationString) || !verificationString.Equals(_squarePaymentSettings.AccessTokenVerificationString))
+                if (!Request.Query.TryGetValue("state", out StringValues verificationString) || !verificationString.Equals(_squarePaymentSettings.AccessTokenVerificationString))
                     throw new NopException("The verification string did not pass the validation");
 
                 //check whether there is an authorization code in the request
-                if (!this.Request.Query.TryGetValue("code", out StringValues authorizationCode))
+                if (!Request.Query.TryGetValue("code", out StringValues authorizationCode))
                     throw new NopException("No service response");
 
                 //exchange the authorization code for an access token
@@ -191,7 +191,7 @@ namespace Nop.Plugin.Payments.Square.Controllers
                     ApplicationId = _squarePaymentSettings.ApplicationId,
                     ApplicationSecret = _squarePaymentSettings.ApplicationSecret,
                     AuthorizationCode = authorizationCode,
-                    RedirectUrl = this.Url.RouteUrl(SquarePaymentDefaults.AccessTokenRoute)
+                    RedirectUrl = Url.RouteUrl(SquarePaymentDefaults.AccessTokenRoute)
                 });
                 if (string.IsNullOrEmpty(accessToken))
                     throw new NopException("No service response");

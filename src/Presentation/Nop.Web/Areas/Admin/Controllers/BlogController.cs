@@ -49,16 +49,16 @@ namespace Nop.Web.Areas.Admin.Controllers
             IStoreService storeService,
             IUrlRecordService urlRecordService)
         {
-            this._blogModelFactory = blogModelFactory;
-            this._blogService = blogService;
-            this._customerActivityService = customerActivityService;
-            this._eventPublisher = eventPublisher;
-            this._localizationService = localizationService;
-            this._notificationService = notificationService;
-            this._permissionService = permissionService;
-            this._storeMappingService = storeMappingService;
-            this._storeService = storeService;
-            this._urlRecordService = urlRecordService;
+            _blogModelFactory = blogModelFactory;
+            _blogService = blogService;
+            _customerActivityService = customerActivityService;
+            _eventPublisher = eventPublisher;
+            _localizationService = localizationService;
+            _notificationService = notificationService;
+            _permissionService = permissionService;
+            _storeMappingService = storeMappingService;
+            _storeService = storeService;
+            _urlRecordService = urlRecordService;
         }
 
         #endregion

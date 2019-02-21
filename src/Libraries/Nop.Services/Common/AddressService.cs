@@ -38,14 +38,14 @@ namespace Nop.Services.Common
             IRepository<Address> addressRepository,
             IStateProvinceService stateProvinceService)
         {
-            this._addressSettings = addressSettings;
-            this._addressAttributeParser = addressAttributeParser;
-            this._addressAttributeService = addressAttributeService;
-            this._cacheManager = cacheManager;
-            this._countryService = countryService;
-            this._eventPublisher = eventPublisher;
-            this._addressRepository = addressRepository;
-            this._stateProvinceService = stateProvinceService;
+            _addressSettings = addressSettings;
+            _addressAttributeParser = addressAttributeParser;
+            _addressAttributeService = addressAttributeService;
+            _cacheManager = cacheManager;
+            _countryService = countryService;
+            _eventPublisher = eventPublisher;
+            _addressRepository = addressRepository;
+            _stateProvinceService = stateProvinceService;
         }
 
         #endregion

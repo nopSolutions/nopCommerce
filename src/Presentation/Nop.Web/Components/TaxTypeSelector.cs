@@ -13,8 +13,8 @@ namespace Nop.Web.Components
         public TaxTypeSelectorViewComponent(ICommonModelFactory commonModelFactory,
             TaxSettings taxSettings)
         {
-            this._commonModelFactory = commonModelFactory;
-            this._taxSettings = taxSettings;
+            _commonModelFactory = commonModelFactory;
+            _taxSettings = taxSettings;
         }
 
         public IViewComponentResult Invoke()
