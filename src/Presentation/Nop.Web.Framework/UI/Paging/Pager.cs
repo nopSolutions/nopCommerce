@@ -110,7 +110,7 @@ namespace Nop.Web.Framework.UI.Paging
         /// <param name="context">ViewContext</param>
 		public Pager(IPageableModel model, ViewContext context)
 		{
-            model = model;
+            this.model = model;
             viewContext = context;
             booleanParameterNames = new List<string>();
 		}

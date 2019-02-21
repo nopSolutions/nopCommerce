@@ -45,8 +45,8 @@ namespace Nop.Services.EuropaCheckVatService
         
         public checkVatRequest(string countryCode, string vatNumber)
         {
-            countryCode = countryCode;
-            vatNumber = vatNumber;
+            this.countryCode = countryCode;
+            this.vatNumber = vatNumber;
         }
     }
     
@@ -83,12 +83,12 @@ namespace Nop.Services.EuropaCheckVatService
         
         public checkVatResponse(string countryCode, string vatNumber, System.DateTime requestDate, bool valid, string name, string address)
         {
-            countryCode = countryCode;
-            vatNumber = vatNumber;
-            requestDate = requestDate;
-            valid = valid;
-            name = name;
-            address = address;
+            this.countryCode = countryCode;
+            this.vatNumber = vatNumber;
+            this.requestDate = requestDate;
+            this.valid = valid;
+            this.name = name;
+            this.address = address;
         }
     }
     
@@ -150,15 +150,15 @@ namespace Nop.Services.EuropaCheckVatService
         
         public checkVatApproxRequest(string countryCode, string vatNumber, string traderName, string traderCompanyType, string traderStreet, string traderPostcode, string traderCity, string requesterCountryCode, string requesterVatNumber)
         {
-            countryCode = countryCode;
-            vatNumber = vatNumber;
-            traderName = traderName;
-            traderCompanyType = traderCompanyType;
-            traderStreet = traderStreet;
-            traderPostcode = traderPostcode;
-            traderCity = traderCity;
-            requesterCountryCode = requesterCountryCode;
-            requesterVatNumber = requesterVatNumber;
+            this.countryCode = countryCode;
+            this.vatNumber = vatNumber;
+            this.traderName = traderName;
+            this.traderCompanyType = traderCompanyType;
+            this.traderStreet = traderStreet;
+            this.traderPostcode = traderPostcode;
+            this.traderCity = traderCity;
+            this.requesterCountryCode = requesterCountryCode;
+            this.requesterVatNumber = requesterVatNumber;
         }
     }
     
@@ -241,22 +241,22 @@ namespace Nop.Services.EuropaCheckVatService
                     EuropaCheckVatService.matchCode traderCityMatch, 
                     string requestIdentifier)
         {
-            countryCode = countryCode;
-            vatNumber = vatNumber;
-            requestDate = requestDate;
-            valid = valid;
-            traderName = traderName;
-            traderCompanyType = traderCompanyType;
-            traderAddress = traderAddress;
-            traderStreet = traderStreet;
-            traderPostcode = traderPostcode;
-            traderCity = traderCity;
-            traderNameMatch = traderNameMatch;
-            traderCompanyTypeMatch = traderCompanyTypeMatch;
-            traderStreetMatch = traderStreetMatch;
-            traderPostcodeMatch = traderPostcodeMatch;
-            traderCityMatch = traderCityMatch;
-            requestIdentifier = requestIdentifier;
+            this.countryCode = countryCode;
+            this.vatNumber = vatNumber;
+            this.requestDate = requestDate;
+            this.valid = valid;
+            this.traderName = traderName;
+            this.traderCompanyType = traderCompanyType;
+            this.traderAddress = traderAddress;
+            this.traderStreet = traderStreet;
+            this.traderPostcode = traderPostcode;
+            this.traderCity = traderCity;
+            this.traderNameMatch = traderNameMatch;
+            this.traderCompanyTypeMatch = traderCompanyTypeMatch;
+            this.traderStreetMatch = traderStreetMatch;
+            this.traderPostcodeMatch = traderPostcodeMatch;
+            this.traderCityMatch = traderCityMatch;
+            this.requestIdentifier = requestIdentifier;
         }
     }
     
