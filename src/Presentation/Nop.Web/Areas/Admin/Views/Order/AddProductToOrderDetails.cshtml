@@ -1,4 +1,4 @@
-﻿@model AddProductToOrderModel
+@model AddProductToOrderModel
 
 @using Nop.Core.Domain.Catalog
 
@@ -10,7 +10,6 @@
 }
 
 @*we add enctype = "multipart/form-data" because "File upload" attribute control type requires it*@
-
 <form asp-controller="Order" asp-action="AddProductToOrderDetails" asp-route-orderId="@Model.OrderId"
       asp-route-productId="@Model.ProductId" enctype="multipart/form-data" method="post" id="product-details-form">
     
@@ -53,7 +52,7 @@
                                     <nop-label asp-for="UnitPriceInclTax" />
                                 </div>
                                 <div class="col-md-9">
-                                    <nop-editor asp-for="UnitPriceInclTax" />
+                                    <nop-editor asp-for="UnitPriceInclTax" class="UnitPriceInclTax" />
                                 </div>
                             </div>
                             <div class="form-group">
@@ -143,3 +142,23 @@
         </div>
     </div>
 </form>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#Quantity, #UnitPriceInclTax, #UnitPriceExclTax").TouchSpin().on('change', function () {
+            updateTotal();
+        });
+    });
+
+    function updateTotal() {
+        var quantity = $("#Quantity").val();
+        var unitPriceInclTax = $("#UnitPriceInclTax").val();
+        var unitPriceExclTax = $("#UnitPriceExclTax").val();
+
+        var priceInclTax = unitPriceInclTax * quantity;
+        $("#SubTotalInclTax").val(priceInclTax.toFixed(4));
+
+        var priceExclTax = unitPriceExclTax * quantity;
+        $("#SubTotalExclTax").val(priceExclTax.toFixed(4));
+    }
+</script>
