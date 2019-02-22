@@ -47,16 +47,16 @@ namespace Nop.Services.Topics
             IStoreMappingService storeMappingService,
             IWorkContext workContext)
         {
-            this._catalogSettings = catalogSettings;
-            this._aclService = aclService;
-            this._cacheManager = cacheManager;
-            this._eventPublisher = eventPublisher;
-            this._aclRepository = aclRepository;
-            this._storeMappingRepository = storeMappingRepository;
-            this._topicRepository = topicRepository;
-            this._storeMappingService = storeMappingService;
-            this._workContext = workContext;
-            this._entityName = typeof(Topic).Name;
+            _catalogSettings = catalogSettings;
+            _aclService = aclService;
+            _cacheManager = cacheManager;
+            _eventPublisher = eventPublisher;
+            _aclRepository = aclRepository;
+            _storeMappingRepository = storeMappingRepository;
+            _topicRepository = topicRepository;
+            _storeMappingService = storeMappingService;
+            _workContext = workContext;
+            _entityName = typeof(Topic).Name;
         }
 
         #endregion

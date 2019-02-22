@@ -28,9 +28,9 @@ namespace Nop.Web.Areas.Admin.Factories
             ILocalizationService localizationService,
             IQueuedEmailService queuedEmailService)
         {
-            this._dateTimeHelper = dateTimeHelper;
-            this._localizationService = localizationService;
-            this._queuedEmailService = queuedEmailService;
+            _dateTimeHelper = dateTimeHelper;
+            _localizationService = localizationService;
+            _queuedEmailService = queuedEmailService;
         }
 
         #endregion

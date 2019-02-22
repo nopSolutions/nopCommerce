@@ -34,12 +34,12 @@ namespace Nop.Services.Blogs
             IRepository<BlogPost> blogPostRepository,
             IRepository<StoreMapping> storeMappingRepository)
         {
-            this._catalogSettings = catalogSettings;
-            this._eventPublisher = eventPublisher;
-            this._blogCommentRepository = blogCommentRepository;
-            this._blogPostRepository = blogPostRepository;
-            this._storeMappingRepository = storeMappingRepository;
-            this._entityName = typeof(BlogPost).Name;
+            _catalogSettings = catalogSettings;
+            _eventPublisher = eventPublisher;
+            _blogCommentRepository = blogCommentRepository;
+            _blogPostRepository = blogPostRepository;
+            _storeMappingRepository = storeMappingRepository;
+            _entityName = typeof(BlogPost).Name;
         }
 
         #endregion
@@ -155,7 +155,7 @@ namespace Nop.Services.Blogs
             var taggedBlogPosts = new List<BlogPost>();
             foreach (var blogPost in blogPostsAll)
             {
-                var tags = this.ParseTags(blogPost);
+                var tags = ParseTags(blogPost);
                 if (!string.IsNullOrEmpty(tags.FirstOrDefault(t => t.Equals(tag, StringComparison.InvariantCultureIgnoreCase))))
                     taggedBlogPosts.Add(blogPost);
             }
@@ -179,7 +179,7 @@ namespace Nop.Services.Blogs
             var blogPosts = GetAllBlogPosts(storeId: storeId, languageId: languageId, showHidden: showHidden);
             foreach (var blogPost in blogPosts)
             {
-                var tags = this.ParseTags(blogPost);
+                var tags = ParseTags(blogPost);
                 foreach (var tag in tags)
                 {
                     var foundBlogPostTag = blogPostTags.Find(bpt => bpt.Name.Equals(tag, StringComparison.InvariantCultureIgnoreCase));

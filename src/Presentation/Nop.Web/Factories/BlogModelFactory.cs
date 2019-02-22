@@ -57,19 +57,19 @@ namespace Nop.Web.Factories
             IWorkContext workContext,
             MediaSettings mediaSettings)
         {
-            this._blogSettings = blogSettings;
-            this._captchaSettings = captchaSettings;
-            this._customerSettings = customerSettings;
-            this._blogService = blogService;
-            this._customerService = customerService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._genericAttributeService = genericAttributeService;
-            this._pictureService = pictureService;
-            this._cacheManager = cacheManager;
-            this._storeContext = storeContext;
-            this._urlRecordService = urlRecordService;
-            this._workContext = workContext;
-            this._mediaSettings = mediaSettings;
+            _blogSettings = blogSettings;
+            _captchaSettings = captchaSettings;
+            _customerSettings = customerSettings;
+            _blogService = blogService;
+            _customerService = customerService;
+            _dateTimeHelper = dateTimeHelper;
+            _genericAttributeService = genericAttributeService;
+            _pictureService = pictureService;
+            _cacheManager = cacheManager;
+            _storeContext = storeContext;
+            _urlRecordService = urlRecordService;
+            _workContext = workContext;
+            _mediaSettings = mediaSettings;
         }
 
         #endregion

@@ -38,13 +38,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             IVendorAttributeModelFactory vendorAttributeModelFactory,
             IVendorAttributeService vendorAttributeService)
         {
-            this._customerActivityService = customerActivityService;
-            this._localizationService = localizationService;
-            this._localizedEntityService = localizedEntityService;
-            this._notificationService = notificationService;
-            this._permissionService = permissionService;
-            this._vendorAttributeModelFactory = vendorAttributeModelFactory;
-            this._vendorAttributeService = vendorAttributeService;
+            _customerActivityService = customerActivityService;
+            _localizationService = localizationService;
+            _localizedEntityService = localizedEntityService;
+            _notificationService = notificationService;
+            _permissionService = permissionService;
+            _vendorAttributeModelFactory = vendorAttributeModelFactory;
+            _vendorAttributeService = vendorAttributeService;
         }
 
         #endregion

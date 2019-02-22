@@ -33,12 +33,12 @@ namespace Nop.Web.Areas.Admin.Controllers
             IPermissionService permissionService,
             ISettingService settingService)
         {
-            this._externalAuthenticationSettings = externalAuthenticationSettings;
-            this._eventPublisher = eventPublisher;
-            this._externalAuthenticationMethodModelFactory = externalAuthenticationMethodModelFactory;
-            this._externalAuthenticationService = externalAuthenticationService;
-            this._permissionService = permissionService;
-            this._settingService = settingService;
+            _externalAuthenticationSettings = externalAuthenticationSettings;
+            _eventPublisher = eventPublisher;
+            _externalAuthenticationMethodModelFactory = externalAuthenticationMethodModelFactory;
+            _externalAuthenticationService = externalAuthenticationService;
+            _permissionService = permissionService;
+            _settingService = settingService;
         }
 
         #endregion

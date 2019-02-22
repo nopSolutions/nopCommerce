@@ -19,7 +19,7 @@ namespace Nop.Web.Areas.Admin.Models.News
 
         public NewsItemModel()
         {
-            this.AvailableLanguages = new List<SelectListItem>();
+            AvailableLanguages = new List<SelectListItem>();
 
             SelectedStoreIds = new List<int>();
             AvailableStores = new List<SelectListItem>();

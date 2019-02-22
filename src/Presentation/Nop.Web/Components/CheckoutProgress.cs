@@ -11,7 +11,7 @@ namespace Nop.Web.Components
 
         public CheckoutProgressViewComponent(ICheckoutModelFactory checkoutModelFactory)
         {
-            this._checkoutModelFactory = checkoutModelFactory;
+            _checkoutModelFactory = checkoutModelFactory;
         }
 
         public IViewComponentResult Invoke(CheckoutProgressStep step)

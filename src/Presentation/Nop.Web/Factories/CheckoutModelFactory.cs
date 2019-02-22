@@ -83,31 +83,31 @@ namespace Nop.Web.Factories
             RewardPointsSettings rewardPointsSettings,
             ShippingSettings shippingSettings)
         {
-            this._addressSettings = addressSettings;
-            this._commonSettings = commonSettings;
-            this._addressModelFactory = addressModelFactory;
-            this._addressService = addressService;
-            this._countryService = countryService;
-            this._currencyService = currencyService;
-            this._genericAttributeService = genericAttributeService;
-            this._localizationService = localizationService;
-            this._orderProcessingService = orderProcessingService;
-            this._orderTotalCalculationService = orderTotalCalculationService;
-            this._paymentService = paymentService;
-            this._pluginService = pluginService;
-            this._priceFormatter = priceFormatter;
-            this._rewardPointService = rewardPointService;
-            this._shippingService = shippingService;
-            this._shoppingCartService = shoppingCartService;
-            this._stateProvinceService = stateProvinceService;
-            this._storeContext = storeContext;
-            this._storeMappingService = storeMappingService;
-            this._taxService = taxService;
-            this._workContext = workContext;
-            this._orderSettings = orderSettings;
-            this._paymentSettings = paymentSettings;
-            this._rewardPointsSettings = rewardPointsSettings;
-            this._shippingSettings = shippingSettings;
+            _addressSettings = addressSettings;
+            _commonSettings = commonSettings;
+            _addressModelFactory = addressModelFactory;
+            _addressService = addressService;
+            _countryService = countryService;
+            _currencyService = currencyService;
+            _genericAttributeService = genericAttributeService;
+            _localizationService = localizationService;
+            _orderProcessingService = orderProcessingService;
+            _orderTotalCalculationService = orderTotalCalculationService;
+            _paymentService = paymentService;
+            _pluginService = pluginService;
+            _priceFormatter = priceFormatter;
+            _rewardPointService = rewardPointService;
+            _shippingService = shippingService;
+            _shoppingCartService = shoppingCartService;
+            _stateProvinceService = stateProvinceService;
+            _storeContext = storeContext;
+            _storeMappingService = storeMappingService;
+            _taxService = taxService;
+            _workContext = workContext;
+            _orderSettings = orderSettings;
+            _paymentSettings = paymentSettings;
+            _rewardPointsSettings = rewardPointsSettings;
+            _shippingSettings = shippingSettings;
         }
 
         #endregion

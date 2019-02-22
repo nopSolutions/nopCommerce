@@ -31,10 +31,10 @@ namespace Nop.Web.Areas.Admin.Factories
             ILocalizationService localizationService,
             ILogger logger)
         {
-            this._baseAdminModelFactory = baseAdminModelFactory;
-            this._dateTimeHelper = dateTimeHelper;
-            this._localizationService = localizationService;
-            this._logger = logger;
+            _baseAdminModelFactory = baseAdminModelFactory;
+            _dateTimeHelper = dateTimeHelper;
+            _localizationService = localizationService;
+            _logger = logger;
         }
 
         #endregion

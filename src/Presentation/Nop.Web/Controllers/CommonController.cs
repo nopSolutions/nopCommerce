@@ -68,23 +68,23 @@ namespace Nop.Web.Controllers
             StoreInformationSettings storeInformationSettings,
             VendorSettings vendorSettings)
         {
-            this._captchaSettings = captchaSettings;
-            this._commonSettings = commonSettings;
-            this._commonModelFactory = commonModelFactory;
-            this._currencyService = currencyService;
-            this._customerActivityService = customerActivityService;
-            this._genericAttributeService = genericAttributeService;
-            this._languageService = languageService;
-            this._localizationService = localizationService;
-            this._logger = logger;
-            this._storeContext = storeContext;
-            this._themeContext = themeContext;
-            this._vendorService = vendorService;
-            this._workContext = workContext;
-            this._workflowMessageService = workflowMessageService;
-            this._localizationSettings = localizationSettings;
-            this._storeInformationSettings = storeInformationSettings;
-            this._vendorSettings = vendorSettings;
+            _captchaSettings = captchaSettings;
+            _commonSettings = commonSettings;
+            _commonModelFactory = commonModelFactory;
+            _currencyService = currencyService;
+            _customerActivityService = customerActivityService;
+            _genericAttributeService = genericAttributeService;
+            _languageService = languageService;
+            _localizationService = localizationService;
+            _logger = logger;
+            _storeContext = storeContext;
+            _themeContext = themeContext;
+            _vendorService = vendorService;
+            _workContext = workContext;
+            _workflowMessageService = workflowMessageService;
+            _localizationSettings = localizationSettings;
+            _storeInformationSettings = storeInformationSettings;
+            _vendorSettings = vendorSettings;
         }
 
         #endregion
@@ -130,11 +130,11 @@ namespace Nop.Web.Controllers
             if (_localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
             {
                 //remove current language code if it's already localized URL
-                if (returnUrl.IsLocalizedUrl(this.Request.PathBase, true, out Language _))
-                    returnUrl = returnUrl.RemoveLanguageSeoCodeFromUrl(this.Request.PathBase, true);
+                if (returnUrl.IsLocalizedUrl(Request.PathBase, true, out Language _))
+                    returnUrl = returnUrl.RemoveLanguageSeoCodeFromUrl(Request.PathBase, true);
 
                 //and add code of passed language
-                returnUrl = returnUrl.AddLanguageSeoCodeToUrl(this.Request.PathBase, true, language);
+                returnUrl = returnUrl.AddLanguageSeoCodeToUrl(Request.PathBase, true, language);
             }
 
             _workContext.WorkingLanguage = language;

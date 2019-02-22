@@ -29,9 +29,9 @@ namespace Nop.Web.Areas.Admin.Factories
             ILocalizedModelFactory localizedModelFactory,
             IReviewTypeService reviewTypeService)
         {
-            this._localizationService = localizationService;
-            this._localizedModelFactory = localizedModelFactory;
-            this._reviewTypeService = reviewTypeService;
+            _localizationService = localizationService;
+            _localizedModelFactory = localizedModelFactory;
+            _reviewTypeService = reviewTypeService;
         }
 
         #endregion

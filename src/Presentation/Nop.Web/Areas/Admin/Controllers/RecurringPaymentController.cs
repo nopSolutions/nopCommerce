@@ -35,12 +35,12 @@ namespace Nop.Web.Areas.Admin.Controllers
             IPermissionService permissionService,
             IRecurringPaymentModelFactory recurringPaymentModelFactory)
         {
-            this._localizationService = localizationService;
-            this._notificationService = notificationService;
-            this._orderProcessingService = orderProcessingService;
-            this._orderService = orderService;
-            this._permissionService = permissionService;
-            this._recurringPaymentModelFactory = recurringPaymentModelFactory;
+            _localizationService = localizationService;
+            _notificationService = notificationService;
+            _orderProcessingService = orderProcessingService;
+            _orderService = orderService;
+            _permissionService = permissionService;
+            _recurringPaymentModelFactory = recurringPaymentModelFactory;
         }
 
         #endregion

@@ -64,20 +64,20 @@ namespace Nop.Web.Controllers
             LocalizationSettings localizationSettings,
             NewsSettings newsSettings)
         {
-            this._captchaSettings = captchaSettings;
-            this._customerActivityService = customerActivityService;
-            this._eventPublisher = eventPublisher;
-            this._localizationService = localizationService;
-            this._newsModelFactory = newsModelFactory;
-            this._newsService = newsService;
-            this._permissionService = permissionService;
-            this._storeContext = storeContext;
-            this._urlRecordService = urlRecordService;
-            this._webHelper = webHelper;
-            this._workContext = workContext;
-            this._workflowMessageService = workflowMessageService;
-            this._localizationSettings = localizationSettings;
-            this._newsSettings = newsSettings;
+            _captchaSettings = captchaSettings;
+            _customerActivityService = customerActivityService;
+            _eventPublisher = eventPublisher;
+            _localizationService = localizationService;
+            _newsModelFactory = newsModelFactory;
+            _newsService = newsService;
+            _permissionService = permissionService;
+            _storeContext = storeContext;
+            _urlRecordService = urlRecordService;
+            _webHelper = webHelper;
+            _workContext = workContext;
+            _workflowMessageService = workflowMessageService;
+            _localizationSettings = localizationSettings;
+            _newsSettings = newsSettings;
         }
 
         #endregion

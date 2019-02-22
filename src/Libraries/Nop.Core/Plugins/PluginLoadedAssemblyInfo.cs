@@ -18,9 +18,9 @@ namespace Nop.Core.Plugins
         /// <param name="assemblyInMemory">Assembly full name</param>
         public PluginLoadedAssemblyInfo(string shortName, string assemblyInMemory)
         {
-            this.ShortName = shortName;
-            this.References = new List<(string PluginName, string AssemblyName)>();
-            this.AssemblyFullNameInMemory = assemblyInMemory;
+            ShortName = shortName;
+            References = new List<(string PluginName, string AssemblyName)>();
+            AssemblyFullNameInMemory = assemblyInMemory;
         }
 
         #endregion

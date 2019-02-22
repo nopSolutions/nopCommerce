@@ -23,7 +23,7 @@ namespace Nop.Services.Themes
 
         public ThemeProvider(INopFileProvider fileProvider)
         {
-            this._fileProvider = fileProvider;
+            _fileProvider = fileProvider;
         }
 
         #region Methods

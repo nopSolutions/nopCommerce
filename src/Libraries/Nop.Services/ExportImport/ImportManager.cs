@@ -117,37 +117,37 @@ namespace Nop.Services.ExportImport
             MediaSettings mediaSettings,
             VendorSettings vendorSettings)
         {
-            this._catalogSettings = catalogSettings;
-            this._categoryService = categoryService;
-            this._countryService = countryService;
-            this._customerActivityService = customerActivityService;
-            this._dataProvider = dataProvider;
-            this._dateRangeService = dateRangeService;
-            this._encryptionService = encryptionService;
-            this._fileProvider = fileProvider;
-            this._localizationService = localizationService;
-            this._logger = logger;
-            this._manufacturerService = manufacturerService;
-            this._measureService = measureService;
-            this._newsLetterSubscriptionService = newsLetterSubscriptionService;
-            this._pictureService = pictureService;
-            this._productAttributeService = productAttributeService;
-            this._productService = productService;
-            this._productTagService = productTagService;
-            this._productTemplateService = productTemplateService;
-            this._serviceScopeFactory = serviceScopeFactory;
-            this._shippingService = shippingService;
-            this._specificationAttributeService = specificationAttributeService;
-            this._stateProvinceService = stateProvinceService;
-            this._storeContext = storeContext;
-            this._storeMappingService = storeMappingService;
-            this._storeService = storeService;
-            this._taxCategoryService = taxCategoryService;
-            this._urlRecordService = urlRecordService;
-            this._vendorService = vendorService;
-            this._workContext = workContext;
-            this._mediaSettings = mediaSettings;
-            this._vendorSettings = vendorSettings;
+            _catalogSettings = catalogSettings;
+            _categoryService = categoryService;
+            _countryService = countryService;
+            _customerActivityService = customerActivityService;
+            _dataProvider = dataProvider;
+            _dateRangeService = dateRangeService;
+            _encryptionService = encryptionService;
+            _fileProvider = fileProvider;
+            _localizationService = localizationService;
+            _logger = logger;
+            _manufacturerService = manufacturerService;
+            _measureService = measureService;
+            _newsLetterSubscriptionService = newsLetterSubscriptionService;
+            _pictureService = pictureService;
+            _productAttributeService = productAttributeService;
+            _productService = productService;
+            _productTagService = productTagService;
+            _productTemplateService = productTemplateService;
+            _serviceScopeFactory = serviceScopeFactory;
+            _shippingService = shippingService;
+            _specificationAttributeService = specificationAttributeService;
+            _stateProvinceService = stateProvinceService;
+            _storeContext = storeContext;
+            _storeMappingService = storeMappingService;
+            _storeService = storeService;
+            _taxCategoryService = taxCategoryService;
+            _urlRecordService = urlRecordService;
+            _vendorService = vendorService;
+            _workContext = workContext;
+            _mediaSettings = mediaSettings;
+            _vendorSettings = vendorSettings;
         }
 
         #endregion

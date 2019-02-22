@@ -64,20 +64,20 @@ namespace Nop.Web.Areas.Admin.Controllers
             IWebHelper webHelper,
             IWorkContext workContext)
         {
-            this._commonModelFactory = commonModelFactory;
-            this._customerService = customerService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._languageService = languageService;
-            this._localizationService = localizationService;
-            this._maintenanceService = maintenanceService;
-            this._fileProvider = fileProvider;
-            this._notificationService = notificationService;
-            this._permissionService = permissionService;
-            this._shoppingCartService = shoppingCartService;
-            this._cacheManager = cacheManager;
-            this._urlRecordService = urlRecordService;
-            this._webHelper = webHelper;
-            this._workContext = workContext;
+            _commonModelFactory = commonModelFactory;
+            _customerService = customerService;
+            _dateTimeHelper = dateTimeHelper;
+            _languageService = languageService;
+            _localizationService = localizationService;
+            _maintenanceService = maintenanceService;
+            _fileProvider = fileProvider;
+            _notificationService = notificationService;
+            _permissionService = permissionService;
+            _shoppingCartService = shoppingCartService;
+            _cacheManager = cacheManager;
+            _urlRecordService = urlRecordService;
+            _webHelper = webHelper;
+            _workContext = workContext;
         }
 
         #endregion

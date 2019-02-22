@@ -102,28 +102,28 @@ namespace Nop.Web.Areas.Admin.Controllers
             IUploadService uploadService,
             NopConfig config)
         {
-            this._addressService = addressService;
-            this._customerActivityService = customerActivityService;
-            this._customerService = customerService;
-            this._encryptionService = encryptionService;
-            this._fulltextService = fulltextService;
-            this._genericAttributeService = genericAttributeService;
-            this._gdprService = gdprService;
-            this._localizedEntityService = localizedEntityService;
-            this._localizationService = localizationService;
-            this._maintenanceService = maintenanceService;
-            this._fileProvider = fileProvider;
-            this._notificationService = notificationService;
-            this._orderService = orderService;
-            this._permissionService = permissionService;
-            this._pictureService = pictureService;
-            this._settingModelFactory = settingModelFactory;
-            this._settingService = settingService;
-            this._storeContext = storeContext;
-            this._storeService = storeService;
-            this._workContext = workContext;
-            this._uploadService = uploadService;
-            this._config = config;
+            _addressService = addressService;
+            _customerActivityService = customerActivityService;
+            _customerService = customerService;
+            _encryptionService = encryptionService;
+            _fulltextService = fulltextService;
+            _genericAttributeService = genericAttributeService;
+            _gdprService = gdprService;
+            _localizedEntityService = localizedEntityService;
+            _localizationService = localizationService;
+            _maintenanceService = maintenanceService;
+            _fileProvider = fileProvider;
+            _notificationService = notificationService;
+            _orderService = orderService;
+            _permissionService = permissionService;
+            _pictureService = pictureService;
+            _settingModelFactory = settingModelFactory;
+            _settingService = settingService;
+            _storeContext = storeContext;
+            _storeService = storeService;
+            _workContext = workContext;
+            _uploadService = uploadService;
+            _config = config;
         }
 
         #endregion
@@ -1175,7 +1175,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             var model = _settingModelFactory.PrepareGeneralCommonSettingsModel();
 
             //notify admin that CSS bundling is not allowed in virtual directories
-            if (model.SeoSettings.EnableCssBundling && this.HttpContext.Request.PathBase.HasValue)
+            if (model.SeoSettings.EnableCssBundling && HttpContext.Request.PathBase.HasValue)
                 _notificationService.WarningNotification(_localizationService.GetResource("Admin.Configuration.Settings.GeneralCommon.EnableCssBundling.Warning"));
 
             return View(model);

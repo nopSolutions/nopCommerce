@@ -55,15 +55,15 @@ namespace Nop.Web.Areas.Admin.Controllers
             IStoreMappingService storeMappingService,
             IStoreService storeService)
         {
-            this._customerActivityService = customerActivityService;
-            this._languageModelFactory = languageModelFactory;
-            this._languageService = languageService;
-            this._localizationService = localizationService;
-            this._fileProvider = fileProvider;
-            this._notificationService = notificationService;
-            this._permissionService = permissionService;
-            this._storeMappingService = storeMappingService;
-            this._storeService = storeService;
+            _customerActivityService = customerActivityService;
+            _languageModelFactory = languageModelFactory;
+            _languageService = languageService;
+            _localizationService = localizationService;
+            _fileProvider = fileProvider;
+            _notificationService = notificationService;
+            _permissionService = permissionService;
+            _storeMappingService = storeMappingService;
+            _storeService = storeService;
         }
 
         #endregion

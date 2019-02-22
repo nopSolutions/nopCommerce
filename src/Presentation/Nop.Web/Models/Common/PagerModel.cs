@@ -15,7 +15,7 @@ namespace Nop.Web.Models.Common
 
         public PagerModel(ILocalizationService localizationService)
         {
-            this._localizationService = localizationService;
+            _localizationService = localizationService;
         }
 
         #endregion Constructors
@@ -52,7 +52,7 @@ namespace Nop.Web.Models.Common
         {
             get
             {
-                return (this.PageIndex + 1);
+                return (PageIndex + 1);
             }
         }
 
@@ -81,15 +81,15 @@ namespace Nop.Web.Models.Common
         {
             get
             {
-                if (this.pageIndex < 0)
+                if (pageIndex < 0)
                 {
                     return 0;
                 }
-                return this.pageIndex;
+                return pageIndex;
             }
             set
             {
-                this.pageIndex = value;
+                pageIndex = value;
             }
         }
 
@@ -220,12 +220,12 @@ namespace Nop.Web.Models.Common
         {
             get
             {
-                if ((this.TotalRecords == 0) || (this.PageSize == 0))
+                if ((TotalRecords == 0) || (PageSize == 0))
                 {
                     return 0;
                 }
-                var num = this.TotalRecords / this.PageSize;
-                if ((this.TotalRecords % this.PageSize) > 0)
+                var num = TotalRecords / PageSize;
+                if ((TotalRecords % PageSize) > 0)
                 {
                     num++;
                 }

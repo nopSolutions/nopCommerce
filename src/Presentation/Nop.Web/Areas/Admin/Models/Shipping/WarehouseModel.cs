@@ -16,7 +16,7 @@ namespace Nop.Web.Areas.Admin.Models.Shipping
 
         public WarehouseModel()
         {
-            this.Address = new AddressModel();
+            Address = new AddressModel();
         }
 
         #endregion

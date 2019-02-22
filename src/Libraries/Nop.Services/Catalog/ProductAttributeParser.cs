@@ -26,8 +26,8 @@ namespace Nop.Services.Catalog
         public ProductAttributeParser(IDbContext context,
             IProductAttributeService productAttributeService)
         {
-            this._context = context;
-            this._productAttributeService = productAttributeService;
+            _context = context;
+            _productAttributeService = productAttributeService;
         }
 
         #endregion

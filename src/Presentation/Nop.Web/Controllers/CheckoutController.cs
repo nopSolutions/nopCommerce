@@ -87,30 +87,30 @@ namespace Nop.Web.Controllers
             RewardPointsSettings rewardPointsSettings,
             ShippingSettings shippingSettings)
         {
-            this._addressSettings = addressSettings;
-            this._customerSettings = customerSettings;
-            this._addressAttributeParser = addressAttributeParser;
-            this._addressService = addressService;
-            this._checkoutModelFactory = checkoutModelFactory;
-            this._countryService = countryService;
-            this._customerService = customerService;
-            this._genericAttributeService = genericAttributeService;
-            this._localizationService = localizationService;
-            this._logger = logger;
-            this._orderProcessingService = orderProcessingService;
-            this._orderService = orderService;
-            this._paymentService = paymentService;
-            this._pluginService = pluginService;
-            this._shippingService = shippingService;
-            this._shoppingCartService = shoppingCartService;
-            this._stateProvinceService = stateProvinceService;
-            this._storeContext = storeContext;
-            this._webHelper = webHelper;
-            this._workContext = workContext;
-            this._orderSettings = orderSettings;
-            this._paymentSettings = paymentSettings;
-            this._rewardPointsSettings = rewardPointsSettings;
-            this._shippingSettings = shippingSettings;
+            _addressSettings = addressSettings;
+            _customerSettings = customerSettings;
+            _addressAttributeParser = addressAttributeParser;
+            _addressService = addressService;
+            _checkoutModelFactory = checkoutModelFactory;
+            _countryService = countryService;
+            _customerService = customerService;
+            _genericAttributeService = genericAttributeService;
+            _localizationService = localizationService;
+            _logger = logger;
+            _orderProcessingService = orderProcessingService;
+            _orderService = orderService;
+            _paymentService = paymentService;
+            _pluginService = pluginService;
+            _shippingService = shippingService;
+            _shoppingCartService = shoppingCartService;
+            _stateProvinceService = stateProvinceService;
+            _storeContext = storeContext;
+            _webHelper = webHelper;
+            _workContext = workContext;
+            _orderSettings = orderSettings;
+            _paymentSettings = paymentSettings;
+            _rewardPointsSettings = rewardPointsSettings;
+            _shippingSettings = shippingSettings;
         }
 
         #endregion

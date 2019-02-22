@@ -109,37 +109,37 @@ namespace Nop.Web.Areas.Admin.Controllers
             IWorkContext workContext,
             VendorSettings vendorSettings)
         {
-            this._aclService = aclService;
-            this._backInStockSubscriptionService = backInStockSubscriptionService;
-            this._categoryService = categoryService;
-            this._copyProductService = copyProductService;
-            this._customerActivityService = customerActivityService;
-            this._customerService = customerService;
-            this._discountService = discountService;
-            this._downloadService = downloadService;
-            this._exportManager = exportManager;
-            this._importManager = importManager;
-            this._languageService = languageService;
-            this._localizationService = localizationService;
-            this._localizedEntityService = localizedEntityService;
-            this._manufacturerService = manufacturerService;
-            this._fileProvider = fileProvider;
-            this._notificationService = notificationService;
-            this._pdfService = pdfService;
-            this._permissionService = permissionService;
-            this._pictureService = pictureService;
-            this._productAttributeParser = productAttributeParser;
-            this._productAttributeService = productAttributeService;
-            this._productModelFactory = productModelFactory;
-            this._productService = productService;
-            this._productTagService = productTagService;
-            this._settingService = settingService;
-            this._shippingService = shippingService;
-            this._shoppingCartService = shoppingCartService;
-            this._specificationAttributeService = specificationAttributeService;
-            this._urlRecordService = urlRecordService;
-            this._workContext = workContext;
-            this._vendorSettings = vendorSettings;
+            _aclService = aclService;
+            _backInStockSubscriptionService = backInStockSubscriptionService;
+            _categoryService = categoryService;
+            _copyProductService = copyProductService;
+            _customerActivityService = customerActivityService;
+            _customerService = customerService;
+            _discountService = discountService;
+            _downloadService = downloadService;
+            _exportManager = exportManager;
+            _importManager = importManager;
+            _languageService = languageService;
+            _localizationService = localizationService;
+            _localizedEntityService = localizedEntityService;
+            _manufacturerService = manufacturerService;
+            _fileProvider = fileProvider;
+            _notificationService = notificationService;
+            _pdfService = pdfService;
+            _permissionService = permissionService;
+            _pictureService = pictureService;
+            _productAttributeParser = productAttributeParser;
+            _productAttributeService = productAttributeService;
+            _productModelFactory = productModelFactory;
+            _productService = productService;
+            _productTagService = productTagService;
+            _settingService = settingService;
+            _shippingService = shippingService;
+            _shoppingCartService = shoppingCartService;
+            _specificationAttributeService = specificationAttributeService;
+            _urlRecordService = urlRecordService;
+            _workContext = workContext;
+            _vendorSettings = vendorSettings;
         }
 
         #endregion

@@ -33,11 +33,11 @@ namespace Nop.Services.Plugins
             INopFileProvider fileProvider,
             IWebHelper webHelper)
         {
-            this._customerService = customerService;
-            this._logger = logger;
-            this._fileProvider = fileProvider;
-            this._webHelper = webHelper;
-            this._pluginsInfo = Singleton<PluginsInfo>.Instance;
+            _customerService = customerService;
+            _logger = logger;
+            _fileProvider = fileProvider;
+            _webHelper = webHelper;
+            _pluginsInfo = Singleton<PluginsInfo>.Instance;
         }
 
         #endregion

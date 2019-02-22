@@ -34,12 +34,12 @@ namespace Nop.Plugin.Payments.Square.Services
             SquarePaymentManager squarePaymentManager,
             SquarePaymentSettings squarePaymentSettings)
         {
-            this._localizationService = localizationService;
-            this._logger = logger;
-            this._paymentService = paymentService;
-            this._settingService = settingService;
-            this._squarePaymentManager = squarePaymentManager;
-            this._squarePaymentSettings = squarePaymentSettings;
+            _localizationService = localizationService;
+            _logger = logger;
+            _paymentService = paymentService;
+            _settingService = settingService;
+            _squarePaymentManager = squarePaymentManager;
+            _squarePaymentSettings = squarePaymentSettings;
         }
 
         #endregion

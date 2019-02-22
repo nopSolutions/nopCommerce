@@ -27,7 +27,7 @@ namespace Nop.Plugin.Widgets.NivoSlider.Infrastructure.Cache
 
         public ModelCacheEventConsumer(IStaticCacheManager cacheManager)
         {
-            this._cacheManager = cacheManager;
+            _cacheManager = cacheManager;
         }
 
         public void HandleEvent(EntityInsertedEvent<Setting> eventMessage)

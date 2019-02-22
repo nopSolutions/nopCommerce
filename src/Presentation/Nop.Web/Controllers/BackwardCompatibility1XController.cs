@@ -44,17 +44,17 @@ namespace Nop.Web.Controllers
             IUrlRecordService urlRecordService,
             IWebHelper webHelper)
         {
-            this._blogService = blogService;
-            this._categoryService = categoryService;
-            this._customerService = customerService;
-            this._forumService = forumService;
-            this._manufacturerService = manufacturerService;
-            this._newsService = newsService;
-            this._productService = productService;
-            this._productTagService = productTagService;
-            this._topicService = topicService;
-            this._urlRecordService = urlRecordService;
-            this._webHelper = webHelper;
+            _blogService = blogService;
+            _categoryService = categoryService;
+            _customerService = customerService;
+            _forumService = forumService;
+            _manufacturerService = manufacturerService;
+            _newsService = newsService;
+            _productService = productService;
+            _productTagService = productTagService;
+            _topicService = topicService;
+            _urlRecordService = urlRecordService;
+            _webHelper = webHelper;
         }
 
         #endregion
@@ -66,7 +66,7 @@ namespace Nop.Web.Controllers
             // use Request.RawUrl, for instance to parse out what was invoked
             // this regex will extract anything between a "/" and a ".aspx"
             var regex = new Regex(@"(?<=/).+(?=\.aspx)", RegexOptions.Compiled);
-            var rawUrl = _webHelper.GetRawUrl(this.HttpContext.Request);
+            var rawUrl = _webHelper.GetRawUrl(HttpContext.Request);
             var aspxfileName = regex.Match(rawUrl).Value.ToLowerInvariant();
 
             switch (aspxfileName)

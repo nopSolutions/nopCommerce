@@ -10,7 +10,7 @@ namespace Nop.Web.Components
 
         public TopicBlockViewComponent(ITopicModelFactory topicModelFactory)
         {
-            this._topicModelFactory = topicModelFactory;
+            _topicModelFactory = topicModelFactory;
         }
 
         public IViewComponentResult Invoke(string systemName)

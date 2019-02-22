@@ -21,10 +21,10 @@ namespace Nop.Web.Components
             IStoreContext storeContext,
             IWorkContext workContext)
         {
-            this._shoppingCartModelFactory = shoppingCartModelFactory;
-            this._shoppingCartService = shoppingCartService;
-            this._storeContext = storeContext;
-            this._workContext = workContext;
+            _shoppingCartModelFactory = shoppingCartModelFactory;
+            _shoppingCartService = shoppingCartService;
+            _storeContext = storeContext;
+            _workContext = workContext;
         }
 
         public IViewComponentResult Invoke(bool? prepareAndDisplayOrderReviewData, ShoppingCartModel overriddenModel)

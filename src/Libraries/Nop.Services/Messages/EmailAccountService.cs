@@ -25,8 +25,8 @@ namespace Nop.Services.Messages
         public EmailAccountService(IEventPublisher eventPublisher,
             IRepository<EmailAccount> emailAccountRepository)
         {
-            this._eventPublisher = eventPublisher;
-            this._emailAccountRepository = emailAccountRepository;
+            _eventPublisher = eventPublisher;
+            _emailAccountRepository = emailAccountRepository;
         }
 
         #endregion

@@ -39,11 +39,11 @@ namespace Nop.Plugin.Payments.Worldpay.Services
             IPaymentService paymentService,
             WorldpayPaymentManager worldpayPaymentManager)
         {
-            this._customerService = customerService;
-            this._genericAttributeService = genericAttributeService;
-            this._localizationService = localizationService;
-            this._paymentService = paymentService;
-            this._worldpayPaymentManager = worldpayPaymentManager;
+            _customerService = customerService;
+            _genericAttributeService = genericAttributeService;
+            _localizationService = localizationService;
+            _paymentService = paymentService;
+            _worldpayPaymentManager = worldpayPaymentManager;
         }
 
         #endregion

@@ -42,13 +42,13 @@ namespace Nop.Web.Factories
             ILocalizationService localizationService,
             IStateProvinceService stateProvinceService)
         {
-            this._addressSettings = addressSettings;
-            this._addressAttributeFormatter = addressAttributeFormatter;
-            this._addressAttributeParser = addressAttributeParser;
-            this._addressAttributeService = addressAttributeService;
-            this._genericAttributeService = genericAttributeService;
-            this._localizationService = localizationService;
-            this._stateProvinceService = stateProvinceService;
+            _addressSettings = addressSettings;
+            _addressAttributeFormatter = addressAttributeFormatter;
+            _addressAttributeParser = addressAttributeParser;
+            _addressAttributeService = addressAttributeService;
+            _genericAttributeService = genericAttributeService;
+            _localizationService = localizationService;
+            _stateProvinceService = stateProvinceService;
         }
 
         #endregion

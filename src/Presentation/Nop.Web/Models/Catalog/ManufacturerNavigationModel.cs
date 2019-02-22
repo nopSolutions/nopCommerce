@@ -7,7 +7,7 @@ namespace Nop.Web.Models.Catalog
     {
         public ManufacturerNavigationModel()
         {
-            this.Manufacturers = new List<ManufacturerBriefInfoModel>();
+            Manufacturers = new List<ManufacturerBriefInfoModel>();
         }
 
         public IList<ManufacturerBriefInfoModel> Manufacturers { get; set; }

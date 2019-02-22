@@ -35,9 +35,9 @@ namespace Nop.Core
             IHttpContextAccessor httpContextAccessor,
             INopFileProvider fileProvider)
         {
-            this._hostingConfig = hostingConfig;
-            this._httpContextAccessor = httpContextAccessor;
-            this._fileProvider = fileProvider;
+            _hostingConfig = hostingConfig;
+            _httpContextAccessor = httpContextAccessor;
+            _fileProvider = fileProvider;
         }
 
         #endregion

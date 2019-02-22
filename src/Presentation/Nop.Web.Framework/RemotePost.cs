@@ -67,13 +67,13 @@ namespace Nop.Web.Framework
         /// <param name="webHelper">Web helper</param>
         public RemotePost(IHttpContextAccessor httpContextAccessor, IWebHelper webHelper)
         {
-            this._inputValues = new NameValueCollection();
-            this.Url = "http://www.someurl.com";
-            this.Method = "post";
-            this.FormName = "formName";
+            _inputValues = new NameValueCollection();
+            Url = "http://www.someurl.com";
+            Method = "post";
+            FormName = "formName";
 
-            this._httpContextAccessor = httpContextAccessor;
-            this._webHelper = webHelper;
+            _httpContextAccessor = httpContextAccessor;
+            _webHelper = webHelper;
         }
 
         /// <summary>

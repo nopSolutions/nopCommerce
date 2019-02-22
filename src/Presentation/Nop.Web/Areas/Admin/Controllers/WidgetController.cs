@@ -33,12 +33,12 @@ namespace Nop.Web.Areas.Admin.Controllers
             IWidgetService widgetService,
             WidgetSettings widgetSettings)
         {
-            this._eventPublisher = eventPublisher;
-            this._permissionService = permissionService;
-            this._settingService = settingService;
-            this._widgetModelFactory = widgetModelFactory;
-            this._widgetService = widgetService;
-            this._widgetSettings = widgetSettings;
+            _eventPublisher = eventPublisher;
+            _permissionService = permissionService;
+            _settingService = settingService;
+            _widgetModelFactory = widgetModelFactory;
+            _widgetService = widgetService;
+            _widgetSettings = widgetSettings;
         }
 
         #endregion

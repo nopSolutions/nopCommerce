@@ -59,19 +59,19 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Controllers
             IStoreService storeService,
             MeasureSettings measureSettings)
         {
-            this._currencySettings = currencySettings;
-            this._fixedByWeightByTotalSettings = fixedByWeightByTotalSettings;
-            this._countryService = countryService;
-            this._currencyService = currencyService;
-            this._localizationService = localizationService;
-            this._measureService = measureService;
-            this._permissionService = permissionService;
-            this._settingService = settingService;
-            this._shippingByWeightService = shippingByWeightService;
-            this._stateProvinceService = stateProvinceService;
-            this._shippingService = shippingService;
-            this._storeService = storeService;
-            this._measureSettings = measureSettings;
+            _currencySettings = currencySettings;
+            _fixedByWeightByTotalSettings = fixedByWeightByTotalSettings;
+            _countryService = countryService;
+            _currencyService = currencyService;
+            _localizationService = localizationService;
+            _measureService = measureService;
+            _permissionService = permissionService;
+            _settingService = settingService;
+            _shippingByWeightService = shippingByWeightService;
+            _stateProvinceService = stateProvinceService;
+            _shippingService = shippingService;
+            _storeService = storeService;
+            _measureSettings = measureSettings;
         }
 
         #endregion

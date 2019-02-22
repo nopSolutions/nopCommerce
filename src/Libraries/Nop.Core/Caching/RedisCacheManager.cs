@@ -33,12 +33,12 @@ namespace Nop.Core.Caching
             if (string.IsNullOrEmpty(config.RedisCachingConnectionString))
                 throw new Exception("Redis connection string is empty");
 
-            this._perRequestCacheManager = perRequestCacheManager;
+            _perRequestCacheManager = perRequestCacheManager;
 
             // ConnectionMultiplexer.Connect should only be called once and shared between callers
-            this._connectionWrapper = connectionWrapper;
+            _connectionWrapper = connectionWrapper;
 
-            this._db = _connectionWrapper.GetDatabase();
+            _db = _connectionWrapper.GetDatabase();
         }
 
         #endregion

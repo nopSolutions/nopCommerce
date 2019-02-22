@@ -94,34 +94,34 @@ namespace Nop.Web.Factories
             MediaSettings mediaSettings,
             VendorSettings vendorSettings)
         {
-            this._blogSettings = blogSettings;
-            this._catalogSettings = catalogSettings;
-            this._displayDefaultMenuItemSettings = displayDefaultMenuItemSettings;
-            this._forumSettings = forumSettings;
-            this._categoryService = categoryService;
-            this._categoryTemplateService = categoryTemplateService;
-            this._currencyService = currencyService;
-            this._eventPublisher = eventPublisher;
-            this._httpContextAccessor = httpContextAccessor;
-            this._localizationService = localizationService;
-            this._manufacturerService = manufacturerService;
-            this._manufacturerTemplateService = manufacturerTemplateService;
-            this._pictureService = pictureService;
-            this._priceFormatter = priceFormatter;
-            this._productModelFactory = productModelFactory;
-            this._productService = productService;
-            this._productTagService = productTagService;
-            this._searchTermService = searchTermService;
-            this._specificationAttributeService = specificationAttributeService;
-            this._cacheManager = cacheManager;
-            this._storeContext = storeContext;
-            this._topicService = topicService;
-            this._urlRecordService = urlRecordService;
-            this._vendorService = vendorService;
-            this._webHelper = webHelper;
-            this._workContext = workContext;
-            this._mediaSettings = mediaSettings;
-            this._vendorSettings = vendorSettings;
+            _blogSettings = blogSettings;
+            _catalogSettings = catalogSettings;
+            _displayDefaultMenuItemSettings = displayDefaultMenuItemSettings;
+            _forumSettings = forumSettings;
+            _categoryService = categoryService;
+            _categoryTemplateService = categoryTemplateService;
+            _currencyService = currencyService;
+            _eventPublisher = eventPublisher;
+            _httpContextAccessor = httpContextAccessor;
+            _localizationService = localizationService;
+            _manufacturerService = manufacturerService;
+            _manufacturerTemplateService = manufacturerTemplateService;
+            _pictureService = pictureService;
+            _priceFormatter = priceFormatter;
+            _productModelFactory = productModelFactory;
+            _productService = productService;
+            _productTagService = productTagService;
+            _searchTermService = searchTermService;
+            _specificationAttributeService = specificationAttributeService;
+            _cacheManager = cacheManager;
+            _storeContext = storeContext;
+            _topicService = topicService;
+            _urlRecordService = urlRecordService;
+            _vendorService = vendorService;
+            _webHelper = webHelper;
+            _workContext = workContext;
+            _mediaSettings = mediaSettings;
+            _vendorSettings = vendorSettings;
         }
 
         #endregion

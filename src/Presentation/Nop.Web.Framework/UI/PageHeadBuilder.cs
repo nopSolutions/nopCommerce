@@ -65,22 +65,22 @@ namespace Nop.Web.Framework.UI
             INopFileProvider fileProvider,
             IUrlRecordService urlRecordService)
         {
-            this._seoSettings = seoSettings;
-            this._hostingEnvironment = hostingEnvironment;
-            this._cacheManager = cacheManager;
-            this._fileProvider = fileProvider;
-            this._urlRecordService = urlRecordService;
-            this._processor = new BundleFileProcessor();
+            _seoSettings = seoSettings;
+            _hostingEnvironment = hostingEnvironment;
+            _cacheManager = cacheManager;
+            _fileProvider = fileProvider;
+            _urlRecordService = urlRecordService;
+            _processor = new BundleFileProcessor();
 
-            this._titleParts = new List<string>();
-            this._metaDescriptionParts = new List<string>();
-            this._metaKeywordParts = new List<string>();
-            this._scriptParts = new Dictionary<ResourceLocation, List<ScriptReferenceMeta>>();
-            this._inlineScriptParts = new Dictionary<ResourceLocation, List<string>>();
-            this._cssParts = new Dictionary<ResourceLocation, List<CssReferenceMeta>>();
-            this._canonicalUrlParts = new List<string>();
-            this._headCustomParts = new List<string>();
-            this._pageCssClassParts = new List<string>();
+            _titleParts = new List<string>();
+            _metaDescriptionParts = new List<string>();
+            _metaKeywordParts = new List<string>();
+            _scriptParts = new Dictionary<ResourceLocation, List<ScriptReferenceMeta>>();
+            _inlineScriptParts = new Dictionary<ResourceLocation, List<string>>();
+            _cssParts = new Dictionary<ResourceLocation, List<CssReferenceMeta>>();
+            _canonicalUrlParts = new List<string>();
+            _headCustomParts = new List<string>();
+            _pageCssClassParts = new List<string>();
         }
 
         #endregion
@@ -820,7 +820,7 @@ namespace Nop.Web.Framework.UI
             {
                 if (item == null)
                     return false;
-                return this.Src.Equals(item.Src) && this.DebugSrc.Equals(item.DebugSrc);
+                return Src.Equals(item.Src) && DebugSrc.Equals(item.DebugSrc);
             }
             /// <summary>
             /// Get hash code
@@ -858,7 +858,7 @@ namespace Nop.Web.Framework.UI
             {
                 if (item == null)
                     return false;
-                return this.Src.Equals(item.Src) && this.DebugSrc.Equals(item.DebugSrc);
+                return Src.Equals(item.Src) && DebugSrc.Equals(item.DebugSrc);
             }
             /// <summary>
             /// Get hash code

@@ -27,9 +27,9 @@ namespace Nop.Web.Areas.Admin.Factories
             ICustomerActivityService customerActivityService,
             IDateTimeHelper dateTimeHelper)
         {
-            this._baseAdminModelFactory = baseAdminModelFactory;
-            this._customerActivityService = customerActivityService;
-            this._dateTimeHelper = dateTimeHelper;
+            _baseAdminModelFactory = baseAdminModelFactory;
+            _customerActivityService = customerActivityService;
+            _dateTimeHelper = dateTimeHelper;
         }
 
         #endregion

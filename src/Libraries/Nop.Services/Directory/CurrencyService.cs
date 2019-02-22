@@ -37,12 +37,12 @@ namespace Nop.Services.Directory
             IStaticCacheManager cacheManager,
             IStoreMappingService storeMappingService)
         {
-            this._currencySettings = currencySettings;
-            this._eventPublisher = eventPublisher;
-            this._pluginService = pluginService;
-            this._currencyRepository = currencyRepository;
-            this._cacheManager = cacheManager;
-            this._storeMappingService = storeMappingService;
+            _currencySettings = currencySettings;
+            _eventPublisher = eventPublisher;
+            _pluginService = pluginService;
+            _currencyRepository = currencyRepository;
+            _cacheManager = cacheManager;
+            _storeMappingService = storeMappingService;
         }
 
         #endregion

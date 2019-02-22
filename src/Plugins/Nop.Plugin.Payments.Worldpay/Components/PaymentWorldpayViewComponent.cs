@@ -33,10 +33,10 @@ namespace Nop.Plugin.Payments.Worldpay.Components
             IWorkContext workContext,
             WorldpayPaymentManager worldpayPaymentManager)
         {
-            this._genericAttributeService = genericAttributeService;
-            this._localizationService = localizationService;
-            this._workContext = workContext;
-            this._worldpayPaymentManager = worldpayPaymentManager;
+            _genericAttributeService = genericAttributeService;
+            _localizationService = localizationService;
+            _workContext = workContext;
+            _worldpayPaymentManager = worldpayPaymentManager;
         }
 
         #endregion

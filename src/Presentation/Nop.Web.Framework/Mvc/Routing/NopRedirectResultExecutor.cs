@@ -26,7 +26,7 @@ namespace Nop.Web.Framework.Mvc.Routing
             IUrlHelperFactory urlHelperFactory,
             SecuritySettings securitySettings) : base(loggerFactory, urlHelperFactory)
         {
-            this._securitySettings = securitySettings;
+            _securitySettings = securitySettings;
         }
 
         #endregion

@@ -12,7 +12,7 @@
         /// <param name="entity">Entity</param>
         public EntityDeletedEvent(T entity)
         {
-            this.Entity = entity;
+            Entity = entity;
         }
 
         /// <summary>

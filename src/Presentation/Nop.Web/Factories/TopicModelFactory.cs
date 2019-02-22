@@ -42,14 +42,14 @@ namespace Nop.Web.Factories
             IUrlRecordService urlRecordService,
             IWorkContext workContext)
         {
-            this._aclService = aclService;
-            this._localizationService = localizationService;
-            this._cacheManager = cacheManager;
-            this._storeContext = storeContext;
-            this._topicService = topicService;
-            this._topicTemplateService = topicTemplateService;
-            this._urlRecordService = urlRecordService;
-            this._workContext = workContext;
+            _aclService = aclService;
+            _localizationService = localizationService;
+            _cacheManager = cacheManager;
+            _storeContext = storeContext;
+            _topicService = topicService;
+            _topicTemplateService = topicTemplateService;
+            _urlRecordService = urlRecordService;
+            _workContext = workContext;
         }
 
         #endregion

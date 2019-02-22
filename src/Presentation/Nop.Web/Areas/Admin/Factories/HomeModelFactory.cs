@@ -57,14 +57,14 @@ namespace Nop.Web.Areas.Admin.Factories
             IWebHelper webHelper,
             IWorkContext workContext)
         {
-            this._adminAreaSettings = adminAreaSettings;
-            this._commonModelFactory = commonModelFactory;
-            this._httpContextAccessor = httpContextAccessor;
-            this._orderModelFactory = orderModelFactory;
-            this._settingService = settingService;
-            this._cacheManager = cacheManager;
-            this._webHelper = webHelper;
-            this._workContext = workContext;
+            _adminAreaSettings = adminAreaSettings;
+            _commonModelFactory = commonModelFactory;
+            _httpContextAccessor = httpContextAccessor;
+            _orderModelFactory = orderModelFactory;
+            _settingService = settingService;
+            _cacheManager = cacheManager;
+            _webHelper = webHelper;
+            _workContext = workContext;
         }
 
         #endregion

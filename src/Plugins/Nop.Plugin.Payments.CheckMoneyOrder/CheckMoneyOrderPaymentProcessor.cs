@@ -36,12 +36,12 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder
             IShoppingCartService shoppingCartService,
             IWebHelper webHelper)
         {
-            this._checkMoneyOrderPaymentSettings = checkMoneyOrderPaymentSettings;
-            this._localizationService = localizationService;
-            this._paymentService = paymentService;
-            this._settingService = settingService;
-            this._shoppingCartService = shoppingCartService;
-            this._webHelper = webHelper;
+            _checkMoneyOrderPaymentSettings = checkMoneyOrderPaymentSettings;
+            _localizationService = localizationService;
+            _paymentService = paymentService;
+            _settingService = settingService;
+            _shoppingCartService = shoppingCartService;
+            _webHelper = webHelper;
         }
 
         #endregion

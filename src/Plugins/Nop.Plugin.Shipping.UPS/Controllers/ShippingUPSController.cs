@@ -38,11 +38,11 @@ namespace Nop.Plugin.Shipping.UPS.Controllers
             ISettingService settingService,
             UPSSettings upsSettings)
         {
-            this._localizationService = localizationService;
-            this._notificationService = notificationService;
-            this._permissionService = permissionService;
-            this._settingService = settingService;
-            this._upsSettings = upsSettings;
+            _localizationService = localizationService;
+            _notificationService = notificationService;
+            _permissionService = permissionService;
+            _settingService = settingService;
+            _upsSettings = upsSettings;
         }
 
         #endregion

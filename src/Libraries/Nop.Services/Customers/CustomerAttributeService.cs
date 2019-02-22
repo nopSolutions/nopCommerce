@@ -29,10 +29,10 @@ namespace Nop.Services.Customers
             IRepository<CustomerAttribute> customerAttributeRepository,
             IRepository<CustomerAttributeValue> customerAttributeValueRepository)
         {
-            this._cacheManager = cacheManager;
-            this._eventPublisher = eventPublisher;
-            this._customerAttributeRepository = customerAttributeRepository;
-            this._customerAttributeValueRepository = customerAttributeValueRepository;
+            _cacheManager = cacheManager;
+            _eventPublisher = eventPublisher;
+            _customerAttributeRepository = customerAttributeRepository;
+            _customerAttributeValueRepository = customerAttributeValueRepository;
         }
 
         #endregion

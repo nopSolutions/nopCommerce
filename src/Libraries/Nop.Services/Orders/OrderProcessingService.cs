@@ -130,48 +130,48 @@ namespace Nop.Services.Orders
             ShippingSettings shippingSettings,
             TaxSettings taxSettings)
         {
-            this._currencySettings = currencySettings;
-            this._affiliateService = affiliateService;
-            this._checkoutAttributeFormatter = checkoutAttributeFormatter;
-            this._countryService = countryService;
-            this._currencyService = currencyService;
-            this._customerActivityService = customerActivityService;
-            this._customerService = customerService;
-            this._customNumberFormatter = customNumberFormatter;
-            this._discountService = discountService;
-            this._encryptionService = encryptionService;
-            this._eventPublisher = eventPublisher;
-            this._genericAttributeService = genericAttributeService;
-            this._giftCardService = giftCardService;
-            this._languageService = languageService;
-            this._localizationService = localizationService;
-            this._logger = logger;
-            this._orderService = orderService;
-            this._orderTotalCalculationService = orderTotalCalculationService;
-            this._paymentService = paymentService;
-            this._pdfService = pdfService;
-            this._priceCalculationService = priceCalculationService;
-            this._priceFormatter = priceFormatter;
-            this._productAttributeFormatter = productAttributeFormatter;
-            this._productAttributeParser = productAttributeParser;
-            this._productService = productService;
-            this._rewardPointService = rewardPointService;
-            this._shipmentService = shipmentService;
-            this._shippingService = shippingService;
-            this._shoppingCartService = shoppingCartService;
-            this._stateProvinceService = stateProvinceService;
-            this._storeContext = storeContext;
-            this._taxService = taxService;
-            this._vendorService = vendorService;
-            this._webHelper = webHelper;
-            this._workContext = workContext;
-            this._workflowMessageService = workflowMessageService;
-            this._localizationSettings = localizationSettings;
-            this._orderSettings = orderSettings;
-            this._paymentSettings = paymentSettings;
-            this._rewardPointsSettings = rewardPointsSettings;
-            this._shippingSettings = shippingSettings;
-            this._taxSettings = taxSettings;
+            _currencySettings = currencySettings;
+            _affiliateService = affiliateService;
+            _checkoutAttributeFormatter = checkoutAttributeFormatter;
+            _countryService = countryService;
+            _currencyService = currencyService;
+            _customerActivityService = customerActivityService;
+            _customerService = customerService;
+            _customNumberFormatter = customNumberFormatter;
+            _discountService = discountService;
+            _encryptionService = encryptionService;
+            _eventPublisher = eventPublisher;
+            _genericAttributeService = genericAttributeService;
+            _giftCardService = giftCardService;
+            _languageService = languageService;
+            _localizationService = localizationService;
+            _logger = logger;
+            _orderService = orderService;
+            _orderTotalCalculationService = orderTotalCalculationService;
+            _paymentService = paymentService;
+            _pdfService = pdfService;
+            _priceCalculationService = priceCalculationService;
+            _priceFormatter = priceFormatter;
+            _productAttributeFormatter = productAttributeFormatter;
+            _productAttributeParser = productAttributeParser;
+            _productService = productService;
+            _rewardPointService = rewardPointService;
+            _shipmentService = shipmentService;
+            _shippingService = shippingService;
+            _shoppingCartService = shoppingCartService;
+            _stateProvinceService = stateProvinceService;
+            _storeContext = storeContext;
+            _taxService = taxService;
+            _vendorService = vendorService;
+            _webHelper = webHelper;
+            _workContext = workContext;
+            _workflowMessageService = workflowMessageService;
+            _localizationSettings = localizationSettings;
+            _orderSettings = orderSettings;
+            _paymentSettings = paymentSettings;
+            _rewardPointsSettings = rewardPointsSettings;
+            _shippingSettings = shippingSettings;
+            _taxSettings = taxSettings;
         }
 
         #endregion
@@ -185,9 +185,9 @@ namespace Nop.Services.Orders
         {
             public PlaceOrderContainer()
             {
-                this.Cart = new List<ShoppingCartItem>();
-                this.AppliedDiscounts = new List<DiscountForCaching>();
-                this.AppliedGiftCards = new List<AppliedGiftCard>();
+                Cart = new List<ShoppingCartItem>();
+                AppliedDiscounts = new List<DiscountForCaching>();
+                AppliedGiftCards = new List<AppliedGiftCard>();
             }
 
             /// <summary>

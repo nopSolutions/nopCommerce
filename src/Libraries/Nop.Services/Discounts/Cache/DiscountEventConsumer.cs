@@ -40,7 +40,7 @@ namespace Nop.Services.Discounts.Cache
 
         public DiscountEventConsumer(IStaticCacheManager cacheManager)
         {
-            this._cacheManager = cacheManager;
+            _cacheManager = cacheManager;
         }
 
         #endregion

@@ -40,13 +40,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             IStoreMappingService storeMappingService,
             IStoreService storeService)
         {
-            this._localizationService = localizationService;
-            this._notificationService = notificationService;
-            this._permissionService = permissionService;
-            this._pollModelFactory = pollModelFactory;
-            this._pollService = pollService;
-            this._storeMappingService = storeMappingService;
-            this._storeService = storeService;
+            _localizationService = localizationService;
+            _notificationService = notificationService;
+            _permissionService = permissionService;
+            _pollModelFactory = pollModelFactory;
+            _pollService = pollService;
+            _storeMappingService = storeMappingService;
+            _storeService = storeService;
         }
 
         #endregion

@@ -20,8 +20,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             IPermissionService permissionService,
             IReportModelFactory reportModelFactory)
         {
-            this._permissionService = permissionService;
-            this._reportModelFactory = reportModelFactory;
+            _permissionService = permissionService;
+            _reportModelFactory = reportModelFactory;
         }
 
         #endregion

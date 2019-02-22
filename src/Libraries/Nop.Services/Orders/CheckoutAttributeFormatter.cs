@@ -44,15 +44,15 @@ namespace Nop.Services.Orders
             IWebHelper webHelper,
             IWorkContext workContext)
         {
-            this._checkoutAttributeParser = checkoutAttributeParser;
-            this._checkoutAttributeService = checkoutAttributeService;
-            this._currencyService = currencyService;
-            this._downloadService = downloadService;
-            this._localizationService = localizationService;
-            this._priceFormatter = priceFormatter;
-            this._taxService = taxService;
-            this._webHelper = webHelper;
-            this._workContext = workContext;
+            _checkoutAttributeParser = checkoutAttributeParser;
+            _checkoutAttributeService = checkoutAttributeService;
+            _currencyService = currencyService;
+            _downloadService = downloadService;
+            _localizationService = localizationService;
+            _priceFormatter = priceFormatter;
+            _taxService = taxService;
+            _webHelper = webHelper;
+            _workContext = workContext;
         }
 
         #endregion

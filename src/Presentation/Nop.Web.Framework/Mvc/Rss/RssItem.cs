@@ -51,11 +51,11 @@ namespace Nop.Web.Framework.Mvc.Rss
         /// <param name="pubDate">Last build date</param>
         private void Init(string title, string content, Uri link, string id, DateTimeOffset pubDate)
         {
-            this.Title = new XElement(NopRssDefaults.Title, title);
-            this.Content = new XElement(NopRssDefaults.Description, content);
-            this.Link = new XElement(NopRssDefaults.Link, link);
-            this.Id = new XElement(NopRssDefaults.Guid, new XAttribute("isPermaLink", false), id);
-            this.PubDate = new XElement(NopRssDefaults.PubDate, pubDate.ToString("r"));
+            Title = new XElement(NopRssDefaults.Title, title);
+            Content = new XElement(NopRssDefaults.Description, content);
+            Link = new XElement(NopRssDefaults.Link, link);
+            Id = new XElement(NopRssDefaults.Guid, new XAttribute("isPermaLink", false), id);
+            PubDate = new XElement(NopRssDefaults.PubDate, pubDate.ToString("r"));
         }
 
         /// <summary>

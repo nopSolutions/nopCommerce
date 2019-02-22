@@ -30,10 +30,10 @@ namespace Nop.Web.Areas.Admin.Factories
             ILocalizationService localizationService,
             IStoreMappingSupportedModelFactory storeMappingSupportedModelFactory)
         {
-            this._baseAdminModelFactory = baseAdminModelFactory;
-            this._languageService = languageService;
-            this._localizationService = localizationService;
-            this._storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
+            _baseAdminModelFactory = baseAdminModelFactory;
+            _languageService = languageService;
+            _localizationService = localizationService;
+            _storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
         }
 
         #endregion

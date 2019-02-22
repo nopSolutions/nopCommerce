@@ -12,8 +12,8 @@ namespace Nop.Web.Components
 
         public HomepageNewsViewComponent(INewsModelFactory newsModelFactory, NewsSettings newsSettings)
         {
-            this._newsModelFactory = newsModelFactory;
-            this._newsSettings = newsSettings;
+            _newsModelFactory = newsModelFactory;
+            _newsSettings = newsSettings;
         }
 
         public IViewComponentResult Invoke()

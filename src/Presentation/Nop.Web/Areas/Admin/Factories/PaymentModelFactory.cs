@@ -33,10 +33,10 @@ namespace Nop.Web.Areas.Admin.Factories
             IPaymentService paymentService,
             IPluginService pluginService)
         {
-            this._countryService = countryService;
-            this._localizationService = localizationService;
-            this._paymentService = paymentService;
-            this._pluginService = pluginService;
+            _countryService = countryService;
+            _localizationService = localizationService;
+            _paymentService = paymentService;
+            _pluginService = pluginService;
         }
 
         #endregion

@@ -20,10 +20,10 @@ namespace Nop.Services.ExportImport.Help
         /// <param name="ignore">Specifies whether the property should be exported</param>
         public PropertyByName(string propertyName, Func<T, object> func = null, bool ignore = false)
         {
-            this.PropertyName = propertyName;
-            this.GetProperty = func;
-            this.PropertyOrderPosition = 1;
-            this.Ignore = ignore;
+            PropertyName = propertyName;
+            GetProperty = func;
+            PropertyOrderPosition = 1;
+            Ignore = ignore;
         }
 
         /// <summary>

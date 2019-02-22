@@ -21,8 +21,8 @@ namespace Nop.Services.Directory
         public UpdateExchangeRateTask(CurrencySettings currencySettings,
             ICurrencyService currencyService)
         {
-            this._currencySettings = currencySettings;
-            this._currencyService = currencyService;
+            _currencySettings = currencySettings;
+            _currencyService = currencyService;
         }
 
         #endregion

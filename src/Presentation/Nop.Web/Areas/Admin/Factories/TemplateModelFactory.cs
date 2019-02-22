@@ -29,10 +29,10 @@ namespace Nop.Web.Areas.Admin.Factories
             IProductTemplateService productTemplateService,
             ITopicTemplateService topicTemplateService)
         {
-            this._categoryTemplateService = categoryTemplateService;
-            this._manufacturerTemplateService = manufacturerTemplateService;
-            this._productTemplateService = productTemplateService;
-            this._topicTemplateService = topicTemplateService;
+            _categoryTemplateService = categoryTemplateService;
+            _manufacturerTemplateService = manufacturerTemplateService;
+            _productTemplateService = productTemplateService;
+            _topicTemplateService = topicTemplateService;
         }
 
         #endregion

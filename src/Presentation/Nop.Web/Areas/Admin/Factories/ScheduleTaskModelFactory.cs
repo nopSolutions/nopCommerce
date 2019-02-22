@@ -25,8 +25,8 @@ namespace Nop.Web.Areas.Admin.Factories
         public ScheduleTaskModelFactory(IDateTimeHelper dateTimeHelper,
             IScheduleTaskService scheduleTaskService)
         {
-            this._dateTimeHelper = dateTimeHelper;
-            this._scheduleTaskService = scheduleTaskService;
+            _dateTimeHelper = dateTimeHelper;
+            _scheduleTaskService = scheduleTaskService;
         }
 
         #endregion

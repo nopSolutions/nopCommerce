@@ -15,7 +15,7 @@ namespace Nop.Web.Framework.Events
         /// <param name="model">Model</param>
         public ModelPreparedEvent(T model)
         {
-            this.Model = model;
+            Model = model;
         }
 
         #endregion

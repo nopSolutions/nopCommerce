@@ -39,9 +39,9 @@ namespace Nop.Plugin.Payments.Manual.Components
             }
 
             //set postback values (we cannot access "Form" with "GET" requests)
-            if (this.Request.Method != WebRequestMethods.Http.Get)
+            if (Request.Method != WebRequestMethods.Http.Get)
             {
-                var form = this.Request.Form;
+                var form = Request.Form;
                 model.CardholderName = form["CardholderName"];
                 model.CardNumber = form["CardNumber"];
                 model.CardCode = form["CardCode"];

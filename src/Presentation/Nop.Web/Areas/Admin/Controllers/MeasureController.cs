@@ -38,13 +38,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             ISettingService settingService,
             MeasureSettings measureSettings)
         {
-            this._customerActivityService = customerActivityService;
-            this._localizationService = localizationService;
-            this._measureModelFactory = measureModelFactory;
-            this._measureService = measureService;
-            this._permissionService = permissionService;
-            this._settingService = settingService;
-            this._measureSettings = measureSettings;
+            _customerActivityService = customerActivityService;
+            _localizationService = localizationService;
+            _measureModelFactory = measureModelFactory;
+            _measureService = measureService;
+            _permissionService = permissionService;
+            _settingService = settingService;
+            _measureSettings = measureSettings;
         }
 
         #endregion

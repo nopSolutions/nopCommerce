@@ -48,10 +48,10 @@ namespace Nop.Web.Framework.Mvc.Filters
                 IWorkContext workContext,
                 CustomerSettings customerSettings)
             {
-                this._customerService = customerService;
-                this._webHelper = webHelper;
-                this._workContext = workContext;
-                this._customerSettings = customerSettings;
+                _customerService = customerService;
+                _webHelper = webHelper;
+                _workContext = workContext;
+                _customerSettings = customerSettings;
             }
 
             #endregion

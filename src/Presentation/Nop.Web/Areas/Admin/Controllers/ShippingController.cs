@@ -60,19 +60,19 @@ namespace Nop.Web.Areas.Admin.Controllers
             IShippingService shippingService,
             ShippingSettings shippingSettings)
         {
-            this._addressService = addressService;
-            this._countryService = countryService;
-            this._customerActivityService = customerActivityService;
-            this._dateRangeService = dateRangeService;
-            this._eventPublisher = eventPublisher;
-            this._localizationService = localizationService;
-            this._localizedEntityService = localizedEntityService;
-            this._notificationService = notificationService;
-            this._permissionService = permissionService;
-            this._settingService = settingService;
-            this._shippingModelFactory = shippingModelFactory;
-            this._shippingService = shippingService;
-            this._shippingSettings = shippingSettings;
+            _addressService = addressService;
+            _countryService = countryService;
+            _customerActivityService = customerActivityService;
+            _dateRangeService = dateRangeService;
+            _eventPublisher = eventPublisher;
+            _localizationService = localizationService;
+            _localizedEntityService = localizedEntityService;
+            _notificationService = notificationService;
+            _permissionService = permissionService;
+            _settingService = settingService;
+            _shippingModelFactory = shippingModelFactory;
+            _shippingService = shippingService;
+            _shippingSettings = shippingSettings;
         }
 
         #endregion

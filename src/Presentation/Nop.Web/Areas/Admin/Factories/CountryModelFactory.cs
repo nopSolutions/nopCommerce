@@ -33,11 +33,11 @@ namespace Nop.Web.Areas.Admin.Factories
             IStoreMappingSupportedModelFactory storeMappingSupportedModelFactory,
             IStateProvinceService stateProvinceService)
         {
-            this._countryService = countryService;
-            this._localizationService = localizationService;
-            this._localizedModelFactory = localizedModelFactory;
-            this._storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
-            this._stateProvinceService = stateProvinceService;
+            _countryService = countryService;
+            _localizationService = localizationService;
+            _localizedModelFactory = localizedModelFactory;
+            _storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
+            _stateProvinceService = stateProvinceService;
         }
 
         #endregion

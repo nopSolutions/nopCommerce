@@ -32,10 +32,10 @@ namespace Nop.Services.Logging
             IRepository<Log> logRepository,
             IWebHelper webHelper)
         {
-            this._commonSettings = commonSettings;
-            this._dbContext = dbContext;
-            this._logRepository = logRepository;
-            this._webHelper = webHelper;
+            _commonSettings = commonSettings;
+            _dbContext = dbContext;
+            _logRepository = logRepository;
+            _webHelper = webHelper;
         }
 
         #endregion

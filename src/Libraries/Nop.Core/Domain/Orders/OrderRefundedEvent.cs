@@ -12,8 +12,8 @@ namespace Nop.Core.Domain.Orders
         /// <param name="amount">Amount</param>
         public OrderRefundedEvent(Order order, decimal amount)
         {
-            this.Order = order;
-            this.Amount = amount;
+            Order = order;
+            Amount = amount;
         }
 
         /// <summary>

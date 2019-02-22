@@ -31,9 +31,9 @@ namespace Nop.Plugin.Payments.Worldpay.Services
             IWorkContext workContext,
             WorldpayPaymentSettings worldpayPaymentSettings)
         {
-            this._logger = logger;
-            this._workContext = workContext;
-            this._worldpayPaymentSettings = worldpayPaymentSettings;
+            _logger = logger;
+            _workContext = workContext;
+            _worldpayPaymentSettings = worldpayPaymentSettings;
         }
 
         #endregion

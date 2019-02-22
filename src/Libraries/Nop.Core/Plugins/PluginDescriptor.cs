@@ -17,9 +17,9 @@ namespace Nop.Core.Plugins
 
         public PluginDescriptor()
         {
-            this.SupportedVersions = new List<string>();
-            this.LimitedToStores = new List<int>();
-            this.LimitedToCustomerRoles = new List<int>();
+            SupportedVersions = new List<string>();
+            LimitedToStores = new List<int>();
+            LimitedToCustomerRoles = new List<int>();
         }
 
         /// <summary>
@@ -28,7 +28,7 @@ namespace Nop.Core.Plugins
         /// <param name="referencedAssembly">Referenced assembly</param>
         public PluginDescriptor(Assembly referencedAssembly) : this()
         {
-            this.ReferencedAssembly = referencedAssembly;
+            ReferencedAssembly = referencedAssembly;
         }
 
         #endregion

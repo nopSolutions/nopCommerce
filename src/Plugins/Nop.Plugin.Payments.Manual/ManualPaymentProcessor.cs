@@ -37,11 +37,11 @@ namespace Nop.Plugin.Payments.Manual
             IWebHelper webHelper,
             ManualPaymentSettings manualPaymentSettings)
         {
-            this._localizationService = localizationService;
-            this._paymentService = paymentService;
-            this._settingService = settingService;
-            this._webHelper = webHelper;
-            this._manualPaymentSettings = manualPaymentSettings;
+            _localizationService = localizationService;
+            _paymentService = paymentService;
+            _settingService = settingService;
+            _webHelper = webHelper;
+            _manualPaymentSettings = manualPaymentSettings;
         }
 
         #endregion

@@ -20,10 +20,10 @@ namespace Nop.Web.Components
             IProductService productService,
             IStoreMappingService storeMappingService)
         {
-            this._aclService = aclService;
-            this._productModelFactory = productModelFactory;
-            this._productService = productService;
-            this._storeMappingService = storeMappingService;
+            _aclService = aclService;
+            _productModelFactory = productModelFactory;
+            _productService = productService;
+            _storeMappingService = storeMappingService;
         }
 
         public IViewComponentResult Invoke(int? productThumbPictureSize)

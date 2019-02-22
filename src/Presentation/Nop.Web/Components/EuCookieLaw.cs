@@ -21,10 +21,10 @@ namespace Nop.Web.Components
             IWorkContext workContext,
             StoreInformationSettings storeInformationSettings)
         {
-            this._genericAttributeService = genericAttributeService;
-            this._storeContext = storeContext;
-            this._workContext = workContext;
-            this._storeInformationSettings = storeInformationSettings;
+            _genericAttributeService = genericAttributeService;
+            _storeContext = storeContext;
+            _workContext = workContext;
+            _storeInformationSettings = storeInformationSettings;
         }
 
         public IViewComponentResult Invoke()

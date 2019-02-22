@@ -96,28 +96,28 @@ namespace Nop.Web.Areas.Admin.Factories
             IReviewTypeModelFactory reviewTypeModelFactory,
             IWorkContext workContext)
         {
-            this._currencySettings = currencySettings;
-            this._addressAttributeModelFactory = addressAttributeModelFactory;
-            this._addressService = addressService;
-            this._baseAdminModelFactory = baseAdminModelFactory;
-            this._currencyService = currencyService;
-            this._customerAttributeModelFactory = customerAttributeModelFactory;
-            this._dateTimeHelper = dateTimeHelper;
-            this._fulltextService = fulltextService;
-            this._gdprService = gdprService;
-            this._localizedModelFactory = localizedModelFactory;
-            this._genericAttributeService = genericAttributeService;
-            this._localizationService = localizationService;
-            this._maintenanceService = maintenanceService;
-            this._pictureService = pictureService;
-            this._returnRequestModelFactory = returnRequestModelFactory;
-            this._settingService = settingService;
-            this._storeContext = storeContext;
-            this._storeService = storeService;
-            this._themeProvider = themeProvider;
-            this._vendorAttributeModelFactory = vendorAttributeModelFactory;
-            this._reviewTypeModelFactory = reviewTypeModelFactory;
-            this._workContext = workContext;
+            _currencySettings = currencySettings;
+            _addressAttributeModelFactory = addressAttributeModelFactory;
+            _addressService = addressService;
+            _baseAdminModelFactory = baseAdminModelFactory;
+            _currencyService = currencyService;
+            _customerAttributeModelFactory = customerAttributeModelFactory;
+            _dateTimeHelper = dateTimeHelper;
+            _fulltextService = fulltextService;
+            _gdprService = gdprService;
+            _localizedModelFactory = localizedModelFactory;
+            _genericAttributeService = genericAttributeService;
+            _localizationService = localizationService;
+            _maintenanceService = maintenanceService;
+            _pictureService = pictureService;
+            _returnRequestModelFactory = returnRequestModelFactory;
+            _settingService = settingService;
+            _storeContext = storeContext;
+            _storeService = storeService;
+            _themeProvider = themeProvider;
+            _vendorAttributeModelFactory = vendorAttributeModelFactory;
+            _reviewTypeModelFactory = reviewTypeModelFactory;
+            _workContext = workContext;
         }
 
         #endregion

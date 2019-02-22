@@ -15,7 +15,7 @@ namespace Nop.Web.Areas.Admin.Models.Customers
 
         public AddRewardPointsToCustomerModel()
         {
-            this.AvailableStores = new List<SelectListItem>();
+            AvailableStores = new List<SelectListItem>();
         }
 
         #endregion

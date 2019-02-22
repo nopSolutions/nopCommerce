@@ -58,20 +58,20 @@ namespace Nop.Services.Tax
             ShippingSettings shippingSettings,
             TaxSettings taxSettings)
         {
-            this._addressSettings = addressSettings;
-            this._customerSettings = customerSettings;
-            this._addressService = addressService;
-            this._countryService = countryService;
-            this._genericAttributeService = genericAttributeService;
-            this._geoLookupService = geoLookupService;
-            this._logger = logger;
-            this._pluginService = pluginService;
-            this._stateProvinceService = stateProvinceService;
-            this._storeContext = storeContext;
-            this._webHelper = webHelper;
-            this._workContext = workContext;
-            this._shippingSettings = shippingSettings;
-            this._taxSettings = taxSettings;
+            _addressSettings = addressSettings;
+            _customerSettings = customerSettings;
+            _addressService = addressService;
+            _countryService = countryService;
+            _genericAttributeService = genericAttributeService;
+            _geoLookupService = geoLookupService;
+            _logger = logger;
+            _pluginService = pluginService;
+            _stateProvinceService = stateProvinceService;
+            _storeContext = storeContext;
+            _webHelper = webHelper;
+            _workContext = workContext;
+            _shippingSettings = shippingSettings;
+            _taxSettings = taxSettings;
         }
 
         #endregion

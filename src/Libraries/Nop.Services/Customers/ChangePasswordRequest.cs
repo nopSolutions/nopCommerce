@@ -50,12 +50,12 @@ namespace Nop.Services.Customers
             PasswordFormat newPasswordFormat, string newPassword, string oldPassword = "",
             string hashedPasswordFormat = null)
         {
-            this.Email = email;
-            this.ValidateRequest = validateRequest;
-            this.NewPasswordFormat = newPasswordFormat;
-            this.NewPassword = newPassword;
-            this.OldPassword = oldPassword;
-            this.HashedPasswordFormat = hashedPasswordFormat;
+            Email = email;
+            ValidateRequest = validateRequest;
+            NewPasswordFormat = newPasswordFormat;
+            NewPassword = newPassword;
+            OldPassword = oldPassword;
+            HashedPasswordFormat = hashedPasswordFormat;
         }
     }
 }

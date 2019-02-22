@@ -66,24 +66,24 @@ namespace Nop.Services.Catalog
             IStoreMappingService storeMappingService,
             IWorkContext workContext)
         {
-            this._catalogSettings = catalogSettings;
-            this._commonSettings = commonSettings;
-            this._aclService = aclService;
-            this._cacheManager = cacheManager;
-            this._dataProvider = dataProvider;
-            this._dbContext = dbContext;
-            this._eventPublisher = eventPublisher;
-            this._localizationService = localizationService;
-            this._aclRepository = aclRepository;
-            this._categoryRepository = categoryRepository;
-            this._productRepository = productRepository;
-            this._productCategoryRepository = productCategoryRepository;
-            this._storeMappingRepository = storeMappingRepository;
-            this._staticCacheManager = staticCacheManager;
-            this._storeContext = storeContext;
-            this._storeMappingService = storeMappingService;
-            this._workContext = workContext;
-            this._entityName = typeof(Category).Name;
+            _catalogSettings = catalogSettings;
+            _commonSettings = commonSettings;
+            _aclService = aclService;
+            _cacheManager = cacheManager;
+            _dataProvider = dataProvider;
+            _dbContext = dbContext;
+            _eventPublisher = eventPublisher;
+            _localizationService = localizationService;
+            _aclRepository = aclRepository;
+            _categoryRepository = categoryRepository;
+            _productRepository = productRepository;
+            _productCategoryRepository = productCategoryRepository;
+            _storeMappingRepository = storeMappingRepository;
+            _staticCacheManager = staticCacheManager;
+            _storeContext = storeContext;
+            _storeMappingService = storeMappingService;
+            _workContext = workContext;
+            _entityName = typeof(Category).Name;
         }
 
         #endregion
@@ -230,7 +230,7 @@ namespace Nop.Services.Catalog
             var unsortedCategories = query.ToList();
 
             //sort categories
-            var sortedCategories = this.SortCategoriesForTree(unsortedCategories);
+            var sortedCategories = SortCategoriesForTree(unsortedCategories);
 
             //paging
             return new PagedList<Category>(sortedCategories, pageIndex, pageSize);
@@ -724,7 +724,7 @@ namespace Nop.Services.Catalog
         {
             var result = string.Empty;
 
-            var breadcrumb = this.GetCategoryBreadCrumb(category, allCategories, true);
+            var breadcrumb = GetCategoryBreadCrumb(category, allCategories, true);
             for (var i = 0; i <= breadcrumb.Count - 1; i++)
             {
                 var categoryName = _localizationService.GetLocalized(breadcrumb[i], x => x.Name, languageId);
@@ -763,7 +763,7 @@ namespace Nop.Services.Catalog
                 alreadyProcessedCategoryIds.Add(category.Id);
 
                 category = allCategories != null ? allCategories.FirstOrDefault(c => c.Id == category.ParentCategoryId)
-                    : this.GetCategoryById(category.ParentCategoryId);
+                    : GetCategoryById(category.ParentCategoryId);
             }
 
             result.Reverse();

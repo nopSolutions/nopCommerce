@@ -19,8 +19,8 @@ namespace Nop.Web.Areas.Admin.Controllers
         public OnlineCustomerController(ICustomerModelFactory customerModelFactory,
             IPermissionService permissionService)
         {
-            this._customerModelFactory = customerModelFactory;
-            this._permissionService = permissionService;
+            _customerModelFactory = customerModelFactory;
+            _permissionService = permissionService;
         }
 
         #endregion

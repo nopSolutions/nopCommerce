@@ -28,9 +28,9 @@ namespace Nop.Core.Caching
 
         public RedisConnectionWrapper(NopConfig config)
         {
-            this._config = config;
-            this._connectionString = new Lazy<string>(GetConnectionString);
-            this._redisLockFactory = CreateRedisLockFactory();
+            _config = config;
+            _connectionString = new Lazy<string>(GetConnectionString);
+            _redisLockFactory = CreateRedisLockFactory();
         }
 
         #endregion

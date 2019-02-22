@@ -43,14 +43,14 @@ namespace Nop.Web.Areas.Admin.Controllers
             INotificationService notificationService,
             IPermissionService permissionService)
         {
-            this._dateTimeHelper = dateTimeHelper;
-            this._exportManager = exportManager;
-            this._importManager = importManager;
-            this._localizationService = localizationService;
-            this._newsletterSubscriptionModelFactory = newsletterSubscriptionModelFactory;
-            this._newsLetterSubscriptionService = newsLetterSubscriptionService;
-            this._notificationService = notificationService;
-            this._permissionService = permissionService;
+            _dateTimeHelper = dateTimeHelper;
+            _exportManager = exportManager;
+            _importManager = importManager;
+            _localizationService = localizationService;
+            _newsletterSubscriptionModelFactory = newsletterSubscriptionModelFactory;
+            _newsLetterSubscriptionService = newsLetterSubscriptionService;
+            _notificationService = notificationService;
+            _permissionService = permissionService;
         }
 
         #endregion

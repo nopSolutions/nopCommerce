@@ -32,9 +32,9 @@ namespace Nop.Services.Configuration
             IRepository<Setting> settingRepository,
             IStaticCacheManager cacheManager)
         {
-            this._eventPublisher = eventPublisher;
-            this._settingRepository = settingRepository;
-            this._cacheManager = cacheManager;
+            _eventPublisher = eventPublisher;
+            _settingRepository = settingRepository;
+            _cacheManager = cacheManager;
         }
 
         #endregion

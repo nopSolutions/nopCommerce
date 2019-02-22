@@ -21,7 +21,7 @@ namespace Nop.Web.Framework.Mvc.Filters
         /// <param name="actionParameterName">The name of the action parameter to which the result will be passed</param>
         public ValidateCaptchaAttribute(string actionParameterName = "captchaValid") : base(typeof(ValidateCaptchaFilter))
         {
-            this.Arguments = new object[] { actionParameterName };
+            Arguments = new object[] { actionParameterName };
         }
 
         #endregion
@@ -52,8 +52,8 @@ namespace Nop.Web.Framework.Mvc.Filters
 
             public ValidateCaptchaFilter(string actionParameterName, CaptchaSettings captchaSettings)
             {
-                this._actionParameterName = actionParameterName;
-                this._captchaSettings = captchaSettings;
+                _actionParameterName = actionParameterName;
+                _captchaSettings = captchaSettings;
             }
 
             #endregion

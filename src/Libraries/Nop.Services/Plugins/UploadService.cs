@@ -34,9 +34,9 @@ namespace Nop.Services.Plugins
             IStoreContext storeContext,
             IThemeProvider themeProvider)
         {
-            this._fileProvider = fileProvider;
-            this._storeContext = storeContext;
-            this._themeProvider = themeProvider;
+            _fileProvider = fileProvider;
+            _storeContext = storeContext;
+            _themeProvider = themeProvider;
         }
 
         #endregion

@@ -60,19 +60,19 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
             IWorkContext workContext,
             ShoppingCartSettings shoppingCartSettings)
         {
-            this._genericAttributeService = genericAttributeService;
-            this._orderService = orderService;
-            this._orderProcessingService = orderProcessingService;
-            this._paymentService = paymentService;
-            this._permissionService = permissionService;
-            this._localizationService = localizationService;
-            this._logger = logger;
-            this._notificationService = notificationService;
-            this._settingService = settingService;
-            this._shoppingCartSettings = shoppingCartSettings;
-            this._storeContext = storeContext;
-            this._webHelper = webHelper;
-            this._workContext = workContext;
+            _genericAttributeService = genericAttributeService;
+            _orderService = orderService;
+            _orderProcessingService = orderProcessingService;
+            _paymentService = paymentService;
+            _permissionService = permissionService;
+            _localizationService = localizationService;
+            _logger = logger;
+            _notificationService = notificationService;
+            _settingService = settingService;
+            _shoppingCartSettings = shoppingCartSettings;
+            _storeContext = storeContext;
+            _webHelper = webHelper;
+            _workContext = workContext;
         }
 
         #endregion
@@ -308,7 +308,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
             byte[] parameters;
             using (var stream = new MemoryStream())
             {
-                this.Request.Body.CopyTo(stream);
+                Request.Body.CopyTo(stream);
                 parameters = stream.ToArray();
             }
             var strRequest = Encoding.ASCII.GetString(parameters);
@@ -423,7 +423,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                                     }
                                 }
 
-                                //this.OrderService.InsertOrderNote(newOrder.OrderId, sb.ToString(), DateTime.UtcNow);
+                                //OrderService.InsertOrderNote(newOrder.OrderId, sb.ToString(), DateTime.UtcNow);
                                 _logger.Information("PayPal IPN. Recurring info", new NopException(sb.ToString()));
                             }
                             else

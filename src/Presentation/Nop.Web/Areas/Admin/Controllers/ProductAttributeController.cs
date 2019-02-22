@@ -38,13 +38,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             IProductAttributeModelFactory productAttributeModelFactory,
             IProductAttributeService productAttributeService)
         {
-            this._customerActivityService = customerActivityService;
-            this._localizationService = localizationService;
-            this._localizedEntityService = localizedEntityService;
-            this._notificationService = notificationService;
-            this._permissionService = permissionService;
-            this._productAttributeModelFactory = productAttributeModelFactory;
-            this._productAttributeService = productAttributeService;
+            _customerActivityService = customerActivityService;
+            _localizationService = localizationService;
+            _localizedEntityService = localizedEntityService;
+            _notificationService = notificationService;
+            _permissionService = permissionService;
+            _productAttributeModelFactory = productAttributeModelFactory;
+            _productAttributeService = productAttributeService;
         }
 
         #endregion

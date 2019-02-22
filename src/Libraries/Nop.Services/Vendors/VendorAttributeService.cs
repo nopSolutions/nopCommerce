@@ -29,10 +29,10 @@ namespace Nop.Services.Vendors
             IRepository<VendorAttribute> vendorAttributeRepository,
             IRepository<VendorAttributeValue> vendorAttributeValueRepository)
         {
-            this._cacheManager = cacheManager;
-            this._eventPublisher = eventPublisher;
-            this._vendorAttributeRepository = vendorAttributeRepository;
-            this._vendorAttributeValueRepository = vendorAttributeValueRepository;
+            _cacheManager = cacheManager;
+            _eventPublisher = eventPublisher;
+            _vendorAttributeRepository = vendorAttributeRepository;
+            _vendorAttributeValueRepository = vendorAttributeValueRepository;
         }
 
         #endregion

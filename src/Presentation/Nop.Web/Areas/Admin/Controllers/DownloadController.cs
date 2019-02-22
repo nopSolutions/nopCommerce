@@ -23,8 +23,8 @@ namespace Nop.Web.Areas.Admin.Controllers
         public DownloadController(IDownloadService downloadService,
             INopFileProvider fileProvider)
         {
-            this._downloadService = downloadService;
-            this._fileProvider = fileProvider;
+            _downloadService = downloadService;
+            _fileProvider = fileProvider;
         }
 
         #endregion

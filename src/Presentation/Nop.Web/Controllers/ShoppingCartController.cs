@@ -116,39 +116,39 @@ namespace Nop.Web.Controllers
             OrderSettings orderSettings,
             ShoppingCartSettings shoppingCartSettings)
         {
-            this._captchaSettings = captchaSettings;
-            this._customerSettings = customerSettings;
-            this._checkoutAttributeParser = checkoutAttributeParser;
-            this._checkoutAttributeService = checkoutAttributeService;
-            this._currencyService = currencyService;
-            this._customerActivityService = customerActivityService;
-            this._customerService = customerService;
-            this._discountService = discountService;
-            this._downloadService = downloadService;
-            this._genericAttributeService = genericAttributeService;
-            this._giftCardService = giftCardService;
-            this._localizationService = localizationService;
-            this._fileProvider = fileProvider;
-            this._notificationService = notificationService;
-            this._permissionService = permissionService;
-            this._pictureService = pictureService;
-            this._priceCalculationService = priceCalculationService;
-            this._priceFormatter = priceFormatter;
-            this._productAttributeParser = productAttributeParser;
-            this._productAttributeService = productAttributeService;
-            this._productService = productService;
-            this._shoppingCartModelFactory = shoppingCartModelFactory;
-            this._shoppingCartService = shoppingCartService;
-            this._cacheManager = cacheManager;
-            this._storeContext = storeContext;
-            this._taxService = taxService;
-            this._urlRecordService = urlRecordService;
-            this._webHelper = webHelper;
-            this._workContext = workContext;
-            this._workflowMessageService = workflowMessageService;
-            this._mediaSettings = mediaSettings;
-            this._orderSettings = orderSettings;
-            this._shoppingCartSettings = shoppingCartSettings;
+            _captchaSettings = captchaSettings;
+            _customerSettings = customerSettings;
+            _checkoutAttributeParser = checkoutAttributeParser;
+            _checkoutAttributeService = checkoutAttributeService;
+            _currencyService = currencyService;
+            _customerActivityService = customerActivityService;
+            _customerService = customerService;
+            _discountService = discountService;
+            _downloadService = downloadService;
+            _genericAttributeService = genericAttributeService;
+            _giftCardService = giftCardService;
+            _localizationService = localizationService;
+            _fileProvider = fileProvider;
+            _notificationService = notificationService;
+            _permissionService = permissionService;
+            _pictureService = pictureService;
+            _priceCalculationService = priceCalculationService;
+            _priceFormatter = priceFormatter;
+            _productAttributeParser = productAttributeParser;
+            _productAttributeService = productAttributeService;
+            _productService = productService;
+            _shoppingCartModelFactory = shoppingCartModelFactory;
+            _shoppingCartService = shoppingCartService;
+            _cacheManager = cacheManager;
+            _storeContext = storeContext;
+            _taxService = taxService;
+            _urlRecordService = urlRecordService;
+            _webHelper = webHelper;
+            _workContext = workContext;
+            _workflowMessageService = workflowMessageService;
+            _mediaSettings = mediaSettings;
+            _orderSettings = orderSettings;
+            _shoppingCartSettings = shoppingCartSettings;
         }
 
         #endregion
@@ -808,7 +808,7 @@ namespace Nop.Web.Controllers
                             shoppingCarts.Sum(item => item.Quantity));
 
                         var updateflyoutcartsectionhtml = _shoppingCartSettings.MiniShoppingCartEnabled
-                            ? this.RenderViewComponentToString("FlyoutShoppingCart")
+                            ? RenderViewComponentToString("FlyoutShoppingCart")
                             : "";
 
                         return Json(new
@@ -1105,8 +1105,8 @@ namespace Nop.Web.Controllers
             }
 
             //update blocks
-            var ordetotalssectionhtml = this.RenderViewComponentToString("OrderTotals", new { isEditable });
-            var selectedcheckoutattributesssectionhtml = this.RenderViewComponentToString("SelectedCheckoutAttributes");
+            var ordetotalssectionhtml = RenderViewComponentToString("OrderTotals", new { isEditable });
+            var selectedcheckoutattributesssectionhtml = RenderViewComponentToString("SelectedCheckoutAttributes");
 
             return Json(new
             {

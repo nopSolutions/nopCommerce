@@ -34,11 +34,11 @@ namespace Nop.Web.Factories
             IStaticCacheManager cacheManager,
             IWorkContext workContext)
         {
-            this._countryService = countryService;
-            this._localizationService = localizationService;
-            this._stateProvinceService = stateProvinceService;
-            this._cacheManager = cacheManager;
-            this._workContext = workContext;
+            _countryService = countryService;
+            _localizationService = localizationService;
+            _stateProvinceService = stateProvinceService;
+            _cacheManager = cacheManager;
+            _workContext = workContext;
         }
 
         #endregion

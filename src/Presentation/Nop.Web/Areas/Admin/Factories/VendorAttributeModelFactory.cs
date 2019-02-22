@@ -29,9 +29,9 @@ namespace Nop.Web.Areas.Admin.Factories
             ILocalizedModelFactory localizedModelFactory,
             IVendorAttributeService vendorAttributeService)
         {
-            this._localizationService = localizationService;
-            this._localizedModelFactory = localizedModelFactory;
-            this._vendorAttributeService = vendorAttributeService;
+            _localizationService = localizationService;
+            _localizedModelFactory = localizedModelFactory;
+            _vendorAttributeService = vendorAttributeService;
         }
 
         #endregion

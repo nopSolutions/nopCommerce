@@ -34,9 +34,9 @@ namespace Nop.Plugin.Payments.Square.Services
             IWorkContext workContext,
             SquarePaymentSettings squarePaymentSettings)
         {
-            this._logger = logger;
-            this._workContext = workContext;
-            this._squarePaymentSettings = squarePaymentSettings;
+            _logger = logger;
+            _workContext = workContext;
+            _squarePaymentSettings = squarePaymentSettings;
         }
 
         #endregion

@@ -33,12 +33,12 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles
             IUrlHelperFactory urlHelperFactory,
             IWebHelper webHelper)
         {
-            this._actionContextAccessor = actionContextAccessor;
-            this._discountService = discountService;
-            this._localizationService = localizationService;
-            this._settingService = settingService;
-            this._urlHelperFactory = urlHelperFactory;
-            this._webHelper = webHelper;
+            _actionContextAccessor = actionContextAccessor;
+            _discountService = discountService;
+            _localizationService = localizationService;
+            _settingService = settingService;
+            _urlHelperFactory = urlHelperFactory;
+            _webHelper = webHelper;
         }
 
         #endregion

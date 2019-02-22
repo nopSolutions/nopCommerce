@@ -37,10 +37,10 @@ namespace Nop.Services.Payments
             PaymentSettings paymentSettings,
             ShoppingCartSettings shoppingCartSettings)
         {
-            this._pluginService = pluginService;
-            this._settingService = settingService;
-            this._paymentSettings = paymentSettings;
-            this._shoppingCartSettings = shoppingCartSettings;
+            _pluginService = pluginService;
+            _settingService = settingService;
+            _paymentSettings = paymentSettings;
+            _shoppingCartSettings = shoppingCartSettings;
         }
 
         #endregion

@@ -12,7 +12,7 @@ namespace Nop.Web.Models.Vendors
     {
         public VendorInfoModel()
         {
-            this.VendorAttributes = new List<VendorAttributeModel>();
+            VendorAttributes = new List<VendorAttributeModel>();
         }
 
         [NopResourceDisplayName("Account.VendorInfo.Name")]

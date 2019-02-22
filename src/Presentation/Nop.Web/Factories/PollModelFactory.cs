@@ -31,10 +31,10 @@ namespace Nop.Web.Factories
             IStoreContext storeContext,
             IWorkContext workContext)
         {
-            this._pollService = pollService;
-            this._cacheManager = cacheManager;
-            this._storeContext = storeContext;
-            this._workContext = workContext;
+            _pollService = pollService;
+            _cacheManager = cacheManager;
+            _storeContext = storeContext;
+            _workContext = workContext;
         }
 
         #endregion

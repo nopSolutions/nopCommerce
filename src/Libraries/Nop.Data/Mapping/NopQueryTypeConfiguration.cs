@@ -30,7 +30,7 @@ namespace Nop.Data.Mapping
         public virtual void Configure(QueryTypeBuilder<TQuery> builder)
         {
             //add custom configuration
-            this.PostConfigure(builder);
+            PostConfigure(builder);
         }
 
         /// <summary>

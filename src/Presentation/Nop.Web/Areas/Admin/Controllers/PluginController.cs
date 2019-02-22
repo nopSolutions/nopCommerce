@@ -79,26 +79,26 @@ namespace Nop.Web.Areas.Admin.Controllers
             TaxSettings taxSettings,
             WidgetSettings widgetSettings)
         {
-            this._externalAuthenticationSettings = externalAuthenticationSettings;
-            this._customerActivityService = customerActivityService;
-            this._eventPublisher = eventPublisher;
-            this._externalAuthenticationService = externalAuthenticationService;
-            this._localizationService = localizationService;
-            this._notificationService = notificationService;
-            this._paymentService = paymentService;
-            this._permissionService = permissionService;
-            this._pluginModelFactory = pluginModelFactory;
-            this._pluginService = pluginService;
-            this._settingService = settingService;
-            this._shippingService = shippingService;
-            this._uploadService = uploadService;
-            this._webHelper = webHelper;
-            this._widgetService = widgetService;
-            this._workContext = workContext;
-            this._paymentSettings = paymentSettings;
-            this._shippingSettings = shippingSettings;
-            this._taxSettings = taxSettings;
-            this._widgetSettings = widgetSettings;
+            _externalAuthenticationSettings = externalAuthenticationSettings;
+            _customerActivityService = customerActivityService;
+            _eventPublisher = eventPublisher;
+            _externalAuthenticationService = externalAuthenticationService;
+            _localizationService = localizationService;
+            _notificationService = notificationService;
+            _paymentService = paymentService;
+            _permissionService = permissionService;
+            _pluginModelFactory = pluginModelFactory;
+            _pluginService = pluginService;
+            _settingService = settingService;
+            _shippingService = shippingService;
+            _uploadService = uploadService;
+            _webHelper = webHelper;
+            _widgetService = widgetService;
+            _workContext = workContext;
+            _paymentSettings = paymentSettings;
+            _shippingSettings = shippingSettings;
+            _taxSettings = taxSettings;
+            _widgetSettings = widgetSettings;
         }
 
         #endregion

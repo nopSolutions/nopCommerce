@@ -32,9 +32,9 @@ namespace Nop.Services.Common
             IDbContext dbContext,
             INopFileProvider fileProvider)
         {
-            this._dataProvider = dataProvider;
-            this._dbContext = dbContext;
-            this._fileProvider = fileProvider;
+            _dataProvider = dataProvider;
+            _dbContext = dbContext;
+            _fileProvider = fileProvider;
         }
 
         #endregion

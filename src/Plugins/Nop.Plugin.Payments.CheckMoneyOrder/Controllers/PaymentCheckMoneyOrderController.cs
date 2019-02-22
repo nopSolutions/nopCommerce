@@ -35,12 +35,12 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder.Controllers
             ISettingService settingService,
             IStoreContext storeContext)
         {
-            this._languageService = languageService;
-            this._localizationService = localizationService;
-            this._notificationService = notificationService;
-            this._permissionService = permissionService;
-            this._settingService = settingService;
-            this._storeContext = storeContext;
+            _languageService = languageService;
+            _localizationService = localizationService;
+            _notificationService = notificationService;
+            _permissionService = permissionService;
+            _settingService = settingService;
+            _storeContext = storeContext;
         }
 
         #endregion

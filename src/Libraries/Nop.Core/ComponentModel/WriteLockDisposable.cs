@@ -21,8 +21,8 @@ namespace Nop.Core.ComponentModel
         /// <param name="writeLock">Use true if need to use write lock. If need to use read lock use false</param>
         public ReaderWriteLockDisposable(ReaderWriterLockSlim rwLock, bool writeLock)
         {
-            this._rwLock = rwLock;
-            this._writeLock = writeLock;
+            _rwLock = rwLock;
+            _writeLock = writeLock;
 
             if (_writeLock)
                 _rwLock.EnterWriteLock();

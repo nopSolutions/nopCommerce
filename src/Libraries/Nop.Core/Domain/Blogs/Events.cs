@@ -11,7 +11,7 @@ namespace Nop.Core.Domain.Blogs
         /// <param name="blogComment">Blog comment</param>
         public BlogCommentApprovedEvent(BlogComment blogComment)
         {
-            this.BlogComment = blogComment;
+            BlogComment = blogComment;
         }
 
         /// <summary>

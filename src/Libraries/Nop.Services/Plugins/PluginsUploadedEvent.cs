@@ -16,7 +16,7 @@ namespace Nop.Services.Plugins
         /// <param name="uploadedPlugins">Uploaded plugins</param>
         public PluginsUploadedEvent(IList<PluginDescriptor> uploadedPlugins)
         {
-            this.UploadedPlugins = uploadedPlugins;
+            UploadedPlugins = uploadedPlugins;
         }
 
         #endregion

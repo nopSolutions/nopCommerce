@@ -27,9 +27,9 @@ namespace Nop.Services.Stores
             IRepository<Store> storeRepository,
             IStaticCacheManager cacheManager)
         {
-            this._eventPublisher = eventPublisher;
-            this._storeRepository = storeRepository;
-            this._cacheManager = cacheManager;
+            _eventPublisher = eventPublisher;
+            _storeRepository = storeRepository;
+            _cacheManager = cacheManager;
         }
 
         #endregion
@@ -197,7 +197,7 @@ namespace Nop.Services.Stores
             if (string.IsNullOrEmpty(host))
                 return false;
 
-            var contains = this.ParseHostValues(store).Any(x => x.Equals(host, StringComparison.InvariantCultureIgnoreCase));
+            var contains = ParseHostValues(store).Any(x => x.Equals(host, StringComparison.InvariantCultureIgnoreCase));
 
             return contains;
         }

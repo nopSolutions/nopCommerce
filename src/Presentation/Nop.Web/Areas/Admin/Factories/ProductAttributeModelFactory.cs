@@ -31,10 +31,10 @@ namespace Nop.Web.Areas.Admin.Factories
             IProductAttributeService productAttributeService,
             IProductService productService)
         {
-            this._localizationService = localizationService;
-            this._localizedModelFactory = localizedModelFactory;
-            this._productAttributeService = productAttributeService;
-            this._productService = productService;
+            _localizationService = localizationService;
+            _localizedModelFactory = localizedModelFactory;
+            _productAttributeService = productAttributeService;
+            _productService = productService;
         }
 
         #endregion

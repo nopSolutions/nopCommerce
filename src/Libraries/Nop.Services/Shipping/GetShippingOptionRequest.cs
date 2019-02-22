@@ -16,7 +16,7 @@ namespace Nop.Services.Shipping
 
         public GetShippingOptionRequest()
         {
-            this.Items = new List<PackageItem>();
+            Items = new List<PackageItem>();
         }
 
         #endregion
@@ -94,8 +94,8 @@ namespace Nop.Services.Shipping
             /// <param name="qty">Override "Quantity" property of shopping cart item</param>
             public PackageItem(ShoppingCartItem sci, int? qty = null)
             {
-                this.ShoppingCartItem = sci;
-                this.OverriddenQuantity = qty;
+                ShoppingCartItem = sci;
+                OverriddenQuantity = qty;
             }
 
             /// <summary>

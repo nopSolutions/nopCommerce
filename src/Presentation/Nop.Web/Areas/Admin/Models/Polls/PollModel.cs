@@ -19,10 +19,10 @@ namespace Nop.Web.Areas.Admin.Models.Polls
 
         public PollModel()
         {
-            this.AvailableLanguages = new List<SelectListItem>();
-            this.AvailableStores = new List<SelectListItem>();
-            this.SelectedStoreIds = new List<int>();
-            this.PollAnswerSearchModel = new PollAnswerSearchModel();
+            AvailableLanguages = new List<SelectListItem>();
+            AvailableStores = new List<SelectListItem>();
+            SelectedStoreIds = new List<int>();
+            PollAnswerSearchModel = new PollAnswerSearchModel();
         }
 
         #endregion

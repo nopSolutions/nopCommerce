@@ -60,17 +60,17 @@ namespace Nop.Plugin.Payments.Worldpay
             WorldpayPaymentManager worldpayPaymentManager,
             WorldpayPaymentSettings worldpayPaymentSettings)
         {
-            this._currencyService = currencyService;
-            this._customerService = customerService;
-            this._genericAttributeService = genericAttributeService;
-            this._localizationService = localizationService;
-            this._logger = logger;
-            this._paymentService = paymentService;
-            this._settingService = settingService;
-            this._storeService = storeService;
-            this._webHelper = webHelper;
-            this._worldpayPaymentManager = worldpayPaymentManager;
-            this._worldpayPaymentSettings = worldpayPaymentSettings;
+            _currencyService = currencyService;
+            _customerService = customerService;
+            _genericAttributeService = genericAttributeService;
+            _localizationService = localizationService;
+            _logger = logger;
+            _paymentService = paymentService;
+            _settingService = settingService;
+            _storeService = storeService;
+            _webHelper = webHelper;
+            _worldpayPaymentManager = worldpayPaymentManager;
+            _worldpayPaymentSettings = worldpayPaymentSettings;
         }
 
         #endregion

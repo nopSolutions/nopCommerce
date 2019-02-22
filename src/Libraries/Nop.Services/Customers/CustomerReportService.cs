@@ -31,10 +31,10 @@ namespace Nop.Services.Customers
             IRepository<Customer> customerRepository,
             IRepository<Order> orderRepository)
         {
-            this._customerService = customerService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._customerRepository = customerRepository;
-            this._orderRepository = orderRepository;
+            _customerService = customerService;
+            _dateTimeHelper = dateTimeHelper;
+            _customerRepository = customerRepository;
+            _orderRepository = orderRepository;
         }
 
         #endregion

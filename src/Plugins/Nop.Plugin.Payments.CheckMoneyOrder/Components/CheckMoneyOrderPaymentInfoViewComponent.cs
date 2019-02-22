@@ -19,10 +19,10 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder.Components
             IStoreContext storeContext,
             IWorkContext workContext)
         {
-            this._checkMoneyOrderPaymentSettings = checkMoneyOrderPaymentSettings;
-            this._localizationService = localizationService;
-            this._storeContext = storeContext;
-            this._workContext = workContext;
+            _checkMoneyOrderPaymentSettings = checkMoneyOrderPaymentSettings;
+            _localizationService = localizationService;
+            _storeContext = storeContext;
+            _workContext = workContext;
         }
 
         public IViewComponentResult Invoke()
