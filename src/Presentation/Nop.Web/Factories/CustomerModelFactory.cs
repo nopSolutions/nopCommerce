@@ -581,7 +581,10 @@ namespace Nop.Web.Factories
         /// <returns>Password recovery model</returns>
         public virtual PasswordRecoveryModel PreparePasswordRecoveryModel()
         {
-            var model = new PasswordRecoveryModel();
+            var model = new PasswordRecoveryModel
+            {
+                DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnForgotPasswordPage
+            };
             return model;
         }
 

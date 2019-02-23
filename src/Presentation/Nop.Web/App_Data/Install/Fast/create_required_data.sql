@@ -2018,6 +2018,7 @@ INSERT [dbo].[Setting] ([Id], [Name], [Value], [StoreId]) VALUES (582, N'captcha
 INSERT [dbo].[Setting] ([Id], [Name], [Value], [StoreId]) VALUES (583, N'captchasettings.recaptchatheme', N'', 0)
 INSERT [dbo].[Setting] ([Id], [Name], [Value], [StoreId]) VALUES (584, N'captchasettings.recaptchadefaultlanguage', N'', 0)
 INSERT [dbo].[Setting] ([Id], [Name], [Value], [StoreId]) VALUES (585, N'captchasettings.automaticallychooselanguage', N'True', 0)
+INSERT [dbo].[Setting] ([Id], [Name], [Value], [StoreId]) VALUES (586, N'captchasettings.showonforgotpasswordpage', N'False', 0)
 SET IDENTITY_INSERT [dbo].[Setting] OFF
 GO
 
