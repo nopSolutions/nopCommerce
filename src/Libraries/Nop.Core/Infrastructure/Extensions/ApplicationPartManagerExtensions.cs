@@ -365,7 +365,7 @@ namespace Nop.Core.Infrastructure.Extensions
                 throw new ArgumentNullException(nameof(config));
 
             //perform with locked access to resources
-            using (new ReaderWriteLockDisposable(_locker, true))
+            using (new ReaderWriteLockDisposable(_locker))
             {
                 var pluginDescriptors = new List<PluginDescriptor>();
                 var incompatiblePlugins = new List<string>();
