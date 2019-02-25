@@ -384,6 +384,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
             CreateMap<ReviewType, ReviewTypeModel>()
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore())
                 .ForMember(dest => dest.Form, mo => mo.Ignore());
+            CreateMap<ReviewTypeModel, ReviewType>();
 
             //product review
             CreateMap<ProductReview, ProductReviewModel>()
