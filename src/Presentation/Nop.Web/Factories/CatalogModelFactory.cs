@@ -1,7 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Xml;
+using System.Xml.Linq;
+using System.Xml.Serialization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Caching;
@@ -542,8 +547,10 @@ namespace Nop.Web.Factories
         /// <returns>Top menu model</returns>
         public virtual TopMenuModel PrepareTopMenuModel()
         {
+            var cachedCategoriesModel = new List<CategorySimpleModel>();
             //categories
-            var cachedCategoriesModel = PrepareCategorySimpleModels();
+            if (!_catalogSettings.UseAjaxLoadMenu)
+                cachedCategoriesModel = PrepareCategorySimpleModels();
 
             //top menu topics
             var topicCacheKey = string.Format(NopModelCacheDefaults.TopicTopMenuModelKey,
@@ -574,7 +581,8 @@ namespace Nop.Web.Factories
                 DisplayCustomerInfoMenuItem = _displayDefaultMenuItemSettings.DisplayCustomerInfoMenuItem,
                 DisplayBlogMenuItem = _displayDefaultMenuItemSettings.DisplayBlogMenuItem,
                 DisplayForumsMenuItem = _displayDefaultMenuItemSettings.DisplayForumsMenuItem,
-                DisplayContactUsMenuItem = _displayDefaultMenuItemSettings.DisplayContactUsMenuItem
+                DisplayContactUsMenuItem = _displayDefaultMenuItemSettings.DisplayContactUsMenuItem,
+                UseAjaxMenu = _catalogSettings.UseAjaxLoadMenu
             };
             return model;
         }
@@ -696,10 +704,79 @@ namespace Nop.Web.Factories
                     var subCategories = PrepareCategorySimpleModels(category.Id, loadSubCategories);
                     categoryModel.SubCategories.AddRange(subCategories);
                 }
+
+                categoryModel.HaveSubCategories = categoryModel.SubCategories.Count > 0 &
+                    categoryModel.SubCategories.Any(x => x.IncludeInTopMenu);
+
                 result.Add(categoryModel);
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// Prepare category (simple) xml document
+        /// </summary>
+        /// <returns>Xml document of category (simple) models</returns>
+        public virtual XDocument PrepareCategoryXmlDocument()
+        {
+            var cacheKey = string.Format(NopModelCacheDefaults.CategoryXmlAllModelKey,
+                _workContext.WorkingLanguage.Id,
+                string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
+                _storeContext.CurrentStore.Id);
+
+            return _cacheManager.Get(cacheKey, () => {
+
+                var categories = PrepareCategorySimpleModels();
+
+                var xsSubmit = new XmlSerializer(typeof(List<CategorySimpleModel>));
+
+                using (var strWriter = new StringWriter())
+                {
+                    using (var writer = XmlWriter.Create(strWriter))
+                    {
+                        xsSubmit.Serialize(writer, categories);
+                        var xml = strWriter.ToString();
+
+                        return XDocument.Parse(xml);
+                    }
+                }
+            });
+        }
+
+        /// <summary>
+        /// Prepare root categories for menu
+        /// </summary>
+        /// <param name="url">Helper to build URLs</param>
+        /// <returns>List of category (simple) models</returns>
+        public virtual List<CategorySimpleModel> PrepareRootCategories(IUrlHelper url)
+        {
+            var doc = PrepareCategoryXmlDocument();
+
+            var models = from xe in doc.Element("ArrayOfCategorySimpleModel").Elements("CategorySimpleModel")
+                         select GetCategorySimpleModel(xe, url);
+
+            return models.ToList();
+        }
+
+        /// <summary>
+        /// Prepare subcategories for menu
+        /// </summary>
+        /// <param name="id">Id of category to get subcategory</param>
+        /// <param name="url">Helper to build URLs</param>
+        /// <returns></returns>
+        public virtual List<CategorySimpleModel> PrepareSubCategories(int id, IUrlHelper url)
+        {
+            var doc = PrepareCategoryXmlDocument();
+
+            var model = from xe in doc.Descendants("CategorySimpleModel")
+                        where xe.Element("Id").Value == id.ToString()
+                        select xe;
+
+            var models = from xe in model.First().Elements("SubCategories").Elements("CategorySimpleModel")
+                         select GetCategorySimpleModel(xe, url);
+
+            return models.ToList();
         }
 
         #endregion
@@ -1397,6 +1474,29 @@ namespace Nop.Web.Factories
                 SearchTermMinimumLength = _catalogSettings.ProductSearchTermMinimumLength
             };
             return model;
+        }
+
+        #endregion
+
+        #region Utilities
+
+        protected virtual CategorySimpleModel GetCategorySimpleModel(XElement elem, IUrlHelper url)
+        {
+            return new CategorySimpleModel()
+            {
+
+                Id = Convert.ToInt32(elem.Element("Id").Value),
+                Name = elem.Element("Name").Value,
+                SeName = elem.Element("SeName").Value,
+
+                NumberOfProducts = elem.Element("NumberOfProducts").Value != ""
+                    ? Convert.ToInt32(elem.Element("NumberOfProducts").Value)
+                    : (int?)null,
+
+                IncludeInTopMenu = Convert.ToBoolean(elem.Element("IncludeInTopMenu").Value),
+                HaveSubCategories = Convert.ToBoolean(elem.Element("HaveSubCategories").Value),
+                Route = url.RouteUrl("Category", new { SeName = elem.Element("SeName").Value })
+            };
         }
 
         #endregion

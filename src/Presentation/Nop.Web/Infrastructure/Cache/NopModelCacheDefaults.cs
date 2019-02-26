@@ -120,6 +120,17 @@ namespace Nop.Web.Infrastructure.Cache
         public static string CategoryHomepagePatternKey => "Nop.pres.category.homepage";
 
         /// <summary>
+        /// Key for Xml document of CategorySimpleModels caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : language id
+        /// {1} : comma separated list of customer roles
+        /// {2} : current store ID
+        /// </remarks>
+        public const string CategoryXmlAllModelKey = "Nop.pres.categoryXml.all-{0}-{1}-{2}";
+        public const string CategoryXmlAllPatternKey = "Nop.pres.categoryXml.all";
+
+        /// <summary>
         /// Key for SpecificationAttributeOptionFilter caching
         /// </summary>
         /// <remarks>

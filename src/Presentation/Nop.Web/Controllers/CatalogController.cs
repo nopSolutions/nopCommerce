@@ -134,6 +134,22 @@ namespace Nop.Web.Controllers
             return View(templateViewPath, model);
         }
 
+        [HttpPost]
+        public virtual IActionResult GetCatalogRoot()
+        {
+            var model = _catalogModelFactory.PrepareRootCategories(Url);
+
+            return Json(model);
+        }
+
+        [HttpPost]
+        public virtual IActionResult GetCatalogSubCategories(int id)
+        {
+            var model = _catalogModelFactory.PrepareSubCategories(id, Url);
+
+            return Json(model);
+        }
+
         #endregion
 
         #region Manufacturers
