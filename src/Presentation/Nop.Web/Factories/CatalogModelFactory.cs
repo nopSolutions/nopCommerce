@@ -7,7 +7,9 @@ using System.Xml.Linq;
 using System.Xml.Serialization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Blogs;
@@ -41,6 +43,7 @@ namespace Nop.Web.Factories
         private readonly CatalogSettings _catalogSettings;
         private readonly DisplayDefaultMenuItemSettings _displayDefaultMenuItemSettings;
         private readonly ForumSettings _forumSettings;
+        private readonly IActionContextAccessor _actionContextAccessor;
         private readonly ICategoryService _categoryService;
         private readonly ICategoryTemplateService _categoryTemplateService;
         private readonly ICurrencyService _currencyService;
@@ -59,6 +62,7 @@ namespace Nop.Web.Factories
         private readonly IStaticCacheManager _cacheManager;
         private readonly IStoreContext _storeContext;
         private readonly ITopicService _topicService;
+        private readonly IUrlHelperFactory _urlHelperFactory;
         private readonly IUrlRecordService _urlRecordService;
         private readonly IVendorService _vendorService;
         private readonly IWebHelper _webHelper;
@@ -74,6 +78,7 @@ namespace Nop.Web.Factories
             CatalogSettings catalogSettings,
             DisplayDefaultMenuItemSettings displayDefaultMenuItemSettings,
             ForumSettings forumSettings,
+            IActionContextAccessor actionContextAccessor,
             ICategoryService categoryService,
             ICategoryTemplateService categoryTemplateService,
             ICurrencyService currencyService,
@@ -92,6 +97,7 @@ namespace Nop.Web.Factories
             IStaticCacheManager cacheManager,
             IStoreContext storeContext,
             ITopicService topicService,
+            IUrlHelperFactory urlHelperFactory,
             IUrlRecordService urlRecordService,
             IVendorService vendorService,
             IWebHelper webHelper,
@@ -103,6 +109,7 @@ namespace Nop.Web.Factories
             _catalogSettings = catalogSettings;
             _displayDefaultMenuItemSettings = displayDefaultMenuItemSettings;
             _forumSettings = forumSettings;
+            _actionContextAccessor = actionContextAccessor;
             _categoryService = categoryService;
             _categoryTemplateService = categoryTemplateService;
             _currencyService = currencyService;
@@ -121,6 +128,7 @@ namespace Nop.Web.Factories
             _cacheManager = cacheManager;
             _storeContext = storeContext;
             _topicService = topicService;
+            _urlHelperFactory = urlHelperFactory;
             _urlRecordService = urlRecordService;
             _vendorService = vendorService;
             _webHelper = webHelper;
@@ -747,14 +755,13 @@ namespace Nop.Web.Factories
         /// <summary>
         /// Prepare root categories for menu
         /// </summary>
-        /// <param name="url">Helper to build URLs</param>
         /// <returns>List of category (simple) models</returns>
-        public virtual List<CategorySimpleModel> PrepareRootCategories(IUrlHelper url)
+        public virtual List<CategorySimpleModel> PrepareRootCategories()
         {
             var doc = PrepareCategoryXmlDocument();
 
             var models = from xe in doc.Element("ArrayOfCategorySimpleModel").Elements("CategorySimpleModel")
-                         select GetCategorySimpleModel(xe, url);
+                         select GetCategorySimpleModel(xe);
 
             return models.ToList();
         }
@@ -763,9 +770,8 @@ namespace Nop.Web.Factories
         /// Prepare subcategories for menu
         /// </summary>
         /// <param name="id">Id of category to get subcategory</param>
-        /// <param name="url">Helper to build URLs</param>
         /// <returns></returns>
-        public virtual List<CategorySimpleModel> PrepareSubCategories(int id, IUrlHelper url)
+        public virtual List<CategorySimpleModel> PrepareSubCategories(int id)
         {
             var doc = PrepareCategoryXmlDocument();
 
@@ -774,7 +780,7 @@ namespace Nop.Web.Factories
                         select xe;
 
             var models = from xe in model.First().Elements("SubCategories").Elements("CategorySimpleModel")
-                         select GetCategorySimpleModel(xe, url);
+                         select GetCategorySimpleModel(xe);
 
             return models.ToList();
         }
@@ -1480,8 +1486,10 @@ namespace Nop.Web.Factories
 
         #region Utilities
 
-        protected virtual CategorySimpleModel GetCategorySimpleModel(XElement elem, IUrlHelper url)
+        protected virtual CategorySimpleModel GetCategorySimpleModel(XElement elem)
         {
+            var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
+
             return new CategorySimpleModel()
             {
 
@@ -1495,7 +1503,7 @@ namespace Nop.Web.Factories
 
                 IncludeInTopMenu = Convert.ToBoolean(elem.Element("IncludeInTopMenu").Value),
                 HaveSubCategories = Convert.ToBoolean(elem.Element("HaveSubCategories").Value),
-                Route = url.RouteUrl("Category", new { SeName = elem.Element("SeName").Value })
+                Route = urlHelper.RouteUrl("Category", new { SeName = elem.Element("SeName").Value })
             };
         }
 

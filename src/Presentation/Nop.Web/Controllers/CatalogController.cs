@@ -137,7 +137,7 @@ namespace Nop.Web.Controllers
         [HttpPost]
         public virtual IActionResult GetCatalogRoot()
         {
-            var model = _catalogModelFactory.PrepareRootCategories(Url);
+            var model = _catalogModelFactory.PrepareRootCategories();
 
             return Json(model);
         }
@@ -145,7 +145,7 @@ namespace Nop.Web.Controllers
         [HttpPost]
         public virtual IActionResult GetCatalogSubCategories(int id)
         {
-            var model = _catalogModelFactory.PrepareSubCategories(id, Url);
+            var model = _catalogModelFactory.PrepareSubCategories(id);
 
             return Json(model);
         }

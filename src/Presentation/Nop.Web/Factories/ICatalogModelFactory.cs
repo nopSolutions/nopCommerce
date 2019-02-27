@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Xml.Linq;
-using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Vendors;
 using Nop.Web.Models.Catalog;
@@ -99,17 +98,15 @@ namespace Nop.Web.Factories
         /// <summary>
         /// Prepare root categories for menu
         /// </summary>
-        /// <param name="url">Helper to build URLs</param>
         /// <returns>List of category (simple) models</returns>
-        List<CategorySimpleModel> PrepareRootCategories(IUrlHelper url);
+        List<CategorySimpleModel> PrepareRootCategories();
 
         /// <summary>
         /// Prepare subcategories for menu
         /// </summary>
         /// <param name="id">Id of category to get subcategory</param>
-        /// <param name="url">Helper to build URLs</param>
         /// <returns></returns>
-        List<CategorySimpleModel> PrepareSubCategories(int id, IUrlHelper url);
+        List<CategorySimpleModel> PrepareSubCategories(int id);
 
         #endregion
 
