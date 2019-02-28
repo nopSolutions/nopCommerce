@@ -1096,3 +1096,11 @@ UPDATE [ShippingMethod]
 SET [Description] = 'Shipping by land transport'
 WHERE [Name] = 'Ground'
 GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'commonsettings.scheduletaskruntimeout')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'commonsettings.scheduletaskruntimeout', N'', 0)
+END
+GO

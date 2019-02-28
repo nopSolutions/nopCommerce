@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Net;
+using System.Net.Http;
 using System.Threading;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Tasks;
 using Nop.Core.Infrastructure;
 using Nop.Services.Localization;
@@ -24,6 +24,7 @@ namespace Nop.Services.Tasks
         private readonly Dictionary<string, string> _tasks;
         private Timer _timer;
         private bool _disposed;
+        private static readonly int? _timeout;
 
         #endregion
 
@@ -33,6 +34,7 @@ namespace Nop.Services.Tasks
         {
             _storeContext = EngineContext.Current.Resolve<IStoreContext>();
             _scheduleTaskUrl = $"{_storeContext.CurrentStore.Url}{NopTaskDefaults.ScheduleTaskPath}";
+            _timeout = EngineContext.Current.Resolve<CommonSettings>().ScheduleTaskRunTimeout;
         }
 
         internal TaskThread()
@@ -57,16 +59,22 @@ namespace Nop.Services.Tasks
                 var taskType = _tasks[taskName];
 
                 //create and send post data
-                var postData = new NameValueCollection
+                var postData = new List<KeyValuePair<string, string>>
                 {
-                    { "taskType", taskType }
+                    new KeyValuePair<string, string>("taskType", taskType)
                 };
 
                 try
                 {
-                    using (var client = new WebClient())
+                    using (var client = new HttpClient())
                     {
-                        client.UploadValues(_scheduleTaskUrl, postData);
+                        if (_timeout.HasValue)
+                        {
+                            client.Timeout = TimeSpan.FromMilliseconds(_timeout.Value);
+                        }
+
+                        var task = client.PostAsync(_scheduleTaskUrl, new FormUrlEncodedContent(postData));
+                        task.Wait();
                     }
                 }
                 catch (Exception ex)
