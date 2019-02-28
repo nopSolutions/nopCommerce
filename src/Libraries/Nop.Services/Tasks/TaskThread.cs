@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Nop.Core;
 using Nop.Core.Domain.Tasks;
 using Nop.Core.Infrastructure;
+using Nop.Services.Localization;
 using Nop.Services.Logging;
 
 namespace Nop.Services.Tasks
@@ -19,6 +20,7 @@ namespace Nop.Services.Tasks
         #region Fields
 
         private static readonly string _scheduleTaskUrl;
+        private static readonly IStoreContext _storeContext;
         private readonly Dictionary<string, string> _tasks;
         private Timer _timer;
         private bool _disposed;
@@ -29,8 +31,8 @@ namespace Nop.Services.Tasks
 
         static TaskThread()
         {
-            var storeContext = EngineContext.Current.Resolve<IStoreContext>();
-            _scheduleTaskUrl = $"{storeContext.CurrentStore.Url}{NopTaskDefaults.ScheduleTaskPath}";
+            _storeContext = EngineContext.Current.Resolve<IStoreContext>();
+            _scheduleTaskUrl = $"{_storeContext.CurrentStore.Url}{NopTaskDefaults.ScheduleTaskPath}";
         }
 
         internal TaskThread()
@@ -50,8 +52,10 @@ namespace Nop.Services.Tasks
 
             StartedUtc = DateTime.UtcNow;
             IsRunning = true;
-            foreach (var taskType in _tasks.Values)
+            foreach (var taskName in _tasks.Keys)
             {
+                var taskType = _tasks[taskName];
+
                 //create and send post data
                 var postData = new NameValueCollection
                 {
@@ -73,7 +77,12 @@ namespace Nop.Services.Tasks
                     {
                         // Resolve
                         var logger = scope.ServiceProvider.GetRequiredService<ILogger>();
-                        logger.Error(ex.Message, ex);
+                        var localizationService = scope.ServiceProvider.GetRequiredService<ILocalizationService>();
+
+                        var message = string.Format(localizationService.GetResource("ScheduleTasks.Error"), taskName,
+                            ex.Message, taskType, _storeContext.CurrentStore.Name, _scheduleTaskUrl);
+
+                        logger.Error(message, ex);
                     }
                 }
             }
@@ -104,7 +113,7 @@ namespace Nop.Services.Tasks
         /// </summary>
         public void Dispose()
         {
-            if (_timer == null || _disposed) 
+            if (_timer == null || _disposed)
                 return;
 
             lock (this)

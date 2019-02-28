@@ -17337,6 +17337,9 @@
   <LocaleResource Name="RewardPoints.NoHistory">
     <Value>There is no balance history yet</Value>
   </LocaleResource>
+  <LocaleResource Name="ScheduleTasks.Error">
+    <Value>The "{0}" scheduled task failed with the "{1}" error\r\nRunning context:\r\nTask type: {2}\r\nStore name: {3}\r\nTask run address: {4}</Value>
+  </LocaleResource>  
   <LocaleResource Name="Search">
     <Value>Search</Value>
   </LocaleResource>
