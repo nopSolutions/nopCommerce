@@ -6672,6 +6672,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnRegistrationPage.Hint">
     <Value>Check to show CAPTCHA on registration page.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnForgotPasswordPage">
+    <Value>Show on forgot password page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnForgotPasswordPage.Hint">
+    <Value>Check to show CAPTCHA on forgot password page when restore password</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.ConvertNonWesternChars">
     <Value>Convert non-western chars</Value>
   </LocaleResource>

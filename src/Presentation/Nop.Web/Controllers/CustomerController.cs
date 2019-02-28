@@ -416,13 +416,20 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
+        [ValidateCaptcha]
         [HttpPost, ActionName("PasswordRecovery")]
         [PublicAntiForgery]
         [FormValueRequired("send-email")]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
-        public virtual IActionResult PasswordRecoverySend(PasswordRecoveryModel model)
+        public virtual IActionResult PasswordRecoverySend(PasswordRecoveryModel model, bool captchaValid)
         {
+            // validate CAPTCHA
+            if (_captchaSettings.Enabled && _captchaSettings.ShowOnLoginPage && !captchaValid)
+            {
+                ModelState.AddModelError("", _captchaSettings.GetWrongCaptchaMessage(_localizationService));
+            }
+
             if (ModelState.IsValid)
             {
                 var customer = _customerService.GetCustomerByEmail(model.Email);
