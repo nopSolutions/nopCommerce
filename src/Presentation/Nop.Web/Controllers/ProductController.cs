@@ -35,6 +35,7 @@ namespace Nop.Web.Controllers
 
         private readonly CaptchaSettings _captchaSettings;
         private readonly CatalogSettings _catalogSettings;
+        private readonly ICatalogModelFactory _catalogModelFactory;
         private readonly IAclService _aclService;
         private readonly ICompareProductsService _compareProductsService;
         private readonly ICustomerActivityService _customerActivityService;
@@ -60,6 +61,7 @@ namespace Nop.Web.Controllers
 
         public ProductController(CaptchaSettings captchaSettings,
             CatalogSettings catalogSettings,
+            ICatalogModelFactory catalogModelFactory,
             IAclService aclService,
             ICompareProductsService compareProductsService,
             ICustomerActivityService customerActivityService,
@@ -81,6 +83,7 @@ namespace Nop.Web.Controllers
         {
             _captchaSettings = captchaSettings;
             _catalogSettings = catalogSettings;
+            _catalogModelFactory = catalogModelFactory;
             _aclService = aclService;
             _compareProductsService = compareProductsService;
             _customerActivityService = customerActivityService;
@@ -206,20 +209,11 @@ namespace Nop.Web.Controllers
         #region New (recently added) products page
 
         [HttpsRequirement(SslRequirement.No)]
-        public virtual IActionResult NewProducts()
+        public virtual IActionResult NewProducts(CatalogPagingFilteringModel command)
         {
             if (!_catalogSettings.NewProductsEnabled)
                 return Content("");
-
-            var products = _productService.SearchProducts(
-                storeId: _storeContext.CurrentStore.Id,
-                visibleIndividuallyOnly: true,
-                markedAsNewOnly: true,
-                orderBy: ProductSortingEnum.CreatedOn,
-                pageSize: _catalogSettings.NewProductsNumber);
-
-            var model = new List<ProductOverviewModel>();
-            model.AddRange(_productModelFactory.PrepareProductOverviewModels(products));
+            var model = _catalogModelFactory.PrepaireNewProductsModel(command);
 
             return View(model);
         }

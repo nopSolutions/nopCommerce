@@ -459,5 +459,20 @@ namespace Nop.Core.Domain.Catalog
         /// Get or set a value indicating whether it's necessary to show the date for pre-order availability in a public store
         /// </summary>
         public bool DisplayDatePreOrderAvailability { get; set; }
+
+        /// <summary>
+        /// Gets or sets a number of products per page on 'New products' page
+        /// </summary>
+        public int NewProductsPageSize { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether customers can select the page size for 'New products'
+        /// </summary>
+        public bool NewProductsAllowCustomersToSelectPageSize { get; set; }
+
+        /// <summary>
+        /// Gets or sets the available customer selectable page size options for 'New products'
+        /// </summary>
+        public string NewProductsPageSizeOptions { get; set; }
     }
 }

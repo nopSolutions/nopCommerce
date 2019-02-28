@@ -188,5 +188,15 @@ namespace Nop.Web.Factories
         SearchBoxModel PrepareSearchBoxModel();
 
         #endregion
+
+        #region New products
+        
+        /// <summary>
+        /// Prepare products for New products page
+        /// </summary>
+        /// <param name="command">Catalog paging filtering command</param>
+        /// <returns>Products by tag model</returns>
+        NewProductsModel PrepaireNewProductsModel(CatalogPagingFilteringModel command);
+        #endregion
     }
 }
