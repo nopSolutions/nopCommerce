@@ -1430,6 +1430,7 @@ namespace Nop.Web.Factories
                 visibleIndividuallyOnly: true,
                 markedAsNewOnly: true,
                 orderBy: ProductSortingEnum.CreatedOn,
+                pageIndex: command.PageNumber - 1,
                 pageSize: _catalogSettings.NewProductsNumber);
 
             model.Products = _productModelFactory.PrepareProductOverviewModels(products).ToList();
