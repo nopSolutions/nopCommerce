@@ -219,6 +219,18 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public string ProductsByTagPageSizeOptions { get; set; }
         public bool ProductsByTagPageSizeOptions_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.NewProductsPageSize")]
+        public int NewProductsPageSize { get; set;  }
+        public bool NewProductsPageSize_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.NewProductsAllowCustomersToSelectPageSize")]
+        public bool NewProductsAllowCustomersToSelectPageSize { get; set; }
+        public bool NewProductsAllowCustomersToSelectPageSize_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.NewProductsPageSizeOptions")]
+        public string NewProductsPageSizeOptions { get; set; }
+        public bool NewProductsPageSizeOptions_OverrideForStore { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.IncludeShortDescriptionInCompareProducts")]
         public bool IncludeShortDescriptionInCompareProducts { get; set; }
         public bool IncludeShortDescriptionInCompareProducts_OverrideForStore { get; set; }
