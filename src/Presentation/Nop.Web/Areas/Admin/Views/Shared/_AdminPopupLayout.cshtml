@@ -69,8 +69,8 @@
             var rootAppPath = '@(Url.Content("~/"))';
         </script>
         @Html.NopHeadCustom()
-        @Html.NopCssFiles(this.Url, ResourceLocation.Head, false)
-        @Html.NopScripts(this.Url, ResourceLocation.Head, false)
+        @Html.NopCssFiles(ResourceLocation.Head, false)
+        @Html.NopScripts(ResourceLocation.Head, false)
     </head>
     <body class="hold-transition skin-blue sidebar-collapse">
         <div class="wrapper">
@@ -79,8 +79,8 @@
                 @RenderBody()
             </div>
         </div>
-        @Html.NopCssFiles(this.Url, ResourceLocation.Footer)
-        @Html.NopScripts(this.Url, ResourceLocation.Footer)
+        @Html.NopCssFiles(ResourceLocation.Footer)
+        @Html.NopScripts(ResourceLocation.Footer)
         <script>
             $(document).ready(function () {
                 //enable tooltips

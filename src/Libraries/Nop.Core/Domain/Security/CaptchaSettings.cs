@@ -48,6 +48,10 @@ namespace Nop.Core.Domain.Security
         /// </summary>
         public bool ShowOnApplyVendorPage { get; set; }
         /// <summary>
+        /// A value indicating whether CAPTCHA should be displayed on the "forgot password" page
+        /// </summary>
+        public bool ShowOnForgotPasswordPage { get; set; }
+        /// <summary>
         /// reCAPTCHA public key
         /// </summary>
         public string ReCaptchaPublicKey { get; set; }

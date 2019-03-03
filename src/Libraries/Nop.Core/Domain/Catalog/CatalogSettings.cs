@@ -474,5 +474,10 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets the available customer selectable page size options for 'New products'
         /// </summary>
         public string NewProductsPageSizeOptions { get; set; }
+        
+        /// <summary>description
+        /// Get or set a value indicating whether use standart menu in public store or use Ajax to load menu
+        /// </summary>
+        public bool UseAjaxLoadMenu { get; set; }
     }
 }

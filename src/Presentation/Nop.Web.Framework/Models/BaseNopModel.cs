@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Xml.Serialization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
@@ -46,11 +47,13 @@ namespace Nop.Web.Framework.Models
         #region Properties
 
         //MVC is suppressing further validation if the IFormCollection is passed to a controller method. That's why we add it to the model
+        [XmlIgnore]
         public IFormCollection Form { get; set; }
 
         /// <summary>
         /// Gets or sets property to store any custom values for models 
         /// </summary>
+        [XmlIgnore]
         public Dictionary<string, object> CustomProperties { get; set; }
 
         #endregion

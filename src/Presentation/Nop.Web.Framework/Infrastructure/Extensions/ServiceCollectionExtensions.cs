@@ -57,7 +57,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             engine.Initialize(services);
             var serviceProvider = engine.ConfigureServices(services, configuration);
 
-            if (!DataSettingsManager.DatabaseIsInstalled) 
+            if (!DataSettingsManager.DatabaseIsInstalled)
                 return serviceProvider;
 
             //implement schedule tasks
@@ -196,6 +196,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             //set default authentication schemes
             var authenticationBuilder = services.AddAuthentication(options =>
             {
+                options.DefaultChallengeScheme = NopAuthenticationDefaults.AuthenticationScheme;
                 options.DefaultScheme = NopAuthenticationDefaults.AuthenticationScheme;
                 options.DefaultSignInScheme = NopAuthenticationDefaults.ExternalAuthenticationScheme;
             });

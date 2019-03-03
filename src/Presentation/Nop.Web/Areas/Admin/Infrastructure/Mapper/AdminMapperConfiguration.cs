@@ -338,6 +338,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(settings => settings.ProductSortingEnumDisabled, options => options.Ignore())
                 .ForMember(settings => settings.ProductSortingEnumDisplayOrder, options => options.Ignore())
                 .ForMember(settings => settings.PublishBackProductWhenCancellingOrders, options => options.Ignore())
+                .ForMember(settings => settings.UseAjaxLoadMenu, options => options.Ignore())
                 .ForMember(settings => settings.UseLinksInRequiredProductWarnings, options => options.Ignore());
 
             CreateMap<ProductCategory, CategoryProductModel>()
@@ -384,6 +385,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
             CreateMap<ReviewType, ReviewTypeModel>()
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore())
                 .ForMember(dest => dest.Form, mo => mo.Ignore());
+            CreateMap<ReviewTypeModel, ReviewType>();
 
             //product review
             CreateMap<ProductReview, ProductReviewModel>()
@@ -1409,7 +1411,8 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.ShowOnLoginPage_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.ShowOnNewsCommentPage_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.ShowOnProductReviewPage_OverrideForStore, options => options.Ignore())
-                .ForMember(model => model.ShowOnRegistrationPage_OverrideForStore, options => options.Ignore());
+                .ForMember(model => model.ShowOnRegistrationPage_OverrideForStore, options => options.Ignore())
+                .ForMember(model => model.ShowOnForgotPasswordPage_OverrideForStore, options => options.Ignore());
             CreateMap<CaptchaSettingsModel, CaptchaSettings>()
                 .ForMember(settings => settings.AutomaticallyChooseLanguage, options => options.Ignore())
                 .ForMember(settings => settings.ReCaptchaDefaultLanguage, options => options.Ignore())

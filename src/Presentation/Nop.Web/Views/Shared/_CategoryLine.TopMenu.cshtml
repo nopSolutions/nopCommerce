@@ -1,10 +1,10 @@
 ﻿@model TopMenuModel.CategoryLineModel
 <li>
     <a href="@Url.RouteUrl("Category", new { SeName = Model.Category.SeName })">@Model.Category.Name
-    @if (Model.Category.NumberOfProducts.HasValue)
-    {
-        <text> </text>@T("Categories.TotalProducts", Model.Category.NumberOfProducts.Value)
-    }
+        @if (Model.Category.NumberOfProducts.HasValue)
+        {
+            <text> </text>@T("Categories.TotalProducts", Model.Category.NumberOfProducts.Value)
+        }
     </a>
     @{
         //subcategories
