@@ -54,18 +54,18 @@ namespace Nop.Web.Factories
             IWorkContext workContext,
             OrderSettings orderSettings)
         {
-            this._currencyService = currencyService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._downloadService = downloadService;
-            this._localizationService = localizationService;
-            this._orderService = orderService;
-            this._priceFormatter = priceFormatter;
-            this._returnRequestService = returnRequestService;
-            this._cacheManager = cacheManager;
-            this._storeContext = storeContext;
-            this._urlRecordService = urlRecordService;
-            this._workContext = workContext;
-            this._orderSettings = orderSettings;
+            _currencyService = currencyService;
+            _dateTimeHelper = dateTimeHelper;
+            _downloadService = downloadService;
+            _localizationService = localizationService;
+            _orderService = orderService;
+            _priceFormatter = priceFormatter;
+            _returnRequestService = returnRequestService;
+            _cacheManager = cacheManager;
+            _storeContext = storeContext;
+            _urlRecordService = urlRecordService;
+            _workContext = workContext;
+            _orderSettings = orderSettings;
         }
 
         #endregion
@@ -130,7 +130,7 @@ namespace Nop.Web.Factories
             model.CustomOrderNumber = order.CustomOrderNumber;
 
             //return reasons
-            model.AvailableReturnReasons = _cacheManager.Get(string.Format(ModelCacheEventConsumer.RETURNREQUESTREASONS_MODEL_KEY, _workContext.WorkingLanguage.Id),
+            model.AvailableReturnReasons = _cacheManager.Get(string.Format(NopModelCacheDefaults.ReturnRequestReasonsModelKey, _workContext.WorkingLanguage.Id),
                 () =>
                 {
                     var reasons = new List<SubmitReturnRequestModel.ReturnRequestReasonModel>();
@@ -144,7 +144,7 @@ namespace Nop.Web.Factories
                 });
 
             //return actions
-            model.AvailableReturnActions = _cacheManager.Get(string.Format(ModelCacheEventConsumer.RETURNREQUESTACTIONS_MODEL_KEY, _workContext.WorkingLanguage.Id),
+            model.AvailableReturnActions = _cacheManager.Get(string.Format(NopModelCacheDefaults.ReturnRequestActionsModelKey, _workContext.WorkingLanguage.Id),
                 () =>
                 {
                     var actions = new List<SubmitReturnRequestModel.ReturnRequestActionModel>();

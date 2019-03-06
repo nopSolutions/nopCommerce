@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.News;
 using Nop.Core.Html;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.News;
+using Nop.Services.Seo;
 using Nop.Services.Stores;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.News;
@@ -22,6 +24,7 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
+        private readonly CatalogSettings _catalogSettings;
         private readonly IBaseAdminModelFactory _baseAdminModelFactory;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ILanguageService _languageService;
@@ -29,26 +32,31 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly INewsService _newsService;
         private readonly IStoreMappingSupportedModelFactory _storeMappingSupportedModelFactory;
         private readonly IStoreService _storeService;
+        private readonly IUrlRecordService _urlRecordService;
 
         #endregion
 
         #region Ctor
 
-        public NewsModelFactory(IBaseAdminModelFactory baseAdminModelFactory,
+        public NewsModelFactory(CatalogSettings catalogSettings,
+            IBaseAdminModelFactory baseAdminModelFactory,
             IDateTimeHelper dateTimeHelper,
             ILanguageService languageService,
             ILocalizationService localizationService,
             INewsService newsService,
             IStoreMappingSupportedModelFactory storeMappingSupportedModelFactory,
-            IStoreService storeService)
+            IStoreService storeService,
+            IUrlRecordService urlRecordService)
         {
-            this._baseAdminModelFactory = baseAdminModelFactory;
-            this._dateTimeHelper = dateTimeHelper;
-            this._languageService = languageService;
-            this._localizationService = localizationService;
-            this._newsService = newsService;
-            this._storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
-            this._storeService = storeService;
+            _catalogSettings = catalogSettings;
+            _baseAdminModelFactory = baseAdminModelFactory;
+            _dateTimeHelper = dateTimeHelper;
+            _languageService = languageService;
+            _localizationService = localizationService;
+            _newsService = newsService;
+            _storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
+            _storeService = storeService;
+            _urlRecordService = urlRecordService;
         }
 
         #endregion
@@ -71,6 +79,8 @@ namespace Nop.Web.Areas.Admin.Factories
             var newsItem = _newsService.GetNewsById(filterByNewsItemId ?? 0);
             PrepareNewsCommentSearchModel(newsContentModel.NewsComments, newsItem);
 
+            
+
             return newsContentModel;
         }
 
@@ -86,6 +96,8 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare available stores
             _baseAdminModelFactory.PrepareStores(searchModel.AvailableStores);
+
+            searchModel.HideStoresList = _catalogSettings.IgnoreStoreLimitations || searchModel.AvailableStores.SelectionIsNotPossible();
 
             //prepare page parameters
             searchModel.SetGridPageSize();
@@ -121,12 +133,13 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     //convert dates to the user time
                     if (newsItem.StartDateUtc.HasValue)
-                        newsItemModel.StartDate = _dateTimeHelper.ConvertToUserTime(newsItem.StartDateUtc.Value, DateTimeKind.Utc);
+                        newsItemModel.StartDateUtc = _dateTimeHelper.ConvertToUserTime(newsItem.StartDateUtc.Value, DateTimeKind.Utc);
                     if (newsItem.EndDateUtc.HasValue)
-                        newsItemModel.EndDate = _dateTimeHelper.ConvertToUserTime(newsItem.EndDateUtc.Value, DateTimeKind.Utc);
+                        newsItemModel.EndDateUtc = _dateTimeHelper.ConvertToUserTime(newsItem.EndDateUtc.Value, DateTimeKind.Utc);
                     newsItemModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(newsItem.CreatedOnUtc, DateTimeKind.Utc);
 
                     //fill in additional values (not existing in the entity)
+                    newsItemModel.SeName = _urlRecordService.GetSeName(newsItem, newsItem.LanguageId, true, false);
                     newsItemModel.LanguageName = _languageService.GetLanguageById(newsItem.LanguageId)?.Name;
                     newsItemModel.ApprovedComments = _newsService.GetNewsCommentsCount(newsItem, isApproved: true);
                     newsItemModel.NotApprovedComments = _newsService.GetNewsCommentsCount(newsItem, isApproved: false);
@@ -151,10 +164,14 @@ namespace Nop.Web.Areas.Admin.Factories
             //fill in model values from the entity
             if (newsItem != null)
             {
-                model = model ?? newsItem.ToModel<NewsItemModel>();
+                if (model == null)
+                {
+                    model = newsItem.ToModel<NewsItemModel>();
+                    model.SeName = _urlRecordService.GetSeName(newsItem, newsItem.LanguageId, true, false);
+                }
 
-                model.StartDate = newsItem.StartDateUtc;
-                model.EndDate = newsItem.EndDateUtc;
+                model.StartDateUtc = newsItem.StartDateUtc;
+                model.EndDateUtc = newsItem.EndDateUtc;
             }
 
             //set default values for the new model
@@ -249,6 +266,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     commentModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(newsComment.CreatedOnUtc, DateTimeKind.Utc);
 
                     //fill in additional values (not existing in the entity)
+                    commentModel.NewsItemTitle = newsComment.NewsItem.Title;
                     commentModel.CustomerInfo = newsComment.Customer.IsRegistered()
                         ? newsComment.Customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
                     commentModel.CommentText = HtmlHelper.FormatText(newsComment.CommentText, false, true, false, false, false, false);

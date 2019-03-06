@@ -28,6 +28,8 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
         public int SearchStoreId { get; set; }
         public IList<SelectListItem> AvailableStores { get; set; }
 
+        public bool HideStoresList { get; set; }
+
         #endregion
     }
 }

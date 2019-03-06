@@ -28,7 +28,7 @@
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-md-6">
-                            <div class="form-group" @(Model.AvailableStores.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
+                            <div class="form-group" @(Model.HideStoresList ? Html.Raw("style=\"display:none\"") : null)>
                                 <div class="col-md-4">
                                     <nop-label asp-for="SearchStoreId" />
                                 </div>

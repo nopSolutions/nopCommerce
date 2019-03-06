@@ -45,14 +45,14 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Controllers
             IStoreService storeService,
             ITaxCategoryService taxCategoryService)
         {
-            this._countryStateZipSettings = countryStateZipSettings;
-            this._countryService = countryService;
-            this._taxRateService = taxRateService;
-            this._permissionService = permissionService;
-            this._settingService = settingService;
-            this._stateProvinceService = stateProvinceService;
-            this._storeService = storeService;
-            this._taxCategoryService = taxCategoryService;
+            _countryStateZipSettings = countryStateZipSettings;
+            _countryService = countryService;
+            _taxRateService = taxRateService;
+            _permissionService = permissionService;
+            _settingService = settingService;
+            _stateProvinceService = stateProvinceService;
+            _storeService = storeService;
+            _taxCategoryService = taxCategoryService;
         }
 
         #endregion

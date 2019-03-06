@@ -11,7 +11,7 @@ namespace Nop.Web.Components
 
         public HomepagePollsViewComponent(IPollModelFactory pollModelFactory)
         {
-            this._pollModelFactory = pollModelFactory;
+            _pollModelFactory = pollModelFactory;
         }
 
         public IViewComponentResult Invoke()

@@ -27,9 +27,9 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
             IWebHelper webHelper,
             ISettingService settingService)
         {
-            this._localizationService = localizationService;
-            this._webHelper = webHelper;
-            this._settingService = settingService;
+            _localizationService = localizationService;
+            _webHelper = webHelper;
+            _settingService = settingService;
         }
 
         #endregion

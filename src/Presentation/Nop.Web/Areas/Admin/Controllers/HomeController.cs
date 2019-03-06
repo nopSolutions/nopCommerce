@@ -35,13 +35,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             IPermissionService permissionService,
             ISettingService settingService)
         {
-            this._adminAreaSettings = adminAreaSettings;
-            this._commonModelFactory = commonModelFactory;
-            this._homeModelFactory = homeModelFactory;
-            this._localizationService = localizationService;
-            this._notificationService = notificationService;
-            this._permissionService = permissionService;
-            this._settingService = settingService;
+            _adminAreaSettings = adminAreaSettings;
+            _commonModelFactory = commonModelFactory;
+            _homeModelFactory = homeModelFactory;
+            _localizationService = localizationService;
+            _notificationService = notificationService;
+            _permissionService = permissionService;
+            _settingService = settingService;
         }
 
         #endregion

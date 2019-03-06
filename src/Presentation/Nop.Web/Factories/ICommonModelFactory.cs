@@ -98,7 +98,7 @@ namespace Nop.Web.Factories
         /// Prepare the favicon model
         /// </summary>
         /// <returns>Favicon model</returns>
-        FaviconModel PrepareFaviconModel();
+        FaviconAndAppIconsModel PrepareFaviconAndAppIconsModel();
 
         /// <summary>
         /// Get robots.txt file

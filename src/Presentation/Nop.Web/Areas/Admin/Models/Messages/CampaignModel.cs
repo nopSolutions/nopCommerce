@@ -19,9 +19,9 @@ namespace Nop.Web.Areas.Admin.Models.Messages
 
         public CampaignModel()
         {
-            this.AvailableStores = new List<SelectListItem>();
-            this.AvailableCustomerRoles = new List<SelectListItem>();
-            this.AvailableEmailAccounts = new List<SelectListItem>();
+            AvailableStores = new List<SelectListItem>();
+            AvailableCustomerRoles = new List<SelectListItem>();
+            AvailableEmailAccounts = new List<SelectListItem>();
         }
 
         #endregion

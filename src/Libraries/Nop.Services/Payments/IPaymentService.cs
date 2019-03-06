@@ -24,8 +24,10 @@ namespace Nop.Services.Payments
         /// Load payment provider by system name
         /// </summary>
         /// <param name="systemName">System name</param>
+        /// <param name="customer">Load records allowed only to a specified customer; pass null to ignore ACL permissions</param>
+        /// <param name="storeId">Load records allowed only on the specified store; pass 0 to ignore store mappings</param>
         /// <returns>Found payment provider</returns>
-        IPaymentMethod LoadPaymentMethodBySystemName(string systemName);
+        IPaymentMethod LoadPaymentMethodBySystemName(string systemName, Customer customer = null, int storeId = 0);
 
         /// <summary>
         /// Load all payment providers

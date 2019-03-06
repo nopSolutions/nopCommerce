@@ -77,11 +77,10 @@ namespace Nop.Web.Framework.UI
         /// <summary>
         /// Generate all script parts
         /// </summary>
-        /// <param name="urlHelper">URL Helper</param>
         /// <param name="location">A location of the script element</param>
         /// <param name="bundleFiles">A value indicating whether to bundle script elements</param>
         /// <returns>Generated string</returns>
-        string GenerateScripts(IUrlHelper urlHelper, ResourceLocation location, bool? bundleFiles = null);
+        string GenerateScripts(ResourceLocation location, bool? bundleFiles = null);
 
         /// <summary>
         /// Add inline script element
@@ -98,10 +97,9 @@ namespace Nop.Web.Framework.UI
         /// <summary>
         /// Generate all inline script parts
         /// </summary>
-        /// <param name="urlHelper">URL Helper</param>
         /// <param name="location">A location of the script element</param>
         /// <returns>Generated string</returns>
-        string GenerateInlineScripts(IUrlHelper urlHelper, ResourceLocation location);
+        string GenerateInlineScripts(ResourceLocation location);
 
         /// <summary>
         /// Add CSS element
@@ -122,11 +120,10 @@ namespace Nop.Web.Framework.UI
         /// <summary>
         /// Generate all CSS parts
         /// </summary>
-        /// <param name="urlHelper">URL Helper</param>
         /// <param name="location">A location of the script element</param>
         /// <param name="bundleFiles">A value indicating whether to bundle script elements</param>
         /// <returns>Generated string</returns>
-        string GenerateCssFiles(IUrlHelper urlHelper, ResourceLocation location, bool? bundleFiles = null);
+        string GenerateCssFiles(ResourceLocation location, bool? bundleFiles = null);
         /// <summary>
         /// Add canonical URL element to the <![CDATA[<head>]]>
         /// </summary>

@@ -180,6 +180,13 @@ var Billing = {
         }
 
         Checkout.setStepResponse(response);
+        Billing.initializeCountrySelect();
+    },
+
+    initializeCountrySelect: function () {
+        if ($('#opc-billing').has('select[data-trigger="country-select"]')) {
+            $('#opc-billing select[data-trigger="country-select"]').countrySelect();
+        }
     }
 };
 
@@ -255,6 +262,13 @@ var Shipping = {
         }
 
         Checkout.setStepResponse(response);
+        Shipping.initializeCountrySelect();
+    },
+
+    initializeCountrySelect: function () {
+        if ($('#opc-shipping').has('select[data-trigger="country-select"]')) {
+            $('#opc-shipping select[data-trigger="country-select"]').countrySelect();
+        }
     }
 };
 

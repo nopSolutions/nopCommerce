@@ -26,9 +26,9 @@ namespace Nop.Services.Catalog
             IHttpContextAccessor httpContextAccessor,
             IProductService productService)
         {
-            this._catalogSettings = catalogSettings;
-            this._httpContextAccessor = httpContextAccessor;
-            this._productService = productService;
+            _catalogSettings = catalogSettings;
+            _httpContextAccessor = httpContextAccessor;
+            _productService = productService;
         }
 
         #endregion

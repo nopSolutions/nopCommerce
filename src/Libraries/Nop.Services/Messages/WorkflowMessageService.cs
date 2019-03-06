@@ -62,20 +62,20 @@ namespace Nop.Services.Messages
             IStoreService storeService,
             ITokenizer tokenizer)
         {
-            this._commonSettings = commonSettings;
-            this._emailAccountSettings = emailAccountSettings;
-            this._affiliateService = affiliateService;
-            this._customerService = customerService;
-            this._emailAccountService = emailAccountService;
-            this._eventPublisher = eventPublisher;
-            this._languageService = languageService;
-            this._localizationService = localizationService;
-            this._messageTemplateService = messageTemplateService;
-            this._messageTokenProvider = messageTokenProvider;
-            this._queuedEmailService = queuedEmailService;
-            this._storeContext = storeContext;
-            this._storeService = storeService;
-            this._tokenizer = tokenizer;
+            _commonSettings = commonSettings;
+            _emailAccountSettings = emailAccountSettings;
+            _affiliateService = affiliateService;
+            _customerService = customerService;
+            _emailAccountService = emailAccountService;
+            _eventPublisher = eventPublisher;
+            _languageService = languageService;
+            _localizationService = localizationService;
+            _messageTemplateService = messageTemplateService;
+            _messageTokenProvider = messageTokenProvider;
+            _queuedEmailService = queuedEmailService;
+            _storeContext = storeContext;
+            _storeService = storeService;
+            _tokenizer = tokenizer;
         }
 
         #endregion

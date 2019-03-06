@@ -6,7 +6,8 @@ using System.Text;
 using BundlerMinifier;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.WebUtilities;
 using Nop.Core;
 using Nop.Core.Caching;
@@ -26,9 +27,11 @@ namespace Nop.Web.Framework.UI
         private static readonly object s_lock = new object();
 
         private readonly SeoSettings _seoSettings;
+        private readonly IActionContextAccessor _actionContextAccessor;
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IStaticCacheManager _cacheManager;
         private readonly INopFileProvider _fileProvider;
+        private readonly IUrlHelperFactory _urlHelperFactory;
         private readonly IUrlRecordService _urlRecordService;
         private readonly BundleFileProcessor _processor;
 
@@ -50,37 +53,33 @@ namespace Nop.Web.Framework.UI
         #endregion
 
         #region Ctor
-
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="seoSettings">SEO settings</param>
-        /// <param name="hostingEnvironment">Hosting environment</param>
-        /// <param name="cacheManager">Cache manager</param>
-        /// <param name="fileProvider">File provider</param>
-        /// <param name="urlRecordService">Url record service</param>
+        
         public PageHeadBuilder(SeoSettings seoSettings,
+            IActionContextAccessor actionContextAccessor,
             IHostingEnvironment hostingEnvironment,
             IStaticCacheManager cacheManager,
             INopFileProvider fileProvider,
+            IUrlHelperFactory urlHelperFactory,
             IUrlRecordService urlRecordService)
         {
-            this._seoSettings = seoSettings;
-            this._hostingEnvironment = hostingEnvironment;
-            this._cacheManager = cacheManager;
-            this._fileProvider = fileProvider;
-            this._urlRecordService = urlRecordService;
-            this._processor = new BundleFileProcessor();
+            _seoSettings = seoSettings;
+            _actionContextAccessor = actionContextAccessor;
+            _hostingEnvironment = hostingEnvironment;
+            _cacheManager = cacheManager;
+            _fileProvider = fileProvider;
+            _urlHelperFactory = urlHelperFactory;
+            _urlRecordService = urlRecordService;
+            _processor = new BundleFileProcessor();
 
-            this._titleParts = new List<string>();
-            this._metaDescriptionParts = new List<string>();
-            this._metaKeywordParts = new List<string>();
-            this._scriptParts = new Dictionary<ResourceLocation, List<ScriptReferenceMeta>>();
-            this._inlineScriptParts = new Dictionary<ResourceLocation, List<string>>();
-            this._cssParts = new Dictionary<ResourceLocation, List<CssReferenceMeta>>();
-            this._canonicalUrlParts = new List<string>();
-            this._headCustomParts = new List<string>();
-            this._pageCssClassParts = new List<string>();
+            _titleParts = new List<string>();
+            _metaDescriptionParts = new List<string>();
+            _metaKeywordParts = new List<string>();
+            _scriptParts = new Dictionary<ResourceLocation, List<ScriptReferenceMeta>>();
+            _inlineScriptParts = new Dictionary<ResourceLocation, List<string>>();
+            _cssParts = new Dictionary<ResourceLocation, List<CssReferenceMeta>>();
+            _canonicalUrlParts = new List<string>();
+            _headCustomParts = new List<string>();
+            _pageCssClassParts = new List<string>();
         }
 
         #endregion
@@ -311,17 +310,18 @@ namespace Nop.Web.Framework.UI
         /// <summary>
         /// Generate all script parts
         /// </summary>
-        /// <param name="urlHelper">URL Helper</param>
         /// <param name="location">A location of the script element</param>
         /// <param name="bundleFiles">A value indicating whether to bundle script elements</param>
         /// <returns>Generated string</returns>
-        public virtual string GenerateScripts(IUrlHelper urlHelper, ResourceLocation location, bool? bundleFiles = null)
+        public virtual string GenerateScripts(ResourceLocation location, bool? bundleFiles = null)
         {
             if (!_scriptParts.ContainsKey(location) || _scriptParts[location] == null)
                 return "";
 
             if (!_scriptParts.Any())
                 return "";
+
+            var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
 
             var debugModel = _hostingEnvironment.IsDevelopment();
 
@@ -447,10 +447,9 @@ namespace Nop.Web.Framework.UI
         /// <summary>
         /// Generate all inline script parts
         /// </summary>
-        /// <param name="urlHelper">URL Helper</param>
         /// <param name="location">A location of the script element</param>
         /// <returns>Generated string</returns>
-        public virtual string GenerateInlineScripts(IUrlHelper urlHelper, ResourceLocation location)
+        public virtual string GenerateInlineScripts(ResourceLocation location)
         {
             if (!_inlineScriptParts.ContainsKey(location) || _inlineScriptParts[location] == null)
                 return "";
@@ -520,11 +519,10 @@ namespace Nop.Web.Framework.UI
         /// <summary>
         /// Generate all CSS parts
         /// </summary>
-        /// <param name="urlHelper">URL Helper</param>
         /// <param name="location">A location of the script element</param>
         /// <param name="bundleFiles">A value indicating whether to bundle script elements</param>
         /// <returns>Generated string</returns>
-        public virtual string GenerateCssFiles(IUrlHelper urlHelper, ResourceLocation location, bool? bundleFiles = null)
+        public virtual string GenerateCssFiles(ResourceLocation location, bool? bundleFiles = null)
         {
             if (!_cssParts.ContainsKey(location) || _cssParts[location] == null)
                 return "";
@@ -532,6 +530,7 @@ namespace Nop.Web.Framework.UI
             if (!_cssParts.Any())
                 return "";
 
+            var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
 
             var debugModel = _hostingEnvironment.IsDevelopment();
 
@@ -820,7 +819,7 @@ namespace Nop.Web.Framework.UI
             {
                 if (item == null)
                     return false;
-                return this.Src.Equals(item.Src) && this.DebugSrc.Equals(item.DebugSrc);
+                return Src.Equals(item.Src) && DebugSrc.Equals(item.DebugSrc);
             }
             /// <summary>
             /// Get hash code
@@ -858,7 +857,7 @@ namespace Nop.Web.Framework.UI
             {
                 if (item == null)
                     return false;
-                return this.Src.Equals(item.Src) && this.DebugSrc.Equals(item.DebugSrc);
+                return Src.Equals(item.Src) && DebugSrc.Equals(item.DebugSrc);
             }
             /// <summary>
             /// Get hash code

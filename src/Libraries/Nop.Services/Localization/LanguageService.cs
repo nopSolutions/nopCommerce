@@ -36,12 +36,12 @@ namespace Nop.Services.Localization
             IStoreMappingService storeMappingService,
             LocalizationSettings localizationSettings)
         {
-            this._eventPublisher = eventPublisher;
-            this._languageRepository = languageRepository;
-            this._settingService = settingService;
-            this._cacheManager = cacheManager;
-            this._storeMappingService = storeMappingService;
-            this._localizationSettings = localizationSettings;
+            _eventPublisher = eventPublisher;
+            _languageRepository = languageRepository;
+            _settingService = settingService;
+            _cacheManager = cacheManager;
+            _storeMappingService = storeMappingService;
+            _localizationSettings = localizationSettings;
         }
 
         #endregion

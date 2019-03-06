@@ -21,6 +21,7 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
+        private readonly CatalogSettings _catalogSettings;
         private readonly IBaseAdminModelFactory _baseAdminModelFactory;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ILocalizationService _localizationService;
@@ -32,19 +33,21 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #region Ctor
 
-        public ProductReviewModelFactory(IBaseAdminModelFactory baseAdminModelFactory,
+        public ProductReviewModelFactory(CatalogSettings catalogSettings,
+            IBaseAdminModelFactory baseAdminModelFactory,
             IDateTimeHelper dateTimeHelper,
             ILocalizationService localizationService,
             IProductService productService,
             IReviewTypeService reviewTypeService,
             IWorkContext workContext)
         {
-            this._baseAdminModelFactory = baseAdminModelFactory;
-            this._dateTimeHelper = dateTimeHelper;
-            this._localizationService = localizationService;
-            this._productService = productService;
-            this._reviewTypeService = reviewTypeService;
-            this._workContext = workContext;
+            _catalogSettings = catalogSettings;
+            _baseAdminModelFactory = baseAdminModelFactory;
+            _dateTimeHelper = dateTimeHelper;
+            _localizationService = localizationService;
+            _productService = productService;
+            _reviewTypeService = reviewTypeService;
+            _workContext = workContext;
         }
 
         #endregion
@@ -82,6 +85,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 Text = _localizationService.GetResource("Admin.Catalog.ProductReviews.List.SearchApproved.DisapprovedOnly"),
                 Value = "2"
             });
+
+            searchModel.HideStoresList = _catalogSettings.IgnoreStoreLimitations || searchModel.AvailableStores.SelectionIsNotPossible();
 
             //prepare page parameters
             searchModel.SetGridPageSize();
@@ -206,6 +211,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(productReview));
 
             searchModel.ProductReviewId = productReview.Id;
+
+            searchModel.IsAnyReviewTypes = productReview.ProductReviewReviewTypeMappingEntries.Any();
 
             //prepare page parameters
             searchModel.SetGridPageSize();

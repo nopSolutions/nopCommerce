@@ -71,19 +71,19 @@ namespace Nop.Plugin.Shipping.UPS
             ILocalizationService localizationService,
             IWebHelper webHelper)
         {
-            this._measureService = measureService;
-            this._shippingService = shippingService;
-            this._settingService = settingService;
-            this._upsSettings = upsSettings;
-            this._countryService = countryService;
-            this._currencyService = currencyService;
-            this._currencySettings = currencySettings;
-            this._orderTotalCalculationService = orderTotalCalculationService;
-            this._logger = logger;
-            this._localizationService = localizationService;
-            this._webHelper = webHelper;
+            _measureService = measureService;
+            _shippingService = shippingService;
+            _settingService = settingService;
+            _upsSettings = upsSettings;
+            _countryService = countryService;
+            _currencyService = currencyService;
+            _currencySettings = currencySettings;
+            _orderTotalCalculationService = orderTotalCalculationService;
+            _logger = logger;
+            _localizationService = localizationService;
+            _webHelper = webHelper;
 
-            this._traceMessages = new StringBuilder();
+            _traceMessages = new StringBuilder();
         }
 
         #endregion

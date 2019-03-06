@@ -28,9 +28,9 @@ namespace Nop.Services.Vendors
             IRepository<Vendor> vendorRepository,
             IRepository<VendorNote> vendorNoteRepository)
         {
-            this._eventPublisher = eventPublisher;
-            this._vendorRepository = vendorRepository;
-            this._vendorNoteRepository = vendorNoteRepository;
+            _eventPublisher = eventPublisher;
+            _vendorRepository = vendorRepository;
+            _vendorNoteRepository = vendorNoteRepository;
         }
 
         #endregion

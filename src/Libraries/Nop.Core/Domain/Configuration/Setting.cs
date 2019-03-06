@@ -19,9 +19,9 @@ namespace Nop.Core.Domain.Configuration
         /// <param name="storeId">Store identifier</param>
         public Setting(string name, string value, int storeId = 0)
         {
-            this.Name = name;
-            this.Value = value;
-            this.StoreId = storeId;
+            Name = name;
+            Value = value;
+            StoreId = storeId;
         }
 
         /// <summary>

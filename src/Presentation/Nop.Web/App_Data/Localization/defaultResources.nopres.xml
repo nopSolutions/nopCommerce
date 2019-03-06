@@ -95,13 +95,7 @@
   </LocaleResource>
   <LocaleResource Name="Account.ChangePassword.Fields.NewPassword.EnteredPasswordsDoNotMatch">
     <Value>The new password and confirmation password do not match.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Account.ChangePassword.Fields.NewPassword.LengthValidation">
-    <Value>The password should have at least {0} characters.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Account.ChangePassword.Fields.NewPassword.Required">
-    <Value>New password is required.</Value>
-  </LocaleResource>
+  </LocaleResource>  
   <LocaleResource Name="Account.ChangePassword.Fields.OldPassword">
     <Value>Old password</Value>
   </LocaleResource>
@@ -374,13 +368,7 @@
   </LocaleResource>
   <LocaleResource Name="Account.Fields.Password.EnteredPasswordsDoNotMatch">
     <Value>The password and confirmation password do not match.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Account.Fields.Password.LengthValidation">
-    <Value>The password should have at least {0} characters.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Account.Fields.Password.Required">
-    <Value>Password is required.</Value>
-  </LocaleResource>
+  </LocaleResource>  
   <LocaleResource Name="Account.Fields.Phone">
     <Value>Phone</Value>
   </LocaleResource>
@@ -590,13 +578,7 @@
   </LocaleResource>
   <LocaleResource Name="Account.PasswordRecovery.NewPassword.EnteredPasswordsDoNotMatch">
     <Value>The new password and confirmation password do not match.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Account.PasswordRecovery.NewPassword.LengthValidation">
-    <Value>The password should have at least {0} characters.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Account.PasswordRecovery.NewPassword.Required">
-    <Value>New password is required.</Value>
-  </LocaleResource>
+  </LocaleResource>    
   <LocaleResource Name="Account.PasswordRecovery.OldPassword">
     <Value>Old password</Value>
   </LocaleResource>
@@ -1139,6 +1121,9 @@
   </LocaleResource>
   <LocaleResource Name="ActivityLog.UninstallPlugin">
     <Value>Uninstalled a plugin (FriendlyName: '{0}')</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.UploadNewIconsArchive">
+    <Value>Uploaded a new favicon and app icons archive for store (ID = '{0}')</Value>
   </LocaleResource>
   <LocaleResource Name="ActivityLog.UploadNewPlugin">
     <Value>Uploaded a new plugin (FriendlyName: '{0}')</Value>
@@ -2070,6 +2055,9 @@
   <LocaleResource Name="Admin.Catalog.Categories.Deleted">
     <Value>The category has been deleted successfully.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Display">
+    <Value>Display</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.EditCategoryDetails">
     <Value>Edit category details</Value>
   </LocaleResource>
@@ -2241,6 +2229,9 @@
   <LocaleResource Name="Admin.Catalog.Categories.Manage">
     <Value>Manage Categories</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Mappings">
+    <Value>Mappings</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Products">
     <Value>Products</Value>
   </LocaleResource>
@@ -2279,6 +2270,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.Deleted">
     <Value>The manufacturer has been deleted successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Display">
+    <Value>Display</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.EditManufacturerDetails">
     <Value>Edit manufacturer details</Value>
@@ -2423,6 +2417,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.List.SearchStore.Hint">
     <Value>Search by a specific store.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Mappings">
+    <Value>Mappings</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.Products">
     <Value>Products</Value>
@@ -2603,6 +2600,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.AssociatedProducts.SaveBeforeEdit">
     <Value>You need to save the product before you can add associated products for this product page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.AssociatedProducts.TryToAddSelfGroupedProduct">
+    <Value>You cannot add current group product to related ones. This group product was ignored while adding.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.BackToList">
     <Value>back to product list</Value>
@@ -2974,7 +2974,7 @@
     <Value>Low stock activity</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.LowStockActivity.Hint">
-    <Value>Action to be taken when your current stock quantity falls below (reaches) the 'Minimum stock quantity'.</Value>
+    <Value>Action to be taken when your current stock quantity falls below (reaches) the 'Minimum stock quantity'. Activation of the action will occur only after an order is placed.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.ManageInventoryMethod">
     <Value>Inventory method</Value>
@@ -3330,11 +3330,17 @@
   <LocaleResource Name="Admin.Catalog.Products.Import.CategoriesWithSameNameNotSupported">
     <Value>Categories with the same name are not supported in the same category level. Check your category list in "Catalog -&gt; Categories" page</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Import.DatabaseNotContainCategory">
+    <Value>Database doesn't contain the '{0}' category</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Import.ManufacturersDontExist">
     <Value>Manufacturers with the following names and/or IDs don't exist: {0}</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Import.ProductAttributesDontExist">
     <Value>Product attributes with the following IDs don't exist: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Import.StoresDontExist">
+    <Value>Stores with the following names and/or IDs don't exist: {0}</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Imported">
     <Value>Products have been imported successfully.</Value>
@@ -3432,6 +3438,12 @@
   <LocaleResource Name="Admin.Catalog.Products.Pictures.AddNew">
     <Value>Add a new picture</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Pictures.Alert.AddNew">
+    <Value>Upload picture first.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Pictures.Alert.PictureAdd">
+    <Value>Failed to add product picture.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Pictures.Fields.DisplayOrder">
     <Value>Display order</Value>
   </LocaleResource>
@@ -3473,6 +3485,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AttributeCombinations.AddTitle">
     <Value>Select new combination and enter details below</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Alert.FailedGenerate">
+    <Value>Error while generating attribute combinations.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AttributeCombinations.AlreadyExists">
     <Value>The same combination already exists</Value>
@@ -3891,6 +3906,9 @@
   <LocaleResource Name="Admin.Catalog.Products.SpecificationAttributes.AddNew">
     <Value>Add a new product specification attribute</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.SpecificationAttributes.Alert.FailedRetrieving">
+    <Value>Failed to retrieve specification options.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.SpecificationAttributes.Fields.AllowFiltering">
     <Value>Allow filtering</Value>
   </LocaleResource>
@@ -4068,6 +4086,21 @@
   <LocaleResource Name="Admin.Common.AddNewRecord">
     <Value>Add new record</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Common.Alert">
+    <Value>Information</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Common.Alert.Add.Error">
+    <Value>Failed to add record.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Common.Alert.Save.Error">
+    <Value>Error while saving.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Common.Alert.Save.Ok">
+    <Value>Successfully saved.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Common.Alert.States.Failed">
+    <Value>Failed to retrieve states.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Common.All">
     <Value>All</Value>
   </LocaleResource>
@@ -4169,6 +4202,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Common.NoCancel">
     <Value>No, cancel</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Common.Ok">
+    <Value>Ok</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Common.Preview">
     <Value>Preview</Value>
@@ -4457,6 +4493,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Currencies.AddNew">
     <Value>Add a new currency</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Currencies.Alert.Error">
+    <Value>Failed to update currency.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Currencies.ApplyRate">
     <Value>Apply rate</Value>
@@ -4935,15 +4974,18 @@
   <LocaleResource Name="Admin.Configuration.PaymentMethodsAndRestrictions">
     <Value>Payment methods and restrictions</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Plugins">
-    <Value>Plugins</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Plugins.AdditionalInfo">
     <Value>Additional info</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Plugins.Deleted">
-    <Value>The plugin has been deleted.</Value>
+  <LocaleResource Name="Admin.Configuration.Plugins.ApplyChanges">
+    <Value>Restart application to apply changes</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.ApplyChanges.Progress">
+    <Value>Applying changes on plugins...</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.ChangesApplyAfterReboot">
+    <Value>Changes will be apply after restart application</Value>
+  </LocaleResource> 
   <LocaleResource Name="Admin.Configuration.Plugins.Description">
     <Value>Manual plugin installation</Value>
   </LocaleResource>
@@ -4961,6 +5003,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Plugins.Description.Step4">
     <Value>Click on the 'Install' link to install the plugin.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.DiscardChanges">
+    <Value>Discard changes</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.DiscardChanges.Progress">
+    <Value>Discarding changes on plugins...</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Plugins.EditDetails">
     <Value>Edit plugin details</Value>
@@ -5049,9 +5097,6 @@
   <LocaleResource Name="Admin.Configuration.Plugins.Info">
     <Value>Plugin Info</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Plugins.Installed">
-    <Value>The plugin has been installed.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Plugins.LoadMode">
     <Value>Load mode</Value>
   </LocaleResource>
@@ -5117,9 +5162,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Plugins.ReloadList.Progress">
     <Value>Reloading plugin list...</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Plugins.Uninstalled">
-    <Value>The plugin has been uninstalled.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Plugins.Upload">
     <Value>Upload plugin or theme</Value>
@@ -5411,6 +5453,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ExportImportProductSpecificationAttributes.Hint">
     <Value>Check if products should be exported/imported with specification attributes.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ExportImportProductUseLimitedToStores">
+    <Value>Export/Import products with "limited to stores"</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ExportImportProductUseLimitedToStores.Hint">
+    <Value>Check if products should be exported/imported with "limited to stores" property.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ExportImportRelatedEntitiesByName">
     <Value>Export/Import related entities using name</Value>
@@ -6086,6 +6134,30 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PasswordMinLength.Hint">
     <Value>Specify password minimum length.</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PasswordRequireDigit">
+    <Value>Password must have at least one digit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PasswordRequireDigit.Hint">
+    <Value>Specify that passwords must have at least one digit.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PasswordRequireLowercase">
+    <Value>Password must have at least one lowercase</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PasswordRequireLowercase.Hint">
+    <Value>Specify that password must have at least one lowercase.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PasswordRequireNonAlphanumeric">
+    <Value>Password must have at least one non alphanumeric character</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PasswordRequireNonAlphanumeric.Hint">
+    <Value>Specify that password must have at least one non alphanumeric character.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PasswordRequireUppercase">
+    <Value>Password must have at least one uppercase</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PasswordRequireUppercase.Hint">
+    <Value>Specify that passwords must have at least one uppercase.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PasswordRecoveryLinkDaysValid">
     <Value>Password recovery link. Days valid</Value>
@@ -6218,6 +6290,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.ZipPostalCodeRequired.Hint">
     <Value>Check if 'Zip / postal code' is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.FaviconAndAppIcons.Uploaded">
+    <Value>Favicon and app icons have been uploaded</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Forums">
     <Value>Forum settings</Value>
@@ -6495,6 +6570,9 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.BlockTitle.Common">
     <Value>Common</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.BlockTitle.FaviconAndAppIcons">
+    <Value>Favicon and app icons</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.BlockTitle.FooterItems">
     <Value>Footer items</Value>
   </LocaleResource>
@@ -6593,6 +6671,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnRegistrationPage.Hint">
     <Value>Check to show CAPTCHA on registration page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnForgotPasswordPage">
+    <Value>Show on forgot password page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnForgotPasswordPage.Hint">
+    <Value>Check to show CAPTCHA on forgot password page when restore password.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.ConvertNonWesternChars">
     <Value>Convert non-western chars</Value>
@@ -6824,6 +6908,18 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.FacebookLink.Hint">
     <Value>Specify your Facebook page URL. Leave empty if you have no such page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.FaviconAndAppIcons.Description">
+    <Value>Favicon and app icons are small pictures associated with a particular website or web page. They are displayed by the browser in the tab before the page title, and as a picture next to a bookmark, in tabs and in other interface elements. You can see an example of the favicon and app icons archive in /icons/samples in the root of the site.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.FaviconAndAppIcons.MissingFile">
+    <Value>Could not find file {0}. This file is required. It contains the code for the page head element.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.FaviconAndAppIcons.UploadIconsArchive">
+    <Value>Upload icons archive</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.FaviconAndAppIcons.UploadIconsArchive.Hint">
+    <Value>Upload archive with favicon and app icons for different operating systems and devices. You can see an example of the favicon and app icons archive in /icons/samples in the root of the site. Your favicon and app icons path is "icons/icons_{0}"</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.ForceSslForAllPages">
     <Value>Force SSL for all site pages</Value>
@@ -8094,6 +8190,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.EmailWishlistEnabled.Hint">
     <Value>Check to allow customers to email their wishlists to friends.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.GroupTierPricesForDistinctShoppingCartItems">
+    <Value>Group tier prices for distinct shopping cart items</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.GroupTierPricesForDistinctShoppingCartItems.Hint">
+    <Value>Allows to offer special prices when customers buy bigger amounts of a particular product. For example, when a customer could have two shopping cart items for the same products (different product attributes).</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.MaximumShoppingCartItems">
     <Value>Maximum shopping cart items</Value>
   </LocaleResource>
@@ -8463,6 +8565,9 @@
   <LocaleResource Name="Admin.Configuration.Shipping.Measures.Dimensions.Description">
     <Value>NOTE: if you change your primary dimension, then do not forget to update the appropriate ratios of the units</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Dimensions.MarkAsPrimaryDimension.Alert.FailedToUpdate">
+    <Value>Failed to update dimension.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Shipping.Measures.Dimensions.Fields.DisplayOrder">
     <Value>Display order</Value>
   </LocaleResource>
@@ -8504,7 +8609,7 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Shipping.Measures.Weights.Fields.MarkAsPrimaryWeight">
     <Value>Mark as primary weight</Value>
-  </LocaleResource>
+  </LocaleResource>  
   <LocaleResource Name="Admin.Configuration.Shipping.Measures.Weights.Fields.Name">
     <Value>Name</Value>
   </LocaleResource>
@@ -8519,6 +8624,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Shipping.Measures.Weights.Fields.SystemKeyword.Required">
     <Value>Please provide a system keyword.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Weights.MarkAsPrimaryWeight.Alert.FailedToUpdate">
+    <Value>Failed to update weight.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Shipping.Methods">
     <Value>Shipping methods</Value>
@@ -8829,9 +8937,6 @@
   <LocaleResource Name="Admin.Configuration.Stores.Updated">
     <Value>The store has been updated successfully.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Tax">
-    <Value>Tax</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Tax.Categories">
     <Value>Tax categories</Value>
   </LocaleResource>
@@ -9032,12 +9137,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Blog.Comments.Fields.StoreName">
     <Value>Store name</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Blog.Comments.List.BlogPostId">
-    <Value>Blog post ID</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Blog.Comments.List.BlogPostId.Hint">
-    <Value>Search by blog post ID.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Blog.Comments.List.CreatedOnFrom">
     <Value>Created from</Value>
@@ -9494,12 +9593,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.News.Comments.List.CreatedOnTo.Hint">
     <Value>The creation to date for the search.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.News.Comments.List.NewsItemId">
-    <Value>News item ID</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.News.Comments.List.NewsItemId.Hint">
-    <Value>Search by news item ID.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.News.Comments.List.SearchApproved">
     <Value>Approved</Value>
@@ -10560,6 +10653,9 @@
   <LocaleResource Name="Admin.Customers.Customers.Impersonate.Description2">
     <Value>Note: Click 'finish session' link in order to finish this session</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Impersonate.Inactive">
+    <Value>This customer is inactive</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.Info">
     <Value>Customer info</Value>
   </LocaleResource>
@@ -10686,6 +10782,9 @@
   <LocaleResource Name="Admin.Customers.Customers.RewardPoints.AddTitle">
     <Value>Add (reduce) points</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.RewardPoints.Alert.HistoryAdd">
+    <Value>Failed to add reward points.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.RewardPoints.Fields.ActivatePointsImmediately">
     <Value>Activate points immediately</Value>
   </LocaleResource>
@@ -10733,7 +10832,7 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.RewardPoints.Fields.Store.Hint">
     <Value>Choose a store. It's useful only when you have "Points accumulated for all stores" setting disabled.</Value>
-  </LocaleResource>
+  </LocaleResource>  
   <LocaleResource Name="Admin.Customers.Customers.SendEmail">
     <Value>Send email</Value>
   </LocaleResource>
@@ -10902,6 +11001,9 @@
   <LocaleResource Name="Admin.Download.SaveDownloadURL">
     <Value>Save download</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Download.SaveDownloadURL.Alert.FailedSave">
+    <Value>Failed to save download object.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Download.UploadFile">
     <Value>Upload file</Value>
   </LocaleResource>
@@ -10946,6 +11048,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.GiftCards.Fields.GiftCardCouponCode">
     <Value>Coupon code</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GiftCards.Fields.GiftCardCouponCode.Alert.FailedGenerate">
+    <Value>Failed to generate code.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.GiftCards.Fields.GiftCardCouponCode.Generate">
     <Value>Generate code</Value>
@@ -11655,6 +11760,9 @@
   <LocaleResource Name="Admin.Orders.OrderNotes.AddTitle">
     <Value>Add order note</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.OrderNotes.Alert.Add">
+    <Value>Failed to add order note.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Orders.OrderNotes.Fields.CreatedOn">
     <Value>Created on</Value>
   </LocaleResource>
@@ -12114,6 +12222,15 @@
   <LocaleResource Name="Admin.Plugins">
     <Value>Plugins</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Plugins.Errors.NotDeleted">
+    <Value>The plugin "{0}" not deleted</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Plugins.Errors.NotInstalled">
+    <Value>The plugin "{0}" not installed</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Plugins.Errors.NotUninstalled">
+    <Value>The plugin "{0}" not uninstalled</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Plugins.Saved">
     <Value>The plugin has been updated successfully.</Value>
   </LocaleResource>
@@ -12453,6 +12570,12 @@
   <LocaleResource Name="Admin.Promotions.Discounts.Requirements.AddNew">
     <Value>Add a new discount requirement</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Requirements.Alert.FailedGetDiscountRequirements">
+    <Value>Failed to load requirements info. Please refresh the page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Requirements.Alert.FailedToSave">
+    <Value>Failed to save requirement</Value>
+  </LocaleResource>  
   <LocaleResource Name="Admin.Promotions.Discounts.Requirements.DefaultRequirementGroup">
     <Value>Default requirement group</Value>
   </LocaleResource>
@@ -12472,7 +12595,7 @@
     <Value>Select requirement type</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.Requirements.FailedToSave">
-    <Value>Failed to save requirement</Value>
+    <Value>Failed to save discount requirements.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.Requirements.GroupIsEmpty">
     <Value>The group is empty</Value>
@@ -12749,6 +12872,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Reports.Customers.CustomerStatistics">
     <Value>New customers</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Customers.CustomerStatistics.Alert.FailedLoad">
+    <Value>Failed to load statistics.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Reports.Customers.CustomerStatistics.Month">
     <Value>Month</Value>
@@ -13145,6 +13271,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.SalesReport.OrderStatistics">
     <Value>Orders</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.OrderStatistics.Alert.FailedLoad">
+    <Value>Failed to load statistics.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.SalesReport.OrderStatistics.Month">
     <Value>Month</Value>
@@ -13920,6 +14049,9 @@
   <LocaleResource Name="Admin.System.Warnings">
     <Value>Warnings</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.Warnings.AssemblyHasCollision">
+    <Value>The '{0}' assembly has collision, application loaded the '{1}' assembly, but {2}</Value>
+  </LocaleResource>  
   <LocaleResource Name="Admin.System.Warnings.DefaultDimension.NotSet">
     <Value>Default dimension is not set</Value>
   </LocaleResource>
@@ -13986,6 +14118,9 @@
   <LocaleResource Name="Admin.System.Warnings.PluginNotLoaded">
     <Value>'{0}' plugin is not compatible or cannot be loaded.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.Warnings.PluginRequiredAssembly">
+    <Value>the '{0}' plugin required the '{1}' assembly</Value>
+  </LocaleResource>  
   <LocaleResource Name="Admin.System.Warnings.PrimaryCurrency.NotSet">
     <Value>Primary store currency is not set</Value>
   </LocaleResource>
@@ -14127,6 +14262,9 @@
   <LocaleResource Name="Admin.Vendors.Fields.SeName.Hint">
     <Value>Set a search engine friendly page name e.g. 'the-best-vendor' to make your page URL 'http://www.yourStore.com/the-best-vendor'. Leave empty to generate it automatically based on the name of the vendor.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Display">
+    <Value>Display</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Vendors.Info">
     <Value>Vendor Info</Value>
   </LocaleResource>
@@ -14234,6 +14372,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Vendors.VendorNotes.AddTitle">
     <Value>Add vendor note</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.VendorNotes.AddTitle.Alert.FailedAddNote">
+    <Value>Failed to add vendor note.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Vendors.VendorNotes.Fields.CreatedOn">
     <Value>Created on</Value>
@@ -14378,6 +14519,9 @@
   </LocaleResource>
   <LocaleResource Name="Checkout">
     <Value>Checkout</Value>
+  </LocaleResource>
+  <LocaleResource Name="Checkout.Addresses.Invalid">
+    <Value>You have {0} invalid address(es)</Value>
   </LocaleResource>
   <LocaleResource Name="Checkout.BillingAddress">
     <Value>Billing address</Value>
@@ -15307,7 +15451,7 @@
     <Value>Remove Filter</Value>
   </LocaleResource>
   <LocaleResource Name="Filtering.SpecificationFilter.Separator">
-    <Value>or </Value>
+    <Value>or</Value>
   </LocaleResource>
   <LocaleResource Name="Footer.CustomerService">
     <Value>Customer service</Value>
@@ -15341,6 +15485,9 @@
   </LocaleResource>
   <LocaleResource Name="Footer.TaxShipping.InclTax">
     <Value><![CDATA[All prices are entered including tax. Excluding <a href="{0}">shipping</a>]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="FormattedAttributes.PriceAdjustment">
+    <Value> [{0}{1}{2}]</Value>
   </LocaleResource>
   <LocaleResource Name="Forum.ActiveDiscussions">
     <Value>Active discussions</Value>
@@ -17304,6 +17451,9 @@
   <LocaleResource Name="ShoppingCart.CustomerEnteredPrice.RangeError">
     <Value>The price must be from {0} to {1}</Value>
   </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Discount.CannotBeUsed">
+    <Value>You cannot use this discount coupon because the validation conditions are not met</Value>
+  </LocaleResource>
   <LocaleResource Name="ShoppingCart.Discount.CannotBeUsedAnymore">
     <Value>Sorry, you've used this discount already</Value>
   </LocaleResource>
@@ -17319,6 +17469,9 @@
   <LocaleResource Name="ShoppingCart.DiscountCouponCode">
     <Value>Discount Code</Value>
   </LocaleResource>
+  <LocaleResource Name="ShoppingCart.DiscountCouponCode.Activated">
+    <Value>Coupon code ({0}) is activated! The discount will be applied to your order.</Value>
+  </LocaleResource>
   <LocaleResource Name="ShoppingCart.DiscountCouponCode.Applied">
     <Value>The coupon code was applied</Value>
   </LocaleResource>
@@ -17327,6 +17480,9 @@
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.DiscountCouponCode.CurrentCode">
     <Value>Entered coupon code - {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.DiscountCouponCode.Invalid">
+    <Value>This coupon code ({0}) is invalid or no longer available.</Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.DiscountCouponCode.Label">
     <Value>Enter discount coupon code</Value>
@@ -17640,6 +17796,27 @@
   <LocaleResource Name="Topic.WrongPassword">
     <Value>Wrong password</Value>
   </LocaleResource>
+  <LocaleResource Name="Validation.Password.IsNotEmpty">
+    <Value>Password is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Validation.Password.LengthValidation">
+    <Value><![CDATA[<li>must have at least {0} characters</li>]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Validation.Password.RequireDigit">
+    <Value><![CDATA[<li>must have at least one digit</li>]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Validation.Password.RequireLowercase">
+    <Value><![CDATA[<li>must have at least one lowercase</li>]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Validation.Password.RequireNonAlphanumeric">
+    <Value><![CDATA[<li>must have at least one special character (e.g. #?!@$%^&*-)</li>]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Validation.Password.RequireUppercase">
+    <Value><![CDATA[<li>must have at least one uppercase</li>]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Validation.Password.Rule">
+    <Value><![CDATA[<p>must meet the following rules: </p><ul>{0}{1}{2}{3}{4}</ul>]]></Value>
+  </LocaleResource>  
   <LocaleResource Name="Vendors">
     <Value>Vendors</Value>
   </LocaleResource>

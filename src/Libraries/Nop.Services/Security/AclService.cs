@@ -35,11 +35,11 @@ namespace Nop.Services.Security
             IStaticCacheManager cacheManager,
             IWorkContext workContext)
         {
-            this._catalogSettings = catalogSettings;
-            this._eventPublisher = eventPublisher;
-            this._aclRecordRepository = aclRecordRepository;
-            this._cacheManager = cacheManager;
-            this._workContext = workContext;
+            _catalogSettings = catalogSettings;
+            _eventPublisher = eventPublisher;
+            _aclRecordRepository = aclRecordRepository;
+            _cacheManager = cacheManager;
+            _workContext = workContext;
         }
 
         #endregion

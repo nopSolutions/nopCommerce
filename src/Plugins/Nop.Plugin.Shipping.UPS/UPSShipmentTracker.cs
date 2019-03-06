@@ -21,9 +21,9 @@ namespace Nop.Plugin.Shipping.UPS
 
         public UPSShipmentTracker(ILogger logger, ILocalizationService localizationService, UPSSettings upsSettings)
         {
-            this._logger = logger;
-            this._localizationService = localizationService;
-            this._upsSettings = upsSettings;
+            _logger = logger;
+            _localizationService = localizationService;
+            _upsSettings = upsSettings;
         }
 
         /// <summary>

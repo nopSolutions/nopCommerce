@@ -332,7 +332,7 @@
                                     });
                                 },
                                 error: function(xhr, ajaxOptions, thrownError) {
-                                    alert('Failed to retrieve states.');
+                                    $("#statesAlert").click();
                                 }
                             });
                         });
@@ -369,7 +369,8 @@
                                     grid.dataSource.read();
                                 },
                                 error: function(xhr, ajaxOptions, thrownError) {
-                                    alert(thrownError);
+                                    $('#setAsShippedSelectedFailed-info').html(thrownError);
+                                    $("#setAsShippedSelectedFailed").click();
                                 },
                                 traditional: true
                             });
@@ -396,7 +397,8 @@
                                     grid.dataSource.read();
                                 },
                                 error: function(xhr, ajaxOptions, thrownError) {
-                                    alert(thrownError);
+                                    $('#setAsDeliveredSelectedFailed-info').html(thrownError);
+                                    $("#setAsDeliveredSelectedFailed").click(); 
                                 },
                                 traditional: true
                             });
@@ -452,6 +454,9 @@
 <form asp-controller="Order" asp-action="PdfPackagingSlipSelected" method="post" id="pdf-packaging-slip-selected-form">
     <input type="hidden" id="selectedIds" name="selectedIds" value="" />
 </form>
+<nop-alert asp-alert-id="statesAlert" asp-alert-message="@T("Admin.Common.Alert.States.Failed")" />
+<nop-alert asp-alert-id="setAsShippedSelectedFailed" />
+<nop-alert asp-alert-id="setAsDeliveredSelectedFailed" />
 
 <script>
                 $(document).ready(function () {

@@ -21,7 +21,6 @@ using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
-using SixLabors.ImageSharp.Processing.Transforms;
 using SixLabors.Primitives;
 using static SixLabors.ImageSharp.Configuration;
 
@@ -64,18 +63,18 @@ namespace Nop.Services.Media
             IWebHelper webHelper,
             MediaSettings mediaSettings)
         {
-            this._dataProvider = dataProvider;
-            this._dbContext = dbContext;
-            this._eventPublisher = eventPublisher;
-            this._fileProvider = fileProvider;
-            this._productAttributeParser = productAttributeParser;
-            this._pictureRepository = pictureRepository;
-            this._pictureBinaryRepository = pictureBinaryRepository;
-            this._productPictureRepository = productPictureRepository;
-            this._settingService = settingService;
-            this._urlRecordService = urlRecordService;
-            this._webHelper = webHelper;
-            this._mediaSettings = mediaSettings;
+            _dataProvider = dataProvider;
+            _dbContext = dbContext;
+            _eventPublisher = eventPublisher;
+            _fileProvider = fileProvider;
+            _productAttributeParser = productAttributeParser;
+            _pictureRepository = pictureRepository;
+            _pictureBinaryRepository = pictureBinaryRepository;
+            _productPictureRepository = productPictureRepository;
+            _settingService = settingService;
+            _urlRecordService = urlRecordService;
+            _webHelper = webHelper;
+            _mediaSettings = mediaSettings;
         }
 
         #endregion
@@ -355,7 +354,7 @@ namespace Nop.Services.Media
                         break;
 
                     case PngEncoder pngEncoder:
-                        pngEncoder.PngColorType = PngColorType.RgbWithAlpha;
+                        pngEncoder.ColorType = PngColorType.RgbWithAlpha;
                         pngEncoder.Encode(image, stream);
                         break;
 

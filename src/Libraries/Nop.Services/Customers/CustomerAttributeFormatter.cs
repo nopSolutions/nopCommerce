@@ -28,10 +28,10 @@ namespace Nop.Services.Customers
             ILocalizationService localizationService,
             IWorkContext workContext)
         {
-            this._customerAttributeParser = customerAttributeParser;
-            this._customerAttributeService = customerAttributeService;
-            this._localizationService = localizationService;
-            this._workContext = workContext;
+            _customerAttributeParser = customerAttributeParser;
+            _customerAttributeService = customerAttributeService;
+            _localizationService = localizationService;
+            _workContext = workContext;
         }
 
         #endregion

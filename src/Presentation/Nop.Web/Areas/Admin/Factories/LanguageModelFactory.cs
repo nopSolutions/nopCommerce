@@ -30,10 +30,10 @@ namespace Nop.Web.Areas.Admin.Factories
             ILocalizationService localizationService,
             IStoreMappingSupportedModelFactory storeMappingSupportedModelFactory)
         {
-            this._baseAdminModelFactory = baseAdminModelFactory;
-            this._languageService = languageService;
-            this._localizationService = localizationService;
-            this._storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
+            _baseAdminModelFactory = baseAdminModelFactory;
+            _languageService = languageService;
+            _localizationService = localizationService;
+            _storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
         }
 
         #endregion
@@ -174,8 +174,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     LanguageId = language.Id,
                     Id = localeResource.Value.Key,
-                    Name = localeResource.Key,
-                    Value = localeResource.Value.Value
+                    ResourceName = localeResource.Key,
+                    ResourceValue = localeResource.Value.Value
                 }),
                 Total = localeResources.Count()
             };

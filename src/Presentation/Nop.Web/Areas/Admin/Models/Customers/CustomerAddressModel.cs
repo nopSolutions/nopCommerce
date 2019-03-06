@@ -12,7 +12,7 @@ namespace Nop.Web.Areas.Admin.Models.Customers
 
         public CustomerAddressModel()
         {
-            this.Address = new AddressModel();
+            Address = new AddressModel();
         }
 
         #endregion

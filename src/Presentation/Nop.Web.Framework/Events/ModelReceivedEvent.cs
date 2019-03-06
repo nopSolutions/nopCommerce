@@ -17,8 +17,8 @@ namespace Nop.Web.Framework.Events
         /// <param name="modelState">Model state</param>
         public ModelReceivedEvent(T model, ModelStateDictionary modelState)
         {
-            this.Model = model;
-            this.ModelState = modelState;
+            Model = model;
+            ModelState = modelState;
         }
 
         #endregion

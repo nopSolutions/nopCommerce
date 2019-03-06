@@ -14,7 +14,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
 
         public StoreInformationSettingsModel()
         {
-            this.AvailableStoreThemes = new List<ThemeModel>();
+            AvailableStoreThemes = new List<ThemeModel>();
         }
 
         #endregion

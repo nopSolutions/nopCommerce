@@ -1,5 +1,4 @@
 ﻿using System;
-using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Localization;
@@ -19,7 +18,7 @@ namespace Nop.Services.Tests.Catalog
         {
             _productService = new ProductService(new CatalogSettings(), new CommonSettings(), null, new NopNullCache(),
                 null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
-                null, null, new LocalizationSettings());
+                null, null, null, new LocalizationSettings());
         }
 
         [Test]

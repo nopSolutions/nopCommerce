@@ -48,10 +48,10 @@ namespace Nop.Web.Framework.Mvc.Filters
                 IWebHelper webHelper,
                 IWorkContext workContext)
             {
-                this._customerSettings = customerSettings;
-                this._genericAttributeService = genericAttributeService;
-                this._webHelper = webHelper;
-                this._workContext = workContext;
+                _customerSettings = customerSettings;
+                _genericAttributeService = genericAttributeService;
+                _webHelper = webHelper;
+                _workContext = workContext;
             }
 
             #endregion

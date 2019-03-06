@@ -40,6 +40,7 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
+        private readonly CatalogSettings _catalogSettings;
         private readonly CurrencySettings _currencySettings;
         private readonly IAclSupportedModelFactory _aclSupportedModelFactory;
         private readonly IBaseAdminModelFactory _baseAdminModelFactory;
@@ -79,7 +80,8 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #region Ctor
 
-        public ProductModelFactory(CurrencySettings currencySettings,
+        public ProductModelFactory(CatalogSettings catalogSettings,
+            CurrencySettings currencySettings,
             IAclSupportedModelFactory aclSupportedModelFactory,
             IBaseAdminModelFactory baseAdminModelFactory,
             ICategoryService categoryService,
@@ -114,40 +116,41 @@ namespace Nop.Web.Areas.Admin.Factories
             TaxSettings taxSettings,
             VendorSettings vendorSettings)
         {
-            this._currencySettings = currencySettings;
-            this._aclSupportedModelFactory = aclSupportedModelFactory;
-            this._baseAdminModelFactory = baseAdminModelFactory;
-            this._categoryService = categoryService;
-            this._currencyService = currencyService;
-            this._customerService = customerService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._discountService = discountService;
-            this._discountSupportedModelFactory = discountSupportedModelFactory;
-            this._localizationService = localizationService;
-            this._localizedModelFactory = localizedModelFactory;
-            this._manufacturerService = manufacturerService;
-            this._measureService = measureService;
-            this._measureSettings = measureSettings;
-            this._orderService = orderService;
-            this._pictureService = pictureService;
-            this._productAttributeFormatter = productAttributeFormatter;
-            this._productAttributeParser = productAttributeParser;
-            this._productAttributeService = productAttributeService;
-            this._productService = productService;
-            this._productTagService = productTagService;
-            this._productTemplateService = productTemplateService;
-            this._settingModelFactory = settingModelFactory;
-            this._shipmentService = shipmentService;
-            this._shippingService = shippingService;
-            this._shoppingCartService = shoppingCartService;
-            this._specificationAttributeService = specificationAttributeService;
-            this._cacheManager = cacheManager;
-            this._storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
-            this._storeService = storeService;
-            this._urlRecordService = urlRecordService;
-            this._workContext = workContext;
-            this._taxSettings = taxSettings;
-            this._vendorSettings = vendorSettings;
+            _catalogSettings = catalogSettings;
+            _currencySettings = currencySettings;
+            _aclSupportedModelFactory = aclSupportedModelFactory;
+            _baseAdminModelFactory = baseAdminModelFactory;
+            _cacheManager = cacheManager;
+            _categoryService = categoryService;
+            _currencyService = currencyService;
+            _customerService = customerService;
+            _dateTimeHelper = dateTimeHelper;
+            _discountService = discountService;
+            _discountSupportedModelFactory = discountSupportedModelFactory;
+            _localizationService = localizationService;
+            _localizedModelFactory = localizedModelFactory;
+            _manufacturerService = manufacturerService;
+            _measureService = measureService;
+            _measureSettings = measureSettings;
+            _orderService = orderService;
+            _pictureService = pictureService;
+            _productAttributeFormatter = productAttributeFormatter;
+            _productAttributeParser = productAttributeParser;
+            _productAttributeService = productAttributeService;
+            _productService = productService;
+            _productTagService = productTagService;
+            _productTemplateService = productTemplateService;
+            _settingModelFactory = settingModelFactory;
+            _shipmentService = shipmentService;
+            _shippingService = shippingService;
+            _shoppingCartService = shoppingCartService;
+            _specificationAttributeService = specificationAttributeService;
+            _storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
+            _storeService = storeService;
+            _urlRecordService = urlRecordService;
+            _workContext = workContext;
+            _taxSettings = taxSettings;
+            _vendorSettings = vendorSettings;
         }
 
         #endregion
@@ -203,45 +206,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
                 models.Add(model);
             }
-        }
-
-        /// <summary>
-        /// Prepare specification attribute model to add to the product
-        /// </summary>
-        /// <param name="model">Specification attribute model to add to the product</param>
-        /// <returns>Specification attribute model to add to the product</returns>
-        protected virtual AddSpecificationAttributeToProductModel PrepareAddSpecificationAttributeToProductModel(
-            AddSpecificationAttributeToProductModel model)
-        {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
-
-            model.ShowOnProductPage = true;
-
-            model.AvailableAttributes = _cacheManager.Get(ModelCacheEventConsumer.SPEC_ATTRIBUTES_MODEL_KEY, () =>
-            {
-                var availableSpecificationAttributes = new List<SelectListItem>();
-                foreach (var sa in _specificationAttributeService.GetSpecificationAttributes())
-                {
-                    availableSpecificationAttributes.Add(new SelectListItem
-                    {
-                        Text = sa.Name,
-                        Value = sa.Id.ToString()
-                    });
-                }
-
-                return availableSpecificationAttributes;
-            });
-
-            //options of preselected specification attribute
-            if (model.AvailableAttributes.Any() && int.TryParse(model.AvailableAttributes.FirstOrDefault()?.Value, out var selectedAttributeId))
-            {
-                model.AvailableOptions = _specificationAttributeService
-                    .GetSpecificationAttributeOptionsBySpecificationAttribute(selectedAttributeId)
-                    .Select(option => new SelectListItem { Text = option.Name, Value = option.Id.ToString() }).ToList();
-            }
-
-            return model;
         }
 
         /// <summary>
@@ -679,6 +643,8 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare available warehouses
             _baseAdminModelFactory.PrepareWarehouses(searchModel.AvailableWarehouses);
 
+            searchModel.HideStoresList = _catalogSettings.IgnoreStoreLimitations || searchModel.AvailableStores.SelectionIsNotPossible();
+
             //prepare "published" filter (0 - all; 1 - published only; 2 - unpublished only)
             searchModel.AvailablePublishedOptions.Add(new SelectListItem
             {
@@ -747,6 +713,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     productModel.FullDescription = string.Empty;
 
                     //fill in additional values (not existing in the entity)
+                    productModel.SeName = _urlRecordService.GetSeName(product, 0, true, false);
                     var defaultProductPicture = _pictureService.GetPicturesByProductId(product.Id, 1).FirstOrDefault();
                     productModel.PictureThumbnailUrl = _pictureService.GetPictureUrl(defaultProductPicture, 75);
                     productModel.ProductTypeName = _localizationService.GetLocalizedEnum(product.ProductType);
@@ -775,7 +742,11 @@ namespace Nop.Web.Areas.Admin.Factories
             if (product != null)
             {
                 //fill in model values from the entity
-                model = model ?? product.ToModel<ProductModel>();
+                if (model == null)
+                {
+                    model = product.ToModel<ProductModel>();
+                    model.SeName = _urlRecordService.GetSeName(product, 0, true, false);
+                }
 
                 var parentGroupedProduct = _productService.GetProductById(product.ParentGroupedProductId);
                 if (parentGroupedProduct != null)
@@ -800,9 +771,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
                 //prepare copy product model
                 PrepareCopyProductModel(model.CopyProductModel, product);
-
-                //prepare specification attribute model to add to the product
-                PrepareAddSpecificationAttributeToProductModel(model.AddSpecificationAttributeModel);
 
                 //prepare nested search model
                 PrepareRelatedProductSearchModel(model.RelatedProductSearchModel, product);
@@ -853,6 +821,8 @@ namespace Nop.Web.Areas.Admin.Factories
             model.BaseWeightIn = _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId).Name;
             model.BaseDimensionIn = _measureService.GetMeasureDimensionById(_measureSettings.BaseDimensionId).Name;
             model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
+            model.HasAvailableSpecificationAttributes = _cacheManager.Get(NopModelCacheDefaults.SpecAttributesModelKey,
+                    () => _specificationAttributeService.GetSpecificationAttributesWithOptions()).Any();
 
             //prepare localized models
             if (!excludeProperties)
@@ -999,7 +969,13 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new AddRequiredProductListModel
             {
                 //fill in model values from the entity
-                Data = products.Select(product => product.ToModel<ProductModel>()),
+                Data = products.Select(product =>
+                {
+                    var productModel = product.ToModel<ProductModel>();
+                    productModel.SeName = _urlRecordService.GetSeName(product, 0, true, false);
+
+                    return productModel;
+                }),
                 Total = products.TotalCount
             };
 
@@ -1103,7 +1079,13 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new AddRelatedProductListModel
             {
                 //fill in model values from the entity
-                Data = products.Select(product => product.ToModel<ProductModel>()),
+                Data = products.Select(product =>
+                {
+                    var productModel = product.ToModel<ProductModel>();
+                    productModel.SeName = _urlRecordService.GetSeName(product, 0, true, false);
+
+                    return productModel;
+                }),
                 Total = products.TotalCount
             };
 
@@ -1211,7 +1193,13 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new AddCrossSellProductListModel
             {
                 //fill in model values from the entity
-                Data = products.Select(product => product.ToModel<ProductModel>()),
+                Data = products.Select(product =>
+                {
+                    var productModel = product.ToModel<ProductModel>();
+                    productModel.SeName = _urlRecordService.GetSeName(product, 0, true, false);
+
+                    return productModel;
+                }),
                 Total = products.TotalCount
             };
 
@@ -1241,7 +1229,13 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new AssociatedProductListModel
             {
                 //fill in model values from the entity
-                Data = associatedProducts.PaginationByRequestModel(searchModel).Select(associatedProduct => associatedProduct.ToModel<AssociatedProductModel>()),
+                Data = associatedProducts.PaginationByRequestModel(searchModel).Select(associatedProduct =>
+                {
+                    var associatedProductModel = associatedProduct.ToModel<AssociatedProductModel>();
+                    associatedProductModel.ProductName = associatedProduct.Name;
+
+                    return associatedProductModel;
+                }),
                 Total = associatedProducts.Count
             };
 
@@ -1314,6 +1308,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     var productModel = product.ToModel<ProductModel>();
 
                     //fill in additional values (not existing in the entity)
+                    productModel.SeName = _urlRecordService.GetSeName(product, 0, true, false);
                     var parentGroupedProduct = _productService.GetProductById(product.ParentGroupedProductId);
                     if (parentGroupedProduct == null)
                         return productModel;
@@ -1398,6 +1393,9 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     //fill in additional values (not existing in the entity)
                     productSpecificationAttributeModel.AttributeTypeName = _localizationService.GetLocalizedEnum(attribute.AttributeType);
+                    productSpecificationAttributeModel.AttributeId = attribute.SpecificationAttributeOption.SpecificationAttribute.Id;
+                    productSpecificationAttributeModel.AttributeName = attribute.SpecificationAttributeOption.SpecificationAttribute.Name;
+
                     switch (attribute.AttributeType)
                     {
                         case SpecificationAttributeType.Option:
@@ -1408,7 +1406,7 @@ namespace Nop.Web.Areas.Admin.Factories
                             productSpecificationAttributeModel.ValueRaw = WebUtility.HtmlEncode(attribute.CustomValue);
                             break;
                         case SpecificationAttributeType.CustomHtmlText:
-                            productSpecificationAttributeModel.ValueRaw = WebUtility.HtmlEncode(attribute.CustomValue);
+                            productSpecificationAttributeModel.ValueRaw = attribute.CustomValue;
                             break;
                         case SpecificationAttributeType.Hyperlink:
                             productSpecificationAttributeModel.ValueRaw = attribute.CustomValue;
@@ -1419,6 +1417,76 @@ namespace Nop.Web.Areas.Admin.Factories
                 }),
                 Total = productSpecificationAttributes.Count
             };
+
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare paged product specification attribute model
+        /// </summary>
+        /// <param name="productId">Product id</param>
+        /// <param name="specificationId">Specification attribute id</param>
+        /// <returns>Product specification attribute model</returns>
+        public virtual AddSpecificationAttributeModel PrepareAddSpecificationAttributeModel(int productId, int? specificationId)
+        {
+            if (!specificationId.HasValue)
+            {
+                return new AddSpecificationAttributeModel
+                {
+                    AvailableAttributes = _cacheManager.Get(NopModelCacheDefaults.SpecAttributesModelKey,
+                            () => _specificationAttributeService.GetSpecificationAttributesWithOptions())
+                        .Select(sa => new SelectListItem {Text = sa.Name, Value = sa.Id.ToString()})
+                        .ToList(),
+                    ProductId = productId
+                };
+
+            }
+
+            var attribute = _specificationAttributeService.GetProductSpecificationAttributeById(specificationId.Value);
+
+            if (attribute == null)
+            {
+                throw new ArgumentException("No specification attribute found with the specified id");
+            }
+
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null && attribute.Product.VendorId != _workContext.CurrentVendor.Id)
+                throw new UnauthorizedAccessException("This is not your product");
+
+            var model = attribute.ToModel<AddSpecificationAttributeModel>();
+            model.SpecificationId = attribute.Id;
+            model.AttributeId = attribute.SpecificationAttributeOption.SpecificationAttribute.Id;
+            model.AttributeTypeName = _localizationService.GetLocalizedEnum(attribute.AttributeType);
+            model.AttributeName = attribute.SpecificationAttributeOption.SpecificationAttribute.Name;
+
+            model.AvailableAttributes = _cacheManager.Get(NopModelCacheDefaults.SpecAttributesModelKey,
+                    () => _specificationAttributeService.GetSpecificationAttributesWithOptions())
+                .Select(sa => new SelectListItem {Text = sa.Name, Value = sa.Id.ToString()})
+                .ToList();
+
+            model.AvailableOptions = _specificationAttributeService
+                .GetSpecificationAttributeOptionsBySpecificationAttribute(model.AttributeId)
+                .Select(option => new SelectListItem { Text = option.Name, Value = option.Id.ToString() })
+                .ToList();
+
+            switch (attribute.AttributeType)
+            {
+                case SpecificationAttributeType.Option:
+                    model.ValueRaw = WebUtility.HtmlEncode(attribute.SpecificationAttributeOption.Name);
+                    model.SpecificationAttributeOptionId = attribute.SpecificationAttributeOptionId;
+                    break;
+                case SpecificationAttributeType.CustomText:
+                    model.Value = WebUtility.HtmlDecode(attribute.CustomValue);
+                    break;
+                case SpecificationAttributeType.CustomHtmlText:
+                    model.ValueRaw = attribute.CustomValue;
+                    break;
+                case SpecificationAttributeType.Hyperlink:
+                    model.Value = attribute.CustomValue;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(attribute.AttributeType));
+            }
 
             return model;
         }
@@ -1648,10 +1716,11 @@ namespace Nop.Web.Areas.Admin.Factories
                     //fill in model values from the entity
                     var tierPriceModel = price.ToModel<TierPriceModel>();
 
-                    //fill in additional values (not existing in the entity)                    
+                    //fill in additional values (not existing in the entity)   
                     tierPriceModel.Store = price.StoreId > 0
                         ? (_storeService.GetStoreById(price.StoreId)?.Name ?? "Deleted")
                         : _localizationService.GetResource("Admin.Catalog.Products.TierPrices.Fields.Store.All");
+                    tierPriceModel.CustomerRoleId = price.CustomerRoleId ?? 0;
                     tierPriceModel.CustomerRole = price.CustomerRoleId.HasValue
                         ? _customerService.GetCustomerRoleById(price.CustomerRoleId.Value).Name
                         : _localizationService.GetResource("Admin.Catalog.Products.TierPrices.Fields.CustomerRole.All");
@@ -1847,6 +1916,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 localizedModelConfiguration = (locale, languageId) =>
                 {
                     locale.TextPrompt = _localizationService.GetLocalized(productAttributeMapping, entity => entity.TextPrompt, languageId, false, false);
+                    locale.DefaultValue = _localizationService.GetLocalized(productAttributeMapping, entity => entity.DefaultValue, languageId, false, false);
                 };
 
                 //prepare nested search model
@@ -2068,7 +2138,13 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new AssociateProductToAttributeValueListModel
             {
                 //fill in model values from the entity
-                Data = products.Select(product => product.ToModel<ProductModel>()),
+                Data = products.Select(product =>
+                {
+                    var productModel = product.ToModel<ProductModel>();
+                    productModel.SeName = _urlRecordService.GetSeName(product, 0, true, false);
+
+                    return productModel;
+                }),
                 Total = products.TotalCount
             };
 

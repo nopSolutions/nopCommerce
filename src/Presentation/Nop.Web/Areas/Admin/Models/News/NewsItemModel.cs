@@ -19,7 +19,7 @@ namespace Nop.Web.Areas.Admin.Models.News
 
         public NewsItemModel()
         {
-            this.AvailableLanguages = new List<SelectListItem>();
+            AvailableLanguages = new List<SelectListItem>();
 
             SelectedStoreIds = new List<int>();
             AvailableStores = new List<SelectListItem>();
@@ -57,11 +57,11 @@ namespace Nop.Web.Areas.Admin.Models.News
 
         [NopResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.StartDate")]
         [UIHint("DateTimeNullable")]
-        public DateTime? StartDate { get; set; }
+        public DateTime? StartDateUtc { get; set; }
 
         [NopResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.EndDate")]
         [UIHint("DateTimeNullable")]
-        public DateTime? EndDate { get; set; }
+        public DateTime? EndDateUtc { get; set; }
 
         [NopResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.MetaKeywords")]
         public string MetaKeywords { get; set; }

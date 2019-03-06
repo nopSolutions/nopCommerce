@@ -1,10 +1,11 @@
 ﻿@model IList<VendorAttributeModel>
+@using Nop.Web.Framework.Controllers
 
 @using Nop.Core.Domain.Catalog
 
 @foreach (var attribute in Model)
 {
-    var controlId = $"vendor_attribute_{attribute.Id}";
+    var controlId = $"{NopAttributePrefixDefaults.Vendor}{attribute.Id}";
     var textPrompt = attribute.Name;
 
     <div class="inputs vendor-attributes">

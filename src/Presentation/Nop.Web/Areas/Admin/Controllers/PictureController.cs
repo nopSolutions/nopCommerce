@@ -24,9 +24,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             INopFileProvider fileProvider,
             IPictureService pictureService)
         {
-            this._downloadService = downloadService;
-            this._fileProvider = fileProvider;
-            this._pictureService = pictureService;
+            _downloadService = downloadService;
+            _fileProvider = fileProvider;
+            _pictureService = pictureService;
         }
 
         #endregion

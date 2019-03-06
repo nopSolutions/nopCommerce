@@ -45,9 +45,9 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Infrastructure.Cache
             ISettingService settingService,
             IStaticCacheManager cacheManager)
         {
-            this._taxRateService = taxRateService;
-            this._settingService = settingService;
-            this._cacheManager = cacheManager;
+            _taxRateService = taxRateService;
+            _settingService = settingService;
+            _cacheManager = cacheManager;
         }
 
         #endregion

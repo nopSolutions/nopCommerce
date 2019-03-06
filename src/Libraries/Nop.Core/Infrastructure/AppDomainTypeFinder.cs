@@ -26,7 +26,7 @@ namespace Nop.Core.Infrastructure
 
         public AppDomainTypeFinder(INopFileProvider fileProvider = null)
         {
-            this._fileProvider = fileProvider ?? CommonHelper.DefaultFileProvider;
+            _fileProvider = fileProvider ?? CommonHelper.DefaultFileProvider;
         }
 
         #endregion

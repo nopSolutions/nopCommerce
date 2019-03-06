@@ -4,7 +4,6 @@
 @inject IPermissionService permissionService
 @inject ICustomerService customerService
 @inject IEventPublisher eventPublisher
-@inject IHttpContextAccessor httpContextAccessor
 @inject CommonSettings commonSettings
 @inject LocalizationSettings localizationSettings
 @inject StoreInformationSettings storeInformationSettings
@@ -12,7 +11,6 @@
 @inject Nop.Services.Localization.ILanguageService languageService
 @using System.Globalization
 @using System.Text.Encodings.Web
-@using Microsoft.AspNetCore.Http
 @using Nop.Core.Domain.Customers
 @using Nop.Web.Framework.UI;
 @using Nop.Core;
@@ -23,8 +21,8 @@
 @using Nop.Services.Security;
 
 @{
-    var rawUrl = webHelper.GetRawUrl(httpContextAccessor.HttpContext.Request);
-    
+    var returnUrl = webHelper.GetRawUrl(Context.Request);
+
     var kendoVersion = "2014.1.318";
     var supportRtl = workContext.WorkingLanguage.Rtl && !localizationSettings.IgnoreRtlPropertyForAdminArea;
 
@@ -104,8 +102,10 @@
             var rootAppPath = '@(Url.Content("~/"))';
         </script>
         @Html.NopHeadCustom()
-        @Html.NopCssFiles(this.Url, ResourceLocation.Head, false)
-        @Html.NopScripts(this.Url, ResourceLocation.Head, false)
+        @Html.NopCssFiles(ResourceLocation.Head, false)
+        @Html.NopScripts(ResourceLocation.Head, false)
+        @*Insert favicon and app icons head code*@
+        @await Component.InvokeAsync("Favicon")
     </head>
     <body class="hold-transition skin-blue sidebar-mini @if (hideSidebar) 
                                                     {<text>sidebar-collapse</text>}">
@@ -172,7 +172,7 @@
                                         <ul class="maintenance-menu dropdown-menu bg-light-blue" role="menu">
                                             <li>
                                                 <form asp-controller="Common" asp-action="ClearCache" asp-area="@AreaNames.Admin">
-                                                    <input name="returnurl" type="hidden" value="@rawUrl">
+                                                    <input name="returnurl" type="hidden" value="@returnUrl">
                                                     <button type="submit" class="bg-light-blue">
                                                         <span>@T("Admin.Header.ClearCache")</span>
                                                     </button>
@@ -180,7 +180,7 @@
                                             </li>
                                             <li>
                                                 <form asp-controller="Common" asp-action="RestartApplication" asp-area="@AreaNames.Admin">
-                                                    <input name="returnurl" type="hidden" value="@rawUrl">
+                                                    <input name="returnurl" type="hidden" value="@returnUrl">
                                                     <button id="restart-application" type="submit" class="bg-light-blue">
                                                         <span>@T("Admin.Header.RestartApplication")</span>
                                                     </button>
@@ -263,8 +263,8 @@
                 }
             };
         </script>
-        @Html.NopCssFiles(this.Url, ResourceLocation.Footer)
-        @Html.NopScripts(this.Url, ResourceLocation.Footer)
+        @Html.NopCssFiles(ResourceLocation.Footer)
+        @Html.NopScripts(ResourceLocation.Footer)
         <a id="backTop" class="btn btn-back-top bg-teal"></a>
         <script>
             $(document).ready(function () {
@@ -276,7 +276,7 @@
 
                 //save sidebar preferences
                 $('a.sidebar-toggle').on('click', function () {
-                    var collapsed = !$('body').hasClass('sidebar-collapse');
+                    var collapsed = $('body').hasClass('sidebar-collapse');
                     saveUserPreferences('@(Url.Action("SavePreference", "Preferences"))', '@hideSidebarAttributeName', collapsed);
                 });
 

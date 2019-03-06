@@ -62,20 +62,20 @@ namespace Nop.Web.Areas.Admin.Controllers
             IVendorModelFactory vendorModelFactory,
             IVendorService vendorService)
         {
-            this._addressService = addressService;
-            this._customerActivityService = customerActivityService;
-            this._customerService = customerService;
-            this._genericAttributeService = genericAttributeService;
-            this._localizationService = localizationService;
-            this._localizedEntityService = localizedEntityService;
-            this._notificationService = notificationService;
-            this._permissionService = permissionService;
-            this._pictureService = pictureService;
-            this._urlRecordService = urlRecordService;
-            this._vendorAttributeParser = vendorAttributeParser;
-            this._vendorAttributeService = vendorAttributeService;
-            this._vendorModelFactory = vendorModelFactory;
-            this._vendorService = vendorService;
+            _addressService = addressService;
+            _customerActivityService = customerActivityService;
+            _customerService = customerService;
+            _genericAttributeService = genericAttributeService;
+            _localizationService = localizationService;
+            _localizedEntityService = localizedEntityService;
+            _notificationService = notificationService;
+            _permissionService = permissionService;
+            _pictureService = pictureService;
+            _urlRecordService = urlRecordService;
+            _vendorAttributeParser = vendorAttributeParser;
+            _vendorAttributeService = vendorAttributeService;
+            _vendorModelFactory = vendorModelFactory;
+            _vendorService = vendorService;
         }
 
         #endregion
@@ -133,7 +133,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             var vendorAttributes = _vendorAttributeService.GetAllVendorAttributes();
             foreach (var attribute in vendorAttributes)
             {
-                var controlId = $"vendor_attribute_{attribute.Id}";
+                var controlId = $"{NopAttributePrefixDefaults.Vendor}{attribute.Id}";
                 StringValues ctrlAttributes;
                 switch (attribute.AttributeControlType)
                 {

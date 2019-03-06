@@ -130,8 +130,9 @@ namespace Nop.Services.Directory
         /// Load exchange rate provider by system name
         /// </summary>
         /// <param name="systemName">System name</param>
+        /// <param name="customer">Load records allowed only to a specified customer; pass null to ignore ACL permissions</param>
         /// <returns>Found exchange rate provider</returns>
-        IExchangeRateProvider LoadExchangeRateProviderBySystemName(string systemName);
+        IExchangeRateProvider LoadExchangeRateProviderBySystemName(string systemName, Customer customer = null);
 
         /// <summary>
         /// Load all exchange rate providers

@@ -34,9 +34,9 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Services
             ICacheManager cacheManager,
             IRepository<TaxRate> taxRateRepository)
         {
-            this._eventPublisher = eventPublisher;
-            this._cacheManager = cacheManager;
-            this._taxRateRepository = taxRateRepository;
+            _eventPublisher = eventPublisher;
+            _cacheManager = cacheManager;
+            _taxRateRepository = taxRateRepository;
         }
 
         #endregion

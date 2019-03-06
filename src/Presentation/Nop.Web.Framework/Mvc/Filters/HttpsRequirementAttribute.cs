@@ -29,8 +29,8 @@ namespace Nop.Web.Framework.Mvc.Filters
         /// <param name="sslRequirement">Whether the page should be secured</param>
         public HttpsRequirementAttribute(SslRequirement sslRequirement) : base(typeof(HttpsRequirementFilter))
         {
-            this._sslRequirement = sslRequirement;
-            this.Arguments = new object[] { sslRequirement };
+            _sslRequirement = sslRequirement;
+            Arguments = new object[] { sslRequirement };
         }
 
         #endregion
@@ -67,10 +67,10 @@ namespace Nop.Web.Framework.Mvc.Filters
                 IWebHelper webHelper,
                 SecuritySettings securitySettings)
             {
-                this._sslRequirement = sslRequirement;
-                this._storeContext = storeContext;
-                this._webHelper = webHelper;
-                this._securitySettings = securitySettings;
+                _sslRequirement = sslRequirement;
+                _storeContext = storeContext;
+                _webHelper = webHelper;
+                _securitySettings = securitySettings;
             }
 
             #endregion

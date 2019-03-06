@@ -57,17 +57,17 @@ namespace Nop.Services.Localization
             IWorkContext workContext,
             LocalizationSettings localizationSettings)
         {
-            this._dataProvider = dataProvider;
-            this._dbContext = dbContext;
-            this._eventPublisher = eventPublisher;
-            this._languageService = languageService;
-            this._localizedEntityService = localizedEntityService;
-            this._logger = logger;
-            this._lsrRepository = lsrRepository;
-            this._settingService = settingService;
-            this._cacheManager = cacheManager;
-            this._workContext = workContext;
-            this._localizationSettings = localizationSettings;
+            _dataProvider = dataProvider;
+            _dbContext = dbContext;
+            _eventPublisher = eventPublisher;
+            _languageService = languageService;
+            _localizedEntityService = localizedEntityService;
+            _logger = logger;
+            _lsrRepository = lsrRepository;
+            _settingService = settingService;
+            _cacheManager = cacheManager;
+            _workContext = workContext;
+            _localizationSettings = localizationSettings;
         }
 
         #endregion

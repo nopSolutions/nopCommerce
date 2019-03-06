@@ -12,7 +12,7 @@ namespace Nop.Services.Payments
     {
         public ProcessPaymentRequest()
         {
-            this.CustomValues = new Dictionary<string, object>();
+            CustomValues = new Dictionary<string, object>();
         }
 
         /// <summary>

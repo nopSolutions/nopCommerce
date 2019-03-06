@@ -17,7 +17,7 @@ namespace Nop.Web.Areas.Admin.Models.Customers
 
         public CustomerRoleModel()
         {
-            this.TaxDisplayTypeValues = new List<SelectListItem>();
+            TaxDisplayTypeValues = new List<SelectListItem>();
         }
 
         #endregion

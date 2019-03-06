@@ -40,14 +40,14 @@ namespace Nop.Services.Directory
             IRepository<StoreMapping> storeMappingRepository,
             IStoreContext storeContext)
         {
-            this._catalogSettings = catalogSettings;
-            this._cacheManager = cacheManager;
-            this._eventPublisher = eventPublisher;
-            this._localizationService = localizationService;
-            this._countryRepository = countryRepository;
-            this._storeMappingRepository = storeMappingRepository;
-            this._storeContext = storeContext;
-            this._entityName = typeof(Country).Name;
+            _catalogSettings = catalogSettings;
+            _cacheManager = cacheManager;
+            _eventPublisher = eventPublisher;
+            _localizationService = localizationService;
+            _countryRepository = countryRepository;
+            _storeMappingRepository = storeMappingRepository;
+            _storeContext = storeContext;
+            _entityName = typeof(Country).Name;
         }
 
         #endregion

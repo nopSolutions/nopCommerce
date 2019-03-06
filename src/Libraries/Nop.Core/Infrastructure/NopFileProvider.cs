@@ -457,7 +457,13 @@ namespace Nop.Core.Infrastructure
         /// <returns>A string containing all lines of the file</returns>
         public virtual string ReadAllText(string path, Encoding encoding)
         {
-            return File.ReadAllText(path, encoding);
+            using (var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            {
+                using (var streamReader = new StreamReader(fileStream, encoding))
+                {
+                    return streamReader.ReadToEnd();
+                }
+            }
         }
 
         /// <summary>

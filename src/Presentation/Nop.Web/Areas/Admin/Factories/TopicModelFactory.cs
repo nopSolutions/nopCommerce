@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Nop.Core;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Topics;
 using Nop.Services.Localization;
 using Nop.Services.Seo;
@@ -22,6 +23,7 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
+        private readonly CatalogSettings _catalogSettings;
         private readonly IAclSupportedModelFactory _aclSupportedModelFactory;
         private readonly IActionContextAccessor _actionContextAccessor;
         private readonly IBaseAdminModelFactory _baseAdminModelFactory;
@@ -37,7 +39,8 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #region Ctor
 
-        public TopicModelFactory(IAclSupportedModelFactory aclSupportedModelFactory,
+        public TopicModelFactory(CatalogSettings catalogSettings,
+            IAclSupportedModelFactory aclSupportedModelFactory,
             IActionContextAccessor actionContextAccessor,
             IBaseAdminModelFactory baseAdminModelFactory,
             ILocalizationService localizationService,
@@ -48,16 +51,17 @@ namespace Nop.Web.Areas.Admin.Factories
             IUrlRecordService urlRecordService,
             IWebHelper webHelper)
         {
-            this._aclSupportedModelFactory = aclSupportedModelFactory;
-            this._actionContextAccessor = actionContextAccessor;
-            this._baseAdminModelFactory = baseAdminModelFactory;
-            this._localizationService = localizationService;
-            this._localizedModelFactory = localizedModelFactory;
-            this._storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
-            this._topicService = topicService;
-            this._urlHelperFactory = urlHelperFactory;
-            this._urlRecordService = urlRecordService;
-            this._webHelper = webHelper;
+            _catalogSettings = catalogSettings;
+            _aclSupportedModelFactory = aclSupportedModelFactory;
+            _actionContextAccessor = actionContextAccessor;
+            _baseAdminModelFactory = baseAdminModelFactory;
+            _localizationService = localizationService;
+            _localizedModelFactory = localizedModelFactory;
+            _storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
+            _topicService = topicService;
+            _urlHelperFactory = urlHelperFactory;
+            _urlRecordService = urlRecordService;
+            _webHelper = webHelper;
         }
 
         #endregion
@@ -76,6 +80,8 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare available stores
             _baseAdminModelFactory.PrepareStores(searchModel.AvailableStores);
+
+            searchModel.HideStoresList = _catalogSettings.IgnoreStoreLimitations || searchModel.AvailableStores.SelectionIsNotPossible();
 
             //prepare page parameters
             searchModel.SetGridPageSize();
@@ -117,6 +123,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     //little performance optimization: ensure that "Body" is not returned
                     topicModel.Body = string.Empty;
 
+                    topicModel.SeName = _urlRecordService.GetSeName(topic, 0, true, false);
+
                     return topicModel;
                 }),
                 Total = topics.Count
@@ -139,7 +147,11 @@ namespace Nop.Web.Areas.Admin.Factories
             if (topic != null)
             {
                 //fill in model values from the entity
-                model = model ?? topic.ToModel<TopicModel>();
+                if (model == null)
+                {
+                    model = topic.ToModel<TopicModel>();
+                    model.SeName = _urlRecordService.GetSeName(topic, 0, true, false);
+                }
 
                 model.Url = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext)
                     .RouteUrl("Topic", new { SeName = _urlRecordService.GetSeName(topic) }, _webHelper.CurrentRequestProtocol);

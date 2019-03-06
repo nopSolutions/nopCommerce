@@ -17,7 +17,7 @@ namespace Nop.Web.Framework.Validators
         public DecimalPropertyValidator(decimal maxValue) :
             base("Decimal value is out of range")
         {
-            this._maxValue = maxValue;
+            _maxValue = maxValue;
         }
 
         /// <summary>

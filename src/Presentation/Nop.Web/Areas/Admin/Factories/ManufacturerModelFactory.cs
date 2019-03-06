@@ -9,6 +9,7 @@ using Nop.Services.Localization;
 using Nop.Services.Seo;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Catalog;
+using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;
 
 namespace Nop.Web.Areas.Admin.Factories
@@ -48,17 +49,17 @@ namespace Nop.Web.Areas.Admin.Factories
             IStoreMappingSupportedModelFactory storeMappingSupportedModelFactory,
             IUrlRecordService urlRecordService)
         {
-            this._catalogSettings = catalogSettings;
-            this._aclSupportedModelFactory = aclSupportedModelFactory;
-            this._baseAdminModelFactory = baseAdminModelFactory;
-            this._manufacturerService = manufacturerService;
-            this._discountService = discountService;
-            this._discountSupportedModelFactory = discountSupportedModelFactory;
-            this._localizationService = localizationService;
-            this._localizedModelFactory = localizedModelFactory;
-            this._productService = productService;
-            this._storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
-            this._urlRecordService = urlRecordService;
+            _catalogSettings = catalogSettings;
+            _aclSupportedModelFactory = aclSupportedModelFactory;
+            _baseAdminModelFactory = baseAdminModelFactory;
+            _manufacturerService = manufacturerService;
+            _discountService = discountService;
+            _discountSupportedModelFactory = discountSupportedModelFactory;
+            _localizationService = localizationService;
+            _localizedModelFactory = localizedModelFactory;
+            _productService = productService;
+            _storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
+            _urlRecordService = urlRecordService;
         }
 
         #endregion
@@ -105,6 +106,8 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare available stores
             _baseAdminModelFactory.PrepareStores(searchModel.AvailableStores);
 
+            searchModel.HideStoresList = _catalogSettings.IgnoreStoreLimitations || searchModel.AvailableStores.SelectionIsNotPossible();
+
             //prepare page parameters
             searchModel.SetGridPageSize();
 
@@ -131,7 +134,13 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new ManufacturerListModel
             {
                 //fill in model values from the entity
-                Data = manufacturers.Select(manufacturer => manufacturer.ToModel<ManufacturerModel>()),
+                Data = manufacturers.Select(manufacturer =>
+                {
+                    var manufacturerModel = manufacturer.ToModel<ManufacturerModel>();
+                    manufacturerModel.SeName = _urlRecordService.GetSeName(manufacturer, 0, true, false);
+
+                    return manufacturerModel;
+                }),
                 Total = manufacturers.TotalCount
             };
 
@@ -153,7 +162,11 @@ namespace Nop.Web.Areas.Admin.Factories
             if (manufacturer != null)
             {
                 //fill in model values from the entity
-                model = model ?? manufacturer.ToModel<ManufacturerModel>();
+                if (model == null)
+                {
+                    model = manufacturer.ToModel<ManufacturerModel>();
+                    model.SeName = _urlRecordService.GetSeName(manufacturer, 0, true, false);
+                }
 
                 //prepare nested search model
                 PrepareManufacturerProductSearchModel(model.ManufacturerProductSearchModel, manufacturer);
@@ -294,7 +307,13 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new AddProductToManufacturerListModel
             {
                 //fill in model values from the entity
-                Data = products.Select(product => product.ToModel<ProductModel>()),
+                Data = products.Select(product =>
+                {
+                    var productModel = product.ToModel<ProductModel>();
+                    productModel.SeName = _urlRecordService.GetSeName(product, 0, true, false);
+
+                    return productModel;
+                }),
                 Total = products.TotalCount
             };
 

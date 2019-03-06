@@ -13,24 +13,27 @@ namespace Nop.Plugin.Payments.Square.Validators
         public ConfigurationModelValidator()
         {
             //rules for sandbox credentials
-            RuleFor(model => model.AccessToken).Must((model, context) =>
+            RuleFor(model => model.SandboxAccessToken).Must((model, context) =>
             {
                 //do not validate for production credentials
                 if (!model.UseSandbox)
                     return true;
 
-                return !string.IsNullOrEmpty(model.AccessToken) && 
-                    model.AccessToken.StartsWith(SquarePaymentDefaults.SandboxCredentialsPrefix, StringComparison.InvariantCultureIgnoreCase);
+                //password type input is not populated from the model
+                if (model.SandboxAccessToken == null)
+                    return true;
+
+                return model.SandboxAccessToken.StartsWith(SquarePaymentDefaults.SandboxCredentialsPrefix, StringComparison.InvariantCultureIgnoreCase);
             }).WithMessage($"Sandbox access token should start with '{SquarePaymentDefaults.SandboxCredentialsPrefix}'");
 
-            RuleFor(model => model.ApplicationId).Must((model, context) =>
+            RuleFor(model => model.SandboxApplicationId).Must((model, context) =>
             {
                 //do not validate for production credentials
                 if (!model.UseSandbox)
                     return true;
 
-                return !string.IsNullOrEmpty(model.ApplicationId) && 
-                    model.ApplicationId.StartsWith(SquarePaymentDefaults.SandboxCredentialsPrefix, StringComparison.InvariantCultureIgnoreCase);
+                return !string.IsNullOrEmpty(model.SandboxApplicationId) &&
+                    model.SandboxApplicationId.StartsWith(SquarePaymentDefaults.SandboxCredentialsPrefix, StringComparison.InvariantCultureIgnoreCase);
             }).WithMessage($"Sandbox application ID should start with '{SquarePaymentDefaults.SandboxCredentialsPrefix}'");
         }
     }

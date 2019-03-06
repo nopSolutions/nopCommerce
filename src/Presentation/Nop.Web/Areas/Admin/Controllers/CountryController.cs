@@ -59,19 +59,19 @@ namespace Nop.Web.Areas.Admin.Controllers
             IStoreMappingService storeMappingService,
             IStoreService storeService)
         {
-            this._addressService = addressService;
-            this._countryModelFactory = countryModelFactory;
-            this._countryService = countryService;
-            this._customerActivityService = customerActivityService;
-            this._exportManager = exportManager;
-            this._importManager = importManager;
-            this._localizationService = localizationService;
-            this._localizedEntityService = localizedEntityService;
-            this._notificationService = notificationService;
-            this._permissionService = permissionService;
-            this._stateProvinceService = stateProvinceService;
-            this._storeMappingService = storeMappingService;
-            this._storeService = storeService;
+            _addressService = addressService;
+            _countryModelFactory = countryModelFactory;
+            _countryService = countryService;
+            _customerActivityService = customerActivityService;
+            _exportManager = exportManager;
+            _importManager = importManager;
+            _localizationService = localizationService;
+            _localizedEntityService = localizedEntityService;
+            _notificationService = notificationService;
+            _permissionService = permissionService;
+            _stateProvinceService = stateProvinceService;
+            _storeMappingService = storeMappingService;
+            _storeService = storeService;
         }
 
         #endregion

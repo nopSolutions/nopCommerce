@@ -68,25 +68,25 @@ namespace Nop.Web.Controllers
             MediaSettings mediaSettings,
             VendorSettings vendorSettings)
         {
-            this._catalogSettings = catalogSettings;
-            this._aclService = aclService;
-            this._catalogModelFactory = catalogModelFactory;
-            this._categoryService = categoryService;
-            this._customerActivityService = customerActivityService;
-            this._genericAttributeService = genericAttributeService;
-            this._localizationService = localizationService;
-            this._manufacturerService = manufacturerService;
-            this._permissionService = permissionService;
-            this._productModelFactory = productModelFactory;
-            this._productService = productService;
-            this._productTagService = productTagService;
-            this._storeContext = storeContext;
-            this._storeMappingService = storeMappingService;
-            this._vendorService = vendorService;
-            this._webHelper = webHelper;
-            this._workContext = workContext;
-            this._mediaSettings = mediaSettings;
-            this._vendorSettings = vendorSettings;
+            _catalogSettings = catalogSettings;
+            _aclService = aclService;
+            _catalogModelFactory = catalogModelFactory;
+            _categoryService = categoryService;
+            _customerActivityService = customerActivityService;
+            _genericAttributeService = genericAttributeService;
+            _localizationService = localizationService;
+            _manufacturerService = manufacturerService;
+            _permissionService = permissionService;
+            _productModelFactory = productModelFactory;
+            _productService = productService;
+            _productTagService = productTagService;
+            _storeContext = storeContext;
+            _storeMappingService = storeMappingService;
+            _vendorService = vendorService;
+            _webHelper = webHelper;
+            _workContext = workContext;
+            _mediaSettings = mediaSettings;
+            _vendorSettings = vendorSettings;
         }
 
         #endregion
@@ -132,6 +132,22 @@ namespace Nop.Web.Controllers
             //template
             var templateViewPath = _catalogModelFactory.PrepareCategoryTemplateViewPath(category.CategoryTemplateId);
             return View(templateViewPath, model);
+        }
+
+        [HttpPost]
+        public virtual IActionResult GetCatalogRoot()
+        {
+            var model = _catalogModelFactory.PrepareRootCategories();
+
+            return Json(model);
+        }
+
+        [HttpPost]
+        public virtual IActionResult GetCatalogSubCategories(int id)
+        {
+            var model = _catalogModelFactory.PrepareSubCategories(id);
+
+            return Json(model);
         }
 
         #endregion
@@ -256,7 +272,7 @@ namespace Nop.Web.Controllers
             //'Continue shopping' URL
             _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
                 NopCustomerDefaults.LastContinueShoppingPageAttribute,
-                _webHelper.GetThisPageUrl(false),
+                _webHelper.GetThisPageUrl(true),
                 _storeContext.CurrentStore.Id);
 
             if (model == null)

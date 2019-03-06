@@ -57,19 +57,19 @@ namespace Nop.Web.Areas.Admin.Controllers
             IWorkflowMessageService workflowMessageService,
             LocalizationSettings localizationSettings)
         {
-            this._currencySettings = currencySettings;
-            this._currencyService = currencyService;
-            this._customerActivityService = customerActivityService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._giftCardModelFactory = giftCardModelFactory;
-            this._giftCardService = giftCardService;
-            this._languageService = languageService;
-            this._localizationService = localizationService;
-            this._notificationService = notificationService;
-            this._permissionService = permissionService;
-            this._priceFormatter = priceFormatter;
-            this._workflowMessageService = workflowMessageService;
-            this._localizationSettings = localizationSettings;
+            _currencySettings = currencySettings;
+            _currencyService = currencyService;
+            _customerActivityService = customerActivityService;
+            _dateTimeHelper = dateTimeHelper;
+            _giftCardModelFactory = giftCardModelFactory;
+            _giftCardService = giftCardService;
+            _languageService = languageService;
+            _localizationService = localizationService;
+            _notificationService = notificationService;
+            _permissionService = permissionService;
+            _priceFormatter = priceFormatter;
+            _workflowMessageService = workflowMessageService;
+            _localizationSettings = localizationSettings;
         }
 
         #endregion

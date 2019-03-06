@@ -33,10 +33,10 @@ namespace Nop.Web.Areas.Admin.Factories
             ILocalizationService localizationService,
             ILocalizedModelFactory localizedModelFactory)
         {
-            this._addressAttributeParser = addressAttributeParser;
-            this._addressAttributeService = addressAttributeService;
-            this._localizationService = localizationService;
-            this._localizedModelFactory = localizedModelFactory;
+            _addressAttributeParser = addressAttributeParser;
+            _addressAttributeService = addressAttributeService;
+            _localizationService = localizationService;
+            _localizedModelFactory = localizedModelFactory;
         }
 
         #endregion

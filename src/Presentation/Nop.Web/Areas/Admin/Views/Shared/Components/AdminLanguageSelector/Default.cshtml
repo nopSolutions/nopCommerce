@@ -1,17 +1,16 @@
 ﻿@model LanguageSelectorModel
-@using System.Net
-@using Microsoft.AspNetCore.Http
-@using Nop.Core;
-@inject IWebHelper webHelper
-@inject IHttpContextAccessor httpContextAccessor
+
+@inject Nop.Core.IWebHelper webHelper
+
 @if (Model.AvailableLanguages.Count > 1)
 {
     <div style="padding: 7px 12px 0 12px;">
         @{
+            var returnUrl = webHelper.GetRawUrl(Context.Request);
             var languages = Model.AvailableLanguages.Select(lang => new SelectListItem
             {
                 Text = lang.Name,
-                Value = webHelper.ModifyQueryString(Url.Action("SetLanguage", "Common", new {langid = lang.Id, area = AreaNames.Admin }, webHelper.CurrentRequestProtocol), "returnurl", webHelper.GetRawUrl(httpContextAccessor.HttpContext.Request)),
+                Value = Url.Action("SetLanguage", "Common", new {langid = lang.Id, area = AreaNames.Admin, returnUrl }, webHelper.CurrentRequestProtocol),
                 Selected = lang.Id.Equals(Model.CurrentLanguage.Id)
             });
 

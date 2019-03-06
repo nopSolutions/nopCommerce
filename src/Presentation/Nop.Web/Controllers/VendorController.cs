@@ -66,21 +66,21 @@ namespace Nop.Web.Controllers
             LocalizationSettings localizationSettings,
             VendorSettings vendorSettings)
         {
-            this._captchaSettings = captchaSettings;
-            this._customerService = customerService;
-            this._downloadService = downloadService;
-            this._genericAttributeService = genericAttributeService;
-            this._localizationService = localizationService;
-            this._pictureService = pictureService;
-            this._urlRecordService = urlRecordService;
-            this._vendorAttributeParser = vendorAttributeParser;
-            this._vendorAttributeService = vendorAttributeService;
-            this._vendorModelFactory = vendorModelFactory;
-            this._vendorService = vendorService;
-            this._workContext = workContext;
-            this._workflowMessageService = workflowMessageService;
-            this._localizationSettings = localizationSettings;
-            this._vendorSettings = vendorSettings;
+            _captchaSettings = captchaSettings;
+            _customerService = customerService;
+            _downloadService = downloadService;
+            _genericAttributeService = genericAttributeService;
+            _localizationService = localizationService;
+            _pictureService = pictureService;
+            _urlRecordService = urlRecordService;
+            _vendorAttributeParser = vendorAttributeParser;
+            _vendorAttributeService = vendorAttributeService;
+            _vendorModelFactory = vendorModelFactory;
+            _vendorService = vendorService;
+            _workContext = workContext;
+            _workflowMessageService = workflowMessageService;
+            _localizationSettings = localizationSettings;
+            _vendorSettings = vendorSettings;
         }
 
         #endregion

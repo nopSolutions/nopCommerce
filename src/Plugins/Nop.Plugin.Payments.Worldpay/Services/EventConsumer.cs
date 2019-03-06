@@ -39,11 +39,11 @@ namespace Nop.Plugin.Payments.Worldpay.Services
             IPaymentService paymentService,
             WorldpayPaymentManager worldpayPaymentManager)
         {
-            this._customerService = customerService;
-            this._genericAttributeService = genericAttributeService;
-            this._localizationService = localizationService;
-            this._paymentService = paymentService;
-            this._worldpayPaymentManager = worldpayPaymentManager;
+            _customerService = customerService;
+            _genericAttributeService = genericAttributeService;
+            _localizationService = localizationService;
+            _paymentService = paymentService;
+            _worldpayPaymentManager = worldpayPaymentManager;
         }
 
         #endregion
@@ -59,9 +59,9 @@ namespace Nop.Plugin.Payments.Worldpay.Services
             if (eventMessage?.Helper?.ViewContext?.ActionDescriptor == null)
                 return;
 
-            //check whether the payment plugin is installed and is active
+            //check whether the payment plugin is active
             var worldpayPaymentMethod = _paymentService.LoadPaymentMethodBySystemName(WorldpayPaymentDefaults.SystemName);
-            if (!(worldpayPaymentMethod?.PluginDescriptor?.Installed ?? false) || !_paymentService.IsPaymentMethodActive(worldpayPaymentMethod))
+            if (!_paymentService.IsPaymentMethodActive(worldpayPaymentMethod))
                 return;
 
             //add js sсript to one page checkout
@@ -83,9 +83,9 @@ namespace Nop.Plugin.Payments.Worldpay.Services
             if (!eventMessage.TabStripName.Equals(tabsElementId))
                 return;
 
-            //check whether the payment plugin is installed and is active
+            //check whether the payment plugin is active
             var worldpayPaymentMethod = _paymentService.LoadPaymentMethodBySystemName(WorldpayPaymentDefaults.SystemName);
-            if (!(worldpayPaymentMethod?.PluginDescriptor?.Installed ?? false) || !_paymentService.IsPaymentMethodActive(worldpayPaymentMethod))
+            if (!_paymentService.IsPaymentMethodActive(worldpayPaymentMethod))
                 return;
 
             //get the view model
@@ -110,7 +110,7 @@ namespace Nop.Plugin.Payments.Worldpay.Services
 
             //create a new tab
             var tabName = _localizationService.GetResource("Plugins.Payments.Worldpay.WorldpayCustomer");
-            var url = "~/Plugins/Payments.Worldpay/Views/Customer/_CreateOrUpdate.Worldpay.cshtml";            
+            var url = "~/Plugins/Payments.Worldpay/Views/Customer/_CreateOrUpdate.Worldpay.cshtml";
             var contentModel = (await eventMessage.Helper.PartialAsync(url, model)).RenderHtmlContent()
                 .Replace("</script>", "<\\/script>");  //we need escape a closing script tag to prevent terminating the script block early
             var worldpayCustomerTab = eventMessage.TabContentByModel("tab-worldpay", tabName, contentModel);

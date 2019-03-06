@@ -42,14 +42,14 @@ namespace Nop.Web.Factories
             IUrlRecordService urlRecordService,
             IWorkContext workContext)
         {
-            this._aclService = aclService;
-            this._localizationService = localizationService;
-            this._cacheManager = cacheManager;
-            this._storeContext = storeContext;
-            this._topicService = topicService;
-            this._topicTemplateService = topicTemplateService;
-            this._urlRecordService = urlRecordService;
-            this._workContext = workContext;
+            _aclService = aclService;
+            _localizationService = localizationService;
+            _cacheManager = cacheManager;
+            _storeContext = storeContext;
+            _topicService = topicService;
+            _topicTemplateService = topicTemplateService;
+            _urlRecordService = urlRecordService;
+            _workContext = workContext;
         }
 
         #endregion
@@ -95,7 +95,7 @@ namespace Nop.Web.Factories
         /// <returns>Topic model</returns>
         public virtual TopicModel PrepareTopicModelById(int topicId)
         {
-            var cacheKey = string.Format(ModelCacheEventConsumer.TOPIC_MODEL_BY_ID_KEY,
+            var cacheKey = string.Format(NopModelCacheDefaults.TopicModelByIdKey,
                 topicId,
                 _workContext.WorkingLanguage.Id,
                 _storeContext.CurrentStore.Id,
@@ -119,7 +119,7 @@ namespace Nop.Web.Factories
         /// <returns>Topic model</returns>
         public virtual TopicModel PrepareTopicModelBySystemName(string systemName)
         {
-            var cacheKey = string.Format(ModelCacheEventConsumer.TOPIC_MODEL_BY_SYSTEMNAME_KEY,
+            var cacheKey = string.Format(NopModelCacheDefaults.TopicModelBySystemNameKey,
                 systemName,
                 _workContext.WorkingLanguage.Id,
                 _storeContext.CurrentStore.Id,
@@ -143,7 +143,7 @@ namespace Nop.Web.Factories
         /// <returns>View path</returns>
         public virtual string PrepareTemplateViewPath(int topicTemplateId)
         {
-            var templateCacheKey = string.Format(ModelCacheEventConsumer.TOPIC_TEMPLATE_MODEL_KEY, topicTemplateId);
+            var templateCacheKey = string.Format(NopModelCacheDefaults.TopicTemplateModelKey, topicTemplateId);
             var templateViewPath = _cacheManager.Get(templateCacheKey, () =>
             {
                 var template = _topicTemplateService.GetTopicTemplateById(topicTemplateId);

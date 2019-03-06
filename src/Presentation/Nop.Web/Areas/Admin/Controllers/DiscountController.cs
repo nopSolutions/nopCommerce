@@ -53,17 +53,17 @@ namespace Nop.Web.Areas.Admin.Controllers
             IProductService productService,
             IWebHelper webHelper)
         {
-            this._catalogSettings = catalogSettings;
-            this._categoryService = categoryService;
-            this._customerActivityService = customerActivityService;
-            this._discountModelFactory = discountModelFactory;
-            this._discountService = discountService;
-            this._localizationService = localizationService;
-            this._manufacturerService = manufacturerService;
-            this._notificationService = notificationService;
-            this._permissionService = permissionService;
-            this._productService = productService;
-            this._webHelper = webHelper;
+            _catalogSettings = catalogSettings;
+            _categoryService = categoryService;
+            _customerActivityService = customerActivityService;
+            _discountModelFactory = discountModelFactory;
+            _discountService = discountService;
+            _localizationService = localizationService;
+            _manufacturerService = manufacturerService;
+            _notificationService = notificationService;
+            _permissionService = permissionService;
+            _productService = productService;
+            _webHelper = webHelper;
         }
 
         #endregion

@@ -29,10 +29,10 @@ namespace Nop.Services.Catalog
             IRepository<ReviewType> reviewTypeRepository,
             IStaticCacheManager cacheManager)
         {
-            this._eventPublisher = eventPublisher;
-            this._productReviewReviewTypeMappingRepository = productReviewReviewTypeMappingRepository;
-            this._reviewTypeRepository = reviewTypeRepository;
-            this._cacheManager = cacheManager;
+            _eventPublisher = eventPublisher;
+            _productReviewReviewTypeMappingRepository = productReviewReviewTypeMappingRepository;
+            _reviewTypeRepository = reviewTypeRepository;
+            _cacheManager = cacheManager;
         }
 
         #endregion

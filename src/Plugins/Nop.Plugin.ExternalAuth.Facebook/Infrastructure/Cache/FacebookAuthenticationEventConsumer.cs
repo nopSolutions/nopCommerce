@@ -22,7 +22,7 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Infrastructure.Cache
 
         public FacebookAuthenticationEventConsumer(IGenericAttributeService genericAttributeService)
         {
-            this._genericAttributeService = genericAttributeService;
+            _genericAttributeService = genericAttributeService;
         }
 
         #endregion

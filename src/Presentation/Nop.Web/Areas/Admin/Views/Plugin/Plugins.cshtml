@@ -1,0 +1,350 @@
+﻿@model PluginSearchModel
+
+@using System.Text.Encodings.Web
+@using Nop.Core.Plugins
+
+@{
+    //page title
+    ViewBag.Title = T("Admin.Configuration.Plugins.Local").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Local plugins");
+}
+
+<nop-antiforgery-token />
+<form asp-controller="Plugin" asp-action="Plugins" id="plugins-form-local">
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.Configuration.Plugins.Local")
+        </h1>
+    </div>
+
+    <div class="content-header clearfix">
+        <div class="pull-right">
+            @if (Model.NeedToRestart)
+            {
+            <button type="submit" name="plugin-apply-changes" class="btn bg-green">@T("Admin.Configuration.Plugins.ApplyChanges")</button>
+            <button type="submit" name="plugin-discard-changes" class="btn bg-red">@T("Admin.Configuration.Plugins.DiscardChanges")</button>
+            }
+
+            <button type="submit" name="plugin-reload-grid" class="btn bg-blue">@T("Admin.Configuration.Plugins.ReloadList")</button>
+            <script>
+                $(document).ready(function() {
+                    $("button[name='plugin-reload-grid']").on("click",
+                        function(e) {
+                            showThrobber(
+                                '@Html.Raw(JavaScriptEncoder.Default.Encode(T("Admin.Configuration.Plugins.ReloadList.Progress").Text))');
+                        });
+                    $("button[name='plugin-apply-changes']").on("click",
+                        function(e) {
+                            showThrobber(
+                                '@Html.Raw(JavaScriptEncoder.Default.Encode(T("Admin.Configuration.Plugins.ApplyChanges.Progress").Text))');
+                        });
+                    $("button[name='plugin-discard-changes']").on("click",
+                        function(e) {
+                            showThrobber(
+                                '@Html.Raw(JavaScriptEncoder.Default.Encode(T("Admin.Configuration.Plugins.DiscardChanges.Progress").Text))');
+                        });
+                });
+            </script>
+            <button type="button" name="uploadplugin" class="btn bg-olive" data-toggle="modal" data-target="#uploadplugin-window">
+                <i class="fa fa-upload"></i>
+                @T("Admin.Configuration.Plugins.Upload")
+            </button>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.PluginListButtons })
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="form-horizontal">
+            <script>
+                $(document).ready(function () {
+                    //install a plugin
+                    $("#plugins-local-grid").on("click", ".install-plugin-link", function (e) {
+                        $("html, body").animate({ scrollTop: 0 }, 400);
+                        showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Admin.Configuration.Plugins.Fields.Install.Progress").Text))');
+                        return true;
+                    });
+
+                    //uninstall a plugin
+                    $("#plugins-local-grid").on("click", ".uninstall-plugin-link", function (e) {
+                        $("html, body").animate({ scrollTop: 0 }, 400);
+                        showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Admin.Configuration.Plugins.Fields.Uninstall.Progress").Text))');
+                        return true;
+                    });
+
+                    //upload a plugin
+                    $("#upload-plugin").on("click", function (e) {
+                        $("html, body").animate({ scrollTop: 0 }, 400);
+                        showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Admin.Configuration.Plugins.Upload.Progress").Text))');
+                        return true;
+                    });
+                });
+            </script>
+
+            <div class="panel-group">
+                <div class="panel panel-default panel-search">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p>
+                                    <h4>@T("Admin.Configuration.Plugins.Description")</h4>
+                                    <ol>
+                                        <li>@T("Admin.Configuration.Plugins.Description.Step1")</li>
+                                        <li>@T("Admin.Configuration.Plugins.Description.Step2")</li>
+                                        <li>@T("Admin.Configuration.Plugins.Description.Step3")</li>
+                                        <li>@T("Admin.Configuration.Plugins.Description.Step4")</li>
+                                    </ol>
+                                </p>
+                                <p>
+                                    @T("Admin.Configuration.Plugins.Description.DownloadMorePlugins")
+                                </p>
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="SearchLoadModeId" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-select asp-for="SearchLoadModeId" asp-items="Model.AvailableLoadModes" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="SearchGroup" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-select asp-for="SearchGroup" asp-items="Model.AvailableGroups" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-8 col-md-offset-4">
+                                        <button type="button" id="search-plugins-local" class="btn btn-primary btn-search">
+                                            <i class="fa fa-search"></i>
+                                            @T("Admin.Common.Search")
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div id="plugins-local-grid"></div>
+
+                        <script>
+                            $(document).ready(function () {
+                                $("#plugins-local-grid").kendoGrid({
+                                    dataSource: {
+                                        type: "json",
+                                        transport: {
+                                            read: {
+                                                url: "@Html.Raw(Url.Action("ListSelect", "Plugin"))",
+                                                type: "POST",
+                                                dataType: "json",
+                                                data: function() {
+                                                    var data = {
+                                                        SearchLoadModeId: $('#SearchLoadModeId').val(),
+                                                        SearchGroup: $('#SearchGroup').val()
+                                                    };
+                                                    addAntiForgeryToken(data);
+                                                    return data;
+                                                }
+                                            }
+                                        },
+                                        schema: {
+                                            data: "Data",
+                                            total: "Total",
+                                            errors: "Errors"
+                                        },
+                                        error: function (e) {
+                                            display_kendoui_grid_error(e);
+                                            // Cancel the changes
+                                            this.cancelChanges();
+                                        },
+                                        pageSize: @(Model.PageSize),
+                                        serverPaging: true,
+                                        serverFiltering: true,
+                                        serverSorting: true
+                                    },
+                                    pageable: {
+                                        refresh: true,
+                                        pageSizes: [@(Model.AvailablePageSizes)],
+                                        @await Html.PartialAsync("_GridPagerMessages")
+                                    },
+                                    editable: {
+                                        confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                                        mode: "inline"
+                                    },
+                                    scrollable: false,
+                                    dataBound: onDataBound,
+                                    columns: [
+                                        {
+                                            field: "Group",
+                                            title: "@T("Admin.Configuration.Plugins.Fields.Group")",
+                                            width: 150
+                                        }, {
+                                            field: "LogoUrl",
+                                            title: "@T("Admin.Configuration.Plugins.Fields.Logo")",
+                                            width: 200,
+                                            template: '<img src="#=LogoUrl#" />',
+                                            headerAttributes: { style: "text-align:center" },
+                                            attributes: { style: "text-align:center" }
+                                        }, {
+                                            field: "Description",
+                                            title: "@T("Admin.Configuration.Plugins.Info")",
+                                            template: '<b>#:FriendlyName#</b>' +
+                                                '# if(Description) {# <br />#:Description# #} #' +
+                                                //allow configuration only when a plugin has a configuration URL specified
+                                                '<br /> # if(ConfigurationUrl && ConfigurationUrl.length > 0) {# <a class="btn btn-default margin-r-5" href="#=ConfigurationUrl#"><i class="fa fa-cog"></i>@T("Admin.Configuration.Plugins.Fields.Configure")</a>#} #' +
+                                                '<a class="btn btn-default" href="javascript:OpenWindow(\'@Url.Content("~/Admin/Plugin/EditPopup")?systemName=#=SystemName#&btnId=btnRefreshList&formId=plugins-form-list\', 800, 500, true);"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>',
+                                            attributes: { style: "vertical-align:top;" },
+                                            width: 400
+                                        }, {
+                                            field: "FriendlyName",
+                                            title: "@T("Admin.Configuration.Plugins.AdditionalInfo")",
+                                            template: '<ul class="common-list">' +
+                                                '<li>@T("Admin.Configuration.Plugins.Fields.Version"): #:Version#</li>' +
+                                                '<li>@T("Admin.Configuration.Plugins.Fields.Author"): #:Author#</li>' +
+                                                '<li>@T("Admin.Configuration.Plugins.Fields.SystemName"): #:SystemName#</li>' +
+                                                '<li>@T("Admin.Configuration.Plugins.Fields.DisplayOrder"): #:DisplayOrder#</li>' +
+                                                '<li>@T("Admin.Configuration.Plugins.Fields.Installed"):  # if(Installed) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #</li>' +
+                                                '# if(CanChangeEnabled) {# <li>@T("Admin.Configuration.Plugins.Fields.IsEnabled"): # if(IsEnabled) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} # </li> #} #' +
+                                                '</ul>'
+                                        }, {
+                                            field: "Installed",
+                                            title: "@T("Admin.Configuration.Plugins.Fields.Installation")",
+                                            template: '# if(Installed) {# <button type="submit" name="uninstall-plugin-link-#=SystemName#" class="btn bg-red uninstall-plugin-link">@T("Admin.Configuration.Plugins.Fields.Uninstall")</button> #} else {#  <button type="submit" name="install-plugin-link-#=SystemName#" class="btn bg-green install-plugin-link">@T("Admin.Configuration.Plugins.Fields.Install")</button> <button type="button" name="delete-plugin-link-#=SystemName#" class="btn bg-red delete-plugin-link" >@T("Admin.Configuration.Plugins.Fields.Delete")</button> #} #',
+                                            headerAttributes: { style: "text-align:center" },
+                                            attributes: { style: "text-align:center" },
+                                            width: 150
+                                        }
+                                    ]
+                                });
+                            });
+                        </script>
+                    </div>
+
+                    <div id="plugin-delete-confirmation" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="plugin-delete-confirmation-title" style="display: none;">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                    <h4 class="modal-title" id="plugindelete-confirmation-title">@T("Admin.Common.AreYouSure")</h4>
+                                </div>
+                                <div class="form-horizontal">
+                                    <div class="modal-body">
+                                        @T("Admin.Common.DeleteConfirmation")
+                                    </div>
+                                    <div class="modal-footer">
+                                        <span class="btn btn-default" data-dismiss="modal">@T("Admin.Common.NoCancel")</span>
+                                        <button type="submit" class="btn bg-red pull-right">@T("Admin.Common.Delete")</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <script>
+                            function onDataBound(e) {
+                                $('button[name^="delete-plugin-link-"]')
+                                    .attr("data-toggle", "modal")
+                                    .attr("data-target", "#plugin-delete-confirmation")
+                                    .on("click", function () {
+                                        $("#plugin-delete-confirmation button[type=submit]").attr("name", $(this).attr("name"));
+                                    });
+
+                                $("#plugin-delete-confirmation button[type=submit]").on("click",
+                                    function() {
+                                        $('#plugin-delete-confirmation').modal('toggle');
+                                        $("html, body").animate({ scrollTop: 0 }, 400);
+                                        showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Admin.Configuration.Plugins.Fields.Delete.Progress").Text))');
+                                        return true;
+                                    });
+                            }
+                        </script>
+                    </div>
+
+                    <div>
+                        <input type="submit" id="btnRefreshList" style="display: none" />
+                        <script>
+                            $(document).ready(function () {
+                                $('#btnRefreshList').click(function () {
+                                    //refresh grid
+                                    var grid = $("#plugins-local-grid").data('kendoGrid');
+                                    grid.dataSource.read();
+
+                                    //return false to don't reload a page
+                                    return false;
+                                });
+                            });
+                        </script>
+
+                        <script>
+                            $(document).ready(function () {
+                                //search button
+                                $('#search-plugins-local').click(function () {
+                                    //search
+                                    var grid = $('#plugins-local-grid').data('kendoGrid');
+                                    grid.dataSource.read();
+
+                                    return false;
+                                });
+                            });
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.PluginDetailsBlock, additionalData = Model })
+</form>
+
+@*upload plugin form*@
+<div id="uploadplugin-window" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="uploadplugin-window-title">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="uploadplugin-window-title">@T("Admin.Configuration.Plugins.Upload")</h4>
+            </div>
+            <form asp-controller="Plugin" asp-action="UploadPluginsAndThemes" method="post" enctype="multipart/form-data">
+                <div class="form-horizontal">
+                    <div class="modal-body">
+                        <ul class="common-list">
+                            <li>
+                                @T("Admin.Configuration.Plugins.Upload.Hint1")
+                            </li>
+                            <li>
+                                @string.Format(T("Admin.Configuration.Plugins.Upload.Hint2").Text, NopPluginDefaults.UploadedItemsFileName)
+                            </li>
+                            <li>
+                                <em>@T("Admin.Configuration.Plugins.Upload.Hint3")</em>
+                            </li>
+                            <li>
+                                <em>@T("Admin.Configuration.Plugins.Upload.Hint4")</em>
+                            </li>
+                        </ul>
+                        <div class="form-group">
+                            <div class="col-md-2">
+                                <div class="label-wrapper">
+                                    <label class="control-label">
+                                        @T("Admin.Common.ZipFile")
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-10">
+                                <input type="file" id="archivefile" name="archivefile" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary" id="upload-plugin">
+                            @T("Admin.Configuration.Plugins.Upload")
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+

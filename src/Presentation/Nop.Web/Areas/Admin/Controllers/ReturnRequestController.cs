@@ -46,16 +46,16 @@ namespace Nop.Web.Areas.Admin.Controllers
             IReturnRequestService returnRequestService,
             IWorkflowMessageService workflowMessageService)
         {
-            this._customerActivityService = customerActivityService;
-            this._customerService = customerService;
-            this._localizationService = localizationService;
-            this._localizedEntityService = localizedEntityService;
-            this._notificationService = notificationService;
-            this._orderService = orderService;
-            this._permissionService = permissionService;
-            this._returnRequestModelFactory = returnRequestModelFactory;
-            this._returnRequestService = returnRequestService;
-            this._workflowMessageService = workflowMessageService;
+            _customerActivityService = customerActivityService;
+            _customerService = customerService;
+            _localizationService = localizationService;
+            _localizedEntityService = localizedEntityService;
+            _notificationService = notificationService;
+            _orderService = orderService;
+            _permissionService = permissionService;
+            _returnRequestModelFactory = returnRequestModelFactory;
+            _returnRequestService = returnRequestService;
+            _workflowMessageService = workflowMessageService;
         }
 
         #endregion
@@ -146,12 +146,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                returnRequest.Quantity = model.Quantity;
-                returnRequest.ReasonForReturn = model.ReasonForReturn;
-                returnRequest.RequestedAction = model.RequestedAction;
-                returnRequest.CustomerComments = model.CustomerComments;
-                returnRequest.StaffNotes = model.StaffNotes;
-                returnRequest.ReturnRequestStatusId = model.ReturnRequestStatusId;
+                returnRequest = model.ToEntity(returnRequest);
                 returnRequest.UpdatedOnUtc = DateTime.UtcNow;
                 _customerService.UpdateCustomer(returnRequest.Customer);
 

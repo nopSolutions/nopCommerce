@@ -50,10 +50,10 @@ namespace Nop.Web.Framework.Mvc.Filters
                 IWorkContext workContext,
                 LocalizationSettings localizationSettings)
             {
-                this._languageService = languageService;
-                this._webHelper = webHelper;
-                this._workContext = workContext;
-                this._localizationSettings = localizationSettings;
+                _languageService = languageService;
+                _webHelper = webHelper;
+                _workContext = workContext;
+                _localizationSettings = localizationSettings;
             }
 
             #endregion

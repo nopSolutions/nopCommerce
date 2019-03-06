@@ -58,19 +58,19 @@ namespace Nop.Services.Customers
             IRepository<GenericAttribute> gaRepository,
             IStaticCacheManager staticCacheManager)
         {
-            this._customerSettings = customerSettings;
-            this._cacheManager = cacheManager;
-            this._dataProvider = dataProvider;
-            this._dbContext = dbContext;
-            this._eventPublisher = eventPublisher;
-            this._genericAttributeService = genericAttributeService;
-            this._customerRepository = customerRepository;
-            this._customerCustomerRoleMappingRepository = customerCustomerRoleMappingRepository;
-            this._customerPasswordRepository = customerPasswordRepository;
-            this._customerRoleRepository = customerRoleRepository;
-            this._gaRepository = gaRepository;
-            this._staticCacheManager = staticCacheManager;
-            this._entityName = typeof(Customer).Name;
+            _customerSettings = customerSettings;
+            _cacheManager = cacheManager;
+            _dataProvider = dataProvider;
+            _dbContext = dbContext;
+            _eventPublisher = eventPublisher;
+            _genericAttributeService = genericAttributeService;
+            _customerRepository = customerRepository;
+            _customerCustomerRoleMappingRepository = customerCustomerRoleMappingRepository;
+            _customerPasswordRepository = customerPasswordRepository;
+            _customerRoleRepository = customerRoleRepository;
+            _gaRepository = gaRepository;
+            _staticCacheManager = staticCacheManager;
+            _entityName = typeof(Customer).Name;
         }
 
         #endregion
@@ -642,7 +642,7 @@ namespace Nop.Services.Customers
                     result = customer.Username;
                     break;
                 case CustomerNameFormat.ShowFullNames:
-                    result = this.GetCustomerFullName(customer);
+                    result = GetCustomerFullName(customer);
                     break;
                 case CustomerNameFormat.ShowFirstName:
                     result = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.FirstNameAttribute);
@@ -774,7 +774,7 @@ namespace Nop.Services.Customers
                 throw new ArgumentNullException(nameof(customer));
 
             //get applied coupon codes
-            var existingCouponCodes = this.ParseAppliedDiscountCouponCodes(customer);
+            var existingCouponCodes = ParseAppliedDiscountCouponCodes(customer);
 
             //clear them
             _genericAttributeService.SaveAttribute<string>(customer, NopCustomerDefaults.DiscountCouponCodeAttribute, null);
@@ -782,7 +782,7 @@ namespace Nop.Services.Customers
             //save again except removed one
             foreach (var existingCouponCode in existingCouponCodes)
                 if (!existingCouponCode.Equals(couponCode, StringComparison.InvariantCultureIgnoreCase))
-                    this.ApplyDiscountCouponCode(customer, existingCouponCode);
+                    ApplyDiscountCouponCode(customer, existingCouponCode);
         }
 
         /// <summary>
@@ -902,7 +902,7 @@ namespace Nop.Services.Customers
                 throw new ArgumentNullException(nameof(customer));
 
             //get applied coupon codes
-            var existingCouponCodes = this.ParseAppliedGiftCardCouponCodes(customer);
+            var existingCouponCodes = ParseAppliedGiftCardCouponCodes(customer);
 
             //clear them
             _genericAttributeService.SaveAttribute<string>(customer, NopCustomerDefaults.GiftCardCouponCodesAttribute, null);
@@ -910,7 +910,7 @@ namespace Nop.Services.Customers
             //save again except removed one
             foreach (var existingCouponCode in existingCouponCodes)
                 if (!existingCouponCode.Equals(couponCode, StringComparison.InvariantCultureIgnoreCase))
-                    this.ApplyGiftCardCouponCode(customer, existingCouponCode);
+                    ApplyGiftCardCouponCode(customer, existingCouponCode);
         }
 
         #endregion
@@ -1173,7 +1173,7 @@ namespace Nop.Services.Customers
             //get current password usage time
             var currentLifetime = _staticCacheManager.Get(cacheKey, () =>
             {
-                var customerPassword = this.GetCurrentPassword(customer.Id);
+                var customerPassword = GetCurrentPassword(customer.Id);
                 //password is not found, so return max value to force customer to change password
                 if (customerPassword == null)
                     return int.MaxValue;

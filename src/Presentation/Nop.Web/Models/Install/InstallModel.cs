@@ -14,7 +14,7 @@ namespace Nop.Web.Models.Install
     {
         public InstallModel()
         {
-            this.AvailableLanguages = new List<SelectListItem>();
+            AvailableLanguages = new List<SelectListItem>();
         }
 
         public string AdminEmail { get; set; }

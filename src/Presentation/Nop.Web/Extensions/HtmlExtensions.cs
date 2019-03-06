@@ -227,7 +227,7 @@ namespace Nop.Web.Extensions
 
             //static cache manager
             var cacheManager = EngineContext.Current.Resolve<IStaticCacheManager>();
-            var cacheKey = string.Format(ModelCacheEventConsumer.TOPIC_SENAME_BY_SYSTEMNAME,
+            var cacheKey = string.Format(NopModelCacheDefaults.TopicSenameBySystemName,
                 systemName, workContext.WorkingLanguage.Id, storeContext.CurrentStore.Id,
                 string.Join(",", workContext.CurrentCustomer.GetCustomerRoleIds()));
             var cachedSeName = cacheManager.Get(cacheKey, () =>
@@ -257,7 +257,7 @@ namespace Nop.Web.Extensions
 
             //static cache manager
             var cacheManager = EngineContext.Current.Resolve<IStaticCacheManager>();
-            var cacheKey = string.Format(ModelCacheEventConsumer.TOPIC_TITLE_BY_SYSTEMNAME,
+            var cacheKey = string.Format(NopModelCacheDefaults.TopicTitleBySystemName,
                 systemName, workContext.WorkingLanguage.Id, storeContext.CurrentStore.Id,
                 string.Join(",", workContext.CurrentCustomer.GetCustomerRoleIds()));
             var cachedTitle = cacheManager.Get(cacheKey, () =>

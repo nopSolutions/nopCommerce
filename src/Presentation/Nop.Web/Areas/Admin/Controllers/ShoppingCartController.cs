@@ -27,10 +27,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             IShoppingCartService shoppingCartService,
             IShoppingCartModelFactory shoppingCartModelFactory)
         {
-            this._customerService = customerService;
-            this._permissionService = permissionService;
-            this._shoppingCartModelFactory = shoppingCartModelFactory;
-            this._shoppingCartService = shoppingCartService;
+            _customerService = customerService;
+            _permissionService = permissionService;
+            _shoppingCartModelFactory = shoppingCartModelFactory;
+            _shoppingCartService = shoppingCartService;
         }
 
         #endregion

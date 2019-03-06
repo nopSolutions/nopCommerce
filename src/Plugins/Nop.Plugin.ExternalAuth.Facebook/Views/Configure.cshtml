@@ -8,7 +8,7 @@
     <div class="panel-group">
         <div class="panel panel-default">
             <div class="panel-body">
-                @T("Plugins.ExternalAuth.Facebook.Instructions")
+                @Html.Raw(string.Format(T("Plugins.ExternalAuth.Facebook.Instructions").Text, webHelper.GetStoreLocation()))
                 <div class="form-group">
                     <div class="col-md-3">
                         <nop-label asp-for="ClientId" />

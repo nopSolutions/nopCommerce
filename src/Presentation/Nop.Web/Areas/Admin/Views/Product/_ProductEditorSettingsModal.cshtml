@@ -1,8 +1,6 @@
-﻿@using Microsoft.AspNetCore.Http
-@using Nop.Core
-@model ProductModel
-@inject IWebHelper webHelper
-@inject IHttpContextAccessor httpContextAccessor
+﻿@model ProductModel
+
+@inject Nop.Core.IWebHelper webHelper
 
 <div id="productsettings-window" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="productsettings-window-title">
     <div class="modal-dialog editor-settings-modal-dialog">
@@ -15,7 +13,7 @@
             </div>
             <div class="modal-body">
                 <form asp-controller="Product" asp-action="SaveProductEditorSettings" method="post">
-                    <input type="hidden" name="returnurl" value="@webHelper.GetRawUrl(httpContextAccessor.HttpContext.Request)" />
+                    <input type="hidden" name="returnurl" value="@webHelper.GetRawUrl(Context.Request)" />
                     <div class="row">
                         <div class="col-md-12">
                             @T("Admin.Configuration.Settings.ProductEditor.ModalDescription")

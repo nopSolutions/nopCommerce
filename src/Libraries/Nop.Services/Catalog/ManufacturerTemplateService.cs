@@ -24,8 +24,8 @@ namespace Nop.Services.Catalog
         public ManufacturerTemplateService(IEventPublisher eventPublisher,
             IRepository<ManufacturerTemplate> manufacturerTemplateRepository)
         {
-            this._eventPublisher = eventPublisher;
-            this._manufacturerTemplateRepository = manufacturerTemplateRepository;
+            _eventPublisher = eventPublisher;
+            _manufacturerTemplateRepository = manufacturerTemplateRepository;
         }
 
         #endregion

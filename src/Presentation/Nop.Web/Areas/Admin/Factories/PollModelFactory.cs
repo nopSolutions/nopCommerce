@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Polls;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
@@ -18,6 +19,7 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
+        private readonly CatalogSettings _catalogSettings;
         private readonly IBaseAdminModelFactory _baseAdminModelFactory;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ILanguageService _languageService;
@@ -28,17 +30,19 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #region Ctor
 
-        public PollModelFactory(IBaseAdminModelFactory baseAdminModelFactory,
+        public PollModelFactory(CatalogSettings catalogSettings,
+            IBaseAdminModelFactory baseAdminModelFactory,
             IDateTimeHelper dateTimeHelper,
             ILanguageService languageService,
             IPollService pollService,
             IStoreMappingSupportedModelFactory storeMappingSupportedModelFactory)
         {
-            this._baseAdminModelFactory = baseAdminModelFactory;
-            this._dateTimeHelper = dateTimeHelper;
-            this._languageService = languageService;
-            this._pollService = pollService;
-            this._storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
+            _catalogSettings = catalogSettings;
+            _baseAdminModelFactory = baseAdminModelFactory;
+            _dateTimeHelper = dateTimeHelper;
+            _languageService = languageService;
+            _pollService = pollService;
+            _storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
         }
 
         #endregion
@@ -84,6 +88,8 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare available stores
             _baseAdminModelFactory.PrepareStores(searchModel.AvailableStores);
 
+            searchModel.HideStoresList = _catalogSettings.IgnoreStoreLimitations || searchModel.AvailableStores.SelectionIsNotPossible();
+
             //prepare page parameters
             searchModel.SetGridPageSize();
 
@@ -115,9 +121,9 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     //convert dates to the user time
                     if (poll.StartDateUtc.HasValue)
-                        pollModel.StartDate = _dateTimeHelper.ConvertToUserTime(poll.StartDateUtc.Value, DateTimeKind.Utc);
+                        pollModel.StartDateUtc = _dateTimeHelper.ConvertToUserTime(poll.StartDateUtc.Value, DateTimeKind.Utc);
                     if (poll.EndDateUtc.HasValue)
-                        pollModel.EndDate = _dateTimeHelper.ConvertToUserTime(poll.EndDateUtc.Value, DateTimeKind.Utc);
+                        pollModel.EndDateUtc = _dateTimeHelper.ConvertToUserTime(poll.EndDateUtc.Value, DateTimeKind.Utc);
 
                     //fill in additional values (not existing in the entity)
                     pollModel.LanguageName = _languageService.GetLanguageById(poll.LanguageId)?.Name;
@@ -144,8 +150,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 //fill in model values from the entity
                 model = model ?? poll.ToModel<PollModel>();
 
-                model.StartDate = poll.StartDateUtc;
-                model.EndDate = poll.EndDateUtc;
+                model.StartDateUtc = poll.StartDateUtc;
+                model.EndDateUtc = poll.EndDateUtc;
 
                 //prepare nested search model
                 PreparePollAnswerSearchModel(model.PollAnswerSearchModel, poll);

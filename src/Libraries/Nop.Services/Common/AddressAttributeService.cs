@@ -29,10 +29,10 @@ namespace Nop.Services.Common
             IRepository<AddressAttribute> addressAttributeRepository,
             IRepository<AddressAttributeValue> addressAttributeValueRepository)
         {
-            this._cacheManager = cacheManager;
-            this._eventPublisher = eventPublisher;
-            this._addressAttributeRepository = addressAttributeRepository;
-            this._addressAttributeValueRepository = addressAttributeValueRepository;
+            _cacheManager = cacheManager;
+            _eventPublisher = eventPublisher;
+            _addressAttributeRepository = addressAttributeRepository;
+            _addressAttributeValueRepository = addressAttributeValueRepository;
         }
 
         #endregion

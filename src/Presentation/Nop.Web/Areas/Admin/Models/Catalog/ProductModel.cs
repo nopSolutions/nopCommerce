@@ -25,7 +25,6 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
             Locales = new List<ProductLocalizedModel>();
             CopyProductModel = new CopyProductModel();
             AddPictureModel = new ProductPictureModel();
-            AddSpecificationAttributeModel = new AddSpecificationAttributeToProductModel();
             ProductWarehouseInventoryModels = new List<ProductWarehouseInventoryModel>();
             ProductEditorSettingsModel = new ProductEditorSettingsModel();
             StockQuantityHistory = new StockQuantityHistoryModel();
@@ -442,12 +441,12 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
         //product attributes
         public bool ProductAttributesExist { get; set; }
 
-        //add specification attribute model
-        public AddSpecificationAttributeToProductModel AddSpecificationAttributeModel { get; set; }
-
         //multiple warehouses
         [NopResourceDisplayName("Admin.Catalog.Products.ProductWarehouseInventory")]
         public IList<ProductWarehouseInventoryModel> ProductWarehouseInventoryModels { get; set; }
+
+        //specification attributes
+        public bool HasAvailableSpecificationAttributes { get; set; }
 
         //copy product
         public CopyProductModel CopyProductModel { get; set; }

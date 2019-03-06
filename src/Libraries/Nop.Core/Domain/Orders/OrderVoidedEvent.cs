@@ -13,7 +13,7 @@ namespace Nop.Core.Domain.Orders
         /// <param name="order">Order</param>
         public OrderVoidedEvent(Order order)
         {
-            this.Order = order;
+            Order = order;
         }
 
         #endregion

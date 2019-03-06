@@ -12,7 +12,7 @@ namespace Nop.Web.Areas.Admin.Models.Orders
 
         public RecurringPaymentModel()
         {
-            this.RecurringPaymentHistorySearchModel = new RecurringPaymentHistorySearchModel();
+            RecurringPaymentHistorySearchModel = new RecurringPaymentHistorySearchModel();
         }
 
         #endregion

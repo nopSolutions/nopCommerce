@@ -39,14 +39,14 @@ namespace Nop.Services.Catalog
             IStaticCacheManager staticCacheManager,
             IUrlRecordService urlRecordService)
         {
-            this._cacheManager = cacheManager;
-            this._dbContext = dbContext;
-            this._eventPublisher = eventPublisher;
-            this._productService = productService;
-            this._productProductTagMappingRepository = productProductTagMappingRepository;
-            this._productTagRepository = productTagRepository;
-            this._staticCacheManager = staticCacheManager;
-            this._urlRecordService = urlRecordService;
+            _cacheManager = cacheManager;
+            _dbContext = dbContext;
+            _eventPublisher = eventPublisher;
+            _productService = productService;
+            _productProductTagMappingRepository = productProductTagMappingRepository;
+            _productTagRepository = productTagRepository;
+            _staticCacheManager = staticCacheManager;
+            _urlRecordService = urlRecordService;
         }
 
         #endregion

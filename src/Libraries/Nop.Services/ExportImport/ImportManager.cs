@@ -73,6 +73,7 @@ namespace Nop.Services.ExportImport
         private readonly IStateProvinceService _stateProvinceService;
         private readonly IStoreContext _storeContext;
         private readonly IStoreMappingService _storeMappingService;
+        private readonly IStoreService _storeService;
         private readonly ITaxCategoryService _taxCategoryService;
         private readonly IUrlRecordService _urlRecordService;
         private readonly IVendorService _vendorService;
@@ -108,6 +109,7 @@ namespace Nop.Services.ExportImport
             IStateProvinceService stateProvinceService,
             IStoreContext storeContext,
             IStoreMappingService storeMappingService,
+            IStoreService storeService,
             ITaxCategoryService taxCategoryService,
             IUrlRecordService urlRecordService,
             IVendorService vendorService,
@@ -115,36 +117,37 @@ namespace Nop.Services.ExportImport
             MediaSettings mediaSettings,
             VendorSettings vendorSettings)
         {
-            this._catalogSettings = catalogSettings;
-            this._categoryService = categoryService;
-            this._countryService = countryService;
-            this._customerActivityService = customerActivityService;
-            this._dataProvider = dataProvider;
-            this._dateRangeService = dateRangeService;
-            this._encryptionService = encryptionService;
-            this._fileProvider = fileProvider;
-            this._localizationService = localizationService;
-            this._logger = logger;
-            this._manufacturerService = manufacturerService;
-            this._measureService = measureService;
-            this._newsLetterSubscriptionService = newsLetterSubscriptionService;
-            this._pictureService = pictureService;
-            this._productAttributeService = productAttributeService;
-            this._productService = productService;
-            this._productTagService = productTagService;
-            this._productTemplateService = productTemplateService;
-            this._serviceScopeFactory = serviceScopeFactory;
-            this._shippingService = shippingService;
-            this._specificationAttributeService = specificationAttributeService;
-            this._stateProvinceService = stateProvinceService;
-            this._storeContext = storeContext;
-            this._storeMappingService = storeMappingService;
-            this._taxCategoryService = taxCategoryService;
-            this._urlRecordService = urlRecordService;
-            this._vendorService = vendorService;
-            this._workContext = workContext;
-            this._mediaSettings = mediaSettings;
-            this._vendorSettings = vendorSettings;
+            _catalogSettings = catalogSettings;
+            _categoryService = categoryService;
+            _countryService = countryService;
+            _customerActivityService = customerActivityService;
+            _dataProvider = dataProvider;
+            _dateRangeService = dateRangeService;
+            _encryptionService = encryptionService;
+            _fileProvider = fileProvider;
+            _localizationService = localizationService;
+            _logger = logger;
+            _manufacturerService = manufacturerService;
+            _measureService = measureService;
+            _newsLetterSubscriptionService = newsLetterSubscriptionService;
+            _pictureService = pictureService;
+            _productAttributeService = productAttributeService;
+            _productService = productService;
+            _productTagService = productTagService;
+            _productTemplateService = productTemplateService;
+            _serviceScopeFactory = serviceScopeFactory;
+            _shippingService = shippingService;
+            _specificationAttributeService = specificationAttributeService;
+            _stateProvinceService = stateProvinceService;
+            _storeContext = storeContext;
+            _storeMappingService = storeMappingService;
+            _storeService = storeService;
+            _taxCategoryService = taxCategoryService;
+            _urlRecordService = urlRecordService;
+            _vendorService = vendorService;
+            _workContext = workContext;
+            _mediaSettings = mediaSettings;
+            _vendorSettings = vendorSettings;
         }
 
         #endregion
@@ -869,6 +872,10 @@ namespace Nop.Services.ExportImport
             tempProperty = manager.GetProperty("Manufacturers");
             var manufacturerCellNum = tempProperty?.PropertyOrderPosition ?? -1;
 
+            var allStores = new List<string>();
+            tempProperty = manager.GetProperty("LimitedToStores");
+            var limitedToStoresCellNum = tempProperty?.PropertyOrderPosition ?? -1;
+
             if (_catalogSettings.ExportImportUseDropdownlistsForAssociatedEntities)
             {
                 productAttributeManager.SetSelectList("AttributeControlType", AttributeControlType.TextBox.ToSelectList(useLocalization: false));
@@ -1011,6 +1018,15 @@ namespace Nop.Services.ExportImport
                             .Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()));
                 }
 
+                if (limitedToStoresCellNum > 0)
+                {
+                    var storeIds = worksheet.Cells[endRow, limitedToStoresCellNum].Value?.ToString() ??
+                                          string.Empty;
+                    if (!string.IsNullOrEmpty(storeIds))
+                        allStores.AddRange(storeIds
+                            .Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()));
+                }
+
                 //counting the number of products
                 productsInFile.Add(endRow);
 
@@ -1043,6 +1059,13 @@ namespace Nop.Services.ExportImport
             if (notExistingSpecificationAttributeOptions.Any())
             {
                 throw new ArgumentException($"The following specification attribute option ID(s) don't exist - {string.Join(", ", notExistingSpecificationAttributeOptions)}");
+            }
+
+            //performance optimization, the check for the existence of the stores in one SQL request
+            var notExistingStores = _storeService.GetNotExistingStores(allStores.ToArray());
+            if (notExistingStores.Any())
+            {
+                throw new ArgumentException(string.Format(_localizationService.GetResource("Admin.Catalog.Products.Import.StoresDontExist"), string.Join(", ", notExistingStores)));
             }
 
             return new ImportProductMetadata
@@ -1193,9 +1216,10 @@ namespace Nop.Services.ExportImport
                 Dictionary<CategoryKey, Category> allCategories;
                 try
                 {
-                    allCategories = _categoryService
-                        .GetAllCategories(showHidden: true, loadCacheableCopy: false)
-                        .ToDictionary(c => new CategoryKey(c, _categoryService, _storeMappingService), c => c);
+                    var allCategoryList = _categoryService.GetAllCategories(showHidden: true, loadCacheableCopy: false);
+                    
+                    allCategories = allCategoryList
+                        .ToDictionary(c => new CategoryKey(c, _categoryService, allCategoryList, _storeMappingService), c => c);
                 }
                 catch (ArgumentException)
                 {
@@ -1208,6 +1232,9 @@ namespace Nop.Services.ExportImport
 
                 //performance optimization, load all manufacturers in one SQL request
                 var allManufacturers = _manufacturerService.GetAllManufacturers(showHidden: true);
+
+                //performance optimization, load all stores in one SQL request
+                var allStores = _storeService.GetAllStores();
 
                 //product to import images
                 var productPictureMetadata = new List<ProductPictureMetadata>();
@@ -1533,6 +1560,9 @@ namespace Nop.Services.ExportImport
                             case "Height":
                                 product.Height = property.DecimalValue;
                                 break;
+                            case "IsLimitedToStores":
+                                product.LimitedToStores = property.BooleanValue;
+                                break;
                         }
                     }
 
@@ -1611,7 +1641,23 @@ namespace Nop.Services.ExportImport
 
                         var importedCategories = categoryList.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
                             .Select(categoryName => new CategoryKey(categoryName))
-                            .Select(categoryKey => allCategories.ContainsKey(categoryKey) ? allCategories[categoryKey].Id : allCategories.Values.FirstOrDefault(c => c.Name == categoryKey.Key)?.Id ?? int.Parse(categoryKey.Key)).ToList();
+                            .Select(categoryKey =>
+                            {
+                                var rez = allCategories.ContainsKey(categoryKey) ? allCategories[categoryKey].Id : allCategories.Values.FirstOrDefault(c => c.Name == categoryKey.Key)?.Id;
+
+                                if (!rez.HasValue && int.TryParse(categoryKey.Key, out var id))
+                                {
+                                    rez = id;
+                                }
+                                
+                                if(!rez.HasValue)
+                                {
+                                    //database doesn't contain the imported category
+                                    throw new ArgumentException(string.Format(_localizationService.GetResource("Admin.Catalog.Products.Import.DatabaseNotContainCategory"), categoryKey.Key));
+                                }
+
+                                return rez.Value;
+                            }).ToList();
 
                         foreach (var categoryId in importedCategories)
                         {
@@ -1684,6 +1730,17 @@ namespace Nop.Services.ExportImport
 
                         //product tag mappings
                         _productTagService.UpdateProductTags(product, productTags.Where(pt => !filter.Contains(pt)).ToArray());
+                    }
+
+                    tempProperty = metadata.Manager.GetProperty("LimitedToStores");
+                    if (tempProperty != null)
+                    {
+                        var limitedToStoresList = tempProperty.StringValue;
+
+                        var importedStores = product.LimitedToStores ? limitedToStoresList.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
+                            .Select(x => allStores.FirstOrDefault(store => store.Name == x.Trim())?.Id ?? int.Parse(x.Trim())).ToList() : new List<int>();
+
+                        _productService.UpdateProductStoreMappings(product, importedStores);
                     }
 
                     var picture1 = DownloadFile(metadata.Manager.GetProperty("Picture1")?.StringValue, downloadedFiles);
@@ -2117,9 +2174,9 @@ namespace Nop.Services.ExportImport
 
         public class CategoryKey
         {
-            public CategoryKey(Category category, ICategoryService categoryService, IStoreMappingService storeMappingService)
+            public CategoryKey(Category category, ICategoryService categoryService, IList<Category> allCategories, IStoreMappingService storeMappingService)
             {
-                Key = categoryService.GetFormattedBreadCrumb(category);
+                Key = categoryService.GetFormattedBreadCrumb(category, allCategories);
                 StoresIds = category.LimitedToStores ? storeMappingService.GetStoresIdsWithAccess(category).ToList() : new List<int>();
                 Category = category;
             }

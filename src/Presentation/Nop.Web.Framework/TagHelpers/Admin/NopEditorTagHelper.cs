@@ -146,7 +146,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
                 For.Name,
                 Template,
                 readOnly: false,
-                additionalViewData: new { htmlAttributes, postfix = this.Postfix });
+                additionalViewData: new { htmlAttributes, postfix = Postfix });
 
             var htmlOutput = templateBuilder.Build();
             output.Content.SetHtmlContent(htmlOutput.RenderHtmlContent());

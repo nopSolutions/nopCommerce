@@ -33,6 +33,11 @@ namespace Nop.Services.Customers
         public string OldPassword { get; set; }
 
         /// <summary>
+        /// Hashed password format (e.g. SHA1, SHA512)
+        /// </summary>
+        public string HashedPasswordFormat { get; set; }
+
+        /// <summary>
         /// Ctor
         /// </summary>
         /// <param name="email">Email</param>
@@ -40,14 +45,17 @@ namespace Nop.Services.Customers
         /// <param name="newPasswordFormat">Password format</param>
         /// <param name="newPassword">New password</param>
         /// <param name="oldPassword">Old password</param>
-        public ChangePasswordRequest(string email, bool validateRequest, 
-            PasswordFormat newPasswordFormat, string newPassword, string oldPassword = "")
+        /// <param name="hashedPasswordFormat">Hashed password format</param>
+        public ChangePasswordRequest(string email, bool validateRequest,
+            PasswordFormat newPasswordFormat, string newPassword, string oldPassword = "",
+            string hashedPasswordFormat = null)
         {
-            this.Email = email;
-            this.ValidateRequest = validateRequest;
-            this.NewPasswordFormat = newPasswordFormat;
-            this.NewPassword = newPassword;
-            this.OldPassword = oldPassword;
+            Email = email;
+            ValidateRequest = validateRequest;
+            NewPasswordFormat = newPasswordFormat;
+            NewPassword = newPassword;
+            OldPassword = oldPassword;
+            HashedPasswordFormat = hashedPasswordFormat;
         }
     }
 }

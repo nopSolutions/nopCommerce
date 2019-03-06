@@ -22,7 +22,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
         public ExternalAuthenticationMethodModelFactory(IExternalAuthenticationService externalAuthenticationService)
         {
-            this._externalAuthenticationService = externalAuthenticationService;
+            _externalAuthenticationService = externalAuthenticationService;
         }
 
         #endregion

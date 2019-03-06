@@ -1,10 +1,9 @@
 @model ProductModel
 
-<div class="panel-group">
+<div class="panel-body">
     <p>
         @T("Admin.Catalog.Products.ProductAttributes.Hint")
     </p>
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductDetailsProductAttributesTop, additionalData = Model })
     @if (Model.Id > 0)
     {
         if (Model.ProductAttributesExist)
@@ -31,5 +30,4 @@
             </div>
         </div>
     }
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductDetailsProductAttributesBottom, additionalData = Model })
 </div>

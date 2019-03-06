@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Messages;
 using Nop.Services.Helpers;
 using Nop.Services.Messages;
@@ -16,6 +17,7 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
+        private readonly CatalogSettings _catalogSettings;
         private readonly EmailAccountSettings _emailAccountSettings;
         private readonly IBaseAdminModelFactory _baseAdminModelFactory;
         private readonly ICampaignService _campaignService;
@@ -26,17 +28,19 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #region Ctor
 
-        public CampaignModelFactory(EmailAccountSettings emailAccountSettings,
+        public CampaignModelFactory(CatalogSettings catalogSettings,
+            EmailAccountSettings emailAccountSettings,
             IBaseAdminModelFactory baseAdminModelFactory,
             ICampaignService campaignService,
             IDateTimeHelper dateTimeHelper,
             IMessageTokenProvider messageTokenProvider)
         {
-            this._emailAccountSettings = emailAccountSettings;
-            this._baseAdminModelFactory = baseAdminModelFactory;
-            this._campaignService = campaignService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._messageTokenProvider = messageTokenProvider;
+            _catalogSettings = catalogSettings;
+            _emailAccountSettings = emailAccountSettings;
+            _baseAdminModelFactory = baseAdminModelFactory;
+            _campaignService = campaignService;
+            _dateTimeHelper = dateTimeHelper;
+            _messageTokenProvider = messageTokenProvider;
         }
 
         #endregion
@@ -55,6 +59,8 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare available stores
             _baseAdminModelFactory.PrepareStores(searchModel.AvailableStores);
+
+            searchModel.HideStoresList = _catalogSettings.IgnoreStoreLimitations || searchModel.AvailableStores.SelectionIsNotPossible();
 
             //prepare page parameters
             searchModel.SetGridPageSize();

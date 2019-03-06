@@ -36,12 +36,12 @@ namespace Nop.Services.Catalog
             IWorkContext workContext,
             TaxSettings taxSettings)
         {
-            this._currencySettings = currencySettings;
-            this._currencyService = currencyService;
-            this._localizationService = localizationService;
-            this._measureService = measureService;
-            this._workContext = workContext;
-            this._taxSettings = taxSettings;
+            _currencySettings = currencySettings;
+            _currencyService = currencyService;
+            _localizationService = localizationService;
+            _measureService = measureService;
+            _workContext = workContext;
+            _taxSettings = taxSettings;
         }
 
         #endregion
@@ -420,8 +420,9 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="productPrice">Product price (in primary currency). Pass null if you want to use a default produce price</param>
+        /// <param name="totalWeight">Total weight of product (with attribute weight adjustment). Pass null if you want to use a default produce weight</param>
         /// <returns>Base price</returns>
-        public virtual string FormatBasePrice(Product product, decimal? productPrice)
+        public virtual string FormatBasePrice(Product product, decimal? productPrice, decimal? totalWeight = null)
         {
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
@@ -429,7 +430,7 @@ namespace Nop.Services.Catalog
             if (!product.BasepriceEnabled)
                 return null;
 
-            var productAmount = product.BasepriceAmount;
+            var productAmount = totalWeight.HasValue && totalWeight.Value > decimal.Zero ? totalWeight.Value : product.BasepriceAmount;
             //Amount in product cannot be 0
             if (productAmount == 0)
                 return null;
@@ -450,7 +451,7 @@ namespace Nop.Services.Catalog
                 _measureService.ConvertWeight(productAmount, productUnit, referenceUnit, false) *
                 referenceAmount;
             var basePriceInCurrentCurrency = _currencyService.ConvertFromPrimaryStoreCurrency(basePrice, _workContext.WorkingCurrency);
-            var basePriceStr = this.FormatPrice(basePriceInCurrentCurrency, true, false);
+            var basePriceStr = FormatPrice(basePriceInCurrentCurrency, true, false);
 
             var result = string.Format(_localizationService.GetResource("Products.BasePrice"),
                 basePriceStr, referenceAmount.ToString("G29"), referenceUnit.Name);

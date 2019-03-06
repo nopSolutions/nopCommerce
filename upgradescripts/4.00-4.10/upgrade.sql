@@ -3841,7 +3841,8 @@ EXEC('CREATE TABLE [dbo].[PictureBinary]
 	INSERT INTO [dbo].[PictureBinary](PictureId, BinaryData)
 	SELECT [Id], [PictureBinary] FROM [dbo].[Picture]
 
-	ALTER TABLE dbo.Picture	DROP COLUMN [PictureBinary]')	
+	ALTER TABLE dbo.Picture DROP COLUMN [PictureBinary]
+	ALTER INDEX ALL ON [Picture] REBUILD')	
 
 END
 GO

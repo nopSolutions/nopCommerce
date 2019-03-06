@@ -11,8 +11,8 @@ namespace Nop.Web.Areas.Admin.Models.Shipping
 
         public DatesRangesSearchModel()
         {
-            this.DeliveryDateSearchModel = new DeliveryDateSearchModel();
-            this.ProductAvailabilityRangeSearchModel = new ProductAvailabilityRangeSearchModel();
+            DeliveryDateSearchModel = new DeliveryDateSearchModel();
+            ProductAvailabilityRangeSearchModel = new ProductAvailabilityRangeSearchModel();
         }
 
         #endregion

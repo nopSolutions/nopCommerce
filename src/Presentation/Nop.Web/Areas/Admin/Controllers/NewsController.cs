@@ -49,16 +49,16 @@ namespace Nop.Web.Areas.Admin.Controllers
             IStoreService storeService,
             IUrlRecordService urlRecordService)
         {
-            this._customerActivityService = customerActivityService;
-            this._eventPublisher = eventPublisher;
-            this._localizationService = localizationService;
-            this._newsModelFactory = newsModelFactory;
-            this._newsService = newsService;
-            this._notificationService = notificationService;
-            this._permissionService = permissionService;
-            this._storeMappingService = storeMappingService;
-            this._storeService = storeService;
-            this._urlRecordService = urlRecordService;
+            _customerActivityService = customerActivityService;
+            _eventPublisher = eventPublisher;
+            _localizationService = localizationService;
+            _newsModelFactory = newsModelFactory;
+            _newsService = newsService;
+            _notificationService = notificationService;
+            _permissionService = permissionService;
+            _storeMappingService = storeMappingService;
+            _storeService = storeService;
+            _urlRecordService = urlRecordService;
         }
 
         #endregion
@@ -97,10 +97,10 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual IActionResult Index()
         {
-            return RedirectToAction("List");
+            return RedirectToAction("NewsItems");
         }
 
-        public virtual IActionResult List(int? filterByNewsItemId)
+        public virtual IActionResult NewsItems(int? filterByNewsItemId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageNews))
                 return AccessDeniedView();
@@ -143,8 +143,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 var newsItem = model.ToEntity<NewsItem>();
-                newsItem.StartDateUtc = model.StartDate;
-                newsItem.EndDateUtc = model.EndDate;
                 newsItem.CreatedOnUtc = DateTime.UtcNow;
                 _newsService.InsertNews(newsItem);
 
@@ -162,7 +160,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _notificationService.SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.News.NewsItems.Added"));
 
                 if (!continueEditing)
-                    return RedirectToAction("List");
+                    return RedirectToAction("NewsItems");
 
                 //selected tab
                 SaveSelectedTabName();
@@ -185,7 +183,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //try to get a news item with the specified id
             var newsItem = _newsService.GetNewsById(id);
             if (newsItem == null)
-                return RedirectToAction("List");
+                return RedirectToAction("NewsItems");
 
             //prepare model
             var model = _newsModelFactory.PrepareNewsItemModel(null, newsItem);
@@ -202,13 +200,11 @@ namespace Nop.Web.Areas.Admin.Controllers
             //try to get a news item with the specified id
             var newsItem = _newsService.GetNewsById(model.Id);
             if (newsItem == null)
-                return RedirectToAction("List");
+                return RedirectToAction("NewsItems");
 
             if (ModelState.IsValid)
             {
                 newsItem = model.ToEntity(newsItem);
-                newsItem.StartDateUtc = model.StartDate;
-                newsItem.EndDateUtc = model.EndDate;
                 _newsService.UpdateNews(newsItem);
 
                 //activity log
@@ -225,7 +221,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _notificationService.SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.News.NewsItems.Updated"));
 
                 if (!continueEditing)
-                    return RedirectToAction("List");
+                    return RedirectToAction("NewsItems");
 
                 //selected tab
                 SaveSelectedTabName();
@@ -249,7 +245,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //try to get a news item with the specified id
             var newsItem = _newsService.GetNewsById(id);
             if (newsItem == null)
-                return RedirectToAction("List");
+                return RedirectToAction("NewsItems");
 
             _newsService.DeleteNews(newsItem);
 
@@ -259,14 +255,14 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             _notificationService.SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.News.NewsItems.Deleted"));
 
-            return RedirectToAction("List");
+            return RedirectToAction("NewsItems");
         }
 
         #endregion
 
         #region Comments
 
-        public virtual IActionResult Comments(int? filterByNewsItemId)
+        public virtual IActionResult NewsComments(int? filterByNewsItemId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageNews))
                 return AccessDeniedView();
@@ -274,7 +270,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //try to get a news item with the specified id
             var newsItem = _newsService.GetNewsById(filterByNewsItemId ?? 0);
             if (newsItem == null && filterByNewsItemId.HasValue)
-                return RedirectToAction("List");
+                return RedirectToAction("NewsComments");
 
             //prepare model
             var model = _newsModelFactory.PrepareNewsCommentSearchModel(new NewsCommentSearchModel(), newsItem);
@@ -306,7 +302,8 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             var previousIsApproved = comment.IsApproved;
 
-            comment.IsApproved = model.IsApproved;
+            //fill entity from model
+            comment = model.ToEntity(comment);
             _newsService.UpdateNews(comment.NewsItem);
 
             //activity log

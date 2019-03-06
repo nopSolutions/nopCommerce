@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Encodings.Web;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
@@ -98,33 +99,33 @@ namespace Nop.Web.Areas.Admin.Controllers
             IWorkflowMessageService workflowMessageService,
             OrderSettings orderSettings)
         {
-            this._addressAttributeParser = addressAttributeParser;
-            this._addressService = addressService;
-            this._customerActivityService = customerActivityService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._downloadService = downloadService;
-            this._encryptionService = encryptionService;
-            this._exportManager = exportManager;
-            this._giftCardService = giftCardService;
-            this._localizationService = localizationService;
-            this._notificationService = notificationService;
-            this._orderModelFactory = orderModelFactory;
-            this._orderProcessingService = orderProcessingService;
-            this._orderService = orderService;
-            this._paymentService = paymentService;
-            this._pdfService = pdfService;
-            this._permissionService = permissionService;
-            this._priceCalculationService = priceCalculationService;
-            this._productAttributeFormatter = productAttributeFormatter;
-            this._productAttributeParser = productAttributeParser;
-            this._productAttributeService = productAttributeService;
-            this._productService = productService;
-            this._shipmentService = shipmentService;
-            this._shippingService = shippingService;
-            this._shoppingCartService = shoppingCartService;
-            this._workContext = workContext;
-            this._workflowMessageService = workflowMessageService;
-            this._orderSettings = orderSettings;
+            _addressAttributeParser = addressAttributeParser;
+            _addressService = addressService;
+            _customerActivityService = customerActivityService;
+            _dateTimeHelper = dateTimeHelper;
+            _downloadService = downloadService;
+            _encryptionService = encryptionService;
+            _exportManager = exportManager;
+            _giftCardService = giftCardService;
+            _localizationService = localizationService;
+            _notificationService = notificationService;
+            _orderModelFactory = orderModelFactory;
+            _orderProcessingService = orderProcessingService;
+            _orderService = orderService;
+            _paymentService = paymentService;
+            _pdfService = pdfService;
+            _permissionService = permissionService;
+            _priceCalculationService = priceCalculationService;
+            _productAttributeFormatter = productAttributeFormatter;
+            _productAttributeParser = productAttributeParser;
+            _productAttributeService = productAttributeService;
+            _productService = productService;
+            _shipmentService = shipmentService;
+            _shippingService = shippingService;
+            _shoppingCartService = shoppingCartService;
+            _workContext = workContext;
+            _workflowMessageService = workflowMessageService;
+            _orderSettings = orderSettings;
         }
 
         #endregion
@@ -196,7 +197,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             var productAttributes = _productAttributeService.GetProductAttributeMappingsByProductId(product.Id);
             foreach (var attribute in productAttributes)
             {
-                var controlId = $"product_attribute_{attribute.Id}";
+                var controlId = $"{NopAttributePrefixDefaults.Product}{attribute.Id}";
                 StringValues ctrlAttributes;
 
                 switch (attribute.AttributeControlType)
@@ -213,7 +214,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                             {
                                 //get quantity entered by customer
                                 var quantity = 1;
-                                var quantityStr = form[$"product_attribute_{attribute.Id}_{selectedAttributeId}_qty"];
+                                var quantityStr = form[$"{NopAttributePrefixDefaults.Product}{attribute.Id}_{selectedAttributeId}_qty"];
                                 if (!StringValues.IsNullOrEmpty(quantityStr) &&
                                     (!int.TryParse(quantityStr, out quantity) || quantity < 1))
                                     errors.Add(_localizationService.GetResource("ShoppingCart.QuantityShouldPositive"));
@@ -237,7 +238,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                                 //get quantity entered by customer
                                 var quantity = 1;
-                                var quantityStr = form[$"product_attribute_{attribute.Id}_{item}_qty"];
+                                var quantityStr = form[$"{NopAttributePrefixDefaults.Product}{attribute.Id}_{item}_qty"];
                                 if (!StringValues.IsNullOrEmpty(quantityStr) &&
                                     (!int.TryParse(quantityStr, out quantity) || quantity < 1))
                                     errors.Add(_localizationService.GetResource("ShoppingCart.QuantityShouldPositive"));
@@ -258,7 +259,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                         {
                             //get quantity entered by customer
                             var quantity = 1;
-                            var quantityStr = form[$"product_attribute_{attribute.Id}_{selectedAttributeId}_qty"];
+                            var quantityStr = form[$"{NopAttributePrefixDefaults.Product}{attribute.Id}_{selectedAttributeId}_qty"];
                             if (!StringValues.IsNullOrEmpty(quantityStr) &&
                                 (!int.TryParse(quantityStr, out quantity) || quantity < 1))
                                 errors.Add(_localizationService.GetResource("ShoppingCart.QuantityShouldPositive"));
@@ -561,7 +562,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 var xml = _exportManager.ExportOrdersToXml(orders);
 
-                return File(Encoding.UTF8.GetBytes(xml), "application/xml", "orders.xml");
+                return File(Encoding.UTF8.GetBytes(xml), MimeTypes.ApplicationXml, "orders.xml");
             }
             catch (Exception exc)
             {
@@ -588,7 +589,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             var xml = _exportManager.ExportOrdersToXml(orders);
 
-            return File(Encoding.UTF8.GetBytes(xml), "application/xml", "orders.xml");
+            return File(Encoding.UTF8.GetBytes(xml), MimeTypes.ApplicationXml, "orders.xml");
         }
 
         [HttpPost, ActionName("List")]
@@ -2755,7 +2756,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (string.IsNullOrEmpty(message))
             {
-                return Json(new { Result = false, Error = _localizationService.GetResource("Admin.Orders.OrderNotes.Fields.Note.Validation") });
+                return Json(new { Result = false, Error = JavaScriptEncoder.Default.Encode(_localizationService.GetResource("Admin.Orders.OrderNotes.Fields.Note.Validation")) });
             }
 
             //try to get an order with the specified id

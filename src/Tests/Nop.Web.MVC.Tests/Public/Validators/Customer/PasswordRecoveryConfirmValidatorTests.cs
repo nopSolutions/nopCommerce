@@ -91,25 +91,6 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
                 ConfirmNewPassword = "some password"
             };
             _validator.ShouldNotHaveValidationErrorFor(x => x.NewPassword, model);
-        }
-
-        [Test]
-        public void Should_validate_newPassword_is_length()
-        {
-            _customerSettings.PasswordMinLength = 5;
-            _validator = new PasswordRecoveryConfirmValidator(_localizationService, _customerSettings);
-
-            var model = new PasswordRecoveryConfirmModel
-            {
-                NewPassword = "1234"
-            };
-            //we know that new password should equal confirmation password
-            model.ConfirmNewPassword = model.NewPassword;
-            _validator.ShouldHaveValidationErrorFor(x => x.NewPassword, model);
-            model.NewPassword = "12345";
-            //we know that new password should equal confirmation password
-            model.ConfirmNewPassword = model.NewPassword;
-            _validator.ShouldNotHaveValidationErrorFor(x => x.NewPassword, model);
-        }
+        }                
     }
 }

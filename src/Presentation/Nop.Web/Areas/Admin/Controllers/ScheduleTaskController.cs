@@ -6,6 +6,7 @@ using Nop.Services.Messages;
 using Nop.Services.Security;
 using Nop.Services.Tasks;
 using Nop.Web.Areas.Admin.Factories;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Tasks;
 using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
@@ -34,12 +35,12 @@ namespace Nop.Web.Areas.Admin.Controllers
             IScheduleTaskModelFactory scheduleTaskModelFactory,
             IScheduleTaskService scheduleTaskService)
         {
-            this._customerActivityService = customerActivityService;
-            this._localizationService = localizationService;
-            this._notificationService = notificationService;
-            this._permissionService = permissionService;
-            this._scheduleTaskModelFactory = scheduleTaskModelFactory;
-            this._scheduleTaskService = scheduleTaskService;
+            _customerActivityService = customerActivityService;
+            _localizationService = localizationService;
+            _notificationService = notificationService;
+            _permissionService = permissionService;
+            _scheduleTaskModelFactory = scheduleTaskModelFactory;
+            _scheduleTaskService = scheduleTaskService;
         }
 
         #endregion
@@ -87,10 +88,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             var scheduleTask = _scheduleTaskService.GetTaskById(model.Id)
                                ?? throw new ArgumentException("Schedule task cannot be loaded");
 
-            scheduleTask.Name = model.Name;
-            scheduleTask.Seconds = model.Seconds;
-            scheduleTask.Enabled = model.Enabled;
-            scheduleTask.StopOnError = model.StopOnError;
+            scheduleTask = model.ToEntity(scheduleTask);
+
             _scheduleTaskService.UpdateTask(scheduleTask);
 
             //activity log

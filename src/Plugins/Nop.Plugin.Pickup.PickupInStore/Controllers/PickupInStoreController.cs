@@ -49,14 +49,14 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
             IStoreService storeService,
             AddressSettings customerSettings)
         {
-            this._addressService = addressService;
-            this._countryService = countryService;
-            this._localizationService = localizationService;
-            this._permissionService = permissionService;
-            this._stateProvinceService = stateProvinceService;
-            this._storePickupPointService = storePickupPointService;
-            this._storeService = storeService;
-            this._addressSettings = customerSettings;
+            _addressService = addressService;
+            _countryService = countryService;
+            _localizationService = localizationService;
+            _permissionService = permissionService;
+            _stateProvinceService = stateProvinceService;
+            _storePickupPointService = storePickupPointService;
+            _storeService = storeService;
+            _addressSettings = customerSettings;
         }
 
         #endregion

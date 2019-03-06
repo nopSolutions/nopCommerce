@@ -467,13 +467,13 @@ namespace Nop.Services.Tests.Catalog
                 IRepository<RelatedProduct> relatedProductRepository,
                 IRepository<StockQuantityHistory> stockQuantityHistoryRepository,
                 IRepository<StoreMapping> storeMappingRepository, IRepository<TierPrice> tierPriceRepository,
-                IStoreMappingService storeMappingService, IWorkContext workContext,
+                IStoreService storeService, IStoreMappingService storeMappingService, IWorkContext workContext,
                 LocalizationSettings localizationSettings) : base(catalogSettings, commonSettings, aclService,
                 cacheManager, dataProvider, dateRangeService, dbContext, eventPublisher, languageService,
                 localizationService, productAttributeParser, productAttributeService, aclRepository,
                 crossSellProductRepository, productRepository, productPictureRepository, productReviewRepository,
                 productWarehouseInventoryRepository, relatedProductRepository, stockQuantityHistoryRepository,
-                storeMappingRepository, tierPriceRepository, storeMappingService, workContext, localizationSettings)
+                storeMappingRepository,  tierPriceRepository, storeService, storeMappingService, workContext, localizationSettings)
             {
             }
 
@@ -481,7 +481,7 @@ namespace Nop.Services.Tests.Catalog
             {
                 return new TestProductService(new CatalogSettings(), new CommonSettings(), null,
                     null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
-                    null, null, null, null, null, new LocalizationSettings());
+                    null, null, null, null, null, null, new LocalizationSettings());
             }
         }
     }

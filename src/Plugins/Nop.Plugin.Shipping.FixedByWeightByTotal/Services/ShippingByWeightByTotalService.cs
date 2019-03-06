@@ -38,8 +38,8 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Services
         public ShippingByWeightByTotalService(IRepository<ShippingByWeightByTotalRecord> sbwtRepository,
             ICacheManager cacheManager)
         {
-            this._sbwtRepository = sbwtRepository;
-            this._cacheManager = cacheManager;
+            _sbwtRepository = sbwtRepository;
+            _cacheManager = cacheManager;
         }
 
         #endregion
