@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Linq;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
+using Nop.Services.Directory;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Stores;
@@ -30,6 +33,8 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IProductAttributeFormatter _productAttributeFormatter;
         private readonly IStoreService _storeService;
         private readonly ITaxService _taxService;
+        private readonly ICountryService _countryService;
+        private readonly CatalogSettings _catalogSettings;
 
         #endregion
 
@@ -43,7 +48,9 @@ namespace Nop.Web.Areas.Admin.Factories
             IPriceFormatter priceFormatter,
             IProductAttributeFormatter productAttributeFormatter,
             IStoreService storeService,
-            ITaxService taxService)
+            ITaxService taxService,
+            ICountryService countryService,
+            CatalogSettings catalogSettings)
         {
             _baseAdminModelFactory = baseAdminModelFactory;
             _customerService = customerService;
@@ -54,6 +61,8 @@ namespace Nop.Web.Areas.Admin.Factories
             _productAttributeFormatter = productAttributeFormatter;
             _storeService = storeService;
             _taxService = taxService;
+            _countryService = countryService;
+            _catalogSettings = catalogSettings;
         }
 
         #endregion
@@ -96,6 +105,16 @@ namespace Nop.Web.Areas.Admin.Factories
             //set default search values
             searchModel.ShoppingCartType = ShoppingCartType.ShoppingCart;
 
+            //prepare available billing countries
+            searchModel.AvailableCountries = _countryService.GetAllCountriesForBilling(showHidden: true)
+                .Select(country => new SelectListItem { Text = country.Name, Value = country.Id.ToString() }).ToList();
+            searchModel.AvailableCountries.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+
+            //prepare available stores
+            _baseAdminModelFactory.PrepareStores(searchModel.AvailableStores);
+
+            searchModel.HideStoresList = _catalogSettings.IgnoreStoreLimitations || searchModel.AvailableStores.SelectionIsNotPossible();
+
             //prepare nested search model
             PrepareShoppingCartItemSearchModel(searchModel.ShoppingCartItemSearchModel);
 
@@ -117,7 +136,8 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //get customers with shopping carts
             var customers = _customerService.GetAllCustomers(loadOnlyWithShoppingCart: true,
-                sct: searchModel.ShoppingCartType,
+                sct: searchModel.ShoppingCartType, startDate:searchModel.StartDate, endDate:searchModel.EndDate,
+                billingCountryId: searchModel.BillingCountryId, storeId:searchModel.StoreId, productId:searchModel.ProductId,
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Xml;
 using Nop.Core;
 using Nop.Core.Caching;
@@ -102,6 +103,11 @@ namespace Nop.Services.Customers
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="getOnlyTotalCount">A value in indicating whether you want to load only total number of records. Set to "true" if you don't want to load data from database</param>
+        /// <param name="startDate">The start date for the search.</param>
+        /// <param name="endDate">The end date for the search.</param>
+        /// <param name="productId"></param>
+        /// <param name="billingCountryId"></param>
+        /// <param name="storeId"></param>
         /// <returns>Customers</returns>
         public virtual IPagedList<Customer> GetAllCustomers(DateTime? createdFromUtc = null,
             DateTime? createdToUtc = null, int affiliateId = 0, int vendorId = 0,
@@ -110,7 +116,7 @@ namespace Nop.Services.Customers
             int dayOfBirth = 0, int monthOfBirth = 0,
             string company = null, string phone = null, string zipPostalCode = null,
             string ipAddress = null, bool loadOnlyWithShoppingCart = false, ShoppingCartType? sct = null,
-            int pageIndex = 0, int pageSize = int.MaxValue, bool getOnlyTotalCount = false)
+            int pageIndex = 0, int pageSize = int.MaxValue, bool getOnlyTotalCount = false, DateTime? startDate = null, DateTime? endDate = null, int productId = 0, int billingCountryId = 0, int storeId = 0)
         {
             var query = _customerRepository.Table;
             if (createdFromUtc.HasValue)
@@ -244,10 +250,69 @@ namespace Nop.Services.Customers
                 query = sct.HasValue ?
                     query.Where(c => c.ShoppingCartItems.Any(x => x.ShoppingCartTypeId == sctId)) :
                     query.Where(c => c.ShoppingCartItems.Any());
+
+                var paramExpression = Expression.Parameter(typeof(ShoppingCartItem), "x");
+
+                Expression filter = null;
+
+                if (sct.HasValue)
+                {
+                    var sctFilter = Expression.Equal(
+                                        Expression.Property(paramExpression, nameof(ShoppingCartItem.ShoppingCartTypeId)),
+                                        Expression.Constant(sctId));
+
+                    filter = filter != null ? Expression.And(filter, sctFilter) : sctFilter;
+                }
+                if (startDate.HasValue)
+                {
+                    var startDateProperty = Expression.Property(paramExpression, nameof(ShoppingCartItem.CreatedOnUtc));
+
+                    var startDateFilter = Expression.GreaterThanOrEqual(
+                                            Expression.Property(startDateProperty, nameof(DateTime.Date)),
+                                            Expression.Constant(startDate.Value.Date));
+
+                    filter = filter != null ? Expression.And(filter, startDateFilter) : startDateFilter;
+                }
+                if (endDate.HasValue)
+                {
+                    var endDateProperty = Expression.Property(paramExpression, nameof(ShoppingCartItem.CreatedOnUtc));
+
+                    var endDateFilter = Expression.LessThanOrEqual(
+                            Expression.Property(endDateProperty, nameof(DateTime.Date)),
+                            Expression.Constant(endDate.Value.Date));
+
+                    filter = filter != null ? Expression.And(filter, endDateFilter) : endDateFilter;
+                }
+                if (productId > 0)
+                {
+                    var productFilter = Expression.Equal(
+                            Expression.Property(paramExpression, nameof(ShoppingCartItem.ProductId)),
+                            Expression.Constant(productId));
+
+                    filter = filter != null ? Expression.And(filter, productFilter) : productFilter;
+                }
+                if (storeId > 0)
+                {
+                    var storeFilter = Expression.Equal(
+                            Expression.Property(paramExpression, nameof(ShoppingCartItem.StoreId)),
+                            Expression.Constant(storeId));
+
+                    filter = filter != null ? Expression.And(filter, storeFilter) : storeFilter;
+                }
+
+                var combinedExpression = Expression.Lambda<Func<ShoppingCartItem, bool>>(
+                    filter,
+                    paramExpression);
+
+                query = query.Where(c => c.ShoppingCartItems.Any(x => combinedExpression.Compile()(x)));
+
+                if (billingCountryId > 0)
+                {
+                    query = query.Where(x => x.BillingAddress.CountryId == billingCountryId);
+                }
             }
 
             query = query.OrderByDescending(c => c.CreatedOnUtc);
-
             var customers = new PagedList<Customer>(query, pageIndex, pageSize, getOnlyTotalCount);
             return customers;
         }

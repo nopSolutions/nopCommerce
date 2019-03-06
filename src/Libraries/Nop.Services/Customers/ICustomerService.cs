@@ -38,6 +38,11 @@ namespace Nop.Services.Customers
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="getOnlyTotalCount">A value in indicating whether you want to load only total number of records. Set to "true" if you don't want to load data from database</param>
+        /// <param name="startDate">The start date for the search.</param>
+        /// <param name="endDate">The end date for the search.</param>
+        /// <param name="productId"></param>
+        /// <param name="billingCountryId"></param>
+        /// <param name="storeId"></param>
         /// <returns>Customers</returns>
         IPagedList<Customer> GetAllCustomers(DateTime? createdFromUtc = null,
             DateTime? createdToUtc = null, int affiliateId = 0, int vendorId = 0,
@@ -46,7 +51,7 @@ namespace Nop.Services.Customers
             int dayOfBirth = 0, int monthOfBirth = 0,
             string company = null, string phone = null, string zipPostalCode = null,
             string ipAddress = null, bool loadOnlyWithShoppingCart = false, ShoppingCartType? sct = null,
-            int pageIndex = 0, int pageSize = int.MaxValue, bool getOnlyTotalCount = false);
+            int pageIndex = 0, int pageSize = int.MaxValue, bool getOnlyTotalCount = false, DateTime? startDate = null, DateTime? endDate = null, int productId = 0, int billingCountryId = 0, int storeId = 0);
 
         /// <summary>
         /// Gets online customers
