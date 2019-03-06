@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
@@ -38,11 +39,13 @@ namespace Nop.Web.Framework.Security.Captcha
                 lang = supportedLanguageCodes.Contains(twoLetterIsoCode) ? twoLetterIsoCode : lang;
             }
 
+            var randomNumber = CommonHelper.GenerateRandomInteger();
+
             //generate captcha control
             var captchaControl = new GRecaptchaControl
             {
                 Theme = captchaSettings.ReCaptchaTheme,
-                Id = "recaptcha",
+                Id = randomNumber,
                 PublicKey = captchaSettings.ReCaptchaPublicKey,
                 Language =  lang
             };

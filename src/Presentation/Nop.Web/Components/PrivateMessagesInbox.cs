@@ -10,7 +10,7 @@ namespace Nop.Web.Components
 
         public PrivateMessagesInboxViewComponent(IPrivateMessagesModelFactory privateMessagesModelFactory)
         {
-            this._privateMessagesModelFactory = privateMessagesModelFactory;
+            _privateMessagesModelFactory = privateMessagesModelFactory;
         }
 
         public IViewComponentResult Invoke(int pageNumber, string tab)

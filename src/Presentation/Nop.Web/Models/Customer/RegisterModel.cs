@@ -14,11 +14,11 @@ namespace Nop.Web.Models.Customer
     {
         public RegisterModel()
         {
-            this.AvailableTimeZones = new List<SelectListItem>();
-            this.AvailableCountries = new List<SelectListItem>();
-            this.AvailableStates = new List<SelectListItem>();
-            this.CustomerAttributes = new List<CustomerAttributeModel>();
-            this.GdprConsents = new List<GdprConsentModel>();
+            AvailableTimeZones = new List<SelectListItem>();
+            AvailableCountries = new List<SelectListItem>();
+            AvailableStates = new List<SelectListItem>();
+            CustomerAttributes = new List<CustomerAttributeModel>();
+            GdprConsents = new List<GdprConsentModel>();
         }
         
         [DataType(DataType.EmailAddress)]

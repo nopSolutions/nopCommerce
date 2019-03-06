@@ -16,9 +16,9 @@ namespace Nop.Web.Framework.Events
         /// <param name="tabStripName">Tabstrip name</param>
         public AdminTabStripCreated(IHtmlHelper helper, string tabStripName)
         {
-            this.Helper = helper;
-            this.TabStripName = tabStripName;
-            this.BlocksToRender = new List<IHtmlContent>();
+            Helper = helper;
+            TabStripName = tabStripName;
+            BlocksToRender = new List<IHtmlContent>();
         }
 
         /// <summary>

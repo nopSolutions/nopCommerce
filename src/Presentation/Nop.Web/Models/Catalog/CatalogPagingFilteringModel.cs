@@ -26,12 +26,12 @@ namespace Nop.Web.Models.Catalog
         /// </summary>
         public CatalogPagingFilteringModel()
         {
-            this.AvailableSortOptions = new List<SelectListItem>();
-            this.AvailableViewModes = new List<SelectListItem>();
-            this.PageSizeOptions = new List<SelectListItem>();
+            AvailableSortOptions = new List<SelectListItem>();
+            AvailableViewModes = new List<SelectListItem>();
+            PageSizeOptions = new List<SelectListItem>();
 
-            this.PriceRangeFilter = new PriceRangeFilterModel();
-            this.SpecificationFilter = new SpecificationFilterModel();
+            PriceRangeFilter = new PriceRangeFilterModel();
+            SpecificationFilter = new SpecificationFilterModel();
         }
 
         #endregion
@@ -108,7 +108,7 @@ namespace Nop.Web.Models.Catalog
             /// </summary>
             public PriceRangeFilterModel()
             {
-                this.Items = new List<PriceRangeFilterItem>();
+                Items = new List<PriceRangeFilterItem>();
             }
 
             #endregion
@@ -205,11 +205,11 @@ namespace Nop.Web.Models.Catalog
                 var priceRangeList = GetPriceRangeList(priceRangeStr);
                 if (priceRangeList.Any())
                 {
-                    this.Enabled = true;
+                    Enabled = true;
 
                     var selectedPriceRange = GetSelectedPriceRange(webHelper, priceRangeStr);
 
-                    this.Items = priceRangeList.ToList().Select(x =>
+                    Items = priceRangeList.ToList().Select(x =>
                     {
                         //from&to
                         var item = new PriceRangeFilterItem();
@@ -243,12 +243,12 @@ namespace Nop.Web.Models.Catalog
                         //remove filter URL
                         var url = webHelper.RemoveQueryString(webHelper.GetThisPageUrl(true), QUERYSTRINGPARAM);
                         url = ExcludeQueryStringParams(url, webHelper);
-                        this.RemoveFilterUrl = url;
+                        RemoveFilterUrl = url;
                     }
                 }
                 else
                 {
-                    this.Enabled = false;
+                    Enabled = false;
                 }
             }
             
@@ -313,8 +313,8 @@ namespace Nop.Web.Models.Catalog
             /// </summary>
             public SpecificationFilterModel()
             {
-                this.AlreadyFilteredItems = new List<SpecificationFilterItem>();
-                this.NotFilteredItems = new List<SpecificationFilterItem>();
+                AlreadyFilteredItems = new List<SpecificationFilterItem>();
+                NotFilteredItems = new List<SpecificationFilterItem>();
             }
 
             #endregion
@@ -381,7 +381,7 @@ namespace Nop.Web.Models.Catalog
                 Enabled = false;
                 var optionIds = filterableSpecificationAttributeOptionIds != null
                     ? string.Join(",", filterableSpecificationAttributeOptionIds) : string.Empty;
-                var cacheKey = string.Format(ModelCacheEventConsumer.SPECS_FILTER_MODEL_KEY, optionIds, workContext.WorkingLanguage.Id);
+                var cacheKey = string.Format(NopModelCacheDefaults.SpecsFilterModelKey, optionIds, workContext.WorkingLanguage.Id);
 
                 var allOptions = specificationAttributeService.GetSpecificationAttributeOptionsByIds(filterableSpecificationAttributeOptionIds);
                 var allFilters = cacheManager.Get(cacheKey, () => allOptions.Select(sao =>

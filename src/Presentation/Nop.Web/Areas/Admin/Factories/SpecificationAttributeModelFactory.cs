@@ -29,9 +29,9 @@ namespace Nop.Web.Areas.Admin.Factories
             ILocalizedModelFactory localizedModelFactory,
             ISpecificationAttributeService specificationAttributeService)
         {
-            this._localizationService = localizationService;
-            this._localizedModelFactory = localizedModelFactory;
-            this._specificationAttributeService = specificationAttributeService;
+            _localizationService = localizationService;
+            _localizedModelFactory = localizedModelFactory;
+            _specificationAttributeService = specificationAttributeService;
         }
 
         #endregion
@@ -269,6 +269,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = products.Select(product => 
                 {
                     var specificationAttributeProductModel = product.ToModel<SpecificationAttributeProductModel>();
+                    specificationAttributeProductModel.ProductId = product.Id;
+                    specificationAttributeProductModel.ProductName = product.Name;
                     specificationAttributeProductModel.SpecificationAttributeId = specificationAttribute.Id;
 
                     return specificationAttributeProductModel;

@@ -48,10 +48,10 @@ namespace Nop.Web.Framework.Mvc.Filters
                 IWorkContext workContext,
                 CustomerSettings customerSettings)
             {
-                this._customerService = customerService;
-                this._webHelper = webHelper;
-                this._workContext = workContext;
-                this._customerSettings = customerSettings;
+                _customerService = customerService;
+                _webHelper = webHelper;
+                _workContext = workContext;
+                _customerSettings = customerSettings;
             }
 
             #endregion
@@ -85,9 +85,10 @@ namespace Nop.Web.Framework.Mvc.Filters
                 var currentIpAddress = _webHelper.GetCurrentIpAddress();
                 if (string.IsNullOrEmpty(currentIpAddress))
                     return;
-                
+
                 //update customer's IP address
-                if (!currentIpAddress.Equals(_workContext.CurrentCustomer.LastIpAddress, StringComparison.InvariantCultureIgnoreCase))
+                if (_workContext.OriginalCustomerIfImpersonated == null &&
+                     !currentIpAddress.Equals(_workContext.CurrentCustomer.LastIpAddress, StringComparison.InvariantCultureIgnoreCase))
                 {
                     _workContext.CurrentCustomer.LastIpAddress = currentIpAddress;
                     _customerService.UpdateCustomer(_workContext.CurrentCustomer);

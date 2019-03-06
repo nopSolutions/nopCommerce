@@ -32,7 +32,7 @@
                             });
                         },
                         error: function(xhr, ajaxOptions, thrownError) {
-                            alert('Failed to retrieve states.');
+                            $("#getStatesByCountryIdAlert").click();
                         }
                     });
                 });
@@ -166,3 +166,4 @@
         </div>
     </div>
 </div>
+<nop-alert asp-alert-id="getStatesByCountryIdAlert" asp-alert-message="@T("Admin.Common.Alert.States.Failed")" />

@@ -74,6 +74,17 @@ namespace Nop.Services.Catalog
         }
 
         /// <summary>
+        /// Gets specification attributes that have options
+        /// </summary>
+        /// <returns>Specification attributes that have available options</returns>
+        public virtual IList<SpecificationAttribute> GetSpecificationAttributesWithOptions()
+        {
+            return GetSpecificationAttributes()
+                .Where(sa => sa.SpecificationAttributeOptions.Any())
+                .ToList();
+        }
+
+        /// <summary>
         /// Deletes a specification attribute
         /// </summary>
         /// <param name="specificationAttribute">The specification attribute</param>

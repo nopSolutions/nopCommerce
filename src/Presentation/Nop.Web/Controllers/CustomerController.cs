@@ -15,6 +15,7 @@ using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Tax;
+using Nop.Core.Http;
 using Nop.Services.Authentication;
 using Nop.Services.Authentication.External;
 using Nop.Services.Catalog;
@@ -133,46 +134,46 @@ namespace Nop.Web.Controllers
             StoreInformationSettings storeInformationSettings,
             TaxSettings taxSettings)
         {
-            this._addressSettings = addressSettings;
-            this._captchaSettings = captchaSettings;
-            this._customerSettings = customerSettings;
-            this._dateTimeSettings = dateTimeSettings;
-            this._downloadService = downloadService;
-            this._forumSettings = forumSettings;
-            this._gdprSettings = gdprSettings;
-            this._addressAttributeParser = addressAttributeParser;
-            this._addressModelFactory = addressModelFactory;
-            this._addressService = addressService;
-            this._authenticationService = authenticationService;
-            this._countryService = countryService;
-            this._currencyService = currencyService;
-            this._customerActivityService = customerActivityService;
-            this._customerAttributeParser = customerAttributeParser;
-            this._customerAttributeService = customerAttributeService;
-            this._customerModelFactory = customerModelFactory;
-            this._customerRegistrationService = customerRegistrationService;
-            this._customerService = customerService;
-            this._eventPublisher = eventPublisher;
-            this._exportManager = exportManager;
-            this._externalAuthenticationService = externalAuthenticationService;
-            this._gdprService = gdprService;
-            this._genericAttributeService = genericAttributeService;
-            this._giftCardService = giftCardService;
-            this._localizationService = localizationService;
-            this._newsLetterSubscriptionService = newsLetterSubscriptionService;
-            this._orderService = orderService;
-            this._pictureService = pictureService;
-            this._priceFormatter = priceFormatter;
-            this._shoppingCartService = shoppingCartService;
-            this._storeContext = storeContext;
-            this._taxService = taxService;
-            this._webHelper = webHelper;
-            this._workContext = workContext;
-            this._workflowMessageService = workflowMessageService;
-            this._localizationSettings = localizationSettings;
-            this._mediaSettings = mediaSettings;
-            this._storeInformationSettings = storeInformationSettings;
-            this._taxSettings = taxSettings;
+            _addressSettings = addressSettings;
+            _captchaSettings = captchaSettings;
+            _customerSettings = customerSettings;
+            _dateTimeSettings = dateTimeSettings;
+            _downloadService = downloadService;
+            _forumSettings = forumSettings;
+            _gdprSettings = gdprSettings;
+            _addressAttributeParser = addressAttributeParser;
+            _addressModelFactory = addressModelFactory;
+            _addressService = addressService;
+            _authenticationService = authenticationService;
+            _countryService = countryService;
+            _currencyService = currencyService;
+            _customerActivityService = customerActivityService;
+            _customerAttributeParser = customerAttributeParser;
+            _customerAttributeService = customerAttributeService;
+            _customerModelFactory = customerModelFactory;
+            _customerRegistrationService = customerRegistrationService;
+            _customerService = customerService;
+            _eventPublisher = eventPublisher;
+            _exportManager = exportManager;
+            _externalAuthenticationService = externalAuthenticationService;
+            _gdprService = gdprService;
+            _genericAttributeService = genericAttributeService;
+            _giftCardService = giftCardService;
+            _localizationService = localizationService;
+            _newsLetterSubscriptionService = newsLetterSubscriptionService;
+            _orderService = orderService;
+            _pictureService = pictureService;
+            _priceFormatter = priceFormatter;
+            _shoppingCartService = shoppingCartService;
+            _storeContext = storeContext;
+            _taxService = taxService;
+            _webHelper = webHelper;
+            _workContext = workContext;
+            _workflowMessageService = workflowMessageService;
+            _localizationSettings = localizationSettings;
+            _mediaSettings = mediaSettings;
+            _storeInformationSettings = storeInformationSettings;
+            _taxSettings = taxSettings;
         }
 
         #endregion
@@ -188,7 +189,7 @@ namespace Nop.Web.Controllers
             var attributes = _customerAttributeService.GetAllCustomerAttributes();
             foreach (var attribute in attributes)
             {
-                var controlId = $"customer_attribute_{attribute.Id}";
+                var controlId = $"{NopAttributePrefixDefaults.Customer}{attribute.Id}";
                 switch (attribute.AttributeControlType)
                 {
                     case AttributeControlType.DropdownList:
@@ -374,7 +375,7 @@ namespace Nop.Web.Controllers
                     .SaveAttribute<int?>(_workContext.OriginalCustomerIfImpersonated, NopCustomerDefaults.ImpersonatedCustomerIdAttribute, null);
 
                 //redirect back to customer details page (admin area)
-                return this.RedirectToAction("Edit", "Customer", new { id = _workContext.CurrentCustomer.Id, area = AreaNames.Admin });
+                return RedirectToAction("Edit", "Customer", new { id = _workContext.CurrentCustomer.Id, area = AreaNames.Admin });
             }
 
             //activity log
@@ -396,7 +397,7 @@ namespace Nop.Web.Controllers
                 //the only good solution in this case is to store a temporary variable
                 //indicating that the EU cookie popup window should not be displayed on the next page open (after logout redirection to homepage)
                 //but it'll be displayed for further page loads
-                TempData["nop.IgnoreEuCookieLawWarning"] = true;
+                TempData[$"{NopCookieDefaults.Prefix}{NopCookieDefaults.IgnoreEuCookieLawWarning}"] = true; 
             }
 
             return RedirectToRoute("HomePage");
@@ -415,13 +416,20 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
+        [ValidateCaptcha]
         [HttpPost, ActionName("PasswordRecovery")]
         [PublicAntiForgery]
         [FormValueRequired("send-email")]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
-        public virtual IActionResult PasswordRecoverySend(PasswordRecoveryModel model)
+        public virtual IActionResult PasswordRecoverySend(PasswordRecoveryModel model, bool captchaValid)
         {
+            // validate CAPTCHA
+            if (_captchaSettings.Enabled && _captchaSettings.ShowOnForgotPasswordPage && !captchaValid)
+            {
+                ModelState.AddModelError("", _captchaSettings.GetWrongCaptchaMessage(_localizationService));
+            }
+
             if (ModelState.IsValid)
             {
                 var customer = _customerService.GetCustomerByEmail(model.Email);
@@ -772,7 +780,7 @@ namespace Nop.Web.Controllers
                         FaxNumber = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.FaxAttribute),
                         CreatedOnUtc = customer.CreatedOnUtc
                     };
-                    if (this._addressService.IsAddressValid(defaultAddress))
+                    if (_addressService.IsAddressValid(defaultAddress))
                     {
                         //some validation
                         if (defaultAddress.CountryId == 0)
@@ -817,9 +825,8 @@ namespace Nop.Web.Controllers
                                 //send customer welcome message
                                 _workflowMessageService.SendCustomerWelcomeMessage(customer, _workContext.WorkingLanguage.Id);
 
-                                var redirectUrl = Url.RouteUrl("RegisterResult", new { resultId = (int)UserRegistrationType.Standard }, _webHelper.CurrentRequestProtocol);
-                                if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
-                                    redirectUrl = _webHelper.ModifyQueryString(redirectUrl, "returnurl", returnUrl);
+                                var redirectUrl = Url.RouteUrl("RegisterResult",
+                                    new { resultId = (int)UserRegistrationType.Standard, returnUrl }, _webHelper.CurrentRequestProtocol);
                                 return Redirect(redirectUrl);
                             }
                         default:
@@ -965,7 +972,7 @@ namespace Nop.Web.Controllers
                 if (ModelState.IsValid)
                 {
                     //username 
-                    if (_customerSettings.UsernamesEnabled && this._customerSettings.AllowUsersToChangeUsernames)
+                    if (_customerSettings.UsernamesEnabled && _customerSettings.AllowUsersToChangeUsernames)
                     {
                         if (
                             !customer.Username.Equals(model.Username.Trim(), StringComparison.InvariantCultureIgnoreCase))

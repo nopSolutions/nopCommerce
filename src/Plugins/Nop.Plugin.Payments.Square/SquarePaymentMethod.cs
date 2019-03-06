@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
@@ -65,19 +65,19 @@ namespace Nop.Plugin.Payments.Square
             SquarePaymentManager squarePaymentManager,
             SquarePaymentSettings squarePaymentSettings)
         {
-            this._currencySettings = currencySettings;
-            this._currencyService = currencyService;
-            this._customerService = customerService;
-            this._genericAttributeService = genericAttributeService;
-            this._localizationService = localizationService;
-            this._logger = logger;
-            this._paymentService = paymentService;
-            this._pageHeadBuilder = pageHeadBuilder;
-            this._settingService = settingService;
-            this._scheduleTaskService = scheduleTaskService;
-            this._webHelper = webHelper;
-            this._squarePaymentManager = squarePaymentManager;
-            this._squarePaymentSettings = squarePaymentSettings;
+            _currencySettings = currencySettings;
+            _currencyService = currencyService;
+            _customerService = customerService;
+            _genericAttributeService = genericAttributeService;
+            _localizationService = localizationService;
+            _logger = logger;
+            _paymentService = paymentService;
+            _pageHeadBuilder = pageHeadBuilder;
+            _settingService = settingService;
+            _scheduleTaskService = scheduleTaskService;
+            _webHelper = webHelper;
+            _squarePaymentManager = squarePaymentManager;
+            _squarePaymentSettings = squarePaymentSettings;
         }
 
         #endregion
@@ -208,15 +208,15 @@ namespace Nop.Plugin.Payments.Square
             //create common charge request parameters
             var chargeRequest = new ExtendedChargeRequest
             (
-                AmountMoney: amountMoney,
-                BillingAddress: billingAddress,
-                BuyerEmailAddress: email,
-                DelayCapture: _squarePaymentSettings.TransactionMode == TransactionMode.Authorize,
-                IdempotencyKey: Guid.NewGuid().ToString(),
-                IntegrationId: !string.IsNullOrEmpty(SquarePaymentDefaults.IntegrationId) ? SquarePaymentDefaults.IntegrationId : null,
-                Note: string.Format(SquarePaymentDefaults.PaymentNote, paymentRequest.OrderGuid),
-                ReferenceId: paymentRequest.OrderGuid.ToString(),
-                ShippingAddress: shippingAddress
+                amountMoney: amountMoney,
+                billingAddress: billingAddress,
+                buyerEmailAddress: email,
+                delayCapture: _squarePaymentSettings.TransactionMode == TransactionMode.Authorize,
+                idempotencyKey: Guid.NewGuid().ToString(),
+                integrationId: !string.IsNullOrEmpty(SquarePaymentDefaults.IntegrationId) ? SquarePaymentDefaults.IntegrationId : null,
+                note: string.Format(SquarePaymentDefaults.PaymentNote, paymentRequest.OrderGuid),
+                referenceId: paymentRequest.OrderGuid.ToString(),
+                shippingAddress: shippingAddress
             );
 
             //try to get previously stored card details
@@ -634,6 +634,7 @@ namespace Nop.Plugin.Payments.Square
             _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.Location", "Business location");
             _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.Location.Hint", "Choose your business location. Location is a required parameter for payment requests.");
             _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.Location.NotExist", "No locations");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.Location.Select", "Select location");
             _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.PostalCode", "Postal code");
             _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.PostalCode.Key", "Postal code");
             _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.SandboxAccessToken", "Sandbox access token");
@@ -711,6 +712,7 @@ namespace Nop.Plugin.Payments.Square
             _localizationService.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.Location");
             _localizationService.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.Location.Hint");
             _localizationService.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.Location.NotExist");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.Location.Select");
             _localizationService.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.PostalCode");
             _localizationService.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.PostalCode.Key");
             _localizationService.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.SandboxAccessToken");

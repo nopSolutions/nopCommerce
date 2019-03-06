@@ -30,11 +30,11 @@ namespace Nop.Web.Controllers
             IStoreMappingService storeMappingService,
             IWorkContext workContext)
         {
-            this._localizationService = localizationService;
-            this._pollModelFactory = pollModelFactory;
-            this._pollService = pollService;
-            this._storeMappingService = storeMappingService;
-            this._workContext = workContext;
+            _localizationService = localizationService;
+            _pollModelFactory = pollModelFactory;
+            _pollService = pollService;
+            _storeMappingService = storeMappingService;
+            _workContext = workContext;
         }
 
         #endregion

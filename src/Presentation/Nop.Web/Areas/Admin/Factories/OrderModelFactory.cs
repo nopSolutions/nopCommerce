@@ -26,6 +26,7 @@ using Nop.Services.Media;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Security;
+using Nop.Services.Seo;
 using Nop.Services.Shipping;
 using Nop.Services.Stores;
 using Nop.Services.Tax;
@@ -47,6 +48,7 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Fields
 
         private readonly AddressSettings _addressSettings;
+        private readonly CatalogSettings _catalogSettings;
         private readonly CurrencySettings _currencySettings;
         private readonly IActionContextAccessor _actionContextAccessor;
         private readonly IAddressAttributeFormatter _addressAttributeFormatter;
@@ -82,6 +84,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly MeasureSettings _measureSettings;
         private readonly OrderSettings _orderSettings;
         private readonly ShippingSettings _shippingSettings;
+        private readonly IUrlRecordService _urlRecordService;
         private readonly TaxSettings _taxSettings;
 
         #endregion
@@ -89,6 +92,7 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Ctor
 
         public OrderModelFactory(AddressSettings addressSettings,
+            CatalogSettings catalogSettings,
             CurrencySettings currencySettings,
             IActionContextAccessor actionContextAccessor,
             IAddressAttributeFormatter addressAttributeFormatter,
@@ -124,45 +128,48 @@ namespace Nop.Web.Areas.Admin.Factories
             MeasureSettings measureSettings,
             OrderSettings orderSettings,
             ShippingSettings shippingSettings,
+            IUrlRecordService urlRecordService,
             TaxSettings taxSettings)
         {
-            this._addressSettings = addressSettings;
-            this._currencySettings = currencySettings;
-            this._actionContextAccessor = actionContextAccessor;
-            this._addressAttributeFormatter = addressAttributeFormatter;
-            this._addressAttributeModelFactory = addressAttributeModelFactory;
-            this._affiliateService = affiliateService;
-            this._baseAdminModelFactory = baseAdminModelFactory;
-            this._countryService = countryService;
-            this._currencyService = currencyService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._discountService = discountService;
-            this._downloadService = downloadService;
-            this._encryptionService = encryptionService;
-            this._giftCardService = giftCardService;
-            this._localizationService = localizationService;
-            this._measureService = measureService;
-            this._orderProcessingService = orderProcessingService;
-            this._orderReportService = orderReportService;
-            this._orderService = orderService;
-            this._paymentService = paymentService;
-            this._pictureService = pictureService;
-            this._priceCalculationService = priceCalculationService;
-            this._priceFormatter = priceFormatter;
-            this._productAttributeService = productAttributeService;
-            this._productService = productService;
-            this._returnRequestService = returnRequestService;
-            this._shipmentService = shipmentService;
-            this._shippingService = shippingService;
-            this._storeService = storeService;
-            this._taxService = taxService;
-            this._urlHelperFactory = urlHelperFactory;
-            this._vendorService = vendorService;
-            this._workContext = workContext;
-            this._measureSettings = measureSettings;
-            this._orderSettings = orderSettings;
-            this._shippingSettings = shippingSettings;
-            this._taxSettings = taxSettings;
+            _addressSettings = addressSettings;
+            _catalogSettings = catalogSettings;
+            _currencySettings = currencySettings;
+            _actionContextAccessor = actionContextAccessor;
+            _addressAttributeFormatter = addressAttributeFormatter;
+            _addressAttributeModelFactory = addressAttributeModelFactory;
+            _affiliateService = affiliateService;
+            _baseAdminModelFactory = baseAdminModelFactory;
+            _countryService = countryService;
+            _currencyService = currencyService;
+            _dateTimeHelper = dateTimeHelper;
+            _discountService = discountService;
+            _downloadService = downloadService;
+            _encryptionService = encryptionService;
+            _giftCardService = giftCardService;
+            _localizationService = localizationService;
+            _measureService = measureService;
+            _orderProcessingService = orderProcessingService;
+            _orderReportService = orderReportService;
+            _orderService = orderService;
+            _paymentService = paymentService;
+            _pictureService = pictureService;
+            _priceCalculationService = priceCalculationService;
+            _priceFormatter = priceFormatter;
+            _productAttributeService = productAttributeService;
+            _productService = productService;
+            _returnRequestService = returnRequestService;
+            _shipmentService = shipmentService;
+            _shippingService = shippingService;
+            _storeService = storeService;
+            _taxService = taxService;
+            _urlHelperFactory = urlHelperFactory;
+            _vendorService = vendorService;
+            _workContext = workContext;
+            _measureSettings = measureSettings;
+            _orderSettings = orderSettings;
+            _shippingSettings = shippingSettings;
+            _urlRecordService = urlRecordService;
+            _taxSettings = taxSettings;
         }
 
         #endregion
@@ -855,6 +862,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 .Select(country => new SelectListItem { Text = country.Name, Value = country.Id.ToString() }).ToList();
             searchModel.AvailableCountries.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
 
+            searchModel.HideStoresList = _catalogSettings.IgnoreStoreLimitations || searchModel.AvailableStores.SelectionIsNotPossible();
+
             //prepare page parameters
             searchModel.SetGridPageSize();
 
@@ -1030,14 +1039,14 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     Id = order.Id,
                     OrderStatusId = order.OrderStatusId,
-                    OrderGuid = order.OrderGuid,
-                    CustomOrderNumber = order.CustomOrderNumber,
                     CustomerId = order.CustomerId,
-                    CustomerIp = order.CustomerIp,
                     VatNumber = order.VatNumber,
                     CheckoutAttributeInfo = order.CheckoutAttributeDescription
                 };
 
+                model.OrderGuid = order.OrderGuid;
+                model.CustomOrderNumber = order.CustomOrderNumber;
+                model.CustomerIp = order.CustomerIp;
                 model.OrderStatus = _localizationService.GetLocalizedEnum(order.OrderStatus);
                 model.StoreName = _storeService.GetStoreById(order.StoreId)?.Name ?? "Deleted";
                 model.CustomerInfo = order.Customer.IsRegistered() ? order.Customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
@@ -1155,7 +1164,13 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new AddProductToOrderListModel
             {
                 //fill in model values from the entity
-                Data = products.Select(product => product.ToModel<ProductModel>()),
+                Data = products.Select(product =>
+                {
+                    var productModel = product.ToModel<ProductModel>();
+                    productModel.SeName = _urlRecordService.GetSeName(product, 0, true, false);
+
+                    return productModel;
+                }),
                 Total = products.TotalCount
             };
 
@@ -1259,7 +1274,7 @@ namespace Nop.Web.Areas.Admin.Factories
             _baseAdminModelFactory.PrepareCountries(searchModel.AvailableCountries);
 
             //prepare available states and provinces
-            _baseAdminModelFactory.PrepareStatesAndProvinces(searchModel.AvailableCountries, searchModel.CountryId);
+            _baseAdminModelFactory.PrepareStatesAndProvinces(searchModel.AvailableStates, searchModel.CountryId);
 
             //prepare available warehouses
             _baseAdminModelFactory.PrepareWarehouses(searchModel.AvailableWarehouses);
@@ -1322,6 +1337,10 @@ namespace Nop.Web.Areas.Admin.Factories
                         : _localizationService.GetResource("Admin.Orders.Shipments.DeliveryDate.NotYet");
 
                     //fill in additional values (not existing in the entity)
+                    shipmentModel.CanShip = !shipment.ShippedDateUtc.HasValue;
+                    shipmentModel.CanDeliver = shipment.ShippedDateUtc.HasValue && !shipment.DeliveryDateUtc.HasValue;
+                    shipmentModel.CustomOrderNumber = shipment.Order.CustomOrderNumber;
+
                     if (shipment.TotalWeight.HasValue)
                         shipmentModel.TotalWeight = $"{shipment.TotalWeight:F2} [{_measureService.GetMeasureWeightById(_measureSettings.BaseWeightId)?.Name}]";
 
@@ -1347,7 +1366,11 @@ namespace Nop.Web.Areas.Admin.Factories
             if (shipment != null)
             {
                 //fill in model values from the entity
-                model = model ?? shipment.ToModel<ShipmentModel>();  
+                model = model ?? shipment.ToModel<ShipmentModel>();
+
+                model.CanShip = !shipment.ShippedDateUtc.HasValue;
+                model.CanDeliver = shipment.ShippedDateUtc.HasValue && !shipment.DeliveryDateUtc.HasValue;
+                model.CustomOrderNumber = shipment.Order.CustomOrderNumber;
 
                 model.ShippedDate = shipment.ShippedDateUtc.HasValue
                     ? _dateTimeHelper.ConvertToUserTime(shipment.ShippedDateUtc.Value, DateTimeKind.Utc).ToString()
@@ -1499,6 +1522,10 @@ namespace Nop.Web.Areas.Admin.Factories
                         : _localizationService.GetResource("Admin.Orders.Shipments.DeliveryDate.NotYet");
 
                     //fill in additional values (not existing in the entity)
+                    shipmentModel.CanShip = !shipment.ShippedDateUtc.HasValue;
+                    shipmentModel.CanDeliver = shipment.ShippedDateUtc.HasValue && !shipment.DeliveryDateUtc.HasValue;
+                    shipmentModel.CustomOrderNumber = shipment.Order.CustomOrderNumber;
+
                     var baseWeight = _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId)?.Name;
                     if (shipment.TotalWeight.HasValue)
                         shipmentModel.TotalWeight = $"{shipment.TotalWeight:F2} [{baseWeight}]";

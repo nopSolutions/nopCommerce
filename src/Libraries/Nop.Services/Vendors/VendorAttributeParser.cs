@@ -24,8 +24,8 @@ namespace Nop.Services.Vendors
         public VendorAttributeParser(ILocalizationService localizationService,
             IVendorAttributeService vendorAttributeService)
         {
-            this._localizationService = localizationService;
-            this._vendorAttributeService = vendorAttributeService;
+            _localizationService = localizationService;
+            _vendorAttributeService = vendorAttributeService;
         }
 
         #endregion

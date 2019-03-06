@@ -66,23 +66,23 @@ namespace Nop.Services.Orders
             ShoppingCartSettings shoppingCartSettings,
             TaxSettings taxSettings)
         {
-            this._catalogSettings = catalogSettings;
-            this._checkoutAttributeParser = checkoutAttributeParser;
-            this._discountService = discountService;
-            this._genericAttributeService = genericAttributeService;
-            this._giftCardService = giftCardService;
-            this._paymentService = paymentService;
-            this._priceCalculationService = priceCalculationService;
-            this._rewardPointService = rewardPointService;
-            this._rewardPointsSettings = rewardPointsSettings;
-            this._shippingService = shippingService;
-            this._shoppingCartService = shoppingCartService;
-            this._storeContext = storeContext;
-            this._taxService = taxService;
-            this._workContext = workContext;
-            this._shippingSettings = shippingSettings;
-            this._shoppingCartSettings = shoppingCartSettings;
-            this._taxSettings = taxSettings;
+            _catalogSettings = catalogSettings;
+            _checkoutAttributeParser = checkoutAttributeParser;
+            _discountService = discountService;
+            _genericAttributeService = genericAttributeService;
+            _giftCardService = giftCardService;
+            _paymentService = paymentService;
+            _priceCalculationService = priceCalculationService;
+            _rewardPointService = rewardPointService;
+            _rewardPointsSettings = rewardPointsSettings;
+            _shippingService = shippingService;
+            _shoppingCartService = shoppingCartService;
+            _storeContext = storeContext;
+            _taxService = taxService;
+            _workContext = workContext;
+            _shippingSettings = shippingSettings;
+            _shoppingCartSettings = shoppingCartSettings;
+            _taxSettings = taxSettings;
         }
 
         #endregion

@@ -52,17 +52,17 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Components
             IStoreContext storeContext,
             IWorkContext workContext)
         {
-            this._currencySettings = currencySettings;
-            this._googleAnalyticsSettings = googleAnalyticsSettings;
-            this._categoryService = categoryService;
-            this._currencyService = currencyService;
-            this._genericAttributeService = genericAttributeService;
-            this._logger = logger;
-            this._orderService = orderService;
-            this._productService = productService;
-            this._settingService = settingService;
-            this._storeContext = storeContext;
-            this._workContext = workContext;
+            _currencySettings = currencySettings;
+            _googleAnalyticsSettings = googleAnalyticsSettings;
+            _categoryService = categoryService;
+            _currencyService = currencyService;
+            _genericAttributeService = genericAttributeService;
+            _logger = logger;
+            _orderService = orderService;
+            _productService = productService;
+            _settingService = settingService;
+            _storeContext = storeContext;
+            _workContext = workContext;
         }
 
         #endregion

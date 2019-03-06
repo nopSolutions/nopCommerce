@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
@@ -60,7 +59,6 @@ namespace Nop.Web.Factories
         private readonly ICustomerService _customerService;
         private readonly IForumService _forumService;
         private readonly IGenericAttributeService _genericAttributeService;
-        private readonly IHostingEnvironment _hostingEnvironment;
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
         private readonly IManufacturerService _manufacturerService;
@@ -103,7 +101,6 @@ namespace Nop.Web.Factories
             ICustomerService customerService,
             IForumService forumService,
             IGenericAttributeService genericAttributeService,
-            IHostingEnvironment hostingEnvironment,
             ILanguageService languageService,
             ILocalizationService localizationService,
             IManufacturerService manufacturerService,
@@ -129,44 +126,43 @@ namespace Nop.Web.Factories
             StoreInformationSettings storeInformationSettings,
             VendorSettings vendorSettings)
         {
-            this._blogSettings = blogSettings;
-            this._captchaSettings = captchaSettings;
-            this._catalogSettings = catalogSettings;
-            this._commonSettings = commonSettings;
-            this._customerSettings = customerSettings;
-            this._displayDefaultFooterItemSettings = displayDefaultFooterItemSettings;
-            this._forumSettings = forumSettings;
-            this._actionContextAccessor = actionContextAccessor;
-            this._categoryService = categoryService;
-            this._currencyService = currencyService;
-            this._customerService = customerService;
-            this._forumService = forumService;
-            this._genericAttributeService = genericAttributeService;
-            this._hostingEnvironment = hostingEnvironment;
-            this._languageService = languageService;
-            this._localizationService = localizationService;
-            this._manufacturerService = manufacturerService;
-            this._fileProvider = fileProvider;
-            this._pageHeadBuilder = pageHeadBuilder;
-            this._permissionService = permissionService;
-            this._pictureService = pictureService;
-            this._productService = productService;
-            this._productTagService = productTagService;
-            this._sitemapGenerator = sitemapGenerator;
-            this._shoppingCartService = shoppingCartService;
-            this._cacheManager = cacheManager;
-            this._storeContext = storeContext;
-            this._themeContext = themeContext;
-            this._themeProvider = themeProvider;
-            this._topicService = topicService;
-            this._urlHelperFactory = urlHelperFactory;
-            this._urlRecordService = urlRecordService;
-            this._webHelper = webHelper;
-            this._workContext = workContext;
-            this._localizationSettings = localizationSettings;
-            this._newsSettings = newsSettings;
-            this._storeInformationSettings = storeInformationSettings;
-            this._vendorSettings = vendorSettings;
+            _blogSettings = blogSettings;
+            _captchaSettings = captchaSettings;
+            _catalogSettings = catalogSettings;
+            _commonSettings = commonSettings;
+            _customerSettings = customerSettings;
+            _displayDefaultFooterItemSettings = displayDefaultFooterItemSettings;
+            _forumSettings = forumSettings;
+            _actionContextAccessor = actionContextAccessor;
+            _categoryService = categoryService;
+            _currencyService = currencyService;
+            _customerService = customerService;
+            _forumService = forumService;
+            _genericAttributeService = genericAttributeService;
+            _languageService = languageService;
+            _localizationService = localizationService;
+            _manufacturerService = manufacturerService;
+            _fileProvider = fileProvider;
+            _pageHeadBuilder = pageHeadBuilder;
+            _permissionService = permissionService;
+            _pictureService = pictureService;
+            _productService = productService;
+            _productTagService = productTagService;
+            _sitemapGenerator = sitemapGenerator;
+            _shoppingCartService = shoppingCartService;
+            _cacheManager = cacheManager;
+            _storeContext = storeContext;
+            _themeContext = themeContext;
+            _themeProvider = themeProvider;
+            _topicService = topicService;
+            _urlHelperFactory = urlHelperFactory;
+            _urlRecordService = urlRecordService;
+            _webHelper = webHelper;
+            _workContext = workContext;
+            _localizationSettings = localizationSettings;
+            _newsSettings = newsSettings;
+            _storeInformationSettings = storeInformationSettings;
+            _vendorSettings = vendorSettings;
         }
 
         #endregion
@@ -210,7 +206,7 @@ namespace Nop.Web.Factories
                 StoreName = _localizationService.GetLocalized(_storeContext.CurrentStore, x => x.Name)
             };
 
-            var cacheKey = string.Format(ModelCacheEventConsumer.STORE_LOGO_PATH, _storeContext.CurrentStore.Id, _themeContext.WorkingThemeName, _webHelper.IsCurrentConnectionSecured());
+            var cacheKey = string.Format(NopModelCacheDefaults.StoreLogoPath, _storeContext.CurrentStore.Id, _themeContext.WorkingThemeName, _webHelper.IsCurrentConnectionSecured());
             model.LogoPath = _cacheManager.Get(cacheKey, () =>
             {
                 var logo = "";
@@ -236,7 +232,7 @@ namespace Nop.Web.Factories
         /// <returns>Language selector model</returns>
         public virtual LanguageSelectorModel PrepareLanguageSelectorModel()
         {
-            var availableLanguages = _cacheManager.Get(string.Format(ModelCacheEventConsumer.AVAILABLE_LANGUAGES_MODEL_KEY, _storeContext.CurrentStore.Id), () =>
+            var availableLanguages = _cacheManager.Get(string.Format(NopModelCacheDefaults.AvailableLanguagesModelKey, _storeContext.CurrentStore.Id), () =>
             {
                 var result = _languageService
                     .GetAllLanguages(storeId: _storeContext.CurrentStore.Id)
@@ -266,7 +262,7 @@ namespace Nop.Web.Factories
         /// <returns>Currency selector model</returns>
         public virtual CurrencySelectorModel PrepareCurrencySelectorModel()
         {
-            var availableCurrencies = _cacheManager.Get(string.Format(ModelCacheEventConsumer.AVAILABLE_CURRENCIES_MODEL_KEY, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id), () =>
+            var availableCurrencies = _cacheManager.Get(string.Format(NopModelCacheDefaults.AvailableCurrenciesModelKey, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id), () =>
             {
                 var result = _currencyService
                     .GetAllCurrencies(storeId: _storeContext.CurrentStore.Id)
@@ -406,7 +402,7 @@ namespace Nop.Web.Factories
         public virtual FooterModel PrepareFooterModel()
         {
             //footer topics
-            var topicCacheKey = string.Format(ModelCacheEventConsumer.TOPIC_FOOTER_MODEL_KEY,
+            var topicCacheKey = string.Format(NopModelCacheDefaults.TopicFooterModelKey,
                 _workContext.WorkingLanguage.Id,
                 _storeContext.CurrentStore.Id,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()));
@@ -522,7 +518,7 @@ namespace Nop.Web.Factories
         /// <returns>Sitemap model</returns>
         public virtual SitemapModel PrepareSitemapModel(SitemapPageModel pageModel)
         {
-            var cacheKey = string.Format(ModelCacheEventConsumer.SITEMAP_PAGE_MODEL_KEY,
+            var cacheKey = string.Format(NopModelCacheDefaults.SitemapPageModelKey,
                 _workContext.WorkingLanguage.Id,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);
@@ -684,7 +680,7 @@ namespace Nop.Web.Factories
         /// <returns>Sitemap as string in XML format</returns>
         public virtual string PrepareSitemapXml(int? id)
         {
-            var cacheKey = string.Format(ModelCacheEventConsumer.SITEMAP_SEO_MODEL_KEY, id,
+            var cacheKey = string.Format(NopModelCacheDefaults.SitemapSeoModelKey, id,
                 _workContext.WorkingLanguage.Id,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);
@@ -720,26 +716,13 @@ namespace Nop.Web.Factories
         /// Prepare the favicon model
         /// </summary>
         /// <returns>Favicon model</returns>
-        public virtual FaviconModel PrepareFaviconModel()
+        public virtual FaviconAndAppIconsModel PrepareFaviconAndAppIconsModel()
         {
-            var model = new FaviconModel();
-
-            //try loading a store specific favicon
-
-            var faviconFileName = $"favicon-{_storeContext.CurrentStore.Id}.ico";
-            var localFaviconPath = _fileProvider.Combine(_hostingEnvironment.WebRootPath, faviconFileName);
-            if (!_fileProvider.FileExists(localFaviconPath))
+            var model = new FaviconAndAppIconsModel
             {
-                //try loading a generic favicon
-                faviconFileName = "favicon.ico";
-                localFaviconPath = _fileProvider.Combine(_hostingEnvironment.WebRootPath, faviconFileName);
-                if (!_fileProvider.FileExists(localFaviconPath))
-                {
-                    return model;
-                }
-            }
+                HeadCode = _commonSettings.FaviconAndAppIconsHeadCode
+            };
 
-            model.FaviconUrl = _webHelper.GetStoreLocation() + faviconFileName;
             return model;
         }
 
@@ -789,6 +772,9 @@ namespace Nop.Web.Factories
                     "/boards/topicmove",
                     "/boards/topicwatch",
                     "/cart",
+                    "/changecurrency",
+                    "/changelanguage",
+                    "/changetaxtype",
                     "/checkout",
                     "/checkout/billingaddress",
                     "/checkout/completed",
@@ -809,6 +795,7 @@ namespace Nop.Web.Factories
                     "/customer/info",
                     "/deletepm",
                     "/emailwishlist",
+                    "/eucookielawaccept",
                     "/inboxupdate",
                     "/newsletter/subscriptionactivation",
                     "/onepagecheckout",
@@ -820,6 +807,7 @@ namespace Nop.Web.Factories
                     "/returnrequest",
                     "/returnrequest/history",
                     "/rewardpoints/history",
+                    "/search?",
                     "/sendpm",
                     "/sentupdate",
                     "/shoppingcart/*",

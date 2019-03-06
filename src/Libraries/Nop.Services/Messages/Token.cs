@@ -24,9 +24,9 @@
         /// <param name="neverHtmlEncoded">Indicates whether this token should not be HTML encoded</param>
         public Token(string key, object value, bool neverHtmlEncoded)
         {
-            this.Key = key;
-            this.Value = value;
-            this.NeverHtmlEncoded = neverHtmlEncoded;
+            Key = key;
+            Value = value;
+            NeverHtmlEncoded = neverHtmlEncoded;
         }
 
         #endregion

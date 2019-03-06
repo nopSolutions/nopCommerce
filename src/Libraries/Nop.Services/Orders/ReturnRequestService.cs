@@ -29,10 +29,10 @@ namespace Nop.Services.Orders
             IRepository<ReturnRequestAction> returnRequestActionRepository,
             IRepository<ReturnRequestReason> returnRequestReasonRepository)
         {
-            this._eventPublisher = eventPublisher;
-            this._returnRequestRepository = returnRequestRepository;
-            this._returnRequestActionRepository = returnRequestActionRepository;
-            this._returnRequestReasonRepository = returnRequestReasonRepository;
+            _eventPublisher = eventPublisher;
+            _returnRequestRepository = returnRequestRepository;
+            _returnRequestActionRepository = returnRequestActionRepository;
+            _returnRequestReasonRepository = returnRequestReasonRepository;
         }
 
         #endregion

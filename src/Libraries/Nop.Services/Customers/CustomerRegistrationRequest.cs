@@ -23,13 +23,13 @@ namespace Nop.Services.Customers
             int storeId,
             bool isApproved = true)
         {
-            this.Customer = customer;
-            this.Email = email;
-            this.Username = username;
-            this.Password = password;
-            this.PasswordFormat = passwordFormat;
-            this.StoreId = storeId;
-            this.IsApproved = isApproved;
+            Customer = customer;
+            Email = email;
+            Username = username;
+            Password = password;
+            PasswordFormat = passwordFormat;
+            StoreId = storeId;
+            IsApproved = isApproved;
         }
 
         /// <summary>

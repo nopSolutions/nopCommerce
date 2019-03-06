@@ -13,8 +13,8 @@ namespace Nop.Web.Components
         public StoreThemeSelectorViewComponent(ICommonModelFactory commonModelFactory,
             StoreInformationSettings storeInformationSettings)
         {
-            this._commonModelFactory = commonModelFactory;
-            this._storeInformationSettings = storeInformationSettings;
+            _commonModelFactory = commonModelFactory;
+            _storeInformationSettings = storeInformationSettings;
         }
 
         public IViewComponentResult Invoke()

@@ -35,12 +35,12 @@ namespace Nop.Web.Areas.Admin.Controllers
             ITemplateModelFactory templateModelFactory,
             ITopicTemplateService topicTemplateService)
         {
-            this._categoryTemplateService = categoryTemplateService;
-            this._manufacturerTemplateService = manufacturerTemplateService;
-            this._permissionService = permissionService;
-            this._productTemplateService = productTemplateService;
-            this._templateModelFactory = templateModelFactory;
-            this._topicTemplateService = topicTemplateService;
+            _categoryTemplateService = categoryTemplateService;
+            _manufacturerTemplateService = manufacturerTemplateService;
+            _permissionService = permissionService;
+            _productTemplateService = productTemplateService;
+            _templateModelFactory = templateModelFactory;
+            _topicTemplateService = topicTemplateService;
         }
 
         #endregion

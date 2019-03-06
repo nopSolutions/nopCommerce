@@ -1,0 +1,19 @@
+﻿@model ActionAlertModel
+
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="@(Model.WindowId)-title">@T("Admin.Common.Alert")</h4>
+        </div>
+        <div class="modal-body">
+            <div class="additional-text" id="@(Model.AlertId)-info"></div>
+            @(Model.AlertMessage)
+        </div>
+        <div class="modal-footer">
+            <span class="btn btn-primary pull-right" data-dismiss="modal">@T("Admin.Common.Ok")</span>
+        </div>
+    </div>
+</div>
+@*The closing tag must be described in full, otherwise, some browsers incorrectly render the markup, without taking into account the closing tag.*@
+<div class="btn btn-default" id="@(Model.AlertId)" style="display:none"></div>

@@ -13,8 +13,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure.DependencyManagement;
+using Nop.Core.Infrastructure.Extensions;
 using Nop.Core.Infrastructure.Mapper;
-using Nop.Core.Plugins;
 
 namespace Nop.Core.Infrastructure
 {
@@ -87,7 +87,6 @@ namespace Nop.Core.Infrastructure
 
             //create and sort instances of dependency registrars
             var instances = dependencyRegistrars
-                //.Where(dependencyRegistrar => PluginManager.FindPlugin(dependencyRegistrar)?.Installed ?? true) //ignore not installed plugins
                 .Select(dependencyRegistrar => (IDependencyRegistrar)Activator.CreateInstance(dependencyRegistrar))
                 .OrderBy(dependencyRegistrar => dependencyRegistrar.Order);
 
@@ -115,7 +114,6 @@ namespace Nop.Core.Infrastructure
 
             //create and sort instances of mapper configurations
             var instances = mapperConfigurations
-                .Where(mapperConfiguration => PluginManager.FindPlugin(mapperConfiguration)?.Installed ?? true) //ignore not installed plugins
                 .Select(mapperConfiguration => (IOrderedMapperProfile)Activator.CreateInstance(mapperConfiguration))
                 .OrderBy(mapperConfiguration => mapperConfiguration.Order);
 
@@ -152,7 +150,7 @@ namespace Nop.Core.Infrastructure
             //initialize plugins
             var nopConfig = provider.GetRequiredService<NopConfig>();
             var mvcCoreBuilder = services.AddMvcCore();
-            PluginManager.Initialize(mvcCoreBuilder.PartManager, nopConfig);
+            mvcCoreBuilder.PartManager.InitializePlugins(nopConfig);
         }
 
         private Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
@@ -182,7 +180,6 @@ namespace Nop.Core.Infrastructure
 
             //create and sort instances of startup configurations
             var instances = startupConfigurations
-                //.Where(startup => PluginManager.FindPlugin(startup)?.Installed ?? true) //ignore not installed plugins
                 .Select(startup => (INopStartup)Activator.CreateInstance(startup))
                 .OrderBy(startup => startup.Order);
 
@@ -219,7 +216,6 @@ namespace Nop.Core.Infrastructure
 
             //create and sort instances of startup configurations
             var instances = startupConfigurations
-                //.Where(startup => PluginManager.FindPlugin(startup)?.Installed ?? true) //ignore not installed plugins
                 .Select(startup => (INopStartup)Activator.CreateInstance(startup))
                 .OrderBy(startup => startup.Order);
 
@@ -235,7 +231,7 @@ namespace Nop.Core.Infrastructure
         /// <returns>Resolved service</returns>
         public T Resolve<T>() where T : class
         {
-            return (T)GetServiceProvider().GetRequiredService(typeof(T));
+            return (T)Resolve(typeof(T));
         }
 
         /// <summary>
@@ -245,7 +241,7 @@ namespace Nop.Core.Infrastructure
         /// <returns>Resolved service</returns>
         public object Resolve(Type type)
         {
-            return GetServiceProvider().GetRequiredService(type);
+            return GetServiceProvider().GetService(type);
         }
 
         /// <summary>
@@ -253,7 +249,7 @@ namespace Nop.Core.Infrastructure
         /// </summary>
         /// <typeparam name="T">Type of resolved services</typeparam>
         /// <returns>Collection of resolved services</returns>
-        public IEnumerable<T> ResolveAll<T>()
+        public virtual IEnumerable<T> ResolveAll<T>()
         {
             return (IEnumerable<T>)GetServiceProvider().GetServices(typeof(T));
         }

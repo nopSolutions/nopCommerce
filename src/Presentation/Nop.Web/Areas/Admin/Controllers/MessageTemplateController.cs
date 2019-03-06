@@ -46,16 +46,16 @@ namespace Nop.Web.Areas.Admin.Controllers
             IStoreService storeService,
             IWorkflowMessageService workflowMessageService)
         {
-            this._customerActivityService = customerActivityService;
-            this._localizationService = localizationService;
-            this._localizedEntityService = localizedEntityService;
-            this._messageTemplateModelFactory = messageTemplateModelFactory;
-            this._messageTemplateService = messageTemplateService;
-            this._notificationService = notificationService;
-            this._permissionService = permissionService;
-            this._storeMappingService = storeMappingService;
-            this._storeService = storeService;
-            this._workflowMessageService = workflowMessageService;
+            _customerActivityService = customerActivityService;
+            _localizationService = localizationService;
+            _localizedEntityService = localizedEntityService;
+            _messageTemplateModelFactory = messageTemplateModelFactory;
+            _messageTemplateService = messageTemplateService;
+            _notificationService = notificationService;
+            _permissionService = permissionService;
+            _storeMappingService = storeMappingService;
+            _storeService = storeService;
+            _workflowMessageService = workflowMessageService;
         }
 
         #endregion

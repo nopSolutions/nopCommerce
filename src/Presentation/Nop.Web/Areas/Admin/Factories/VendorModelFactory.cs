@@ -57,19 +57,19 @@ namespace Nop.Web.Areas.Admin.Factories
             IVendorService vendorService,
             VendorSettings vendorSettings)
         {
-            this._addressAttributeModelFactory = addressAttributeModelFactory;
-            this._addressService = addressService;
-            this._baseAdminModelFactory = baseAdminModelFactory;
-            this._customerService = customerService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._genericAttributeService = genericAttributeService;
-            this._localizationService = localizationService;
-            this._localizedModelFactory = localizedModelFactory;
-            this._urlRecordService = urlRecordService;
-            this._vendorAttributeParser = vendorAttributeParser;
-            this._vendorAttributeService = vendorAttributeService;
-            this._vendorService = vendorService;
-            this._vendorSettings = vendorSettings;
+            _addressAttributeModelFactory = addressAttributeModelFactory;
+            _addressService = addressService;
+            _baseAdminModelFactory = baseAdminModelFactory;
+            _customerService = customerService;
+            _dateTimeHelper = dateTimeHelper;
+            _genericAttributeService = genericAttributeService;
+            _localizationService = localizationService;
+            _localizedModelFactory = localizedModelFactory;
+            _urlRecordService = urlRecordService;
+            _vendorAttributeParser = vendorAttributeParser;
+            _vendorAttributeService = vendorAttributeService;
+            _vendorService = vendorService;
+            _vendorSettings = vendorSettings;
         }
 
         #endregion
@@ -286,7 +286,13 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new VendorListModel
             {
                 //fill in model values from the entity
-                Data = vendors.Select(vendor => vendor.ToModel<VendorModel>()),
+                Data = vendors.Select(vendor =>
+                {
+                    var vendorModel = vendor.ToModel<VendorModel>();
+                    vendorModel.SeName = _urlRecordService.GetSeName(vendor, 0, true, false);
+
+                    return vendorModel;
+                }),
                 Total = vendors.TotalCount
             };
 
@@ -307,7 +313,11 @@ namespace Nop.Web.Areas.Admin.Factories
             if (vendor != null)
             {
                 //fill in model values from the entity
-                model = model ?? vendor.ToModel<VendorModel>();
+                if (model == null)
+                {
+                    model = vendor.ToModel<VendorModel>();
+                    model.SeName = _urlRecordService.GetSeName(vendor, 0, true, false);
+                }
 
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>

@@ -43,14 +43,14 @@ namespace Nop.Web.Controllers
             IStoreContext storeContext,
             IWorkContext workContext)
         {
-            this._forumSettings = forumSettings;
-            this._customerActivityService = customerActivityService;
-            this._customerService = customerService;
-            this._forumService = forumService;
-            this._localizationService = localizationService;
-            this._privateMessagesModelFactory = privateMessagesModelFactory;
-            this._storeContext = storeContext;
-            this._workContext = workContext;
+            _forumSettings = forumSettings;
+            _customerActivityService = customerActivityService;
+            _customerService = customerService;
+            _forumService = forumService;
+            _localizationService = localizationService;
+            _privateMessagesModelFactory = privateMessagesModelFactory;
+            _storeContext = storeContext;
+            _workContext = workContext;
         }
 
         #endregion

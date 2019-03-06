@@ -26,8 +26,8 @@ namespace Nop.Plugin.ExchangeRate.EcbExchange
         public EcbExchangeRateProvider(ILocalizationService localizationService,
             ILogger logger)
         {
-            this._localizationService = localizationService;
-            this._logger = logger;
+            _localizationService = localizationService;
+            _logger = logger;
         }
 
         #endregion

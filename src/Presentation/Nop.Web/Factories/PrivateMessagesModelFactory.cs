@@ -38,13 +38,13 @@ namespace Nop.Web.Factories
             IStoreContext storeContext,
             IWorkContext workContext)
         {
-            this._customerSettings = customerSettings;
-            this._forumSettings = forumSettings;
-            this._customerService = customerService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._forumService = forumService;
-            this._storeContext = storeContext;
-            this._workContext = workContext;
+            _customerSettings = customerSettings;
+            _forumSettings = forumSettings;
+            _customerService = customerService;
+            _dateTimeHelper = dateTimeHelper;
+            _forumService = forumService;
+            _storeContext = storeContext;
+            _workContext = workContext;
         }
 
         #endregion

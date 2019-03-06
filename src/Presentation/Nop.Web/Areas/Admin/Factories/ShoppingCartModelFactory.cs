@@ -45,15 +45,15 @@ namespace Nop.Web.Areas.Admin.Factories
             IStoreService storeService,
             ITaxService taxService)
         {
-            this._baseAdminModelFactory = baseAdminModelFactory;
-            this._customerService = customerService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._localizationService = localizationService;
-            this._priceCalculationService = priceCalculationService;
-            this._priceFormatter = priceFormatter;
-            this._productAttributeFormatter = productAttributeFormatter;
-            this._storeService = storeService;
-            this._taxService = taxService;
+            _baseAdminModelFactory = baseAdminModelFactory;
+            _customerService = customerService;
+            _dateTimeHelper = dateTimeHelper;
+            _localizationService = localizationService;
+            _priceCalculationService = priceCalculationService;
+            _priceFormatter = priceFormatter;
+            _productAttributeFormatter = productAttributeFormatter;
+            _storeService = storeService;
+            _taxService = taxService;
         }
 
         #endregion
@@ -180,6 +180,9 @@ namespace Nop.Web.Areas.Admin.Factories
                     itemModel.UnitPrice = _priceFormatter.FormatPrice(_taxService.GetProductPrice(item.Product, unitPrice, out var _));
                     var subTotal = _priceCalculationService.GetSubTotal(item);
                     itemModel.Total = _priceFormatter.FormatPrice(_taxService.GetProductPrice(item.Product, subTotal, out _));
+
+                    //set product name since it does not survive mapping
+                    itemModel.ProductName = item?.Product?.Name;
 
                     return itemModel;
                 }),

@@ -10,6 +10,7 @@
 <form asp-controller="Product" asp-action="ProductAttributeCombinationEditPopup"
       asp-route-btnId="@Context.Request.Query["btnId"]"
       asp-route-formId="@Context.Request.Query["formId"]">
+    <input asp-for="ProductId" type="hidden" />
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Edit")
@@ -21,6 +22,6 @@
             </button>
             @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductAttributeCombinationDetailsButtons, additionalData = Model })
         </div>
-    </div>
+    </div>    
     @await Html.PartialAsync("_CreateOrUpdateProductAttributeCombination", Model)    
 </form>

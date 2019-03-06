@@ -20,7 +20,7 @@ namespace Nop.Services.Common
 
         public KeepAliveTask(IWebHelper webHelper)
         {
-            this._webHelper = webHelper;
+            _webHelper = webHelper;
         }
 
         #endregion

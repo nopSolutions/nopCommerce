@@ -11,34 +11,34 @@ namespace Nop.Plugin.Payments.Square.Domain
     {
         #region Ctor
 
-        public ExtendedChargeRequest(string IntegrationId = null,
-            string IdempotencyKey = null, 
-            Money AmountMoney = null, 
-            string CardNonce = null, 
-            string CustomerCardId = null, 
-            bool? DelayCapture = null, 
-            string ReferenceId = null, 
-            string Note = null, 
-            string CustomerId = null, 
-            Address BillingAddress = null, 
-            Address ShippingAddress = null, 
-            string BuyerEmailAddress = null, 
-            string OrderId = null, 
-            List<AdditionalRecipient> AdditionalRecipients = null) : base(IdempotencyKey,
-                AmountMoney,
-                CardNonce,
-                CustomerCardId,
-                DelayCapture,
-                ReferenceId,
-                Note,
-                CustomerId,
-                BillingAddress,
-                ShippingAddress,
-                BuyerEmailAddress,
-                OrderId,
-                AdditionalRecipients)
+        public ExtendedChargeRequest(string integrationId = null,
+            string idempotencyKey = null,
+            Money amountMoney = null,
+            string cardNonce = null,
+            string customerCardId = null,
+            bool? delayCapture = null,
+            string referenceId = null,
+            string note = null,
+            string customerId = null,
+            Address billingAddress = null,
+            Address shippingAddress = null,
+            string buyerEmailAddress = null,
+            string orderId = null,
+            List<AdditionalRecipient> additionalRecipients = null) : base(idempotencyKey,
+            amountMoney,
+            cardNonce,
+            customerCardId,
+            delayCapture,
+            referenceId,
+            note,
+            customerId,
+            billingAddress,
+            shippingAddress,
+            buyerEmailAddress,
+            orderId,
+            additionalRecipients)
         {
-            this.IntegrationId = IntegrationId;
+            IntegrationId = integrationId;
         }
 
         #endregion

@@ -114,6 +114,16 @@
                                 <span asp-validation-for="CrossSellsNumber"></span>
                             </div>
                         </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="GroupTierPricesForDistinctShoppingCartItems_OverrideForStore" asp-input="GroupTierPricesForDistinctShoppingCartItems" asp-store-scope="@Model.ActiveStoreScopeConfiguration"/>
+                                <nop-label asp-for="GroupTierPricesForDistinctShoppingCartItems"/>
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="GroupTierPricesForDistinctShoppingCartItems" />
+                                <span asp-validation-for="GroupTierPricesForDistinctShoppingCartItems"></span>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="panel panel-default">

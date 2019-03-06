@@ -27,12 +27,12 @@ namespace Nop.Web.Components
             IRecentlyViewedProductsService recentlyViewedProductsService,
             IStoreMappingService storeMappingService)
         {
-            this._catalogSettings = catalogSettings;
-            this._aclService = aclService;
-            this._productModelFactory = productModelFactory;
-            this._productService = productService;
-            this._recentlyViewedProductsService = recentlyViewedProductsService;
-            this._storeMappingService = storeMappingService;
+            _catalogSettings = catalogSettings;
+            _aclService = aclService;
+            _productModelFactory = productModelFactory;
+            _productService = productService;
+            _recentlyViewedProductsService = recentlyViewedProductsService;
+            _storeMappingService = storeMappingService;
         }
 
         public IViewComponentResult Invoke(int? productThumbPictureSize, bool? preparePriceModel)

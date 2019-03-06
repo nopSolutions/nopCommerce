@@ -46,9 +46,9 @@ namespace Nop.Web.Framework.Mvc.Filters
                 IUrlHelperFactory urlHelperFactory,
                 IWorkContext workContext)
             {
-                this._customerService = customerService;
-                this._urlHelperFactory = urlHelperFactory;
-                this._workContext = workContext;
+                _customerService = customerService;
+                _urlHelperFactory = urlHelperFactory;
+                _workContext = workContext;
             }
 
             #endregion

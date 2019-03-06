@@ -34,11 +34,11 @@ namespace Nop.Services.Messages
             IRepository<Customer> customerRepository,
             IRepository<NewsLetterSubscription> subscriptionRepository)
         {
-            this._customerService = customerService;
-            this._context = context;
-            this._eventPublisher = eventPublisher;
-            this._customerRepository = customerRepository;
-            this._subscriptionRepository = subscriptionRepository;
+            _customerService = customerService;
+            _context = context;
+            _eventPublisher = eventPublisher;
+            _customerRepository = customerRepository;
+            _subscriptionRepository = subscriptionRepository;
         }
 
         #endregion

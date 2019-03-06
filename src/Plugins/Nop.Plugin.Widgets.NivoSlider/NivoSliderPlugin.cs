@@ -27,11 +27,11 @@ namespace Nop.Plugin.Widgets.NivoSlider
             IWebHelper webHelper,
             INopFileProvider fileProvider)
         {
-            this._localizationService = localizationService;
-            this._pictureService = pictureService;
-            this._settingService = settingService;
-            this._webHelper = webHelper;
-            this._fileProvider = fileProvider;
+            _localizationService = localizationService;
+            _pictureService = pictureService;
+            _settingService = settingService;
+            _webHelper = webHelper;
+            _fileProvider = fileProvider;
         }
 
         /// <summary>

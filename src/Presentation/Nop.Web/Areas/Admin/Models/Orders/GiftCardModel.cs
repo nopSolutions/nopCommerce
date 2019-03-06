@@ -14,7 +14,7 @@ namespace Nop.Web.Areas.Admin.Models.Orders
 
         public GiftCardModel()
         {
-            this.GiftCardUsageHistorySearchModel = new GiftCardUsageHistorySearchModel();
+            GiftCardUsageHistorySearchModel = new GiftCardUsageHistorySearchModel();
         }
 
         #endregion

@@ -11,7 +11,7 @@ namespace Nop.Web.Components
 
         public HomepageCategoriesViewComponent(ICatalogModelFactory catalogModelFactory)
         {
-            this._catalogModelFactory = catalogModelFactory;
+            _catalogModelFactory = catalogModelFactory;
         }
 
         public IViewComponentResult Invoke()

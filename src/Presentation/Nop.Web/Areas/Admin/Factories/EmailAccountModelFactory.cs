@@ -25,8 +25,8 @@ namespace Nop.Web.Areas.Admin.Factories
         public EmailAccountModelFactory(EmailAccountSettings emailAccountSettings,
             IEmailAccountService emailAccountService)
         {
-            this._emailAccountSettings = emailAccountSettings;
-            this._emailAccountService = emailAccountService;
+            _emailAccountSettings = emailAccountSettings;
+            _emailAccountService = emailAccountService;
         }
 
         #endregion

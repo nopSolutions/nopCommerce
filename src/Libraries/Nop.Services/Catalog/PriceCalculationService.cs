@@ -51,18 +51,18 @@ namespace Nop.Services.Catalog
             IWorkContext workContext,
             ShoppingCartSettings shoppingCartSettings)
         {
-            this._catalogSettings = catalogSettings;
-            this._currencySettings = currencySettings;
-            this._categoryService = categoryService;
-            this._currencyService = currencyService;
-            this._discountService = discountService;
-            this._manufacturerService = manufacturerService;
-            this._productAttributeParser = productAttributeParser;
-            this._productService = productService;
-            this._cacheManager = cacheManager;
-            this._storeContext = storeContext;
-            this._workContext = workContext;
-            this._shoppingCartSettings = shoppingCartSettings;
+            _catalogSettings = catalogSettings;
+            _currencySettings = currencySettings;
+            _categoryService = categoryService;
+            _currencyService = currencyService;
+            _discountService = discountService;
+            _manufacturerService = manufacturerService;
+            _productAttributeParser = productAttributeParser;
+            _productService = productService;
+            _cacheManager = cacheManager;
+            _storeContext = storeContext;
+            _workContext = workContext;
+            _shoppingCartSettings = shoppingCartSettings;
         }
 
         #endregion
@@ -77,7 +77,7 @@ namespace Nop.Services.Catalog
         {
             public ProductPriceForCaching()
             {
-                this.AppliedDiscounts = new List<DiscountForCaching>();
+                AppliedDiscounts = new List<DiscountForCaching>();
             }
 
             /// <summary>
@@ -602,7 +602,7 @@ namespace Nop.Services.Catalog
 
             //rounding
             if (_shoppingCartSettings.RoundPricesDuringCalculation)
-                finalPrice = this.RoundPrice(finalPrice);
+                finalPrice = RoundPrice(finalPrice);
 
             return finalPrice;
         }
@@ -771,7 +771,7 @@ namespace Nop.Services.Catalog
 
             currency = currency ?? _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
 
-            return this.Round(value, currency.RoundingType);
+            return Round(value, currency.RoundingType);
         }
 
         /// <summary>

@@ -10,13 +10,13 @@ namespace Nop.Web.Components
 
         public FaviconViewComponent(ICommonModelFactory commonModelFactory)
         {
-            this._commonModelFactory = commonModelFactory;
+            _commonModelFactory = commonModelFactory;
         }
 
         public IViewComponentResult Invoke()
         {
-            var model = _commonModelFactory.PrepareFaviconModel();
-            if (string.IsNullOrEmpty(model.FaviconUrl))
+            var model = _commonModelFactory.PrepareFaviconAndAppIconsModel();
+            if (string.IsNullOrEmpty(model.HeadCode))
                 return Content("");
             return View(model);
         }

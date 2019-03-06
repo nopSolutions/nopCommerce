@@ -44,15 +44,15 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal
             IWebHelper webHelper,
             ShippingByWeightByTotalObjectContext objectContext)
         {
-            this._fixedByWeightByTotalSettings = fixedByWeightByTotalSettings;
-            this._localizationService = localizationService;
-            this._priceCalculationService = priceCalculationService;
-            this._settingService = settingService;
-            this._shippingByWeightByTotalService = shippingByWeightByTotalService;
-            this._shippingService = shippingService;
-            this._storeContext = storeContext;
-            this._webHelper = webHelper;
-            this._objectContext = objectContext;
+            _fixedByWeightByTotalSettings = fixedByWeightByTotalSettings;
+            _localizationService = localizationService;
+            _priceCalculationService = priceCalculationService;
+            _settingService = settingService;
+            _shippingByWeightByTotalService = shippingByWeightByTotalService;
+            _shippingService = shippingService;
+            _storeContext = storeContext;
+            _webHelper = webHelper;
+            _objectContext = objectContext;
         }
 
         #endregion

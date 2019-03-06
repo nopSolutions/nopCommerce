@@ -44,8 +44,8 @@ namespace Nop.Web.Framework.Mvc.Filters
             public ValidateIpAddressFilter(IWebHelper webHelper,
                 SecuritySettings securitySettings)
             {
-                this._webHelper = webHelper;
-                this._securitySettings = securitySettings;
+                _webHelper = webHelper;
+                _securitySettings = securitySettings;
             }
 
             #endregion

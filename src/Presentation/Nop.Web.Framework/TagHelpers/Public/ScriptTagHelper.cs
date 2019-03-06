@@ -39,8 +39,8 @@ namespace Nop.Web.Framework.TagHelpers.Public
         /// <param name="httpContextAccessor">HTTP context accessor</param>
         public ScriptTagHelper(IHtmlHelper htmlHelper, IHttpContextAccessor httpContextAccessor)
         {
-            this._htmlHelper = htmlHelper;
-            this._httpContextAccessor = httpContextAccessor;
+            _htmlHelper = htmlHelper;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         /// <summary>

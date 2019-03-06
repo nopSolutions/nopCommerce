@@ -9,6 +9,7 @@ using Nop.Services.Localization;
 using Nop.Services.Messages;
 using Nop.Services.Security;
 using Nop.Web.Areas.Admin.Factories;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Messages;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
@@ -42,14 +43,14 @@ namespace Nop.Web.Areas.Admin.Controllers
             INotificationService notificationService,
             IPermissionService permissionService)
         {
-            this._dateTimeHelper = dateTimeHelper;
-            this._exportManager = exportManager;
-            this._importManager = importManager;
-            this._localizationService = localizationService;
-            this._newsletterSubscriptionModelFactory = newsletterSubscriptionModelFactory;
-            this._newsLetterSubscriptionService = newsLetterSubscriptionService;
-            this._notificationService = notificationService;
-            this._permissionService = permissionService;
+            _dateTimeHelper = dateTimeHelper;
+            _exportManager = exportManager;
+            _importManager = importManager;
+            _localizationService = localizationService;
+            _newsletterSubscriptionModelFactory = newsletterSubscriptionModelFactory;
+            _newsLetterSubscriptionService = newsLetterSubscriptionService;
+            _notificationService = notificationService;
+            _permissionService = permissionService;
         }
 
         #endregion
@@ -94,8 +95,9 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
 
             var subscription = _newsLetterSubscriptionService.GetNewsLetterSubscriptionById(model.Id);
-            subscription.Email = model.Email;
-            subscription.Active = model.Active;
+
+            //fill entity from model
+            subscription = model.ToEntity(subscription);
             _newsLetterSubscriptionService.UpdateNewsLetterSubscription(subscription);
 
             return new NullJsonResult();

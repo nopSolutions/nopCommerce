@@ -43,8 +43,8 @@ namespace Nop.Web.Framework.Mvc.Filters
             public WwwRequirementFilter(IWebHelper webHelper,
                 SeoSettings seoSettings)
             {
-                this._webHelper = webHelper;
-                this._seoSettings = seoSettings;
+                _webHelper = webHelper;
+                _seoSettings = seoSettings;
             }
 
             #endregion

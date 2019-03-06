@@ -44,16 +44,16 @@ namespace Nop.Services.Messages
             IRepository<StoreMapping> storeMappingRepository,
             IStoreMappingService storeMappingService)
         {
-            this._catalogSettings = catalogSettings;
-            this._cacheManager = cacheManager;
-            this._eventPublisher = eventPublisher;
-            this._languageService = languageService;
-            this._localizationService = localizationService;
-            this._localizedEntityService = localizedEntityService;
-            this._messageTemplateRepository = messageTemplateRepository;
-            this._storeMappingRepository = storeMappingRepository;
-            this._storeMappingService = storeMappingService;
-            this._entityName = typeof(MessageTemplate).Name;
+            _catalogSettings = catalogSettings;
+            _cacheManager = cacheManager;
+            _eventPublisher = eventPublisher;
+            _languageService = languageService;
+            _localizationService = localizationService;
+            _localizedEntityService = localizedEntityService;
+            _messageTemplateRepository = messageTemplateRepository;
+            _storeMappingRepository = storeMappingRepository;
+            _storeMappingService = storeMappingService;
+            _entityName = typeof(MessageTemplate).Name;
         }
 
         #endregion

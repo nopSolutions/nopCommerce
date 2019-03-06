@@ -79,7 +79,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly INopFileProvider _fileProvider;
         private readonly IOrderService _orderService;
         private readonly IPaymentService _paymentService;
-        private readonly IPluginFinder _pluginFinder;
+        private readonly IPluginService _pluginService;
         private readonly IProductService _productService;
         private readonly IReturnRequestService _returnRequestService;
         private readonly ISearchTermService _searchTermService;
@@ -114,7 +114,7 @@ namespace Nop.Web.Areas.Admin.Factories
             IMeasureService measureService,
             IOrderService orderService,
             IPaymentService paymentService,
-            IPluginFinder pluginFinder,
+            IPluginService pluginService,
             IProductService productService,
             IReturnRequestService returnRequestService,
             ISearchTermService searchTermService,
@@ -129,36 +129,36 @@ namespace Nop.Web.Areas.Admin.Factories
             MeasureSettings measureSettings,
             TaxSettings taxSettings)
         {
-            this._adminAreaSettings = adminAreaSettings;
-            this._catalogSettings = catalogSettings;
-            this._currencySettings = currencySettings;
-            this._actionContextAccessor = actionContextAccessor;
-            this._currencyService = currencyService;
-            this._customerService = customerService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._externalAuthenticationService = externalAuthenticationService;
-            this._fileProvider = fileProvider;
-            this._httpContextAccessor = httpContextAccessor;
-            this._languageService = languageService;
-            this._localizationService = localizationService;
-            this._maintenanceService = maintenanceService;
-            this._measureService = measureService;
-            this._orderService = orderService;
-            this._paymentService = paymentService;
-            this._pluginFinder = pluginFinder;
-            this._productService = productService;
-            this._returnRequestService = returnRequestService;
-            this._searchTermService = searchTermService;
-            this._shippingService = shippingService;
-            this._storeContext = storeContext;
-            this._storeService = storeService;
-            this._urlHelperFactory = urlHelperFactory;
-            this._urlRecordService = urlRecordService;
-            this._webHelper = webHelper;
-            this._widgetService = widgetService;
-            this._workContext = workContext;
-            this._measureSettings = measureSettings;
-            this._taxSettings = taxSettings;
+            _adminAreaSettings = adminAreaSettings;
+            _catalogSettings = catalogSettings;
+            _currencySettings = currencySettings;
+            _actionContextAccessor = actionContextAccessor;
+            _currencyService = currencyService;
+            _customerService = customerService;
+            _dateTimeHelper = dateTimeHelper;
+            _externalAuthenticationService = externalAuthenticationService;
+            _fileProvider = fileProvider;
+            _httpContextAccessor = httpContextAccessor;
+            _languageService = languageService;
+            _localizationService = localizationService;
+            _maintenanceService = maintenanceService;
+            _measureService = measureService;
+            _orderService = orderService;
+            _paymentService = paymentService;
+            _pluginService = pluginService;
+            _productService = productService;
+            _returnRequestService = returnRequestService;
+            _searchTermService = searchTermService;
+            _shippingService = shippingService;
+            _storeContext = storeContext;
+            _storeService = storeService;
+            _urlHelperFactory = urlHelperFactory;
+            _urlRecordService = urlRecordService;
+            _webHelper = webHelper;
+            _widgetService = widgetService;
+            _workContext = workContext;
+            _measureSettings = measureSettings;
+            _taxSettings = taxSettings;
         }
 
         #endregion
@@ -416,15 +416,29 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(models));
 
             //check whether there are incompatible plugins
-            if (!PluginManager.IncompatiblePlugins?.Any() ?? true)
-                return;
-
-            foreach (var pluginName in PluginManager.IncompatiblePlugins)
+            foreach (var pluginName in _pluginService.GetIncompatiblePlugins())
             {
                 models.Add(new SystemWarningModel
                 {
                     Level = SystemWarningLevel.Warning,
                     Text = string.Format(_localizationService.GetResource("Admin.System.Warnings.PluginNotLoaded"), pluginName)
+                });
+            }
+
+            //check whether there are any collision of loaded assembly
+            foreach (var assembly in _pluginService.GetAssemblyCollisions())
+            {
+                //get plugin references message
+                var message = assembly.Collisions
+                    .Select(item => string.Format(_localizationService
+                        .GetResource("Admin.System.Warnings.PluginRequiredAssembly"), item.PluginName, item.AssemblyName))
+                    .Aggregate("", (curent, all) => all + ", " + curent).TrimEnd(',', ' ');
+
+                models.Add(new SystemWarningModel
+                {
+                    Level = SystemWarningLevel.Warning,
+                    Text = string.Format(_localizationService.GetResource("Admin.System.Warnings.AssemblyHasCollision"),
+                        assembly.ShortName, assembly.AssemblyFullNameInMemory, message)
                 });
             }
         }
@@ -541,11 +555,11 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="models">List of system warning models</param>
         protected virtual void PreparePluginsEnabledWarningModel(List<SystemWarningModel> models)
         {
-            var pluginDescriptors = _pluginFinder.GetPluginDescriptors();
+            var plugins = _pluginService.GetPlugins<IPlugin>();
 
             var notEnabled = new List<string>();
 
-            foreach (var plugin in pluginDescriptors.Select(pd => pd.Instance()))
+            foreach (var plugin in plugins)
             {
                 var isEnabled = true;
 
@@ -806,6 +820,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     var urlRecordModel = urlRecord.ToModel<UrlRecordModel>();
 
                     //fill in additional values (not existing in the entity)
+                    urlRecordModel.Name = urlRecord.Slug;
                     urlRecordModel.Language = urlRecord.LanguageId == 0
                         ? _localizationService.GetResource("Admin.System.SeNames.Language.Standard")
                         : _languageService.GetLanguageById(urlRecord.LanguageId)?.Name ?? "Unknown";

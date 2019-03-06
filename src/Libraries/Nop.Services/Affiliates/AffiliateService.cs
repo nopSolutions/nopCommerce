@@ -35,12 +35,12 @@ namespace Nop.Services.Affiliates
             IWebHelper webHelper,
             SeoSettings seoSettings)
         {
-            this._eventPublisher = eventPublisher;
-            this._affiliateRepository = affiliateRepository;
-            this._orderRepository = orderRepository;
-            this._urlRecordService = urlRecordService;
-            this._webHelper = webHelper;
-            this._seoSettings = seoSettings;
+            _eventPublisher = eventPublisher;
+            _affiliateRepository = affiliateRepository;
+            _orderRepository = orderRepository;
+            _urlRecordService = urlRecordService;
+            _webHelper = webHelper;
+            _seoSettings = seoSettings;
         }
 
         #endregion
@@ -251,7 +251,7 @@ namespace Nop.Services.Affiliates
             var tempName = friendlyUrlName;
             while (true)
             {
-                var affiliateByFriendlyUrlName = this.GetAffiliateByFriendlyUrlName(tempName);
+                var affiliateByFriendlyUrlName = GetAffiliateByFriendlyUrlName(tempName);
                 var reserved = affiliateByFriendlyUrlName != null && affiliateByFriendlyUrlName.Id != affiliate.Id;
                 if (!reserved)
                     break;

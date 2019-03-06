@@ -90,32 +90,32 @@ namespace Nop.Services.Orders
             OrderSettings orderSettings,
             ShoppingCartSettings shoppingCartSettings)
         {
-            this._catalogSettings = catalogSettings;
-            this._aclService = aclService;
-            this._actionContextAccessor = actionContextAccessor;
-            this._checkoutAttributeParser = checkoutAttributeParser;
-            this._checkoutAttributeService = checkoutAttributeService;
-            this._currencyService = currencyService;
-            this._customerService = customerService;
-            this._dateRangeService = dateRangeService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._eventPublisher = eventPublisher;
-            this._genericAttributeService = genericAttributeService;
-            this._localizationService = localizationService;
-            this._permissionService = permissionService;
-            this._priceFormatter = priceFormatter;
-            this._productAttributeParser = productAttributeParser;
-            this._productAttributeService = productAttributeService;
-            this._productService = productService;
-            this._sciRepository = sciRepository;
-            this._shippingService = shippingService;
-            this._storeContext = storeContext;
-            this._storeMappingService = storeMappingService;
-            this._urlHelperFactory = urlHelperFactory;
-            this._urlRecordService = urlRecordService;
-            this._workContext = workContext;
-            this._orderSettings = orderSettings;
-            this._shoppingCartSettings = shoppingCartSettings;
+            _catalogSettings = catalogSettings;
+            _aclService = aclService;
+            _actionContextAccessor = actionContextAccessor;
+            _checkoutAttributeParser = checkoutAttributeParser;
+            _checkoutAttributeService = checkoutAttributeService;
+            _currencyService = currencyService;
+            _customerService = customerService;
+            _dateRangeService = dateRangeService;
+            _dateTimeHelper = dateTimeHelper;
+            _eventPublisher = eventPublisher;
+            _genericAttributeService = genericAttributeService;
+            _localizationService = localizationService;
+            _permissionService = permissionService;
+            _priceFormatter = priceFormatter;
+            _productAttributeParser = productAttributeParser;
+            _productAttributeService = productAttributeService;
+            _productService = productService;
+            _sciRepository = sciRepository;
+            _shippingService = shippingService;
+            _storeContext = storeContext;
+            _storeMappingService = storeMappingService;
+            _urlHelperFactory = urlHelperFactory;
+            _urlRecordService = urlRecordService;
+            _workContext = workContext;
+            _orderSettings = orderSettings;
+            _shoppingCartSettings = shoppingCartSettings;
         }
 
         #endregion

@@ -52,7 +52,7 @@ namespace Nop.Services.Catalog.Cache
 
         public PriceCacheEventConsumer(IStaticCacheManager cacheManager)
         {
-            this._cacheManager = cacheManager;
+            _cacheManager = cacheManager;
         }
 
         #endregion

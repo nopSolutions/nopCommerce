@@ -31,10 +31,10 @@ namespace Nop.Web.Areas.Admin.Factories
             IProductAttributeService productAttributeService,
             IProductService productService)
         {
-            this._localizationService = localizationService;
-            this._localizedModelFactory = localizedModelFactory;
-            this._productAttributeService = productAttributeService;
-            this._productService = productService;
+            _localizationService = localizationService;
+            _localizedModelFactory = localizedModelFactory;
+            _productAttributeService = productAttributeService;
+            _productService = productService;
         }
 
         #endregion
@@ -270,7 +270,12 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new ProductAttributeProductListModel
             {
                 //fill in model values from the entity
-                Data = products.Select(product => product.ToModel<ProductAttributeProductModel>()),
+                Data = products.Select(product =>
+                {
+                    var productAttributeProductModel = product.ToModel<ProductAttributeProductModel>();
+                    productAttributeProductModel.ProductName = product.Name;
+                    return productAttributeProductModel;
+                }),
                 Total = products.TotalCount
             };
 

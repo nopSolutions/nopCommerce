@@ -55,14 +55,14 @@ namespace Nop.Web.Framework.Controllers
 
             var viewComponentResult = ViewComponent(componentName, arguments);
 
-            var viewData = this.ViewData;
+            var viewData = ViewData;
             if (viewData == null)
             {
                 throw new NotImplementedException();
                 //TODO viewData = new ViewDataDictionary(_modelMetadataProvider, context.ModelState);
             }
 
-            var tempData = this.TempData;
+            var tempData = TempData;
             if (tempData == null)
             {
                 throw new NotImplementedException();
@@ -133,11 +133,11 @@ namespace Nop.Web.Framework.Controllers
             var razorViewEngine = EngineContext.Current.Resolve<IRazorViewEngine>();
 
             //create action context
-            var actionContext = new ActionContext(this.HttpContext, this.RouteData, this.ControllerContext.ActionDescriptor, this.ModelState);
+            var actionContext = new ActionContext(HttpContext, RouteData, ControllerContext.ActionDescriptor, ModelState);
 
             //set view name as action name in case if not passed
             if (string.IsNullOrEmpty(viewName))
-                viewName = this.ControllerContext.ActionDescriptor.ActionName;
+                viewName = ControllerContext.ActionDescriptor.ActionName;
 
             //set model
             ViewData.Model = model;
@@ -243,7 +243,7 @@ namespace Nop.Web.Framework.Controllers
             var webHelper = EngineContext.Current.Resolve<IWebHelper>();
 
             //return Challenge();
-            return RedirectToAction("AccessDenied", "Security", new { pageUrl = webHelper.GetRawUrl(this.Request) });
+            return RedirectToAction("AccessDenied", "Security", new { pageUrl = webHelper.GetRawUrl(Request) });
         }
 
         /// <summary>

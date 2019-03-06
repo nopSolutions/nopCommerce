@@ -34,12 +34,12 @@ namespace Nop.Services.Polls
             IRepository<PollVotingRecord> pollVotingRecordRepository,
              IRepository<StoreMapping> storeMappingRepository)
         {
-            this._catalogSettings = catalogSettings;
-            this._eventPublisher = eventPublisher;
-            this._pollRepository = pollRepository;
-            this._pollAnswerRepository = pollAnswerRepository;
-            this._pollVotingRecordRepository = pollVotingRecordRepository;
-            this._storeMappingRepository = storeMappingRepository;
+            _catalogSettings = catalogSettings;
+            _eventPublisher = eventPublisher;
+            _pollRepository = pollRepository;
+            _pollAnswerRepository = pollAnswerRepository;
+            _pollVotingRecordRepository = pollVotingRecordRepository;
+            _storeMappingRepository = storeMappingRepository;
         }
 
         #endregion

@@ -32,12 +32,12 @@ namespace Nop.Web.Controllers
             ITopicModelFactory topicModelFactory,
             ITopicService topicService)
         {
-            this._aclService = aclService;
-            this._localizationService = localizationService;
-            this._permissionService = permissionService;
-            this._storeMappingService = storeMappingService;
-            this._topicModelFactory = topicModelFactory;
-            this._topicService = topicService;
+            _aclService = aclService;
+            _localizationService = localizationService;
+            _permissionService = permissionService;
+            _storeMappingService = storeMappingService;
+            _topicModelFactory = topicModelFactory;
+            _topicService = topicService;
         }
 
         #endregion

@@ -31,10 +31,10 @@ namespace Nop.Web.Factories
             IStoreContext storeContext,
             IWorkContext workContext)
         {
-            this._pollService = pollService;
-            this._cacheManager = cacheManager;
-            this._storeContext = storeContext;
-            this._workContext = workContext;
+            _pollService = pollService;
+            _cacheManager = cacheManager;
+            _storeContext = storeContext;
+            _workContext = workContext;
         }
 
         #endregion
@@ -85,7 +85,7 @@ namespace Nop.Web.Factories
             if (string.IsNullOrWhiteSpace(systemKeyword))
                 return null;
 
-            var cacheKey = string.Format(ModelCacheEventConsumer.POLL_BY_SYSTEMNAME_MODEL_KEY, 
+            var cacheKey = string.Format(NopModelCacheDefaults.PollBySystemNameModelKey, 
                 systemKeyword, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
 
             var cachedModel = _cacheManager.Get(cacheKey, () =>
@@ -117,7 +117,7 @@ namespace Nop.Web.Factories
         /// <returns>List of the poll model</returns>
         public virtual List<PollModel> PrepareHomePagePollModels()
         {
-            var cacheKey = string.Format(ModelCacheEventConsumer.HOMEPAGE_POLLS_MODEL_KEY, 
+            var cacheKey = string.Format(NopModelCacheDefaults.HomepagePollsModelKey, 
                 _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
 
             var cachedPolls = _cacheManager.Get(cacheKey, () =>

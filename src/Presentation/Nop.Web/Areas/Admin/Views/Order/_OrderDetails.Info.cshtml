@@ -74,8 +74,7 @@
         }
     </script>
 }
-<div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.OrderDetailsInfoTop, additionalData = Model })
+<div class="panel-body">
     <div class="panel panel-default">
         <div class="panel-body">
             @if (!Model.IsLoggedInAsVendor)
@@ -823,5 +822,4 @@
             </div>
         </div>
     </div>
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.OrderDetailsInfoBottom, additionalData = Model })
 </div>

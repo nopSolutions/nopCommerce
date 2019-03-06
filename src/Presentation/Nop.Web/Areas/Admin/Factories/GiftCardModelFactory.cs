@@ -39,12 +39,12 @@ namespace Nop.Web.Areas.Admin.Factories
             ILocalizationService localizationService,
             IPriceFormatter priceFormatter)
         {
-            this._currencySettings = currencySettings;
-            this._currencyService = currencyService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._giftCardService = giftCardService;
-            this._localizationService = localizationService;
-            this._priceFormatter = priceFormatter;
+            _currencySettings = currencySettings;
+            _currencyService = currencyService;
+            _dateTimeHelper = dateTimeHelper;
+            _giftCardService = giftCardService;
+            _localizationService = localizationService;
+            _priceFormatter = priceFormatter;
         }
 
         #endregion
@@ -212,6 +212,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     giftCardUsageHistoryModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(historyEntry.CreatedOnUtc, DateTimeKind.Utc);
 
                     //fill in additional values (not existing in the entity)
+                    giftCardUsageHistoryModel.OrderId = historyEntry.UsedWithOrderId;
+                    giftCardUsageHistoryModel.CustomOrderNumber = historyEntry.UsedWithOrder.CustomOrderNumber;
                     giftCardUsageHistoryModel.UsedValue = _priceFormatter.FormatPrice(historyEntry.UsedValue, true, false);
 
                     return giftCardUsageHistoryModel;

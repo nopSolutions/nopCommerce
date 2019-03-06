@@ -36,13 +36,13 @@ namespace Nop.Services.Catalog
             IRepository<ProductAttributeMapping> productAttributeMappingRepository,
             IRepository<ProductAttributeValue> productAttributeValueRepository)
         {
-            this._cacheManager = cacheManager;
-            this._eventPublisher = eventPublisher;
-            this._predefinedProductAttributeValueRepository = predefinedProductAttributeValueRepository;
-            this._productAttributeRepository = productAttributeRepository;
-            this._productAttributeCombinationRepository = productAttributeCombinationRepository;
-            this._productAttributeMappingRepository = productAttributeMappingRepository;
-            this._productAttributeValueRepository = productAttributeValueRepository;
+            _cacheManager = cacheManager;
+            _eventPublisher = eventPublisher;
+            _predefinedProductAttributeValueRepository = predefinedProductAttributeValueRepository;
+            _productAttributeRepository = productAttributeRepository;
+            _productAttributeCombinationRepository = productAttributeCombinationRepository;
+            _productAttributeMappingRepository = productAttributeMappingRepository;
+            _productAttributeValueRepository = productAttributeValueRepository;
         }
 
         #endregion

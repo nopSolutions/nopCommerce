@@ -22,10 +22,10 @@ namespace Nop.Web.Controllers
             IPermissionService permissionService,
             IProfileModelFactory profileModelFactory)
         {
-            this._customerSettings = customerSettings;
-            this._customerService = customerService;
-            this._permissionService = permissionService;
-            this._profileModelFactory = profileModelFactory;
+            _customerSettings = customerSettings;
+            _customerService = customerService;
+            _permissionService = permissionService;
+            _profileModelFactory = profileModelFactory;
         }
 
         public virtual IActionResult Index(int? id, int? pageNumber)

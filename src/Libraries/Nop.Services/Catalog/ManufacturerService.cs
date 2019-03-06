@@ -46,17 +46,17 @@ namespace Nop.Services.Catalog
             IStoreContext storeContext,
             IWorkContext workContext)
         {
-            this._catalogSettings = catalogSettings;
-            this._cacheManager = cacheManager;
-            this._eventPublisher = eventPublisher;
-            this._aclRepository = aclRepository;
-            this._manufacturerRepository = manufacturerRepository;
-            this._productRepository = productRepository;
-            this._productManufacturerRepository = productManufacturerRepository;
-            this._storeMappingRepository = storeMappingRepository;
-            this._storeContext = storeContext;
-            this._workContext = workContext;
-            this._entityName = typeof(Manufacturer).Name;
+            _catalogSettings = catalogSettings;
+            _cacheManager = cacheManager;
+            _eventPublisher = eventPublisher;
+            _aclRepository = aclRepository;
+            _manufacturerRepository = manufacturerRepository;
+            _productRepository = productRepository;
+            _productManufacturerRepository = productManufacturerRepository;
+            _storeMappingRepository = storeMappingRepository;
+            _storeContext = storeContext;
+            _workContext = workContext;
+            _entityName = typeof(Manufacturer).Name;
         }
 
         #endregion

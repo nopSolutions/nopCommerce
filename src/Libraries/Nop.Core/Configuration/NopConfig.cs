@@ -23,6 +23,12 @@ namespace Nop.Core.Configuration
         /// Gets or sets end point for Azure BLOB storage
         /// </summary>
         public string AzureBlobStorageEndPoint { get; set; }
+        /// <summary>
+        /// Gets or sets whether or the Container Name is appended to the AzureBlobStorageEndPoint
+        /// when constructing the url
+        /// </summary>
+        public bool AzureBlobStorageAppendContainerName { get; set; }
+
 
         /// <summary>
         /// Gets or sets a value indicating whether we should use Redis server for caching (instead of default in-memory caching)

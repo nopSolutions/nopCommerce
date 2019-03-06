@@ -11,7 +11,7 @@ namespace Nop.Web.Areas.Admin.Models.Orders
 
         public OrderShipmentSearchModel()
         {
-            this.ShipmentItemSearchModel = new ShipmentItemSearchModel();
+            ShipmentItemSearchModel = new ShipmentItemSearchModel();
         }
 
         #endregion

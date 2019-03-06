@@ -372,6 +372,13 @@ namespace Nop.Services.Catalog
         /// <returns>Formatted date</returns>
         string FormatRentalDate(Product product, DateTime date);
 
+        /// <summary>
+        /// Update product store mappings
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="limitedToStoresIds">A list of store ids for mapping</param>
+        void UpdateProductStoreMappings(Product product, IList<int> limitedToStoresIds);
+
         #endregion
 
         #region Inventory management methods

@@ -39,9 +39,9 @@ namespace Nop.Web.Framework
             IHttpContextAccessor httpContextAccessor,
             IStoreService storeService)
         {
-            this._genericAttributeService = genericAttributeService;
-            this._httpContextAccessor = httpContextAccessor;
-            this._storeService = storeService;
+            _genericAttributeService = genericAttributeService;
+            _httpContextAccessor = httpContextAccessor;
+            _storeService = storeService;
         }
 
         #endregion

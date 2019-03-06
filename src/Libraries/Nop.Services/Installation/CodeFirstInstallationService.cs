@@ -169,62 +169,62 @@ namespace Nop.Services.Installation
             IRepository<Warehouse> warehouseRepository,
             IWebHelper webHelper)
         {
-            this._genericAttributeService = genericAttributeService;
-            this._fileProvider = fileProvider;
-            this._activityLogRepository = activityLogRepository;
-            this._activityLogTypeRepository = activityLogTypeRepository;
-            this._addressRepository = addressRepository;
-            this._affiliateRepository = affiliateRepository;
-            this._blogPostRepository = blogPostRepository;
-            this._categoryRepository = categoryRepository;
-            this._categoryTemplateRepository = categoryTemplateRepository;
-            this._checkoutAttributeRepository = checkoutAttributeRepository;
-            this._countryRepository = countryRepository;
-            this._currencyRepository = currencyRepository;
-            this._customerPasswordRepository = customerPasswordRepository;
-            this._customerRepository = customerRepository;
-            this._customerRoleRepository = customerRoleRepository;
-            this._deliveryDateRepository = deliveryDateRepository;
-            this._discountRepository = discountRepository;
-            this._emailAccountRepository = emailAccountRepository;
-            this._forumGroupRepository = forumGroupRepository;
-            this._forumRepository = forumRepository;
-            this._giftCardRepository = giftCardRepository;
-            this._languageRepository = languageRepository;
-            this._manufacturerRepository = manufacturerRepository;
-            this._manufacturerTemplateRepository = manufacturerTemplateRepository;
-            this._measureDimensionRepository = measureDimensionRepository;
-            this._measureWeightRepository = measureWeightRepository;
-            this._messageTemplateRepository = messageTemplateRepository;
-            this._newsItemRepository = newsItemRepository;
-            this._orderItemRepository = orderItemRepository;
-            this._orderNoteRepository = orderNoteRepository;
-            this._orderRepository = orderRepository;
-            this._pollRepository = pollRepository;
-            this._productAttributeRepository = productAttributeRepository;
-            this._productAvailabilityRangeRepository = productAvailabilityRangeRepository;
-            this._productRepository = productRepository;
-            this._productTagRepository = productTagRepository;
-            this._productTemplateRepository = productTemplateRepository;
-            this._relatedProductRepository = relatedProductRepository;
-            this._returnRequestActionRepository = returnRequestActionRepository;
-            this._returnRequestReasonRepository = returnRequestReasonRepository;
-            this._scheduleTaskRepository = scheduleTaskRepository;
-            this._searchTermRepository = searchTermRepository;
-            this._shipmentItemRepository = shipmentItemRepository;
-            this._shipmentRepository = shipmentRepository;
-            this._shippingMethodRepository = shippingMethodRepository;
-            this._specificationAttributeRepository = specificationAttributeRepository;
-            this._stateProvinceRepository = stateProvinceRepository;
-            this._stockQuantityHistoryRepository = stockQuantityHistoryRepository;
-            this._storeRepository = storeRepository;
-            this._taxCategoryRepository = taxCategoryRepository;
-            this._topicRepository = topicRepository;
-            this._topicTemplateRepository = topicTemplateRepository;
-            this._urlRecordRepository = urlRecordRepository;
-            this._vendorRepository = vendorRepository;
-            this._warehouseRepository = warehouseRepository;
-            this._webHelper = webHelper;
+            _genericAttributeService = genericAttributeService;
+            _fileProvider = fileProvider;
+            _activityLogRepository = activityLogRepository;
+            _activityLogTypeRepository = activityLogTypeRepository;
+            _addressRepository = addressRepository;
+            _affiliateRepository = affiliateRepository;
+            _blogPostRepository = blogPostRepository;
+            _categoryRepository = categoryRepository;
+            _categoryTemplateRepository = categoryTemplateRepository;
+            _checkoutAttributeRepository = checkoutAttributeRepository;
+            _countryRepository = countryRepository;
+            _currencyRepository = currencyRepository;
+            _customerPasswordRepository = customerPasswordRepository;
+            _customerRepository = customerRepository;
+            _customerRoleRepository = customerRoleRepository;
+            _deliveryDateRepository = deliveryDateRepository;
+            _discountRepository = discountRepository;
+            _emailAccountRepository = emailAccountRepository;
+            _forumGroupRepository = forumGroupRepository;
+            _forumRepository = forumRepository;
+            _giftCardRepository = giftCardRepository;
+            _languageRepository = languageRepository;
+            _manufacturerRepository = manufacturerRepository;
+            _manufacturerTemplateRepository = manufacturerTemplateRepository;
+            _measureDimensionRepository = measureDimensionRepository;
+            _measureWeightRepository = measureWeightRepository;
+            _messageTemplateRepository = messageTemplateRepository;
+            _newsItemRepository = newsItemRepository;
+            _orderItemRepository = orderItemRepository;
+            _orderNoteRepository = orderNoteRepository;
+            _orderRepository = orderRepository;
+            _pollRepository = pollRepository;
+            _productAttributeRepository = productAttributeRepository;
+            _productAvailabilityRangeRepository = productAvailabilityRangeRepository;
+            _productRepository = productRepository;
+            _productTagRepository = productTagRepository;
+            _productTemplateRepository = productTemplateRepository;
+            _relatedProductRepository = relatedProductRepository;
+            _returnRequestActionRepository = returnRequestActionRepository;
+            _returnRequestReasonRepository = returnRequestReasonRepository;
+            _scheduleTaskRepository = scheduleTaskRepository;
+            _searchTermRepository = searchTermRepository;
+            _shipmentItemRepository = shipmentItemRepository;
+            _shipmentRepository = shipmentRepository;
+            _shippingMethodRepository = shippingMethodRepository;
+            _specificationAttributeRepository = specificationAttributeRepository;
+            _stateProvinceRepository = stateProvinceRepository;
+            _stockQuantityHistoryRepository = stockQuantityHistoryRepository;
+            _storeRepository = storeRepository;
+            _taxCategoryRepository = taxCategoryRepository;
+            _topicRepository = topicRepository;
+            _topicTemplateRepository = topicTemplateRepository;
+            _urlRecordRepository = urlRecordRepository;
+            _vendorRepository = vendorRepository;
+            _warehouseRepository = warehouseRepository;
+            _webHelper = webHelper;
         }
 
         #endregion
@@ -526,7 +526,7 @@ namespace Nop.Services.Installation
                     Rate = 0.86M,
                     DisplayLocale = string.Empty,
                     //CustomFormatting = "ˆ0.00",
-                    CustomFormatting = "€0.00",
+                    CustomFormatting = string.Format("{0}0.00", "\u20ac"), //euro symbol
                     Published = true,
                     DisplayOrder = 6,
                     CreatedOnUtc = DateTime.UtcNow,
@@ -4038,7 +4038,7 @@ namespace Nop.Services.Installation
                 {
                     Name = "Ground",
                     Description =
-                        "Compared to other shipping methods, ground shipping is carried out closer to the earth",
+                        "Shipping by land transport",
                     DisplayOrder = 1
                 },
                 new ShippingMethod
@@ -4206,7 +4206,7 @@ namespace Nop.Services.Installation
             //set hashed admin password
             var customerRegistrationService = EngineContext.Current.Resolve<ICustomerRegistrationService>();
             customerRegistrationService.ChangePassword(new ChangePasswordRequest(defaultUserEmail, false,
-                 PasswordFormat.Hashed, defaultUserPassword));
+                 PasswordFormat.Hashed, defaultUserPassword, null, NopCustomerServiceDefaults.DefaultHashedPasswordFormat));
 
             //second user
             var secondUserEmail = "steve_gates@nopCommerce.com";
@@ -5981,7 +5981,8 @@ namespace Nop.Services.Installation
                 JqueryMigrateScriptLoggingActive = false,
                 SupportPreviousNopcommerceVersions = true,
                 UseResponseCompression = false,
-                StaticFilesCacheControl = "public,max-age=604800"
+                StaticFilesCacheControl = "public,max-age=604800",
+                FaviconAndAppIconsHeadCode = "<link rel=\"apple-touch-icon\" sizes=\"180x180\" href=\"/icons/icons_0/apple-touch-icon.png\"><link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"/icons/icons_0/favicon-32x32.png\"><link rel=\"icon\" type=\"image/png\" sizes=\"192x192\" href=\"/icons/icons_0/android-chrome-192x192.png\"><link rel=\"icon\" type=\"image/png\" sizes=\"16x16\" href=\"/icons/icons_0/favicon-16x16.png\"><link rel=\"manifest\" href=\"/icons/icons_0/site.webmanifest\"><link rel=\"mask-icon\" href=\"/icons/icons_0/safari-pinned-tab.svg\" color=\"#5bbad5\"><link rel=\"shortcut icon\" href=\"/icons/icons_0/favicon.ico\"><meta name=\"msapplication-TileColor\" content=\"#2d89ef\"><meta name=\"msapplication-TileImage\" content=\"/icons/icons_0/mstile-144x144.png\"><meta name=\"msapplication-config\" content=\"/icons/icons_0/browserconfig.xml\"><meta name=\"theme-color\" content=\"#ffffff\">"
             });
 
             settingService.SaveSetting(new SeoSettings
@@ -6107,7 +6108,7 @@ namespace Nop.Services.Installation
                 ShowCategoryProductNumberIncludingSubcategories = false,
                 CategoryBreadcrumbEnabled = true,
                 ShowShareButton = true,
-                PageShareCode = "<!-- AddThis Button BEGIN --><div class=\"addthis_toolbox addthis_default_style \"><a class=\"addthis_button_preferred_1\"></a><a class=\"addthis_button_preferred_2\"></a><a class=\"addthis_button_preferred_3\"></a><a class=\"addthis_button_preferred_4\"></a><a class=\"addthis_button_compact\"></a><a class=\"addthis_counter addthis_bubble_style\"></a></div><script src=\"http://s7.addthis.com/js/250/addthis_widget.js#pubid=nopsolutions\"></script><!-- AddThis Button END -->",
+                PageShareCode = "<!-- AddThis Button BEGIN --><div class=\"addthis_toolbox addthis_default_style \"><a class=\"addthis_button_preferred_1\"></a><a class=\"addthis_button_preferred_2\"></a><a class=\"addthis_button_preferred_3\"></a><a class=\"addthis_button_preferred_4\"></a><a class=\"addthis_button_compact\"></a><a class=\"addthis_counter addthis_bubble_style\"></a></div><script src=\"http://s7.addcom/js/250/addthis_widget.js#pubid=nopsolutions\"></script><!-- AddThis Button END -->",
                 ProductReviewsMustBeApproved = false,
                 DefaultProductRatingValue = 5,
                 AllowAnonymousUsersToReviewProduct = false,
@@ -6170,7 +6171,8 @@ namespace Nop.Services.Installation
                 ExportImportProductsCountInOneFile = 500,
                 ExportImportSplitProductsFile = false,
                 ExportImportRelatedEntitiesByName = true,
-                CountDisplayedYearsDatePicker = 1
+                CountDisplayedYearsDatePicker = 1,
+                UseAjaxLoadMenu = false
             });
 
             settingService.SaveSetting(new LocalizationSettings
@@ -6191,8 +6193,12 @@ namespace Nop.Services.Installation
                 CheckUsernameAvailabilityEnabled = false,
                 AllowUsersToChangeUsernames = false,
                 DefaultPasswordFormat = PasswordFormat.Hashed,
-                HashedPasswordFormat = "SHA512",
+                HashedPasswordFormat = NopCustomerServiceDefaults.DefaultHashedPasswordFormat,
                 PasswordMinLength = 6,
+                PasswordRequireDigit = false,
+                PasswordRequireLowercase = false,
+                PasswordRequireNonAlphanumeric = false,
+                PasswordRequireUppercase = false,
                 UnduplicatedPasswordsNumber = 4,
                 PasswordRecoveryLinkDaysValid = 7,
                 PasswordLifetime = 90,
@@ -6327,7 +6333,7 @@ namespace Nop.Services.Installation
                 DisplayCurrencyLabel = false,
                 PrimaryStoreCurrencyId = _currencyRepository.Table.Single(c => c.CurrencyCode == "USD").Id,
                 PrimaryExchangeRateCurrencyId = _currencyRepository.Table.Single(c => c.CurrencyCode == "USD").Id,
-                ActiveExchangeRateProviderSystemName = "CurrencyExchange.MoneyConverter",
+                ActiveExchangeRateProviderSystemName = "CurrencyExchange.ECB",
                 AutoUpdateEnabled = false
             });
 
@@ -6611,6 +6617,11 @@ namespace Nop.Services.Installation
             {
                 ReCaptchaDefaultLanguage = string.Empty,
                 AutomaticallyChooseLanguage = true
+            });
+
+            settingService.SaveSetting(new MessagesSettings
+            {
+                UsePopupNotifications = false
             });
         }
 

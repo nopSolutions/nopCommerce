@@ -10,7 +10,7 @@ namespace Nop.Web.Components
 
         public SelectedCheckoutAttributesViewComponent(IShoppingCartModelFactory shoppingCartModelFactory)
         {
-            this._shoppingCartModelFactory = shoppingCartModelFactory;
+            _shoppingCartModelFactory = shoppingCartModelFactory;
         }
 
         public IViewComponentResult Invoke()

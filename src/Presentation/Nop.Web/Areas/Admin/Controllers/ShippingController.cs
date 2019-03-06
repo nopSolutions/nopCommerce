@@ -5,10 +5,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Shipping;
-using Nop.Core.Plugins;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Directory;
+using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Messages;
@@ -32,11 +32,11 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly ICountryService _countryService;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IDateRangeService _dateRangeService;
+        private readonly IEventPublisher _eventPublisher;
         private readonly ILocalizationService _localizationService;
         private readonly ILocalizedEntityService _localizedEntityService;
         private readonly INotificationService _notificationService;
         private readonly IPermissionService _permissionService;
-        private readonly IPluginFinder _pluginFinder;
         private readonly ISettingService _settingService;
         private readonly IShippingModelFactory _shippingModelFactory;
         private readonly IShippingService _shippingService;
@@ -50,29 +50,29 @@ namespace Nop.Web.Areas.Admin.Controllers
             ICountryService countryService,
             ICustomerActivityService customerActivityService,
             IDateRangeService dateRangeService,
+            IEventPublisher eventPublisher,
             ILocalizationService localizationService,
             ILocalizedEntityService localizedEntityService,
             INotificationService notificationService,
             IPermissionService permissionService,
-            IPluginFinder pluginFinder,
             ISettingService settingService,
             IShippingModelFactory shippingModelFactory,
             IShippingService shippingService,
             ShippingSettings shippingSettings)
         {
-            this._addressService = addressService;
-            this._countryService = countryService;
-            this._customerActivityService = customerActivityService;
-            this._dateRangeService = dateRangeService;
-            this._localizationService = localizationService;
-            this._localizedEntityService = localizedEntityService;
-            this._notificationService = notificationService;
-            this._permissionService = permissionService;
-            this._pluginFinder = pluginFinder;
-            this._settingService = settingService;
-            this._shippingModelFactory = shippingModelFactory;
-            this._shippingService = shippingService;
-            this._shippingSettings = shippingSettings;
+            _addressService = addressService;
+            _countryService = countryService;
+            _customerActivityService = customerActivityService;
+            _dateRangeService = dateRangeService;
+            _eventPublisher = eventPublisher;
+            _localizationService = localizationService;
+            _localizedEntityService = localizedEntityService;
+            _notificationService = notificationService;
+            _permissionService = permissionService;
+            _settingService = settingService;
+            _shippingModelFactory = shippingModelFactory;
+            _shippingService = shippingService;
+            _shippingSettings = shippingSettings;
         }
 
         #endregion
@@ -163,10 +163,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             pluginDescriptor.DisplayOrder = model.DisplayOrder;
 
             //update the description file
-            PluginManager.SavePluginDescriptor(pluginDescriptor);
+            pluginDescriptor.Save();
 
-            //reset plugin cache
-            _pluginFinder.ReloadPlugins(pluginDescriptor);
+            //raise event
+            _eventPublisher.Publish(new PluginUpdatedEvent(pluginDescriptor));
 
             return new NullJsonResult();
         }
@@ -228,10 +228,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             pluginDescriptor.DisplayOrder = model.DisplayOrder;
 
             //update the description file
-            PluginManager.SavePluginDescriptor(pluginDescriptor);
+            pluginDescriptor.Save();
 
-            //reset plugin cache
-            _pluginFinder.ReloadPlugins(pluginDescriptor);
+            //raise event
+            _eventPublisher.Publish(new PluginUpdatedEvent(pluginDescriptor));
 
             return new NullJsonResult();
         }
@@ -665,12 +665,9 @@ namespace Nop.Web.Areas.Admin.Controllers
                 address.CreatedOnUtc = DateTime.UtcNow;
                 _addressService.InsertAddress(address);
 
-                var warehouse = new Warehouse
-                {
-                    Name = model.Name,
-                    AdminComment = model.AdminComment,
-                    AddressId = address.Id
-                };
+                //fill entity from model
+                var warehouse = model.ToEntity<Warehouse>();
+                warehouse.AddressId = address.Id;
 
                 _shippingService.InsertWarehouse(warehouse);
 
@@ -730,8 +727,9 @@ namespace Nop.Web.Areas.Admin.Controllers
                 else
                     _addressService.InsertAddress(address);
 
-                warehouse.Name = model.Name;
-                warehouse.AdminComment = model.AdminComment;
+                //fill entity from model
+                warehouse = model.ToEntity(warehouse);
+
                 warehouse.AddressId = address.Id;
 
                 _shippingService.UpdateWarehouse(warehouse);

@@ -1,0 +1,159 @@
+@model BlogContentModel
+
+@{
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Blog posts");
+}
+
+<nop-antiforgery-token />
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        @T("Admin.ContentManagement.Blog.BlogPosts")
+    </h1>
+    <div class="pull-right">
+        <a asp-action="BlogPostCreate" class="btn bg-blue">
+            <i class="fa fa-plus-square"></i>
+            @T("Admin.Common.AddNew")
+        </a>
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.BlogListButtons })
+    </div>
+</div>
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+
+            @*hide the entire search block if no elements are displayed*@
+            <div class="panel panel-default panel-search" @(Model.BlogPosts.HideStoresList ? Html.Raw("style=\"display:none\"") : null)>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    <nop-label asp-for="BlogPosts.SearchStoreId" />
+                                </div>
+                                <div class="col-md-8">
+                                    <nop-select asp-for="BlogPosts.SearchStoreId" asp-items="Model.BlogPosts.AvailableStores" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-8 col-md-offset-4">
+                                    <button type="button" id="search-blogpost" class="btn btn-primary btn-search">
+                                        <i class="fa fa-search"></i>
+                                        @T("Admin.Common.Search")
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="blogpost-grid"></div>
+
+                    <script>
+                        $(document).ready(function() {
+                            $("#blogpost-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("List", "Blog"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: function () {
+                                                var data = {
+                                                    SearchStoreId: $('#SearchStoreId').val()
+                                                };
+                                                addAntiForgeryToken(data);
+                                                return data;
+                                            }
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    pageSize: @(Model.BlogPosts.PageSize),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(Model.BlogPosts.AvailablePageSizes)],
+                                    @await Html.PartialAsync("_GridPagerMessages")
+                                },
+                                editable: {
+                                    confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                                    mode: "inline"
+                                },
+                                scrollable: false,
+                                columns: [
+                                {
+                                    field: "Title",
+                                    title: "@T("Admin.ContentManagement.Blog.BlogPosts.Fields.Title")"
+                                }, {
+                                    field: "LanguageName",
+                                    title: "@T("Admin.ContentManagement.Blog.BlogPosts.Fields.Language")"
+                                }, {
+                                    title: "@T("Admin.ContentManagement.Blog.BlogPosts.Fields.Comments")",
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" },
+                                    template: '<a class="btn btn-default" href="BlogComments?filterByBlogPostId=#=Id#">@T("Admin.ContentManagement.Blog.BlogPosts.Fields.Comments") - #=ApprovedComments + NotApprovedComments# (#=NotApprovedComments#)</a>'
+                                }, {
+                                    field: "StartDateUtc",
+                                    title: "@T("Admin.ContentManagement.Blog.BlogPosts.Fields.StartDate")",
+                                    width: 200,
+                                    type: "date",
+                                    format: "{0:G}"
+                                }, {
+                                    field: "EndDateUtc",
+                                    title: "@T("Admin.ContentManagement.Blog.BlogPosts.Fields.EndDate")",
+                                    width: 200,
+                                    type: "date",
+                                    format: "{0:G}"
+                                }, {
+                                    field: "CreatedOn",
+                                    title: "@T("Admin.ContentManagement.Blog.BlogPosts.Fields.CreatedOn")",
+                                    width: 200,
+                                    type: "date",
+                                    format: "{0:G}"
+                                }, {
+                                    field: "Id",
+                                    title: "@T("Admin.Common.Edit")",
+                                    width: 100,
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" },
+                                    template: '<a class="btn btn-default" href="BlogPostEdit/#=Id#"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>'
+                                    }
+                                ]
+                            });
+                        });
+                    </script>
+
+                    <script>
+                        $(document).ready(function () {
+                            //search button
+                            $('#search-blogpost').click(function () {
+                                //search
+                                var grid = $('#blogpost-grid').data('kendoGrid');
+                                grid.dataSource.page(1); //new search. Set page size to 1
+                                //grid.dataSource.read(); we already loaded the grid above using "page" function
+                                return false;
+                            });
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

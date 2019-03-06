@@ -2,7 +2,6 @@
 using System.Linq;
 using Moq;
 using Nop.Core;
-using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Orders;
@@ -10,6 +9,7 @@ using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
+using Nop.Services.Customers;
 using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
@@ -63,7 +63,11 @@ namespace Nop.Services.Tests.Shipping
             _eventPublisher = new Mock<IEventPublisher>();
             _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
 
-            var pluginFinder = new PluginFinder(_eventPublisher.Object);
+            var customerService = new Mock<ICustomerService>();
+            var loger = new Mock<ILogger>();
+            var webHelper = new Mock<IWebHelper>();
+
+            var pluginService = new PluginService(customerService.Object, loger.Object , CommonHelper.DefaultFileProvider, webHelper.Object);
 
             _localizationService = new Mock<ILocalizationService>();
             _addressService = new Mock<IAddressService>();
@@ -83,7 +87,7 @@ namespace Nop.Services.Tests.Shipping
                 _genericAttributeService.Object,
                 _localizationService.Object,
                 _logger,
-                pluginFinder,
+                pluginService,
                 _priceCalcService.Object,
                 _productAttributeParser.Object,
                 _productService.Object,

@@ -11,7 +11,7 @@ namespace Nop.Core.Domain.Shipping
         /// <param name="shipment">Shipment</param>
         public ShipmentDeliveredEvent(Shipment shipment)
         {
-            this.Shipment = shipment;
+            Shipment = shipment;
         }
 
         /// <summary>

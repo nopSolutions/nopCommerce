@@ -159,10 +159,11 @@
                     grid.dataSource.read();
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
-                    alert('Failed to update dimension');
+                    $("#markAsPrimaryDimensionAlert").click();
                 }
             });
             $('#btnMarkAsPrimaryDimension-action-confirmation').modal('toggle');
         });
     });        
 </script>
+<nop-alert asp-alert-id="markAsPrimaryDimensionAlert" asp-alert-message="@T("Admin.Configuration.Shipping.Measures.Dimensions.MarkAsPrimaryDimension.Alert.FailedToUpdate")" />

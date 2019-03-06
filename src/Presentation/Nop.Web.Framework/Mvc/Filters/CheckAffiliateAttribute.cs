@@ -55,9 +55,9 @@ namespace Nop.Web.Framework.Mvc.Filters
                 ICustomerService customerService,
                 IWorkContext workContext)
             {
-                this._affiliateService = affiliateService;
-                this._customerService = customerService;
-                this._workContext = workContext;
+                _affiliateService = affiliateService;
+                _customerService = customerService;
+                _workContext = workContext;
             }
 
             #endregion

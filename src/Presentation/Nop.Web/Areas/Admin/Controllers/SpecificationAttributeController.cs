@@ -39,13 +39,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             ISpecificationAttributeModelFactory specificationAttributeModelFactory,
             ISpecificationAttributeService specificationAttributeService)
         {
-            this._customerActivityService = customerActivityService;
-            this._localizationService = localizationService;
-            this._localizedEntityService = localizedEntityService;
-            this._notificationService = notificationService;
-            this._permissionService = permissionService;
-            this._specificationAttributeModelFactory = specificationAttributeModelFactory;
-            this._specificationAttributeService = specificationAttributeService;
+            _customerActivityService = customerActivityService;
+            _localizationService = localizationService;
+            _localizedEntityService = localizedEntityService;
+            _notificationService = notificationService;
+            _permissionService = permissionService;
+            _specificationAttributeModelFactory = specificationAttributeModelFactory;
+            _specificationAttributeService = specificationAttributeService;
         }
 
         #endregion

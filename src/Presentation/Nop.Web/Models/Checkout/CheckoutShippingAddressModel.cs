@@ -10,6 +10,7 @@ namespace Nop.Web.Models.Checkout
         {
             Warnings = new List<string>();
             ExistingAddresses = new List<AddressModel>();
+            InvalidExistingAddresses = new List<AddressModel>();
             ShippingNewAddress = new AddressModel();
             PickupPoints = new List<CheckoutPickupPointModel>();
         }
@@ -17,6 +18,7 @@ namespace Nop.Web.Models.Checkout
         public IList<string> Warnings { get; set; }
 
         public IList<AddressModel> ExistingAddresses { get; set; }
+        public IList<AddressModel> InvalidExistingAddresses { get; set; }
         public AddressModel ShippingNewAddress { get; set; }
         public bool NewAddressPreselected { get; set; }
 

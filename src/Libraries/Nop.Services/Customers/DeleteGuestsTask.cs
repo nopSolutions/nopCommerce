@@ -21,8 +21,8 @@ namespace Nop.Services.Customers
         public DeleteGuestsTask(CustomerSettings customerSettings,
             ICustomerService customerService)
         {
-            this._customerSettings = customerSettings;
-            this._customerService = customerService;
+            _customerSettings = customerSettings;
+            _customerService = customerService;
         }
 
         #endregion

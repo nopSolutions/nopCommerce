@@ -42,14 +42,14 @@ namespace Nop.Web.Areas.Admin.Controllers
             IProductService productService,
             IWorkContext workContext)
         {
-            this._customerActivityService = customerActivityService;
-            this._customerRoleModelFactory = customerRoleModelFactory;
-            this._customerService = customerService;
-            this._localizationService = localizationService;
-            this._notificationService = notificationService;
-            this._permissionService = permissionService;
-            this._productService = productService;
-            this._workContext = workContext;
+            _customerActivityService = customerActivityService;
+            _customerRoleModelFactory = customerRoleModelFactory;
+            _customerService = customerService;
+            _localizationService = localizationService;
+            _notificationService = notificationService;
+            _permissionService = permissionService;
+            _productService = productService;
+            _workContext = workContext;
         }
 
         #endregion

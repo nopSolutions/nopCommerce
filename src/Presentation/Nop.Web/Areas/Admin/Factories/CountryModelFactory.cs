@@ -33,11 +33,11 @@ namespace Nop.Web.Areas.Admin.Factories
             IStoreMappingSupportedModelFactory storeMappingSupportedModelFactory,
             IStateProvinceService stateProvinceService)
         {
-            this._countryService = countryService;
-            this._localizationService = localizationService;
-            this._localizedModelFactory = localizedModelFactory;
-            this._storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
-            this._stateProvinceService = stateProvinceService;
+            _countryService = countryService;
+            _localizationService = localizationService;
+            _localizedModelFactory = localizedModelFactory;
+            _storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
+            _stateProvinceService = stateProvinceService;
         }
 
         #endregion
@@ -103,7 +103,13 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new CountryListModel
             {
                 //fill in model values from the entity
-                Data = countries.PaginationByRequestModel(searchModel).Select(country => country.ToModel<CountryModel>()),
+                Data = countries.PaginationByRequestModel(searchModel).Select(country =>
+                {
+                    var countryModel = country.ToModel<CountryModel>();
+                    countryModel.NumberOfStates = country.StateProvinces?.Count ?? 0;
+
+                    return countryModel;
+                }),
                 Total = countries.Count
             };
 
@@ -124,7 +130,11 @@ namespace Nop.Web.Areas.Admin.Factories
             if (country != null)
             {
                 //fill in model values from the entity
-                model = model ?? country.ToModel<CountryModel>();
+                if (model == null)
+                {
+                    model = country.ToModel<CountryModel>();
+                    model.NumberOfStates = country.StateProvinces?.Count ?? 0;
+                }
 
                 //prepare nested search model
                 PrepareStateProvinceSearchModel(model.StateProvinceSearchModel, country);
@@ -203,7 +213,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>
                 {
-                    locale.Name = _localizationService.GetLocalized(country, entity => entity.Name, languageId, false, false);
+                    locale.Name = _localizationService.GetLocalized(state, entity => entity.Name, languageId, false, false);
                 };
             }
 
