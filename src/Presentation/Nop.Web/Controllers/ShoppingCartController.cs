@@ -1591,6 +1591,14 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// Add start and end date filters
+        /// </summary>
+        /// <param name="startdate/enddate"></param>
+        /// <returns></returns>
+        /// 
+
+
         #endregion
 
         #region Wishlist
