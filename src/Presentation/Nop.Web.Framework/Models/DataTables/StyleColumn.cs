@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
 
-namespace Nop.Web.Framework.DataTables
+namespace Nop.Web.Framework.Models.DataTables
 {
     /// <summary>
     /// Represents style of column

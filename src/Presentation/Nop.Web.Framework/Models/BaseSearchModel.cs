@@ -1,6 +1,6 @@
 ﻿using Nop.Core.Domain.Common;
 using Nop.Core.Infrastructure;
-using Nop.Web.Framework.DataTables;
+using Nop.Web.Framework.Models.DataTables;
 
 namespace Nop.Web.Framework.Models
 {
@@ -14,8 +14,7 @@ namespace Nop.Web.Framework.Models
         public BaseSearchModel()
         {
             //set the default values
-            this.Start = 0;
-            this.Length = 10;
+            Length = 10;
         }
 
         #endregion
@@ -23,22 +22,14 @@ namespace Nop.Web.Framework.Models
         #region Properties
 
         /// <summary>
-        /// Gets or sets a page number
+        /// Gets a page number
         /// </summary>
-        public int Page
-        {
-            set { }
-            get => (this.Start / this.Length) + 1;
-        }
+        public int Page => (Start / Length) + 1;
 
         /// <summary>
-        /// Gets or sets a page size
+        /// Gets a page size
         /// </summary>
-        public int PageSize
-        {
-            set { }
-            get => this.Length;
-        }
+        public int PageSize => Length;
 
         /// <summary>
         /// Gets or sets a comma-separated list of available page sizes
@@ -72,13 +63,15 @@ namespace Nop.Web.Framework.Models
         /// <summary>
         /// Set grid page parameters
         /// </summary>
-        public void SetGridPageSize()
+        /// <param name="pageSize">Page size; pass null to use default value</param>
+        /// <param name="availablePageSizes">Available page sizes; pass null to use default value</param>
+        public void SetGridPageSize(int? pageSize = null, string availablePageSizes = null)
         {
             var adminAreaSettings = EngineContext.Current.Resolve<AdminAreaSettings>();
 
-            this.Start = 0;
-            this.Length = adminAreaSettings.DefaultGridPageSize;
-            this.AvailablePageSizes = adminAreaSettings.GridPageSizes;
+            Start = 0;
+            Length = pageSize ?? adminAreaSettings.DefaultGridPageSize;
+            AvailablePageSizes = availablePageSizes ?? adminAreaSettings.GridPageSizes;
         }
 
         /// <summary>
@@ -88,9 +81,9 @@ namespace Nop.Web.Framework.Models
         {
             var adminAreaSettings = EngineContext.Current.Resolve<AdminAreaSettings>();
 
-            this.Start = 0;
-            this.Length = adminAreaSettings.PopupGridPageSize;
-            this.AvailablePageSizes = adminAreaSettings.GridPageSizes;
+            Start = 0;
+            Length = adminAreaSettings.PopupGridPageSize;
+            AvailablePageSizes = adminAreaSettings.GridPageSizes;
         }
 
         #endregion

@@ -3,7 +3,7 @@
 namespace Nop.Web.Framework.Models
 {
     /// <summary>
-    /// Represents the base paged list model (implementation for KendoUI grids)
+    /// Represents the base paged list model (implementation for DataTables grids)
     /// </summary>
     public abstract partial class BasePagedListModel<T> : BaseNopModel, IPagedModel<T> where T : BaseNopModel
     {
@@ -13,18 +13,21 @@ namespace Nop.Web.Framework.Models
         public IEnumerable<T> Data { get; set; }
 
         /// <summary>
-        /// Gets or sets total records number
+        /// Gets or sets draw
         /// </summary>
+        public string Draw { get; set; }
+
+        /// <summary>
+        /// Gets or sets a number of filtered data records
+        /// </summary>
+        public int RecordsFiltered { get; set; }
+
+        /// <summary>
+        /// Gets or sets a number of total data records
+        /// </summary>
+        public int RecordsTotal { get; set; }
+
+        //TODO: remove after moving to DataTables grids
         public int Total { get; set; }
-
-        /// <summary>
-        /// Gets or sets an extra data
-        /// </summary>
-        public object ExtraData { get; set; }
-
-        /// <summary>
-        /// Gets or sets an errors
-        /// </summary>
-        public object Errors { get; set; }
     }
 }

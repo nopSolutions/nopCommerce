@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Nop.Web.Framework.Models;
 
-namespace Nop.Web.Framework.DataTables
+namespace Nop.Web.Framework.Models.DataTables
 {
     /// <summary>
     /// Represents base DataTables model

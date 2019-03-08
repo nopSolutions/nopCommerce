@@ -446,7 +446,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //prepare model
             var model = _orderModelFactory.PrepareOrderListModel(searchModel);
 
-            return JsonDataTable(model);
+            return Json(model);
         }
 
         [HttpPost]
@@ -2100,7 +2100,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //prepare model
             var model = _orderModelFactory.PrepareShipmentListModel(searchModel);
 
-            return JsonDataTable(model);
+            return Json(model);
         }
 
         [HttpPost]
@@ -2126,8 +2126,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual IActionResult ShipmentsItemsByShipmentId(ShipmentItemSearchModel searchModel)
         {
-            searchModel.SetGridPageSize();
-
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedKendoGridJson();
 
@@ -2150,7 +2148,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //prepare model
             var model = _orderModelFactory.PrepareShipmentItemListModel(searchModel, shipment);
 
-            return JsonDataTable(model);
+            return Json(model);
         }
 
         public virtual IActionResult AddShipment(int orderId)

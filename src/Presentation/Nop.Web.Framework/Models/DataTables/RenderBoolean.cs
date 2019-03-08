@@ -1,4 +1,4 @@
-﻿namespace Nop.Web.Framework.DataTables
+﻿namespace Nop.Web.Framework.Models.DataTables
 {
     /// <summary>
     /// Represents boolean render for DataTables column

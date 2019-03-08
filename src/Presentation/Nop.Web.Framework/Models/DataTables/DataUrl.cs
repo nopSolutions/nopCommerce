@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Routing;
 
-namespace Nop.Web.Framework.DataTables
+namespace Nop.Web.Framework.Models.DataTables
 {
     /// <summary>
     /// Represents the data url

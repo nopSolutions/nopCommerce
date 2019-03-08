@@ -1,4 +1,4 @@
-﻿namespace Nop.Web.Framework.DataTables
+﻿namespace Nop.Web.Framework.Models.DataTables
 {
     /// <summary>
     /// Represents date render for DataTables column

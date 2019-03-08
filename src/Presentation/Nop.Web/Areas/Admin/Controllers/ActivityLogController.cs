@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
-using Nop.Services.Security;
 using Nop.Services.Messages;
+using Nop.Services.Security;
 using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Models.Logging;
 using Nop.Web.Framework.Mvc;
@@ -52,7 +52,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             var model = _activityLogModelFactory.PrepareActivityLogTypeSearchModel(new ActivityLogTypeSearchModel());
 
             return View(model);
-        }        
+        }
 
         [HttpPost, ActionName("SaveTypes")]
         public virtual IActionResult SaveTypes(IFormCollection form)
@@ -105,11 +105,11 @@ namespace Nop.Web.Areas.Admin.Controllers
             //prepare model
             var model = _activityLogModelFactory.PrepareActivityLogListModel(searchModel);
 
-            return JsonDataTable(model);
+            return Json(model);
         }
 
         [HttpPost]
-        public virtual IActionResult AcivityLogDelete(int id)
+        public virtual IActionResult ActivityLogDelete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageActivityLog))
                 return AccessDeniedView();
