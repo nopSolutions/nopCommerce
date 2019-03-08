@@ -7,6 +7,7 @@ using Nop.Services.Messages;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Messages;
 using Nop.Web.Framework.Extensions;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -77,14 +78,14 @@ namespace Nop.Web.Areas.Admin.Factories
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
-            
+
             //get campaigns
-            var campaigns = _campaignService.GetAllCampaigns(searchModel.StoreId);
+            var campaigns = _campaignService.GetAllCampaigns(searchModel.StoreId).ToPagedList(searchModel);
 
             //prepare grid model
             var model = new CampaignListModel
             {
-                Data = campaigns.PaginationByRequestModel(searchModel).Select(campaign =>
+                Data = campaigns.Select(campaign =>
                 {
                     //fill in model values from the entity
                     var campaignModel = campaign.ToModel<CampaignModel>();
@@ -99,7 +100,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     return campaignModel;
                 }),
-                Total = campaigns.Count
+                Total = campaigns.TotalCount
             };
 
             return model;

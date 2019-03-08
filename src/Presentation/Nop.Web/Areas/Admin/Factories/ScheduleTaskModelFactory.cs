@@ -4,7 +4,7 @@ using Nop.Services.Helpers;
 using Nop.Services.Tasks;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Tasks;
-using Nop.Web.Framework.Extensions;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -60,12 +60,12 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get schedule tasks
-            var scheduleTasks = _scheduleTaskService.GetAllTasks(true);
+            var scheduleTasks = _scheduleTaskService.GetAllTasks(true).ToPagedList(searchModel);
 
             //prepare list model
             var model = new ScheduleTaskListModel
             {
-                Data = scheduleTasks.PaginationByRequestModel(searchModel).Select(scheduleTask =>
+                Data = scheduleTasks.Select(scheduleTask =>
                 {
                     //fill in model values from the entity
                     var scheduleTaskModel = scheduleTask.ToModel<ScheduleTaskModel>();
@@ -91,7 +91,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     return scheduleTaskModel;
                 }),
-                Total = scheduleTasks.Count
+                Total = scheduleTasks.TotalCount
             };
 
             return model;

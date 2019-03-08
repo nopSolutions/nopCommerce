@@ -38,7 +38,7 @@ using Nop.Services.Tax;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Areas.Admin.Models.Localization;
-using Nop.Web.Framework.Extensions;
+using Nop.Web.Framework.Models.Extensions;
 using Nop.Web.Framework.Security;
 
 namespace Nop.Web.Areas.Admin.Factories
@@ -221,7 +221,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     var url = string.Format(NOPCOMMERCE_WARNING_URL, local, currentStoreUrl);
                     var warning = client.GetStringAsync(url).Result;
 
-                    if (!String.IsNullOrEmpty(warning))
+                    if (!string.IsNullOrEmpty(warning))
                         models.Add(new SystemWarningModel
                         {
                             Level = SystemWarningLevel.CopyrightRemovalKey,
@@ -753,12 +753,12 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get backup files
-            var backupFiles = _maintenanceService.GetAllBackupFiles().ToList();
+            var backupFiles = _maintenanceService.GetAllBackupFiles().ToPagedList(searchModel);
 
             //prepare list model
             var model = new BackupFileListModel
             {
-                Data = backupFiles.PaginationByRequestModel(searchModel).Select(file =>
+                Data = backupFiles.Select(file =>
                 {
                     //fill in model values from the entity
                     var backupFileModel = new BackupFileModel
@@ -772,7 +772,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     return backupFileModel;
                 }),
-                Total = backupFiles.Count
+                Total = backupFiles.TotalCount
             };
 
             return model;
@@ -891,8 +891,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //prepare page parameters
-            searchModel.PageSize = 5;
-            searchModel.AvailablePageSizes = "5";
+            searchModel.SetGridPageSize(5, "5");
 
             return searchModel;
         }

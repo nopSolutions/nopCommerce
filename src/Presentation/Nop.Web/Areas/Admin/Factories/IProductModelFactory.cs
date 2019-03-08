@@ -1,6 +1,5 @@
 ﻿using Nop.Core.Domain.Catalog;
 using Nop.Web.Areas.Admin.Models.Catalog;
-using Nop.Web.Framework.DataTables;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -9,13 +8,6 @@ namespace Nop.Web.Areas.Admin.Factories
     /// </summary>
     public partial interface IProductModelFactory
     {
-        /// <summary>
-        /// Prepare product datatables model
-        /// </summary>
-        /// <param name="searchModel">Product search model</param>
-        /// <returns>Product datatables model</returns>
-        DataTablesModel PrepareProductGridModel(ProductSearchModel searchModel);
-
         /// <summary>
         /// Prepare product search model
         /// </summary>
@@ -174,7 +166,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="product">Product</param>
         /// <returns>Product order list model</returns>
         ProductOrderListModel PrepareProductOrderListModel(ProductOrderSearchModel searchModel, Product product);
-        
+
         /// <summary>
         /// Prepare bulk edit product search model
         /// </summary>

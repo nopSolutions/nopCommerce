@@ -14,7 +14,7 @@ using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Orders;
 using Nop.Web.Areas.Admin.Models.Reports;
-using Nop.Web.Framework.Extensions;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -145,11 +145,13 @@ namespace Nop.Web.Areas.Admin.Factories
                 Published = combination.Product.Published
             }));
 
+            var pagesList = lowStockProductModels.ToPagedList(searchModel);
+
             //prepare list model
             var model = new LowStockProductListModel
             {
-                Data = lowStockProductModels.PaginationByRequestModel(searchModel),
-                Total = lowStockProductModels.Count
+                Data = pagesList,
+                Total = pagesList.TotalCount
             };
 
             return model;
@@ -383,12 +385,12 @@ namespace Nop.Web.Areas.Admin.Factories
             var items = _orderReportService.GetCountryReport(os: orderStatus,
                 ps: paymentStatus,
                 startTimeUtc: startDateValue,
-                endTimeUtc: endDateValue);
+                endTimeUtc: endDateValue).ToPagedList(searchModel);
 
             //prepare list model
             var model = new CountryReportListModel
             {
-                Data = items.PaginationByRequestModel(searchModel).Select(item =>
+                Data = items.Select(item =>
                 {
                     //fill in model values from the entity
                     var countryReportModel = new CountryReportModel
@@ -402,7 +404,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     return countryReportModel;
                 }),
-                Total = items.Count
+                Total = items.TotalCount
             };
 
             return model;
@@ -559,11 +561,13 @@ namespace Nop.Web.Areas.Admin.Factories
                 }
             };
 
+            var pagedList = reportItems.ToPagedList(searchModel);
+
             //prepare list model
             var model = new RegisteredCustomersReportListModel
             {
-                Data = reportItems.PaginationByRequestModel(searchModel),
-                Total = reportItems.Count
+                Data = pagedList,
+                Total = pagedList.TotalCount
             };
 
             return model;

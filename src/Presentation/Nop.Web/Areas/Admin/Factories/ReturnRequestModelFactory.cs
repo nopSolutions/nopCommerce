@@ -9,8 +9,8 @@ using Nop.Services.Media;
 using Nop.Services.Orders;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Orders;
-using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -113,7 +113,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     //fill in model values from the entity
                     var returnRequestModel = returnRequest.ToModel<ReturnRequestModel>();
-                    
+
                     //convert dates to the user time
                     returnRequestModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(returnRequest.CreatedOnUtc, DateTimeKind.Utc);
 
@@ -215,14 +215,14 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get return request reasons
-            var reasons = _returnRequestService.GetAllReturnRequestReasons();
+            var reasons = _returnRequestService.GetAllReturnRequestReasons().ToPagedList(searchModel);
 
             //prepare list model
             var model = new ReturnRequestReasonListModel
             {
                 //fill in model values from the entity
-                Data = reasons.PaginationByRequestModel(searchModel).Select(reason => reason.ToModel<ReturnRequestReasonModel>()),
-                Total = reasons.Count
+                Data = reasons.Select(reason => reason.ToModel<ReturnRequestReasonModel>()),
+                Total = reasons.TotalCount
             };
 
             return model;
@@ -286,14 +286,14 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get return request actions
-            var actions = _returnRequestService.GetAllReturnRequestActions();
+            var actions = _returnRequestService.GetAllReturnRequestActions().ToPagedList(searchModel);
 
             //prepare list model
             var model = new ReturnRequestActionListModel
             {
                 //fill in model values from the entity
-                Data = actions.PaginationByRequestModel(searchModel).Select(action => action.ToModel<ReturnRequestActionModel>()),
-                Total = actions.Count
+                Data = actions.Select(action => action.ToModel<ReturnRequestActionModel>()),
+                Total = actions.TotalCount
             };
 
             return model;

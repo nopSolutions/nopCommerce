@@ -36,8 +36,9 @@ using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Areas.Admin.Models.Orders;
 using Nop.Web.Areas.Admin.Models.Reports;
-using Nop.Web.Framework.DataTables;
 using Nop.Web.Framework.Extensions;
+using Nop.Web.Framework.Models.DataTables;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -787,21 +788,17 @@ namespace Nop.Web.Areas.Admin.Factories
             return searchModel;
         }
 
-        #endregion
-
-        #region Methods
-
         /// <summary>
         /// Prepare oreder datatables model
         /// </summary>
         /// <param name="searchModel">Order search model</param>
         /// <returns>Order datatables model</returns>
-        public virtual DataTablesModel PrepareOrderGridModel(OrderSearchModel searchModel)
+        protected virtual DataTablesModel PrepareOrderGridModel(OrderSearchModel searchModel)
         {
             //prepare page parameters
             searchModel.SetGridPageSize();
 
-            List<string> Filters = new List<string>()
+            var Filters = new List<string>()
             {
                 nameof(searchModel.StartDate),
                 nameof(searchModel.EndDate),
@@ -822,29 +819,31 @@ namespace Nop.Web.Areas.Admin.Factories
 
             var dataModel = new OrderModel();
 
-            
-            List<ColumnProperty> columns = new List<ColumnProperty>();
-            columns.Add(new ColumnProperty()
+
+            var columns = new List<ColumnProperty>
             {
-                Data = nameof(dataModel.CustomerId)
-            });
-            columns.Add(new ColumnProperty()
-            {
-                Data = nameof(dataModel.OrderStatusId)
-            });
-            columns.Add(new ColumnProperty()
-            {
-                Data = nameof(dataModel.Id),
-                IsMasterCheckBox = true,
-                Render = new RenderCheckBox("checkbox_orders"),
-                Width = "50",
-            });
-            columns.Add(new ColumnProperty()
-            {
-                Data = nameof(dataModel.CustomOrderNumber),
-                Title = _localizationService.GetResource("Admin.Orders.Fields.CustomOrderNumber"),
-                Width = "80"
-            });
+                new ColumnProperty()
+                {
+                    Data = nameof(dataModel.CustomerId)
+                },
+                new ColumnProperty()
+                {
+                    Data = nameof(dataModel.OrderStatusId)
+                },
+                new ColumnProperty()
+                {
+                    Data = nameof(dataModel.Id),
+                    IsMasterCheckBox = true,
+                    Render = new RenderCheckBox("checkbox_orders"),
+                    Width = "50",
+                },
+                new ColumnProperty()
+                {
+                    Data = nameof(dataModel.CustomOrderNumber),
+                    Title = _localizationService.GetResource("Admin.Orders.Fields.CustomOrderNumber"),
+                    Width = "80"
+                }
+            };
             //a vendor does not have access to this functionality
             if (!searchModel.IsLoggedInAsVendor)
             {
@@ -855,7 +854,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     Width = "100",
                     Render = new RenderCustom("renderColumnOrderStatus")
                 });
-            }                
+            }
             columns.Add(new ColumnProperty()
             {
                 Data = nameof(dataModel.PaymentStatus),
@@ -901,16 +900,16 @@ namespace Nop.Web.Areas.Admin.Factories
                     Title = _localizationService.GetResource("Admin.Orders.Fields.OrderTotal"),
                     Width = "100",
                 });
-            }                
+            }
             columns.Add(new ColumnProperty()
             {
                 Data = nameof(dataModel.Id),
                 Title = _localizationService.GetResource("Admin.Common.View"),
                 Width = "50",
                 Render = new RenderButtonEdit(new DataUrl("Edit"))
-            });            
+            });
 
-            List<ColumnDefinition> ColDef = new List<ColumnDefinition>
+            var ColDef = new List<ColumnDefinition>
             {
                 new ColumnDefinition()
                 {
@@ -943,6 +942,10 @@ namespace Nop.Web.Areas.Admin.Factories
                 ColumnDefs = ColDef
             };
         }
+
+        #endregion
+
+        #region Methods
 
         /// <summary>
         /// Prepare order search model
@@ -1019,7 +1022,7 @@ namespace Nop.Web.Areas.Admin.Factories
             searchModel.Grid = PrepareOrderGridModel(searchModel);
             searchModel.HideStoresList = _catalogSettings.IgnoreStoreLimitations || searchModel.AvailableStores.SelectionIsNotPossible();
 
-            
+
 
             return searchModel;
         }
@@ -1067,10 +1070,10 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new OrderListModel
+            var model = new OrderListModel().PrepareToGrid(searchModel, orders, () =>
             {
                 //fill in model values from the entity
-                Data = orders.Select(order =>
+                return orders.Select(order =>
                 {
                     //fill in model values from the entity
                     var orderModel = new OrderModel
@@ -1096,11 +1099,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     orderModel.OrderTotal = _priceFormatter.FormatPrice(order.OrderTotal, true, false);
 
                     return orderModel;
-                }),
-                Draw = searchModel.Draw,
-                RecordsTotal = orders.TotalCount,
-                RecordsFiltered = orders.TotalCount
-            };
+                });
+            });
 
             return model;
         }
@@ -1477,10 +1477,10 @@ namespace Nop.Web.Areas.Admin.Factories
                 searchModel.PageSize);
 
             //prepare list model
-            var model = new ShipmentListModel
+            var model = new ShipmentListModel().PrepareToGrid(searchModel, shipments, () =>
             {
                 //fill in model values from the entity
-                Data = shipments.Select(shipment =>
+                return shipments.Select(shipment =>
                 {
                     //fill in model values from the entity
                     var shipmentModel = shipment.ToModel<ShipmentModel>();
@@ -1502,11 +1502,8 @@ namespace Nop.Web.Areas.Admin.Factories
                         shipmentModel.TotalWeight = $"{shipment.TotalWeight:F2} [{_measureService.GetMeasureWeightById(_measureSettings.BaseWeightId)?.Name}]";
 
                     return shipmentModel;
-                }),
-                Draw  = searchModel.Draw,
-                RecordsFiltered = shipments.TotalCount,
-                RecordsTotal = shipments.TotalCount
-            };
+                });
+            });
 
             return model;
         }
@@ -1663,11 +1660,13 @@ namespace Nop.Web.Areas.Admin.Factories
 
             shipments = shipments.OrderBy(shipment => shipment.CreatedOnUtc).ToList();
 
+            var pagedShipments = shipments.ToPagedList(searchModel);
+
             //prepare list model
             var model = new OrderShipmentListModel
             {
                 //fill in model values from the entity
-                Data = shipments.PaginationByRequestModel(searchModel).Select(shipment =>
+                Data = pagedShipments.Select(shipment =>
                 {
                     //fill in model values from the entity
                     var shipmentModel = shipment.ToModel<ShipmentModel>();
@@ -1691,7 +1690,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     return shipmentModel;
                 }),
-                Total = shipments.Count
+                Total = pagedShipments.TotalCount
             };
 
             return model;
@@ -1712,13 +1711,13 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(shipment));
 
             //get shipments
-            var shipmentItems = shipment.ShipmentItems.ToList();
+            var shipmentItems = shipment.ShipmentItems.ToList().ToPagedList(searchModel);
 
             //prepare list model
-            var model = new ShipmentItemListModel
+            var model = new ShipmentItemListModel().PrepareToGrid(searchModel, shipmentItems, () =>
             {
                 //fill in model values from the entity
-                Data = shipmentItems.PaginationByRequestModel(searchModel).Select(item =>
+                return shipmentItems.Select(item =>
                 {
                     //fill in model values from the entity
                     var shipmentItemModel = new ShipmentItemModel
@@ -1746,11 +1745,8 @@ namespace Nop.Web.Areas.Admin.Factories
                         $"{orderItem.Product.Length:F2} x {orderItem.Product.Width:F2} x {orderItem.Product.Height:F2} [{baseDimension}]";
 
                     return shipmentItemModel;
-                }),
-                RecordsTotal = shipmentItems.Count,
-                RecordsFiltered = shipmentItems.Count,
-                Draw = searchModel.Draw
-            };
+                });
+            });
 
             return model;
         }
@@ -1770,16 +1766,16 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(order));
 
             //get notes
-            var orderNotes = order.OrderNotes.OrderByDescending(on => on.CreatedOnUtc).ToList();
+            var orderNotes = order.OrderNotes.OrderByDescending(on => on.CreatedOnUtc).ToList().ToPagedList(searchModel);
 
             //prepare list model
             var model = new OrderNoteListModel
             {
                 //fill in model values from the entity
-                Data = orderNotes.PaginationByRequestModel(searchModel).Select(orderNote =>
+                Data = orderNotes.Select(orderNote =>
                 {
                     //fill in model values from the entity
-                    var orderNoteModel = orderNote.ToModel<OrderNoteModel>(); 
+                    var orderNoteModel = orderNote.ToModel<OrderNoteModel>();
 
                     //convert dates to the user time
                     orderNoteModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(orderNote.CreatedOnUtc, DateTimeKind.Utc);
@@ -1790,7 +1786,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     return orderNoteModel;
                 }),
-                Total = orderNotes.Count
+                Total = orderNotes.TotalCount
             };
 
             return model;
@@ -1807,8 +1803,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //prepare page parameters
-            searchModel.PageSize = 5;
-            searchModel.AvailablePageSizes = "5";
+            searchModel.SetGridPageSize(5, "5");
 
             return searchModel;
         }
@@ -1868,10 +1863,12 @@ namespace Nop.Web.Areas.Admin.Factories
                 _orderReportService.OrderAverageReport(0, OrderStatus.Cancelled)
             };
 
+            var pagedList = new PagedList<OrderAverageReportLineSummary>(report, 0, int.MaxValue);
+
             //prepare list model
             var model = new OrderAverageReportListModel
             {
-                Data = report.Select(reportItem => new OrderAverageReportModel
+                Data = pagedList.Select(reportItem => new OrderAverageReportModel
                 {
                     OrderStatus = _localizationService.GetLocalizedEnum(reportItem.OrderStatus),
                     SumTodayOrders = _priceFormatter.FormatPrice(reportItem.SumTodayOrders, true, false),
@@ -1880,7 +1877,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     SumThisYearOrders = _priceFormatter.FormatPrice(reportItem.SumThisYearOrders, true, false),
                     SumAllTimeOrders = _priceFormatter.FormatPrice(reportItem.SumAllTimeOrders, true, false)
                 }),
-                Total = report.Count
+                Total = pagedList.TotalCount
             };
 
             return model;
@@ -1939,11 +1936,13 @@ namespace Nop.Web.Areas.Admin.Factories
                 ViewLink = urlHelper.Action("List", "Order", new { orderStatuses = string.Join(",", orderStatuses) })
             });
 
+            var pagedList = new PagedList<OrderIncompleteReportModel>(orderIncompleteReportModels, 0, int.MaxValue);
+
             //prepare list model
             var model = new OrderIncompleteReportListModel
             {
-                Data = orderIncompleteReportModels,
-                Total = orderIncompleteReportModels.Count
+                Data = pagedList,
+                Total = pagedList.TotalCount
             };
 
             return model;

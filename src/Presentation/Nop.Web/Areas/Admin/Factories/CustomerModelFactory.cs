@@ -31,8 +31,8 @@ using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Areas.Admin.Models.Customers;
 using Nop.Web.Areas.Admin.Models.ShoppingCart;
-using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -249,39 +249,39 @@ namespace Nop.Web.Areas.Admin.Factories
                         case AttributeControlType.DropdownList:
                         case AttributeControlType.RadioList:
                         case AttributeControlType.Checkboxes:
+                        {
+                            if (!string.IsNullOrEmpty(selectedCustomerAttributes))
                             {
-                                if (!string.IsNullOrEmpty(selectedCustomerAttributes))
-                                {
-                                    //clear default selection
-                                    foreach (var item in attributeModel.Values)
-                                        item.IsPreSelected = false;
+                                //clear default selection
+                                foreach (var item in attributeModel.Values)
+                                    item.IsPreSelected = false;
 
-                                    //select new values
-                                    var selectedValues = _customerAttributeParser.ParseCustomerAttributeValues(selectedCustomerAttributes);
-                                    foreach (var attributeValue in selectedValues)
-                                        foreach (var item in attributeModel.Values)
-                                            if (attributeValue.Id == item.Id)
-                                                item.IsPreSelected = true;
-                                }
+                                //select new values
+                                var selectedValues = _customerAttributeParser.ParseCustomerAttributeValues(selectedCustomerAttributes);
+                                foreach (var attributeValue in selectedValues)
+                                    foreach (var item in attributeModel.Values)
+                                        if (attributeValue.Id == item.Id)
+                                            item.IsPreSelected = true;
                             }
-                            break;
+                        }
+                        break;
                         case AttributeControlType.ReadonlyCheckboxes:
-                            {
-                                //do nothing
-                                //values are already pre-set
-                            }
-                            break;
+                        {
+                            //do nothing
+                            //values are already pre-set
+                        }
+                        break;
                         case AttributeControlType.TextBox:
                         case AttributeControlType.MultilineTextbox:
+                        {
+                            if (!string.IsNullOrEmpty(selectedCustomerAttributes))
                             {
-                                if (!string.IsNullOrEmpty(selectedCustomerAttributes))
-                                {
-                                    var enteredText = _customerAttributeParser.ParseValues(selectedCustomerAttributes, attribute.Id);
-                                    if (enteredText.Any())
-                                        attributeModel.DefaultValue = enteredText[0];
-                                }
+                                var enteredText = _customerAttributeParser.ParseValues(selectedCustomerAttributes, attribute.Id);
+                                if (enteredText.Any())
+                                    attributeModel.DefaultValue = enteredText[0];
                             }
-                            break;
+                        }
+                        break;
                         case AttributeControlType.Datepicker:
                         case AttributeControlType.ColorSquares:
                         case AttributeControlType.ImageSquares:
@@ -599,7 +599,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = customers.Select(customer =>
                 {
                     //fill in model values from the entity
-                    var customerModel = customer.ToModel<CustomerModel>();                    
+                    var customerModel = customer.ToModel<CustomerModel>();
 
                     //convert dates to the user time
                     customerModel.Email = customer.IsRegistered() ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
@@ -808,7 +808,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = rewardPoints.Select(historyEntry =>
                 {
                     //fill in model values from the entity        
-                    var rewardPointsHistoryModel = historyEntry.ToModel<CustomerRewardPointsModel>();                    
+                    var rewardPointsHistoryModel = historyEntry.ToModel<CustomerRewardPointsModel>();
 
                     //convert dates to the user time
                     var activatingDate = _dateTimeHelper.ConvertToUserTime(historyEntry.CreatedOnUtc, DateTimeKind.Utc);
@@ -845,12 +845,13 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //get customer addresses
             var addresses = customer.Addresses
-                .OrderByDescending(address => address.CreatedOnUtc).ThenByDescending(address => address.Id).ToList();
+                .OrderByDescending(address => address.CreatedOnUtc).ThenByDescending(address => address.Id).ToList()
+                .ToPagedList(searchModel);
 
             //prepare list model
             var model = new CustomerAddressListModel
             {
-                Data = addresses.PaginationByRequestModel(searchModel).Select(address =>
+                Data = addresses.Select(address =>
                 {
                     //fill in model values from the entity        
                     var addressModel = address.ToModel<AddressModel>();
@@ -862,7 +863,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     return addressModel;
                 }),
-                Total = addresses.Count
+                Total = addresses.TotalCount
             };
 
             return model;
@@ -928,7 +929,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     //convert dates to the user time
                     orderModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc);
-                    
+
                     //fill in additional values (not existing in the entity)
                     orderModel.StoreName = _storeService.GetStoreById(order.StoreId)?.Name ?? "Unknown";
                     orderModel.OrderStatus = _localizationService.GetLocalizedEnum(order.OrderStatus);
@@ -960,19 +961,21 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(customer));
 
             //get customer shopping cart
-            var shoppingCart = customer.ShoppingCartItems.Where(item => item.ShoppingCartTypeId == searchModel.ShoppingCartTypeId).ToList();
+            var shoppingCart = customer.ShoppingCartItems
+                .Where(item => item.ShoppingCartTypeId == searchModel.ShoppingCartTypeId).ToList()
+                .ToPagedList(searchModel);
 
             //prepare list model
             var model = new CustomerShoppingCartListModel
             {
-                Data = shoppingCart.PaginationByRequestModel(searchModel).Select(item =>
+                Data = shoppingCart.Select(item =>
                 {
                     //fill in model values from the entity
                     var shoppingCartItemModel = item.ToModel<ShoppingCartItemModel>();
 
                     //fill in additional values (not existing in the entity)
                     shoppingCartItemModel.ProductName = item.Product.Name;
-                    shoppingCartItemModel.Store = _storeService.GetStoreById(item.StoreId)?.Name ?? "Unknown";                    
+                    shoppingCartItemModel.Store = _storeService.GetStoreById(item.StoreId)?.Name ?? "Unknown";
                     shoppingCartItemModel.AttributeInfo = _productAttributeFormatter.FormatAttributes(item.Product, item.AttributesXml);
                     shoppingCartItemModel.UnitPrice = _priceFormatter.FormatPrice(_taxService.GetProductPrice(item.Product, _priceCalculationService.GetUnitPrice(item), out var _));
                     shoppingCartItemModel.Total = _priceFormatter.FormatPrice(_taxService.GetProductPrice(item.Product, _priceCalculationService.GetSubTotal(item), out _));
@@ -981,7 +984,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     return shoppingCartItemModel;
                 }),
-                Total = shoppingCart.Count
+                Total = shoppingCart.TotalCount
             };
 
             return model;
@@ -1054,7 +1057,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     //fill in model values from the entity
                     var subscriptionModel = subscription.ToModel<CustomerBackInStockSubscriptionModel>();
-                    
+
                     //convert dates to the user time
                     subscriptionModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(subscription.CreatedOnUtc, DateTimeKind.Utc);
 
@@ -1110,7 +1113,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = customers.Select(customer =>
                 {
                     //fill in model values from the entity
-                    var customerModel = customer.ToModel<OnlineCustomerModel>();                    
+                    var customerModel = customer.ToModel<OnlineCustomerModel>();
 
                     //convert dates to the user time
                     customerModel.LastActivityDate = _dateTimeHelper.ConvertToUserTime(customer.LastActivityDateUtc, DateTimeKind.Utc);
@@ -1164,7 +1167,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             var customerId = 0;
             var customerInfo = "";
-            if (!String.IsNullOrEmpty(searchModel.SearchEmail))
+            if (!string.IsNullOrEmpty(searchModel.SearchEmail))
             {
                 var customer = _customerService.GetCustomerByEmail(searchModel.SearchEmail);
                 if (customer != null)
@@ -1193,7 +1196,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     var requestModel = log.ToModel<GdprLogModel>();
 
                     //fill in additional values (not existing in the entity)
-                    requestModel.CustomerInfo = customer != null && !customer.Deleted && !String.IsNullOrEmpty(customer.Email) ? customer.Email : log.CustomerInfo;
+                    requestModel.CustomerInfo = customer != null && !customer.Deleted && !string.IsNullOrEmpty(customer.Email) ? customer.Email : log.CustomerInfo;
                     requestModel.RequestType = _localizationService.GetLocalizedEnum(log.RequestType);
                     requestModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(log.CreatedOnUtc, DateTimeKind.Utc);
 

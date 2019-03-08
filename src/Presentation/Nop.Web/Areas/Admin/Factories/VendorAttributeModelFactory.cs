@@ -5,8 +5,8 @@ using Nop.Services.Localization;
 using Nop.Services.Vendors;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Vendors;
-using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -92,12 +92,12 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get vendor attributes
-            var vendorAttributes = _vendorAttributeService.GetAllVendorAttributes();
+            var vendorAttributes = _vendorAttributeService.GetAllVendorAttributes().ToPagedList(searchModel);
 
             //prepare list model
             var model = new VendorAttributeListModel
             {
-                Data = vendorAttributes.PaginationByRequestModel(searchModel).Select(attribute =>
+                Data = vendorAttributes.Select(attribute =>
                 {
                     //fill in model values from the entity
                     var attributeModel = attribute.ToModel<VendorAttributeModel>();
@@ -107,7 +107,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     return attributeModel;
                 }),
-                Total = vendorAttributes.Count
+                Total = vendorAttributes.TotalCount
             };
 
             return model;
@@ -163,14 +163,14 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(vendorAttribute));
 
             //get vendor attribute values
-            var vendorAttributeValues = _vendorAttributeService.GetVendorAttributeValues(vendorAttribute.Id);
+            var vendorAttributeValues = _vendorAttributeService.GetVendorAttributeValues(vendorAttribute.Id).ToPagedList(searchModel);
 
             //prepare list model
             var model = new VendorAttributeValueListModel
             {
                 //fill in model values from the entity
-                Data = vendorAttributeValues.PaginationByRequestModel(searchModel).Select(value => value.ToModel<VendorAttributeValueModel>()),
-                Total = vendorAttributeValues.Count
+                Data = vendorAttributeValues.Select(value => value.ToModel<VendorAttributeValueModel>()),
+                Total = vendorAttributeValues.TotalCount
             };
 
             return model;

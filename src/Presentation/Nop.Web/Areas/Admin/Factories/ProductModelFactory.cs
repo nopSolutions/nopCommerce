@@ -30,7 +30,8 @@ using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Areas.Admin.Models.Orders;
 using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;
-using Nop.Web.Framework.DataTables;
+using Nop.Web.Framework.Models.DataTables;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -327,22 +328,22 @@ namespace Nop.Web.Areas.Admin.Factories
                             case AttributeControlType.Checkboxes:
                             case AttributeControlType.ColorSquares:
                             case AttributeControlType.ImageSquares:
+                            {
+                                if (!string.IsNullOrEmpty(productAttributeMapping.ConditionAttributeXml))
                                 {
-                                    if (!string.IsNullOrEmpty(productAttributeMapping.ConditionAttributeXml))
-                                    {
-                                        //clear default selection
-                                        foreach (var item in attributeModel.Values)
-                                            item.IsPreSelected = false;
+                                    //clear default selection
+                                    foreach (var item in attributeModel.Values)
+                                        item.IsPreSelected = false;
 
-                                        //select new values
-                                        var selectedValues = _productAttributeParser.ParseProductAttributeValues(productAttributeMapping.ConditionAttributeXml);
-                                        foreach (var attributeValue in selectedValues)
-                                            foreach (var item in attributeModel.Values)
-                                                if (attributeValue.Id == item.Id)
-                                                    item.IsPreSelected = true;
-                                    }
+                                    //select new values
+                                    var selectedValues = _productAttributeParser.ParseProductAttributeValues(productAttributeMapping.ConditionAttributeXml);
+                                    foreach (var attributeValue in selectedValues)
+                                        foreach (var item in attributeModel.Values)
+                                            if (attributeValue.Id == item.Id)
+                                                item.IsPreSelected = true;
                                 }
-                                break;
+                            }
+                            break;
                             case AttributeControlType.ReadonlyCheckboxes:
                             case AttributeControlType.TextBox:
                             case AttributeControlType.MultilineTextbox:
@@ -608,21 +609,17 @@ namespace Nop.Web.Areas.Admin.Factories
             return searchModel;
         }
 
-        #endregion
-
-        #region Methods
-
         /// <summary>
         /// Prepare product datatables model
         /// </summary>
         /// <param name="searchModel">Product search model</param>
         /// <returns>Product datatables model</returns>
-        public virtual DataTablesModel PrepareProductGridModel(ProductSearchModel searchModel)
+        protected virtual DataTablesModel PrepareProductGridModel(ProductSearchModel searchModel)
         {
             //prepare page parameters
             searchModel.SetGridPageSize();
 
-            List<string> Filters = new List<string>()
+            var Filters = new List<string>()
             {
                 nameof(searchModel.SearchProductName),
                 nameof(searchModel.SearchCategoryId),
@@ -635,9 +632,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 nameof(searchModel.SearchPublishedId)
             };
 
-            ProductModel dataModel = new ProductModel();
+            var dataModel = new ProductModel();
 
-            List<ColumnProperty> columns = new List<ColumnProperty>
+            var columns = new List<ColumnProperty>
             {
                 new ColumnProperty()
                 {
@@ -647,7 +644,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     Data = nameof(dataModel.Id),
                     IsMasterCheckBox = true,
-                    Render = new RenderCheckBox("checkbox_products"),                    
+                    Render = new RenderCheckBox("checkbox_products"),
                     Width = "50",
                 },
                 new ColumnProperty()
@@ -705,7 +702,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 }
             };
 
-            List<ColumnDefinition> ColDef = new List<ColumnDefinition>
+            var ColDef = new List<ColumnDefinition>
             {
                 new ColumnDefinition()
                 {
@@ -739,6 +736,10 @@ namespace Nop.Web.Areas.Admin.Factories
                 ColumnDefs = ColDef
             };
         }
+
+        #endregion
+
+        #region Methods
 
         /// <summary>
         /// Prepare product search model
@@ -830,9 +831,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 overridePublished: overridePublished);
 
             //prepare list model
-            var model = new ProductListModel
+            var model = new ProductListModel().PrepareToGrid(searchModel, products, () =>
             {
-                Data = products.Select(product =>
+                return products.Select(product =>
                 {
                     //fill in model values from the entity
                     var productModel = product.ToModel<ProductModel>();
@@ -849,11 +850,8 @@ namespace Nop.Web.Areas.Admin.Factories
                         productModel.StockQuantityStr = _productService.GetTotalStockQuantity(product).ToString();
 
                     return productModel;
-                }),
-                Draw = searchModel.Draw,
-                RecordsTotal = products.TotalCount,
-                RecordsFiltered = products.TotalCount
-            };
+                });
+            });
 
             return model;
         }
@@ -1127,12 +1125,13 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(product));
 
             //get related products
-            var relatedProducts = _productService.GetRelatedProductsByProductId1(productId1: product.Id, showHidden: true);
+            var relatedProducts = _productService
+                .GetRelatedProductsByProductId1(productId1: product.Id, showHidden: true).ToPagedList(searchModel);
 
             //prepare grid model
             var model = new RelatedProductListModel
             {
-                Data = relatedProducts.PaginationByRequestModel(searchModel).Select(relatedProduct =>
+                Data = relatedProducts.Select(relatedProduct =>
                 {
                     //fill in model values from the entity
                     var relatedProductModel = relatedProduct.ToModel<RelatedProductModel>();
@@ -1142,7 +1141,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     return relatedProductModel;
                 }),
-                Total = relatedProducts.Count
+                Total = relatedProducts.TotalCount
             };
 
             return model;
@@ -1237,12 +1236,13 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(product));
 
             //get cross-sell products
-            var crossSellProducts = _productService.GetCrossSellProductsByProductId1(productId1: product.Id, showHidden: true);
+            var crossSellProducts = _productService
+                .GetCrossSellProductsByProductId1(productId1: product.Id, showHidden: true).ToPagedList(searchModel);
 
             //prepare grid model
             var model = new CrossSellProductListModel
             {
-                Data = crossSellProducts.PaginationByRequestModel(searchModel).Select(crossSellProduct =>
+                Data = crossSellProducts.Select(crossSellProduct =>
                 {
                     //fill in model values from the entity
                     var crossSellProductModel = new CrossSellProductModel
@@ -1256,7 +1256,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     return crossSellProductModel;
                 }),
-                Total = crossSellProducts.Count
+                Total = crossSellProducts.TotalCount
             };
 
             return model;
@@ -1353,20 +1353,20 @@ namespace Nop.Web.Areas.Admin.Factories
             //get associated products
             var associatedProducts = _productService.GetAssociatedProducts(showHidden: true,
                 parentGroupedProductId: product.Id,
-                vendorId: _workContext.CurrentVendor?.Id ?? 0);
+                vendorId: _workContext.CurrentVendor?.Id ?? 0).ToPagedList(searchModel);
 
             //prepare grid model
             var model = new AssociatedProductListModel
             {
                 //fill in model values from the entity
-                Data = associatedProducts.PaginationByRequestModel(searchModel).Select(associatedProduct =>
+                Data = associatedProducts.Select(associatedProduct =>
                 {
                     var associatedProductModel = associatedProduct.ToModel<AssociatedProductModel>();
                     associatedProductModel.ProductName = associatedProduct.Name;
 
                     return associatedProductModel;
                 }),
-                Total = associatedProducts.Count
+                Total = associatedProducts.TotalCount
             };
 
             return model;
@@ -1469,12 +1469,12 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(product));
 
             //get product pictures
-            var productPictures = _productService.GetProductPicturesByProductId(product.Id);
+            var productPictures = _productService.GetProductPicturesByProductId(product.Id).ToPagedList(searchModel);
 
             //prepare grid model
             var model = new ProductPictureListModel
             {
-                Data = productPictures.PaginationByRequestModel(searchModel).Select(productPicture =>
+                Data = productPictures.Select(productPicture =>
                 {
                     //fill in model values from the entity
                     var productPictureModel = productPicture.ToModel<ProductPictureModel>();
@@ -1489,7 +1489,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     return productPictureModel;
                 }),
-                Total = productPictures.Count
+                Total = productPictures.TotalCount
             };
 
             return model;
@@ -1511,12 +1511,13 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(product));
 
             //get product specification attributes
-            var productSpecificationAttributes = _specificationAttributeService.GetProductSpecificationAttributes(product.Id);
+            var productSpecificationAttributes = _specificationAttributeService
+                .GetProductSpecificationAttributes(product.Id).ToPagedList(searchModel);
 
             //prepare grid model
             var model = new ProductSpecificationAttributeListModel
             {
-                Data = productSpecificationAttributes.PaginationByRequestModel(searchModel).Select(attribute =>
+                Data = productSpecificationAttributes.Select(attribute =>
                 {
                     //fill in model values from the entity
                     var productSpecificationAttributeModel = attribute.ToModel<ProductSpecificationAttributeModel>();
@@ -1545,7 +1546,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     return productSpecificationAttributeModel;
                 }),
-                Total = productSpecificationAttributes.Count
+                Total = productSpecificationAttributes.TotalCount
             };
 
             return model;
@@ -1565,7 +1566,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     AvailableAttributes = _cacheManager.Get(NopModelCacheDefaults.SpecAttributesModelKey,
                             () => _specificationAttributeService.GetSpecificationAttributesWithOptions())
-                        .Select(sa => new SelectListItem {Text = sa.Name, Value = sa.Id.ToString()})
+                        .Select(sa => new SelectListItem { Text = sa.Name, Value = sa.Id.ToString() })
                         .ToList(),
                     ProductId = productId
                 };
@@ -1591,7 +1592,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             model.AvailableAttributes = _cacheManager.Get(NopModelCacheDefaults.SpecAttributesModelKey,
                     () => _specificationAttributeService.GetSpecificationAttributesWithOptions())
-                .Select(sa => new SelectListItem {Text = sa.Name, Value = sa.Id.ToString()})
+                .Select(sa => new SelectListItem { Text = sa.Name, Value = sa.Id.ToString() })
                 .ToList();
 
             model.AvailableOptions = _specificationAttributeService
@@ -1649,22 +1650,23 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //get product tags
             var productTags = _productTagService.GetAllProductTags()
-                .OrderByDescending(tag => _productTagService.GetProductCount(tag.Id, storeId: 0)).ToList();
+                .OrderByDescending(tag => _productTagService.GetProductCount(tag.Id, storeId: 0)).ToList()
+                .ToPagedList(searchModel);
 
             //prepare list model
             var model = new ProductTagListModel
             {
-                Data = productTags.PaginationByRequestModel(searchModel).Select(tag =>
+                Data = productTags.Select(tag =>
                 {
                     //fill in model values from the entity
                     var productTagModel = tag.ToModel<ProductTagModel>();
-                    
+
                     //fill in additional values (not existing in the entity)
                     productTagModel.ProductCount = _productTagService.GetProductCount(tag.Id, storeId: 0);
 
                     return productTagModel;
                 }),
-                Total = productTags.Count
+                Total = productTags.TotalCount
             };
 
             return model;
@@ -1688,7 +1690,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     model = productTag.ToModel<ProductTagModel>();
                 }
-               
+
                 model.ProductCount = _productTagService.GetProductCount(productTag.Id, storeId: 0);
 
                 //define localized model configuration action
@@ -1836,12 +1838,13 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //get tier prices
             var tierPrices = product.TierPrices
-                .OrderBy(price => price.StoreId).ThenBy(price => price.Quantity).ThenBy(price => price.CustomerRoleId).ToList();
+                .OrderBy(price => price.StoreId).ThenBy(price => price.Quantity).ThenBy(price => price.CustomerRoleId)
+                .ToList().ToPagedList(searchModel);
 
             //prepare grid model
             var model = new TierPriceListModel
             {
-                Data = tierPrices.PaginationByRequestModel(searchModel).Select(price =>
+                Data = tierPrices.Select(price =>
                 {
                     //fill in model values from the entity
                     var tierPriceModel = price.ToModel<TierPriceModel>();
@@ -1857,7 +1860,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     return tierPriceModel;
                 }),
-                Total = tierPrices.Count
+                Total = tierPrices.TotalCount
             };
 
             return model;
@@ -1882,7 +1885,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 //fill in model values from the entity
                 if (model == null)
                 {
-                    model = tierPrice.ToModel<TierPriceModel>(); 
+                    model = tierPrice.ToModel<TierPriceModel>();
                 }
             }
 
@@ -1961,12 +1964,13 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(product));
 
             //get product attribute mappings
-            var productAttributeMappings = _productAttributeService.GetProductAttributeMappingsByProductId(product.Id);
+            var productAttributeMappings = _productAttributeService
+                .GetProductAttributeMappingsByProductId(product.Id).ToPagedList(searchModel);
 
             //prepare grid model
             var model = new ProductAttributeMappingListModel
             {
-                Data = productAttributeMappings.PaginationByRequestModel(searchModel).Select(attributeMapping =>
+                Data = productAttributeMappings.Select(attributeMapping =>
                 {
                     //fill in model values from the entity
                     var productAttributeMappingModel = attributeMapping.ToModel<ProductAttributeMappingModel>();
@@ -1991,7 +1995,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     return productAttributeMappingModel;
                 }),
-                Total = productAttributeMappings.Count
+                Total = productAttributeMappings.TotalCount
             };
 
             return model;
@@ -2085,12 +2089,13 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(productAttributeMapping));
 
             //get product attribute values
-            var productAttributeValues = _productAttributeService.GetProductAttributeValues(productAttributeMapping.Id);
+            var productAttributeValues = _productAttributeService
+                .GetProductAttributeValues(productAttributeMapping.Id).ToPagedList(searchModel);
 
             //prepare list model
             var model = new ProductAttributeValueListModel
             {
-                Data = productAttributeValues.PaginationByRequestModel(searchModel).Select(value =>
+                Data = productAttributeValues.Select(value =>
                 {
                     //fill in model values from the entity
                     var productAttributeValueModel = value.ToModel<ProductAttributeValueModel>();
@@ -2121,7 +2126,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     return productAttributeValueModel;
                 }),
-                Total = productAttributeValues.Count
+                Total = productAttributeValues.TotalCount
             };
 
             return model;
@@ -2297,12 +2302,13 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(product));
 
             //get product attribute combinations
-            var productAttributeCombinations = _productAttributeService.GetAllProductAttributeCombinations(product.Id);
+            var productAttributeCombinations = _productAttributeService
+                .GetAllProductAttributeCombinations(product.Id).ToPagedList(searchModel);
 
             //prepare grid model
             var model = new ProductAttributeCombinationListModel
             {
-                Data = productAttributeCombinations.PaginationByRequestModel(searchModel).Select(combination =>
+                Data = productAttributeCombinations.Select(combination =>
                 {
                     //fill in model values from the entity
                     var productAttributeCombinationModel = combination.ToModel<ProductAttributeCombinationModel>();
@@ -2323,7 +2329,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     return productAttributeCombinationModel;
                 }),
-                Total = productAttributeCombinations.Count
+                Total = productAttributeCombinations.TotalCount
             };
 
             return model;

@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Routing;
 using Nop.Services.Cms;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Cms;
-using Nop.Web.Framework.Extensions;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -58,12 +58,12 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get widgets
-            var widgets = _widgetService.LoadAllWidgets();
+            var widgets = _widgetService.LoadAllWidgets().ToPagedList(searchModel);
 
             //prepare grid model
             var model = new WidgetListModel
             {
-                Data = widgets.PaginationByRequestModel(searchModel).Select(widget =>
+                Data = widgets.Select(widget =>
                 {
                     //fill in model values from the entity
                     var widgetMethodModel = widget.ToPluginModel<WidgetModel>();
@@ -74,7 +74,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     return widgetMethodModel;
                 }),
-                Total = widgets.Count
+                Total = widgets.TotalCount
             };
 
             return model;

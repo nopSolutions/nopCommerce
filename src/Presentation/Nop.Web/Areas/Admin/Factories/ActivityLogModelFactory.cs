@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json.Linq;
 using Nop.Services.Helpers;
+using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Logging;
-using Nop.Web.Framework.DataTables;
-using Nop.Services.Localization;
-using Newtonsoft.Json.Linq;
-using Microsoft.AspNetCore.Mvc;
+using Nop.Web.Framework.Models.DataTables;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -41,13 +41,13 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #endregion
 
-        #region Methods
+        #region Utilities
 
         /// <summary>
         /// Prepare activity log type models
         /// </summary>
         /// <returns>List of activity log type models</returns>
-        public virtual IList<ActivityLogTypeModel> PrepareActivityLogTypeModels()
+        protected virtual IList<ActivityLogTypeModel> PrepareActivityLogTypeModels()
         {
             //prepare available activity log types
             var availableActivityTypes = _customerActivityService.GetAllActivityTypes();
@@ -61,14 +61,14 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Activity log types search model</param>
         /// <returns>Datatables model</returns>
-        public virtual DataTablesModel PrepareActivityLogTypeGridModel(ActivityLogTypeSearchModel searchModel)
+        protected virtual DataTablesModel PrepareActivityLogTypeGridModel(ActivityLogTypeSearchModel searchModel)
         {
             //prepare page parameters
             searchModel.SetGridPageSize();
 
-            ActivityLogTypeModel dataModel = new ActivityLogTypeModel();
+            var dataModel = new ActivityLogTypeModel();
 
-            List<ColumnProperty> columns = new List<ColumnProperty>
+            var columns = new List<ColumnProperty>
             {
                 new ColumnProperty()
                 {
@@ -86,7 +86,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 }
             };
 
-            List<ColumnDefinition> ColDef = new List<ColumnDefinition>
+            var ColDef = new List<ColumnDefinition>
             {
                 new ColumnDefinition()
                 {
@@ -96,10 +96,10 @@ namespace Nop.Web.Areas.Admin.Factories
             };
 
             //prepare Data
-            JArray activityLogTypes = new JArray();
+            var activityLogTypes = new JArray();
             foreach (var altm in searchModel.ActivityLogTypeListModel)
             {
-                JObject activityLogType = new JObject
+                var activityLogType = new JObject
                 {
                     [nameof(altm.Id)] = altm.Id,
                     [nameof(altm.Name)] = altm.Name,
@@ -120,34 +120,17 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
-        /// Prepare activity log types search model
-        /// </summary>
-        /// <param name="searchModel">Activity log types search model</param>
-        /// <returns>Activity log types search model</returns>
-        public virtual ActivityLogTypeSearchModel PrepareActivityLogTypeSearchModel(ActivityLogTypeSearchModel searchModel)
-        {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            searchModel.ActivityLogTypeListModel = PrepareActivityLogTypeModels();
-
-            searchModel.Grid = PrepareActivityLogTypeGridModel(searchModel);
-
-            return searchModel;
-        }
-
-        /// <summary>
         /// Prepare activity log datatables models
         /// </summary>
         /// <param name="searchModel">Activity log search model</param>
         /// <returns>Datatables model</returns>
-        public virtual DataTablesModel PrepareActivityLogGridModel(ActivityLogSearchModel searchModel)
+        protected virtual DataTablesModel PrepareActivityLogGridModel(ActivityLogSearchModel searchModel)
         {
             //prepare page parameters
             searchModel.SetGridPageSize();
 
 
-            List<string> Filters = new List<string>()
+            var Filters = new List<string>()
             {
                 nameof(searchModel.CreatedOnTo),
                 nameof(searchModel.CreatedOnFrom),
@@ -155,9 +138,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 nameof(searchModel.ActivityLogTypeId)
             };
 
-            ActivityLogModel dataModel = new ActivityLogModel();
+            var dataModel = new ActivityLogModel();
 
-            List<ColumnProperty> columns = new List<ColumnProperty>
+            var columns = new List<ColumnProperty>
             {
                 new ColumnProperty()
                 {
@@ -207,7 +190,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 }
             };
 
-            List<ColumnDefinition> ColDef = new List<ColumnDefinition>
+            var ColDef = new List<ColumnDefinition>
             {
                 new ColumnDefinition()
                 {
@@ -228,7 +211,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 ServerSide = true,
                 Processing = true,
                 UrlRead = new DataUrl("ListLogs", "ActivityLog"),
-                UrlAction = new DataUrl("AcivityLogDelete", "ActivityLog"),
+                UrlAction = new DataUrl("ActivityLogDelete", "ActivityLog"),
                 LengthMenu = searchModel.AvailablePageSizes,
                 SearchButtonId = "search-log",
                 Filters = Filters,
@@ -236,6 +219,27 @@ namespace Nop.Web.Areas.Admin.Factories
                 ColumnDefs = ColDef
             };
 
+        }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Prepare activity log types search model
+        /// </summary>
+        /// <param name="searchModel">Activity log types search model</param>
+        /// <returns>Activity log types search model</returns>
+        public virtual ActivityLogTypeSearchModel PrepareActivityLogTypeSearchModel(ActivityLogTypeSearchModel searchModel)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            searchModel.ActivityLogTypeListModel = PrepareActivityLogTypeModels();
+
+            searchModel.Grid = PrepareActivityLogTypeGridModel(searchModel);
+
+            return searchModel;
         }
 
         /// <summary>
@@ -265,7 +269,7 @@ namespace Nop.Web.Areas.Admin.Factories
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
-            
+
             //get parameters to filter log
             var startDateValue = searchModel.CreatedOnFrom == null ? null
                 : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.CreatedOnFrom.Value, _dateTimeHelper.CurrentTimeZone);
@@ -280,9 +284,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new ActivityLogListModel
+            var model = new ActivityLogListModel().PrepareToGrid(searchModel, activityLog, () =>
             {
-                Data = activityLog.Select(logItem =>
+                return activityLog.Select(logItem =>
                 {
                     //fill in model values from the entity
                     var logItemModel = logItem.ToModel<ActivityLogModel>();
@@ -294,11 +298,8 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     return logItemModel;
 
-                }),
-                Draw = searchModel.Draw,
-                RecordsTotal = activityLog.TotalCount,
-                RecordsFiltered = activityLog.TotalCount
-            };
+                });
+            });
 
             return model;
         }

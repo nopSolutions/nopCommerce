@@ -133,8 +133,9 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return Json(new System.Collections.Generic.List<string>());
 
             //prepare model
-            var model = _pluginModelFactory.PreparePluginListModel(
-                new PluginSearchModel { PageSize = int.MaxValue });
+            var searchModel = new PluginSearchModel();
+            searchModel.SetGridPageSize(pageSize: int.MaxValue);
+            var model = _pluginModelFactory.PreparePluginListModel(searchModel);
 
             //negative rate is set to move plugins to the end of list
             var filtredPlugins = model.Data

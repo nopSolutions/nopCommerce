@@ -18,7 +18,7 @@ using Nop.Services.Seo;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Areas.Admin.Models.Discounts;
-using Nop.Web.Framework.Extensions;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -216,12 +216,12 @@ namespace Nop.Web.Areas.Admin.Factories
                 couponCode: searchModel.SearchDiscountCouponCode,
                 discountName: searchModel.SearchDiscountName,
                 startDateUtc: startDateUtc,
-                endDateUtc: endDateUtc);
+                endDateUtc: endDateUtc).ToPagedList(searchModel);
 
             //prepare list model
             var model = new DiscountListModel
             {
-                Data = discounts.PaginationByRequestModel(searchModel).Select(discount =>
+                Data = discounts.Select(discount =>
                 {
                     //fill in model values from the entity
                     var discountModel = discount.ToModel<DiscountModel>();
@@ -234,7 +234,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     return discountModel;
                 }),
-                Total = discounts.Count
+                Total = discounts.TotalCount
             };
 
             return model;
@@ -387,7 +387,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     //fill in model values from the entity
                     var discountUsageHistoryModel = historyEntry.ToModel<DiscountUsageHistoryModel>();
-                    
+
                     //convert dates to the user time
                     discountUsageHistoryModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(historyEntry.CreatedOnUtc, DateTimeKind.Utc);
 
@@ -535,7 +535,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new DiscountCategoryListModel
             {
                 //fill in model values from the entity
-                Data = discountCategories.Select(category => 
+                Data = discountCategories.Select(category =>
                 {
                     var discountCategoryModel = category.ToModel<DiscountCategoryModel>();
 

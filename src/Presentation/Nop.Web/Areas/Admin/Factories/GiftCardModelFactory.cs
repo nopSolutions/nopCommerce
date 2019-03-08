@@ -10,7 +10,7 @@ using Nop.Services.Localization;
 using Nop.Services.Orders;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Orders;
-using Nop.Web.Framework.Extensions;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -198,12 +198,14 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(giftCard));
 
             //get gift card usage history
-            var usageHistory = giftCard.GiftCardUsageHistory.OrderByDescending(historyEntry => historyEntry.CreatedOnUtc).ToList();
+            var usageHistory = giftCard.GiftCardUsageHistory
+                .OrderByDescending(historyEntry => historyEntry.CreatedOnUtc).ToList()
+                .ToPagedList(searchModel);
 
             //prepare list model
             var model = new GiftCardUsageHistoryListModel
             {
-                Data = usageHistory.PaginationByRequestModel(searchModel).Select(historyEntry =>
+                Data = usageHistory.Select(historyEntry =>
                 {
                     //fill in model values from the entity
                     var giftCardUsageHistoryModel = historyEntry.ToModel<GiftCardUsageHistoryModel>();
@@ -218,7 +220,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     return giftCardUsageHistoryModel;
                 }),
-                Total = usageHistory.Count
+                Total = usageHistory.TotalCount
             };
 
             return model;

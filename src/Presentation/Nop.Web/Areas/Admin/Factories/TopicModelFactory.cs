@@ -13,6 +13,7 @@ using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Topics;
 using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -112,10 +113,12 @@ namespace Nop.Web.Areas.Admin.Factories
                                                (topic.Body?.Contains(searchModel.SearchKeywords) ?? false)).ToList();
             }
 
+            var pagedTopics = topics.ToList().ToPagedList(searchModel);
+
             //prepare grid model
             var model = new TopicListModel
             {
-                Data = topics.PaginationByRequestModel(searchModel).Select(topic =>
+                Data = pagedTopics.Select(topic =>
                 {
                     //fill in model values from the entity
                     var topicModel = topic.ToModel<TopicModel>();
@@ -127,7 +130,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     return topicModel;
                 }),
-                Total = topics.Count
+                Total = pagedTopics.TotalCount
             };
 
             return model;

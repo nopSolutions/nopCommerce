@@ -4,7 +4,7 @@ using Nop.Core.Domain.Directory;
 using Nop.Services.Directory;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Directory;
-using Nop.Web.Framework.Extensions;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -97,12 +97,12 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get dimensions
-            var dimensions = _measureService.GetAllMeasureDimensions();
+            var dimensions = _measureService.GetAllMeasureDimensions().ToPagedList(searchModel);
 
             //prepare list model
             var model = new MeasureDimensionListModel
             {
-                Data = dimensions.PaginationByRequestModel(searchModel).Select(dimension =>
+                Data = dimensions.Select(dimension =>
                 {
                     //fill in model values from the entity
                     var dimensionModel = dimension.ToModel<MeasureDimensionModel>();
@@ -112,7 +112,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     return dimensionModel;
                 }),
-                Total = dimensions.Count
+                Total = dimensions.TotalCount
             };
 
             return model;
@@ -129,12 +129,12 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get weights
-            var weights = _measureService.GetAllMeasureWeights();
+            var weights = _measureService.GetAllMeasureWeights().ToPagedList(searchModel);
 
             //prepare list model
             var model = new MeasureWeightListModel
             {
-                Data = weights.PaginationByRequestModel(searchModel).Select(weight =>
+                Data = weights.Select(weight =>
                 {
                     //fill in model values from the entity
                     var weightModel = weight.ToModel<MeasureWeightModel>();
@@ -144,7 +144,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     return weightModel;
                 }),
-                Total = weights.Count
+                Total = weights.TotalCount
             };
 
             return model;

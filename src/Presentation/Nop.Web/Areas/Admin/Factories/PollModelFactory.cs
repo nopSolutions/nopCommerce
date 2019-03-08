@@ -9,6 +9,7 @@ using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Polls;
 using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -188,14 +189,14 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(poll));
 
             //get poll answers
-            var pollAnswers = poll.PollAnswers.OrderBy(pollAnswer => pollAnswer.DisplayOrder).ToList();
+            var pollAnswers = poll.PollAnswers.OrderBy(pollAnswer => pollAnswer.DisplayOrder).ToList().ToPagedList(searchModel);
 
             //prepare list model
             var model = new PollAnswerListModel
             {
                 //fill in model values from the entity
-                Data = pollAnswers.PaginationByRequestModel(searchModel).Select(pollAnswer => pollAnswer.ToModel<PollAnswerModel>()),
-                Total = pollAnswers.Count
+                Data = pollAnswers.Select(pollAnswer => pollAnswer.ToModel<PollAnswerModel>()),
+                Total = pollAnswers.TotalCount
             };
 
             return model;

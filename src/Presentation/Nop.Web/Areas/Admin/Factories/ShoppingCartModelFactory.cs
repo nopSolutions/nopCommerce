@@ -10,7 +10,7 @@ using Nop.Services.Stores;
 using Nop.Services.Tax;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.ShoppingCart;
-using Nop.Web.Framework.Extensions;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -160,12 +160,14 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(customer));
 
             //get shopping cart items
-            var items = customer.ShoppingCartItems.Where(item => item.ShoppingCartType == searchModel.ShoppingCartType).ToList();
+            var items = customer.ShoppingCartItems
+                .Where(item => item.ShoppingCartType == searchModel.ShoppingCartType).ToList()
+                .ToPagedList(searchModel);
 
             //prepare list model
             var model = new ShoppingCartItemListModel
             {
-                Data = items.PaginationByRequestModel(searchModel).Select(item =>
+                Data = items.Select(item =>
                 {
                     //fill in model values from the entity
                     var itemModel = item.ToModel<ShoppingCartItemModel>();
@@ -186,7 +188,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     return itemModel;
                 }),
-                Total = items.Count
+                Total = items.TotalCount
             };
 
             return model;

@@ -9,8 +9,8 @@ using Nop.Services.Localization;
 using Nop.Services.Orders;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Orders;
-using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -77,7 +77,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(checkoutAttribute));
 
             model.EnableCondition = !string.IsNullOrEmpty(checkoutAttribute.ConditionAttributeXml);
-            
+
             //get selected checkout attribute
             var selectedAttribute = _checkoutAttributeParser.ParseCheckoutAttributes(checkoutAttribute.ConditionAttributeXml).FirstOrDefault();
             model.SelectedAttributeId = selectedAttribute?.Id ?? 0;
@@ -158,12 +158,12 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get checkout attributes
-            var checkoutAttributes = _checkoutAttributeService.GetAllCheckoutAttributes();
+            var checkoutAttributes = _checkoutAttributeService.GetAllCheckoutAttributes().ToPagedList(searchModel);
 
             //prepare list model
             var model = new CheckoutAttributeListModel
             {
-                Data = checkoutAttributes.PaginationByRequestModel(searchModel).Select(attribute =>
+                Data = checkoutAttributes.Select(attribute =>
                 {
                     //fill in model values from the entity
                     var attributeModel = attribute.ToModel<CheckoutAttributeModel>();
@@ -173,7 +173,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     return attributeModel;
                 }),
-                Total = checkoutAttributes.Count
+                Total = checkoutAttributes.TotalCount
             };
 
             return model;
@@ -247,12 +247,13 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(checkoutAttribute));
 
             //get checkout attribute values
-            var checkoutAttributeValues = _checkoutAttributeService.GetCheckoutAttributeValues(checkoutAttribute.Id);
+            var checkoutAttributeValues = _checkoutAttributeService
+                .GetCheckoutAttributeValues(checkoutAttribute.Id).ToPagedList(searchModel);
 
             //prepare list model
             var model = new CheckoutAttributeValueListModel
             {
-                Data = checkoutAttributeValues.PaginationByRequestModel(searchModel).Select(value =>
+                Data = checkoutAttributeValues.Select(value =>
                 {
                     //fill in model values from the entity
                     var checkoutAttributeValueModel = value.ToModel<CheckoutAttributeValueModel>();
@@ -263,7 +264,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     return checkoutAttributeValueModel;
                 }),
-                Total = checkoutAttributeValues.Count
+                Total = checkoutAttributeValues.TotalCount
             };
 
             return model;

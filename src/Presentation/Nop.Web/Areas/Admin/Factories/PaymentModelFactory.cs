@@ -8,7 +8,7 @@ using Nop.Services.Plugins;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Directory;
 using Nop.Web.Areas.Admin.Models.Payments;
-using Nop.Web.Framework.Extensions;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -87,12 +87,12 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get payment methods
-            var paymentMethods = _paymentService.LoadAllPaymentMethods();
+            var paymentMethods = _paymentService.LoadAllPaymentMethods().ToPagedList(searchModel);
 
             //prepare grid model
             var model = new PaymentMethodListModel
             {
-                Data = paymentMethods.PaginationByRequestModel(searchModel).Select(method =>
+                Data = paymentMethods.Select(method =>
                 {
                     //fill in model values from the entity
                     var paymentMethodModel = method.ToPluginModel<PaymentMethodModel>();
@@ -105,7 +105,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     return paymentMethodModel;
                 }),
-                Total = paymentMethods.Count
+                Total = paymentMethods.TotalCount
             };
 
             return model;
