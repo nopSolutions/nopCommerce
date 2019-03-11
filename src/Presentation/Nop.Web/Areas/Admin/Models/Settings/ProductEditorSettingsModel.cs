@@ -200,10 +200,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
 
         [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.PurchasedWithOrders")]
         public bool PurchasedWithOrders { get; set; }
-
-        [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.OneColumnProductPage")]
-        public bool OneColumnProductPage { get; set; }
-
+       
         [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.ProductAttributes")]
         public bool ProductAttributes { get; set; }
 

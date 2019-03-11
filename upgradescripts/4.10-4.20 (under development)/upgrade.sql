@@ -290,6 +290,12 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnForgotPasswordPage.Hint">
     <Value>Check to show CAPTCHA on forgot password page when restore password.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.OneColumnProductPage">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.BlockTitle.OneColumnProductPage">
+    <Value></Value>
+  </LocaleResource>
 </Language>'
 
 CREATE TABLE #LocaleStringResourceTmp
@@ -1098,4 +1104,10 @@ GO
 UPDATE [ShippingMethod] 
 SET [Description] = 'Shipping by land transport'
 WHERE [Name] = 'Ground'
+GO
+
+
+--delete setting
+DELETE FROM [Setting]
+WHERE [Name] = N'producteditorsettings.onecolumnproductpage'
 GO
