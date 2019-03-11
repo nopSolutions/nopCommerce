@@ -12,9 +12,6 @@ namespace Nop.Web.Areas.Admin.Models.Settings
 
         public int ActiveStoreScopeConfiguration { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.Id")]
-        public bool Id { get; set; }
-
         [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.ProductType")]
         public bool ProductType { get; set; }
 
@@ -182,13 +179,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
 
         [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.Published")]
         public bool Published { get; set; }
-
-        [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.CreatedOn")]
-        public bool CreatedOn { get; set; }
-
-        [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.UpdatedOn")]
-        public bool UpdatedOn { get; set; }
-
+        
         [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.RelatedProducts")]
         public bool RelatedProducts { get; set; }
 
