@@ -141,7 +141,11 @@ ul.common-list {
 /*COLLAPSIBLE BLOCKS*/
 .panel.collapsible-panel {
     margin-bottom: 10px;
-    border-color: #3c8dbc;
+    border-top: 3px solid #d2d6de;
+    border-left: none;
+    border-right: none;
+    border-bottom: none;
+    box-shadow: 0 1px 1px rgba(0,0,0,0.1);
 }
 
 .panel.collapsible-panel textarea {
@@ -149,7 +153,11 @@ ul.common-list {
 }
 
 .panel.collapsible-panel .sub-panel {
-    margin-bottom: 15px;
+    margin-bottom: 5px;
+}
+
+.panel.collapsible-panel .panel {
+    margin-bottom: 0;
 }
 
 .panel.collapsible-panel .panel-heading {
@@ -158,16 +166,16 @@ ul.common-list {
     cursor: pointer;
 }
 
-.panel.collapsible-panel >.panel-heading {
-    background-color: #3c8dbc;
-    color: #fff;
-    border-color: #3c8dbc;
+.panel.collapsible-panel > .panel-heading {
+    background-color: #ffffff;
+    color: #444;
+    border-bottom: 1px solid #f4f4f4;
     padding-left: 45px;
 }
 
 .panel.collapsible-panel >.panel-heading span {
-    font-size: 14px;
-    font-weight: bold;
+    font-size: 18px;
+    font-weight: 400;
 }
 
 .panel.collapsible-panel .panel-heading i.toggle-icon {
@@ -176,11 +184,19 @@ ul.common-list {
     top: 14px;
 }
 
+.panel.collapsible-panel .panel-container .panel-group {
+    margin-bottom: 0;
+}
+
+.panel.collapsible-panel .panel-container {
+    overflow: hidden;
+}
+
 .panel.collapsible-panel .panel-heading div.icon-container {
     width: 45px;
     position: absolute;
     left: 0;
-    top: 12px;
+    top: 14px;
     text-align: center;
 }
 
