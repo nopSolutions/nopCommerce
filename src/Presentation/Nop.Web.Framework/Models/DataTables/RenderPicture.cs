@@ -3,17 +3,15 @@
     /// <summary>
     /// Represents picture render for DataTables column
     /// </summary>
-    public partial class RenderPicture : Render
+    public partial class RenderPicture : IRender
     {
-        public RenderPicture(string src)
-        {
-            this.Type = RenderType.Picture;
-            this.Src = src;
-        }
+        #region Properties
 
         /// <summary>
         /// Gets or sets picture source
         /// </summary>
         public string Src { get; set; }
+
+        #endregion
     }
 }

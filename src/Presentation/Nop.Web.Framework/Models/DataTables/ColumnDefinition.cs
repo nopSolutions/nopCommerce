@@ -9,7 +9,8 @@
 
         public ColumnDefinition()
         {
-            this.Visible = true;
+            //set default values
+            Visible = true;
         }
 
         #endregion
@@ -44,7 +45,7 @@
         /// <summary>
         /// Class to assign to each cell in the column.
         /// </summary>
-        public StyleColumn ClassName { get; set; }
+        public StyleColumn? ClassName { get; set; }
 
         #endregion
     }

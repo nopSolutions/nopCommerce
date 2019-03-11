@@ -3,14 +3,22 @@
     /// <summary>
     /// Represents button render for DataTables column
     /// </summary>
-    public partial class RenderButton : Render
+    public partial class RenderButton : IRender
     {
-        public RenderButton(string title, StyleButton style)
+        #region Ctor
+
+        /// <summary>
+        /// Initializes a new instance of the RenderButton class 
+        /// </summary>
+        /// <param name="title">Button title</param>
+        public RenderButton(string title)
         {
-            this.Type = RenderType.Button;
-            this.Title = title;
-            this.Style = style;
+            Title = title;
         }
+
+        #endregion
+
+        #region Properties
 
         /// <summary>
         /// Gets or sets button title
@@ -20,6 +28,8 @@
         /// <summary>
         /// Gets or sets button style
         /// </summary>
-        public StyleButton Style {get; set;}
+        public StyleButton Style { get; set; }
+
+        #endregion
     }
 }

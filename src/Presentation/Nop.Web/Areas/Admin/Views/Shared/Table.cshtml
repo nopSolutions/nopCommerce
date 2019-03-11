@@ -1,90 +1,86 @@
-﻿@using System.Text.Encodings.Web
+﻿@model DataTablesModel
+
+@using System.Net;
 @using System.Runtime.Serialization;
-
-@model DataTablesModel
-
 @using Nop.Web.Framework.Models.DataTables;
 
 @{
     //the locale which MomentJS should use - the default is en (English).
-    var locate = "en";
+    var locale = "en";
 }
 
-@functions{
+@functions
+{
     string GetUrl(DataUrl dataUrl)
     {
-        string url = null;
-        if (!string.IsNullOrEmpty(dataUrl.ControllerName) && !string.IsNullOrEmpty(dataUrl.ActionName))
-        {
-            url = Url.Action(dataUrl.ActionName, dataUrl.ControllerName, dataUrl.RouteValues, null, null);
-        }
-        else if (!string.IsNullOrEmpty(dataUrl.Url))
-        {
-            url = dataUrl.Url.StartsWith("~/", StringComparison.Ordinal) ? Url.Content(dataUrl.Url) : dataUrl.Url;
-            url += "/";
-        }
-
-        return url;
+        return !string.IsNullOrEmpty(dataUrl?.ActionName) && !string.IsNullOrEmpty(dataUrl.ControllerName)
+            ? Url.Action(dataUrl.ActionName, dataUrl.ControllerName, dataUrl.RouteValues)
+            : !string.IsNullOrEmpty(dataUrl.Url)
+            ? $"{(dataUrl.Url.StartsWith("~/", StringComparison.Ordinal) ? Url.Content(dataUrl.Url) : dataUrl.Url).TrimEnd('/')}/"
+            : string.Empty;
     }
 
-    string GetEnumValue(Type enumType, object enumVal)
+    string GetEnumValue(Type type, object value)
     {
-        var memInfo = enumType.GetMember(enumVal.ToString());
-        var attr = memInfo[0].GetCustomAttributes(false).OfType<EnumMemberAttribute>().FirstOrDefault();
-        if (attr != null)
-        {
-            return attr.Value;
-        }
-
-        return null;
+        return type.GetMember(value.ToString())?[0]
+            ?.GetCustomAttributes(false).OfType<EnumMemberAttribute>().FirstOrDefault()
+            ?.Value;
     }
 }
 
 <table class="table table-bordered table-hover dataTable" width="100%" id="@Model.Name"></table>
+
 <script>
     $(document).ready(function () {
         var table = $('#@Model.Name').DataTable({
             @if (!string.IsNullOrEmpty(Model.HeaderCallback))
             {
-                <text>footerCallback: function (tfoot, data, start, end, display) {
-                    return @(Model.HeaderCallback)(tfoot, data, start, end, display)
-                },
+                <text>
+                    headerCallback: function (tfoot, data, start, end, display) {
+                        return @(Model.HeaderCallback)(tfoot, data, start, end, display)
+                    },
                 </text>
             }
             @if (!string.IsNullOrEmpty(Model.FooterCallback))
             {
-                <text>headerCallback: function (tfoot, data, start, end, display) {
-                    return @(Model.FooterCallback)(tfoot, data, start, end, display)
-                },
+                <text>
+                    footerCallback: function (tfoot, data, start, end, display) {
+                        return @(Model.FooterCallback)(tfoot, data, start, end, display)
+                    },
                 </text>
             }
             @if (Model.Processing)
             {
-                <text>processing: @Model.Processing.ToString().ToLower(),
+                <text>
+                    processing: @Model.Processing.ToString().ToLower(),
                 </text>
             }
             @if (Model.ServerSide)
             {
-                <text>serverSide: @Model.ServerSide.ToString().ToLower(),
+                <text>
+                    serverSide: @Model.ServerSide.ToString().ToLower(),
                 </text>
             }
-            @if(Model.Data != null) {
-                <text> data: @(Html.Raw(Model.Data.ToString())),
+            @if (Model.Data != null)
+            {
+                <text>
+                    data: @Html.Raw(Model.Data.ToString()),
                 </text>
-            } else {
+            }
+            else
+            {
                 <text>
                     ajax:
                     {
-                        url: "@Html.Raw(GetUrl(Model.UrlRead))",
-                        type: 'POST',
+                        url: '@Html.Raw(GetUrl(Model.UrlRead))',
+                        type: '@WebRequestMethods.Http.Post',
                         dataType: 'json',
                         data: function(data) {
-                            @if(@Model.Filters != null)
+                            @foreach (var filter in Model.Filters)
                             {
-                                foreach (string filter in @Model.Filters)
-                                {
-                                    <text>data.@filter = $('#@filter').val();</text>
-                                }
+                                <text>
+                                    data.@filter = $('#@filter').val();
+                                </text>
                             }
                             addAntiForgeryToken(data);
                             return data;
@@ -93,153 +89,168 @@
                 </text>
             }
             paging: @Model.Paging.ToString().ToLower(),
-            pagingType: "@Model.PagingType",
+            pagingType: '@Model.PagingType',
             language: @await Html.PartialAsync("_GridLocalization"),
+            pageLength: @Model.Length,
             lengthMenu: [@Model.LengthMenu],
             ordering: @Model.Ordering.ToString().ToLower(),
             fixedHeader: @Model.FixedHeader.ToString().ToLower(),
             dom: '@Model.Dom',
             columnDefs: [
-                @if (Model.ColumnDefs != null)
+                @foreach (var definition in Model.ColumnDefinitions)
                 {
-                    foreach (ColumnDefinition def in Model.ColumnDefs)
+                    <text>
                     {
-                        <Text>
+                        targets: @definition.Targets,
+                        visible: @definition.Visible.ToString().ToLower(),
+                        searchable: @definition.Searchable.ToString().ToLower(),
+                        @if (definition.ClassName.HasValue)
                         {
-                            targets: @def.Targets,
-                            visible: @def.Visible.ToString().ToLower(),
-                            searchable: @def.Searchable.ToString().ToLower(),
-                            @if((int)def.ClassName > 0)
-                            {
-                                <Text>className: "@GetEnumValue(typeof(StyleColumn), def.ClassName)",
-                                </text>
-                            }
-                            @if (!string.IsNullOrEmpty(def.Width))
-                            {
-                                <Text>width: "@def.Width"
-                                </text>
-                            }
-                        },
-                        </text>
-                    }
+                            <text>
+                                className: '@GetEnumValue(typeof(StyleColumn), definition.ClassName.Value)',
+                            </text>
+                        }
+                        @if (!string.IsNullOrEmpty(definition.Width))
+                        {
+                            <text>
+                                width: '@definition.Width'
+                            </text>
+                        }
+                    },
+                    </text>
                 }
             ],
             columns: [
-                @if (Model.ColumnCollection != null)
+                @foreach (var column in Model.ColumnCollection)
                 {
-                    foreach (ColumnProperty column in Model.ColumnCollection)
+                    <text>
                     {
-                        <Text>
+                        data: '@column.Data',
+                        @if (!string.IsNullOrEmpty(column.Title) && !column.IsMasterCheckBox)
                         {
-                            data: "@column.Data",
-                            @if (!string.IsNullOrEmpty(column.Title) && !column.IsMasterCheckBox)
+                            <text>
+                                title: '@Html.Raw(column.Title)',
+                            </text>
+                        }
+                        else
+                        {
+                            if (!string.IsNullOrEmpty(column.Title) && column.IsMasterCheckBox)
                             {
-                                <Text>
-                                title: "@(Html.Raw(JavaScriptEncoder.Default.Encode(column.Title)))",</text>
-                            } else
+                                <text>
+                                    title: '<div class="checkbox"><label><input id="mastercheckbox" type="checkbox"/>@column.Title</label></div>',
+                                </text>
+                            }
+                            else
                             {
-                                if (!string.IsNullOrEmpty(column.Title) && column.IsMasterCheckBox)
+                                if (string.IsNullOrEmpty(column.Title) && column.IsMasterCheckBox)
                                 {
-                                    <Text>
-                                    title: "<div class='checkbox'><label><input id='mastercheckbox' type='checkbox'/>@column.Title</label></div>",</text>
+                                    <text>
+                                        title: '<input id="mastercheckbox" type="checkbox"/>',
+                                    </text>
                                 }
-                                else
-                                {
-                                    if (string.IsNullOrEmpty(column.Title) && column.IsMasterCheckBox)
-                                    {
-                                        <Text>
-                                        title: "<input id='mastercheckbox' type='checkbox'/>",</text>
+                            }
+                        }
+                        width: '@column.Width',
+                        @if (column.AutoWidth)
+                        {
+                            <text>
+                                autoWidth: @column.AutoWidth.ToString().ToLower(),
+                            </text>
+                        }
+                        @switch (column.Render)
+                        {
+                            case RenderLink link:
+                                <text>
+                                    render: function (data, type, row, meta) {
+                                        @if (!string.IsNullOrEmpty(link.Title))
+                                        {
+                                            <text>
+                                                return '<a href="@GetUrl(link.Url)' + row.@link.Url.DataId + '">@link.Title</a>'
+                                            </text>
+                                        }
+                                        else
+                                        {
+                                            <text>
+                                                return '<a href="@GetUrl(link.Url)' + row.@link.Url.DataId + '">' + data + '</a>'
+                                            </text>
+                                        }
                                     }
-                                }
-                            }
-                            width: "@column.Width",
-                            @if (column.AutoWidth)
-                            {
-                                <Text>
-                                autoWidth: @column.AutoWidth.ToString().ToLower(),</text>
-                            }
-
-                            @if (@column.Render != null)
-                            {
-                                switch (@column.Render.Type)
-                                {
-                                    case RenderType.Link:
-                                        var link = (RenderLink)@column.Render;
-                                        <Text>
-                                            render: function (data, type, row, meta) {
-                                                return '<a href="@GetUrl(@link.Url)' + row.@link.Url.DataId + '">' + @link.Title + '</a>'
-                                            }
-                                        </text>
-                                        break;
-                                    case RenderType.Date:
-                                        var date = (RenderDate)@column.Render;
-                                        <Text>
-                                            render: function (data, type, row, meta) {
-                                                return moment(data).locale("@locate").format("@date.Format");
-                                            }
-                                        </text>
-                                        break;
-                                    case RenderType.Button:
-                                        var button = (RenderButton)@column.Render;
-                                        <Text>
-                                            render: function (data, type, row, meta) {
-                                                return '<a href="#" class="@GetEnumValue(typeof(StyleButton), button.Style)" onclick=ActionData("' + data + '");>@button.Title</a>'
-                                            }
-                                        </text>
-                                        break;
-                                    case RenderType.ButtonEdit:
-                                        var buttonEdit = (RenderButtonEdit)@column.Render;
-
-                                        <Text>
-                                            render: function (data, type, row, meta) {
-                                                return '<a class="@GetEnumValue(typeof(StyleButton), buttonEdit.Style)" href="@GetUrl(buttonEdit.Url)' + data + '"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>'
-                                            }
-                                        </text>
-                                        break;
-                                    case RenderType.Picture:
-                                        var picture = (RenderPicture)@column.Render;
-                                        <Text>
-                                            render: function (data, type, row, meta) {
-                                                return '<img src="' + @picture.Src + '" />'
-                                            }
-                                        </text>
-                                        break;
-                                    case RenderType.Checkbox:
-                                        var checkBox = (RenderCheckBox)@column.Render;
-                                        <text>
-                                            render: function (data, type, row, meta) {
-                                                return (data == "true") ? "<input name='@checkBox.Name' value='" + row.Id + "' type='checkbox' class='checkboxGroups' checked='checked'/>"
-                                                    : "<input name='@checkBox.Name' value='" + row.Id + "' type='checkbox' class='checkboxGroups'/>";
-                                            }
-                                        </text>
-                                        break;
-                                    case RenderType.Boolean:
-                                        <text>
-                                            render: function (data, type, row) {
-                                                return (data == true) ? "<i class='fa fa-check true-icon'></i>" : "<i class='fa fa-close false-icon'></i>";
-                                            }
-                                        </text>
-                                        break;
-                                    case RenderType.Custom:
-                                        var custom = (RenderCustom)@column.Render;
-                                        <Text>
-                                            render: function (data, type, row, meta) {
-                                                return @(custom.FunctionName)(data, type, row, meta)
-                                            }
-                                        </text>
-                                        break;
-                                }
-                            }
-                        },
-                        </text>
-                    }
+                                </text>
+                                break;
+                            case RenderDate date:
+                                <text>
+                                    render: function (data, type, row, meta) {
+                                        return moment(data).locale('@locale').format('@date.Format');
+                                    }
+                                </text>
+                                break;
+                            case RenderButton button:
+                                <text>
+                                    render: function (data, type, row, meta) {
+                                        return '<a href="#" class="@GetEnumValue(typeof(StyleButton), button.Style)" onclick=ActionData("' + data + '");>@button.Title</a>'
+                                    }
+                                </text>
+                                break;
+                            case RenderButtonEdit buttonEdit:
+                                <text>
+                                    render: function (data, type, row, meta) {
+                                        return '<a class="@GetEnumValue(typeof(StyleButton), buttonEdit.Style)" href="@GetUrl(buttonEdit.Url)' + data + '"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>'
+                                    }
+                                </text>
+                                break;
+                            case RenderPicture picture:
+                                <text>
+                                    render: function (data, type, row, meta) {
+                                        @if (!string.IsNullOrEmpty(picture.Src))
+                                        {
+                                            <text>
+                                                return '<img src="@picture.Src"/>'
+                                            </text>
+                                        }
+                                        else
+                                        {
+                                            <text>
+                                                return '<img src="' + data + '"/>'
+                                            </text>
+                                        }
+                                    }
+                                </text>
+                                break;
+                            case RenderCheckBox checkBox:
+                                <text>
+                                    render: function (data, type, row, meta) {
+                                        return (data === 'true')
+                                            ? '<input name="@checkBox.Name" value="' + row.Id + '" type="checkbox" class="checkboxGroups" checked="checked" />'
+                                            : '<input name="@checkBox.Name" value="' + row.Id + '" type="checkbox" class="checkboxGroups" />';
+                                    }
+                                </text>
+                                break;
+                            case RenderBoolean renderBoolean:
+                                <text>
+                                    render: function (data, type, row) {
+                                        return (data == true)
+                                            ? '<i class="fa fa-check true-icon"></i>'
+                                            : '<i class="fa fa-close false-icon"></i>';
+                                    }
+                                </text>
+                                break;
+                            case RenderCustom custom:
+                                <text>
+                                    render: function (data, type, row, meta) {
+                                        return @(custom.FunctionName)(data, type, row, meta)
+                                    }
+                                </text>
+                                break;
+                        }
+                    },
+                    </text>
                 }
             ]
         });
 
         @if (!string.IsNullOrEmpty(Model.SearchButtonId) && (Model.DeleteSelected == null))
         {
-            <Text>
+            <text>
                 $('#@Model.SearchButtonId').click(function () {
                     table.ajax.reload();
                 });
@@ -250,10 +261,10 @@
 </script>
 @if (Model.UrlAction != null)
 {
-    <Text>
-    <script>
+    <text>
+        <script>
             function ActionData(RowID) {
-                if (confirm("@T("Admin.Common.DeleteConfirmation")")) {
+                if (confirm('@T("Admin.Common.DeleteConfirmation")')) {
                     Action(RowID);
                 }
                 else {
@@ -268,12 +279,11 @@
                 addAntiForgeryToken(postData);
 
                 $.ajax({
-                    url: "@Html.Raw(GetUrl(Model.UrlAction))",
-                    type: 'POST',
+                    url: '@Html.Raw(GetUrl(Model.UrlAction))',
+                    type: '@WebRequestMethods.Http.Post',
                     dataType: 'json',
                     data: postData,
                     success: function () {
-                        //reload grid
                         $('#@Model.Name').DataTable().draw(false);
                     },
                     error: function (xhr, ajaxOptions, thrownError) {
@@ -281,85 +291,77 @@
                     }
                 });
             }
-    </script>
+        </script>
     </text>
 }
 
 @if (Model.DeleteSelected != null)
 {
-    <Text>
-    <script>
-        var selectedIds = [];
+    <text>
+        <script>
+            var selectedIds = [];
 
-        $(document).ready(function () {
-            @if (!string.IsNullOrEmpty(Model.SearchButtonId))
-            {
-                <Text>
-                $('#@Model.SearchButtonId').click(function() {
-                //search
-                $('#@Model.Name').DataTable().ajax.reload();
-                //clear selected checkboxes
-                $('.checkboxGroups').attr('checked', false).change();
-                    selectedIds = [];
+            $(document).ready(function () {
+                @if (!string.IsNullOrEmpty(Model.SearchButtonId))
+                {
+                    <text>
+                        $('#@Model.SearchButtonId').click(function() {
+                            $('#@Model.Name').DataTable().ajax.reload();
+                            $('.checkboxGroups').attr('checked', false).change();
+                            selectedIds = [];
+                            return false;
+                        });
+                    </text>
+                }
+
+                $('#delete-selected-action-confirmation-submit-button').bind('click', function () {
+                    var postData = {
+                        selectedIds: selectedIds
+                    };
+                    addAntiForgeryToken(postData);
+                    $.ajax({
+                        cache: false,
+                        type: '@WebRequestMethods.Http.Post',
+                        url: '@Html.Raw(GetUrl(Model.DeleteSelected))',
+                        data: postData,
+                        complete: function (data) {
+                            $('#@Model.Name').DataTable().ajax.reload();
+                        },
+                        error: function (xhr, ajaxOptions, thrownError) {
+                            $('#deleteSelectedFailed-info').html(thrownError);
+                            $('#deleteSelectedFailed').click();
+                        }
+                    });
+                    $('#delete-selected-action-confirmation').modal('toggle');
                     return false;
                 });
-                </Text>
-            }
 
-            //delete selected
-            $("#delete-selected-action-confirmation-submit-button").bind("click", function () {
-                var postData = {
-                    selectedIds: selectedIds
-                };
-                addAntiForgeryToken(postData);
-                $.ajax({
-                    cache: false,
-                    type: "POST",
-                    url: "@Html.Raw(GetUrl(Model.DeleteSelected))",
-                    data: postData,
-                    complete: function (data) {
-                        //reload grid
-                        $('#@Model.Name').DataTable().ajax.reload();
-                    },
-                    error: function (xhr, ajaxOptions, thrownError) {
-                        $('#deleteSelectedFailed-info').html(thrownError);
-                        $("#deleteSelectedFailed").click();
-                    }
+                $('#mastercheckbox').click(function () {
+                    $('.checkboxGroups').attr('checked', $(this).is(':checked')).change();
                 });
-                $('#delete-selected-action-confirmation').modal('toggle');
-                return false;
-            });
 
-            $('#mastercheckbox').click(function () {
-                $('.checkboxGroups').attr('checked', $(this).is(':checked')).change();
-            });
-
-            //wire up checkboxes.
-            $('#@Model.Name').on('change', 'input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]', function (e) {
-                var $check = $(this);
-                var checked = jQuery.inArray($check.val(), selectedIds);
-                if ($check.is(":checked") == true) {
-                    if (checked == -1) {
-                        //add id to selectedIds.
-                        selectedIds.push($check.val());
+                $('#@Model.Name').on('change', 'input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]', function (e) {
+                    var $check = $(this);
+                    var checked = jQuery.inArray($check.val(), selectedIds);
+                    if ($check.is(':checked') == true) {
+                        if (checked == -1) {
+                            selectedIds.push($check.val());
+                        }
+                    } else if (checked > -1) {
+                        selectedIds = $.grep(selectedIds, function (item, index) {
+                            return item != $check.val();
+                        });
                     }
-                } else if (checked > -1) {
-                    //remove id from selectedIds.
-                    selectedIds = $.grep(selectedIds, function (item, index) {
-                        return item != $check.val();
-                    });
-                }
-                updateMasterCheckbox();
+                    updateMasterCheckbox();
+                });
             });
-        });
 
-        function updateMasterCheckbox() {
-            var numChkBoxes = $('#@Model.Name input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]').length;
-            var numChkBoxesChecked = $('#@Model.Name input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]:checked').length;
-            $('#mastercheckbox').attr('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
-        }
-
-    </script>
-    <nop-alert asp-alert-id="deleteSelectedFailed" />
-    </Text>
+            function updateMasterCheckbox() {
+                var numChkBoxes = $('#@Model.Name input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]').length;
+                var numChkBoxesChecked = $('#@Model.Name input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]:checked').length;
+                $('#mastercheckbox').attr('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
+            }
+        </script>
+        <nop-alert asp-alert-id="deleteSelectedFailed" />
+    </text>
 }

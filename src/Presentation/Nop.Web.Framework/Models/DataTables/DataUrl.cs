@@ -9,22 +9,37 @@ namespace Nop.Web.Framework.Models.DataTables
     {
         #region Ctor
 
-        public DataUrl(string actionName, string controllerName, RouteValueDictionary routeValues = null)
+        /// <summary>
+        /// Initializes a new instance of the DataUrl class 
+        /// </summary>
+        /// <param name="actionName">Action name</param>
+        /// <param name="controllerName">Controller name</param>
+        /// <param name="routeValues">Route values</param>
+        public DataUrl(string actionName, string controllerName, RouteValueDictionary routeValues)
         {
-            this.ActionName = actionName;
-            this.ControllerName = controllerName;
-            this.RouteValues = routeValues;
+            ActionName = actionName;
+            ControllerName = controllerName;
+            RouteValues = routeValues;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the DataUrl class 
+        /// </summary>
+        /// <param name="url">URL</param>
         public DataUrl(string url)
         {
-            this.Url = url;
+            Url = url;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the DataUrl class 
+        /// </summary>
+        /// <param name="url">URL</param>
+        /// <param name="dataId">Name of the column whose value is to be used as identifier in URL</param>
         public DataUrl(string url, string dataId)
         {
-            this.Url = url;
-            this.DataId = dataId;
+            Url = url;
+            DataId = dataId;
         }
 
         #endregion

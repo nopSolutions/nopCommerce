@@ -1,4 +1,5 @@
 ﻿using System.Runtime.Serialization;
+
 namespace Nop.Web.Framework.Models.DataTables
 {
     /// <summary>
@@ -11,31 +12,36 @@ namespace Nop.Web.Framework.Models.DataTables
         /// Default style
         /// </summary>
         [EnumMember(Value = "btn btn-default")]
-        defaultStyle,
+        Default,
+
         /// <summary>
         /// Dark blue style
         /// </summary>
         [EnumMember(Value = "btn btn-primary")]
-        primary,
+        Primary,
+
         /// <summary>
         /// Green style
         /// </summary>
         [EnumMember(Value = "btn btn-success")]
-        success,
+        Success,
+
         /// <summary>
         /// Blue style
         /// </summary>
         [EnumMember(Value = "btn btn-info")]
-        info,
+        Info,
+
         /// <summary>
         /// Red style
         /// </summary>
         [EnumMember(Value = "btn btn-danger")]
-        danger,
+        Danger,
+
         /// <summary>
         /// Orange style
         /// </summary>
         [EnumMember(Value = "btn btn-warning")]
-        warning        
+        Warning
     }
 }

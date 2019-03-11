@@ -3,14 +3,22 @@
     /// <summary>
     /// Represents button edit render for DataTables column
     /// </summary>
-    public partial class RenderButtonEdit : Render
+    public partial class RenderButtonEdit : IRender
     {
+        #region Ctor
+
+        /// <summary>
+        /// Initializes a new instance of the RenderButtonEdit class 
+        /// </summary>
+        /// <param name="url">URL to the edit action</param>
         public RenderButtonEdit(DataUrl url)
         {
-            this.Type = RenderType.ButtonEdit;
-            this.Url = url;
-            this.Style = StyleButton.defaultStyle;
+            Url = url;
         }
+
+        #endregion
+
+        #region Properties
 
         /// <summary>
         /// Gets or sets Url to action edit
@@ -21,5 +29,7 @@
         /// Gets or sets button style
         /// </summary>
         public StyleButton Style { get; set; }
+
+        #endregion
     }
 }

@@ -5,7 +5,7 @@
     Html.SetActiveMenuItemSystemName("Activity logs");
 }
 
-<nop-antiforgery-token/>
+<nop-antiforgery-token />
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.Configuration.ActivityLog.ActivityLog")
@@ -15,7 +15,7 @@
             <i class="fa fa-trash-o"></i>
             @T("Admin.Common.Clear")
         </a>
-        @await Component.InvokeAsync("AdminWidget", new {widgetZone = AdminWidgetZones.ActivityLogListButtons})
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ActivityLogListButtons })
     </div>
 
 </div>

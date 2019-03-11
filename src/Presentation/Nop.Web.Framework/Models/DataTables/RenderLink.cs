@@ -3,22 +3,33 @@
     /// <summary>
     /// Represents link render for DataTables column
     /// </summary>
-    public partial class RenderLink : Render
+    public partial class RenderLink : IRender
     {
-        public RenderLink(DataUrl url, string title)
+        #region Ctor
+
+        /// <summary>
+        /// Initializes a new instance of the RenderButton class 
+        /// </summary>
+        /// <param name="url">URL</param>
+        public RenderLink(DataUrl url)
         {
-            this.Type = RenderType.Link;
-            this.Url = url;
-            this.Title = title;
+            Url = url;
         }
+
+        #endregion
+
+        #region Properties
 
         /// <summary>
         /// Gets or sets Url
         /// </summary>
         public DataUrl Url { get; set; }
+
         /// <summary>
         /// Gets or sets link title 
         /// </summary>
         public string Title { get; set; }
+
+        #endregion
     }
 }

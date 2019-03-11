@@ -3,18 +3,35 @@
     /// <summary>
     /// Represents date render for DataTables column
     /// </summary>
-    public partial class RenderDate : Render
+    public partial class RenderDate : IRender
     {
-        public RenderDate(string format)
+        #region Constants
+
+        /// <summary>
+        /// Default date format
+        /// </summary>
+        private string DEFAULT_DATE_FORMAT = "MM-DD-YYYY HH:mm:ss";
+
+        #endregion
+
+        #region Ctor
+
+        public RenderDate()
         {
-            this.Type = RenderType.Date;
-            this.Format = format;
+            //set default values
+            Format = DEFAULT_DATE_FORMAT;
         }
+
+        #endregion
+
+        #region Properties
 
         /// <summary>
         /// Gets or sets format date (moment.js)
         /// See also "http://momentjs.com/"
         /// </summary>
         public string Format { get; set; }
+
+        #endregion
     }
 }

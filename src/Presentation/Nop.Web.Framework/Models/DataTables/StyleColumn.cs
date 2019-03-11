@@ -11,16 +11,18 @@ namespace Nop.Web.Framework.Models.DataTables
         /// Head and body content will be at center
         /// </summary>
         [EnumMember(Value = "dt-head-center dt-body-center")]
-        centerAll = 1,
+        CenterAll = 1,
+
         /// <summary>
         /// Head content will be at center
         /// </summary>
         [EnumMember(Value = "dt-head-center")]
-        centerHead = 2,
+        CenterHead = 2,
+
         /// <summary>
         /// Body content will be at center
         /// </summary>
         [EnumMember(Value = "dt-body-center")]
-        centerBody = 3
+        CenterBody = 3
     }
 }

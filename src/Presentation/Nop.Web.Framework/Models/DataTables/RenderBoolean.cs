@@ -3,11 +3,7 @@
     /// <summary>
     /// Represents boolean render for DataTables column
     /// </summary>
-    public partial class RenderBoolean : Render
+    public partial class RenderBoolean : IRender
     {
-        public RenderBoolean()
-        {
-            this.Type = RenderType.Boolean;
-        }
     }
 }

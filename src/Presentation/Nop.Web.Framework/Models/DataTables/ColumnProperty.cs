@@ -5,6 +5,19 @@
     /// </summary>
     public partial class ColumnProperty
     {
+        #region Ctor
+
+        /// <summary>
+        /// Initializes a new instance of the ColumnProperty class
+        /// </summary>
+        /// <param name="data">The data source for the column from the rows data object</param>
+        public ColumnProperty(string data)
+        {
+            Data = data;
+        }
+
+        #endregion
+
         #region Properties
 
         /// <summary>
@@ -21,7 +34,7 @@
         /// <summary>
         /// Render (process) the data for use in the table. This property will modify the data that is used by DataTables for various operations.
         /// </summary>
-        public Render Render { get; set; }
+        public IRender Render { get; set; }
 
         /// <summary>
         /// Column width assignment. This parameter can be used to define the width of a column, and may take any CSS value (3em, 20px etc).
