@@ -8,11 +8,6 @@ namespace Nop.Core.Domain.Catalog
     public class ProductEditorSettings : ISettings
     {
         /// <summary>
-        /// Gets or sets a value indicating whether 'ID' field is shown
-        /// </summary>
-        public bool Id { get; set; }
-
-        /// <summary>
         /// Gets or sets a value indicating whether 'Product type' field is shown
         /// </summary>
         public bool ProductType { get; set; }
@@ -291,17 +286,7 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets a value indicating whether 'Published' field is shown
         /// </summary>
         public bool Published { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether 'Created on' field is shown
-        /// </summary>
-        public bool CreatedOn { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether 'Updated on' field is shown
-        /// </summary>
-        public bool UpdatedOn { get; set; }
-
+        
         /// <summary>
         /// Gets or sets a value indicating whether 'Related products' block is shown
         /// </summary>
