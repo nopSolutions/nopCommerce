@@ -5,49 +5,49 @@
     var hideInfoBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideInfoBlockAttributeName);
 
     const string hidePricesBlockAttributeName = "ProductPage.HidePricesBlock";
-    var hidePricesBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hidePricesBlockAttributeName);
+    var hidePricesBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hidePricesBlockAttributeName, defaultValue: true);
 
     const string hideShippingBlockAttributeName = "ProductPage.HideShippingBlock";
-    var hideShippingBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideShippingBlockAttributeName);
+    var hideShippingBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideShippingBlockAttributeName, defaultValue: true);
 
     const string hideInventoryBlockAttributeName = "ProductPage.HideInventoryBlock";
-    var hideInventoryBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideInventoryBlockAttributeName);
+    var hideInventoryBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideInventoryBlockAttributeName, defaultValue: true);
 
     const string hidePicturesBlockAttributeName = "ProductPage.HidePicturesBlock";
-    var hidePicturesBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hidePicturesBlockAttributeName);
+    var hidePicturesBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hidePicturesBlockAttributeName, defaultValue: true);
 
     const string hideProductAttributesBlockAttributeName = "ProductPage.HideProductAttributesBlock";
-    var hideProductAttributesBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideProductAttributesBlockAttributeName);
+    var hideProductAttributesBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideProductAttributesBlockAttributeName, defaultValue: true);
 
     const string hideSpecificationAttributeBlockAttributeName = "ProductPage.HideSpecificationAttributeBlock";
-    var hideSpecificationAttributeBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSpecificationAttributeBlockAttributeName);
+    var hideSpecificationAttributeBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSpecificationAttributeBlockAttributeName, defaultValue: true);
 
     const string hideGiftCardBlockAttributeName = "ProductPage.HideGiftCardBlock";
-    var hideGiftCardBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideGiftCardBlockAttributeName);
+    var hideGiftCardBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideGiftCardBlockAttributeName, defaultValue: true);
 
     const string hideDownloadableBlockAttributeName = "ProductPage.HideDownloadableBlock";
-    var hideDownloadableBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideDownloadableBlockAttributeName);
+    var hideDownloadableBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideDownloadableBlockAttributeName, defaultValue: true);
 
     const string hideRentalBlockAttributeName = "ProductPage.HideRentalBlock";
-    var hideRentalBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideRentalBlockAttributeName);
+    var hideRentalBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideRentalBlockAttributeName, defaultValue: true);
 
     const string hideRecurringBlockAttributeName = "ProductPage.HideRecurringBlock";
-    var hideRecurringBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideRecurringBlockAttributeName);
+    var hideRecurringBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideRecurringBlockAttributeName, defaultValue: true);
 
     const string hideSeoBlockAttributeName = "ProductPage.HideSEOBlock";
-    var hideSeoBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSeoBlockAttributeName);
+    var hideSeoBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSeoBlockAttributeName, defaultValue: true);
 
     const string hideRelatedProductsBlockAttributeName = "ProductPage.HideRelatedProductsBlock";
-    var hideRelatedProductsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideRelatedProductsBlockAttributeName);
+    var hideRelatedProductsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideRelatedProductsBlockAttributeName, defaultValue: true);
 
     const string hideCrossSellsProductsBlockAttributeName = "ProductPage.HideCrossSellsProductsBlock";
-    var hideCrossSellsProductsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideCrossSellsProductsBlockAttributeName);
+    var hideCrossSellsProductsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideCrossSellsProductsBlockAttributeName, defaultValue: true);
 
     const string hidePurchasedWithOrdersBlockAttributeName = "ProductPage.HidePurchasedWithOrdersBlock";
-    var hidePurchasedWithOrdersBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hidePurchasedWithOrdersBlockAttributeName);
+    var hidePurchasedWithOrdersBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hidePurchasedWithOrdersBlockAttributeName, defaultValue: true);
 
     const string hideStockQuantityHistoryBlockAttributeName = "ProductPage.HideStockQuantityHistoryBlock";
-    var hideStockQuantityHistoryBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideStockQuantityHistoryBlockAttributeName);
+    var hideStockQuantityHistoryBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideStockQuantityHistoryBlockAttributeName, defaultValue: true);
 }
 
 <div asp-validation-summary="All"></div>

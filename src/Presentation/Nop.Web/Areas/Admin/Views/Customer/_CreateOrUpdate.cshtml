@@ -8,25 +8,25 @@
     var hideInfoBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideInfoBlockAttributeName);
 
     const string hideOrdersBlockAttributeName = "CustomerPage.HideOrdersBlock";
-    var hideOrdersBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideOrdersBlockAttributeName);
+    var hideOrdersBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideOrdersBlockAttributeName, defaultValue: true);
 
     const string hideAddressesBlockAttributeName = "CustomerPage.HideAddressesBlock";
-    var hideAddressesBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideAddressesBlockAttributeName);
+    var hideAddressesBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideAddressesBlockAttributeName, defaultValue: true);
 
     const string hideShoppingCartAndWishlistBlockAttributeName = "CustomerPage.HideShoppingCartAndWishlistBlock";
-    var hideShoppingCartAndWishlistBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideShoppingCartAndWishlistBlockAttributeName);
+    var hideShoppingCartAndWishlistBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideShoppingCartAndWishlistBlockAttributeName, defaultValue: true);
 
     const string hideActivityLogBlockAttributeName = "CustomerPage.HideActivityLogBlock";
-    var hideActivityLogBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideActivityLogBlockAttributeName);
+    var hideActivityLogBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideActivityLogBlockAttributeName, defaultValue: true);
 
     const string hidePlaceOrderBlockAttributeName = "CustomerPage.HidePlaceOrderBlock";
-    var hidePlaceOrderBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hidePlaceOrderBlockAttributeName);
+    var hidePlaceOrderBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hidePlaceOrderBlockAttributeName, defaultValue: true);
 
     const string hideBackInStockSubscriptionsBlockAttributeName = "CustomerPage.HideBackInStockSubscriptionsBlock";
-    var hideBackInStockSubscriptionsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideBackInStockSubscriptionsBlockAttributeName);
+    var hideBackInStockSubscriptionsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideBackInStockSubscriptionsBlockAttributeName, defaultValue: true);
 
     const string hideRewardPointsBlockAttributeName = "CustomerPage.HideRewardPointsBlock";
-    var hideRewardPointsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideRewardPointsBlockAttributeName);
+    var hideRewardPointsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideRewardPointsBlockAttributeName, defaultValue: true);
 }
 
 <div class="content">

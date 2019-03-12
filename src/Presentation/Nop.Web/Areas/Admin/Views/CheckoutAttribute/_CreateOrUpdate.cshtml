@@ -8,10 +8,10 @@
     var hideInfoBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideInfoBlockAttributeName);
 
     const string hideValuesBlockAttributeName = "CheckoutAttributePage.HideValuesBlock";
-    var hideValuesBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideValuesBlockAttributeName);
+    var hideValuesBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideValuesBlockAttributeName, defaultValue: true);
 
     const string hideConditionBlockAttributeName = "CheckoutAttributePage.HideConditionBlock";
-    var hideConditionBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideConditionBlockAttributeName);
+    var hideConditionBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideConditionBlockAttributeName, defaultValue: true);
 }
 
 <div asp-validation-summary="All"></div>

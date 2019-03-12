@@ -8,16 +8,16 @@
 	var hideInfoBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideInfoBlockAttributeName);
 
 	const string hideDisplayBlockAttributeName = "ManufacturerPage.HideDisplayBlock";
-	var hideDisplayBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideDisplayBlockAttributeName);
+	var hideDisplayBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideDisplayBlockAttributeName, defaultValue: true);
 
 	const string hideMappingsBlockAttributeName = "ManufacturerPage.HideMappingsBlock";
-	var hideMappingsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideMappingsBlockAttributeName);
+	var hideMappingsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideMappingsBlockAttributeName, defaultValue: true);
 
 	const string hideSeoBlockAttributeName = "ManufacturerPage.HideSEOBlock";
-	var hideSeoBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSeoBlockAttributeName);
+	var hideSeoBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSeoBlockAttributeName, defaultValue: true);
 
 	const string hideProductsBlockAttributeName = "ManufacturerPage.HideProductsBlock";
-	var hideProductsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideProductsBlockAttributeName);
+	var hideProductsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideProductsBlockAttributeName, defaultValue: true);
 }
 
 <div asp-validation-summary="All"></div>

@@ -5,7 +5,7 @@
     var hideInfoBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideInfoBlockAttributeName);
 
     const string hideResourcesBlockAttributeName = "LanguagePage.HideResourcesBlock";
-    var hideResourcesBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideResourcesBlockAttributeName);
+    var hideResourcesBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideResourcesBlockAttributeName, defaultValue: true);
 }
 
 <div asp-validation-summary="All"></div>

@@ -5,13 +5,13 @@
     var hideInfoBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideInfoBlockAttributeName);
 
     const string hideDisplayBlockAttributeName = "VendorPage.HideDisplayBlock";
-    var hideDisplayBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideDisplayBlockAttributeName);
+    var hideDisplayBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideDisplayBlockAttributeName, defaultValue: true);
 
     const string hideSeoBlockAttributeName = "VendorPage.HideSEOBlock";
-    var hideSeoBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSeoBlockAttributeName);
+    var hideSeoBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSeoBlockAttributeName, defaultValue: true);
 
     const string hideVendorNotesBlockAttributeName = "VendorPage.HideNotesBlock";
-    var hideVendorNotesBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideVendorNotesBlockAttributeName);
+    var hideVendorNotesBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideVendorNotesBlockAttributeName, defaultValue: true);
 }
 
 <div asp-validation-summary="All"></div>
