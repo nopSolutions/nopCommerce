@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -114,7 +115,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             return View(model);
         }
-        
+
         [HttpPost]
         public virtual IActionResult ListSelect(PluginSearchModel searchModel)
         {
@@ -127,29 +128,22 @@ namespace Nop.Web.Areas.Admin.Controllers
             return Json(model);
         }
 
-        public virtual IActionResult SearchList()
+        public virtual IActionResult AdminNavigationPlugins()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
-                return Json(new System.Collections.Generic.List<string>());
+                return Json(new List<string>());
 
-            //prepare model
-            var model = _pluginModelFactory.PreparePluginListModel(
-                new PluginSearchModel { PageSize = int.MaxValue });
+            //prepare models
+            var models = _pluginModelFactory.PrepareAdminNavigationPluginModels().Select(model => new
+            {
+                title = model.FriendlyName,
+                link = model.ConfigurationUrl,
+                parent = "Plugins",
+                grandParent = string.Empty,
+                rate = -50 //negative rate is set to move plugins to the end of list
+            }).ToList();
 
-            //negative rate is set to move plugins to the end of list
-            var filtredPlugins = model.Data
-                .Where(m => !string.IsNullOrEmpty(m.ConfigurationUrl))
-                .Select(m => new
-                {
-                    title = m.FriendlyName,
-                    link = m.ConfigurationUrl,
-                    parent = "Plugins",
-                    grandParent = "",
-                    rate = -50
-                })
-                .ToList();
-
-            return Json(filtredPlugins);
+            return Json(models);
         }
 
         [HttpPost]
