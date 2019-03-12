@@ -139,13 +139,17 @@ ul.common-list {
 }
 
 /*COLLAPSIBLE BLOCKS*/
+#ajaxBusy span.no-ajax-loader {
+  background: none;
+}
+
 .panel.collapsible-panel {
-    margin-bottom: 10px;
-    border-top: 3px solid #d2d6de;
-    border-left: none;
-    border-right: none;
-    border-bottom: none;
-    box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+  margin-bottom: 10px;
+  border-top: 3px solid #d2d6de;
+  border-left: none;
+  border-right: none;
+  border-bottom: none;
+  box-shadow: 0 1px 1px rgba(0,0,0,0.1);
 }
 
 .panel.collapsible-panel textarea {
@@ -160,7 +164,7 @@ ul.common-list {
     margin-bottom: 0;
 }
 
-.panel.collapsible-panel .panel-heading {
+.panel.collapsible-panel >.panel-heading {
     padding-right: 30px;
     position: relative;
     cursor: pointer;
@@ -207,6 +211,57 @@ ul.common-list {
 
 .panel.collapsible-panel .panel-container.collapsed {
     display: none;
+}
+
+/*Search block collapse*/
+.search-row {
+    padding-left: 50px;
+    padding-right: 30px;
+    position: relative;
+    cursor: pointer;
+}
+
+.search-row.opened {
+    margin-bottom: 15px;
+}
+
+.panel-search .search-body {
+    display: none;
+}
+
+.panel-search.collapsed {
+    cursor: pointer;
+}
+
+.icon-search {
+    position: absolute;
+    left: 0;
+    top: 3px;
+    text-align: center;
+    width: 50px;
+}
+
+.icon-search i{
+    font-size: 18px;
+    padding-right: 0!important;
+}
+
+.icon-collapse {
+    position: absolute;
+    right: 0;
+    top: 3px;
+    text-align: center;
+    width: 42px;
+}
+
+.icon-collapse i{
+    font-size: 20px;
+    padding-right: 0!important;
+    font-weight: bold;
+}
+
+.search-text {
+    font-size: 18px;
 }
 
 /*DISCOUNT*/
