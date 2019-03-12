@@ -5,19 +5,19 @@
     var hideInfoBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideInfoBlockAttributeName);
 
     const string hideRequirementsBlockAttributeName = "DiscountPage.HideRequirementsBlock";
-    var hideRequirementsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideRequirementsBlockAttributeName);
+    var hideRequirementsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideRequirementsBlockAttributeName, defaultValue: true);
 
     const string hideUsageHistoryBlockAttributeName = "DiscountPage.HideUsageHistoryBlock";
-    var hideUsageHistoryBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideUsageHistoryBlockAttributeName);
+    var hideUsageHistoryBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideUsageHistoryBlockAttributeName, defaultValue: true);
 
     const string hideAppliedToProductsBlockAttributeName = "DiscountPage.HideAppliedToProductsBlock";
-    var hideAppliedToProductsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideAppliedToProductsBlockAttributeName);
+    var hideAppliedToProductsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideAppliedToProductsBlockAttributeName, defaultValue: true);
 
     const string hideAppliedToCategoriesBlockAttributeName = "DiscountPage.HideAppliedToCategoriesBlock";
-    var hideAppliedToCategoriesBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideAppliedToCategoriesBlockAttributeName);
+    var hideAppliedToCategoriesBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideAppliedToCategoriesBlockAttributeName, defaultValue: true);
 
     const string hideAppliedToManufacturersBlockAttributeName = "DiscountPage.HideAppliedToManufacturersBlock";
-    var hideAppliedToManufacturersBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideAppliedToManufacturersBlockAttributeName);
+    var hideAppliedToManufacturersBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideAppliedToManufacturersBlockAttributeName, defaultValue: true);
 }
 
 <div asp-validation-summary="All"></div>

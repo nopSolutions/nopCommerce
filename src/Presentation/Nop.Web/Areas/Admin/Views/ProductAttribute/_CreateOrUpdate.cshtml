@@ -8,10 +8,10 @@
 	var hideInfoBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideInfoBlockAttributeName);
 
 	const string hideUsedByProductsBlockAttributeName = "ProductAttributePage.HideUsedByProductsBlock";
-	var hideUsedByProductsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideUsedByProductsBlockAttributeName);
+	var hideUsedByProductsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideUsedByProductsBlockAttributeName, defaultValue: true);
 
 	const string hidePredefinedValuesBlockAttributeName = "ProductAttributePage.HidePredefinedValuesBlock";
-	var hidePredefinedValuesBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hidePredefinedValuesBlockAttributeName);
+	var hidePredefinedValuesBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hidePredefinedValuesBlockAttributeName, defaultValue: true);
 
 }
 

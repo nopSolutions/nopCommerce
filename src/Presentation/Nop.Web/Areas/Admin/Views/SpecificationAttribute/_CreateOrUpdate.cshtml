@@ -7,10 +7,10 @@
     var hideInfoBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideInfoBlockAttributeName);
 
     const string hideOptionsBlockAttributeName = "SpecificationAttributePage.HideOptionsBlock";
-    var hideOptionsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideOptionsBlockAttributeName);
+    var hideOptionsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideOptionsBlockAttributeName, defaultValue: true);
 
     const string hideUsedByProductsBlockAttributeName = "SpecificationAttributePage.HideUsedByProductsBlock";
-    var hideUsedByProductsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideUsedByProductsBlockAttributeName);
+    var hideUsedByProductsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideUsedByProductsBlockAttributeName, defaultValue: true);
 }
 
 <div asp-validation-summary="All"></div>
