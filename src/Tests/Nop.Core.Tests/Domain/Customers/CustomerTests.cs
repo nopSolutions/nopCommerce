@@ -4,6 +4,7 @@ using Moq;
 using Nop.Core.Data;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Orders;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Events;
@@ -171,6 +172,7 @@ namespace Nop.Core.Tests.Domain.Customers
             var _customerCustomerRoleMappingRepo = new Mock<IRepository<CustomerCustomerRoleMapping>>();
             var _customerPasswordRepo = new Mock<IRepository<CustomerPassword>>();
             var _genericAttributeRepo = new Mock<IRepository<GenericAttribute>>();
+            var _shoppingCartRepo = new Mock<IRepository<ShoppingCartItem>>();
             var _genericAttributeService = new Mock<IGenericAttributeService>();
             var _eventPublisher = new Mock<IEventPublisher>();
             var _customerRoleRepo = new Mock<IRepository<CustomerRole>>();
@@ -186,6 +188,8 @@ namespace Nop.Core.Tests.Domain.Customers
                 _customerPasswordRepo.Object,
                 _customerRoleRepo.Object,
                 _genericAttributeRepo.Object,
+                _shoppingCartRepo.Object,
+                new NopNullCache(),
                 null);
 
             var customer = new TestCustomer();
