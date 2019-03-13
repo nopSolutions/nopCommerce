@@ -144,35 +144,41 @@ namespace Nop.Services.Orders
 
             //attributes
             var attributesEqual = _productAttributeParser.AreProductAttributesEqual(shoppingCartItem.AttributesXml, attributesXml, false, false);
+            if (!attributesEqual)
+                return false;
 
             //gift cards
-            var giftCardInfoSame = true;
             if (shoppingCartItem.Product.IsGiftCard)
             {
                 _productAttributeParser.GetGiftCardAttribute(attributesXml, out var giftCardRecipientName1, out var _, out var giftCardSenderName1, out var _, out var _);
 
                 _productAttributeParser.GetGiftCardAttribute(shoppingCartItem.AttributesXml, out var giftCardRecipientName2, out var _, out var giftCardSenderName2, out var _, out var _);
 
-                if (giftCardRecipientName1.ToLowerInvariant() != giftCardRecipientName2.ToLowerInvariant() ||
-                    giftCardSenderName1.ToLowerInvariant() != giftCardSenderName2.ToLowerInvariant())
-                    giftCardInfoSame = false;
+                var giftCardsAreEqual = giftCardRecipientName1.Equals(giftCardRecipientName2, StringComparison.InvariantCulture)
+                    && giftCardSenderName1.Equals(giftCardSenderName2, StringComparison.InvariantCulture);
+                if (!giftCardsAreEqual)
+                    return false;
             }
 
             //price is the same (for products which require customers to enter a price)
-            var customerEnteredPricesEqual = true;
             if (shoppingCartItem.Product.CustomerEntersPrice)
+            {
                 //TODO should we use PriceCalculationService.RoundPrice here?
-                customerEnteredPricesEqual = Math.Round(shoppingCartItem.CustomerEnteredPrice, 2) == Math.Round(customerEnteredPrice, 2);
+                var customerEnteredPricesEqual = Math.Round(shoppingCartItem.CustomerEnteredPrice, 2) == Math.Round(customerEnteredPrice, 2);
+                if (!customerEnteredPricesEqual)
+                    return false;
+            }
 
             //rental products
-            var rentalInfoEqual = true;
             if (shoppingCartItem.Product.IsRental)
             {
-                rentalInfoEqual = shoppingCartItem.RentalStartDateUtc == rentalStartDate && shoppingCartItem.RentalEndDateUtc == rentalEndDate;
+                var rentalInfoEqual = shoppingCartItem.RentalStartDateUtc == rentalStartDate && shoppingCartItem.RentalEndDateUtc == rentalEndDate;
+                if (!rentalInfoEqual)
+                    return false;
             }
 
             //found?
-            return attributesEqual && giftCardInfoSame && customerEnteredPricesEqual && rentalInfoEqual;
+            return true;
         }
 
         #endregion
