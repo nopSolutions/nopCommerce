@@ -120,6 +120,63 @@ namespace Nop.Services.Orders
 
         #endregion
 
+        #region Utilities
+
+        /// <summary>
+        /// Determine if the shopping cart item is the same as the one being compared
+        /// </summary>
+        /// <param name="shoppingCartItem">Shopping cart item</param>
+        /// <param name="product">Product</param>
+        /// <param name="attributesXml">Attributes in XML format</param>
+        /// <param name="customerEnteredPrice">Price entered by a customer</param>
+        /// <param name="rentalStartDate">Rental start date</param>
+        /// <param name="rentalEndDate">Rental end date</param>
+        /// <returns>Shopping cart item is equal</returns>
+        protected virtual bool ShoppingCartItemIsEqual(ShoppingCartItem shoppingCartItem,
+            Product product,
+            string attributesXml,
+            decimal customerEnteredPrice,
+            DateTime? rentalStartDate,
+            DateTime? rentalEndDate)
+        {
+            if (shoppingCartItem.ProductId != product.Id)
+                return false;
+
+            //attributes
+            var attributesEqual = _productAttributeParser.AreProductAttributesEqual(shoppingCartItem.AttributesXml, attributesXml, false, false);
+
+            //gift cards
+            var giftCardInfoSame = true;
+            if (shoppingCartItem.Product.IsGiftCard)
+            {
+                _productAttributeParser.GetGiftCardAttribute(attributesXml, out var giftCardRecipientName1, out var _, out var giftCardSenderName1, out var _, out var _);
+
+                _productAttributeParser.GetGiftCardAttribute(shoppingCartItem.AttributesXml, out var giftCardRecipientName2, out var _, out var giftCardSenderName2, out var _, out var _);
+
+                if (giftCardRecipientName1.ToLowerInvariant() != giftCardRecipientName2.ToLowerInvariant() ||
+                    giftCardSenderName1.ToLowerInvariant() != giftCardSenderName2.ToLowerInvariant())
+                    giftCardInfoSame = false;
+            }
+
+            //price is the same (for products which require customers to enter a price)
+            var customerEnteredPricesEqual = true;
+            if (shoppingCartItem.Product.CustomerEntersPrice)
+                //TODO should we use PriceCalculationService.RoundPrice here?
+                customerEnteredPricesEqual = Math.Round(shoppingCartItem.CustomerEnteredPrice, 2) == Math.Round(customerEnteredPrice, 2);
+
+            //rental products
+            var rentalInfoEqual = true;
+            if (shoppingCartItem.Product.IsRental)
+            {
+                rentalInfoEqual = shoppingCartItem.RentalStartDateUtc == rentalStartDate && shoppingCartItem.RentalEndDateUtc == rentalEndDate;
+            }
+
+            //found?
+            return attributesEqual && giftCardInfoSame && customerEnteredPricesEqual && rentalInfoEqual;
+        }
+
+        #endregion
+
         #region Methods
 
         /// <summary>
@@ -1061,46 +1118,8 @@ namespace Nop.Services.Orders
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            foreach (var sci in shoppingCart.Where(a => a.ShoppingCartType == shoppingCartType))
-            {
-                if (sci.ProductId != product.Id)
-                    continue;
-
-                //attributes
-                var attributesEqual = _productAttributeParser.AreProductAttributesEqual(sci.AttributesXml, attributesXml, false, false);
-
-                //gift cards
-                var giftCardInfoSame = true;
-                if (sci.Product.IsGiftCard)
-                {
-                    _productAttributeParser.GetGiftCardAttribute(attributesXml, out var giftCardRecipientName1, out var _, out var giftCardSenderName1, out var _, out var _);
-
-                    _productAttributeParser.GetGiftCardAttribute(sci.AttributesXml, out var giftCardRecipientName2, out var _, out var giftCardSenderName2, out var _, out var _);
-
-                    if (giftCardRecipientName1.ToLowerInvariant() != giftCardRecipientName2.ToLowerInvariant() ||
-                        giftCardSenderName1.ToLowerInvariant() != giftCardSenderName2.ToLowerInvariant())
-                        giftCardInfoSame = false;
-                }
-
-                //price is the same (for products which require customers to enter a price)
-                var customerEnteredPricesEqual = true;
-                if (sci.Product.CustomerEntersPrice)
-                    //TODO should we use PriceCalculationService.RoundPrice here?
-                    customerEnteredPricesEqual = Math.Round(sci.CustomerEnteredPrice, 2) == Math.Round(customerEnteredPrice, 2);
-
-                //rental products
-                var rentalInfoEqual = true;
-                if (sci.Product.IsRental)
-                {
-                    rentalInfoEqual = sci.RentalStartDateUtc == rentalStartDate && sci.RentalEndDateUtc == rentalEndDate;
-                }
-
-                //found?
-                if (attributesEqual && giftCardInfoSame && customerEnteredPricesEqual && rentalInfoEqual)
-                    return sci;
-            }
-
-            return null;
+            return shoppingCart.Where(sci => sci.ShoppingCartType == shoppingCartType)
+                .FirstOrDefault(sci => ShoppingCartItemIsEqual(sci, product, attributesXml, customerEnteredPrice, rentalStartDate, rentalEndDate));
         }
 
         /// <summary>
