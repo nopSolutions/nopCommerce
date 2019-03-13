@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
@@ -68,10 +68,14 @@ namespace Nop.Services.Orders
         /// Gets shopping cart
         /// </summary>
         /// <param name="customer">Customer</param>
-        /// <param name="shoppingCartType">Shopping cart type</param>
-        /// <param name="storeId">Store identifier</param>
+        /// <param name="shoppingCartType">Shopping cart type; pass null to load all records</param>
+        /// <param name="storeId">Store identifier; pass 0 to load all records</param>
+        /// <param name="productId">Product identifier; pass null to load all records</param>
+        /// <param name="createdFromUtc">Created date from (UTC); pass null to load all records</param>
+        /// <param name="createdToUtc">Created date to (UTC); pass null to load all records</param>
         /// <returns>Shopping Cart</returns>
-        IList<ShoppingCartItem> GetShoppingCart(Customer customer, ShoppingCartType shoppingCartType, int storeId);
+        IList<ShoppingCartItem> GetShoppingCart(Customer customer, ShoppingCartType? shoppingCartType = null,
+            int storeId = 0, int? productId = null, DateTime? createdFromUtc = null, DateTime? createdToUtc = null);
 
         /// <summary>
         /// Validates shopping cart item attributes

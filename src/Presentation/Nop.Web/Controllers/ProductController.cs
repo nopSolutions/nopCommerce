@@ -45,6 +45,7 @@ namespace Nop.Web.Controllers
         private readonly IProductModelFactory _productModelFactory;
         private readonly IProductService _productService;
         private readonly IRecentlyViewedProductsService _recentlyViewedProductsService;
+        private readonly IShoppingCartService _shoppingCartService;
         private readonly IStoreContext _storeContext;
         private readonly IStoreMappingService _storeMappingService;
         private readonly IUrlRecordService _urlRecordService;
@@ -70,6 +71,7 @@ namespace Nop.Web.Controllers
             IProductModelFactory productModelFactory,
             IProductService productService,
             IRecentlyViewedProductsService recentlyViewedProductsService,
+            IShoppingCartService shoppingCartService,
             IStoreContext storeContext,
             IStoreMappingService storeMappingService,
             IUrlRecordService urlRecordService,
@@ -91,6 +93,7 @@ namespace Nop.Web.Controllers
             _productModelFactory = productModelFactory;
             _productService = productService;
             _recentlyViewedProductsService = recentlyViewedProductsService;
+            _shoppingCartService = shoppingCartService;
             _storeContext = storeContext;
             _storeMappingService = storeMappingService;
             _urlRecordService = urlRecordService;
@@ -141,9 +144,7 @@ namespace Nop.Web.Controllers
             ShoppingCartItem updatecartitem = null;
             if (_shoppingCartSettings.AllowCartItemEditing && updatecartitemid > 0)
             {
-                var cart = _workContext.CurrentCustomer.ShoppingCartItems
-                    .LimitPerStore(_storeContext.CurrentStore.Id)
-                    .ToList();
+                var cart = _shoppingCartService.GetShoppingCart(_workContext.CurrentCustomer, storeId: _storeContext.CurrentStore.Id);
                 updatecartitem = cart.FirstOrDefault(x => x.Id == updatecartitemid);
                 //not found?
                 if (updatecartitem == null)

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
@@ -39,6 +39,7 @@ namespace Nop.Plugin.Payments.Worldpay
         private readonly ILogger _logger;
         private readonly IPaymentService _paymentService;
         private readonly ISettingService _settingService;
+        private readonly IShoppingCartService _shoppingCartService;
         private readonly IStoreService _storeService;
         private readonly IWebHelper _webHelper;
         private readonly WorldpayPaymentManager _worldpayPaymentManager;
@@ -55,6 +56,7 @@ namespace Nop.Plugin.Payments.Worldpay
             ILogger logger,
             IPaymentService paymentService,
             ISettingService settingService,
+            IShoppingCartService shoppingCartService,
             IStoreService storeService,
             IWebHelper webHelper,
             WorldpayPaymentManager worldpayPaymentManager,
@@ -66,6 +68,7 @@ namespace Nop.Plugin.Payments.Worldpay
             _localizationService = localizationService;
             _logger = logger;
             _paymentService = paymentService;
+            _shoppingCartService = shoppingCartService;
             _settingService = settingService;
             _storeService = storeService;
             _webHelper = webHelper;
@@ -157,9 +160,7 @@ namespace Nop.Plugin.Payments.Worldpay
             request.Amount = Math.Round(amount, 2);
 
             //get current shopping cart
-            var shoppingCart = customer.ShoppingCartItems
-                .Where(shoppingCartItem => shoppingCartItem.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .LimitPerStore(paymentRequest.StoreId).ToList();
+            var shoppingCart = _shoppingCartService.GetShoppingCart(customer, ShoppingCartType.ShoppingCart, paymentRequest.StoreId);
 
             //whether there are non-downloadable items in the shopping cart
             var nonDownloadable = shoppingCart.Any(item => !item.Product.IsDownload);
@@ -167,7 +168,7 @@ namespace Nop.Plugin.Payments.Worldpay
 
             //try to get previously stored card details
             var storedCardKey = _localizationService.GetResource("Plugins.Payments.Worldpay.Fields.StoredCard.Key");
-            if (paymentRequest.CustomValues.TryGetValue(storedCardKey, out object storedCardId) && !storedCardId.ToString().Equals(Guid.Empty.ToString()))
+            if (paymentRequest.CustomValues.TryGetValue(storedCardKey, out var storedCardId) && !storedCardId.ToString().Equals(Guid.Empty.ToString()))
             {
                 //check whether customer exists in Vault
                 var vaultCustomer = _worldpayPaymentManager.GetCustomer(_genericAttributeService.GetAttribute<string>(customer, WorldpayPaymentDefaults.CustomerIdAttribute))
@@ -185,7 +186,7 @@ namespace Nop.Plugin.Payments.Worldpay
 
             //or try to get the card token
             var cardTokenKey = _localizationService.GetResource("Plugins.Payments.Worldpay.Fields.Token.Key");
-            if (!paymentRequest.CustomValues.TryGetValue(cardTokenKey, out object token) || string.IsNullOrEmpty(token?.ToString()))
+            if (!paymentRequest.CustomValues.TryGetValue(cardTokenKey, out var token) || string.IsNullOrEmpty(token?.ToString()))
                 throw new NopException("Failed to get the card token");
 
             //remove the card token from payment custom values, since it is no longer needed
@@ -199,7 +200,7 @@ namespace Nop.Plugin.Payments.Worldpay
 
             //whether to save card details for the future purchasing
             var saveCardKey = _localizationService.GetResource("Plugins.Payments.Worldpay.Fields.SaveCard.Key");
-            if (paymentRequest.CustomValues.TryGetValue(saveCardKey, out object saveCardValue) && saveCardValue is bool saveCard && saveCard && !customer.IsGuest())
+            if (paymentRequest.CustomValues.TryGetValue(saveCardKey, out var saveCardValue) && saveCardValue is bool saveCard && saveCard && !customer.IsGuest())
             {
                 //remove the value from payment custom values, since it is no longer needed
                 paymentRequest.CustomValues.Remove(saveCardKey);
@@ -452,7 +453,7 @@ namespace Nop.Plugin.Payments.Worldpay
                 throw new ArgumentException(nameof(form));
 
             //try to get errors
-            if (form.TryGetValue("Errors", out StringValues errorsString) && !StringValues.IsNullOrEmpty(errorsString))
+            if (form.TryGetValue("Errors", out var errorsString) && !StringValues.IsNullOrEmpty(errorsString))
                 return new[] { errorsString.ToString() }.ToList();
 
             return new List<string>();
@@ -471,13 +472,13 @@ namespace Nop.Plugin.Payments.Worldpay
             var paymentRequest = new ProcessPaymentRequest();
 
             //pass custom values to payment method
-            if (form.TryGetValue("Token", out StringValues token) && !StringValues.IsNullOrEmpty(token))
+            if (form.TryGetValue("Token", out var token) && !StringValues.IsNullOrEmpty(token))
                 paymentRequest.CustomValues.Add(_localizationService.GetResource("Plugins.Payments.Worldpay.Fields.Token.Key"), token.ToString());
 
-            if (form.TryGetValue("StoredCardId", out StringValues storedCardId) && !StringValues.IsNullOrEmpty(storedCardId) && !storedCardId.Equals(Guid.Empty.ToString()))
+            if (form.TryGetValue("StoredCardId", out var storedCardId) && !StringValues.IsNullOrEmpty(storedCardId) && !storedCardId.Equals(Guid.Empty.ToString()))
                 paymentRequest.CustomValues.Add(_localizationService.GetResource("Plugins.Payments.Worldpay.Fields.StoredCard.Key"), storedCardId.ToString());
 
-            if (form.TryGetValue("SaveCard", out StringValues saveCardValue) && !StringValues.IsNullOrEmpty(saveCardValue) && bool.TryParse(saveCardValue[0], out bool saveCard) && saveCard)
+            if (form.TryGetValue("SaveCard", out var saveCardValue) && !StringValues.IsNullOrEmpty(saveCardValue) && bool.TryParse(saveCardValue[0], out var saveCard) && saveCard)
                 paymentRequest.CustomValues.Add(_localizationService.GetResource("Plugins.Payments.Worldpay.Fields.SaveCard.Key"), saveCard);
 
             return paymentRequest;
@@ -565,7 +566,7 @@ namespace Nop.Plugin.Payments.Worldpay
                                 <li>a. Sign into the Virtual Terminal with the login credentials that you received</li>
                                 <li>b. The SecureNet ID will be found on the upper right hand side of your Virtual Terminal page</li>
                                 <li>c. To obtain your Keys, navigate to the Settings tab and select the Key Management link</li>
-                                <li>d. Select appropriate tab � SecureKey or Public Key</li>
+                                <li>d. Select appropriate tab – SecureKey or Public Key</li>
                             </ul>
                         </li>
                         <li>
@@ -648,68 +649,42 @@ namespace Nop.Plugin.Payments.Worldpay
         /// <summary>
         /// Gets a value indicating whether capture is supported
         /// </summary>
-        public bool SupportCapture
-        {
-            get { return true; }
-        }
+        public bool SupportCapture => true;
 
         /// <summary>
         /// Gets a value indicating whether partial refund is supported
         /// </summary>
-        public bool SupportPartiallyRefund
-        {
-            get { return true; }
-        }
+        public bool SupportPartiallyRefund => true;
 
         /// <summary>
         /// Gets a value indicating whether refund is supported
         /// </summary>
-        public bool SupportRefund
-        {
-            get { return true; }
-        }
+        public bool SupportRefund => true;
 
         /// <summary>
         /// Gets a value indicating whether void is supported
         /// </summary>
-        public bool SupportVoid
-        {
-            get { return true; }
-        }
+        public bool SupportVoid => true;
 
         /// <summary>
         /// Gets a recurring payment type of payment method
         /// </summary>
-        public RecurringPaymentType RecurringPaymentType
-        {
-            get { return RecurringPaymentType.Manual; }
-        }
+        public RecurringPaymentType RecurringPaymentType => RecurringPaymentType.Manual;
 
         /// <summary>
         /// Gets a payment method type
         /// </summary>
-        public Nop.Services.Payments.PaymentMethodType PaymentMethodType
-        {
-            get { return Nop.Services.Payments.PaymentMethodType.Standard; }
-        }
+        public Nop.Services.Payments.PaymentMethodType PaymentMethodType => Nop.Services.Payments.PaymentMethodType.Standard;
 
         /// <summary>
         /// Gets a value indicating whether we should display a payment information page for this plugin
         /// </summary>
-        public bool SkipPaymentInfo
-        {
-            get { return false; }
-        }
+        public bool SkipPaymentInfo => false;
 
         /// <summary>
         /// Gets a payment method description that will be displayed on checkout pages in the public store
         /// </summary>
-        public string PaymentMethodDescription
-        {
-            //return description of this payment method to be display on "payment method" checkout step. good practice is to make it localizable
-            //for example, for a redirection payment method, description may be like this: "You will be redirected to PayPal site to complete the payment"
-            get { return _localizationService.GetResource("Plugins.Payments.Worldpay.PaymentMethodDescription"); }
-        }
+        public string PaymentMethodDescription => _localizationService.GetResource("Plugins.Payments.Worldpay.PaymentMethodDescription");
 
         #endregion
     }

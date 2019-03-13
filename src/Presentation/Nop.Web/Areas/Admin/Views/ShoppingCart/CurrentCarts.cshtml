@@ -198,7 +198,12 @@
                                             data: function() {
                                                 var data = {
                                                     CustomerId: e.data.CustomerId,
-                                                    ShoppingCartType: $('#@Html.IdFor(model => model.ShoppingCartType)').val()
+                                                    ShoppingCartType: $('#@Html.IdFor(model => model.ShoppingCartType)').val(),
+                                                    StartDate: $('#@Html.IdFor(model => model.StartDate)').val(),
+                                                    EndDate: $('#@Html.IdFor(model => model.EndDate)').val(),
+                                                    StoreId: $('#@Html.IdFor(model => model.StoreId)').val(),
+                                                    BillingCountryId: $('#@Html.IdFor(model => model.BillingCountryId)').val(),
+                                                    ProductId: $('#@Html.IdFor(model => model.ProductId)').val()
                                                 };
                                                 addAntiForgeryToken(data);
                                                 return data;
