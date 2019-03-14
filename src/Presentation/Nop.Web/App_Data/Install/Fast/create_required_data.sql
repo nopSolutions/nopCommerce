@@ -1482,7 +1482,6 @@ INSERT [Setting] ([Id], [Name], [Value], [StoreId]) VALUES (56, N'adminareasetti
 INSERT [Setting] ([Id], [Name], [Value], [StoreId]) VALUES (57, N'adminareasettings.checkcopyrightremovalkey', N'True', 0)
 INSERT [Setting] ([Id], [Name], [Value], [StoreId]) VALUES (58, N'adminareasettings.lastnewstitleadminarea', N'', 0)
 INSERT [Setting] ([Id], [Name], [Value], [StoreId]) VALUES (59, N'adminareasettings.useisodateformatinjsonresult', N'True', 0)
-INSERT [Setting] ([Id], [Name], [Value], [StoreId]) VALUES (60, N'adminareasettings.usenestedsetting', N'True', 0)
 INSERT [Setting] ([Id], [Name], [Value], [StoreId]) VALUES (61, N'producteditorsettings.id', N'False', 0)
 INSERT [Setting] ([Id], [Name], [Value], [StoreId]) VALUES (62, N'producteditorsettings.producttype', N'False', 0)
 INSERT [Setting] ([Id], [Name], [Value], [StoreId]) VALUES (63, N'producteditorsettings.visibleindividually', N'False', 0)

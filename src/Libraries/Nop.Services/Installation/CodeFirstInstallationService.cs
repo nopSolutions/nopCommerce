@@ -6071,8 +6071,7 @@ namespace Nop.Services.Installation
                 UseRichEditorForCustomerEmails = false,
                 UseRichEditorInMessageTemplates = false,
                 CheckCopyrightRemovalKey = true,
-                UseIsoDateFormatInJsonResult = true,
-                UseNestedSetting = true
+                UseIsoDateFormatInJsonResult = true
             });
 
             settingService.SaveSetting(new ProductEditorSettings

@@ -1214,3 +1214,7 @@ DELETE FROM [Setting]
 WHERE [Name] = N'producteditorsettings.id'
 GO
 
+--delete setting
+DELETE FROM [Setting]
+WHERE [Name] = N'adminareasettings.usenestedsetting'
+GO
