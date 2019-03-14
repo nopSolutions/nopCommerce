@@ -1,0 +1,46 @@
+@model OrderSettingsModel
+
+<div class="panel panel-default advanced-setting">
+    <div class="panel-heading">
+        @T("Admin.Configuration.Settings.Order.BlockTitle.GiftCards")
+    </div>
+    <div class="panel-body">
+        <div class="form-group">
+            <div class="col-md-3">
+                <nop-label asp-for="ActivateGiftCardsAfterCompletingOrder" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="ActivateGiftCardsAfterCompletingOrder" />
+                <span asp-validation-for="ActivateGiftCardsAfterCompletingOrder"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-3">
+                <nop-label asp-for="DeactivateGiftCardsAfterCancellingOrder" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="DeactivateGiftCardsAfterCancellingOrder" />
+                <span asp-validation-for="DeactivateGiftCardsAfterCancellingOrder"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-3">
+                <nop-label asp-for="DeactivateGiftCardsAfterDeletingOrder" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="DeactivateGiftCardsAfterDeletingOrder" />
+                <span asp-validation-for="DeactivateGiftCardsAfterDeletingOrder"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="DeleteGiftCardUsageHistory_OverrideForStore" asp-input="DeleteGiftCardUsageHistory" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="DeleteGiftCardUsageHistory" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="DeleteGiftCardUsageHistory" />
+                <span asp-validation-for="DeleteGiftCardUsageHistory"></span>
+            </div>
+        </div>
+    </div>
+</div>
