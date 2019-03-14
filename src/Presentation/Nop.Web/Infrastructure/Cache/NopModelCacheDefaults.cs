@@ -45,7 +45,6 @@ namespace Nop.Web.Infrastructure.Cache
         /// {2} : current store ID
         /// </remarks>
         public static string ManufacturerHasFeaturedProductsKey => "Nop.pres.manufacturer.hasfeaturedproducts-{0}-{1}-{2}";
-        public static string ManufacturerHasFeaturedProductsPatternKey => "Nop.pres.manufacturer.hasfeaturedproducts";
         public static string ManufacturerHasFeaturedProductsPatternKeyById => "Nop.pres.manufacturer.hasfeaturedproducts-{0}-";
 
         /// <summary>
@@ -79,7 +78,6 @@ namespace Nop.Web.Infrastructure.Cache
         /// {2} : current store ID
         /// </remarks>
         public static string CategoryHasFeaturedProductsKey => "Nop.pres.category.hasfeaturedproducts-{0}-{1}-{2}";
-        public static string CategoryHasFeaturedProductsPatternKey => "Nop.pres.category.hasfeaturedproducts";
         public static string CategoryHasFeaturedProductsPatternKeyById => "Nop.pres.category.hasfeaturedproducts-{0}-";
 
         /// <summary>
