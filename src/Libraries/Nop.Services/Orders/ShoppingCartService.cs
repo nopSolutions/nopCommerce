@@ -154,8 +154,8 @@ namespace Nop.Services.Orders
 
                 _productAttributeParser.GetGiftCardAttribute(shoppingCartItem.AttributesXml, out var giftCardRecipientName2, out var _, out var giftCardSenderName2, out var _, out var _);
 
-                var giftCardsAreEqual = giftCardRecipientName1.Equals(giftCardRecipientName2, StringComparison.InvariantCulture)
-                    && giftCardSenderName1.Equals(giftCardSenderName2, StringComparison.InvariantCulture);
+                var giftCardsAreEqual = giftCardRecipientName1.Equals(giftCardRecipientName2, StringComparison.InvariantCultureIgnoreCase)
+                    && giftCardSenderName1.Equals(giftCardSenderName2, StringComparison.InvariantCultureIgnoreCase);
                 if (!giftCardsAreEqual)
                     return false;
             }
