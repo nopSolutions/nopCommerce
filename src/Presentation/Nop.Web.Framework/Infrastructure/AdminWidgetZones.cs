@@ -4,11 +4,8 @@
     {
         public static string ActivityLogListButtons => "admin_activity_log_list_buttons";
         public static string ActivityTypesListButtons => "admin_activity_types_list_buttons";
+        public static string AddressAttributeDetailsBlock => "admin_address_attribute_details_block";
         public static string AddressAttributeDetailsButtons => "admin_address_attribute_details_buttons";
-        public static string AddressAttributeDetailsInfoBottom => "admin_address_attribute_details_info_bottom";
-        public static string AddressAttributeDetailsInfoTop => "admin_address_attribute_details_info_top";
-        public static string AddressAttributeDetailsValuesBottom => "admin_address_attribute_details_values_bottom";
-        public static string AddressAttributeDetailsValuesTop => "admin_address_attribute_details_values_top";
         public static string AddressAttributeValueDetailsBottom => "admin_address_attribute_value_details_bottom";
         public static string AddressAttributeValueDetailsButtons => "admin_address_attribute_value_details_buttons";
         public static string AddressAttributeValueDetailsTop => "admin_address_attribute_value_details_top";
@@ -57,9 +54,7 @@
         public static string CustomerAddressDetailsButtons => "admin_customer_address_details_buttons";
         public static string CustomerAddressDetailsTop => "admin_customer_address_details_top";
         public static string CustomerAttributeDetailsButtons => "admin_customer_attribute_details_buttons";
-        public static string CustomerAttributeDetailsInfoBottom => "admin_customer_attribute_details_info_bottom";
-        public static string CustomerAttributeDetailsInfoTop => "admin_customer_attribute_details_info_top";
-        public static string CustomerAttributeDetailsValuesBottom => "admin_customer_attribute_details_values_bottom";
+        public static string CustomerAttributeDetailsBlock => "admin_customer_attribute_details_block";
         public static string CustomerAttributeDetailsValuesTop => "admin_customer_attribute_details_values_top";
         public static string CustomerAttributeValueDetailsBottom => "admin_customer_attribute_value_details_bottom";
         public static string CustomerAttributeValueDetailsButtons => "admin_customer_attribute_value_details_buttons";
@@ -72,12 +67,8 @@
         public static string CustomerRoleDetailsButtons => "admin_customer_role_details_buttons";
         public static string CustomerRoleDetailsTop => "admin_customer_role_details_top";
         public static string CustomerRoleListButtons => "admin_customer_role_list_buttons";
-        public static string CustomerUserSettingsAddressFormFieldsBottom => "admin_customer_user_settings_address_form_fields_bottom";
-        public static string CustomerUserSettingsAddressFormFieldsTop => "admin_customer_user_settings_address_form_fields_top";
+        public static string CustomerUserDetailsBlock => "admin_customer_user_details_block";
         public static string CustomerUserSettingsButtons => "admin_customer_user_settings_buttons";
-        public static string CustomerUserSettingsCustomerFormFieldsBottom => "admin_customer_user_settings_customer_form_fields_bottom";
-        public static string CustomerUserSettingsCustomerFormFieldsTop => "admin_customer_user_settings_customer_form_fields_top";
-        public static string CustomerUserSettingsSettingsTop => "admin_customer_user_settings_settings_top";
         public static string DashboardBottom => "admin_dashboard_bottom";
         public static string DashboardCommonstatisticsAfter => "admin_dashboard_commonstatistics_after";
         public static string DashboardCustomerorderchartsAfter => "admin_dashboard_customerordercharts_after";
@@ -164,10 +155,8 @@
         public static string OrderListButtons => "admin_order_list_buttons";
         public static string OrderPartiallyRefundButtons => "admin_order_partially_refund_buttons";
         public static string OrderSettingsButtons => "admin_order_settings_buttons";
+        public static string OrderSettingsDetailsBlock => "admin_order_settings_details_block";
         public static string OrderSettingsReturnRequestSettingsBottom => "admin_order_settings_return_request_settings_bottom";
-        public static string OrderSettingsReturnRequestSettingsTop => "admin_order_settings_return_request_settings_top";
-        public static string OrderSettingsSettingsBottom => "admin_order_settings_settings_bottom";
-        public static string OrderSettingsSettingsTop => "admin_order_settings_settings_top";
         public static string OrderShipmentAddButtons => "admin_order_shipment_add_buttons";
         public static string OrderShipmentDetailsButtons => "admin_order_shipment_details_buttons";
         public static string OrderShipmentListButtons => "admin_order_shipment_list_buttons";
@@ -193,13 +182,8 @@
         public static string ProductAttributeDetailsBlock => "admin_product_attribute_details_block";
         public static string ProductAttributeDetailsButtons => "admin_product_attribute_details_buttons";
         public static string ProductAttributeListButtons => "admin_product_attribute_list_buttons";
+        public static string ProductAttributeMappingDetailsBlock => "admin_product_attribute_mapping_details_block";
         public static string ProductAttributeMappingDetailsButtons => "admin_product_attribute_mapping_details_buttons";
-        public static string ProductAttributeMappingDetailsConditionBottom => "admin_product_attribute_mapping_details_condition_bottom";
-        public static string ProductAttributeMappingDetailsConditionTop => "admin_product_attribute_mapping_details_condition_top";
-        public static string ProductAttributeMappingDetailsInfoBottom => "admin_product_attribute_mapping_details_info_bottom";
-        public static string ProductAttributeMappingDetailsInfoTop => "admin_product_attribute_mapping_details_info_top";
-        public static string ProductAttributeMappingDetailsValuesBottom => "admin_product_attribute_mapping_details_values_bottom";
-        public static string ProductAttributeMappingDetailsValuesTop => "admin_product_attribute_mapping_details_values_top";
         public static string ProductAttributePredefinedValueDetailsButtons => "admin_product_attribute_predefined_value_details_buttons";
         public static string ProductAttributePredefinedValuesDetailsBottom => "admin_product_attribute_predefined_values_details_bottom";
         public static string ProductAttributePredefinedValuesDetailsTop => "admin_product_attribute_predefined_values_details_top";
@@ -296,11 +280,8 @@
         public static string TopicDetailsButtons => "admin_topic_details_buttons";
         public static string TopicListButtons => "admin_topic_list_buttons";
         public static string TopicTemplateListButtons => "admin_topic_template_list_buttons";
+        public static string AdminVendorAttributeDetailsBlock => "admin_vendor_attribute_details_block";
         public static string AdminVendorAttributeDetailsButtons => "admin_vendor_attribute_details_buttons";
-        public static string AdminVendorAttributeDetailsInfoBottom => "admin_vendor_attribute_details_info_bottom";
-        public static string AdminVendorAttributeDetailsInfoTop => "admin_vendor_attribute_details_info_top";
-        public static string AdminVendorAttributeDetailsValuesBottom => "admin_vendor_attribute_details_values_bottom";
-        public static string AdminVendorAttributeDetailsValuesTop => "admin_vendor_attribute_details_values_top";
         public static string AdminVendorAttributeValueDetailsBottom => "admin_vendor_attribute_value_details_bottom";
         public static string AdminVendorAttributeValueDetailsButtons => "admin_vendor_attribute_value_details_buttons";
         public static string AdminVendorAttributeValueDetailsTop => "admin_vendor_attribute_value_details_top";
