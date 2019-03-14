@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -527,23 +527,20 @@ namespace Nop.Services.Media
             string storeLocation = null,
             PictureType defaultPictureType = PictureType.Entity)
         {
-            var url = string.Empty;
-            byte[] pictureBinary = null;
-            if (picture != null)
-                pictureBinary = LoadPictureBinary(picture);
-            if (picture == null || pictureBinary == null || pictureBinary.Length == 0)
-            {
-                if (showDefaultPicture)
-                {
-                    url = GetDefaultPictureUrl(targetSize, defaultPictureType, storeLocation);
-                }
+            var url = showDefaultPicture ? GetDefaultPictureUrl(targetSize, defaultPictureType, storeLocation) : string.Empty;
 
+            if (picture == null)
                 return url;
-            }
+
+            byte[] pictureBinary = null;
 
             if (picture.IsNew)
             {
                 DeletePictureThumbs(picture);
+                pictureBinary = LoadPictureBinary(picture);
+
+                if ((pictureBinary?.Length ?? 0) == 0)
+                    return url;
 
                 //we do not validate picture binary here to ensure that no exception ("Parameter is not valid") will be thrown
                 picture = UpdatePicture(picture.Id,
@@ -586,6 +583,11 @@ namespace Nop.Services.Media
                     //check, if the file was created, while we were waiting for the release of the mutex.
                     if (!GeneratedThumbExists(thumbFilePath, thumbFileName))
                     {
+                        pictureBinary = pictureBinary ?? LoadPictureBinary(picture);
+
+                        if ((pictureBinary?.Length ?? 0) == 0)
+                            return url;
+
                         byte[] pictureBinaryResized;
                         if (targetSize != 0)
                         {
