@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
+using Nop.Core.Caching;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Plugins;
 using Nop.Services.Authentication.External;
@@ -37,8 +38,10 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IPaymentService _paymentService;
         private readonly IPluginService _pluginService;
         private readonly IShippingService _shippingService;
+        private readonly IStaticCacheManager _cacheManager;
         private readonly IStoreMappingSupportedModelFactory _storeMappingSupportedModelFactory;
         private readonly IWidgetService _widgetService;
+        private readonly IWorkContext _workContext;
         private readonly TaxSettings _taxSettings;
         private readonly ILogger _logger;
 
@@ -55,8 +58,10 @@ namespace Nop.Web.Areas.Admin.Factories
             IPaymentService paymentService,
             IPluginService pluginService,
             IShippingService shippingService,
+            IStaticCacheManager cacheManager,
             IStoreMappingSupportedModelFactory storeMappingSupportedModelFactory,
             IWidgetService widgetService,
+            IWorkContext workContext,
             TaxSettings taxSettings,
             ILogger logger)
         {
@@ -69,8 +74,10 @@ namespace Nop.Web.Areas.Admin.Factories
             _paymentService = paymentService;
             _pluginService = pluginService;
             _shippingService = shippingService;
+            _cacheManager = cacheManager;
             _storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
             _widgetService = widgetService;
+            _workContext = workContext;
             _taxSettings = taxSettings;
             _logger = logger;
         }
@@ -384,6 +391,26 @@ namespace Nop.Web.Areas.Admin.Factories
             PrepareOfficialFeedPluginSearchModel(pluginsConfigurationModel.AllPluginsAndThemes);
 
             return pluginsConfigurationModel;
+        }
+
+        /// <summary>
+        /// Prepare plugin models for admin navigation
+        /// </summary>
+        /// <returns>List of models</returns>
+        public virtual IList<AdminNavigationPluginModel> PrepareAdminNavigationPluginModels()
+        {
+            var cacheKey = string.Format(NopPluginDefaults.AdminNavigationPluginsCacheKey, _workContext.CurrentCustomer.Id);
+            return _cacheManager.Get(cacheKey, () =>
+            {
+                //get installed plugins
+                return _pluginService.GetPluginDescriptors<IPlugin>(LoadPluginsMode.InstalledOnly, _workContext.CurrentCustomer)
+                    .Where(plugin => plugin.ShowInPluginsList)
+                    .Select(plugin => new AdminNavigationPluginModel
+                    {
+                        FriendlyName = plugin.FriendlyName,
+                        ConfigurationUrl = plugin.Instance<IPlugin>().GetConfigurationPageUrl()
+                    }).Where(model => !string.IsNullOrEmpty(model.ConfigurationUrl)).ToList();
+            });
         }
 
         #endregion

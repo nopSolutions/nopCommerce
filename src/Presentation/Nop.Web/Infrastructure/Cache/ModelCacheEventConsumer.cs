@@ -73,11 +73,6 @@ namespace Nop.Web.Infrastructure.Cache
         IConsumer<EntityInsertedEvent<ProductSpecificationAttribute>>,
         IConsumer<EntityUpdatedEvent<ProductSpecificationAttribute>>,
         IConsumer<EntityDeletedEvent<ProductSpecificationAttribute>>,
-        //Product attributes
-        IConsumer<EntityDeletedEvent<ProductAttribute>>,
-        //Product attributes
-        IConsumer<EntityInsertedEvent<ProductAttributeMapping>>,
-        IConsumer<EntityDeletedEvent<ProductAttributeMapping>>,
         //Product attribute values
         IConsumer<EntityUpdatedEvent<ProductAttributeValue>>,
         //Topics
@@ -464,20 +459,6 @@ namespace Nop.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(NopModelCacheDefaults.SpecsFilterPatternKey);
         }
 
-        //Product attributes
-        public void HandleEvent(EntityDeletedEvent<ProductAttribute> eventMessage)
-        {
-            _cacheManager.RemoveByPattern(NopModelCacheDefaults.ProductHasProductAttributesPatternKey);
-        }
-        //Product attributes
-        public void HandleEvent(EntityInsertedEvent<ProductAttributeMapping> eventMessage)
-        {
-            _cacheManager.RemoveByPattern(string.Format(NopModelCacheDefaults.ProductHasProductAttributesPatternKeyById, eventMessage.Entity.ProductId));
-        }
-        public void HandleEvent(EntityDeletedEvent<ProductAttributeMapping> eventMessage)
-        {
-            _cacheManager.RemoveByPattern(string.Format(NopModelCacheDefaults.ProductHasProductAttributesPatternKeyById, eventMessage.Entity.ProductId));
-        }
         //Product attributes
         public void HandleEvent(EntityUpdatedEvent<ProductAttributeValue> eventMessage)
         {

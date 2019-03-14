@@ -353,6 +353,36 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.BlockTitle.Security">
     <Value></Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ShoppingCartType.EndDate">
+    <Value>End date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ShoppingCartType.EndDate.Hint">
+    <Value>The end date for the search.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ShoppingCartType.StartDate">
+    <Value>Start date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ShoppingCartType.StartDate.Hint">
+    <Value>The start date for the search.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ShoppingCartType.Product">
+    <Value>Product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ShoppingCartType.Product.Hint">
+    <Value>Search by a specific product.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ShoppingCartType.BillingCountry">
+    <Value>Billing country</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ShoppingCartType.BillingCountry.Hint">
+    <Value>Filter by billing country.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ShoppingCartType.Store">
+    <Value>Store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ShoppingCartType.Store.Hint">
+    <Value>Search by a specific store.</Value>
+  </LocaleResource>
 </Language>'
 
 CREATE TABLE #LocaleStringResourceTmp
@@ -1153,7 +1183,7 @@ GO
 --new activity log type
 IF NOT EXISTS (SELECT 1 FROM [ActivityLogType] WHERE [Name] = N'Upload a favicon and app icons archive')
 BEGIN
-	INSERT [dbo].[ActivityLogType] ( [SystemKeyword], [Name], [Enabled]) VALUES ( N'UploadIconsArchive', N'Upload a favicon and app icons archive', 1)
+	INSERT [ActivityLogType] ( [SystemKeyword], [Name], [Enabled]) VALUES ( N'UploadIconsArchive', N'Upload a favicon and app icons archive', 1)
 END
 GO
 

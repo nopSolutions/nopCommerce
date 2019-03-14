@@ -1081,7 +1081,12 @@ namespace Nop.Web.Controllers
         public virtual IActionResult CheckoutAttributeChange(IFormCollection form, bool isEditable)
         {
             var cart = _shoppingCartService.GetShoppingCart(_workContext.CurrentCustomer, ShoppingCartType.ShoppingCart, _storeContext.CurrentStore.Id);
-            
+
+            //performance optimization workaround (for Entity Framework)
+            //load all products at once (one SQL command)
+            //if not loaded right now, then anyway the code below will load each product separately (multiple SQL commands)
+            _productService.GetProductsByIds(cart.Select(sci => sci.ProductId).ToArray());
+
             //save selected attributes
             ParseAndSaveCheckoutAttributes(cart, form);
             var attributeXml = _genericAttributeService.GetAttribute<string>(_workContext.CurrentCustomer,

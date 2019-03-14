@@ -13,7 +13,6 @@
 @using System.Text.Encodings.Web
 @using Nop.Core.Domain.Customers
 @using Nop.Web.Framework.UI;
-@using Nop.Core;
 @using Nop.Core.Domain
 @using Nop.Core.Domain.Localization
 @using Nop.Services.Customers
@@ -272,11 +271,11 @@
                 $('#backTop').backTop();
 
                 //enable tooltips
-                $('[data-toggle="tooltip"]').tooltip()
+                $('[data-toggle="tooltip"]').tooltip();
 
                 //save sidebar preferences
                 $('a.sidebar-toggle').on('click', function () {
-                    var collapsed = $('body').hasClass('sidebar-collapse');
+                    var collapsed = !$('body').hasClass('sidebar-collapse');
                     saveUserPreferences('@(Url.Action("SavePreference", "Preferences"))', '@hideSidebarAttributeName', collapsed);
                 });
 
@@ -286,7 +285,7 @@
                     ddl.bind("close", pager_close);
 
                     function pager_close(e) {
-                        e.sender.refresh()
+                        e.sender.refresh();
                     }
                 }
             });
