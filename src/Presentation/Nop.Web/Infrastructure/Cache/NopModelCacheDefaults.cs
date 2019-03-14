@@ -197,16 +197,6 @@ namespace Nop.Web.Infrastructure.Cache
         public static string ProductSpecsPatternKeyById => "Nop.pres.product.specs-{0}-";
 
         /// <summary>
-        /// Key for caching of a value indicating whether a product has product attributes
-        /// </summary>
-        /// <remarks>
-        /// {0} : product id
-        /// </remarks>
-        public static string ProductHasProductAttributesKey => "Nop.pres.product.hasproductattributes-{0}-";
-        public static string ProductHasProductAttributesPatternKey => "Nop.pres.product.hasproductattributes";
-        public static string ProductHasProductAttributesPatternKeyById => "Nop.pres.product.hasproductattributes-{0}-";
-
-        /// <summary>
         /// Key for TopicModel caching
         /// </summary>
         /// <remarks>
