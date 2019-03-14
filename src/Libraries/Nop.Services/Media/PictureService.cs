@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using Microsoft.AspNetCore.Http;
 using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
@@ -36,6 +37,7 @@ namespace Nop.Services.Media
         private readonly IDataProvider _dataProvider;
         private readonly IDbContext _dbContext;
         private readonly IEventPublisher _eventPublisher;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly INopFileProvider _fileProvider;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly IRepository<Picture> _pictureRepository;
@@ -53,6 +55,7 @@ namespace Nop.Services.Media
         public PictureService(IDataProvider dataProvider,
             IDbContext dbContext,
             IEventPublisher eventPublisher,
+            IHttpContextAccessor httpContextAccessor,
             INopFileProvider fileProvider,
             IProductAttributeParser productAttributeParser,
             IRepository<Picture> pictureRepository,
@@ -66,6 +69,7 @@ namespace Nop.Services.Media
             _dataProvider = dataProvider;
             _dbContext = dbContext;
             _eventPublisher = eventPublisher;
+            _httpContextAccessor = httpContextAccessor;
             _fileProvider = fileProvider;
             _productAttributeParser = productAttributeParser;
             _pictureRepository = pictureRepository;
@@ -249,6 +253,26 @@ namespace Nop.Services.Media
         }
 
         /// <summary>
+        /// Get images path URL 
+        /// </summary>
+        /// <param name="storeLocation">Store location URL; null to use determine the current store location automatically</param>
+        /// <returns></returns>
+        protected virtual string GetImagesPathUrl(string storeLocation = null)
+        {
+            var pathBase = _httpContextAccessor.HttpContext.Request.PathBase.Value ?? string.Empty ;
+
+            var imagesPathUrl = _mediaSettings.UseAbsoluteImagePath ? storeLocation : $"{pathBase}/";
+
+            imagesPathUrl = string.IsNullOrEmpty(imagesPathUrl)
+                ? _webHelper.GetStoreLocation()
+                : imagesPathUrl;
+
+            imagesPathUrl += "images/";
+
+            return imagesPathUrl;
+        }
+
+        /// <summary>
         /// Get picture (thumb) URL 
         /// </summary>
         /// <param name="thumbFileName">Filename</param>
@@ -256,10 +280,7 @@ namespace Nop.Services.Media
         /// <returns>Local picture thumb path</returns>
         protected virtual string GetThumbUrl(string thumbFileName, string storeLocation = null)
         {
-            storeLocation = !string.IsNullOrEmpty(storeLocation)
-                                    ? storeLocation
-                                    : _webHelper.GetStoreLocation();
-            var url = storeLocation + "images/thumbs/";
+            var url = GetImagesPathUrl(storeLocation) + "thumbs/";
 
             if (_mediaSettings.MultipleThumbDirectories)
             {
@@ -463,10 +484,8 @@ namespace Nop.Services.Media
 
             if (targetSize == 0)
             {
-                var url = (!string.IsNullOrEmpty(storeLocation)
-                                 ? storeLocation
-                                 : _webHelper.GetStoreLocation())
-                                 + "images/" + defaultImageFileName;
+                var url = GetImagesPathUrl(storeLocation) + defaultImageFileName;
+
                 return url;
             }
             else
@@ -527,20 +546,17 @@ namespace Nop.Services.Media
             string storeLocation = null,
             PictureType defaultPictureType = PictureType.Entity)
         {
-            var url = showDefaultPicture ? GetDefaultPictureUrl(targetSize, defaultPictureType, storeLocation) : string.Empty;
-
             if (picture == null)
-                return url;
+                return showDefaultPicture ? GetDefaultPictureUrl(targetSize, defaultPictureType, storeLocation) : string.Empty;
 
             byte[] pictureBinary = null;
-
             if (picture.IsNew)
             {
                 DeletePictureThumbs(picture);
                 pictureBinary = LoadPictureBinary(picture);
 
                 if ((pictureBinary?.Length ?? 0) == 0)
-                    return url;
+                    return showDefaultPicture ? GetDefaultPictureUrl(targetSize, defaultPictureType, storeLocation) : string.Empty;
 
                 //we do not validate picture binary here to ensure that no exception ("Parameter is not valid") will be thrown
                 picture = UpdatePicture(picture.Id,
@@ -576,48 +592,47 @@ namespace Nop.Services.Media
             //and does not decrease performance significantly, because the code is blocked only for the specific file.
             using (var mutex = new Mutex(false, thumbFileName))
             {
+                if (GeneratedThumbExists(thumbFilePath, thumbFileName))
+                    return GetThumbUrl(thumbFileName, storeLocation);
+
+                mutex.WaitOne();
+
+                //check, if the file was created, while we were waiting for the release of the mutex.
                 if (!GeneratedThumbExists(thumbFilePath, thumbFileName))
                 {
-                    mutex.WaitOne();
+                    pictureBinary = pictureBinary ?? LoadPictureBinary(picture);
 
-                    //check, if the file was created, while we were waiting for the release of the mutex.
-                    if (!GeneratedThumbExists(thumbFilePath, thumbFileName))
+                    if ((pictureBinary?.Length ?? 0) == 0)
+                        return showDefaultPicture ? GetDefaultPictureUrl(targetSize, defaultPictureType, storeLocation) : string.Empty;
+
+                    byte[] pictureBinaryResized;
+                    if (targetSize != 0)
                     {
-                        pictureBinary = pictureBinary ?? LoadPictureBinary(picture);
-
-                        if ((pictureBinary?.Length ?? 0) == 0)
-                            return url;
-
-                        byte[] pictureBinaryResized;
-                        if (targetSize != 0)
+                        //resizing required
+                        using (var image = Image.Load(pictureBinary, out var imageFormat))
                         {
-                            //resizing required
-                            using (var image = Image.Load(pictureBinary, out var imageFormat))
+                            image.Mutate(imageProcess => imageProcess.Resize(new ResizeOptions
                             {
-                                image.Mutate(imageProcess => imageProcess.Resize(new ResizeOptions
-                                {
-                                    Mode = ResizeMode.Max,
-                                    Size = CalculateDimensions(image.Size(), targetSize)
-                                }));
+                                Mode = ResizeMode.Max,
+                                Size = CalculateDimensions(image.Size(), targetSize)
+                            }));
 
-                                pictureBinaryResized = EncodeImage(image, imageFormat);
-                            }
+                            pictureBinaryResized = EncodeImage(image, imageFormat);
                         }
-                        else
-                        {
-                            //create a copy of pictureBinary
-                            pictureBinaryResized = pictureBinary.ToArray();
-                        }
-
-                        SaveThumb(thumbFilePath, thumbFileName, picture.MimeType, pictureBinaryResized);
+                    }
+                    else
+                    {
+                        //create a copy of pictureBinary
+                        pictureBinaryResized = pictureBinary.ToArray();
                     }
 
-                    mutex.ReleaseMutex();
+                    SaveThumb(thumbFilePath, thumbFileName, picture.MimeType, pictureBinaryResized);
                 }
+
+                mutex.ReleaseMutex();
             }
 
-            url = GetThumbUrl(thumbFileName, storeLocation);
-            return url;
+            return GetThumbUrl(thumbFileName, storeLocation);
         }
 
         /// <summary>

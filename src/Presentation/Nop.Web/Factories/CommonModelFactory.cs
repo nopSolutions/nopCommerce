@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
@@ -15,6 +16,7 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Localization;
+using Nop.Core.Domain.Media;
 using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
@@ -59,6 +61,7 @@ namespace Nop.Web.Factories
         private readonly ICustomerService _customerService;
         private readonly IForumService _forumService;
         private readonly IGenericAttributeService _genericAttributeService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
         private readonly IManufacturerService _manufacturerService;
@@ -80,6 +83,7 @@ namespace Nop.Web.Factories
         private readonly IWebHelper _webHelper;
         private readonly IWorkContext _workContext;
         private readonly LocalizationSettings _localizationSettings;
+        private readonly MediaSettings _mediaSettings;
         private readonly NewsSettings _newsSettings;
         private readonly StoreInformationSettings _storeInformationSettings;
         private readonly VendorSettings _vendorSettings;
@@ -101,6 +105,7 @@ namespace Nop.Web.Factories
             ICustomerService customerService,
             IForumService forumService,
             IGenericAttributeService genericAttributeService,
+            IHttpContextAccessor httpContextAccessor,
             ILanguageService languageService,
             ILocalizationService localizationService,
             IManufacturerService manufacturerService,
@@ -122,6 +127,7 @@ namespace Nop.Web.Factories
             IWebHelper webHelper,
             IWorkContext workContext,
             LocalizationSettings localizationSettings,
+            MediaSettings mediaSettings,
             NewsSettings newsSettings,
             StoreInformationSettings storeInformationSettings,
             VendorSettings vendorSettings)
@@ -139,6 +145,7 @@ namespace Nop.Web.Factories
             _customerService = customerService;
             _forumService = forumService;
             _genericAttributeService = genericAttributeService;
+            _httpContextAccessor = httpContextAccessor;
             _languageService = languageService;
             _localizationService = localizationService;
             _manufacturerService = manufacturerService;
@@ -159,6 +166,7 @@ namespace Nop.Web.Factories
             _urlRecordService = urlRecordService;
             _webHelper = webHelper;
             _workContext = workContext;
+            _mediaSettings = mediaSettings;
             _localizationSettings = localizationSettings;
             _newsSettings = newsSettings;
             _storeInformationSettings = storeInformationSettings;
@@ -218,7 +226,9 @@ namespace Nop.Web.Factories
                 if (string.IsNullOrEmpty(logo))
                 {
                     //use default logo
-                    logo = $"{_webHelper.GetStoreLocation()}Themes/{_themeContext.WorkingThemeName}/Content/images/logo.png";
+                    var pathBase = _httpContextAccessor.HttpContext.Request.PathBase.Value ?? string.Empty ;
+                    var storeLocation = _mediaSettings.UseAbsoluteImagePath ? _webHelper.GetStoreLocation() : $"{pathBase}/";
+                    logo = $"{storeLocation}Themes/{_themeContext.WorkingThemeName}/Content/images/logo.png";
                 }
                 return logo;
             });

@@ -6286,7 +6286,8 @@ namespace Nop.Services.Installation
                 DefaultImageQuality = 80,
                 MultipleThumbDirectories = false,
                 ImportProductImagesUsingHash = true,
-                AzureCacheControlHeader = string.Empty
+                AzureCacheControlHeader = string.Empty,
+                UseAbsoluteImagePath = true
             });
 
             settingService.SaveSetting(new StoreInformationSettings
