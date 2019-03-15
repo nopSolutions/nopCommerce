@@ -857,7 +857,7 @@ namespace Nop.Services.ExportImport
             {
                 xmlWriter.WriteStartElement("Product");
 
-                xmlWriter.WriteString("ProductId", product.Id, IgnoreExportPoductProperty(p => p.Id));
+                xmlWriter.WriteString("ProductId", product.Id);
                 xmlWriter.WriteString("ProductTypeId", product.ProductTypeId, IgnoreExportPoductProperty(p => p.ProductType));
                 xmlWriter.WriteString("ParentGroupedProductId", product.ParentGroupedProductId, IgnoreExportPoductProperty(p => p.ProductType));
                 xmlWriter.WriteString("VisibleIndividually", product.VisibleIndividually, IgnoreExportPoductProperty(p => p.VisibleIndividually));
@@ -949,8 +949,8 @@ namespace Nop.Services.ExportImport
                 xmlWriter.WriteString("Width", product.Width, IgnoreExportPoductProperty(p => p.Dimensions));
                 xmlWriter.WriteString("Height", product.Height, IgnoreExportPoductProperty(p => p.Dimensions));
                 xmlWriter.WriteString("Published", product.Published, IgnoreExportPoductProperty(p => p.Published));
-                xmlWriter.WriteString("CreatedOnUtc", product.CreatedOnUtc, IgnoreExportPoductProperty(p => p.CreatedOn));
-                xmlWriter.WriteString("UpdatedOnUtc", product.UpdatedOnUtc, IgnoreExportPoductProperty(p => p.UpdatedOn));
+                xmlWriter.WriteString("CreatedOnUtc", product.CreatedOnUtc);
+                xmlWriter.WriteString("UpdatedOnUtc", product.UpdatedOnUtc);
 
                 if (!IgnoreExportPoductProperty(p => p.Discounts))
                 {
@@ -1166,7 +1166,7 @@ namespace Nop.Services.ExportImport
         {
             var properties = new[]
             {
-                new PropertyByName<Product>("ProductId", p => p.Id, IgnoreExportPoductProperty(p => p.Id)),
+                new PropertyByName<Product>("ProductId", p => p.Id),
                 new PropertyByName<Product>("ProductType", p => p.ProductTypeId, IgnoreExportPoductProperty(p => p.ProductType))
                 {
                     DropDownElements = ProductType.SimpleProduct.ToSelectList(useLocalization: false)

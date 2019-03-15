@@ -5,7 +5,7 @@
     var hideInfoBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideInfoBlockAttributeName);
 
     const string hideAnswersBlockAttributeName = "PollPage.HideAnswersBlock";
-    var hideAnswersBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideAnswersBlockAttributeName);
+    var hideAnswersBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideAnswersBlockAttributeName, defaultValue: true);
 }
 
 <div asp-validation-summary="All"></div>

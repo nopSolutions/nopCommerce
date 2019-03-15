@@ -7,7 +7,7 @@
     var hideInfoBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideInfoBlockAttributeName);
 
     const string hideUsageHistoryBlockAttributeName = "GiftCardPage.HideUsageHistoryBlock";
-    var HideUsageHistoryBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideUsageHistoryBlockAttributeName);
+    var HideUsageHistoryBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideUsageHistoryBlockAttributeName, defaultValue: true);
 }
 
 <div asp-validation-summary="All"></div>

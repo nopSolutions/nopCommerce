@@ -2155,7 +2155,7 @@
     <Value>Page size should have a positive value.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Fields.PageSizeOptions">
-    <Value>Page Size options (comma separated)</Value>
+    <Value>Page Size options</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Fields.PageSizeOptions.Hint">
     <Value>Comma separated list of page size options (e.g. 10, 5, 15, 20). First option is the default page size if none are selected.</Value>
@@ -2365,7 +2365,7 @@
     <Value>Page size should have a positive value.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.PageSizeOptions">
-    <Value>Page Size options (comma separated)</Value>
+    <Value>Page Size options</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.PageSizeOptions.Hint">
     <Value>Comma separated list of page size options (e.g. 10, 5, 15, 20). First option is the default page size if none are selected.</Value>
@@ -2607,9 +2607,6 @@
   <LocaleResource Name="Admin.Catalog.Products.BackToList">
     <Value>back to product list</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.CommonInfo">
-    <Value>General information</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Copied">
     <Value>The product has been copied successfully</Value>
   </LocaleResource>
@@ -2790,12 +2787,6 @@
   <LocaleResource Name="Admin.Catalog.Products.Fields.Categories.NoCategoriesAvailable">
     <Value>No categories available.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Fields.CreatedOn">
-    <Value>Created on</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Fields.CreatedOn.Hint">
-    <Value>Date and time when this product was created.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.CustomerEntersPrice">
     <Value>Customer enters price</Value>
   </LocaleResource>
@@ -2903,12 +2894,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.Height.Hint">
     <Value>The product height.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Fields.ID">
-    <Value>ID</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Fields.ID.Hint">
-    <Value>The product identifier.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.IsDownload">
     <Value>Downloadable product</Value>
@@ -3267,12 +3252,6 @@
   <LocaleResource Name="Admin.Catalog.Products.Fields.UnlimitedDownloads.Hint">
     <Value>When a customer purchases a download product, they can download the item unlimited number of times.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Fields.UpdatedOn">
-    <Value>Updated on</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Fields.UpdatedOn.Hint">
-    <Value>Date and time when this product was updated.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.UseMultipleWarehouses">
     <Value>Multiple warehouses</Value>
   </LocaleResource>
@@ -3426,9 +3405,6 @@
   <LocaleResource Name="Admin.Catalog.Products.List.SearchWarehouse.Hint">
     <Value>Search by a specific warehouse.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Mappings">
-    <Value>Mappings</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Pictures">
     <Value>Pictures</Value>
   </LocaleResource>
@@ -3471,7 +3447,7 @@
   <LocaleResource Name="Admin.Catalog.Products.Pictures.SaveBeforeEdit">
     <Value>You need to save the product before you can upload pictures for this product page.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Prices">
+  <LocaleResource Name="Admin.Catalog.Products.Price">
     <Value>Prices</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes">
@@ -3887,12 +3863,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Rental">
     <Value>Rental</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.RequireOtherProducts">
-    <Value>Require other products</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Security">
-    <Value>Access control list</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Shipping">
     <Value>Shipping</Value>
@@ -5605,7 +5575,7 @@
     <Value>Set the page size for products on 'Products by tag' page.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductsByTagPageSizeOptions">
-    <Value>'Products by tag' Page Size options (comma separated)</Value>
+    <Value>'Products by tag' Page Size options</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductsByTagPageSizeOptions.Hint">
     <Value>Comma separated list of page size options (e.g. 10, 5, 15, 20). First option is the default page size if none are selected.</Value>
@@ -5653,7 +5623,7 @@
     <Value>Search page. Check to allow customers to select the page size from a predefined list of options.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.SearchPagePageSizeOptions">
-    <Value>Search page. Page size options (comma separated)</Value>
+    <Value>Search page. Page size options</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.SearchPagePageSizeOptions.Hint">
     <Value>Search page. Comma separated list of page size options (e.g. 10, 5, 15, 20). First option is the default page size if none are selected.</Value>
@@ -6672,6 +6642,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnRegistrationPage.Hint">
     <Value>Check to show CAPTCHA on registration page.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnForgotPasswordPage">
+    <Value>Show on forgot password page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnForgotPasswordPage.Hint">
+    <Value>Check to show CAPTCHA on forgot password page when restore password.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.ConvertNonWesternChars">
     <Value>Convert non-western chars</Value>
   </LocaleResource>
@@ -7689,9 +7665,6 @@
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.Backorders">
     <Value>Backorders</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.BlockTitle.AdvancedProductTypes">
-    <Value>Advanced product types</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.BlockTitle.CommonInfo">
     <Value>General information</Value>
   </LocaleResource>
@@ -7701,17 +7674,8 @@
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.BlockTitle.LinkedProducts">
     <Value>Linked products</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.BlockTitle.Mappings">
-    <Value>Mappings</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.BlockTitle.OneColumnProductPage">
-    <Value>Advanced product types</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.BlockTitle.Price">
     <Value>Price</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.BlockTitle.Security">
-    <Value>Access control list</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.BlockTitle.Shipping">
     <Value>Shipping</Value>
@@ -7724,9 +7688,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.CallForPrice">
     <Value>Call for price</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.CreatedOn">
-    <Value>Created on</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.CrossSellsProducts">
     <Value>Cross-sells products</Value>
@@ -7818,9 +7779,6 @@
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.OldPrice">
     <Value>Old price</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.OneColumnProductPage">
-    <Value>One column product page</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.PAngV">
     <Value>PAngV (base price) enabled</Value>
   </LocaleResource>
@@ -7880,9 +7838,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.TierPrices">
     <Value>Tier prices</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.UpdatedOn">
-    <Value>Updated on</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.UseMultipleWarehouses">
     <Value>Multiple warehouses</Value>
@@ -13350,11 +13305,41 @@
   <LocaleResource Name="Admin.Settings.ReviewType.Updated">
     <Value>The review type has been updated successfully.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ShoppingCartType.BillingCountry">
+    <Value>Billing country</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ShoppingCartType.BillingCountry.Hint">
+    <Value>Filter by billing country.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ShoppingCartType.EndDate">
+    <Value>End date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ShoppingCartType.EndDate.Hint">
+    <Value>The end date for the search.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ShoppingCartType.Product">
+    <Value>Product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ShoppingCartType.Product.Hint">
+    <Value>Search by a specific product.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.ShoppingCartType.ShoppingCartType">
     <Value>Shopping cart type</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ShoppingCartType.ShoppingCartType.Hint">
     <Value>Choose a shopping cart type.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ShoppingCartType.StartDate">
+    <Value>Start date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ShoppingCartType.StartDate.Hint">
+    <Value>The start date for the search.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ShoppingCartType.Store">
+    <Value>Store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ShoppingCartType.Store.Hint">
+    <Value>Search by a specific store.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.StockQuantityHistory.Messages.CancelOrder">
     <Value>The stock quantity has been increased by canceling the order #{0}</Value>
@@ -14236,7 +14221,7 @@
     <Value>Page size should have a positive value.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Vendors.Fields.PageSizeOptions">
-    <Value>Page Size options (comma separated)</Value>
+    <Value>Page Size options</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Vendors.Fields.PageSizeOptions.Hint">
     <Value>Comma separated list of page size options (e.g. 10, 5, 15, 20). First option is the default page size if none are selected.</Value>

@@ -1,4 +1,4 @@
-﻿CREATE FUNCTION [dbo].[nop_splitstring_to_table]
+﻿CREATE FUNCTION [nop_splitstring_to_table]
 (
     @string NVARCHAR(MAX),
     @delimiter CHAR(1)
@@ -23,61 +23,7 @@ BEGIN
 END
 GO
 
-
-
-CREATE FUNCTION [dbo].[nop_getnotnullnotempty]
-(
-    @p1 nvarchar(max) = null, 
-    @p2 nvarchar(max) = null
-)
-RETURNS nvarchar(max)
-AS
-BEGIN
-    IF @p1 IS NULL
-        return @p2
-    IF @p1 =''
-        return @p2
-
-    return @p1
-END
-GO
-
-
-
-CREATE FUNCTION [dbo].[nop_getprimarykey_indexname]
-(
-    @table_name nvarchar(1000) = null
-)
-RETURNS nvarchar(1000)
-AS
-BEGIN
-	DECLARE @index_name nvarchar(1000)
-
-    SELECT @index_name = i.name
-	FROM sys.tables AS tbl
-	INNER JOIN sys.indexes AS i ON (i.index_id > 0 and i.is_hypothetical = 0) AND (i.object_id=tbl.object_id)
-	WHERE (i.is_unique=1 and i.is_disabled=0) and (tbl.name=@table_name)
-
-    RETURN @index_name
-END
-GO
-
-
-CREATE FUNCTION [dbo].[nop_padright]
-(
-    @source INT, 
-    @symbol NVARCHAR(MAX), 
-    @length INT
-)
-RETURNS NVARCHAR(MAX)
-AS
-BEGIN
-    RETURN RIGHT(REPLICATE(@symbol, @length)+ RTRIM(CAST(@source AS NVARCHAR(MAX))), @length)
-END
-GO
-
-
-CREATE PROCEDURE [dbo].[ProductLoadAllPaged]
+CREATE PROCEDURE [ProductLoadAllPaged]
 (
 	@CategoryIds		nvarchar(MAX) = null,	--a list of category IDs (comma-separated list). e.g. 1,2,3
 	@ManufacturerId		int = 0,
@@ -712,7 +658,7 @@ END
 GO
 
 
-CREATE PROCEDURE [dbo].[ProductTagCountLoadAll]
+CREATE PROCEDURE [ProductTagCountLoadAll]
 (
 	@StoreId int
 )
@@ -736,7 +682,7 @@ BEGIN
 END
 GO
 
-CREATE PROCEDURE [dbo].[FullText_IsSupported]
+CREATE PROCEDURE [FullText_IsSupported]
 AS
 BEGIN	
 	EXEC('
@@ -753,39 +699,52 @@ GO
 
 
 
-CREATE PROCEDURE [dbo].[FullText_Enable]
+CREATE PROCEDURE [FullText_Enable]
 AS
 BEGIN
 	--create catalog
 	EXEC('
 	IF NOT EXISTS (SELECT 1 FROM sys.fulltext_catalogs WHERE [name] = ''nopCommerceFullTextCatalog'')
 		CREATE FULLTEXT CATALOG [nopCommerceFullTextCatalog] AS DEFAULT')
+
+	DECLARE @SQL nvarchar(500);
+	DECLARE @index_name nvarchar(1000)
+	DECLARE @ParmDefinition nvarchar(500);
+
+	SELECT @SQL = N'SELECT @index_name_out = i.name FROM sys.tables AS tbl INNER JOIN sys.indexes AS i ON (i.index_id > 0 and i.is_hypothetical = 0) AND (i.object_id=tbl.object_id) WHERE (i.is_unique=1 and i.is_disabled=0) and (tbl.name=@table_name)'
+	SELECT @ParmDefinition = N'@table_name varchar(100), @index_name_out nvarchar(1000) OUTPUT'
+
+	EXEC sp_executesql @SQL, @ParmDefinition, @table_name = 'Product', @index_name_out=@index_name OUTPUT
 	
 	--create indexes
 	DECLARE @create_index_text nvarchar(4000)
 	SET @create_index_text = '
 	IF NOT EXISTS (SELECT 1 FROM sys.fulltext_indexes WHERE object_id = object_id(''[Product]''))
 		CREATE FULLTEXT INDEX ON [Product]([Name], [ShortDescription], [FullDescription])
-		KEY INDEX [' + dbo.[nop_getprimarykey_indexname] ('Product') +  '] ON [nopCommerceFullTextCatalog] WITH CHANGE_TRACKING AUTO'
+		KEY INDEX [' + @index_name +  '] ON [nopCommerceFullTextCatalog] WITH CHANGE_TRACKING AUTO'
 	EXEC(@create_index_text)
+
+	EXEC sp_executesql @SQL, @ParmDefinition, @table_name = 'LocalizedProperty', @index_name_out=@index_name OUTPUT
 	
 	SET @create_index_text = '
 	IF NOT EXISTS (SELECT 1 FROM sys.fulltext_indexes WHERE object_id = object_id(''[LocalizedProperty]''))
 		CREATE FULLTEXT INDEX ON [LocalizedProperty]([LocaleValue])
-		KEY INDEX [' + dbo.[nop_getprimarykey_indexname] ('LocalizedProperty') +  '] ON [nopCommerceFullTextCatalog] WITH CHANGE_TRACKING AUTO'
+		KEY INDEX [' + @index_name +  '] ON [nopCommerceFullTextCatalog] WITH CHANGE_TRACKING AUTO'
 	EXEC(@create_index_text)
+
+	EXEC sp_executesql @SQL, @ParmDefinition, @table_name = 'LocalizedProperty', @index_name_out=@index_name OUTPUT
 
 	SET @create_index_text = '
 	IF NOT EXISTS (SELECT 1 FROM sys.fulltext_indexes WHERE object_id = object_id(''[ProductTag]''))
 		CREATE FULLTEXT INDEX ON [ProductTag]([Name])
-		KEY INDEX [' + dbo.[nop_getprimarykey_indexname] ('ProductTag') +  '] ON [nopCommerceFullTextCatalog] WITH CHANGE_TRACKING AUTO'
+		KEY INDEX [' + @index_name +  '] ON [nopCommerceFullTextCatalog] WITH CHANGE_TRACKING AUTO'
 	EXEC(@create_index_text)
 END
 GO
 
 
 
-CREATE PROCEDURE [dbo].[FullText_Disable]
+CREATE PROCEDURE [FullText_Disable]
 AS
 BEGIN
 	EXEC('
@@ -813,7 +772,7 @@ END
 GO
 
 
-CREATE PROCEDURE [dbo].[LanguagePackImport]
+CREATE PROCEDURE [LanguagePackImport]
 (
 	@LanguageId int,
 	@XmlPackage xml,
@@ -880,7 +839,7 @@ END
 GO
 
 
-CREATE PROCEDURE [dbo].[DeleteGuests]
+CREATE PROCEDURE [DeleteGuests]
 (
 	@OnlyWithoutShoppingCart bit = 1,
 	@CreatedFromUtc datetime,
@@ -951,7 +910,7 @@ END
 GO
 
 
-CREATE PROCEDURE [dbo].[CategoryLoadAllPaged]
+CREATE PROCEDURE [CategoryLoadAllPaged]
 (
     @ShowHidden         BIT = 0,
     @Name               NVARCHAR(MAX) = NULL,
@@ -988,10 +947,12 @@ BEGIN
 
     --get category tree
     ;WITH [CategoryTree]
-    AS (SELECT [Category].[Id] AS [Id], dbo.[nop_padright] ([Category].[DisplayOrder], '0', @lengthOrder) + '-' + dbo.[nop_padright] ([Category].[Id], '0', @lengthId) AS [Order]
+    AS (SELECT [Category].[Id] AS [Id], 
+		(select RIGHT(REPLICATE('0', @lengthOrder)+ RTRIM(CAST([Category].[DisplayOrder] AS NVARCHAR(MAX))), @lengthOrder)) + '-' + (select RIGHT(REPLICATE('0', @lengthId)+ RTRIM(CAST([Category].[Id] AS NVARCHAR(MAX))), @lengthId))  AS [Order]
         FROM [Category] WHERE [Category].[ParentCategoryId] = 0
         UNION ALL
-        SELECT [Category].[Id] AS [Id], [CategoryTree].[Order] + '|' + dbo.[nop_padright] ([Category].[DisplayOrder], '0', @lengthOrder) + '-' + dbo.[nop_padright] ([Category].[Id], '0', @lengthId) AS [Order]
+        SELECT [Category].[Id] AS [Id], 
+		[CategoryTree].[Order] + '|' + (select RIGHT(REPLICATE('0', @lengthOrder)+ RTRIM(CAST([Category].[DisplayOrder] AS NVARCHAR(MAX))), @lengthOrder)) + '-' + (select RIGHT(REPLICATE('0', @lengthId)+ RTRIM(CAST([Category].[Id] AS NVARCHAR(MAX))), @lengthId))  AS [Order]
         FROM [Category]
         INNER JOIN [CategoryTree] ON [CategoryTree].[Id] = [Category].[ParentCategoryId])
     INSERT INTO #OrderedCategoryIds ([CategoryId])

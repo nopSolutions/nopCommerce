@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -437,7 +437,7 @@ namespace Nop.Services.Orders
                                     warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.QuantityExceedsStock"), maximumQuantityCanBeAdded));
                             }
                         }
-                        
+
                         break;
                     case ManageInventoryMethod.ManageStockByAttributes:
                         var combination = _productAttributeParser.FindProductAttributeCombination(product, attributesXml);
@@ -475,7 +475,7 @@ namespace Nop.Services.Orders
                                 warnings.Add(warning);
                             }
                         }
-                        
+
                         break;
                     default:
                         break;
@@ -494,15 +494,15 @@ namespace Nop.Services.Orders
                 }
             }
 
-            if (!product.AvailableEndDateTimeUtc.HasValue || availableStartDateError) 
+            if (!product.AvailableEndDateTimeUtc.HasValue || availableStartDateError)
                 return warnings;
-           
+
             var availableEndDateTime = DateTime.SpecifyKind(product.AvailableEndDateTimeUtc.Value, DateTimeKind.Utc);
             if (availableEndDateTime.CompareTo(DateTime.UtcNow) < 0)
             {
                 warnings.Add(_localizationService.GetResource("ShoppingCart.NotAvailable"));
             }
-            
+
             return warnings;
         }
 
@@ -510,15 +510,39 @@ namespace Nop.Services.Orders
         /// Gets shopping cart
         /// </summary>
         /// <param name="customer">Customer</param>
-        /// <param name="shoppingCartType">Shopping cart type</param>
-        /// <param name="storeId">Store identifier</param>
+        /// <param name="shoppingCartType">Shopping cart type; pass null to load all records</param>
+        /// <param name="storeId">Store identifier; pass 0 to load all records</param>
+        /// <param name="productId">Product identifier; pass null to load all records</param>
+        /// <param name="createdFromUtc">Created date from (UTC); pass null to load all records</param>
+        /// <param name="createdToUtc">Created date to (UTC); pass null to load all records</param>
         /// <returns>Shopping Cart</returns>
-        public virtual IList<ShoppingCartItem> GetShoppingCart(Customer customer, ShoppingCartType shoppingCartType, int storeId)
+        public virtual IList<ShoppingCartItem> GetShoppingCart(Customer customer, ShoppingCartType? shoppingCartType = null,
+            int storeId = 0, int? productId = null, DateTime? createdFromUtc = null, DateTime? createdToUtc = null)
         {
-            return customer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == shoppingCartType)
-                .LimitPerStore(storeId)
-                .ToList();
+            if (customer == null)
+                throw new ArgumentNullException(nameof(customer));
+
+            var items = customer.ShoppingCartItems.AsEnumerable();
+
+            //filter by type
+            if (shoppingCartType.HasValue)
+                items = items.Where(item => item.ShoppingCartType == shoppingCartType.Value);
+
+            //filter shopping cart items by store
+            if (storeId > 0 && !_shoppingCartSettings.CartsSharedBetweenStores)
+                items = items.Where(item => item.StoreId == storeId);
+
+            //filter shopping cart items by product
+            if (productId > 0)
+                items = items.Where(item => item.ProductId == productId);
+
+            //filter shopping cart items by date
+            if (createdFromUtc.HasValue)
+                items = items.Where(item => createdFromUtc.Value <= item.CreatedOnUtc);
+            if (createdToUtc.HasValue)
+                items = items.Where(item => createdToUtc.Value >= item.CreatedOnUtc);
+
+            return items.ToList();
         }
 
         /// <summary>
@@ -593,14 +617,14 @@ namespace Nop.Services.Orders
                     //selected product attributes
                     foreach (var a1 in attributes1)
                     {
-                        if (a1.Id != a2.Id) 
+                        if (a1.Id != a2.Id)
                             continue;
 
                         var attributeValuesStr = _productAttributeParser.ParseValues(attributesXml, a1.Id);
 
                         foreach (var str1 in attributeValuesStr)
                         {
-                            if (string.IsNullOrEmpty(str1.Trim())) 
+                            if (string.IsNullOrEmpty(str1.Trim()))
                                 continue;
 
                             found = true;
@@ -620,9 +644,9 @@ namespace Nop.Services.Orders
                     }
                 }
 
-                if (a2.AttributeControlType != AttributeControlType.ReadonlyCheckboxes) 
+                if (a2.AttributeControlType != AttributeControlType.ReadonlyCheckboxes)
                     continue;
-                
+
                 //customers cannot edit read-only attributes
                 var allowedReadOnlyValueIds = _productAttributeService.GetProductAttributeValues(a2.Id)
                     .Where(x => x.IsPreSelected)
@@ -666,12 +690,12 @@ namespace Nop.Services.Orders
                 }
 
                 //maximum length
-                if (!pam.ValidationMaxLength.HasValue) 
+                if (!pam.ValidationMaxLength.HasValue)
                     continue;
 
-                if (pam.AttributeControlType != AttributeControlType.TextBox && pam.AttributeControlType != AttributeControlType.MultilineTextbox) 
+                if (pam.AttributeControlType != AttributeControlType.TextBox && pam.AttributeControlType != AttributeControlType.MultilineTextbox)
                     continue;
-                
+
                 enteredText = _productAttributeParser.ParseValues(attributesXml, pam.Id).FirstOrDefault();
                 enteredTextLength = string.IsNullOrEmpty(enteredText) ? 0 : enteredText.Length;
 
@@ -688,7 +712,7 @@ namespace Nop.Services.Orders
             var attributeValues = _productAttributeParser.ParseProductAttributeValues(attributesXml);
             foreach (var attributeValue in attributeValues)
             {
-                if (attributeValue.AttributeValueType != AttributeValueType.AssociatedToProduct) 
+                if (attributeValue.AttributeValueType != AttributeValueType.AssociatedToProduct)
                     continue;
 
                 if (ignoreNonCombinableAttributes && attributeValue.ProductAttributeMapping.IsNonCombinable())
@@ -736,7 +760,7 @@ namespace Nop.Services.Orders
             var warnings = new List<string>();
 
             //gift cards
-            if (!product.IsGiftCard) 
+            if (!product.IsGiftCard)
                 return warnings;
 
             _productAttributeParser.GetGiftCardAttribute(attributesXml, out var giftCardRecipientName, out var giftCardRecipientEmail, out var giftCardSenderName, out var giftCardSenderEmail, out var _);
@@ -754,7 +778,7 @@ namespace Nop.Services.Orders
             if (string.IsNullOrEmpty(giftCardSenderName))
                 warnings.Add(_localizationService.GetResource("ShoppingCart.SenderNameError"));
 
-            if (product.GiftCardType != GiftCardType.Virtual) 
+            if (product.GiftCardType != GiftCardType.Virtual)
                 return warnings;
 
             //validate for virtual gift cards only
@@ -812,7 +836,7 @@ namespace Nop.Services.Orders
             var startDateUtc = _dateTimeHelper.ConvertToUtcTime(rentalStartDate.Value, _dateTimeHelper.DefaultStoreTimeZone);
             //but we what if dates should be entered in a customer timezone?
             //DateTime startDateUtc = _dateTimeHelper.ConvertToUtcTime(rentalStartDate.Value, _dateTimeHelper.CurrentTimeZone);
-            if (todayDtUtc.CompareTo(startDateUtc) <= 0) 
+            if (todayDtUtc.CompareTo(startDateUtc) <= 0)
                 return warnings;
 
             warnings.Add(_localizationService.GetResource("ShoppingCart.Rental.StartDateShouldBeFuture"));
@@ -922,7 +946,7 @@ namespace Nop.Services.Orders
             }
 
             //validate checkout attributes
-            if (!validateCheckoutAttributes) 
+            if (!validateCheckoutAttributes)
                 return warnings;
 
             //selected attributes
@@ -941,14 +965,14 @@ namespace Nop.Services.Orders
 
             foreach (var a2 in attributes2)
             {
-                if (!a2.IsRequired) 
+                if (!a2.IsRequired)
                     continue;
 
                 var found = false;
                 //selected checkout attributes
                 foreach (var a1 in attributes1)
                 {
-                    if (a1.Id != a2.Id) 
+                    if (a1.Id != a2.Id)
                         continue;
 
                     var attributeValuesStr = _checkoutAttributeParser.ParseValues(checkoutAttributesXml, a1.Id);
@@ -959,8 +983,8 @@ namespace Nop.Services.Orders
                             break;
                         }
                 }
-                
-                if (found) 
+
+                if (found)
                     continue;
 
                 //if not found
@@ -994,10 +1018,10 @@ namespace Nop.Services.Orders
                 }
 
                 //maximum length
-                if (!ca.ValidationMaxLength.HasValue) 
+                if (!ca.ValidationMaxLength.HasValue)
                     continue;
 
-                if (ca.AttributeControlType != AttributeControlType.TextBox && ca.AttributeControlType != AttributeControlType.MultilineTextbox) 
+                if (ca.AttributeControlType != AttributeControlType.TextBox && ca.AttributeControlType != AttributeControlType.MultilineTextbox)
                     continue;
 
                 enteredText = _checkoutAttributeParser.ParseValues(checkoutAttributesXml, ca.Id).FirstOrDefault();
@@ -1039,7 +1063,7 @@ namespace Nop.Services.Orders
 
             foreach (var sci in shoppingCart.Where(a => a.ShoppingCartType == shoppingCartType))
             {
-                if (sci.ProductId != product.Id) 
+                if (sci.ProductId != product.Id)
                     continue;
 
                 //attributes
@@ -1148,7 +1172,7 @@ namespace Nop.Services.Orders
                     customerEnteredPrice, rentalStartDate, rentalEndDate,
                     newQuantity, addRequiredProducts, shoppingCartItem.Id));
 
-                if (warnings.Any()) 
+                if (warnings.Any())
                     return warnings;
 
                 shoppingCartItem.AttributesXml = attributesXml;
@@ -1167,7 +1191,7 @@ namespace Nop.Services.Orders
                     rentalStartDate, rentalEndDate,
                     quantity, addRequiredProducts));
 
-                if (warnings.Any()) 
+                if (warnings.Any())
                     return warnings;
 
                 //maximum items validation
@@ -1187,7 +1211,7 @@ namespace Nop.Services.Orders
                             warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.MaximumWishlistItems"), _shoppingCartSettings.MaximumWishlistItems));
                             return warnings;
                         }
-                    
+
                         break;
                     default:
                         break;
@@ -1390,7 +1414,7 @@ namespace Nop.Services.Orders
                     throw new NopException($"Product (Id={sci.ProductId}) cannot be loaded");
                 }
 
-                if (!product.IsRecurring) 
+                if (!product.IsRecurring)
                     continue;
 
                 var conflictError = _localizationService.GetResource("ShoppingCart.ConflictingShipmentSchedules");
@@ -1411,7 +1435,7 @@ namespace Nop.Services.Orders
                 _totalCycles = product.RecurringTotalCycles;
             }
 
-            if (!_cycleLength.HasValue) 
+            if (!_cycleLength.HasValue)
                 return string.Empty;
 
             cycleLength = _cycleLength.Value;

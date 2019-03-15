@@ -5,10 +5,10 @@
     var hideInfoBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideInfoBlockAttributeName);
 
     const string hideCustomersBlockAttributeName = "AffiliatePage.HideCustomersBlock";
-    var hideCustomersBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideCustomersBlockAttributeName);
+    var hideCustomersBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideCustomersBlockAttributeName, defaultValue: true);
 
     const string hideOrdersBlockAttributeName = "AffiliatePage.HideOrdersBlock";
-    var hideOrdersBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideOrdersBlockAttributeName);
+    var hideOrdersBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideOrdersBlockAttributeName, defaultValue: true);
 }
 
 <div asp-validation-summary="All"></div>

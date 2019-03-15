@@ -755,8 +755,6 @@ namespace Nop.Web.Areas.Admin.Factories
                     model.AssociatedToProductName = parentGroupedProduct.Name;
                 }
 
-                model.CreatedOn = _dateTimeHelper.ConvertToUserTime(product.CreatedOnUtc, DateTimeKind.Utc);
-                model.UpdatedOn = _dateTimeHelper.ConvertToUserTime(product.UpdatedOnUtc, DateTimeKind.Utc);
                 model.LastStockQuantity = product.StockQuantity;
                 model.ProductTags = string.Join(", ", _productTagService.GetAllProductTagsByProductId(product.Id).Select(tag => tag.Name));
                 model.ProductAttributesExist = _productAttributeService.GetAllProductAttributes().Any();

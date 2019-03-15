@@ -20,6 +20,7 @@ using Nop.Services.Authentication;
 using Nop.Services.Logging;
 using Nop.Web.Framework.Globalization;
 using Nop.Web.Framework.Mvc.Routing;
+using WebMarkupMin.AspNetCore2;
 
 namespace Nop.Web.Framework.Infrastructure.Extensions
 {
@@ -304,6 +305,15 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 //register all routes
                 EngineContext.Current.Resolve<IRoutePublisher>().RegisterRoutes(routeBuilder);
             });
+        }
+
+        /// <summary>
+        /// Configure WebMarkupMin
+        /// </summary>
+        /// <param name="application">Builder for configuring an application's request pipeline</param>
+        public static void UseNopWebMarkupMin(this IApplicationBuilder application)
+        {
+            application.UseWebMarkupMin();
         }
     }
 }

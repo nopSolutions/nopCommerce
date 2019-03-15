@@ -5,7 +5,7 @@
     var hideInfoBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideInfoBlockAttributeName);
 
     const string hideHistoryBlockAttributeName = "RecurringPaymentPage.HideHistoryBlock";
-    var hideHistoryBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideHistoryBlockAttributeName);
+    var hideHistoryBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideHistoryBlockAttributeName, defaultValue: true);
 }
 
 <div asp-validation-summary="All"></div>

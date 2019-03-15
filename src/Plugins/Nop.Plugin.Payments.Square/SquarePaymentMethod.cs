@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
@@ -208,15 +208,15 @@ namespace Nop.Plugin.Payments.Square
             //create common charge request parameters
             var chargeRequest = new ExtendedChargeRequest
             (
-                AmountMoney: amountMoney,
-                BillingAddress: billingAddress,
-                BuyerEmailAddress: email,
-                DelayCapture: _squarePaymentSettings.TransactionMode == TransactionMode.Authorize,
-                IdempotencyKey: Guid.NewGuid().ToString(),
-                IntegrationId: !string.IsNullOrEmpty(SquarePaymentDefaults.IntegrationId) ? SquarePaymentDefaults.IntegrationId : null,
-                Note: string.Format(SquarePaymentDefaults.PaymentNote, paymentRequest.OrderGuid),
-                ReferenceId: paymentRequest.OrderGuid.ToString(),
-                ShippingAddress: shippingAddress
+                amountMoney: amountMoney,
+                billingAddress: billingAddress,
+                buyerEmailAddress: email,
+                delayCapture: _squarePaymentSettings.TransactionMode == TransactionMode.Authorize,
+                idempotencyKey: Guid.NewGuid().ToString(),
+                integrationId: !string.IsNullOrEmpty(SquarePaymentDefaults.IntegrationId) ? SquarePaymentDefaults.IntegrationId : null,
+                note: string.Format(SquarePaymentDefaults.PaymentNote, paymentRequest.OrderGuid),
+                referenceId: paymentRequest.OrderGuid.ToString(),
+                shippingAddress: shippingAddress
             );
 
             //try to get previously stored card details

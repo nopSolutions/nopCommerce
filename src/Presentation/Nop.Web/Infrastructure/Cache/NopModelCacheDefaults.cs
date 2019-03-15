@@ -45,7 +45,6 @@ namespace Nop.Web.Infrastructure.Cache
         /// {2} : current store ID
         /// </remarks>
         public static string ManufacturerHasFeaturedProductsKey => "Nop.pres.manufacturer.hasfeaturedproducts-{0}-{1}-{2}";
-        public static string ManufacturerHasFeaturedProductsPatternKey => "Nop.pres.manufacturer.hasfeaturedproducts";
         public static string ManufacturerHasFeaturedProductsPatternKeyById => "Nop.pres.manufacturer.hasfeaturedproducts-{0}-";
 
         /// <summary>
@@ -79,7 +78,6 @@ namespace Nop.Web.Infrastructure.Cache
         /// {2} : current store ID
         /// </remarks>
         public static string CategoryHasFeaturedProductsKey => "Nop.pres.category.hasfeaturedproducts-{0}-{1}-{2}";
-        public static string CategoryHasFeaturedProductsPatternKey => "Nop.pres.category.hasfeaturedproducts";
         public static string CategoryHasFeaturedProductsPatternKeyById => "Nop.pres.category.hasfeaturedproducts-{0}-";
 
         /// <summary>
@@ -118,6 +116,17 @@ namespace Nop.Web.Infrastructure.Cache
         /// </remarks>
         public static string CategoryHomepageKey => "Nop.pres.category.homepage-{0}-{1}-{2}-{3}-{4}";
         public static string CategoryHomepagePatternKey => "Nop.pres.category.homepage";
+
+        /// <summary>
+        /// Key for Xml document of CategorySimpleModels caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : language id
+        /// {1} : comma separated list of customer roles
+        /// {2} : current store ID
+        /// </remarks>
+        public const string CategoryXmlAllModelKey = "Nop.pres.categoryXml.all-{0}-{1}-{2}";
+        public const string CategoryXmlAllPatternKey = "Nop.pres.categoryXml.all";
 
         /// <summary>
         /// Key for SpecificationAttributeOptionFilter caching
@@ -186,16 +195,6 @@ namespace Nop.Web.Infrastructure.Cache
         public static string ProductSpecsModelKey => "Nop.pres.product.specs-{0}-{1}";
         public static string ProductSpecsPatternKey => "Nop.pres.product.specs";
         public static string ProductSpecsPatternKeyById => "Nop.pres.product.specs-{0}-";
-
-        /// <summary>
-        /// Key for caching of a value indicating whether a product has product attributes
-        /// </summary>
-        /// <remarks>
-        /// {0} : product id
-        /// </remarks>
-        public static string ProductHasProductAttributesKey => "Nop.pres.product.hasproductattributes-{0}-";
-        public static string ProductHasProductAttributesPatternKey => "Nop.pres.product.hasproductattributes";
-        public static string ProductHasProductAttributesPatternKeyById => "Nop.pres.product.hasproductattributes-{0}-";
 
         /// <summary>
         /// Key for TopicModel caching

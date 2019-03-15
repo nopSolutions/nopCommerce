@@ -796,6 +796,16 @@
                                     <span asp-validation-for="CaptchaSettings.ShowOnRegistrationPage"></span>
                                 </div>
                             </div>
+                            <div class="form-group" id="ssCaptchaShowOnForgotPassworPagepnl">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="CaptchaSettings.ShowOnForgotPasswordPage_OverrideForStore" asp-input="CaptchaSettings.ShowOnRegistrationPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="CaptchaSettings.ShowOnForgotPasswordPage" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="CaptchaSettings.ShowOnForgotPasswordPage" />
+                                    <span asp-validation-for="CaptchaSettings.ShowOnForgotPasswordPage"></span>
+                                </div>
+                            </div>
                             <div class="form-group" id="ssCaptchaShowOnContactUsPagepnl">
                                 <div class="col-md-3">
                                     <nop-override-store-checkbox asp-for="CaptchaSettings.ShowOnContactUsPage_OverrideForStore" asp-input="CaptchaSettings.ShowOnContactUsPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
@@ -898,6 +908,7 @@
             if ($('#@Html.IdFor(model => model.CaptchaSettings.Enabled)').is(':checked')) {
                 $('#ssCaptchaShowOnLoginPagepnl').show();
                 $('#ssCaptchaShowOnRegistrationPagepnl').show();
+                $('#ssCaptchaShowOnForgotPassworPagepnl').show();
                 $('#ssCaptchaShowOnContactUsPagepnl').show();
                 $('#ssCaptchaShowOnEmailWishlistToFriendPagepnl').show();
                 $('#ssCaptchaShowOnEmailProductToFriendPagepnl').show();
@@ -910,6 +921,7 @@
             } else {
                 $('#ssCaptchaShowOnLoginPagepnl').hide();
                 $('#ssCaptchaShowOnRegistrationPagepnl').hide();
+                $('#ssCaptchaShowOnForgotPassworPagepnl').hide();
                 $('#ssCaptchaShowOnContactUsPagepnl').hide();
                 $('#ssCaptchaShowOnEmailWishlistToFriendPagepnl').hide();
                 $('#ssCaptchaShowOnEmailProductToFriendPagepnl').hide();

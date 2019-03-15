@@ -195,8 +195,7 @@ namespace Nop.Core.Infrastructure
             RegisterDependencies(nopConfig, services, typeFinder);
 
             //run startup tasks
-            if (!nopConfig.IgnoreStartupTasks)
-                RunStartupTasks(typeFinder);
+            RunStartupTasks(typeFinder);
 
             //resolve assemblies here. otherwise, plugins can throw an exception when rendering views
             AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;

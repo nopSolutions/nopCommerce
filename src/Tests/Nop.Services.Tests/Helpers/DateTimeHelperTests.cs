@@ -95,7 +95,7 @@ namespace Nop.Services.Tests.Helpers
                 Id = 10
             };
 
-            _genericAttributeService.Setup(x => x.GetAttribute<string>(customer, NopCustomerDefaults.TimeZoneIdAttribute, 0))
+            _genericAttributeService.Setup(x => x.GetAttribute<string>(customer, NopCustomerDefaults.TimeZoneIdAttribute, 0, null))
                 .Returns(_gmtPlus3MoscowTimeZoneId);
 
             var timeZone = _dateTimeHelper.GetCustomerTimeZone(customer);
