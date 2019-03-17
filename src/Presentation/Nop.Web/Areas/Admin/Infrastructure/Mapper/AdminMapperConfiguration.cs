@@ -1287,11 +1287,13 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.UploadedFileGuid, options => options.Ignore())
                 .ForMember(model => model.ReturnRequestStatusStr, options => options.Ignore());
             CreateMap<ReturnRequestModel, ReturnRequest>()
+                 .ForMember(entity => entity.CustomNumber, options => options.Ignore())
                  .ForMember(entity => entity.StoreId, options => options.Ignore())
                  .ForMember(entity => entity.OrderItemId, options => options.Ignore())
                  .ForMember(entity => entity.UploadedFileId, options => options.Ignore())
                  .ForMember(entity => entity.CreatedOnUtc, options => options.Ignore())
                  .ForMember(entity => entity.ReturnRequestStatus, options => options.Ignore())
+                 .ForMember(entity => entity.CustomerId, options => options.Ignore())
                  .ForMember(entity => entity.Customer, options => options.Ignore())
                  .ForMember(entity => entity.UpdatedOnUtc, options => options.Ignore());
 
