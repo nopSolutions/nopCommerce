@@ -3,6 +3,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Infrastructure;
+using Nop.Services.Logging;
 using Nop.Services.Media;
 using Nop.Web.Framework.Mvc.Filters;
 
@@ -13,20 +14,26 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Fields
 
         private readonly IDownloadService _downloadService;
+        private readonly ILogger _logger;
         private readonly INopFileProvider _fileProvider;
         private readonly IPictureService _pictureService;
+        private readonly IWorkContext _workContext;
 
         #endregion
 
         #region Ctor
 
         public PictureController(IDownloadService downloadService,
+            ILogger logger,
             INopFileProvider fileProvider,
-            IPictureService pictureService)
+            IPictureService pictureService,
+            IWorkContext workContext)
         {
             _downloadService = downloadService;
+            _logger = logger;
             _fileProvider = fileProvider;
             _pictureService = pictureService;
+            _workContext = workContext;
         }
 
         #endregion
@@ -47,8 +54,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return Json(new
                 {
                     success = false,
-                    message = "No file uploaded",
-                    downloadGuid = Guid.Empty
+                    message = "No file uploaded"
                 });
             }
 
@@ -100,11 +106,29 @@ namespace Nop.Web.Areas.Admin.Controllers
                 }
             }
 
-            var picture = _pictureService.InsertPicture(fileBinary, contentType, null);
+            try
+            {
+                var picture = _pictureService.InsertPicture(fileBinary, contentType, null);
 
-            //when returning JSON the mime-type must be set to text/plain
-            //otherwise some browsers will pop-up a "Save As" dialog.
-            return Json(new { success = true, pictureId = picture.Id, imageUrl = _pictureService.GetPictureUrl(picture, 100) });
+                //when returning JSON the mime-type must be set to text/plain
+                //otherwise some browsers will pop-up a "Save As" dialog.
+                return Json(new
+                {
+                    success = true,
+                    pictureId = picture.Id,
+                    imageUrl = _pictureService.GetPictureUrl(picture, 100)
+                });
+            }
+            catch (Exception exc)
+            {
+                _logger.Error(exc.Message, exc, _workContext.CurrentCustomer);
+
+                return Json(new
+                {
+                    success = false,
+                    message = "Picture cannot be saved"
+                });
+            }
         }
 
         #endregion
