@@ -21,7 +21,6 @@
             <img alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" itemprop="image" id="main-product-img-@Model.Id" />
         }
     </div>
-    <span class="picture-caption">@Model.DefaultPictureModel.Title</span>
     @if (Model.PictureModels.Count > 1 && Model.DefaultPictureZoomEnabled)
     {
         <div class="picture-thumbs">
@@ -60,7 +59,6 @@
                     $('#main-product-img-@Model.Id').attr('alt', $(this).attr('alt'));
                     $('#main-product-img-lightbox-anchor-@Model.Id').attr('href', $(this).attr('data-fullsize'));
 					$('#main-product-img-lightbox-anchor-@Model.Id').attr('title', $(this).attr('title'));
-					$('.picture-caption').text($(this).attr('title'));
                 });
             });
         </script>
