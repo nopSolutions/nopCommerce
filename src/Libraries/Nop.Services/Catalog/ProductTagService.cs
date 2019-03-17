@@ -1,9 +1,12 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
+using Nop.Core.Data.Extensions;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Customers;
 using Nop.Data;
 using Nop.Services.Events;
 using Nop.Services.Seo;
@@ -17,7 +20,9 @@ namespace Nop.Services.Catalog
     {
         #region Fields
 
+        private readonly CatalogSettings _catalogSettings;
         private readonly ICacheManager _cacheManager;
+        private readonly IDataProvider _dataProvider;
         private readonly IDbContext _dbContext;
         private readonly IEventPublisher _eventPublisher;
         private readonly IProductService _productService;
@@ -25,21 +30,27 @@ namespace Nop.Services.Catalog
         private readonly IRepository<ProductTag> _productTagRepository;
         private readonly IStaticCacheManager _staticCacheManager;
         private readonly IUrlRecordService _urlRecordService;
+        private readonly IWorkContext _workContext;
 
         #endregion
 
         #region Ctor
 
-        public ProductTagService(ICacheManager cacheManager,
+        public ProductTagService(CatalogSettings catalogSettings,
+            ICacheManager cacheManager,
+            IDataProvider dataProvider,
             IDbContext dbContext,
             IEventPublisher eventPublisher,
             IProductService productService,
             IRepository<ProductProductTagMapping> productProductTagMappingRepository,
             IRepository<ProductTag> productTagRepository,
             IStaticCacheManager staticCacheManager,
-            IUrlRecordService urlRecordService)
+            IUrlRecordService urlRecordService,
+            IWorkContext workContext)
         {
+            _catalogSettings = catalogSettings;
             _cacheManager = cacheManager;
+            _dataProvider = dataProvider;
             _dbContext = dbContext;
             _eventPublisher = eventPublisher;
             _productService = productService;
@@ -47,6 +58,7 @@ namespace Nop.Services.Catalog
             _productTagRepository = productTagRepository;
             _staticCacheManager = staticCacheManager;
             _urlRecordService = urlRecordService;
+            _workContext = workContext;
         }
 
         #endregion
@@ -57,13 +69,29 @@ namespace Nop.Services.Catalog
         /// Get product count for each of existing product tag
         /// </summary>
         /// <param name="storeId">Store identifier</param>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Dictionary of "product tag ID : product count"</returns>
-        private Dictionary<int, int> GetProductCount(int storeId)
+        private Dictionary<int, int> GetProductCount(int storeId, bool showHidden)
         {
-            var key = string.Format(NopCatalogDefaults.ProductTagCountCacheKey, storeId);
+            string allowedCustomerRolesIds = "";
+            if (!showHidden && !_catalogSettings.IgnoreAcl)
+            {
+                //Access control list. Allowed customer roles
+                //pass customer role identifiers as comma-delimited string
+                allowedCustomerRolesIds = string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds());
+            }
+
+            var key = string.Format(NopCatalogDefaults.ProductTagCountCacheKey, storeId, allowedCustomerRolesIds, showHidden);
             return _staticCacheManager.Get(key, () =>
             {
-                return _dbContext.QueryFromSql<ProductTagWithCount>($"Exec ProductTagCountLoadAll {storeId}")
+                //prepare input parameters
+                var pStoreId = _dataProvider.GetInt32Parameter("StoreId", storeId);
+                var pAllowedCustomerRoleIds = _dataProvider.GetStringParameter("AllowedCustomerRoleIds", allowedCustomerRolesIds);
+
+                //invoke stored procedure
+                return _dbContext.QueryFromSql<ProductTagWithCount>("ProductTagCountLoadAll",
+                        pStoreId,
+                        pAllowedCustomerRoleIds)
                     .ToDictionary(item => item.ProductTagId, item => item.ProductCount);
             });
         }
@@ -197,10 +225,11 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productTagId">Product tag identifier</param>
         /// <param name="storeId">Store identifier</param>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Number of products</returns>
-        public virtual int GetProductCount(int productTagId, int storeId)
+        public virtual int GetProductCount(int productTagId, int storeId, bool showHidden = false)
         {
-            var dictionary = GetProductCount(storeId);
+            var dictionary = GetProductCount(storeId, showHidden);
             if (dictionary.ContainsKey(productTagId))
                 return dictionary[productTagId];
 
@@ -274,6 +303,9 @@ namespace Nop.Services.Catalog
                 var seName = _urlRecordService.ValidateSeName(productTag, string.Empty, productTag.Name, true);
                 _urlRecordService.SaveSlug(productTag, seName, 0);
             }
+
+            //cache
+            _staticCacheManager.RemoveByPattern(NopCatalogDefaults.ProductTagPatternCacheKey);
         }
 
         #endregion

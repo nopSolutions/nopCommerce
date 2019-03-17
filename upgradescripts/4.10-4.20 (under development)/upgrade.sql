@@ -509,7 +509,7 @@ ALTER PROCEDURE [ProductLoadAllPaged]
 	@FilteredSpecs		nvarchar(MAX) = null,	--filter by specification attribute options (comma-separated list of IDs). e.g. 14,15,16
 	@LanguageId			int = 0,
 	@OrderBy			int = 0, --0 - position, 5 - Name: A to Z, 6 - Name: Z to A, 10 - Price: Low to High, 11 - Price: High to Low, 15 - creation date
-	@AllowedCustomerRoleIds	nvarchar(MAX) = null,	--a list of customer role IDs (comma-separated list) for which a product should be shown (if a subjet to ACL)
+	@AllowedCustomerRoleIds	nvarchar(MAX) = null,	--a list of customer role IDs (comma-separated list) for which a product should be shown (if a subject to ACL)
 	@PageIndex			int = 0, 
 	@PageSize			int = 2147483644,
 	@ShowHidden			bit = 0,
@@ -1239,5 +1239,52 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'commonsettings.minificat
 BEGIN
     INSERT [Setting] ([Name], [Value], [StoreId])
     VALUES (N'commonsettings.minificationenabled', N'true', 0)
+END
+GO
+
+--update the "ProductTagCountLoadAll" stored procedure
+ALTER PROCEDURE [ProductTagCountLoadAll]
+(
+	@StoreId int,
+	@AllowedCustomerRoleIds	nvarchar(MAX) = null	--a list of customer role IDs (comma-separated list) for which a product should be shown (if a subject to ACL)
+)
+AS
+BEGIN
+	SET NOCOUNT ON
+		
+	--filter by customer role IDs (access control list)
+	SET @AllowedCustomerRoleIds = isnull(@AllowedCustomerRoleIds, '')	
+	CREATE TABLE #FilteredCustomerRoleIds
+	(
+		CustomerRoleId int not null
+	)
+		
+	INSERT INTO #FilteredCustomerRoleIds (CustomerRoleId)
+	SELECT CAST(data as int) FROM [nop_splitstring_to_table](@AllowedCustomerRoleIds, ',')
+	DECLARE @FilteredCustomerRoleIdsCount int	
+	SET @FilteredCustomerRoleIdsCount = (SELECT COUNT(1) FROM #FilteredCustomerRoleIds)
+	
+	SELECT pt.Id as [ProductTagId], COUNT(p.Id) as [ProductCount]
+	FROM ProductTag pt with (NOLOCK)
+	LEFT JOIN Product_ProductTag_Mapping pptm with (NOLOCK) ON pt.[Id] = pptm.[ProductTag_Id]
+	LEFT JOIN Product p with (NOLOCK) ON pptm.[Product_Id] = p.[Id]
+	WHERE
+		p.[Deleted] = 0
+		AND p.Published = 1
+		AND (@StoreId = 0 or (p.LimitedToStores = 0 OR EXISTS (
+			SELECT 1 FROM [StoreMapping] sm with (NOLOCK)
+			WHERE [sm].EntityId = p.Id AND [sm].EntityName = 'Product' and [sm].StoreId=@StoreId
+			)))
+		AND (@FilteredCustomerRoleIdsCount = 0 or (p.SubjectToAcl = 0 OR EXISTS (
+			SELECT 1 FROM #FilteredCustomerRoleIds [fcr]
+			WHERE
+				[fcr].CustomerRoleId IN (
+					SELECT [acl].CustomerRoleId
+					FROM [AclRecord] acl with (NOLOCK)
+					WHERE [acl].EntityId = p.Id AND [acl].EntityName = 'Product'
+				))
+			))
+	GROUP BY pt.Id
+	ORDER BY pt.Id
 END
 GO
