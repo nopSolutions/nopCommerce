@@ -395,6 +395,17 @@ namespace Nop.Web.Controllers
             return Redirect(url);
         }
 
+        //server error page
+        //available even when a store is closed
+        [CheckAccessClosedStore(true)]
+        //available even when navigation is not allowed
+        [CheckAccessPublicStore(true)]
+        public virtual IActionResult Error()
+        {
+            Response.StatusCode = 500;
+            return File("errorpage.htm", "text/html");
+        }
+
         #endregion
     }
 }
