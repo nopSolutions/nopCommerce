@@ -285,7 +285,10 @@ set @resources='
     <Value>You cannot add current group product to related ones. This group product was ignored while adding.</Value>
   </LocaleResource>
   <LocaleResource Name="ScheduleTasks.Error">
-    <Value>The "{0}" scheduled task failed with the "{1}" error\r\nRunning context:\r\nTask type: {2}\r\nStore name: {3}\r\nTask run address: {4}</Value>
+    <Value>The "{0}" scheduled task failed with the "{1}" error (Task type: "{2}". Store name: "{3}". Task run address: "{4}").</Value>
+  </LocaleResource>    
+  <LocaleResource Name="ScheduleTasks.TimeoutError">
+    <Value>A scheduled task canceled. Timeout expired.</Value>
   </LocaleResource>    
 </Language>'
 
