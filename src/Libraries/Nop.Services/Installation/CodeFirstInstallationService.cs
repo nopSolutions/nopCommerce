@@ -5959,16 +5959,37 @@ namespace Nop.Services.Installation
                 InvoiceFooterTextColumn2 = null
             });
 
-            settingService.SaveSetting(new CommonSettings
+            settingService.SaveSetting(new SitemapSettings
             {
-                UseSystemEmailForContactUsForm = true,
-                UseStoredProcedureForLoadingCategories = true,
                 SitemapEnabled = true,
                 SitemapPageSize = 200,
                 SitemapIncludeCategories = true,
                 SitemapIncludeManufacturers = true,
                 SitemapIncludeProducts = false,
                 SitemapIncludeProductTags = false,
+                SitemapIncludeBlogPosts = true,
+                SitemapIncludeNews = false,
+                SitemapIncludeTopics = true
+            });
+
+            settingService.SaveSetting(new SitemapXmlSettings
+            {
+                SitemapXmlEnabled = true,
+                SitemapXmlIncludeBlogPosts = true,
+                SitemapXmlIncludeCategories = true,
+                SitemapXmlIncludeManufacturers = true,
+                SitemapXmlIncludeNews = true,
+                SitemapXmlIncludeProducts = true,
+                SitemapXmlIncludeProductTags = true,
+                SitemapXmlIncludeCustomUrls = true,
+                SitemapXmlIncludeTopics = true
+            });
+
+            settingService.SaveSetting(new CommonSettings
+            {
+                UseSystemEmailForContactUsForm = true,
+                UseStoredProcedureForLoadingCategories = true,
+
                 DisplayJavaScriptDisabledWarning = false,
                 UseFullTextSearch = false,
                 FullTextMode = FulltextSearchMode.ExactMatch,

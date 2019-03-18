@@ -12,6 +12,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public GeneralCommonSettingsModel()
         {
             StoreInformationSettings = new StoreInformationSettingsModel();
+            SitemapSettings = new SitemapSettingsModel();
             SeoSettings = new SeoSettingsModel();
             SecuritySettings = new SecuritySettingsModel();
             CaptchaSettings = new CaptchaSettingsModel();
@@ -30,6 +31,8 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public int ActiveStoreScopeConfiguration { get; set; }
 
         public StoreInformationSettingsModel StoreInformationSettings { get; set; }
+
+        public SitemapSettingsModel SitemapSettings { get; set; }
 
         public SeoSettingsModel SeoSettings { get; set; }
 
