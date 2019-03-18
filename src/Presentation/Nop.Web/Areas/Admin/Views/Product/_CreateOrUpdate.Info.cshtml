@@ -595,16 +595,19 @@
             <nop-label asp-for="SelectedCustomerRoleIds" />
         </div>
         <div class="col-md-9">
-            <nop-select asp-for="SelectedCustomerRoleIds" asp-items="Model.AvailableCustomerRoles" asp-multiple="true" />
-            <script>
-                                $(document).ready(function() {
-                                    var rolesIdsInput = $('#@Html.IdFor(model => model.SelectedCustomerRoleIds)').data("kendoMultiSelect");
-                                    rolesIdsInput.setOptions({
-                                        autoClose: false,
-                                        filter: "contains"
-                                    });
+            <div class="row">
+                <div class="col-md-4">
+                    <nop-select asp-for="SelectedCustomerRoleIds" asp-items="Model.AvailableCustomerRoles" asp-multiple="true"/>
+                    <script>
+                        $(document).ready(function() {
+                            var rolesIdsInput = $('#@Html.IdFor(model => model.SelectedCustomerRoleIds)')
+                                .data("kendoMultiSelect");
+                            rolesIdsInput.setOptions({
+                                autoClose: false,
+                                filter: "contains"
+                            });
 
-                                    @if (Model.AvailableCustomerRoles.Count == 0)
+                            @if (Model.AvailableCustomerRoles.Count == 0)
                             {
                                 <text>
                                     rolesIdsInput.setOptions({
@@ -613,10 +616,15 @@
                                     });
                                     rolesIdsInput._placeholder();
                                     rolesIdsInput._enable();
-                                    </text>
+                                </text>
                             }
-                                });
-            </script>
+                        });
+                    </script>
+                </div>
+                <div class="col-md-8">
+                    @await Component.InvokeAsync("AclDisabledWarning")
+                </div>
+            </div>
         </div>
     </div>
     <div class="form-group @(Model.ProductEditorSettingsModel.Stores ? null : "advanced-setting")">
@@ -624,16 +632,18 @@
             <nop-label asp-for="SelectedStoreIds" />
         </div>
         <div class="col-md-9">
-            <nop-select asp-for="SelectedStoreIds" asp-items="Model.AvailableStores" asp-multiple="true" />
-            <script>
-                                $(document).ready(function() {
-                                    var storesIdsInput = $('#@Html.IdFor(model => model.SelectedStoreIds)').data("kendoMultiSelect");
-                                    storesIdsInput.setOptions({
-                                        autoClose: false,
-                                        filter: "contains"
-                                    });
+            <div class="row">
+                <div class="col-md-4">
+                    <nop-select asp-for="SelectedStoreIds" asp-items="Model.AvailableStores" asp-multiple="true" />
+                    <script>
+                        $(document).ready(function() {
+                            var storesIdsInput = $('#@Html.IdFor(model => model.SelectedStoreIds)').data("kendoMultiSelect");
+                            storesIdsInput.setOptions({
+                                autoClose: false,
+                                filter: "contains"
+                            });
 
-                                    @if (Model.AvailableStores.Count == 0)
+                            @if (Model.AvailableStores.Count == 0)
                             {
                                 <text>
                                     storesIdsInput.setOptions({
@@ -642,10 +652,15 @@
                                     });
                                     storesIdsInput._placeholder();
                                     storesIdsInput._enable();
-                                    </text>
+                                </text>
                             }
-                                });
-            </script>
+                        });
+                    </script>
+                </div>
+                <div class="col-md-8">
+                    @await Component.InvokeAsync("MultistoreDisabledWarning")
+                </div>
+            </div>
         </div>
     </div>
     <div class="form-group @(Model.ProductEditorSettingsModel.Vendor ? null : "advanced-setting")" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>

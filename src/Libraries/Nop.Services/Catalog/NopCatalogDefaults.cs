@@ -299,8 +299,10 @@
         /// </summary>
         /// <remarks>
         /// {0} : store ID
+        /// {1} : comma separated list of customer roles
+        /// {2} : show hidden records?
         /// </remarks>
-        public static string ProductTagCountCacheKey => "Nop.producttag.count-{0}";
+        public static string ProductTagCountCacheKey => "Nop.producttag.count-{0}-{1}-{2}";
 
         /// <summary>
         /// Gets a key for caching

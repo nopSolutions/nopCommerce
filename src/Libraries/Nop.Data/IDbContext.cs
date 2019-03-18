@@ -35,8 +35,9 @@ namespace Nop.Data
         /// </summary>
         /// <typeparam name="TQuery">Query type</typeparam>
         /// <param name="sql">The raw SQL query</param>
+        /// <param name="parameters">The values to be assigned to parameters</param>
         /// <returns>An IQueryable representing the raw SQL query</returns>
-        IQueryable<TQuery> QueryFromSql<TQuery>(string sql) where TQuery : class;
+        IQueryable<TQuery> QueryFromSql<TQuery>(string sql, params object[] parameters) where TQuery : class;
         
         /// <summary>
         /// Creates a LINQ query for the entity based on a raw SQL query

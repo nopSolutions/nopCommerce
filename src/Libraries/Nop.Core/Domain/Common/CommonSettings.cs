@@ -139,5 +139,10 @@ namespace Nop.Core.Domain.Common
         /// Gets or sets a value of favicon and app icons <head/> code
         /// </summary>
         public string FaviconAndAppIconsHeadCode { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to enable markup minification
+        /// </summary>
+        public bool MinificationEnabled { get; set; }
     }
 }
