@@ -104,7 +104,7 @@
         public static string GdprConsentDetailsBottom => "admin_gdpr_consent_details_bottom";
         public static string GdprConsentDetailsButtons => "admin_gdpr_consent_details_buttons";
         public static string GdprConsentDetailsTop => "admin_gdpr_consent_details_top";
-        public static string GeneralCommonSettingsBottom => "admin_general_common_settings_bottom";
+        public static string GeneralCommonDetailsBlock => "admin_general_common_details_block";
         public static string GeneralCommonSettingsButtons => "admin_general_common_settings_buttons";
         public static string GeneralCommonSettingsTop => "admin_general_common_settings_top";
         public static string GiftCardDetailsBlock => "admin_gift_card_details_block";
@@ -251,7 +251,7 @@
         public static string ShippingMethodListButtons => "admin_shipping_method_list_buttons";
         public static string ShippingProviderListButtons => "admin_shipping_provider_list_buttons";
         public static string ShippingRestrictionListButtons => "admin_shipping_restriction_list_buttons";
-        public static string ShippingSettingsBottom => "admin_shipping_settings_bottom";
+        public static string ShippingDetailsBlock => "admin_shipping_details_block";
         public static string ShippingSettingsButtons => "admin_shipping_settings_buttons";
         public static string ShippingSettingsTop => "admin_shipping_settings_top";
         public static string ShoppingCartSettingsBottom => "admin_shopping_cart_settings_bottom";
