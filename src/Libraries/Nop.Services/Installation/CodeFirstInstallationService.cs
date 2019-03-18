@@ -6300,7 +6300,6 @@ namespace Nop.Services.Installation
                 FacebookLink = "http://www.facebook.com/nopCommerce",
                 TwitterLink = "https://twitter.com/nopCommerce",
                 YoutubeLink = "http://www.youtube.com/user/nopCommerce",
-                GooglePlusLink = "https://plus.google.com/+nopcommerce",
                 HidePoweredByNopCommerce = false
             });
 

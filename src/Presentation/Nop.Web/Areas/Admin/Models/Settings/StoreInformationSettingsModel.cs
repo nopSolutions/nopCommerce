@@ -57,10 +57,6 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public string YoutubeLink { get; set; }
         public bool YoutubeLink_OverrideForStore { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.GooglePlusLink")]
-        public string GooglePlusLink { get; set; }
-        public bool GooglePlusLink_OverrideForStore { get; set; }
-
         [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.SubjectFieldOnContactUsForm")]
         public bool SubjectFieldOnContactUsForm { get; set; }
         public bool SubjectFieldOnContactUsForm_OverrideForStore { get; set; }

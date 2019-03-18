@@ -387,7 +387,6 @@ namespace Nop.Web.Factories
                 FacebookLink = _storeInformationSettings.FacebookLink,
                 TwitterLink = _storeInformationSettings.TwitterLink,
                 YoutubeLink = _storeInformationSettings.YoutubeLink,
-                GooglePlusLink = _storeInformationSettings.GooglePlusLink,
                 WorkingLanguageId = _workContext.WorkingLanguage.Id,
                 NewsEnabled = _newsSettings.Enabled,
             };

@@ -309,7 +309,6 @@ namespace Nop.Web.Areas.Admin.Factories
                 FacebookLink = storeInformationSettings.FacebookLink,
                 TwitterLink = storeInformationSettings.TwitterLink,
                 YoutubeLink = storeInformationSettings.YoutubeLink,
-                GooglePlusLink = storeInformationSettings.GooglePlusLink,
                 SubjectFieldOnContactUsForm = commonSettings.SubjectFieldOnContactUsForm,
                 UseSystemEmailForContactUsForm = commonSettings.UseSystemEmailForContactUsForm,
                 PopupForTermsOfServiceLinks = commonSettings.PopupForTermsOfServiceLinks,
@@ -337,7 +336,6 @@ namespace Nop.Web.Areas.Admin.Factories
             model.FacebookLink_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.FacebookLink, storeId);
             model.TwitterLink_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.TwitterLink, storeId);
             model.YoutubeLink_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.YoutubeLink, storeId);
-            model.GooglePlusLink_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.GooglePlusLink, storeId);
             model.SubjectFieldOnContactUsForm_OverrideForStore = _settingService.SettingExists(commonSettings, x => x.SubjectFieldOnContactUsForm, storeId);
             model.UseSystemEmailForContactUsForm_OverrideForStore = _settingService.SettingExists(commonSettings, x => x.UseSystemEmailForContactUsForm, storeId);
             model.PopupForTermsOfServiceLinks_OverrideForStore = _settingService.SettingExists(commonSettings, x => x.PopupForTermsOfServiceLinks, storeId);

@@ -398,6 +398,15 @@ set @resources='
   <LocaleResource Name="Admin.Vendors.Fields.PageSizeOptions">
     <Value>Page Size options</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.GooglePlusLink">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.GooglePlusLink.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Footer.FollowUs.GooglePlus">
+    <Value></Value>
+  </LocaleResource>
 </Language>'
 
 CREATE TABLE #LocaleStringResourceTmp
@@ -1287,4 +1296,10 @@ BEGIN
 	GROUP BY pt.Id
 	ORDER BY pt.Id
 END
+GO
+
+
+--delete setting
+DELETE FROM [Setting]
+WHERE [Name] = N'storeinformationsettings.googlepluslink'
 GO

@@ -6936,12 +6936,6 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.GenerateProductMetaDescription.Hint">
     <Value>When enabled, product META descriptions will be automatically generated (if not specified on the product details page) based on product short description.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.GooglePlusLink">
-    <Value>Google+ page URL</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.GooglePlusLink.Hint">
-    <Value>Specify your Google+ page URL. Leave empty if you have no such page.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.HoneypotEnabled">
     <Value>Enable honeypot</Value>
   </LocaleResource>
@@ -15440,9 +15434,6 @@
   </LocaleResource>
   <LocaleResource Name="Footer.FollowUs.Facebook">
     <Value>Facebook</Value>
-  </LocaleResource>
-  <LocaleResource Name="Footer.FollowUs.GooglePlus">
-    <Value>Google+</Value>
   </LocaleResource>
   <LocaleResource Name="Footer.FollowUs.RSS">
     <Value>RSS</Value>
