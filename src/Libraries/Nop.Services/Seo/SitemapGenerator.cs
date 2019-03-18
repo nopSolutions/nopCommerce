@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -77,25 +77,25 @@ namespace Nop.Services.Seo
             SecuritySettings securitySettings,
             SitemapXmlSettings sitemapSettings)
         {
+            _blogSettings = blogSettings;
+            _forumSettings = forumSettings;
             _actionContextAccessor = actionContextAccessor;
             _blogService = blogService;
-            _blogSettings = blogSettings;
             _categoryService = categoryService;
-            _forumSettings = forumSettings;
             _languageService = languageService;
-            _localizationSettings = localizationSettings;
             _manufacturerService = manufacturerService;
             _newsService = newsService;
-            _newsSettings = newsSettings;
             _productService = productService;
             _productTagService = productTagService;
-            _securitySettings = securitySettings;
-            _sitemapXmlSettings = sitemapSettings;
             _storeContext = storeContext;
             _topicService = topicService;
             _urlHelperFactory = urlHelperFactory;
             _urlRecordService = urlRecordService;
             _webHelper = webHelper;
+            _localizationSettings = localizationSettings;
+            _newsSettings = newsSettings;
+            _securitySettings = securitySettings;
+            _sitemapXmlSettings = sitemapSettings;
         }
 
         #endregion
@@ -187,60 +187,58 @@ namespace Nop.Services.Seo
             var sitemapUrls = new List<SitemapUrl>
             {
                 //home page
-                GetLocalizedSitemapUrl("HomePage")
-            };           
+                GetLocalizedSitemapUrl("HomePage"),
 
-            if (_sitemapXmlSettings.SitemapXmlEnabled)
-            {
                 //search products
-                sitemapUrls.Add(GetLocalizedSitemapUrl("ProductSearch"));
+                GetLocalizedSitemapUrl("ProductSearch"),
+
                 //contact us
-                sitemapUrls.Add(GetLocalizedSitemapUrl("ContactUs"));
+                GetLocalizedSitemapUrl("ContactUs")
+            };
 
-                //news
-                if (_newsSettings.Enabled)
-                    sitemapUrls.Add(GetLocalizedSitemapUrl("NewsArchive"));
+            //news
+            if (_newsSettings.Enabled)
+                sitemapUrls.Add(GetLocalizedSitemapUrl("NewsArchive"));
 
-                //blog
-                if (_blogSettings.Enabled)
-                    sitemapUrls.Add(GetLocalizedSitemapUrl("Blog"));
+            //blog
+            if (_blogSettings.Enabled)
+                sitemapUrls.Add(GetLocalizedSitemapUrl("Blog"));
 
-                //forum
-                if (_forumSettings.ForumsEnabled)
-                    sitemapUrls.Add(GetLocalizedSitemapUrl("Boards"));
+            //forum
+            if (_forumSettings.ForumsEnabled)
+                sitemapUrls.Add(GetLocalizedSitemapUrl("Boards"));
 
-                //news
-                if (_sitemapXmlSettings.SitemapXmlIncludeNews)
-                    sitemapUrls.AddRange(GetNewsItemUrls());
+            //categories
+            if (_sitemapXmlSettings.SitemapXmlIncludeCategories)
+                sitemapUrls.AddRange(GetCategoryUrls());
 
-                //categories
-                if (_sitemapXmlSettings.SitemapXmlIncludeCategories)
-                    sitemapUrls.AddRange(GetCategoryUrls());
+            //manufacturers
+            if (_sitemapXmlSettings.SitemapXmlIncludeManufacturers)
+                sitemapUrls.AddRange(GetManufacturerUrls());
 
-                //manufacturers
-                if (_sitemapXmlSettings.SitemapXmlIncludeManufacturers)
-                    sitemapUrls.AddRange(GetManufacturerUrls());
+            //products
+            if (_sitemapXmlSettings.SitemapXmlIncludeProducts)
+                sitemapUrls.AddRange(GetProductUrls());
 
-                //products
-                if (_sitemapXmlSettings.SitemapXmlIncludeProducts)
-                    sitemapUrls.AddRange(GetProductUrls());
+            //product tags
+            if (_sitemapXmlSettings.SitemapXmlIncludeProductTags)
+                sitemapUrls.AddRange(GetProductTagUrls());
 
-                //product tags
-                if (_sitemapXmlSettings.SitemapXmlIncludeProductTags)
-                    sitemapUrls.AddRange(GetProductTagUrls());
+            //news
+            if (_sitemapXmlSettings.SitemapXmlIncludeNews && _newsSettings.Enabled)
+                sitemapUrls.AddRange(GetNewsItemUrls());
 
-                //blog posts
-                if (_sitemapXmlSettings.SitemapXmlIncludeBlogPosts)
-                    sitemapUrls.AddRange(GetBlogPostUrls());
+            //blog posts
+            if (_sitemapXmlSettings.SitemapXmlIncludeBlogPosts && _blogSettings.Enabled)
+                sitemapUrls.AddRange(GetBlogPostUrls());
 
-                //topics
-                if (_sitemapXmlSettings.SitemapXmlIncludeTopics)
-                    sitemapUrls.AddRange(GetTopicUrls());
+            //topics
+            if (_sitemapXmlSettings.SitemapXmlIncludeTopics)
+                sitemapUrls.AddRange(GetTopicUrls());
 
-                //custom URLs
-                if (_sitemapXmlSettings.SitemapXmlIncludeCustomUrls)
-                    sitemapUrls.AddRange(GetCustomUrls());
-            }
+            //custom URLs
+            if (_sitemapXmlSettings.SitemapXmlIncludeCustomUrls)
+                sitemapUrls.AddRange(GetCustomUrls());
 
             return sitemapUrls;
         }
@@ -348,13 +346,13 @@ namespace Nop.Services.Seo
         /// <param name="routeParams">Lambda for route params object</param>
         /// <param name="dateTimeUpdatedOn">A time when URL was updated last time</param>
         /// <param name="updateFreq">How often to update url</param>
-        protected virtual SitemapUrl GetLocalizedSitemapUrl(string routeName, 
-            Func<int?, object> routeParams = null, 
+        protected virtual SitemapUrl GetLocalizedSitemapUrl(string routeName,
+            Func<int?, object> routeParams = null,
             DateTime? dateTimeUpdatedOn = null,
             UpdateFrequency updateFreq = UpdateFrequency.Weekly)
         {
             var urlHelper = GetUrlHelper();
-            
+
             //url for current language
             var url = urlHelper.RouteUrl(routeName, routeParams?.Invoke(null), GetHttpProtocol());
 

@@ -94,8 +94,7 @@ namespace Nop.Web.Factories
 
         #region Ctor
 
-        public CommonModelFactory(
-            BlogSettings blogSettings,
+        public CommonModelFactory(BlogSettings blogSettings,
             CaptchaSettings captchaSettings,
             CatalogSettings catalogSettings,
             CommonSettings commonSettings,
@@ -137,28 +136,25 @@ namespace Nop.Web.Factories
             StoreInformationSettings storeInformationSettings,
             VendorSettings vendorSettings)
         {
-            _actionContextAccessor = actionContextAccessor;
-            _blogService = blogService;
             _blogSettings = blogSettings;
-            _cacheManager = cacheManager;
             _captchaSettings = captchaSettings;
             _catalogSettings = catalogSettings;
-            _categoryService = categoryService;
             _commonSettings = commonSettings;
-            _currencyService = currencyService;
-            _customerService = customerService;
             _customerSettings = customerSettings;
             _displayDefaultFooterItemSettings = displayDefaultFooterItemSettings;
-            _fileProvider = fileProvider;
-            _forumService = forumService;
             _forumSettings = forumSettings;
+            _actionContextAccessor = actionContextAccessor;
+            _blogService = blogService;
+            _categoryService = categoryService;
+            _currencyService = currencyService;
+            _customerService = customerService;
+            _forumService = forumService;
             _genericAttributeService = genericAttributeService;
             _languageService = languageService;
             _localizationService = localizationService;
-            _localizationSettings = localizationSettings;
             _manufacturerService = manufacturerService;
             _newsService = newsService;
-            _newsSettings = newsSettings;
+            _fileProvider = fileProvider;
             _pageHeadBuilder = pageHeadBuilder;
             _permissionService = permissionService;
             _pictureService = pictureService;
@@ -166,18 +162,21 @@ namespace Nop.Web.Factories
             _productTagService = productTagService;
             _shoppingCartService = shoppingCartService;
             _sitemapGenerator = sitemapGenerator;
-            _sitemapSettings = sitemapSettings;
-            _sitemapXmlSettings = sitemapXmlSettings;
+            _cacheManager = cacheManager;
             _storeContext = storeContext;
-            _storeInformationSettings = storeInformationSettings;
             _themeContext = themeContext;
             _themeProvider = themeProvider;
             _topicService = topicService;
             _urlHelperFactory = urlHelperFactory;
             _urlRecordService = urlRecordService;
-            _vendorSettings = vendorSettings;
             _webHelper = webHelper;
             _workContext = workContext;
+            _localizationSettings = localizationSettings;
+            _newsSettings = newsSettings;
+            _sitemapSettings = sitemapSettings;
+            _sitemapXmlSettings = sitemapXmlSettings;
+            _storeInformationSettings = storeInformationSettings;
+            _vendorSettings = vendorSettings;
         }
 
         #endregion

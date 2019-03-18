@@ -5968,7 +5968,7 @@ namespace Nop.Services.Installation
                 SitemapIncludeProducts = false,
                 SitemapIncludeProductTags = false,
                 SitemapIncludeBlogPosts = true,
-                SitemapIncludeNews = true,
+                SitemapIncludeNews = false,
                 SitemapIncludeTopics = true
             });
 
@@ -5982,14 +5982,14 @@ namespace Nop.Services.Installation
                 SitemapXmlIncludeProducts = true,
                 SitemapXmlIncludeProductTags = true,
                 SitemapXmlIncludeCustomUrls = true,
-                SitemapXmlIncludeTopics = true,
+                SitemapXmlIncludeTopics = true
             });
 
             settingService.SaveSetting(new CommonSettings
             {
                 UseSystemEmailForContactUsForm = true,
                 UseStoredProcedureForLoadingCategories = true,
-                
+
                 DisplayJavaScriptDisabledWarning = false,
                 UseFullTextSearch = false,
                 FullTextMode = FulltextSearchMode.ExactMatch,

@@ -481,14 +481,7 @@
                         @T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.Sitemap")
                     </div>
                     <div class="panel-body">
-                        <p>
-                            @T("Admin.Configuration.Settings.GeneralCommon.Sitemap.Instructions")
-                        </p>
-                        <div class="form-group">
-                            <div class="col-md-9 col-md-offset-3">
-                                <a asp-controller="Setting" asp-action="AllSettings" asp-route-name="sitemapxml">Sitemap.xml</a>
-                            </div>
-                        </div> 
+                        @(Html.Raw(string.Format(T("Admin.Configuration.Settings.GeneralCommon.Sitemap.Instructions").Text, Url.Action("AllSettings", "Setting", new { settingName = "sitemapxml" })))) 
                         <div class="form-group">
                             <div class="col-md-3">
                                 <nop-override-store-checkbox asp-for="SitemapSettings.SitemapEnabled_OverrideForStore" asp-input="SitemapSettings.SitemapEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />

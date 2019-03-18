@@ -429,7 +429,7 @@ set @resources='
     <Value>News</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.Sitemap.Instructions">
-    <Value><![CDATA[<p>These settings do not apply to sitemap.xml, only for your site map. You can configure generation for sitemap.xml on all settings page.</p>]]></Value>
+    <Value><![CDATA[<p>These settings do not apply to sitemap.xml, only for your site map. You can configure generation for sitemap.xml on <a href="{0}">all settings page</a></p>]]></Value>
   </LocaleResource> 
 </Language>'
 
@@ -1261,7 +1261,7 @@ GO
 IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'sitemapsettings.sitemapincludenews')
 BEGIN
     INSERT [Setting] ([Name], [Value], [StoreId])
-    VALUES (N'sitemapsettings.sitemapincludenews', N'True', 0)
+    VALUES (N'sitemapsettings.sitemapincludenews', N'false', 0)
 END
 GO
 
@@ -1383,6 +1383,14 @@ BEGIN
 	UPDATE [Setting]
 	SET [Name] = 'sitemapsettings.sitemappagesize'
 	WHERE [Name] = 'commonsettings.sitemappagesize'
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'sitemapxmlsettings.sitemapcustomurls')
+BEGIN
+	UPDATE [Setting]
+	SET [Name] = 'sitemapxmlsettings.sitemapcustomurls'
+	WHERE [Name] = 'commonsettings.sitemapcustomurls'
 END
 GO
 

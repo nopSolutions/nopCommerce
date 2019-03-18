@@ -47,9 +47,9 @@ namespace Nop.Web.Controllers
         private readonly SitemapXmlSettings _sitemapXmlSettings;
         private readonly StoreInformationSettings _storeInformationSettings;
         private readonly VendorSettings _vendorSettings;
-        
+
         #endregion
-        
+
         #region Ctor
 
         public CommonController(CaptchaSettings captchaSettings,
@@ -73,30 +73,30 @@ namespace Nop.Web.Controllers
             VendorSettings vendorSettings)
         {
             _captchaSettings = captchaSettings;
-            _commonModelFactory = commonModelFactory;
             _commonSettings = commonSettings;
+            _commonModelFactory = commonModelFactory;
             _currencyService = currencyService;
             _customerActivityService = customerActivityService;
             _genericAttributeService = genericAttributeService;
             _languageService = languageService;
             _localizationService = localizationService;
-            _localizationSettings = localizationSettings;
             _logger = logger;
-            _sitemapSettings = sitemapSettings;
-            _sitemapXmlSettings = sitemapXmlSettings;
             _storeContext = storeContext;
-            _storeInformationSettings = storeInformationSettings;
             _themeContext = themeContext;
             _vendorService = vendorService;
-            _vendorSettings = vendorSettings;
             _workContext = workContext;
             _workflowMessageService = workflowMessageService;
+            _localizationSettings = localizationSettings;
+            _sitemapSettings = sitemapSettings;
+            _sitemapXmlSettings = sitemapXmlSettings;
+            _storeInformationSettings = storeInformationSettings;
+            _vendorSettings = vendorSettings;
         }
 
         #endregion
 
         #region Methods
-        
+
         //page not found
         public virtual IActionResult PageNotFound()
         {
@@ -104,7 +104,7 @@ namespace Nop.Web.Controllers
             {
                 var statusCodeReExecuteFeature = HttpContext?.Features?.Get<IStatusCodeReExecuteFeature>();
                 //TODO add locale resource
-                _logger.Error($"Error 404. The requested page ({statusCodeReExecuteFeature?.OriginalPath}) was not found", 
+                _logger.Error($"Error 404. The requested page ({statusCodeReExecuteFeature?.OriginalPath}) was not found",
                     customer: _workContext.CurrentCustomer);
             }
 
@@ -113,7 +113,7 @@ namespace Nop.Web.Controllers
 
             return View();
         }
-        
+
         //available even when a store is closed
         [CheckAccessClosedStore(true)]
         //available even when navigation is not allowed
@@ -136,7 +136,7 @@ namespace Nop.Web.Controllers
             if (_localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
             {
                 //remove current language code if it's already localized URL
-                if (returnUrl.IsLocalizedUrl(Request.PathBase, true, out Language _))
+                if (returnUrl.IsLocalizedUrl(Request.PathBase, true, out var _))
                     returnUrl = returnUrl.RemoveLanguageSeoCodeFromUrl(Request.PathBase, true);
 
                 //and add code of passed language
@@ -166,7 +166,7 @@ namespace Nop.Web.Controllers
 
             return Redirect(returnUrl);
         }
-        
+
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
         public virtual IActionResult SetTaxType(int customerTaxType, string returnUrl = "")
@@ -223,7 +223,7 @@ namespace Nop.Web.Controllers
                 model.Result = _localizationService.GetResource("ContactUs.YourEnquiryHasBeenSent");
 
                 //activity log
-                _customerActivityService.InsertActivity("PublicStore.ContactUs", 
+                _customerActivityService.InsertActivity("PublicStore.ContactUs",
                     _localizationService.GetResource("ActivityLog.PublicStore.ContactUs"));
 
                 return View(model);
@@ -302,7 +302,9 @@ namespace Nop.Web.Controllers
         [CheckAccessClosedStore(true)]
         public virtual IActionResult SitemapXml(int? id)
         {
-            var siteMap = _commonModelFactory.PrepareSitemapXml(id);
+            var siteMap = _sitemapXmlSettings.SitemapXmlEnabled
+                ? _commonModelFactory.PrepareSitemapXml(id) : string.Empty;
+
             return Content(siteMap, "text/xml");
         }
 

@@ -296,8 +296,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //load settings for a chosen store scope
             var storeId = _storeContext.ActiveStoreScopeConfiguration;
             var storeInformationSettings = _settingService.LoadSetting<StoreInformationSettings>(storeId);
-            var commonSettings = _settingService.LoadSetting<CommonSettings>(storeId);
-            
+            var commonSettings = _settingService.LoadSetting<CommonSettings>(storeId);            
 
             //fill in model values from the entity
             var model = new StoreInformationSettingsModel

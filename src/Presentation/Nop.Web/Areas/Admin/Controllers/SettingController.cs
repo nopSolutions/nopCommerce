@@ -1652,13 +1652,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             return RedirectToAction("GeneralCommon");
         }
 
-        public virtual IActionResult AllSettings(string name = "")
+        public virtual IActionResult AllSettings(string settingName)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
             //prepare model
-            var model = _settingModelFactory.PrepareSettingSearchModel(new SettingSearchModel() { SearchSettingName = WebUtility.HtmlEncode(name) });
+            var model = _settingModelFactory.PrepareSettingSearchModel(new SettingSearchModel() { SearchSettingName = WebUtility.HtmlEncode(settingName) });
 
             return View(model);
         }
