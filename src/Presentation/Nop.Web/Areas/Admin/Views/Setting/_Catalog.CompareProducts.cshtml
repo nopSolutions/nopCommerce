@@ -1,0 +1,52 @@
+@model CatalogSettingsModel
+
+<div class="panel-body">
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="CompareProductsEnabled_OverrideForStore" asp-input="CompareProductsEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="CompareProductsEnabled" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="CompareProductsEnabled" />
+            <span asp-validation-for="CompareProductsEnabled"></span>
+        </div>
+    </div>
+    <nop-nested-setting asp-for="CompareProductsEnabled">
+        <div class="form-group advanced-setting" id="pnlIncludeShortDescriptionInCompareProducts">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="IncludeShortDescriptionInCompareProducts_OverrideForStore" asp-input="IncludeShortDescriptionInCompareProducts" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="IncludeShortDescriptionInCompareProducts" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="IncludeShortDescriptionInCompareProducts" />
+                <span asp-validation-for="IncludeShortDescriptionInCompareProducts"></span>
+            </div>
+        </div>
+        <div class="form-group advanced-setting" id="IncludeFullDescriptionInCompareProducts">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="IncludeFullDescriptionInCompareProducts_OverrideForStore" asp-input="IncludeFullDescriptionInCompareProducts" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="IncludeFullDescriptionInCompareProducts" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="IncludeFullDescriptionInCompareProducts" />
+                <span asp-validation-for="IncludeFullDescriptionInCompareProducts"></span>
+            </div>
+        </div>
+    </nop-nested-setting>
+    <script>
+        $(document).ready(function () {
+            $("#@Html.IdFor(model => model.CompareProductsEnabled)").click(toggleCompareProductsEnabled);
+            toggleCompareProductsEnabled();
+        });
+
+        function toggleCompareProductsEnabled() {
+            if ($('#@Html.IdFor(model => model.CompareProductsEnabled)').is(':checked')) {
+                $('#pnlIncludeShortDescriptionInCompareProducts').show();
+                $('#IncludeFullDescriptionInCompareProducts').show();
+            } else {
+                $('#pnlIncludeShortDescriptionInCompareProducts').hide();
+                $('#IncludeFullDescriptionInCompareProducts').hide();
+            }
+        }
+    </script>
+</div>

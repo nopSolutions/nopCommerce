@@ -1,0 +1,34 @@
+@model CatalogSettingsModel
+
+<div class="panel-body">
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ShowFreeShippingNotification_OverrideForStore" asp-input="ShowFreeShippingNotification" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ShowFreeShippingNotification" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ShowFreeShippingNotification" />
+            <span asp-validation-for="ShowFreeShippingNotification"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="AllowViewUnpublishedProductPage_OverrideForStore" asp-input="AllowViewUnpublishedProductPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="AllowViewUnpublishedProductPage" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="AllowViewUnpublishedProductPage" />
+            <span asp-validation-for="AllowViewUnpublishedProductPage"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="DisplayDiscontinuedMessageForUnpublishedProducts_OverrideForStore" asp-input="DisplayDiscontinuedMessageForUnpublishedProducts" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="DisplayDiscontinuedMessageForUnpublishedProducts" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="DisplayDiscontinuedMessageForUnpublishedProducts" />
+            <span asp-validation-for="DisplayDiscontinuedMessageForUnpublishedProducts"></span>
+        </div>
+    </div>
+</div>

@@ -26,7 +26,7 @@
         public static string CampaignDetailsButtons => "admin_campaign_details_buttons";
         public static string CampaignDetailsTop => "admin_campaign_details_top";
         public static string CampaignListButtons => "admin_campaign_list_buttons";
-        public static string CatalogSettingsBottom => "admin_catalog_settings_bottom";
+        public static string CatalogSettingsDetailsBlock => "admin_catalog_settings_details_block";
         public static string CatalogSettingsButtons => "admin_catalog_settings_buttons";
         public static string CatalogSettingsTop => "admin_catalog_settings_top";
         public static string CategoryDetailsBlock => "admin_category_details_block"; 
@@ -237,9 +237,8 @@
         public static string ReturnRequestReasonDetailsButtons => "admin_return_request_reason_details_buttons";
         public static string ReturnRequestReasonSettingsBottom => "admin_return_request_reason_settings_bottom";
         public static string ReturnRequestReasonSettingsTop => "admin_return_request_reason_settings_top";
-        public static string RewardPointsSettingsBottom => "admin_reward_points_settings_bottom";
+        public static string RewardPointsSettingsDetailsBlock => "admin_reward_points_settings_details_block";
         public static string RewardPointsSettingsButtons => "admin_reward_points_settings_buttons";
-        public static string RewardPointsSettingsTop => "admin_reward_points_settings_top";
         public static string ScheduleTaskListButtons => "admin_schedule_task_list_buttons";
         public static string SearchBoxBefore => "admin_searchbox_before";
         public static string SenamesBottom => "admin_senames_bottom";
@@ -254,9 +253,8 @@
         public static string ShippingDetailsBlock => "admin_shipping_details_block";
         public static string ShippingSettingsButtons => "admin_shipping_settings_buttons";
         public static string ShippingSettingsTop => "admin_shipping_settings_top";
-        public static string ShoppingCartSettingsBottom => "admin_shopping_cart_settings_bottom";
+        public static string ShoppingCartSettingsDetailsBlock => "admin_shopping_cart_settings_details_block";
         public static string ShoppingCartSettingsButtons => "admin_shopping_cart_settings_buttons";
-        public static string ShoppingCartSettingsTop => "admin_shopping_cart_settings_top";
         public static string SpecificationAttributeDetailsBlock => "admin_specification_attribute_details_block";
         public static string SpecificationAttributeDetailsButtons => "admin_specification_attribute_details_buttons";
         public static string SpecificationAttributeListButtons => "admin_specification_attribute_list_buttons";
@@ -272,7 +270,7 @@
         public static string SystemInfoTop => "admin_system_info_top";
         public static string TaxCategoryListButtons => "admin_tax_category_list_buttons";
         public static string TaxProviderListButtons => "admin_tax_provider_list_buttons";
-        public static string TaxSettingsBottom => "admin_tax_settings_bottom";
+        public static string TaxSettingsDetailsBlock => "admin_tax_settings_details_block";
         public static string TaxSettingsButtons => "admin_tax_settings_buttons";
         public static string TaxSettingsTop => "admin_tax_settings_top";
         public static string TemplatesDetailsBlock => "admin_templates_details_block";
