@@ -1523,3 +1523,7 @@ BEGIN
     VALUES (N'gdprsettings.loguserprofilechanges', N'True', 0)
 END
 GO
+
+--alter column
+ALTER TABLE [Setting] ALTER COLUMN [Value] [nvarchar](max) NOT NULL
+GO
