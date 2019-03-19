@@ -353,6 +353,10 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         /// <param name="services">Collection of service descriptors</param>
         public static void AddNopWebMarkupMin(this IServiceCollection services)
         {
+            //check whether database is installed
+            if (!DataSettingsManager.DatabaseIsInstalled)
+                return;
+
             services
                 .AddWebMarkupMin(options =>
                 {
