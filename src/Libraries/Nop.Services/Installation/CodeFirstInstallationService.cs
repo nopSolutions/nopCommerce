@@ -4103,7 +4103,7 @@ namespace Nop.Services.Installation
             _productAvailabilityRangeRepository.Insert(productAvailabilityRanges);
         }
 
-        protected virtual void InstallCustomersAndUsers(string defaultUserEmail, string defaultUserPassword)
+        protected virtual void InstallCustomersAndUsers(string defaultUserEmail, string defaultUserPassword, bool installSampleData)
         {
             var crAdministrators = new CustomerRole
             {
@@ -4208,259 +4208,263 @@ namespace Nop.Services.Installation
             customerRegistrationService.ChangePassword(new ChangePasswordRequest(defaultUserEmail, false,
                  PasswordFormat.Hashed, defaultUserPassword, null, NopCustomerServiceDefaults.DefaultHashedPasswordFormat));
 
-            //second user
-            var secondUserEmail = "steve_gates@nopCommerce.com";
-            var secondUser = new Customer
+            //sample customers
+            if (installSampleData)
             {
-                CustomerGuid = Guid.NewGuid(),
-                Email = secondUserEmail,
-                Username = secondUserEmail,
-                Active = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                LastActivityDateUtc = DateTime.UtcNow,
-                RegisteredInStoreId = storeId
-            };
-            var defaultSecondUserAddress = new Address
-            {
-                FirstName = "Steve",
-                LastName = "Gates",
-                PhoneNumber = "87654321",
-                Email = secondUserEmail,
-                FaxNumber = string.Empty,
-                Company = "Steve Company",
-                Address1 = "750 Bel Air Rd.",
-                Address2 = string.Empty,
-                City = "Los Angeles",
-                StateProvince = _stateProvinceRepository.Table.FirstOrDefault(sp => sp.Name == "California"),
-                Country = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == "USA"),
-                ZipPostalCode = "90077",
-                CreatedOnUtc = DateTime.UtcNow
-            };
-            //secondUser.Addresses.Add(defaultSecondUserAddress);
-            secondUser.CustomerAddressMappings.Add(new CustomerAddressMapping { Address = defaultSecondUserAddress });
-            secondUser.BillingAddress = defaultSecondUserAddress;
-            secondUser.ShippingAddress = defaultSecondUserAddress;
+                //second user
+                var secondUserEmail = "steve_gates@nopCommerce.com";
+                var secondUser = new Customer
+                {
+                    CustomerGuid = Guid.NewGuid(),
+                    Email = secondUserEmail,
+                    Username = secondUserEmail,
+                    Active = true,
+                    CreatedOnUtc = DateTime.UtcNow,
+                    LastActivityDateUtc = DateTime.UtcNow,
+                    RegisteredInStoreId = storeId
+                };
+                var defaultSecondUserAddress = new Address
+                {
+                    FirstName = "Steve",
+                    LastName = "Gates",
+                    PhoneNumber = "87654321",
+                    Email = secondUserEmail,
+                    FaxNumber = string.Empty,
+                    Company = "Steve Company",
+                    Address1 = "750 Bel Air Rd.",
+                    Address2 = string.Empty,
+                    City = "Los Angeles",
+                    StateProvince = _stateProvinceRepository.Table.FirstOrDefault(sp => sp.Name == "California"),
+                    Country = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == "USA"),
+                    ZipPostalCode = "90077",
+                    CreatedOnUtc = DateTime.UtcNow
+                };
+                //secondUser.Addresses.Add(defaultSecondUserAddress);
+                secondUser.CustomerAddressMappings.Add(new CustomerAddressMapping { Address = defaultSecondUserAddress });
+                secondUser.BillingAddress = defaultSecondUserAddress;
+                secondUser.ShippingAddress = defaultSecondUserAddress;
 
-            //secondUser.CustomerRoles.Add(crRegistered);
-            secondUser.AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerRole = crRegistered });
+                //secondUser.CustomerRoles.Add(crRegistered);
+                secondUser.AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerRole = crRegistered });
 
-            _customerRepository.Insert(secondUser);
-            //set default customer name
-            _genericAttributeService.SaveAttribute(secondUser, NopCustomerDefaults.FirstNameAttribute, defaultSecondUserAddress.FirstName);
-            _genericAttributeService.SaveAttribute(secondUser, NopCustomerDefaults.LastNameAttribute, defaultSecondUserAddress.LastName);
+                _customerRepository.Insert(secondUser);
+                //set default customer name
+                _genericAttributeService.SaveAttribute(secondUser, NopCustomerDefaults.FirstNameAttribute, defaultSecondUserAddress.FirstName);
+                _genericAttributeService.SaveAttribute(secondUser, NopCustomerDefaults.LastNameAttribute, defaultSecondUserAddress.LastName);
 
-            //set customer password
-            _customerPasswordRepository.Insert(new CustomerPassword
-            {
-                Customer = secondUser,
-                Password = "123456",
-                PasswordFormat = PasswordFormat.Clear,
-                PasswordSalt = string.Empty,
-                CreatedOnUtc = DateTime.UtcNow
-            });
+                //set customer password
+                _customerPasswordRepository.Insert(new CustomerPassword
+                {
+                    Customer = secondUser,
+                    Password = "123456",
+                    PasswordFormat = PasswordFormat.Clear,
+                    PasswordSalt = string.Empty,
+                    CreatedOnUtc = DateTime.UtcNow
+                });
 
-            //third user
-            var thirdUserEmail = "arthur_holmes@nopCommerce.com";
-            var thirdUser = new Customer
-            {
-                CustomerGuid = Guid.NewGuid(),
-                Email = thirdUserEmail,
-                Username = thirdUserEmail,
-                Active = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                LastActivityDateUtc = DateTime.UtcNow,
-                RegisteredInStoreId = storeId
-            };
-            var defaultThirdUserAddress = new Address
-            {
-                FirstName = "Arthur",
-                LastName = "Holmes",
-                PhoneNumber = "111222333",
-                Email = thirdUserEmail,
-                FaxNumber = string.Empty,
-                Company = "Holmes Company",
-                Address1 = "221B Baker Street",
-                Address2 = string.Empty,
-                City = "London",
-                Country = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == "GBR"),
-                ZipPostalCode = "NW1 6XE",
-                CreatedOnUtc = DateTime.UtcNow
-            };
-            //thirdUser.Addresses.Add(defaultThirdUserAddress);
-            thirdUser.CustomerAddressMappings.Add(new CustomerAddressMapping { Address = defaultThirdUserAddress });
-            thirdUser.BillingAddress = defaultThirdUserAddress;
-            thirdUser.ShippingAddress = defaultThirdUserAddress;
+                //third user
+                var thirdUserEmail = "arthur_holmes@nopCommerce.com";
+                var thirdUser = new Customer
+                {
+                    CustomerGuid = Guid.NewGuid(),
+                    Email = thirdUserEmail,
+                    Username = thirdUserEmail,
+                    Active = true,
+                    CreatedOnUtc = DateTime.UtcNow,
+                    LastActivityDateUtc = DateTime.UtcNow,
+                    RegisteredInStoreId = storeId
+                };
+                var defaultThirdUserAddress = new Address
+                {
+                    FirstName = "Arthur",
+                    LastName = "Holmes",
+                    PhoneNumber = "111222333",
+                    Email = thirdUserEmail,
+                    FaxNumber = string.Empty,
+                    Company = "Holmes Company",
+                    Address1 = "221B Baker Street",
+                    Address2 = string.Empty,
+                    City = "London",
+                    Country = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == "GBR"),
+                    ZipPostalCode = "NW1 6XE",
+                    CreatedOnUtc = DateTime.UtcNow
+                };
+                //thirdUser.Addresses.Add(defaultThirdUserAddress);
+                thirdUser.CustomerAddressMappings.Add(new CustomerAddressMapping { Address = defaultThirdUserAddress });
+                thirdUser.BillingAddress = defaultThirdUserAddress;
+                thirdUser.ShippingAddress = defaultThirdUserAddress;
 
-            //thirdUser.CustomerRoles.Add(crRegistered);
-            thirdUser.AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerRole = crRegistered });
+                //thirdUser.CustomerRoles.Add(crRegistered);
+                thirdUser.AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerRole = crRegistered });
 
-            _customerRepository.Insert(thirdUser);
-            //set default customer name
-            _genericAttributeService.SaveAttribute(thirdUser, NopCustomerDefaults.FirstNameAttribute, defaultThirdUserAddress.FirstName);
-            _genericAttributeService.SaveAttribute(thirdUser, NopCustomerDefaults.LastNameAttribute, defaultThirdUserAddress.LastName);
+                _customerRepository.Insert(thirdUser);
+                //set default customer name
+                _genericAttributeService.SaveAttribute(thirdUser, NopCustomerDefaults.FirstNameAttribute, defaultThirdUserAddress.FirstName);
+                _genericAttributeService.SaveAttribute(thirdUser, NopCustomerDefaults.LastNameAttribute, defaultThirdUserAddress.LastName);
 
-            //set customer password
-            _customerPasswordRepository.Insert(new CustomerPassword
-            {
-                Customer = thirdUser,
-                Password = "123456",
-                PasswordFormat = PasswordFormat.Clear,
-                PasswordSalt = string.Empty,
-                CreatedOnUtc = DateTime.UtcNow
-            });
+                //set customer password
+                _customerPasswordRepository.Insert(new CustomerPassword
+                {
+                    Customer = thirdUser,
+                    Password = "123456",
+                    PasswordFormat = PasswordFormat.Clear,
+                    PasswordSalt = string.Empty,
+                    CreatedOnUtc = DateTime.UtcNow
+                });
 
-            //fourth user
-            var fourthUserEmail = "james_pan@nopCommerce.com";
-            var fourthUser = new Customer
-            {
-                CustomerGuid = Guid.NewGuid(),
-                Email = fourthUserEmail,
-                Username = fourthUserEmail,
-                Active = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                LastActivityDateUtc = DateTime.UtcNow,
-                RegisteredInStoreId = storeId
-            };
-            var defaultFourthUserAddress = new Address
-            {
-                FirstName = "James",
-                LastName = "Pan",
-                PhoneNumber = "369258147",
-                Email = fourthUserEmail,
-                FaxNumber = string.Empty,
-                Company = "Pan Company",
-                Address1 = "St Katharine’s West 16",
-                Address2 = string.Empty,
-                City = "St Andrews",
-                Country = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == "GBR"),
-                ZipPostalCode = "KY16 9AX",
-                CreatedOnUtc = DateTime.UtcNow
-            };
-            //fourthUser.Addresses.Add(defaultFourthUserAddress);
-            fourthUser.CustomerAddressMappings.Add(new CustomerAddressMapping { Address = defaultFourthUserAddress });
-            fourthUser.BillingAddress = defaultFourthUserAddress;
-            fourthUser.ShippingAddress = defaultFourthUserAddress;
+                //fourth user
+                var fourthUserEmail = "james_pan@nopCommerce.com";
+                var fourthUser = new Customer
+                {
+                    CustomerGuid = Guid.NewGuid(),
+                    Email = fourthUserEmail,
+                    Username = fourthUserEmail,
+                    Active = true,
+                    CreatedOnUtc = DateTime.UtcNow,
+                    LastActivityDateUtc = DateTime.UtcNow,
+                    RegisteredInStoreId = storeId
+                };
+                var defaultFourthUserAddress = new Address
+                {
+                    FirstName = "James",
+                    LastName = "Pan",
+                    PhoneNumber = "369258147",
+                    Email = fourthUserEmail,
+                    FaxNumber = string.Empty,
+                    Company = "Pan Company",
+                    Address1 = "St Katharine’s West 16",
+                    Address2 = string.Empty,
+                    City = "St Andrews",
+                    Country = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == "GBR"),
+                    ZipPostalCode = "KY16 9AX",
+                    CreatedOnUtc = DateTime.UtcNow
+                };
+                //fourthUser.Addresses.Add(defaultFourthUserAddress);
+                fourthUser.CustomerAddressMappings.Add(new CustomerAddressMapping { Address = defaultFourthUserAddress });
+                fourthUser.BillingAddress = defaultFourthUserAddress;
+                fourthUser.ShippingAddress = defaultFourthUserAddress;
 
-            //fourthUser.CustomerRoles.Add(crRegistered);
-            fourthUser.AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerRole = crRegistered });
+                //fourthUser.CustomerRoles.Add(crRegistered);
+                fourthUser.AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerRole = crRegistered });
 
-            _customerRepository.Insert(fourthUser);
-            //set default customer name
-            _genericAttributeService.SaveAttribute(fourthUser, NopCustomerDefaults.FirstNameAttribute, defaultFourthUserAddress.FirstName);
-            _genericAttributeService.SaveAttribute(fourthUser, NopCustomerDefaults.LastNameAttribute, defaultFourthUserAddress.LastName);
+                _customerRepository.Insert(fourthUser);
+                //set default customer name
+                _genericAttributeService.SaveAttribute(fourthUser, NopCustomerDefaults.FirstNameAttribute, defaultFourthUserAddress.FirstName);
+                _genericAttributeService.SaveAttribute(fourthUser, NopCustomerDefaults.LastNameAttribute, defaultFourthUserAddress.LastName);
 
-            //set customer password
-            _customerPasswordRepository.Insert(new CustomerPassword
-            {
-                Customer = fourthUser,
-                Password = "123456",
-                PasswordFormat = PasswordFormat.Clear,
-                PasswordSalt = string.Empty,
-                CreatedOnUtc = DateTime.UtcNow
-            });
+                //set customer password
+                _customerPasswordRepository.Insert(new CustomerPassword
+                {
+                    Customer = fourthUser,
+                    Password = "123456",
+                    PasswordFormat = PasswordFormat.Clear,
+                    PasswordSalt = string.Empty,
+                    CreatedOnUtc = DateTime.UtcNow
+                });
 
-            //fifth user
-            var fifthUserEmail = "brenda_lindgren@nopCommerce.com";
-            var fifthUser = new Customer
-            {
-                CustomerGuid = Guid.NewGuid(),
-                Email = fifthUserEmail,
-                Username = fifthUserEmail,
-                Active = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                LastActivityDateUtc = DateTime.UtcNow,
-                RegisteredInStoreId = storeId
-            };
-            var defaultFifthUserAddress = new Address
-            {
-                FirstName = "Brenda",
-                LastName = "Lindgren",
-                PhoneNumber = "14785236",
-                Email = fifthUserEmail,
-                FaxNumber = string.Empty,
-                Company = "Brenda Company",
-                Address1 = "1249 Tongass Avenue, Suite B",
-                Address2 = string.Empty,
-                City = "Ketchikan",
-                StateProvince = _stateProvinceRepository.Table.FirstOrDefault(sp => sp.Name == "Alaska"),
-                Country = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == "USA"),
-                ZipPostalCode = "99901",
-                CreatedOnUtc = DateTime.UtcNow
-            };
-            //fifthUser.Addresses.Add(defaultFifthUserAddress);
-            fifthUser.CustomerAddressMappings.Add(new CustomerAddressMapping { Address = defaultFifthUserAddress });
-            fifthUser.BillingAddress = defaultFifthUserAddress;
-            fifthUser.ShippingAddress = defaultFifthUserAddress;
+                //fifth user
+                var fifthUserEmail = "brenda_lindgren@nopCommerce.com";
+                var fifthUser = new Customer
+                {
+                    CustomerGuid = Guid.NewGuid(),
+                    Email = fifthUserEmail,
+                    Username = fifthUserEmail,
+                    Active = true,
+                    CreatedOnUtc = DateTime.UtcNow,
+                    LastActivityDateUtc = DateTime.UtcNow,
+                    RegisteredInStoreId = storeId
+                };
+                var defaultFifthUserAddress = new Address
+                {
+                    FirstName = "Brenda",
+                    LastName = "Lindgren",
+                    PhoneNumber = "14785236",
+                    Email = fifthUserEmail,
+                    FaxNumber = string.Empty,
+                    Company = "Brenda Company",
+                    Address1 = "1249 Tongass Avenue, Suite B",
+                    Address2 = string.Empty,
+                    City = "Ketchikan",
+                    StateProvince = _stateProvinceRepository.Table.FirstOrDefault(sp => sp.Name == "Alaska"),
+                    Country = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == "USA"),
+                    ZipPostalCode = "99901",
+                    CreatedOnUtc = DateTime.UtcNow
+                };
+                //fifthUser.Addresses.Add(defaultFifthUserAddress);
+                fifthUser.CustomerAddressMappings.Add(new CustomerAddressMapping { Address = defaultFifthUserAddress });
+                fifthUser.BillingAddress = defaultFifthUserAddress;
+                fifthUser.ShippingAddress = defaultFifthUserAddress;
 
-            //fifthUser.CustomerRoles.Add(crRegistered);
-            fifthUser.AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerRole = crRegistered });
+                //fifthUser.CustomerRoles.Add(crRegistered);
+                fifthUser.AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerRole = crRegistered });
 
-            _customerRepository.Insert(fifthUser);
-            //set default customer name
-            _genericAttributeService.SaveAttribute(fifthUser, NopCustomerDefaults.FirstNameAttribute, defaultFifthUserAddress.FirstName);
-            _genericAttributeService.SaveAttribute(fifthUser, NopCustomerDefaults.LastNameAttribute, defaultFifthUserAddress.LastName);
+                _customerRepository.Insert(fifthUser);
+                //set default customer name
+                _genericAttributeService.SaveAttribute(fifthUser, NopCustomerDefaults.FirstNameAttribute, defaultFifthUserAddress.FirstName);
+                _genericAttributeService.SaveAttribute(fifthUser, NopCustomerDefaults.LastNameAttribute, defaultFifthUserAddress.LastName);
 
-            //set customer password
-            _customerPasswordRepository.Insert(new CustomerPassword
-            {
-                Customer = fifthUser,
-                Password = "123456",
-                PasswordFormat = PasswordFormat.Clear,
-                PasswordSalt = string.Empty,
-                CreatedOnUtc = DateTime.UtcNow
-            });
+                //set customer password
+                _customerPasswordRepository.Insert(new CustomerPassword
+                {
+                    Customer = fifthUser,
+                    Password = "123456",
+                    PasswordFormat = PasswordFormat.Clear,
+                    PasswordSalt = string.Empty,
+                    CreatedOnUtc = DateTime.UtcNow
+                });
 
-            //sixth user
-            var sixthUserEmail = "victoria_victoria@nopCommerce.com";
-            var sixthUser = new Customer
-            {
-                CustomerGuid = Guid.NewGuid(),
-                Email = sixthUserEmail,
-                Username = sixthUserEmail,
-                Active = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                LastActivityDateUtc = DateTime.UtcNow,
-                RegisteredInStoreId = storeId
-            };
-            var defaultSixthUserAddress = new Address
-            {
-                FirstName = "Victoria",
-                LastName = "Terces",
-                PhoneNumber = "45612378",
-                Email = sixthUserEmail,
-                FaxNumber = string.Empty,
-                Company = "Terces Company",
-                Address1 = "201 1st Avenue South",
-                Address2 = string.Empty,
-                City = "Saskatoon",
-                StateProvince = _stateProvinceRepository.Table.FirstOrDefault(sp => sp.Name == "Saskatchewan"),
-                Country = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == "CAN"),
-                ZipPostalCode = "S7K 1J9",
-                CreatedOnUtc = DateTime.UtcNow
-            };
-            //sixthUser.Addresses.Add(defaultSixthUserAddress);
-            sixthUser.CustomerAddressMappings.Add(new CustomerAddressMapping { Address = defaultSixthUserAddress });
-            sixthUser.BillingAddress = defaultSixthUserAddress;
-            sixthUser.ShippingAddress = defaultSixthUserAddress;
+                //sixth user
+                var sixthUserEmail = "victoria_victoria@nopCommerce.com";
+                var sixthUser = new Customer
+                {
+                    CustomerGuid = Guid.NewGuid(),
+                    Email = sixthUserEmail,
+                    Username = sixthUserEmail,
+                    Active = true,
+                    CreatedOnUtc = DateTime.UtcNow,
+                    LastActivityDateUtc = DateTime.UtcNow,
+                    RegisteredInStoreId = storeId
+                };
+                var defaultSixthUserAddress = new Address
+                {
+                    FirstName = "Victoria",
+                    LastName = "Terces",
+                    PhoneNumber = "45612378",
+                    Email = sixthUserEmail,
+                    FaxNumber = string.Empty,
+                    Company = "Terces Company",
+                    Address1 = "201 1st Avenue South",
+                    Address2 = string.Empty,
+                    City = "Saskatoon",
+                    StateProvince = _stateProvinceRepository.Table.FirstOrDefault(sp => sp.Name == "Saskatchewan"),
+                    Country = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == "CAN"),
+                    ZipPostalCode = "S7K 1J9",
+                    CreatedOnUtc = DateTime.UtcNow
+                };
+                //sixthUser.Addresses.Add(defaultSixthUserAddress);
+                sixthUser.CustomerAddressMappings.Add(new CustomerAddressMapping { Address = defaultSixthUserAddress });
+                sixthUser.BillingAddress = defaultSixthUserAddress;
+                sixthUser.ShippingAddress = defaultSixthUserAddress;
 
-            //sixthUser.CustomerRoles.Add(crRegistered);
-            //__sixthUser.CustomerCustomerRoleMappings.Add(new CustomerCustomerRoleMapping { CustomerRole = crRegistered });
-            sixthUser.AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerRole = crRegistered });
+                //sixthUser.CustomerRoles.Add(crRegistered);
+                //__sixthUser.CustomerCustomerRoleMappings.Add(new CustomerCustomerRoleMapping { CustomerRole = crRegistered });
+                sixthUser.AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerRole = crRegistered });
 
-            _customerRepository.Insert(sixthUser);
-            //set default customer name
-            _genericAttributeService.SaveAttribute(sixthUser, NopCustomerDefaults.FirstNameAttribute, defaultSixthUserAddress.FirstName);
-            _genericAttributeService.SaveAttribute(sixthUser, NopCustomerDefaults.LastNameAttribute, defaultSixthUserAddress.LastName);
+                _customerRepository.Insert(sixthUser);
+                //set default customer name
+                _genericAttributeService.SaveAttribute(sixthUser, NopCustomerDefaults.FirstNameAttribute, defaultSixthUserAddress.FirstName);
+                _genericAttributeService.SaveAttribute(sixthUser, NopCustomerDefaults.LastNameAttribute, defaultSixthUserAddress.LastName);
 
-            //set customer password
-            _customerPasswordRepository.Insert(new CustomerPassword
-            {
-                Customer = sixthUser,
-                Password = "123456",
-                PasswordFormat = PasswordFormat.Clear,
-                PasswordSalt = string.Empty,
-                CreatedOnUtc = DateTime.UtcNow
-            });
+                //set customer password
+                _customerPasswordRepository.Insert(new CustomerPassword
+                {
+                    Customer = sixthUser,
+                    Password = "123456",
+                    PasswordFormat = PasswordFormat.Clear,
+                    PasswordSalt = string.Empty,
+                    CreatedOnUtc = DateTime.UtcNow
+                });
+            }
 
             //search engine (crawler) built-in user
             var searchEngineUser = new Customer
@@ -12365,7 +12369,7 @@ namespace Nop.Services.Installation
             InstallMessageTemplates();
             InstallTopicTemplates();
             InstallSettings(installSampleData);
-            InstallCustomersAndUsers(defaultUserEmail, defaultUserPassword);
+            InstallCustomersAndUsers(defaultUserEmail, defaultUserPassword, installSampleData);
             InstallTopics();
             InstallLocaleResources();
             InstallActivityLogTypes();
