@@ -1527,3 +1527,11 @@ GO
 --alter column
 ALTER TABLE [Setting] ALTER COLUMN [Value] [nvarchar](max) NOT NULL
 GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'mediasettings.useabsoluteimagepath')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'mediasettings.useabsoluteimagepath', N'True', 0)
+END
+GO

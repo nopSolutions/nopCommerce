@@ -106,5 +106,10 @@ namespace Nop.Core.Domain.Media
         ///proxy-revalidate      — similar to must-revalidate, except that it only applies to proxy caches.
         /// </remarks>
         public string AzureCacheControlHeader { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether need to use absolute pictures path
+        /// </summary>
+        public bool UseAbsoluteImagePath { get; set; }
     }
 }
