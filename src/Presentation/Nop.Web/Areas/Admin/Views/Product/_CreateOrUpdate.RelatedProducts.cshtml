@@ -1,0 +1,142 @@
+﻿@model ProductModel
+<div class="panel-body">
+    <p>
+        @T("Admin.Catalog.Products.RelatedProducts.Hint")
+    </p>
+    @if (Model.Id > 0)
+    {
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div id="relatedproducts-grid"></div>
+
+                <script>
+                                $(document).ready(function() {
+                                    $("#relatedproducts-grid").kendoGrid({
+                                        dataSource: {
+                                            type: "json",
+                                            transport: {
+                                                read: {
+                                                    url: "@Html.Raw(Url.Action("RelatedProductList", "Product"))",
+                                                    type: "POST",
+                                                    dataType: "json",
+                                                    data: function additionalData() {
+                                                        var data = {
+                                                            ProductId: '@(Model.Id)'
+                                                        };
+                                                        addAntiForgeryToken(data);
+                                                        return data;
+                                                    }
+                                                },
+                                                update: {
+                                                    url: "@Html.Raw(Url.Action("RelatedProductUpdate", "Product"))",
+                                                    type: "POST",
+                                                    dataType: "json",
+                                                    data: addAntiForgeryToken
+                                                },
+                                                destroy: {
+                                                    url: "@Html.Raw(Url.Action("RelatedProductDelete", "Product"))",
+                                                    type: "POST",
+                                                    dataType: "json",
+                                                    data: addAntiForgeryToken
+                                                }
+                                            },
+                                            schema: {
+                                                data: "Data",
+                                                total: "Total",
+                                                errors: "Errors",
+                                                model: {
+                                                    id: "Id",
+                                                    fields: {
+                                                        Product2Name: { editable: false, type: "string" },
+                                                        DisplayOrder: { editable: true, type: "number" },
+                                                        ProductId2: { editable: false, type: "number" }
+                                                    }
+                                                }
+                                            },
+                                            requestEnd: function(e) {
+                                                if (e.type == "update") {
+                                                    this.read();
+                                                }
+                                            },
+                                            error: function(e) {
+                                                display_kendoui_grid_error(e);
+                                                // Cancel the changes
+                                                this.cancelChanges();
+                                            },
+                                            pageSize: @(Model.RelatedProductSearchModel.PageSize),
+                                            serverPaging: true,
+                                            serverFiltering: true,
+                                            serverSorting: true
+                                        },
+                                        pageable: {
+                                            refresh: true,
+                                            pageSizes: [@(Model.RelatedProductSearchModel.AvailablePageSizes)],
+                                            @await Html.PartialAsync("_GridPagerMessages")
+                                        },
+                                        editable: {
+                                            confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                                            mode: "inline"
+                                        },
+                                        scrollable: false,
+                                        columns: [
+                                            {
+                                                field: "Product2Name",
+                                                title: "@T("Admin.Catalog.Products.RelatedProducts.Fields.Product")",
+                                                width: 250,
+                                                template: '<a href="@Url.Content("~/Admin/Product/Edit/")#=ProductId2#">#=Product2Name#</a>'
+                                            }, {
+                                                field: "DisplayOrder",
+                                                title: "@T("Admin.Catalog.Products.RelatedProducts.Fields.DisplayOrder")",
+                                                //integer format
+                                                format: "{0:0}",
+                                                width: 120
+                                            }, {
+                                                command: [
+                                                    {
+                                                        name: "edit",
+                                                        text: {
+                                                            edit: "@T("Admin.Common.Edit")",
+                                                            update: "@T("Admin.Common.Update")",
+                                                            cancel: "@T("Admin.Common.Cancel")"
+                                                        }
+                                                    }, {
+                                                        name: "destroy",
+                                                        text: "@T("Admin.Common.Delete")"
+                                                    }
+                                                ],
+                                                width: 220
+                                            }
+                                        ]
+                                    });
+                                });
+                </script>
+            </div>
+            <div class="panel-footer">
+                <button type="submit" id="btnAddNewRelatedProduct" class="btn btn-primary" onclick="javascript:OpenWindow('@(Url.Action("RelatedProductAddPopup", "Product", new {productId = Model.Id, btnId = "btnRefreshRelatedProducts", formId = "product-form"}))', 800, 800, true); return false;">
+                    @T("Admin.Catalog.Products.RelatedProducts.AddNew")
+                </button>
+                <input type="submit" id="btnRefreshRelatedProducts" style="display: none" />
+                <script>
+                    $(document).ready(function () {
+                        $('#btnRefreshRelatedProducts').click(function () {
+                            //refresh grid
+                            var grid = $("#relatedproducts-grid").data('kendoGrid');
+                            grid.dataSource.read();
+
+                            //return false to don't reload a page
+                            return false;
+                        });
+                    });
+                </script>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="panel panel-default">
+            <div class="panel-body">
+                @T("Admin.Catalog.Products.RelatedProducts.SaveBeforeEdit")
+            </div>
+        </div>
+    }
+</div>

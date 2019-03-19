@@ -809,6 +809,12 @@ namespace Nop.Web.Factories
             model.OnePageCheckoutEnabled = _orderSettings.OnePageCheckoutEnabled;
             if (!cart.Any())
                 return model;
+            
+            //performance optimization workaround (for Entity Framework)
+            //load all products at once (one SQL command)
+            //if not loaded right now, then anyway the code below will load each product separately (multiple SQL commands)
+            _productService.GetProductsByIds(cart.Select(sci => sci.ProductId).ToArray());
+            
             model.IsEditable = isEditable;
             model.ShowProductImages = _shoppingCartSettings.ShowProductImagesOnShoppingCart;
             model.ShowSku = _catalogSettings.ShowSkuOnProductDetailsPage;
@@ -919,6 +925,11 @@ namespace Nop.Web.Factories
             if (!cart.Any())
                 return model;
 
+            //performance optimization workaround (for Entity Framework)
+            //load all products at once (one SQL command)
+            //if not loaded right now, then anyway the code below will load each product separately (multiple SQL commands)
+            _productService.GetProductsByIds(cart.Select(sci => sci.ProductId).ToArray());
+
             //simple properties
             var customer = cart.FirstOrDefault(item => item.Customer != null)?.Customer;
             model.CustomerGuid = customer.CustomerGuid;
@@ -960,6 +971,11 @@ namespace Nop.Web.Factories
             if (_workContext.CurrentCustomer.HasShoppingCartItems)
             {
                 var cart = _shoppingCartService.GetShoppingCart(_workContext.CurrentCustomer, ShoppingCartType.ShoppingCart, _storeContext.CurrentStore.Id);
+
+                //one more performance optimization workaround (for Entity Framework)
+                //load all products at once (one SQL command)
+                //if not loaded right now, then anyway the code below will load each product separately (multiple SQL commands)
+                _productService.GetProductsByIds(cart.Select(sci => sci.ProductId).ToArray());
 
                 model.TotalProducts = cart.Sum(item => item.Quantity);
                 if (cart.Any())

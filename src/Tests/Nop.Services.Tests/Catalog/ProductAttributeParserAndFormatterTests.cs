@@ -213,7 +213,8 @@ namespace Nop.Services.Tests.Catalog
                 _productAttributeRepo.Object,
                 _productAttributeCombinationRepo.Object,
                 _productAttributeMappingRepo.Object,
-                _productAttributeValueRepo.Object);
+                _productAttributeValueRepo.Object,
+                new NopNullCache());
 
             _context = new Mock<IDbContext>();
 

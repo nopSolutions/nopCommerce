@@ -168,8 +168,7 @@ namespace Nop.Services.Messages
                     "%Store.CompanyVat%",
                     "%Facebook.URL%",
                     "%Twitter.URL%",
-                    "%YouTube.URL%",
-                    "%GooglePlus.URL%"
+                    "%YouTube.URL%"
                 });
 
                 //customer tokens
@@ -897,7 +896,6 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Facebook.URL", _storeInformationSettings.FacebookLink));
             tokens.Add(new Token("Twitter.URL", _storeInformationSettings.TwitterLink));
             tokens.Add(new Token("YouTube.URL", _storeInformationSettings.YoutubeLink));
-            tokens.Add(new Token("GooglePlus.URL", _storeInformationSettings.GooglePlusLink));
 
             //event notification
             _eventPublisher.EntityTokensAdded(store, tokens);

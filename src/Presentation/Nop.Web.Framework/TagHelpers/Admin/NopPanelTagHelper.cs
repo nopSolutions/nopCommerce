@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
@@ -95,7 +96,13 @@ namespace Nop.Web.Framework.TagHelpers.Admin
             viewContextAware?.Contextualize(ViewContext);
 
             //create panel
-            var panel = new TagBuilder("div");
+            var panel = new TagBuilder("div")
+            {
+                Attributes =
+                {
+                    new KeyValuePair<string, string>("data-panel-name", Name),
+                }
+            };
             panel.AddCssClass("panel panel-default collapsible-panel");
             if (context.AllAttributes.ContainsName(IS_ADVANCED_ATTRIBUTE_NAME) && context.AllAttributes[IS_ADVANCED_ATTRIBUTE_NAME].Value.Equals(true))
             {

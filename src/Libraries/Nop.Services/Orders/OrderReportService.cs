@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -26,7 +26,6 @@ namespace Nop.Services.Orders
         private readonly IRepository<OrderItem> _orderItemRepository;
         private readonly IRepository<Product> _productRepository;
         private readonly IRepository<StoreMapping> _storeMappingRepository;
-        private readonly string _productEntityName;
 
         #endregion
 
@@ -45,7 +44,6 @@ namespace Nop.Services.Orders
             _orderItemRepository = orderItemRepository;
             _productRepository = productRepository;
             _storeMappingRepository = storeMappingRepository;
-            _productEntityName = typeof(Product).Name;
         }
 
         #endregion
@@ -472,7 +470,7 @@ namespace Nop.Services.Orders
             {
                 query = from p in query
                         join sm in _storeMappingRepository.Table
-                        on new { c1 = p.Id, c2 = _productEntityName } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into p_sm
+                        on new { c1 = p.Id, c2 = nameof(Product) } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into p_sm
                         from sm in p_sm.DefaultIfEmpty()
                         where !p.LimitedToStores || storeId == sm.StoreId
                         select p;

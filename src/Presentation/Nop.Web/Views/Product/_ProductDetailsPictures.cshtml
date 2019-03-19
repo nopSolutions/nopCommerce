@@ -4,6 +4,7 @@
     Html.AddCssFileParts("~/lib/magnific-popup/magnific-popup.css");
 }
 <div class="gallery">
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductDetailsBeforePictures, additionalData = Model })
     <div class="picture">
         @if (Model.DefaultPictureZoomEnabled && Model.PictureModels.Count == 1)
         {
@@ -11,8 +12,8 @@
                 <img alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" itemprop="image" id="main-product-img-@Model.Id" />
             </a>
             <script asp-location="Footer">
-                $(document).ready(function () {
-                    $('#main-product-img-lightbox-anchor-@Model.Id').magnificPopup({type: 'image'});
+                $(document).ready(function() {
+                    $('#main-product-img-lightbox-anchor-@Model.Id').magnificPopup({ type: 'image' });
                 });
             </script>
         }
@@ -21,7 +22,6 @@
             <img alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" itemprop="image" id="main-product-img-@Model.Id" />
         }
     </div>
-    <span class="picture-caption">@Model.DefaultPictureModel.Title</span>
     @if (Model.PictureModels.Count > 1 && Model.DefaultPictureZoomEnabled)
     {
         <div class="picture-thumbs">
@@ -33,35 +33,35 @@
             }
         </div>
         <script asp-location="Footer">
-                $(document).ready(function () {
-					$('.picture-thumbs').magnificPopup(
-                        {
-							type: 'image',
-							delegate: 'a',
-                            removalDelay: 300,
-                            gallery: {
-								enabled: true,
-								navigateByImgClick: true,
-								preload: [0, 1],
-                                tPrev: '@T("Media.MagnificPopup.Previous")',
-                                tNext: '@T("Media.MagnificPopup.Next")',
-                                tCounter: '@T("Media.MagnificPopup.Counter")'
-                            },
-                            tClose: '@T("Media.MagnificPopup.Close")',
-                            tLoading: '@T("Media.MagnificPopup.Loading")'
-                        });
-                });
+            $(document).ready(function() {
+                $('.picture-thumbs').magnificPopup(
+                    {
+                        type: 'image',
+                        delegate: 'a',
+                        removalDelay: 300,
+                        gallery: {
+                            enabled: true,
+                            navigateByImgClick: true,
+                            preload: [0, 1],
+                            tPrev: '@T("Media.MagnificPopup.Previous")',
+                            tNext: '@T("Media.MagnificPopup.Next")',
+                            tCounter: '@T("Media.MagnificPopup.Counter")'
+                        },
+                        tClose: '@T("Media.MagnificPopup.Close")',
+                        tLoading: '@T("Media.MagnificPopup.Loading")'
+                    });
+            });
         </script>
         <script asp-location="Footer">
-            $(document).ready(function () {
-                $('.thumb-item > img').on('click', function () {
-                    $('#main-product-img-@Model.Id').attr('src', $(this).attr('data-defaultsize'));
-                    $('#main-product-img-@Model.Id').attr('title', $(this).attr('title'));
-                    $('#main-product-img-@Model.Id').attr('alt', $(this).attr('alt'));
-                    $('#main-product-img-lightbox-anchor-@Model.Id').attr('href', $(this).attr('data-fullsize'));
-					$('#main-product-img-lightbox-anchor-@Model.Id').attr('title', $(this).attr('title'));
-					$('.picture-caption').text($(this).attr('title'));
-                });
+            $(document).ready(function() {
+                $('.thumb-item > img').on('click',
+                    function() {
+                        $('#main-product-img-@Model.Id').attr('src', $(this).attr('data-defaultsize'));
+                        $('#main-product-img-@Model.Id').attr('title', $(this).attr('title'));
+                        $('#main-product-img-@Model.Id').attr('alt', $(this).attr('alt'));
+                        $('#main-product-img-lightbox-anchor-@Model.Id').attr('href', $(this).attr('data-fullsize'));
+                        $('#main-product-img-lightbox-anchor-@Model.Id').attr('title', $(this).attr('title'));
+                    });
             });
         </script>
     }
@@ -78,16 +78,19 @@
                 }
             </div>
             <script asp-location="Footer">
-            $(document).ready(function () {
-                $('.thumb-item img').on('click', function () {
-                    $('#main-product-img-@Model.Id').attr('src', $(this).attr('data-defaultsize'));
-                    $('#main-product-img-@Model.Id').attr('title', $(this).attr('title'));
-                    $('#main-product-img-@Model.Id').attr('alt', $(this).attr('alt'));
-                    $('#main-product-img-lightbox-anchor-@Model.Id').attr('href', $(this).attr('data-fullsize'));
-                    $('#main-product-img-lightbox-anchor-@Model.Id').attr('title', $(this).attr('title'));
+                $(document).ready(function() {
+                    $('.thumb-item img').on('click',
+                        function() {
+                            $('#main-product-img-@Model.Id').attr('src', $(this).attr('data-defaultsize'));
+                            $('#main-product-img-@Model.Id').attr('title', $(this).attr('title'));
+                            $('#main-product-img-@Model.Id').attr('alt', $(this).attr('alt'));
+                            $('#main-product-img-lightbox-anchor-@Model.Id')
+                                .attr('href', $(this).attr('data-fullsize'));
+                            $('#main-product-img-lightbox-anchor-@Model.Id').attr('title', $(this).attr('title'));
+                        });
                 });
-            });
             </script>
         }
     }
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductDetailsAfterPictures, additionalData = Model })
 </div>

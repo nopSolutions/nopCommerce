@@ -1,0 +1,98 @@
+@model TaxSettingsModel
+
+<div class="panel-body">
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="AllowCustomersToSelectTaxDisplayType_OverrideForStore" asp-input="AllowCustomersToSelectTaxDisplayType" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="AllowCustomersToSelectTaxDisplayType" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="AllowCustomersToSelectTaxDisplayType" />
+            <span asp-validation-for="AllowCustomersToSelectTaxDisplayType"></span>
+        </div>
+    </div>
+    <div class="form-group" id="pnlTaxDisplayType">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="TaxDisplayType_OverrideForStore" asp-input="TaxDisplayType" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="TaxDisplayType" />
+        </div>
+        <div class="col-md-9">
+            <nop-select asp-for="TaxDisplayType" asp-items="Model.TaxDisplayTypeValues" />
+            <span asp-validation-for="TaxDisplayType"></span>
+        </div>
+    </div>
+    <div class="form-group advanced-setting">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="PricesIncludeTax_OverrideForStore" asp-input="PricesIncludeTax" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="PricesIncludeTax" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="PricesIncludeTax" />
+            <span asp-validation-for="PricesIncludeTax"></span>
+        </div>
+    </div>
+    <div class="form-group advanced-setting">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="DisplayTaxSuffix_OverrideForStore" asp-input="DisplayTaxSuffix" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="DisplayTaxSuffix" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="DisplayTaxSuffix" />
+            <span asp-validation-for="DisplayTaxSuffix"></span>
+        </div>
+    </div>
+    <div class="form-group advanced-setting">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="DisplayTaxRates_OverrideForStore" asp-input="DisplayTaxRates" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="DisplayTaxRates" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="DisplayTaxRates" />
+            <span asp-validation-for="DisplayTaxRates"></span>
+        </div>
+    </div>
+    <div class="form-group advanced-setting">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="HideZeroTax_OverrideForStore" asp-input="HideZeroTax" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="HideZeroTax" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="HideZeroTax" />
+            <span asp-validation-for="HideZeroTax"></span>
+        </div>
+    </div>
+    <div class="form-group advanced-setting">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="HideTaxInOrderSummary_OverrideForStore" asp-input="HideTaxInOrderSummary" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="HideTaxInOrderSummary" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="HideTaxInOrderSummary" />
+            <span asp-validation-for="HideTaxInOrderSummary"></span>
+        </div>
+    </div>
+    <div class="form-group advanced-setting">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ForceTaxExclusionFromOrderSubtotal_OverrideForStore" asp-input="ForceTaxExclusionFromOrderSubtotal" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ForceTaxExclusionFromOrderSubtotal" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ForceTaxExclusionFromOrderSubtotal" />
+            <span asp-validation-for="ForceTaxExclusionFromOrderSubtotal"></span>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $("#@Html.IdFor(model => model.AllowCustomersToSelectTaxDisplayType)").click(toggleTaxDisplayType);
+        toggleTaxDisplayType();
+    });
+
+    function toggleTaxDisplayType() {
+        if ($('#@Html.IdFor(model => model.AllowCustomersToSelectTaxDisplayType)').is(':checked')) {
+            $('#pnlTaxDisplayType').hide();
+        } else {
+            $('#pnlTaxDisplayType').show();
+        }
+    }
+</script>

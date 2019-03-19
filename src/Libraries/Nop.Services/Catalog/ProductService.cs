@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
@@ -57,7 +57,6 @@ namespace Nop.Services.Catalog
         private readonly IStoreService _storeService;
         private readonly IWorkContext _workContext;
         private readonly LocalizationSettings _localizationSettings;
-        private readonly string _entityName;
 
         #endregion
 
@@ -116,7 +115,6 @@ namespace Nop.Services.Catalog
             _storeService = storeService;
             _workContext = workContext;
             _localizationSettings = localizationSettings;
-            _entityName = typeof(Product).Name;
         }
 
         #endregion
@@ -467,7 +465,7 @@ namespace Nop.Services.Catalog
 
                 query = from p in query
                         join acl in _aclRepository.Table
-                        on new { c1 = p.Id, c2 = _entityName } equals new { c1 = acl.EntityId, c2 = acl.EntityName } into p_acl
+                        on new { c1 = p.Id, c2 = nameof(Product) } equals new { c1 = acl.EntityId, c2 = acl.EntityName } into p_acl
                         from acl in p_acl.DefaultIfEmpty()
                         where !p.SubjectToAcl || allowedCustomerRolesIds.Contains(acl.CustomerRoleId)
                         select p;
@@ -477,7 +475,7 @@ namespace Nop.Services.Catalog
             {
                 query = from p in query
                         join sm in _storeMappingRepository.Table
-                        on new { c1 = p.Id, c2 = _entityName } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into p_sm
+                        on new { c1 = p.Id, c2 = nameof(Product) } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into p_sm
                         from sm in p_sm.DefaultIfEmpty()
                         where !p.LimitedToStores || storeId == sm.StoreId
                         select p;

@@ -1,0 +1,107 @@
+@model CatalogSettingsModel
+
+<div class="panel-body">
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="AllowProductSorting_OverrideForStore" asp-input="AllowProductSorting" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="AllowProductSorting" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="AllowProductSorting" />
+            <span asp-validation-for="AllowProductSorting"></span>
+        </div>
+    </div>
+    <div id="sortoptions-grid"></div>
+
+    <script>
+        $(document).ready(function () {
+            $("#sortoptions-grid").kendoGrid({
+                dataSource: {
+                    type: "json",
+                    transport: {
+                        read: {
+                            url: "@Html.Raw(Url.Action("SortOptionsList", "Setting"))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        },
+                        update: {
+                            url: "@Html.Raw(Url.Action("SortOptionUpdate", "Setting"))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        }
+                    },
+                    schema: {
+                        data: "Data",
+                        total: "Total",
+                        errors: "Errors",
+                        model: {
+                            id: "Id",
+                            fields: {
+                                Name: { editable: false, type: "string" },
+                                DisplayOrder: { editable: true, type: "number" },
+                                IsActive: { editable: true, type: "boolean" }
+                            }
+                        }
+                    },
+                    requestEnd: function (e) {
+                        if (e.type == "update") {
+                            this.read();
+                        }
+                    },
+                    error: function (e) {
+                        display_kendoui_grid_error(e);
+                        // Cancel the changes
+                        this.cancelChanges();
+                    },
+                    pageSize: @(Model.SortOptionSearchModel.PageSize),
+                    serverPaging: true,
+                    serverFiltering: true,
+                    serverSorting: true
+                },
+                pageable: {
+                    refresh: true,
+                    pageSizes: [@(Model.SortOptionSearchModel.AvailablePageSizes)],
+                    @await Html.PartialAsync("_GridPagerMessages")
+                },
+                editable: {
+                    confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                    mode: "inline"
+                },
+                scrollable: false,
+                columns: [
+                    {
+                        field: "Name",
+                        title: "@T("Admin.Configuration.Settings.Catalog.SortOptions.Name")",
+                        width: 250
+                    }, {
+                        field: "DisplayOrder",
+                        title: "@T("Admin.Configuration.Settings.Catalog.SortOptions.DisplayOrder")",
+                        //integer format
+                        format: "{0:0}",
+                        width: 100
+                    }, {
+                        field: "IsActive",
+                        title: "@T("Admin.Configuration.Settings.Catalog.SortOptions.IsActive")",
+                        width: 100,
+                        headerAttributes: { style: "text-align:center" },
+                        attributes: { style: "text-align:center" },
+                        template: '# if(IsActive) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
+                    }, {
+                        command: {
+                            name: "edit",
+                            text: {
+                                edit: "@T("Admin.Common.Edit")",
+                                update: "@T("Admin.Common.Update")",
+                                cancel: "@T("Admin.Common.Cancel")"
+                            }
+                        },
+                        title: "@T("Admin.Common.Edit")",
+                        width: 150
+                    }
+                ]
+            });
+        });
+    </script>
+</div>

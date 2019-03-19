@@ -544,6 +544,10 @@ namespace Nop.Services.Catalog
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
+            //anyway combination cannot contains non combinable attributes
+            if (String.IsNullOrEmpty(attributesXml))
+                return null;
+
             var combinations = _productAttributeService.GetAllProductAttributeCombinations(product.Id);
             return combinations.FirstOrDefault(x =>
                 AreProductAttributesEqual(x.AttributesXml, attributesXml, ignoreNonCombinableAttributes));

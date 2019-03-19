@@ -290,6 +290,165 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnForgotPasswordPage.Hint">
     <Value>Check to show CAPTCHA on forgot password page when restore password.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.OneColumnProductPage">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.BlockTitle.OneColumnProductPage">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.CommonInfo">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Mappings">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Security">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.RequireOtherProducts">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.CreatedOn">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.CreatedOn.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.UpdatedOn">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.UpdatedOn.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.CreatedOn">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.UpdatedOn">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.ID">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.ID.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.Id">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.BlockTitle.Mappings">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Prices">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Price">
+    <Value>Price</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.BlockTitle.LinkedProducts">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.BlockTitle.AdvancedProductTypes">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.BlockTitle.Security">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ShoppingCartType.EndDate">
+    <Value>End date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ShoppingCartType.EndDate.Hint">
+    <Value>The end date for the search.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ShoppingCartType.StartDate">
+    <Value>Start date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ShoppingCartType.StartDate.Hint">
+    <Value>The start date for the search.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ShoppingCartType.Product">
+    <Value>Product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ShoppingCartType.Product.Hint">
+    <Value>Search by a specific product.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ShoppingCartType.BillingCountry">
+    <Value>Billing country</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ShoppingCartType.BillingCountry.Hint">
+    <Value>Filter by billing country.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ShoppingCartType.Store">
+    <Value>Store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ShoppingCartType.Store.Hint">
+    <Value>Search by a specific store.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.PageSizeOptions">
+    <Value>Page Size options</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.PageSizeOptions">
+    <Value>Page Size options</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductsByTagPageSizeOptions">
+    <Value>''Products by tag'' Page Size options</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.SearchPagePageSizeOptions">
+    <Value>Search page. Page size options</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.PageSizeOptions">
+    <Value>Page Size options</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.IncludeInSitemap">
+    <Value>Include in sitemap</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.IncludeInSitemap.Hint">
+    <Value>Check to include this blog post in the sitemap.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SitemapIncludeBlogPosts">
+    <Value>Sitemap includes blog posts</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SitemapIncludeBlogPosts.Hint">
+    <Value>Check if you want to include blog posts in sitemap.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SitemapIncludeTopics">
+    <Value>Sitemap includes topics</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SitemapIncludeTopics.Hint">
+    <Value>Check if you want to include topics in sitemap.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Sitemap.BlogPosts">
+    <Value>Blog posts</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SitemapIncludeNews">
+    <Value>Sitemap includes news items</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SitemapIncludeNews.Hint">
+    <Value>Check if you want to include news items in sitemap.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Sitemap.News">
+    <Value>News</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.Sitemap.Instructions">
+    <Value><![CDATA[<p>These settings do not apply to sitemap.xml, only for your site map. You can configure generation for sitemap.xml on <a href="{0}">all settings page</a></p>]]></Value>
+  </LocaleResource> 
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.GooglePlusLink">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.GooglePlusLink.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Footer.FollowUs.GooglePlus">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.LogUserProfileChanges">
+    <Value>Log user profile changes</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.LogUserProfileChanges.Hint">
+    <Value>Check to log user profile changes (if this feature is enabled in your store).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Gdpr.GdprRequestType.ProfileChanged">
+    <Value>User changed profile</Value>
+  </LocaleResource>
 </Language>'
 
 CREATE TABLE #LocaleStringResourceTmp
@@ -376,6 +535,23 @@ GO
 ALTER TABLE [Topic] ALTER COLUMN [Title] nvarchar(max) NOT NULL
 GO
 
+-- #3236
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[BlogPost]') and NAME='IncludeInSitemap')
+BEGIN
+	ALTER TABLE [BlogPost]
+	ADD [IncludeInSitemap] bit NULL
+END
+GO
+
+UPDATE [BlogPost]
+SET [IncludeInSitemap] = 0
+WHERE [IncludeInSitemap] IS NULL
+GO
+
+ALTER TABLE [BlogPost]
+ALTER COLUMN [IncludeInSitemap] bit NOT NULL
+GO
+
 -- update the "ProductLoadAllPaged" stored procedure
 ALTER PROCEDURE [ProductLoadAllPaged]
 (
@@ -401,7 +577,7 @@ ALTER PROCEDURE [ProductLoadAllPaged]
 	@FilteredSpecs		nvarchar(MAX) = null,	--filter by specification attribute options (comma-separated list of IDs). e.g. 14,15,16
 	@LanguageId			int = 0,
 	@OrderBy			int = 0, --0 - position, 5 - Name: A to Z, 6 - Name: Z to A, 10 - Price: Low to High, 11 - Price: High to Low, 15 - creation date
-	@AllowedCustomerRoleIds	nvarchar(MAX) = null,	--a list of customer role IDs (comma-separated list) for which a product should be shown (if a subjet to ACL)
+	@AllowedCustomerRoleIds	nvarchar(MAX) = null,	--a list of customer role IDs (comma-separated list) for which a product should be shown (if a subject to ACL)
 	@PageIndex			int = 0, 
 	@PageSize			int = 2147483644,
 	@ShowHidden			bit = 0,
@@ -1083,6 +1259,159 @@ BEGIN
 END
 GO
 
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'sitemapsettings.sitemapincludetopics')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'sitemapsettings.sitemapincludetopics', N'True', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'sitemapsettings.sitemapincludeblogposts')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'sitemapsettings.sitemapincludeblogposts', N'True', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'sitemapsettings.sitemapincludenews')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'sitemapsettings.sitemapincludenews', N'false', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'sitemapxmlsettings.sitemapxmlenabled')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'sitemapxmlsettings.sitemapxmlenabled', N'True', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'sitemapxmlsettings.sitemapxmlincludeblogposts')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'sitemapxmlsettings.sitemapxmlincludeblogposts', N'True', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'sitemapxmlsettings.sitemapxmlincludecategories')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'sitemapxmlsettings.sitemapxmlincludecategories', N'True', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'sitemapxmlsettings.sitemapxmlincludecustomurls')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'sitemapxmlsettings.sitemapxmlincludecustomurls', N'True', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'sitemapxmlsettings.sitemapxmlincludemanufacturers')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'sitemapxmlsettings.sitemapxmlincludemanufacturers', N'True', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'sitemapxmlsettings.sitemapxmlincludeproducts')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'sitemapxmlsettings.sitemapxmlincludeproducts', N'True', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'sitemapxmlsettings.sitemapxmlincludeproducttags')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'sitemapxmlsettings.sitemapxmlincludeproducttags', N'True', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'sitemapxmlsettings.sitemapxmlincludetopics')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'sitemapxmlsettings.sitemapxmlincludetopics', N'True', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'sitemapxmlsettings.sitemapxmlincludenews')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'sitemapxmlsettings.sitemapxmlincludenews', N'True', 0)
+END
+GO
+
+--update old settings (#3236)
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'sitemapsettings.sitemapenabled')
+BEGIN
+	UPDATE [Setting] 
+	SET [Name] = 'sitemapsettings.sitemapenabled'
+	WHERE [Name] = 'commonsettings.sitemapenabled'
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'sitemapsettings.sitemapincludecategories')
+BEGIN
+	UPDATE [Setting]
+	SET [Name] = 'sitemapsettings.sitemapincludecategories'
+	WHERE [Name] = 'commonsettings.sitemapincludecategories'
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'sitemapsettings.sitemapincludemanufacturers')
+BEGIN
+	UPDATE [Setting]
+	SET [Name] = 'sitemapsettings.sitemapincludemanufacturers'
+	WHERE [Name] = 'commonsettings.sitemapincludemanufacturers'
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'sitemapsettings.sitemapincludeproducts')
+BEGIN
+	UPDATE [Setting]
+	SET [Name] = 'sitemapsettings.sitemapincludeproducts'
+	WHERE [Name] = 'commonsettings.sitemapincludeproducts'
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'sitemapsettings.sitemapincludeproducttags')
+BEGIN
+	UPDATE [Setting]
+	SET [Name] = 'sitemapsettings.sitemapincludeproducttags'
+	WHERE [Name] = 'commonsettings.sitemapincludeproducttags'
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'sitemapsettings.sitemappagesize')
+BEGIN
+	UPDATE [Setting]
+	SET [Name] = 'sitemapsettings.sitemappagesize'
+	WHERE [Name] = 'commonsettings.sitemappagesize'
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'sitemapxmlsettings.sitemapcustomurls')
+BEGIN
+	UPDATE [Setting]
+	SET [Name] = 'sitemapxmlsettings.sitemapcustomurls'
+	WHERE [Name] = 'commonsettings.sitemapcustomurls'
+END
+GO
+
 --updating of indexes in the Picture table for reduced table size after upgrade nopCommerce from 4.00 to 4.10 version
 ALTER INDEX ALL ON [Picture] REBUILD
 GO
@@ -1090,7 +1419,7 @@ GO
 --new activity log type
 IF NOT EXISTS (SELECT 1 FROM [ActivityLogType] WHERE [Name] = N'Upload a favicon and app icons archive')
 BEGIN
-	INSERT [dbo].[ActivityLogType] ( [SystemKeyword], [Name], [Enabled]) VALUES ( N'UploadIconsArchive', N'Upload a favicon and app icons archive', 1)
+	INSERT [ActivityLogType] ( [SystemKeyword], [Name], [Enabled]) VALUES ( N'UploadIconsArchive', N'Upload a favicon and app icons archive', 1)
 END
 GO
 
@@ -1098,4 +1427,111 @@ GO
 UPDATE [ShippingMethod] 
 SET [Description] = 'Shipping by land transport'
 WHERE [Name] = 'Ground'
+GO
+
+
+--delete setting
+DELETE FROM [Setting]
+WHERE [Name] = N'producteditorsettings.onecolumnproductpage'
+GO
+
+--delete setting
+DELETE FROM [Setting]
+WHERE [Name] = N'producteditorsettings.createdon'
+GO
+
+--delete setting
+DELETE FROM [Setting]
+WHERE [Name] = N'producteditorsettings.updatedon'
+GO
+
+--delete setting
+DELETE FROM [Setting]
+WHERE [Name] = N'producteditorsettings.id'
+GO
+
+--delete setting
+DELETE FROM [Setting]
+WHERE [Name] = N'adminareasettings.usenestedsetting'
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'commonsettings.minificationenabled')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'commonsettings.minificationenabled', N'true', 0)
+END
+GO
+
+--update the "ProductTagCountLoadAll" stored procedure
+ALTER PROCEDURE [ProductTagCountLoadAll]
+(
+	@StoreId int,
+	@AllowedCustomerRoleIds	nvarchar(MAX) = null	--a list of customer role IDs (comma-separated list) for which a product should be shown (if a subject to ACL)
+)
+AS
+BEGIN
+	SET NOCOUNT ON
+		
+	--filter by customer role IDs (access control list)
+	SET @AllowedCustomerRoleIds = isnull(@AllowedCustomerRoleIds, '')	
+	CREATE TABLE #FilteredCustomerRoleIds
+	(
+		CustomerRoleId int not null
+	)
+		
+	INSERT INTO #FilteredCustomerRoleIds (CustomerRoleId)
+	SELECT CAST(data as int) FROM [nop_splitstring_to_table](@AllowedCustomerRoleIds, ',')
+	DECLARE @FilteredCustomerRoleIdsCount int	
+	SET @FilteredCustomerRoleIdsCount = (SELECT COUNT(1) FROM #FilteredCustomerRoleIds)
+	
+	SELECT pt.Id as [ProductTagId], COUNT(p.Id) as [ProductCount]
+	FROM ProductTag pt with (NOLOCK)
+	LEFT JOIN Product_ProductTag_Mapping pptm with (NOLOCK) ON pt.[Id] = pptm.[ProductTag_Id]
+	LEFT JOIN Product p with (NOLOCK) ON pptm.[Product_Id] = p.[Id]
+	WHERE
+		p.[Deleted] = 0
+		AND p.Published = 1
+		AND (@StoreId = 0 or (p.LimitedToStores = 0 OR EXISTS (
+			SELECT 1 FROM [StoreMapping] sm with (NOLOCK)
+			WHERE [sm].EntityId = p.Id AND [sm].EntityName = 'Product' and [sm].StoreId=@StoreId
+			)))
+		AND (@FilteredCustomerRoleIdsCount = 0 or (p.SubjectToAcl = 0 OR EXISTS (
+			SELECT 1 FROM #FilteredCustomerRoleIds [fcr]
+			WHERE
+				[fcr].CustomerRoleId IN (
+					SELECT [acl].CustomerRoleId
+					FROM [AclRecord] acl with (NOLOCK)
+					WHERE [acl].EntityId = p.Id AND [acl].EntityName = 'Product'
+				))
+			))
+	GROUP BY pt.Id
+	ORDER BY pt.Id
+END
+GO
+
+
+--delete setting
+DELETE FROM [Setting]
+WHERE [Name] = N'storeinformationsettings.googlepluslink'
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'gdprsettings.loguserprofilechanges')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'gdprsettings.loguserprofilechanges', N'True', 0)
+END
+GO
+
+--alter column
+ALTER TABLE [Setting] ALTER COLUMN [Value] [nvarchar](max) NOT NULL
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'mediasettings.useabsoluteimagepath')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'mediasettings.useabsoluteimagepath', N'True', 0)
+END
 GO

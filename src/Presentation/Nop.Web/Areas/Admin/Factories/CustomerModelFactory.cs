@@ -579,8 +579,7 @@ namespace Nop.Web.Areas.Admin.Factories
             int.TryParse(searchModel.SearchMonthOfBirth, out var monthOfBirth);
 
             //get customers
-            var customers = _customerService.GetAllCustomers(loadOnlyWithShoppingCart: false,
-                customerRoleIds: searchModel.SelectedCustomerRoleIds.ToArray(),
+            var customers = _customerService.GetAllCustomers(customerRoleIds: searchModel.SelectedCustomerRoleIds.ToArray(),
                 email: searchModel.SearchEmail,
                 username: searchModel.SearchUsername,
                 firstName: searchModel.SearchFirstName,

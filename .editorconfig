@@ -128,7 +128,7 @@ dotnet_naming_symbols.private_fields.applicable_kinds               = field
 dotnet_naming_rule.general_naming.severity                         = warning
 dotnet_naming_rule.general_naming.symbols                          = general
 dotnet_naming_rule.general_naming.style                            = pascal_case_style
-dotnet_naming_symbols.general.applicable_kinds                     = class,struct,enum,property,method,event,delegate
+dotnet_naming_symbols.general.applicable_kinds                     = class,struct,enum,property,method,event,delegate,namespace
 dotnet_naming_symbols.general.applicable_accessibilities           = *
 
 # Use PascalCase for type parameters

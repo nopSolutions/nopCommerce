@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -525,7 +525,7 @@ namespace Nop.Services.Installation
                     CurrencyCode = "EUR",
                     Rate = 0.86M,
                     DisplayLocale = string.Empty,
-                    //CustomFormatting = "ˆ0.00",
+                    //CustomFormatting = "â‚¬0.00",
                     CustomFormatting = string.Format("{0}0.00", "\u20ac"), //euro symbol
                     Published = true,
                     DisplayOrder = 6,
@@ -4103,7 +4103,7 @@ namespace Nop.Services.Installation
             _productAvailabilityRangeRepository.Insert(productAvailabilityRanges);
         }
 
-        protected virtual void InstallCustomersAndUsers(string defaultUserEmail, string defaultUserPassword)
+        protected virtual void InstallCustomersAndUsers(string defaultUserEmail, string defaultUserPassword, bool installSampleData)
         {
             var crAdministrators = new CustomerRole
             {
@@ -4208,259 +4208,263 @@ namespace Nop.Services.Installation
             customerRegistrationService.ChangePassword(new ChangePasswordRequest(defaultUserEmail, false,
                  PasswordFormat.Hashed, defaultUserPassword, null, NopCustomerServiceDefaults.DefaultHashedPasswordFormat));
 
-            //second user
-            var secondUserEmail = "steve_gates@nopCommerce.com";
-            var secondUser = new Customer
+            //sample customers
+            if (installSampleData)
             {
-                CustomerGuid = Guid.NewGuid(),
-                Email = secondUserEmail,
-                Username = secondUserEmail,
-                Active = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                LastActivityDateUtc = DateTime.UtcNow,
-                RegisteredInStoreId = storeId
-            };
-            var defaultSecondUserAddress = new Address
-            {
-                FirstName = "Steve",
-                LastName = "Gates",
-                PhoneNumber = "87654321",
-                Email = secondUserEmail,
-                FaxNumber = string.Empty,
-                Company = "Steve Company",
-                Address1 = "750 Bel Air Rd.",
-                Address2 = string.Empty,
-                City = "Los Angeles",
-                StateProvince = _stateProvinceRepository.Table.FirstOrDefault(sp => sp.Name == "California"),
-                Country = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == "USA"),
-                ZipPostalCode = "90077",
-                CreatedOnUtc = DateTime.UtcNow
-            };
-            //secondUser.Addresses.Add(defaultSecondUserAddress);
-            secondUser.CustomerAddressMappings.Add(new CustomerAddressMapping { Address = defaultSecondUserAddress });
-            secondUser.BillingAddress = defaultSecondUserAddress;
-            secondUser.ShippingAddress = defaultSecondUserAddress;
+                //second user
+                var secondUserEmail = "steve_gates@nopCommerce.com";
+                var secondUser = new Customer
+                {
+                    CustomerGuid = Guid.NewGuid(),
+                    Email = secondUserEmail,
+                    Username = secondUserEmail,
+                    Active = true,
+                    CreatedOnUtc = DateTime.UtcNow,
+                    LastActivityDateUtc = DateTime.UtcNow,
+                    RegisteredInStoreId = storeId
+                };
+                var defaultSecondUserAddress = new Address
+                {
+                    FirstName = "Steve",
+                    LastName = "Gates",
+                    PhoneNumber = "87654321",
+                    Email = secondUserEmail,
+                    FaxNumber = string.Empty,
+                    Company = "Steve Company",
+                    Address1 = "750 Bel Air Rd.",
+                    Address2 = string.Empty,
+                    City = "Los Angeles",
+                    StateProvince = _stateProvinceRepository.Table.FirstOrDefault(sp => sp.Name == "California"),
+                    Country = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == "USA"),
+                    ZipPostalCode = "90077",
+                    CreatedOnUtc = DateTime.UtcNow
+                };
+                //secondUser.Addresses.Add(defaultSecondUserAddress);
+                secondUser.CustomerAddressMappings.Add(new CustomerAddressMapping { Address = defaultSecondUserAddress });
+                secondUser.BillingAddress = defaultSecondUserAddress;
+                secondUser.ShippingAddress = defaultSecondUserAddress;
 
-            //secondUser.CustomerRoles.Add(crRegistered);
-            secondUser.AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerRole = crRegistered });
+                //secondUser.CustomerRoles.Add(crRegistered);
+                secondUser.AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerRole = crRegistered });
 
-            _customerRepository.Insert(secondUser);
-            //set default customer name
-            _genericAttributeService.SaveAttribute(secondUser, NopCustomerDefaults.FirstNameAttribute, defaultSecondUserAddress.FirstName);
-            _genericAttributeService.SaveAttribute(secondUser, NopCustomerDefaults.LastNameAttribute, defaultSecondUserAddress.LastName);
+                _customerRepository.Insert(secondUser);
+                //set default customer name
+                _genericAttributeService.SaveAttribute(secondUser, NopCustomerDefaults.FirstNameAttribute, defaultSecondUserAddress.FirstName);
+                _genericAttributeService.SaveAttribute(secondUser, NopCustomerDefaults.LastNameAttribute, defaultSecondUserAddress.LastName);
 
-            //set customer password
-            _customerPasswordRepository.Insert(new CustomerPassword
-            {
-                Customer = secondUser,
-                Password = "123456",
-                PasswordFormat = PasswordFormat.Clear,
-                PasswordSalt = string.Empty,
-                CreatedOnUtc = DateTime.UtcNow
-            });
+                //set customer password
+                _customerPasswordRepository.Insert(new CustomerPassword
+                {
+                    Customer = secondUser,
+                    Password = "123456",
+                    PasswordFormat = PasswordFormat.Clear,
+                    PasswordSalt = string.Empty,
+                    CreatedOnUtc = DateTime.UtcNow
+                });
 
-            //third user
-            var thirdUserEmail = "arthur_holmes@nopCommerce.com";
-            var thirdUser = new Customer
-            {
-                CustomerGuid = Guid.NewGuid(),
-                Email = thirdUserEmail,
-                Username = thirdUserEmail,
-                Active = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                LastActivityDateUtc = DateTime.UtcNow,
-                RegisteredInStoreId = storeId
-            };
-            var defaultThirdUserAddress = new Address
-            {
-                FirstName = "Arthur",
-                LastName = "Holmes",
-                PhoneNumber = "111222333",
-                Email = thirdUserEmail,
-                FaxNumber = string.Empty,
-                Company = "Holmes Company",
-                Address1 = "221B Baker Street",
-                Address2 = string.Empty,
-                City = "London",
-                Country = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == "GBR"),
-                ZipPostalCode = "NW1 6XE",
-                CreatedOnUtc = DateTime.UtcNow
-            };
-            //thirdUser.Addresses.Add(defaultThirdUserAddress);
-            thirdUser.CustomerAddressMappings.Add(new CustomerAddressMapping { Address = defaultThirdUserAddress });
-            thirdUser.BillingAddress = defaultThirdUserAddress;
-            thirdUser.ShippingAddress = defaultThirdUserAddress;
+                //third user
+                var thirdUserEmail = "arthur_holmes@nopCommerce.com";
+                var thirdUser = new Customer
+                {
+                    CustomerGuid = Guid.NewGuid(),
+                    Email = thirdUserEmail,
+                    Username = thirdUserEmail,
+                    Active = true,
+                    CreatedOnUtc = DateTime.UtcNow,
+                    LastActivityDateUtc = DateTime.UtcNow,
+                    RegisteredInStoreId = storeId
+                };
+                var defaultThirdUserAddress = new Address
+                {
+                    FirstName = "Arthur",
+                    LastName = "Holmes",
+                    PhoneNumber = "111222333",
+                    Email = thirdUserEmail,
+                    FaxNumber = string.Empty,
+                    Company = "Holmes Company",
+                    Address1 = "221B Baker Street",
+                    Address2 = string.Empty,
+                    City = "London",
+                    Country = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == "GBR"),
+                    ZipPostalCode = "NW1 6XE",
+                    CreatedOnUtc = DateTime.UtcNow
+                };
+                //thirdUser.Addresses.Add(defaultThirdUserAddress);
+                thirdUser.CustomerAddressMappings.Add(new CustomerAddressMapping { Address = defaultThirdUserAddress });
+                thirdUser.BillingAddress = defaultThirdUserAddress;
+                thirdUser.ShippingAddress = defaultThirdUserAddress;
 
-            //thirdUser.CustomerRoles.Add(crRegistered);
-            thirdUser.AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerRole = crRegistered });
+                //thirdUser.CustomerRoles.Add(crRegistered);
+                thirdUser.AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerRole = crRegistered });
 
-            _customerRepository.Insert(thirdUser);
-            //set default customer name
-            _genericAttributeService.SaveAttribute(thirdUser, NopCustomerDefaults.FirstNameAttribute, defaultThirdUserAddress.FirstName);
-            _genericAttributeService.SaveAttribute(thirdUser, NopCustomerDefaults.LastNameAttribute, defaultThirdUserAddress.LastName);
+                _customerRepository.Insert(thirdUser);
+                //set default customer name
+                _genericAttributeService.SaveAttribute(thirdUser, NopCustomerDefaults.FirstNameAttribute, defaultThirdUserAddress.FirstName);
+                _genericAttributeService.SaveAttribute(thirdUser, NopCustomerDefaults.LastNameAttribute, defaultThirdUserAddress.LastName);
 
-            //set customer password
-            _customerPasswordRepository.Insert(new CustomerPassword
-            {
-                Customer = thirdUser,
-                Password = "123456",
-                PasswordFormat = PasswordFormat.Clear,
-                PasswordSalt = string.Empty,
-                CreatedOnUtc = DateTime.UtcNow
-            });
+                //set customer password
+                _customerPasswordRepository.Insert(new CustomerPassword
+                {
+                    Customer = thirdUser,
+                    Password = "123456",
+                    PasswordFormat = PasswordFormat.Clear,
+                    PasswordSalt = string.Empty,
+                    CreatedOnUtc = DateTime.UtcNow
+                });
 
-            //fourth user
-            var fourthUserEmail = "james_pan@nopCommerce.com";
-            var fourthUser = new Customer
-            {
-                CustomerGuid = Guid.NewGuid(),
-                Email = fourthUserEmail,
-                Username = fourthUserEmail,
-                Active = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                LastActivityDateUtc = DateTime.UtcNow,
-                RegisteredInStoreId = storeId
-            };
-            var defaultFourthUserAddress = new Address
-            {
-                FirstName = "James",
-                LastName = "Pan",
-                PhoneNumber = "369258147",
-                Email = fourthUserEmail,
-                FaxNumber = string.Empty,
-                Company = "Pan Company",
-                Address1 = "St Katharine’s West 16",
-                Address2 = string.Empty,
-                City = "St Andrews",
-                Country = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == "GBR"),
-                ZipPostalCode = "KY16 9AX",
-                CreatedOnUtc = DateTime.UtcNow
-            };
-            //fourthUser.Addresses.Add(defaultFourthUserAddress);
-            fourthUser.CustomerAddressMappings.Add(new CustomerAddressMapping { Address = defaultFourthUserAddress });
-            fourthUser.BillingAddress = defaultFourthUserAddress;
-            fourthUser.ShippingAddress = defaultFourthUserAddress;
+                //fourth user
+                var fourthUserEmail = "james_pan@nopCommerce.com";
+                var fourthUser = new Customer
+                {
+                    CustomerGuid = Guid.NewGuid(),
+                    Email = fourthUserEmail,
+                    Username = fourthUserEmail,
+                    Active = true,
+                    CreatedOnUtc = DateTime.UtcNow,
+                    LastActivityDateUtc = DateTime.UtcNow,
+                    RegisteredInStoreId = storeId
+                };
+                var defaultFourthUserAddress = new Address
+                {
+                    FirstName = "James",
+                    LastName = "Pan",
+                    PhoneNumber = "369258147",
+                    Email = fourthUserEmail,
+                    FaxNumber = string.Empty,
+                    Company = "Pan Company",
+                    Address1 = "St Katharineâ€™s West 16",
+                    Address2 = string.Empty,
+                    City = "St Andrews",
+                    Country = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == "GBR"),
+                    ZipPostalCode = "KY16 9AX",
+                    CreatedOnUtc = DateTime.UtcNow
+                };
+                //fourthUser.Addresses.Add(defaultFourthUserAddress);
+                fourthUser.CustomerAddressMappings.Add(new CustomerAddressMapping { Address = defaultFourthUserAddress });
+                fourthUser.BillingAddress = defaultFourthUserAddress;
+                fourthUser.ShippingAddress = defaultFourthUserAddress;
 
-            //fourthUser.CustomerRoles.Add(crRegistered);
-            fourthUser.AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerRole = crRegistered });
+                //fourthUser.CustomerRoles.Add(crRegistered);
+                fourthUser.AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerRole = crRegistered });
 
-            _customerRepository.Insert(fourthUser);
-            //set default customer name
-            _genericAttributeService.SaveAttribute(fourthUser, NopCustomerDefaults.FirstNameAttribute, defaultFourthUserAddress.FirstName);
-            _genericAttributeService.SaveAttribute(fourthUser, NopCustomerDefaults.LastNameAttribute, defaultFourthUserAddress.LastName);
+                _customerRepository.Insert(fourthUser);
+                //set default customer name
+                _genericAttributeService.SaveAttribute(fourthUser, NopCustomerDefaults.FirstNameAttribute, defaultFourthUserAddress.FirstName);
+                _genericAttributeService.SaveAttribute(fourthUser, NopCustomerDefaults.LastNameAttribute, defaultFourthUserAddress.LastName);
 
-            //set customer password
-            _customerPasswordRepository.Insert(new CustomerPassword
-            {
-                Customer = fourthUser,
-                Password = "123456",
-                PasswordFormat = PasswordFormat.Clear,
-                PasswordSalt = string.Empty,
-                CreatedOnUtc = DateTime.UtcNow
-            });
+                //set customer password
+                _customerPasswordRepository.Insert(new CustomerPassword
+                {
+                    Customer = fourthUser,
+                    Password = "123456",
+                    PasswordFormat = PasswordFormat.Clear,
+                    PasswordSalt = string.Empty,
+                    CreatedOnUtc = DateTime.UtcNow
+                });
 
-            //fifth user
-            var fifthUserEmail = "brenda_lindgren@nopCommerce.com";
-            var fifthUser = new Customer
-            {
-                CustomerGuid = Guid.NewGuid(),
-                Email = fifthUserEmail,
-                Username = fifthUserEmail,
-                Active = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                LastActivityDateUtc = DateTime.UtcNow,
-                RegisteredInStoreId = storeId
-            };
-            var defaultFifthUserAddress = new Address
-            {
-                FirstName = "Brenda",
-                LastName = "Lindgren",
-                PhoneNumber = "14785236",
-                Email = fifthUserEmail,
-                FaxNumber = string.Empty,
-                Company = "Brenda Company",
-                Address1 = "1249 Tongass Avenue, Suite B",
-                Address2 = string.Empty,
-                City = "Ketchikan",
-                StateProvince = _stateProvinceRepository.Table.FirstOrDefault(sp => sp.Name == "Alaska"),
-                Country = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == "USA"),
-                ZipPostalCode = "99901",
-                CreatedOnUtc = DateTime.UtcNow
-            };
-            //fifthUser.Addresses.Add(defaultFifthUserAddress);
-            fifthUser.CustomerAddressMappings.Add(new CustomerAddressMapping { Address = defaultFifthUserAddress });
-            fifthUser.BillingAddress = defaultFifthUserAddress;
-            fifthUser.ShippingAddress = defaultFifthUserAddress;
+                //fifth user
+                var fifthUserEmail = "brenda_lindgren@nopCommerce.com";
+                var fifthUser = new Customer
+                {
+                    CustomerGuid = Guid.NewGuid(),
+                    Email = fifthUserEmail,
+                    Username = fifthUserEmail,
+                    Active = true,
+                    CreatedOnUtc = DateTime.UtcNow,
+                    LastActivityDateUtc = DateTime.UtcNow,
+                    RegisteredInStoreId = storeId
+                };
+                var defaultFifthUserAddress = new Address
+                {
+                    FirstName = "Brenda",
+                    LastName = "Lindgren",
+                    PhoneNumber = "14785236",
+                    Email = fifthUserEmail,
+                    FaxNumber = string.Empty,
+                    Company = "Brenda Company",
+                    Address1 = "1249 Tongass Avenue, Suite B",
+                    Address2 = string.Empty,
+                    City = "Ketchikan",
+                    StateProvince = _stateProvinceRepository.Table.FirstOrDefault(sp => sp.Name == "Alaska"),
+                    Country = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == "USA"),
+                    ZipPostalCode = "99901",
+                    CreatedOnUtc = DateTime.UtcNow
+                };
+                //fifthUser.Addresses.Add(defaultFifthUserAddress);
+                fifthUser.CustomerAddressMappings.Add(new CustomerAddressMapping { Address = defaultFifthUserAddress });
+                fifthUser.BillingAddress = defaultFifthUserAddress;
+                fifthUser.ShippingAddress = defaultFifthUserAddress;
 
-            //fifthUser.CustomerRoles.Add(crRegistered);
-            fifthUser.AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerRole = crRegistered });
+                //fifthUser.CustomerRoles.Add(crRegistered);
+                fifthUser.AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerRole = crRegistered });
 
-            _customerRepository.Insert(fifthUser);
-            //set default customer name
-            _genericAttributeService.SaveAttribute(fifthUser, NopCustomerDefaults.FirstNameAttribute, defaultFifthUserAddress.FirstName);
-            _genericAttributeService.SaveAttribute(fifthUser, NopCustomerDefaults.LastNameAttribute, defaultFifthUserAddress.LastName);
+                _customerRepository.Insert(fifthUser);
+                //set default customer name
+                _genericAttributeService.SaveAttribute(fifthUser, NopCustomerDefaults.FirstNameAttribute, defaultFifthUserAddress.FirstName);
+                _genericAttributeService.SaveAttribute(fifthUser, NopCustomerDefaults.LastNameAttribute, defaultFifthUserAddress.LastName);
 
-            //set customer password
-            _customerPasswordRepository.Insert(new CustomerPassword
-            {
-                Customer = fifthUser,
-                Password = "123456",
-                PasswordFormat = PasswordFormat.Clear,
-                PasswordSalt = string.Empty,
-                CreatedOnUtc = DateTime.UtcNow
-            });
+                //set customer password
+                _customerPasswordRepository.Insert(new CustomerPassword
+                {
+                    Customer = fifthUser,
+                    Password = "123456",
+                    PasswordFormat = PasswordFormat.Clear,
+                    PasswordSalt = string.Empty,
+                    CreatedOnUtc = DateTime.UtcNow
+                });
 
-            //sixth user
-            var sixthUserEmail = "victoria_victoria@nopCommerce.com";
-            var sixthUser = new Customer
-            {
-                CustomerGuid = Guid.NewGuid(),
-                Email = sixthUserEmail,
-                Username = sixthUserEmail,
-                Active = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                LastActivityDateUtc = DateTime.UtcNow,
-                RegisteredInStoreId = storeId
-            };
-            var defaultSixthUserAddress = new Address
-            {
-                FirstName = "Victoria",
-                LastName = "Terces",
-                PhoneNumber = "45612378",
-                Email = sixthUserEmail,
-                FaxNumber = string.Empty,
-                Company = "Terces Company",
-                Address1 = "201 1st Avenue South",
-                Address2 = string.Empty,
-                City = "Saskatoon",
-                StateProvince = _stateProvinceRepository.Table.FirstOrDefault(sp => sp.Name == "Saskatchewan"),
-                Country = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == "CAN"),
-                ZipPostalCode = "S7K 1J9",
-                CreatedOnUtc = DateTime.UtcNow
-            };
-            //sixthUser.Addresses.Add(defaultSixthUserAddress);
-            sixthUser.CustomerAddressMappings.Add(new CustomerAddressMapping { Address = defaultSixthUserAddress });
-            sixthUser.BillingAddress = defaultSixthUserAddress;
-            sixthUser.ShippingAddress = defaultSixthUserAddress;
+                //sixth user
+                var sixthUserEmail = "victoria_victoria@nopCommerce.com";
+                var sixthUser = new Customer
+                {
+                    CustomerGuid = Guid.NewGuid(),
+                    Email = sixthUserEmail,
+                    Username = sixthUserEmail,
+                    Active = true,
+                    CreatedOnUtc = DateTime.UtcNow,
+                    LastActivityDateUtc = DateTime.UtcNow,
+                    RegisteredInStoreId = storeId
+                };
+                var defaultSixthUserAddress = new Address
+                {
+                    FirstName = "Victoria",
+                    LastName = "Terces",
+                    PhoneNumber = "45612378",
+                    Email = sixthUserEmail,
+                    FaxNumber = string.Empty,
+                    Company = "Terces Company",
+                    Address1 = "201 1st Avenue South",
+                    Address2 = string.Empty,
+                    City = "Saskatoon",
+                    StateProvince = _stateProvinceRepository.Table.FirstOrDefault(sp => sp.Name == "Saskatchewan"),
+                    Country = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == "CAN"),
+                    ZipPostalCode = "S7K 1J9",
+                    CreatedOnUtc = DateTime.UtcNow
+                };
+                //sixthUser.Addresses.Add(defaultSixthUserAddress);
+                sixthUser.CustomerAddressMappings.Add(new CustomerAddressMapping { Address = defaultSixthUserAddress });
+                sixthUser.BillingAddress = defaultSixthUserAddress;
+                sixthUser.ShippingAddress = defaultSixthUserAddress;
 
-            //sixthUser.CustomerRoles.Add(crRegistered);
-            //__sixthUser.CustomerCustomerRoleMappings.Add(new CustomerCustomerRoleMapping { CustomerRole = crRegistered });
-            sixthUser.AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerRole = crRegistered });
+                //sixthUser.CustomerRoles.Add(crRegistered);
+                //__sixthUser.CustomerCustomerRoleMappings.Add(new CustomerCustomerRoleMapping { CustomerRole = crRegistered });
+                sixthUser.AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerRole = crRegistered });
 
-            _customerRepository.Insert(sixthUser);
-            //set default customer name
-            _genericAttributeService.SaveAttribute(sixthUser, NopCustomerDefaults.FirstNameAttribute, defaultSixthUserAddress.FirstName);
-            _genericAttributeService.SaveAttribute(sixthUser, NopCustomerDefaults.LastNameAttribute, defaultSixthUserAddress.LastName);
+                _customerRepository.Insert(sixthUser);
+                //set default customer name
+                _genericAttributeService.SaveAttribute(sixthUser, NopCustomerDefaults.FirstNameAttribute, defaultSixthUserAddress.FirstName);
+                _genericAttributeService.SaveAttribute(sixthUser, NopCustomerDefaults.LastNameAttribute, defaultSixthUserAddress.LastName);
 
-            //set customer password
-            _customerPasswordRepository.Insert(new CustomerPassword
-            {
-                Customer = sixthUser,
-                Password = "123456",
-                PasswordFormat = PasswordFormat.Clear,
-                PasswordSalt = string.Empty,
-                CreatedOnUtc = DateTime.UtcNow
-            });
+                //set customer password
+                _customerPasswordRepository.Insert(new CustomerPassword
+                {
+                    Customer = sixthUser,
+                    Password = "123456",
+                    PasswordFormat = PasswordFormat.Clear,
+                    PasswordSalt = string.Empty,
+                    CreatedOnUtc = DateTime.UtcNow
+                });
+            }
 
             //search engine (crawler) built-in user
             var searchEngineUser = new Customer
@@ -4479,7 +4483,7 @@ namespace Nop.Services.Installation
             //__searchEngineUser.CustomerCustomerRoleMappings.Add(new CustomerCustomerRoleMapping { CustomerRole = crGuests });
             searchEngineUser.AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerRole = crGuests });
             _customerRepository.Insert(searchEngineUser);
-            
+
             //built-in user for background tasks
             var backgroundTaskUser = new Customer
             {
@@ -4670,7 +4674,7 @@ namespace Nop.Services.Installation
                 Note = "Order paid",
                 Order = firstOrder
             });
-            
+
             //second order
             var secondCustomer = _customerRepository.Table.First(c => c.Email.Equals("arthur_holmes@nopCommerce.com"));
             var secondOrder = new Order
@@ -4788,7 +4792,7 @@ namespace Nop.Services.Installation
                 RentalEndDateUtc = null
             };
             _orderItemRepository.Insert(secondOrderItem2);
-            
+
             //third order
             var thirdCustomer = _customerRepository.Table.First(c => c.Email.Equals("james_pan@nopCommerce.com"));
             var thirdOrder = new Order
@@ -5938,7 +5942,7 @@ namespace Nop.Services.Installation
                 _urlRecordRepository.Insert(new UrlRecord
                 {
                     EntityId = topic.Id,
-                    EntityName = typeof(Topic).Name,
+                    EntityName = nameof(Topic),
                     LanguageId = 0,
                     IsActive = true,
                     Slug = ValidateSeName(topic, !string.IsNullOrEmpty(topic.Title) ? topic.Title : topic.SystemName)
@@ -5959,16 +5963,37 @@ namespace Nop.Services.Installation
                 InvoiceFooterTextColumn2 = null
             });
 
-            settingService.SaveSetting(new CommonSettings
+            settingService.SaveSetting(new SitemapSettings
             {
-                UseSystemEmailForContactUsForm = true,
-                UseStoredProcedureForLoadingCategories = true,
                 SitemapEnabled = true,
                 SitemapPageSize = 200,
                 SitemapIncludeCategories = true,
                 SitemapIncludeManufacturers = true,
                 SitemapIncludeProducts = false,
                 SitemapIncludeProductTags = false,
+                SitemapIncludeBlogPosts = true,
+                SitemapIncludeNews = false,
+                SitemapIncludeTopics = true
+            });
+
+            settingService.SaveSetting(new SitemapXmlSettings
+            {
+                SitemapXmlEnabled = true,
+                SitemapXmlIncludeBlogPosts = true,
+                SitemapXmlIncludeCategories = true,
+                SitemapXmlIncludeManufacturers = true,
+                SitemapXmlIncludeNews = true,
+                SitemapXmlIncludeProducts = true,
+                SitemapXmlIncludeProductTags = true,
+                SitemapXmlIncludeCustomUrls = true,
+                SitemapXmlIncludeTopics = true
+            });
+
+            settingService.SaveSetting(new CommonSettings
+            {
+                UseSystemEmailForContactUsForm = true,
+                UseStoredProcedureForLoadingCategories = true,
+
                 DisplayJavaScriptDisabledWarning = false,
                 UseFullTextSearch = false,
                 FullTextMode = FulltextSearchMode.ExactMatch,
@@ -5982,7 +6007,8 @@ namespace Nop.Services.Installation
                 SupportPreviousNopcommerceVersions = true,
                 UseResponseCompression = false,
                 StaticFilesCacheControl = "public,max-age=604800",
-                FaviconAndAppIconsHeadCode = "<link rel=\"apple-touch-icon\" sizes=\"180x180\" href=\"/icons/icons_0/apple-touch-icon.png\"><link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"/icons/icons_0/favicon-32x32.png\"><link rel=\"icon\" type=\"image/png\" sizes=\"192x192\" href=\"/icons/icons_0/android-chrome-192x192.png\"><link rel=\"icon\" type=\"image/png\" sizes=\"16x16\" href=\"/icons/icons_0/favicon-16x16.png\"><link rel=\"manifest\" href=\"/icons/icons_0/site.webmanifest\"><link rel=\"mask-icon\" href=\"/icons/icons_0/safari-pinned-tab.svg\" color=\"#5bbad5\"><link rel=\"shortcut icon\" href=\"/icons/icons_0/favicon.ico\"><meta name=\"msapplication-TileColor\" content=\"#2d89ef\"><meta name=\"msapplication-TileImage\" content=\"/icons/icons_0/mstile-144x144.png\"><meta name=\"msapplication-config\" content=\"/icons/icons_0/browserconfig.xml\"><meta name=\"theme-color\" content=\"#ffffff\">"
+                FaviconAndAppIconsHeadCode = "<link rel=\"apple-touch-icon\" sizes=\"180x180\" href=\"/icons/icons_0/apple-touch-icon.png\"><link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"/icons/icons_0/favicon-32x32.png\"><link rel=\"icon\" type=\"image/png\" sizes=\"192x192\" href=\"/icons/icons_0/android-chrome-192x192.png\"><link rel=\"icon\" type=\"image/png\" sizes=\"16x16\" href=\"/icons/icons_0/favicon-16x16.png\"><link rel=\"manifest\" href=\"/icons/icons_0/site.webmanifest\"><link rel=\"mask-icon\" href=\"/icons/icons_0/safari-pinned-tab.svg\" color=\"#5bbad5\"><link rel=\"shortcut icon\" href=\"/icons/icons_0/favicon.ico\"><meta name=\"msapplication-TileColor\" content=\"#2d89ef\"><meta name=\"msapplication-TileImage\" content=\"/icons/icons_0/mstile-144x144.png\"><meta name=\"msapplication-config\" content=\"/icons/icons_0/browserconfig.xml\"><meta name=\"theme-color\" content=\"#ffffff\">",
+                MinificationEnabled = true
             });
 
             settingService.SaveSetting(new SeoSettings
@@ -6071,8 +6097,7 @@ namespace Nop.Services.Installation
                 UseRichEditorForCustomerEmails = false,
                 UseRichEditorInMessageTemplates = false,
                 CheckCopyrightRemovalKey = true,
-                UseIsoDateFormatInJsonResult = true,
-                UseNestedSetting = true
+                UseIsoDateFormatInJsonResult = true
             });
 
             settingService.SaveSetting(new ProductEditorSettings
@@ -6087,7 +6112,8 @@ namespace Nop.Services.Installation
             {
                 GdprEnabled = false,
                 LogPrivacyPolicyConsent = true,
-                LogNewsletterConsent = true
+                LogNewsletterConsent = true,
+                LogUserProfileChanges = true
             });
 
             settingService.SaveSetting(new CatalogSettings
@@ -6286,7 +6312,8 @@ namespace Nop.Services.Installation
                 DefaultImageQuality = 80,
                 MultipleThumbDirectories = false,
                 ImportProductImagesUsingHash = true,
-                AzureCacheControlHeader = string.Empty
+                AzureCacheControlHeader = string.Empty,
+                UseAbsoluteImagePath = true
             });
 
             settingService.SaveSetting(new StoreInformationSettings
@@ -6300,7 +6327,6 @@ namespace Nop.Services.Installation
                 FacebookLink = "http://www.facebook.com/nopCommerce",
                 TwitterLink = "https://twitter.com/nopCommerce",
                 YoutubeLink = "http://www.youtube.com/user/nopCommerce",
-                GooglePlusLink = "https://plus.google.com/+nopcommerce",
                 HidePoweredByNopCommerce = false
             });
 
@@ -6830,7 +6856,7 @@ namespace Nop.Services.Installation
                 .Table.FirstOrDefault(pt => pt.Name == "Products in Grid or Lines");
             if (categoryTemplateInGridAndLines == null)
                 throw new Exception("Category template cannot be loaded");
-            
+
             //categories
             var allCategories = new List<Category>();
             var categoryComputers = new Category
@@ -7132,7 +7158,7 @@ namespace Nop.Services.Installation
                 _urlRecordRepository.Insert(new UrlRecord
                 {
                     EntityId = category.Id,
-                    EntityName = typeof(Category).Name,
+                    EntityName = nameof(Category),
                     LanguageId = 0,
                     IsActive = true,
                     Slug = ValidateSeName(category, category.Name)
@@ -7205,7 +7231,7 @@ namespace Nop.Services.Installation
                 _urlRecordRepository.Insert(new UrlRecord
                 {
                     EntityId = manufacturer.Id,
-                    EntityName = typeof(Manufacturer).Name,
+                    EntityName = nameof(Manufacturer),
                     LanguageId = 0,
                     IsActive = true,
                     Slug = ValidateSeName(manufacturer, manufacturer.Name)
@@ -7411,7 +7437,7 @@ namespace Nop.Services.Installation
                 Name = "Digital Storm VANQUISH 3 Custom Performance PC",
                 Sku = "DS_VA3_PC",
                 ShortDescription = "Digital Storm Vanquish 3 Desktop PC",
-                FullDescription = "<p>Blow the doors off today’s most demanding games with maximum detail, speed, and power for an immersive gaming experience without breaking the bank.</p><p>Stay ahead of the competition, VANQUISH 3 is fully equipped to easily handle future upgrades, keeping your system on the cutting edge for years to come.</p><p>Each system is put through an extensive stress test, ensuring you experience zero bottlenecks and get the maximum performance from your hardware.</p>",
+                FullDescription = "<p>Blow the doors off todayâ€™s most demanding games with maximum detail, speed, and power for an immersive gaming experience without breaking the bank.</p><p>Stay ahead of the competition, VANQUISH 3 is fully equipped to easily handle future upgrades, keeping your system on the cutting edge for years to come.</p><p>Each system is put through an extensive stress test, ensuring you experience zero bottlenecks and get the maximum performance from your hardware.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 //SeName = "compaq-presario-sr1519x-pentium-4-desktop-pc-with-cdrw",
                 AllowCustomerReviews = true,
@@ -7601,7 +7627,7 @@ namespace Nop.Services.Installation
                 Name = "Asus N551JK-XO076H Laptop",
                 Sku = "AS_551_LP",
                 ShortDescription = "Laptop Asus N551JK Intel Core i7-4710HQ 2.5 GHz, RAM 16GB, HDD 1TB, Video NVidia GTX 850M 4GB, BluRay, 15.6, Full HD, Win 8.1",
-                FullDescription = "<p>The ASUS N550JX combines cutting-edge audio and visual technology to deliver an unsurpassed multimedia experience. A full HD wide-view IPS panel is tailor-made for watching movies and the intuitive touchscreen makes for easy, seamless navigation. ASUS has paired the N550JX’s impressive display with SonicMaster Premium, co-developed with Bang & Olufsen ICEpower® audio experts, for true surround sound. A quad-speaker array and external subwoofer combine for distinct vocals and a low bass that you can feel.</p>",
+                FullDescription = "<p>The ASUS N550JX combines cutting-edge audio and visual technology to deliver an unsurpassed multimedia experience. A full HD wide-view IPS panel is tailor-made for watching movies and the intuitive touchscreen makes for easy, seamless navigation. ASUS has paired the N550JXâ€™s impressive display with SonicMaster Premium, co-developed with Bang & Olufsen ICEpowerÂ® audio experts, for true surround sound. A quad-speaker array and external subwoofer combine for distinct vocals and a low bass that you can feel.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 //SeName = "asus-eee-pc-900ha-89-inch-netbook-black",
                 AllowCustomerReviews = true,
@@ -7859,7 +7885,7 @@ namespace Nop.Services.Installation
                 VisibleIndividually = true,
                 Name = "HP Envy 6-1180ca 15.6-Inch Sleekbook",
                 Sku = "HP_ESB_15",
-                ShortDescription = "HP ENVY 6-1202ea Ultrabook Beats Audio, 3rd generation Intel® CoreTM i7-3517U processor, 8GB RAM, 500GB HDD, Microsoft Windows 8, AMD Radeon HD 8750M (2 GB DDR3 dedicated)",
+                ShortDescription = "HP ENVY 6-1202ea Ultrabook Beats Audio, 3rd generation IntelÂ® CoreTM i7-3517U processor, 8GB RAM, 500GB HDD, Microsoft Windows 8, AMD Radeon HD 8750M (2 GB DDR3 dedicated)",
                 FullDescription = "The UltrabookTM that's up for anything. Thin and light, the HP ENVY is the large screen UltrabookTM with Beats AudioTM. With a soft-touch base that makes it easy to grab and go, it's a laptop that's up for anything.<br /><br /><b>Features</b><br /><br />- Windows 8 or other operating systems available<br /><br /><b>Top performance. Stylish design. Take notice.</b><br /><br />- At just 19.8 mm (0.78 in) thin, the HP ENVY UltrabookTM is slim and light enough to take anywhere. It's the laptop that gets you noticed with the power to get it done.<br />- With an eye-catching metal design, it's a laptop that you want to carry with you. The soft-touch, slip-resistant base gives you the confidence to carry it with ease.<br /><br /><b>More entertaining. More gaming. More fun.</b><br /><br />- Own the UltrabookTM with Beats AudioTM, dual speakers, a subwoofer, and an awesome display. Your music, movies and photo slideshows will always look and sound their best.<br />- Tons of video memory let you experience incredible gaming and multimedia without slowing down. Create and edit videos in a flash. And enjoy more of what you love to the fullest.<br />- The HP ENVY UltrabookTM is loaded with the ports you'd expect on a world-class laptop, but on a Sleekbook instead. Like HDMI, USB, RJ-45, and a headphone jack. You get all the right connections without compromising size.<br /><br /><b>Only from HP.</b><br /><br />- Life heats up. That's why there's HP CoolSense technology, which automatically adjusts your notebook's temperature based on usage and conditions. It stays cool. You stay comfortable.<br />- With HP ProtectSmart, your notebook's data stays safe from accidental bumps and bruises. It senses motion and plans ahead, stopping your hard drive and protecting your entire digital life.<br />- Keep playing even in dimly lit rooms or on red eye flights. The optional backlit keyboard[1] is full-size so you don't compromise comfort. Backlit keyboard. Another bright idea.<br /><br />",
                 ProductTemplateId = productTemplateSimple.Id,
                 //SeName = "hp-pavilion-g60-230us-160-inch-laptop",
@@ -8118,7 +8144,7 @@ namespace Nop.Services.Installation
                 Name = "Sound Forge Pro 11 (recurring)",
                 Sku = "SF_PRO_11",
                 ShortDescription = "Advanced audio waveform editor.",
-                FullDescription = "<p>Sound Forge™ Pro is the application of choice for a generation of creative and prolific artists, producers, and editors. Record audio quickly on a rock-solid platform, address sophisticated audio processing tasks with surgical precision, and render top-notch master files with ease. New features include one-touch recording, metering for the new critical standards, more repair and restoration tools, and exclusive round-trip interoperability with SpectraLayers Pro. Taken together, these enhancements make this edition of Sound Forge Pro the deepest and most advanced audio editing platform available.</p>",
+                FullDescription = "<p>Sound Forgeâ„¢ Pro is the application of choice for a generation of creative and prolific artists, producers, and editors. Record audio quickly on a rock-solid platform, address sophisticated audio processing tasks with surgical precision, and render top-notch master files with ease. New features include one-touch recording, metering for the new critical standards, more repair and restoration tools, and exclusive round-trip interoperability with SpectraLayers Pro. Taken together, these enhancements make this edition of Sound Forge Pro the deepest and most advanced audio editing platform available.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 //SeName = "major-league-baseball-2k9",
                 IsRecurring = true,
@@ -8330,7 +8356,7 @@ namespace Nop.Services.Installation
                 }
             });
         }
-        
+
         protected virtual void InstallElectronics(ProductTemplate productTemplateSimple, ProductTemplate productTemplateGrouped, List<Product> allProducts, string sampleImagesPath, IPictureService pictureService, List<RelatedProduct> relatedProducts)
         {
             //this one is a grouped product with two associated ones
@@ -8341,7 +8367,7 @@ namespace Nop.Services.Installation
                 Name = "Nikon D5500 DSLR",
                 Sku = "N5500DS_0",
                 ShortDescription = "Slim, lightweight Nikon D5500 packs a vari-angle touchscreen",
-                FullDescription = "Nikon has announced its latest DSLR, the D5500. A lightweight, compact DX-format camera with a 24.2MP sensor, it’s the first of its type to offer a vari-angle touchscreen. The D5500 replaces the D5300 in Nikon’s range, and while it offers much the same features the company says it’s a much slimmer and lighter prospect. There’s a deep grip for easier handling and built-in Wi-Fi that lets you transfer and share shots via your phone or tablet.",
+                FullDescription = "Nikon has announced its latest DSLR, the D5500. A lightweight, compact DX-format camera with a 24.2MP sensor, itâ€™s the first of its type to offer a vari-angle touchscreen. The D5500 replaces the D5300 in Nikonâ€™s range, and while it offers much the same features the company says itâ€™s a much slimmer and lighter prospect. Thereâ€™s a deep grip for easier handling and built-in Wi-Fi that lets you transfer and share shots via your phone or tablet.",
                 ProductTemplateId = productTemplateGrouped.Id,
                 //SeName = "canon-digital-slr-camera",
                 AllowCustomerReviews = true,
@@ -8737,7 +8763,7 @@ namespace Nop.Services.Installation
                 Name = "Beats Pill 2.0 Wireless Speaker",
                 Sku = "BP_20_WSP",
                 ShortDescription = "<b>Pill 2.0 Portable Bluetooth Speaker (1-Piece):</b> Watch your favorite movies and listen to music with striking sound quality. This lightweight, portable speaker is easy to take with you as you travel to any destination, keeping you entertained wherever you are. ",
-                FullDescription = "<ul><li>Pair and play with your Bluetooth® device with 30 foot range</li><li>Built-in speakerphone</li><li>7 hour rechargeable battery</li><li>Power your other devices with USB charge out</li><li>Tap two Beats Pills™ together for twice the sound with Beats Bond™</li></ul>",
+                FullDescription = "<ul><li>Pair and play with your BluetoothÂ® device with 30 foot range</li><li>Built-in speakerphone</li><li>7 hour rechargeable battery</li><li>Power your other devices with USB charge out</li><li>Tap two Beats Pillsâ„¢ together for twice the sound with Beats Bondâ„¢</li></ul>",
                 ProductTemplateId = productTemplateSimple.Id,
                 //SeName = "acer-aspire-one-89-mini-notebook-case-black",
                 AllowCustomerReviews = true,
@@ -9396,7 +9422,7 @@ namespace Nop.Services.Installation
                 Name = "Nike Tailwind Loose Short-Sleeve Running Shirt",
                 Sku = "NK_TLS_RS",
                 ShortDescription = string.Empty,
-                FullDescription = "<p>Boost your adrenaline with the Nike® Women's Tailwind Running Shirt. The lightweight, slouchy fit is great for layering, and moisture-wicking fabrics keep you feeling at your best. This tee has a notched hem for an enhanced range of motion, while flat seams with reinforcement tape lessen discomfort and irritation over longer distances. Put your keys and card in the side zip pocket and take off in your Nike® running t-shirt.</p>",
+                FullDescription = "<p>Boost your adrenaline with the NikeÂ® Women's Tailwind Running Shirt. The lightweight, slouchy fit is great for layering, and moisture-wicking fabrics keep you feeling at your best. This tee has a notched hem for an enhanced range of motion, while flat seams with reinforcement tape lessen discomfort and irritation over longer distances. Put your keys and card in the side zip pocket and take off in your NikeÂ® running t-shirt.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 //SeName = "50s-rockabilly-polka-dot-top-jr-plus-size",
                 AllowCustomerReviews = true,
@@ -9704,7 +9730,7 @@ namespace Nop.Services.Installation
             AddProductTag(productLeviJeans, "jeans");
             AddProductTag(productLeviJeans, "apparel");
 
-             var productObeyHat = new Product
+            var productObeyHat = new Product
             {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
@@ -10771,14 +10797,14 @@ namespace Nop.Services.Installation
             InstallJewelry(productTemplateSimple, allProducts, sampleImagesPath, pictureService, relatedProducts);
             //gift cards
             InstallGiftCards(productTemplateSimple, allProducts, sampleImagesPath, pictureService, relatedProducts, deliveryDate);
-            
+
             //search engine names
             foreach (var product in allProducts)
             {
                 _urlRecordRepository.Insert(new UrlRecord
                 {
                     EntityId = product.Id,
-                    EntityName = typeof(Product).Name,
+                    EntityName = nameof(Product),
                     LanguageId = 0,
                     IsActive = true,
                     Slug = ValidateSeName(product, product.Name)
@@ -10787,7 +10813,7 @@ namespace Nop.Services.Installation
 
             //related products
             _relatedProductRepository.Insert(relatedProducts);
-           
+
             //reviews
             var random = new Random();
             foreach (var product in allProducts)
@@ -10820,7 +10846,7 @@ namespace Nop.Services.Installation
             }
 
             _productRepository.Update(allProducts);
-            
+
             //stock quantity history
             foreach (var product in allProducts)
             {
@@ -10959,7 +10985,7 @@ namespace Nop.Services.Installation
                 _urlRecordRepository.Insert(new UrlRecord
                 {
                     EntityId = blogPost.Id,
-                    EntityName = typeof(BlogPost).Name,
+                    EntityName = nameof(BlogPost),
                     LanguageId = blogPost.LanguageId,
                     IsActive = true,
                     Slug = ValidateSeName(blogPost, blogPost.Title)
@@ -11037,7 +11063,7 @@ namespace Nop.Services.Installation
                 _urlRecordRepository.Insert(new UrlRecord
                 {
                     EntityId = newsItem.Id,
-                    EntityName = typeof(NewsItem).Name,
+                    EntityName = nameof(NewsItem),
                     LanguageId = newsItem.LanguageId,
                     IsActive = true,
                     Slug = ValidateSeName(newsItem, newsItem.Title)
@@ -12258,7 +12284,7 @@ namespace Nop.Services.Installation
                 _urlRecordRepository.Insert(new UrlRecord
                 {
                     EntityId = vendor.Id,
-                    EntityName = typeof(Vendor).Name,
+                    EntityName = nameof(Vendor),
                     LanguageId = 0,
                     IsActive = true,
                     Slug = ValidateSeName(vendor, vendor.Name)
@@ -12294,7 +12320,7 @@ namespace Nop.Services.Installation
         private void AddProductTag(Product product, string tag)
         {
             var productTag = _productTagRepository.Table.FirstOrDefault(pt => pt.Name == tag);
-            bool exist = productTag != null;
+            var exist = productTag != null;
             if (productTag == null)
             {
                 productTag = new ProductTag
@@ -12310,7 +12336,7 @@ namespace Nop.Services.Installation
                 _urlRecordRepository.Insert(new UrlRecord
                 {
                     EntityId = productTag.Id,
-                    EntityName = typeof(ProductTag).Name,
+                    EntityName = nameof(ProductTag),
                     LanguageId = 0,
                     IsActive = true,
                     Slug = ValidateSeName(productTag, productTag.Name)
@@ -12344,7 +12370,7 @@ namespace Nop.Services.Installation
             InstallMessageTemplates();
             InstallTopicTemplates();
             InstallSettings(installSampleData);
-            InstallCustomersAndUsers(defaultUserEmail, defaultUserPassword);
+            InstallCustomersAndUsers(defaultUserEmail, defaultUserPassword, installSampleData);
             InstallTopics();
             InstallLocaleResources();
             InstallActivityLogTypes();
@@ -12355,7 +12381,7 @@ namespace Nop.Services.Installation
             InstallReturnRequestReasons();
             InstallReturnRequestActions();
 
-            if (!installSampleData) 
+            if (!installSampleData)
                 return;
 
             InstallCheckoutAttributes();

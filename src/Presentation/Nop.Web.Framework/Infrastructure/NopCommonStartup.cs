@@ -71,10 +71,6 @@ namespace Nop.Web.Framework.Infrastructure
         /// <summary>
         /// Gets order of this startup configuration implementation
         /// </summary>
-        public int Order
-        {
-            //common services should be loaded after error handlers
-            get { return 100; }
-        }
+        public int Order => 100; //common services should be loaded after error handlers
     }
 }

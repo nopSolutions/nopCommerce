@@ -16,12 +16,12 @@
   <ItemGroup>
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.4.0" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="6.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.2.2" />
+    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.2.3" />
     <PackageReference Include="Microsoft.AspNetCore.DataProtection.Redis" Version="0.4.1" />
     <PackageReference Include="MiniProfiler.AspNetCore.Mvc" Version="4.0.165" />
     <PackageReference Include="RedLock.net.StrongName" Version="2.1.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
-    <PackageReference Include="Humanizer" Version="2.5.16" />
+    <PackageReference Include="Humanizer" Version="2.6.2" />
     <PackageReference Include="System.IO.FileSystem.AccessControl" Version="4.5.0" />
   </ItemGroup>
 

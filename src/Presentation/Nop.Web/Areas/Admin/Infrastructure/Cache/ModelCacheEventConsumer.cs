@@ -3,14 +3,16 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Configuration;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Events;
+using Nop.Core.Plugins;
 using Nop.Services.Events;
+using Nop.Services.Plugins;
 
 namespace Nop.Web.Areas.Admin.Infrastructure.Cache
 {
     /// <summary>
     /// Model cache event consumer (used for caching of presentation layer models)
     /// </summary>
-    public partial class ModelCacheEventConsumer: 
+    public partial class ModelCacheEventConsumer :
         //settings
         IConsumer<EntityUpdatedEvent<Setting>>,
         //specification attributes
@@ -28,15 +30,26 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Cache
         //vendors
         IConsumer<EntityInsertedEvent<Vendor>>,
         IConsumer<EntityUpdatedEvent<Vendor>>,
-        IConsumer<EntityDeletedEvent<Vendor>>
-    {
+        IConsumer<EntityDeletedEvent<Vendor>>,
 
-        private readonly ICacheManager _cacheManager;
-        
+        IConsumer<PluginUpdatedEvent>
+    {
+        #region Fields
+
+        private readonly IStaticCacheManager _cacheManager;
+
+        #endregion
+
+        #region Ctor
+
         public ModelCacheEventConsumer(IStaticCacheManager cacheManager)
         {
             _cacheManager = cacheManager;
         }
+
+        #endregion
+
+        #region Methods
 
         public void HandleEvent(EntityUpdatedEvent<Setting> eventMessage)
         {
@@ -99,5 +112,16 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Cache
         {
             _cacheManager.RemoveByPattern(NopModelCacheDefaults.VendorsListPatternKey);
         }
+
+        /// <summary>
+        /// Handle plugin updated event
+        /// </summary>
+        /// <param name="eventMessage">Event</param>
+        public void HandleEvent(PluginUpdatedEvent eventMessage)
+        {
+            _cacheManager.RemoveByPattern(NopPluginDefaults.AdminNavigationPluginsPatternCacheKey);
+        }
+
+        #endregion
     }
 }

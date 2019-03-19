@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -38,8 +38,9 @@ namespace Nop.Services.Customers
         private readonly IRepository<CustomerPassword> _customerPasswordRepository;
         private readonly IRepository<CustomerRole> _customerRoleRepository;
         private readonly IRepository<GenericAttribute> _gaRepository;
+        private readonly IRepository<ShoppingCartItem> _shoppingCartRepository;
         private readonly IStaticCacheManager _staticCacheManager;
-        private readonly string _entityName;
+        private readonly ShoppingCartSettings _shoppingCartSettings;
 
         #endregion
 
@@ -56,7 +57,9 @@ namespace Nop.Services.Customers
             IRepository<CustomerPassword> customerPasswordRepository,
             IRepository<CustomerRole> customerRoleRepository,
             IRepository<GenericAttribute> gaRepository,
-            IStaticCacheManager staticCacheManager)
+            IRepository<ShoppingCartItem> shoppingCartRepository,
+            IStaticCacheManager staticCacheManager,
+            ShoppingCartSettings shoppingCartSettings)
         {
             _customerSettings = customerSettings;
             _cacheManager = cacheManager;
@@ -69,8 +72,9 @@ namespace Nop.Services.Customers
             _customerPasswordRepository = customerPasswordRepository;
             _customerRoleRepository = customerRoleRepository;
             _gaRepository = gaRepository;
+            _shoppingCartRepository = shoppingCartRepository;
             _staticCacheManager = staticCacheManager;
-            _entityName = typeof(Customer).Name;
+            _shoppingCartSettings = shoppingCartSettings;
         }
 
         #endregion
@@ -97,19 +101,15 @@ namespace Nop.Services.Customers
         /// <param name="phone">Phone; null to load all customers</param>
         /// <param name="zipPostalCode">Phone; null to load all customers</param>
         /// <param name="ipAddress">IP address; null to load all customers</param>
-        /// <param name="loadOnlyWithShoppingCart">Value indicating whether to load customers only with shopping cart</param>
-        /// <param name="sct">Value indicating what shopping cart type to filter; used when 'loadOnlyWithShoppingCart' parameter is 'true'</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="getOnlyTotalCount">A value in indicating whether you want to load only total number of records. Set to "true" if you don't want to load data from database</param>
         /// <returns>Customers</returns>
-        public virtual IPagedList<Customer> GetAllCustomers(DateTime? createdFromUtc = null,
-            DateTime? createdToUtc = null, int affiliateId = 0, int vendorId = 0,
-            int[] customerRoleIds = null, string email = null, string username = null,
-            string firstName = null, string lastName = null,
+        public virtual IPagedList<Customer> GetAllCustomers(DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
+            int affiliateId = 0, int vendorId = 0, int[] customerRoleIds = null,
+            string email = null, string username = null, string firstName = null, string lastName = null,
             int dayOfBirth = 0, int monthOfBirth = 0,
-            string company = null, string phone = null, string zipPostalCode = null,
-            string ipAddress = null, bool loadOnlyWithShoppingCart = false, ShoppingCartType? sct = null,
+            string company = null, string phone = null, string zipPostalCode = null, string ipAddress = null,
             int pageIndex = 0, int pageSize = int.MaxValue, bool getOnlyTotalCount = false)
         {
             var query = _customerRepository.Table;
@@ -140,7 +140,7 @@ namespace Nop.Services.Customers
             {
                 query = query
                     .Join(_gaRepository.Table, x => x.Id, y => y.EntityId, (x, y) => new { Customer = x, Attribute = y })
-                    .Where(z => z.Attribute.KeyGroup == _entityName &&
+                    .Where(z => z.Attribute.KeyGroup == nameof(Customer) &&
                                 z.Attribute.Key == NopCustomerDefaults.FirstNameAttribute &&
                                 z.Attribute.Value.Contains(firstName))
                     .Select(z => z.Customer);
@@ -150,7 +150,7 @@ namespace Nop.Services.Customers
             {
                 query = query
                     .Join(_gaRepository.Table, x => x.Id, y => y.EntityId, (x, y) => new { Customer = x, Attribute = y })
-                    .Where(z => z.Attribute.KeyGroup == _entityName &&
+                    .Where(z => z.Attribute.KeyGroup == nameof(Customer) &&
                                 z.Attribute.Key == NopCustomerDefaults.LastNameAttribute &&
                                 z.Attribute.Value.Contains(lastName))
                     .Select(z => z.Customer);
@@ -168,7 +168,7 @@ namespace Nop.Services.Customers
                 //dateOfBirthStr.Length = 5
                 query = query
                     .Join(_gaRepository.Table, x => x.Id, y => y.EntityId, (x, y) => new { Customer = x, Attribute = y })
-                    .Where(z => z.Attribute.KeyGroup == _entityName &&
+                    .Where(z => z.Attribute.KeyGroup == nameof(Customer) &&
                                 z.Attribute.Key == NopCustomerDefaults.DateOfBirthAttribute &&
                                 z.Attribute.Value.Substring(5, 5) == dateOfBirthStr)
                     .Select(z => z.Customer);
@@ -182,7 +182,7 @@ namespace Nop.Services.Customers
                 //dateOfBirthStr.Length = 2
                 query = query
                     .Join(_gaRepository.Table, x => x.Id, y => y.EntityId, (x, y) => new { Customer = x, Attribute = y })
-                    .Where(z => z.Attribute.KeyGroup == _entityName &&
+                    .Where(z => z.Attribute.KeyGroup == nameof(Customer) &&
                                 z.Attribute.Key == NopCustomerDefaults.DateOfBirthAttribute &&
                                 z.Attribute.Value.Substring(8, 2) == dateOfBirthStr)
                     .Select(z => z.Customer);
@@ -193,7 +193,7 @@ namespace Nop.Services.Customers
                 var dateOfBirthStr = "-" + monthOfBirth.ToString("00", CultureInfo.InvariantCulture) + "-";
                 query = query
                     .Join(_gaRepository.Table, x => x.Id, y => y.EntityId, (x, y) => new { Customer = x, Attribute = y })
-                    .Where(z => z.Attribute.KeyGroup == _entityName &&
+                    .Where(z => z.Attribute.KeyGroup == nameof(Customer) &&
                                 z.Attribute.Key == NopCustomerDefaults.DateOfBirthAttribute &&
                                 z.Attribute.Value.Contains(dateOfBirthStr))
                     .Select(z => z.Customer);
@@ -203,7 +203,7 @@ namespace Nop.Services.Customers
             {
                 query = query
                     .Join(_gaRepository.Table, x => x.Id, y => y.EntityId, (x, y) => new { Customer = x, Attribute = y })
-                    .Where(z => z.Attribute.KeyGroup == _entityName &&
+                    .Where(z => z.Attribute.KeyGroup == nameof(Customer) &&
                                 z.Attribute.Key == NopCustomerDefaults.CompanyAttribute &&
                                 z.Attribute.Value.Contains(company))
                     .Select(z => z.Customer);
@@ -213,7 +213,7 @@ namespace Nop.Services.Customers
             {
                 query = query
                     .Join(_gaRepository.Table, x => x.Id, y => y.EntityId, (x, y) => new { Customer = x, Attribute = y })
-                    .Where(z => z.Attribute.KeyGroup == _entityName &&
+                    .Where(z => z.Attribute.KeyGroup == nameof(Customer) &&
                                 z.Attribute.Key == NopCustomerDefaults.PhoneAttribute &&
                                 z.Attribute.Value.Contains(phone))
                     .Select(z => z.Customer);
@@ -223,7 +223,7 @@ namespace Nop.Services.Customers
             {
                 query = query
                     .Join(_gaRepository.Table, x => x.Id, y => y.EntityId, (x, y) => new { Customer = x, Attribute = y })
-                    .Where(z => z.Attribute.KeyGroup == _entityName &&
+                    .Where(z => z.Attribute.KeyGroup == nameof(Customer) &&
                                 z.Attribute.Key == NopCustomerDefaults.ZipPostalCodeAttribute &&
                                 z.Attribute.Value.Contains(zipPostalCode))
                     .Select(z => z.Customer);
@@ -233,17 +233,6 @@ namespace Nop.Services.Customers
             if (!string.IsNullOrWhiteSpace(ipAddress) && CommonHelper.IsValidIpAddress(ipAddress))
             {
                 query = query.Where(w => w.LastIpAddress == ipAddress);
-            }
-
-            if (loadOnlyWithShoppingCart)
-            {
-                int? sctId = null;
-                if (sct.HasValue)
-                    sctId = (int)sct.Value;
-
-                query = sct.HasValue ?
-                    query.Where(c => c.ShoppingCartItems.Any(x => x.ShoppingCartTypeId == sctId)) :
-                    query.Where(c => c.ShoppingCartItems.Any());
             }
 
             query = query.OrderByDescending(c => c.CreatedOnUtc);
@@ -272,6 +261,62 @@ namespace Nop.Services.Customers
             query = query.OrderByDescending(c => c.LastActivityDateUtc);
             var customers = new PagedList<Customer>(query, pageIndex, pageSize);
             return customers;
+        }
+
+        /// <summary>
+        /// Gets customers with shopping carts
+        /// </summary>
+        /// <param name="shoppingCartType">Shopping cart type; pass null to load all records</param>
+        /// <param name="storeId">Store identifier; pass 0 to load all records</param>
+        /// <param name="productId">Product identifier; pass null to load all records</param>
+        /// <param name="createdFromUtc">Created date from (UTC); pass null to load all records</param>
+        /// <param name="createdToUtc">Created date to (UTC); pass null to load all records</param>
+        /// <param name="countryId">Billing country identifier; pass null to load all records</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <returns>Customers</returns>
+        public virtual IPagedList<Customer> GetCustomersWithShoppingCarts(ShoppingCartType? shoppingCartType = null,
+            int storeId = 0, int? productId = null,
+            DateTime? createdFromUtc = null, DateTime? createdToUtc = null, int? countryId = null,
+            int pageIndex = 0, int pageSize = int.MaxValue)
+        {
+            //get all shopping cart items
+            var items = _shoppingCartRepository.Table;
+
+            //filter by type
+            if (shoppingCartType.HasValue)
+                items = items.Where(item => item.ShoppingCartTypeId == (int)shoppingCartType.Value);
+
+            //filter shopping cart items by store
+            if (storeId > 0 && !_shoppingCartSettings.CartsSharedBetweenStores)
+                items = items.Where(item => item.StoreId == storeId);
+
+            //filter shopping cart items by product
+            if (productId > 0)
+                items = items.Where(item => item.ProductId == productId);
+
+            //filter shopping cart items by date
+            if (createdFromUtc.HasValue)
+                items = items.Where(item => createdFromUtc.Value <= item.CreatedOnUtc);
+            if (createdToUtc.HasValue)
+                items = items.Where(item => createdToUtc.Value >= item.CreatedOnUtc);
+
+            //get all active customers
+            var customers = _customerRepository.Table.Where(customer => customer.Active && !customer.Deleted);
+
+            //filter customers by billing country
+            if (countryId > 0)
+                customers = customers.Where(customer => customer.BillingAddress.CountryId == countryId);
+
+            //get customers with shopping carts
+            var customersWithCarts = items.GroupBy(item => item.CustomerId)
+                .Select(cart => new { CustomerId = cart.Key, CreatedOnUtc = cart.Max(item => item.CreatedOnUtc) })
+                .OrderByDescending(cart => cart.CreatedOnUtc)
+                .Select(cart => cart.CustomerId)
+                .ToList() //currently GroupBy and Join (when used together) are incorrectly translated from LINQ to SQL, see https://github.com/aspnet/EntityFrameworkCore/issues/12826, so we continue execution on the server side
+                .Join(customers, id => id, customer => customer.Id, (id, customer) => customer);
+
+            return new PagedList<Customer>(customersWithCarts.ToList(), pageIndex, pageSize);
         }
 
         /// <summary>
@@ -581,8 +626,10 @@ namespace Nop.Services.Customers
             if (!customer.Addresses.Contains(address))
                 return;
 
-            if (customer.BillingAddress == address) customer.BillingAddress = null;
-            if (customer.ShippingAddress == address) customer.ShippingAddress = null;
+            if (customer.BillingAddress == address)
+                customer.BillingAddress = null;
+            if (customer.ShippingAddress == address)
+                customer.ShippingAddress = null;
 
             //customer.Addresses.Remove(address);
             customer.CustomerAddressMappings
@@ -681,7 +728,7 @@ namespace Nop.Services.Customers
                 var nodeList1 = xmlDoc.SelectNodes(@"//DiscountCouponCodes/CouponCode");
                 foreach (XmlNode node1 in nodeList1)
                 {
-                    if (node1.Attributes?["Code"] == null) 
+                    if (node1.Attributes?["Code"] == null)
                         continue;
                     var code = node1.Attributes["Code"].InnerText.Trim();
                     couponCodes.Add(code);
@@ -731,12 +778,12 @@ namespace Nop.Services.Customers
                 var nodeList1 = xmlDoc.SelectNodes(@"//DiscountCouponCodes/CouponCode");
                 foreach (XmlNode node1 in nodeList1)
                 {
-                    if (node1.Attributes?["Code"] == null) 
+                    if (node1.Attributes?["Code"] == null)
                         continue;
 
                     var couponCodeAttribute = node1.Attributes["Code"].InnerText.Trim();
 
-                    if (couponCodeAttribute.ToLower() != couponCode.ToLower()) 
+                    if (couponCodeAttribute.ToLower() != couponCode.ToLower())
                         continue;
 
                     gcElement = (XmlElement)node1;
@@ -809,7 +856,7 @@ namespace Nop.Services.Customers
                 var nodeList1 = xmlDoc.SelectNodes(@"//GiftCardCouponCodes/CouponCode");
                 foreach (XmlNode node1 in nodeList1)
                 {
-                    if (node1.Attributes?["Code"] == null) 
+                    if (node1.Attributes?["Code"] == null)
                         continue;
 
                     var code = node1.Attributes["Code"].InnerText.Trim();
@@ -860,11 +907,11 @@ namespace Nop.Services.Customers
                 var nodeList1 = xmlDoc.SelectNodes(@"//GiftCardCouponCodes/CouponCode");
                 foreach (XmlNode node1 in nodeList1)
                 {
-                    if (node1.Attributes?["Code"] == null) 
+                    if (node1.Attributes?["Code"] == null)
                         continue;
 
                     var couponCodeAttribute = node1.Attributes["Code"].InnerText.Trim();
-                    if (couponCodeAttribute.ToLower() != couponCode.ToLower()) 
+                    if (couponCodeAttribute.ToLower() != couponCode.ToLower())
                         continue;
 
                     gcElement = (XmlElement)node1;

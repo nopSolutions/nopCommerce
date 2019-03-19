@@ -263,6 +263,14 @@
         public static string ProductAttributeCombinationsAllCacheKey => "Nop.productattributecombination.all-{0}";
 
         /// <summary>
+        /// Key for caching of a value indicating whether a product has product attributes
+        /// </summary>
+        /// <remarks>
+        /// {0} : product id
+        /// </remarks>
+        public static string ProductHasProductAttributesCacheKey => "Nop.productattribute.producthasattributes.id-{0}";
+
+        /// <summary>
         /// Gets a key pattern to clear cache
         /// </summary>
         public static string ProductAttributesPatternCacheKey => "Nop.productattribute.";
@@ -291,8 +299,10 @@
         /// </summary>
         /// <remarks>
         /// {0} : store ID
+        /// {1} : comma separated list of customer roles
+        /// {2} : show hidden records?
         /// </remarks>
-        public static string ProductTagCountCacheKey => "Nop.producttag.count-{0}";
+        public static string ProductTagCountCacheKey => "Nop.producttag.count-{0}-{1}-{2}";
 
         /// <summary>
         /// Gets a key for caching

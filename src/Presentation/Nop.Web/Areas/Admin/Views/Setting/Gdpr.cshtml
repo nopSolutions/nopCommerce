@@ -66,6 +66,16 @@
                                     <span asp-validation-for="LogNewsletterConsent"></span>
                                 </div>
                             </div>
+                            <div class="form-group advanced-setting" id="pnlLogUserProfileChanges">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="LogUserProfileChanges_OverrideForStore" asp-input="LogUserProfileChanges" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="LogUserProfileChanges" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="LogUserProfileChanges" />
+                                    <span asp-validation-for="LogUserProfileChanges"></span>
+                                </div>
+                            </div>
                         </nop-nested-setting>
                     </div>
                     <script>
@@ -79,10 +89,12 @@
                             if ($('#@Html.IdFor(model => model.GdprEnabled)').is(':checked')) {
                                 $('#pnlLogPrivacyPolicyConsent').show();
                                 $('#pnlLogNewsletterConsent').show();
-                                $('#pnlConsent').show();
+                                $('#pnlLogUserProfileChanges').show();
+                                $('#pnlConsent').show(); 
                             } else {
                                 $('#pnlLogPrivacyPolicyConsent').hide();
                                 $('#pnlLogNewsletterConsent').hide();
+                                $('#pnlLogUserProfileChanges').hide();
                                 $('#pnlConsent').hide();
                             }
                         }

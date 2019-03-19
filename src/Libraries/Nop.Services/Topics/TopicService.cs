@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
@@ -31,7 +31,6 @@ namespace Nop.Services.Topics
         private readonly IRepository<Topic> _topicRepository;
         private readonly IStoreMappingService _storeMappingService;
         private readonly IWorkContext _workContext;
-        private readonly string _entityName;
 
         #endregion
 
@@ -56,7 +55,6 @@ namespace Nop.Services.Topics
             _topicRepository = topicRepository;
             _storeMappingService = storeMappingService;
             _workContext = workContext;
-            _entityName = typeof(Topic).Name;
         }
 
         #endregion
@@ -155,7 +153,7 @@ namespace Nop.Services.Topics
                         var allowedCustomerRolesIds = _workContext.CurrentCustomer.GetCustomerRoleIds();
                         query = from c in query
                                 join acl in _aclRepository.Table
-                                on new { c1 = c.Id, c2 = _entityName } equals new { c1 = acl.EntityId, c2 = acl.EntityName } into cAcl
+                                on new { c1 = c.Id, c2 = nameof(Topic) } equals new { c1 = acl.EntityId, c2 = acl.EntityName } into cAcl
                                 from acl in cAcl.DefaultIfEmpty()
                                 where !c.SubjectToAcl || allowedCustomerRolesIds.Contains(acl.CustomerRoleId)
                                 select c;
@@ -166,7 +164,7 @@ namespace Nop.Services.Topics
                         //Store mapping
                         query = from c in query
                                 join sm in _storeMappingRepository.Table
-                                on new { c1 = c.Id, c2 = _entityName } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into cSm
+                                on new { c1 = c.Id, c2 = nameof(Topic) } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into cSm
                                 from sm in cSm.DefaultIfEmpty()
                                 where !c.LimitedToStores || storeId == sm.StoreId
                                 select c;

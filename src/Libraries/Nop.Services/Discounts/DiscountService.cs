@@ -8,6 +8,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Infrastructure;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Events;
@@ -751,10 +752,9 @@ namespace Nop.Services.Discounts
             if (discount.DiscountType == DiscountType.AssignedToOrderSubTotal ||
                 discount.DiscountType == DiscountType.AssignedToOrderTotal)
             {
-                var cart = customer.ShoppingCartItems
-                    .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                    .LimitPerStore(_storeContext.CurrentStore.Id)
-                    .ToList();
+                var shoppingCartService = EngineContext.Current.Resolve<IShoppingCartService>();
+                var cart = shoppingCartService.GetShoppingCart(customer,
+                    ShoppingCartType.ShoppingCart, storeId: _storeContext.CurrentStore.Id);
 
                 var hasGiftCards = cart.Any(x => x.Product.IsGiftCard);
                 if (hasGiftCards)

@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Linq;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
+using Nop.Services.Directory;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
+using Nop.Services.Orders;
 using Nop.Services.Stores;
 using Nop.Services.Tax;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
@@ -21,13 +25,16 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
+        private readonly CatalogSettings _catalogSettings;
         private readonly IBaseAdminModelFactory _baseAdminModelFactory;
+        private readonly ICountryService _countryService;
         private readonly ICustomerService _customerService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ILocalizationService _localizationService;
         private readonly IPriceCalculationService _priceCalculationService;
         private readonly IPriceFormatter _priceFormatter;
         private readonly IProductAttributeFormatter _productAttributeFormatter;
+        private readonly IShoppingCartService _shoppingCartService;
         private readonly IStoreService _storeService;
         private readonly ITaxService _taxService;
 
@@ -35,23 +42,29 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #region Ctor
 
-        public ShoppingCartModelFactory(IBaseAdminModelFactory baseAdminModelFactory,
+        public ShoppingCartModelFactory(CatalogSettings catalogSettings,
+            IBaseAdminModelFactory baseAdminModelFactory,
+            ICountryService countryService,
             ICustomerService customerService,
             IDateTimeHelper dateTimeHelper,
             ILocalizationService localizationService,
             IPriceCalculationService priceCalculationService,
             IPriceFormatter priceFormatter,
             IProductAttributeFormatter productAttributeFormatter,
+            IShoppingCartService shoppingCartService,
             IStoreService storeService,
             ITaxService taxService)
         {
+            _catalogSettings = catalogSettings;
             _baseAdminModelFactory = baseAdminModelFactory;
+            _countryService = countryService;
             _customerService = customerService;
             _dateTimeHelper = dateTimeHelper;
             _localizationService = localizationService;
             _priceCalculationService = priceCalculationService;
             _priceFormatter = priceFormatter;
             _productAttributeFormatter = productAttributeFormatter;
+            _shoppingCartService = shoppingCartService;
             _storeService = storeService;
             _taxService = taxService;
         }
@@ -96,6 +109,16 @@ namespace Nop.Web.Areas.Admin.Factories
             //set default search values
             searchModel.ShoppingCartType = ShoppingCartType.ShoppingCart;
 
+            //prepare available billing countries
+            searchModel.AvailableCountries = _countryService.GetAllCountriesForBilling(showHidden: true)
+                .Select(country => new SelectListItem { Text = country.Name, Value = country.Id.ToString() }).ToList();
+            searchModel.AvailableCountries.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+
+            //prepare available stores
+            _baseAdminModelFactory.PrepareStores(searchModel.AvailableStores);
+
+            searchModel.HideStoresList = _catalogSettings.IgnoreStoreLimitations || searchModel.AvailableStores.SelectionIsNotPossible();
+
             //prepare nested search model
             PrepareShoppingCartItemSearchModel(searchModel.ShoppingCartItemSearchModel);
 
@@ -116,8 +139,12 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get customers with shopping carts
-            var customers = _customerService.GetAllCustomers(loadOnlyWithShoppingCart: true,
-                sct: searchModel.ShoppingCartType,
+            var customers = _customerService.GetCustomersWithShoppingCarts(searchModel.ShoppingCartType,
+                storeId: searchModel.StoreId,
+                productId: searchModel.ProductId,
+                createdFromUtc: searchModel.StartDate,
+                createdToUtc: searchModel.EndDate,
+                countryId: searchModel.BillingCountryId,
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
@@ -134,8 +161,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     //fill in additional values (not existing in the entity)
                     shoppingCartModel.CustomerEmail = customer.IsRegistered()
                         ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
-                    shoppingCartModel.TotalItems = customer.ShoppingCartItems
-                        .Where(item => item.ShoppingCartType == searchModel.ShoppingCartType).Sum(item => item.Quantity);
+                    shoppingCartModel.TotalItems = _shoppingCartService.GetShoppingCart(customer, searchModel.ShoppingCartType,
+                        searchModel.StoreId, searchModel.ProductId, searchModel.StartDate, searchModel.EndDate).Sum(item => item.Quantity);
 
                     return shoppingCartModel;
                 }),
@@ -160,7 +187,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(customer));
 
             //get shopping cart items
-            var items = customer.ShoppingCartItems.Where(item => item.ShoppingCartType == searchModel.ShoppingCartType).ToList();
+            var items = _shoppingCartService.GetShoppingCart(customer, searchModel.ShoppingCartType,
+                searchModel.StoreId, searchModel.ProductId, searchModel.StartDate, searchModel.EndDate);
 
             //prepare list model
             var model = new ShoppingCartItemListModel
