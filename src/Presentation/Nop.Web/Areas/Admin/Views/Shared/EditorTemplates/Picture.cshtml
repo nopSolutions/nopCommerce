@@ -98,6 +98,7 @@
         $("#@(clientId + "remove")").click(function(e) {
             $("#@(clientId + "image")").html("<img src='@pictureService.GetDefaultPictureUrl(pictureSize)'/>");
             $("#@(clientId + "value") input").val(0);
+            $("#@(clientId) .qq-upload-list-selector").empty();
             $(this).hide();
         });
     });
