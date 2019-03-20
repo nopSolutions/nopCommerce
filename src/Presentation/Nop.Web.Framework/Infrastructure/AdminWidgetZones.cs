@@ -16,6 +16,7 @@
         public static string AllSettingsBottom => "admin_all_settings_bottom";
         public static string AllSettingsTop => "admin_all_settings_top";
         public static string BlogCommentListButtons => "admin_blog_comment_list_buttons";
+        public static string BlogDetailsBlock => "admin_blog_details_block";
         public static string BlogDetailsButtons => "admin_blog_details_buttons";
         public static string BlogListButtons => "admin_blog_list_buttons";
         public static string BlogPostDetailsBlock => "admin_blog_post_details_block";
@@ -95,18 +96,15 @@
         public static string ForumGroupDetailsButtons => "admin_forum_group_details_buttons";
         public static string ForumGroupDetailsTop => "admin_forum_group_details_top";
         public static string ForumListButtons => "admin_forum_list_buttons";
-        public static string ForumSettingsBottom => "admin_forum_settings_bottom";
         public static string ForumSettingsButtons => "admin_forum_settings_buttons";
-        public static string ForumSettingsTop => "admin_forum_settings_top";
-        public static string GdprSettingsBottom => "admin_gdpr_settings_bottom";
+        public static string ForumSettingsDetailsBlock => "admin_forum_settings_details_block";
         public static string GdprSettingsButtons => "admin_gdpr_settings_buttons";
-        public static string GdprSettingsTop => "admin_gdpr_common_settings_top";
+        public static string GdprSettingsDetailsBlock => "admin_gdpr_common_settings_details_block";
         public static string GdprConsentDetailsBottom => "admin_gdpr_consent_details_bottom";
         public static string GdprConsentDetailsButtons => "admin_gdpr_consent_details_buttons";
         public static string GdprConsentDetailsTop => "admin_gdpr_consent_details_top";
         public static string GeneralCommonDetailsBlock => "admin_general_common_details_block";
         public static string GeneralCommonSettingsButtons => "admin_general_common_settings_buttons";
-        public static string GeneralCommonSettingsTop => "admin_general_common_settings_top";
         public static string GiftCardDetailsBlock => "admin_gift_card_details_block";
         public static string GiftCardDetailsButtons => "admin_gift_card_details_buttons";
         public static string GiftCardListButtons => "admin_gift_card_list_buttons";
@@ -129,8 +127,8 @@
         public static string ManufacturerListButtons => "admin_manufacturer_list_buttons";
         public static string ManufacturerTemplateListButtons => "admin_manufacturer_template_list_buttons";
         public static string MeasureListButtons => "admin_measure_list_buttons";
-        public static string MediaSettingsBottom => "admin_media_settings_bottom";
         public static string MediaSettingsButtons => "admin_media_settings_buttons";
+        public static string MediaSettingsDetailsBlock => "admin_media_settings_details_block";
         public static string MediaSettingsTop => "admin_media_settings_top";
         public static string MenuBefore => "admin_menu_before";
         public static string MessageTemplateDetailsBottom => "admin_message_template_details_bottom";
@@ -139,6 +137,7 @@
         public static string MessageTemplateListButtons => "admin_message_template_list_buttons";
         public static string MessageTemplateTestButtons => "admin_message_template_test_buttons";
         public static string NewsCommentListButtons => "admin_news_comment_list_buttons";
+        public static string NewsDetailsBlock => "admin_news_details_block";
         public static string NewsDetailsButtons => "admin_news_details_buttons";
         public static string NewsItemsDetailsBlock => "admin_news_items_details_block";
         public static string NewsLetterSubscriptionListButtons => "admin_newsletter_subscription_list_buttons";
@@ -286,8 +285,8 @@
         public static string VendorDetailsBlock => "admin_vendor_details_block";
         public static string VendorDetailsButtons => "admin_vendor_details_buttons";
         public static string VendorListButtons => "admin_vendor_list_buttons";
-        public static string VendorSettingsBottom => "admin_vendor_settings_bottom";
         public static string VendorSettingsButtons => "admin_vendor_settings_buttons";
+        public static string VendorSettingsDetailsBlock => "admin_vendor_settings_details_block";
         public static string VendorSettingsTop => "admin_vendor_settings_top";
         public static string WarehouseDetailsBottom => "admin_warehouse_details_bottom";
         public static string WarehouseDetailsButtons => "admin_warehouse_details_buttons";

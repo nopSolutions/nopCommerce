@@ -1,0 +1,85 @@
+@model GdprSettingsModel
+
+<div class="panel-body">
+    <div id="consent-grid"></div>
+
+    <script>
+        $(document).ready(function() {
+            $("#consent-grid").kendoGrid({
+                dataSource: {
+                    type: "json",
+                    transport: {
+                        read: {
+                            url: "@Html.Raw(Url.Action("GdprConsentList", "Setting"))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        }
+                    },
+                    schema: {
+                        data: "Data",
+                        total: "Total",
+                        errors: "Errors"
+                    },
+                    error: function(e) {
+                        display_kendoui_grid_error(e);
+                        // Cancel the changes
+                        this.cancelChanges();
+                    },
+                    pageSize: @(Model.GdprConsentSearchModel.PageSize),
+                    serverPaging: true,
+                    serverFiltering: true,
+                    serverSorting: true
+                },
+                pageable: {
+                    refresh: true,
+                    pageSizes: [@(Model.GdprConsentSearchModel.AvailablePageSizes)],
+                    @await Html.PartialAsync("_GridPagerMessages")
+                },
+                editable: {
+                    confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                    mode: "inline"
+                },
+                scrollable: false,
+                columns: [
+                    {
+                        field: "Message",
+                        title: "@T("Admin.Configuration.Settings.Gdpr.Consent.Message")"
+                    }, {
+                        field: "IsRequired",
+                        title: "@T("Admin.Configuration.Settings.Gdpr.Consent.IsRequired")",
+                        headerAttributes: { style: "text-align:center" },
+                        attributes: { style: "text-align:center" },
+                        template: '# if(IsRequired) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
+                    }, {
+                        field: "DisplayDuringRegistration",
+                        title: "@T("Admin.Configuration.Settings.Gdpr.Consent.DisplayDuringRegistration")",
+                        headerAttributes: { style: "text-align:center" },
+                        attributes: { style: "text-align:center" },
+                        template: '# if(DisplayDuringRegistration) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
+                    }, {
+                        field: "DisplayOnCustomerInfoPage",
+                        title: "@T("Admin.Configuration.Settings.Gdpr.Consent.DisplayOnCustomerInfoPage")",
+                        headerAttributes: { style: "text-align:center" },
+                        attributes: { style: "text-align:center" },
+                        template: '# if(DisplayOnCustomerInfoPage) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
+                    }, {
+                        field: "DisplayOrder",
+                        title: "@T("Admin.Configuration.Settings.Gdpr.Consent.DisplayOrder")"
+                    }, {
+                        field: "Id",
+                        title: "@T("Admin.Common.Edit")",
+                        headerAttributes: { style: "text-align:center" },
+                        attributes: { style: "text-align:center" },
+                        template: '<a class="btn btn-default" href="@Url.Content("~/Admin/Setting/EditGdprConsent/")#=Id#"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>'
+                    }
+                ]
+            });
+        });
+    </script>
+</div>
+<div class="panel-footer">
+    <button type="submit" id="btnAddNewConsent" name="btnAddNewConsent" onclick="javascript:setLocation('@(Url.Action("CreateGdprConsent", "Setting"))'); return false;" class="btn btn-primary">
+        @T("Admin.Configuration.Settings.Gdpr.Consent.AddNew")
+    </button>
+</div>
