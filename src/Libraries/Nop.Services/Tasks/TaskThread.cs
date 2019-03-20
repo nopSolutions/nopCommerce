@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Net;
+using System.Net.Http;
 using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Tasks;
 using Nop.Core.Infrastructure;
+using Nop.Services.Localization;
 using Nop.Services.Logging;
 
 namespace Nop.Services.Tasks
@@ -19,18 +21,20 @@ namespace Nop.Services.Tasks
         #region Fields
 
         private static readonly string _scheduleTaskUrl;
+        private static readonly IStoreContext _storeContext;
         private readonly Dictionary<string, string> _tasks;
         private Timer _timer;
         private bool _disposed;
+        private static readonly int? _timeout;
 
         #endregion
 
         #region Ctors
 
         static TaskThread()
-        {
-            var storeContext = EngineContext.Current.Resolve<IStoreContext>();
-            _scheduleTaskUrl = $"{storeContext.CurrentStore.Url}{NopTaskDefaults.ScheduleTaskPath}";
+        {            _storeContext = EngineContext.Current.Resolve<IStoreContext>();
+            _scheduleTaskUrl = $"{_storeContext.CurrentStore.Url}{NopTaskDefaults.ScheduleTaskPath}";
+            _timeout = EngineContext.Current.Resolve<CommonSettings>().ScheduleTaskRunTimeout;
         }
 
         internal TaskThread()
@@ -50,30 +54,46 @@ namespace Nop.Services.Tasks
 
             StartedUtc = DateTime.UtcNow;
             IsRunning = true;
-            foreach (var taskType in _tasks.Values)
+            foreach (var taskName in _tasks.Keys)
             {
+                var taskType = _tasks[taskName];
+
                 //create and send post data
-                var postData = new NameValueCollection
+                var postData = new List<KeyValuePair<string, string>>
                 {
-                    { "taskType", taskType }
+                    new KeyValuePair<string, string>("taskType", taskType)
                 };
 
                 try
                 {
-                    using (var client = new WebClient())
+                    using (var client = new HttpClient())
                     {
-                        client.UploadValues(_scheduleTaskUrl, postData);
+                        if (_timeout.HasValue)
+                        {
+                            client.Timeout = TimeSpan.FromMilliseconds(_timeout.Value);
+                        }
+
+                        var task = client.PostAsync(_scheduleTaskUrl, new FormUrlEncodedContent(postData));
+                        task.Wait();
                     }
                 }
                 catch (Exception ex)
                 {
                     var _serviceScopeFactory = EngineContext.Current.Resolve<IServiceScopeFactory>();
-
+                    
                     using (var scope = _serviceScopeFactory.CreateScope())
                     {
                         // Resolve
                         var logger = scope.ServiceProvider.GetRequiredService<ILogger>();
-                        logger.Error(ex.Message, ex);
+                        var localizationService = scope.ServiceProvider.GetRequiredService<ILocalizationService>();
+                        var storeContext = scope.ServiceProvider.GetRequiredService<IStoreContext>();
+
+                        var message = ex.InnerException?.GetType() == typeof(TaskCanceledException) ? localizationService.GetResource("ScheduleTasks.TimeoutError") : ex.Message;
+
+                        message = string.Format(localizationService.GetResource("ScheduleTasks.Error"), taskName,
+                            message, taskType, storeContext.CurrentStore.Name, _scheduleTaskUrl);
+
+                        logger.Error(message, ex);
                     }
                 }
             }
@@ -104,7 +124,7 @@ namespace Nop.Services.Tasks
         /// </summary>
         public void Dispose()
         {
-            if (_timer == null || _disposed) 
+            if (_timer == null || _disposed)
                 return;
 
             lock (this)
