@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -472,6 +472,22 @@ namespace Nop.Core
                 rawUrl = $"{request.PathBase}{request.Path}{request.QueryString}";
 
             return rawUrl;
+        }
+        
+        /// <summary>
+        /// Gets whether the request is made with AJAX 
+        /// </summary>
+        /// <param name="request">HTTP request</param>
+        /// <returns>Result</returns>
+        public virtual bool IsAjaxRequest(HttpRequest request)
+        {
+            if (request == null)
+                throw new ArgumentNullException(nameof(request));
+
+            if (request.Headers == null)
+                return false;
+
+            return request.Headers["X-Requested-With"] == "XMLHttpRequest";
         }
 
         #endregion
