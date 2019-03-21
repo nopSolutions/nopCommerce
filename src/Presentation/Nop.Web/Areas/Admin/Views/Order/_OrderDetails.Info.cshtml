@@ -1,4 +1,4 @@
-﻿@model OrderModel
+@model OrderModel
 
 @using Nop.Core.Domain.Tax;
 @using Nop.Core.Domain.Orders;
@@ -6,12 +6,80 @@
 
 @if (!Model.IsLoggedInAsVendor)
 {
-    <script>
-        $(document).ready(function () {
+    <script type="text/javascript">
+	
+	$(document).ready(function () {
             toggleChangeOrderStatus(false);
             toggleOrderTotals(false);
             toggleCC(false);
+
+            $("#OrderSubtotalInclTaxValue, #OrderSubTotalDiscountInclTaxValue, #OrderShippingInclTaxValue, #PaymentMethodAdditionalFeeInclTaxValue, #TaxValue, #OrderTotalDiscountValue").on('change', function () {
+                updateTotal();
+            });
         });
+
+        function updateTotal() {
+
+            var TaxRatesValue = $("#TaxRatesValue").val();
+
+            // Get taxRate from TaxRatesValue
+            var TaxRatesValue = $("#TaxRatesValue").val().split(":");
+
+            var taxRate = 0;
+            if (TaxRatesValue.length > 1)
+                taxRate = parseFloat(TaxRatesValue[0]);
+
+            // Order subtotal with tax
+            var orderSubtotalInclTaxValue = parseFloat($("#OrderSubtotalInclTaxValue").val());
+
+            //  Order subtotal without tax
+            var orderSubtotalExclTaxValue = orderSubtotalInclTaxValue / ((100 + taxRate) / 100); 
+            $("#OrderSubtotalExclTaxValue").val(orderSubtotalExclTaxValue.toFixed(4));
+
+
+            // Order subTotal discount with tax
+            var orderSubTotalDiscountInclTaxValue = parseFloat($("#OrderSubTotalDiscountInclTaxValue").val());
+
+            // Order subtotal discount without tax
+            var orderSubTotalDiscountExclTaxValue = orderSubTotalDiscountInclTaxValue / ((100 + taxRate) / 100);
+            $("#OrderSubTotalDiscountExclTaxValue").val(orderSubTotalDiscountExclTaxValue.toFixed(4));
+
+
+            // Order shipping with tax
+            var orderShippingInclTaxValue = parseFloat($("#OrderShippingInclTaxValue").val());
+
+            // Order shipping without tax
+            var orderShippingExclTaxValue = orderShippingInclTaxValue / ((100 + taxRate) / 100);
+            $("#OrderShippingExclTaxValue").val(orderShippingExclTaxValue.toFixed(4));
+
+
+            // Payment method additional fee with tax
+            var paymentMethodAdditionalFeeInclTaxValue = parseFloat($("#PaymentMethodAdditionalFeeInclTaxValue").val());
+
+            // Order shipping without tax
+            var paymentMethodAdditionalFeeExclTaxValue = paymentMethodAdditionalFeeInclTaxValue / ((100 + taxRate) / 100);
+            $("#PaymentMethodAdditionalFeeExclTaxValue").val(paymentMethodAdditionalFeeExclTaxValue.toFixed(4));
+
+            //  Total order without tax
+            var orderTotalExclTaxValue = orderSubtotalExclTaxValue - orderSubTotalDiscountExclTaxValue + orderShippingExclTaxValue + paymentMethodAdditionalFeeExclTaxValue;
+            
+            // Total order with tax
+            var orderTotalInclTaxValue = orderSubtotalInclTaxValue - orderSubTotalDiscountInclTaxValue + orderShippingInclTaxValue + paymentMethodAdditionalFeeInclTaxValue;
+            
+            // Tax value
+            var taxValue = orderTotalInclTaxValue - orderTotalExclTaxValue;
+            $("#TaxValue").val(taxValue.toFixed(4));
+
+            // Discount
+            var orderTotalDiscountValue = parseFloat($("#OrderTotalDiscountValue").val());
+
+            // orderTotalInclTaxValue = orderTotalInclTaxValue - orderTotalDiscountValue
+            orderTotalInclTaxValue -= orderTotalDiscountValue;
+
+            // Total order with tax
+            $("#OrderTotalValue").val(orderTotalInclTaxValue.toFixed(4));                                                              
+            
+        }
 
         function toggleChangeOrderStatus(editmode) {
             if (editmode) {
@@ -74,7 +142,8 @@
         }
     </script>
 }
-<div class="panel-body">
+<div class="panel-group">
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_order_details_info_top", additionalData = Model.Id })
     <div class="panel panel-default">
         <div class="panel-body">
             @if (!Model.IsLoggedInAsVendor)
@@ -402,7 +471,7 @@
                             <nop-label asp-for="RedeemedRewardPoints" />
                         </div>
                         <div class="col-md-9">
-                            <div class="form-text-row">@($"{Model.RedeemedRewardPoints}{T("Admin.Orders.Fields.RedeemedRewardPoints.Points")} {Model.RedeemedRewardPointsAmount}")</div>
+                            <div class="form-text-row">@Model.RedeemedRewardPoints + @T("Admin.Orders.Fields.RedeemedRewardPoints.Points").Text + "/" + @Model.RedeemedRewardPointsAmount</div>
                         </div>
                     </div>
                 }
@@ -822,4 +891,5 @@
             </div>
         </div>
     </div>
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_order_details_info_bottom", additionalData = Model.Id })
 </div>
