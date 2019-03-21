@@ -41,8 +41,8 @@ namespace Nop.Services.Tests.Shipping
         private Store _store;
         private Mock<IStoreContext> _storeContext;
         private Mock<IPriceCalculationService> _priceCalcService;
-        private ProviderManager<IPickupPointProvider> _pickUpProviderManager;
-        private ProviderManager<IShippingRateComputationMethod> _shippingProviderManager;
+        private IPickupPluginManager _pickupPluginManager;
+        private IShippingPluginManager _shippingPluginManager;
 
         [SetUp]
         public new void SetUp()
@@ -60,7 +60,7 @@ namespace Nop.Services.Tests.Shipping
             _checkoutAttributeParser = new Mock<ICheckoutAttributeParser>();
 
             var cacheManager = new NopNullCache();
-            
+
             _productService = new Mock<IProductService>();
 
             _eventPublisher = new Mock<IEventPublisher>();
@@ -70,10 +70,10 @@ namespace Nop.Services.Tests.Shipping
             var loger = new Mock<ILogger>();
             var webHelper = new Mock<IWebHelper>();
 
-            var pluginService = new PluginService(customerService.Object, loger.Object , CommonHelper.DefaultFileProvider, webHelper.Object);
+            var pluginService = new PluginService(customerService.Object, loger.Object, CommonHelper.DefaultFileProvider, webHelper.Object);
 
-            _pickUpProviderManager = new ProviderManager<IPickupPointProvider>(pluginService);
-            _shippingProviderManager = new ProviderManager<IShippingRateComputationMethod>(pluginService);
+            _pickupPluginManager = new PickupPluginManager(pluginService, _shippingSettings);
+            _shippingPluginManager = new ShippingPluginManager(pluginService, _shippingSettings);
 
             _localizationService = new Mock<ILocalizationService>();
             _addressService = new Mock<IAddressService>();
@@ -93,14 +93,13 @@ namespace Nop.Services.Tests.Shipping
                 _genericAttributeService.Object,
                 _localizationService.Object,
                 _logger,
-                pluginService,
+                _pickupPluginManager,
                 _priceCalcService.Object,
                 _productAttributeParser.Object,
                 _productService.Object,
-                _pickUpProviderManager,
-                _shippingProviderManager,
                 _shippingMethodRepository.Object,
                 _warehouseRepository.Object,
+                _shippingPluginManager,
                 _storeContext.Object,
                 _shippingSettings,
                 _shoppingCartSettings);
@@ -109,7 +108,7 @@ namespace Nop.Services.Tests.Shipping
         [Test]
         public void Can_load_shippingRateComputationMethods()
         {
-            var srcm = _shippingProviderManager.LoadAllProviders();
+            var srcm = _shippingPluginManager.LoadAllPlugins();
             srcm.ShouldNotBeNull();
             srcm.Any().ShouldBeTrue();
         }
@@ -117,18 +116,18 @@ namespace Nop.Services.Tests.Shipping
         [Test]
         public void Can_load_shippingRateComputationMethod_by_systemKeyword()
         {
-            var srcm = _shippingProviderManager.LoadProviderBySystemName("FixedRateTestShippingRateComputationMethod");
+            var srcm = _shippingPluginManager.LoadPluginBySystemName("FixedRateTestShippingRateComputationMethod");
             srcm.ShouldNotBeNull();
         }
 
         [Test]
         public void Can_load_active_shippingRateComputationMethods()
         {
-            var srcm =_shippingProviderManager.LoadActiveProviders(_shippingSettings.ActiveShippingRateComputationMethodSystemNames);
+            var srcm = _shippingPluginManager.LoadActivePlugins(_shippingSettings.ActiveShippingRateComputationMethodSystemNames);
             srcm.ShouldNotBeNull();
             srcm.Any().ShouldBeTrue();
         }
-        
+
         [Test]
         public void Can_get_shoppingCart_totalWeight_without_attributes()
         {

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -15,7 +15,6 @@ using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
-using Nop.Core.Plugins;
 using Nop.Services.Affiliates;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
@@ -59,6 +58,7 @@ namespace Nop.Services.Orders
         private readonly ILogger _logger;
         private readonly IOrderService _orderService;
         private readonly IOrderTotalCalculationService _orderTotalCalculationService;
+        private readonly IPaymentPluginManager _paymentPluginManager;
         private readonly IPaymentService _paymentService;
         private readonly IPdfService _pdfService;
         private readonly IPriceCalculationService _priceCalculationService;
@@ -66,9 +66,9 @@ namespace Nop.Services.Orders
         private readonly IProductAttributeFormatter _productAttributeFormatter;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly IProductService _productService;
-        private readonly IProviderManager<IShippingRateComputationMethod> _shippingProviderManager;
         private readonly IRewardPointService _rewardPointService;
         private readonly IShipmentService _shipmentService;
+        private readonly IShippingPluginManager _shippingPluginManager;
         private readonly IShippingService _shippingService;
         private readonly IShoppingCartService _shoppingCartService;
         private readonly IStateProvinceService _stateProvinceService;
@@ -107,6 +107,7 @@ namespace Nop.Services.Orders
             ILogger logger,
             IOrderService orderService,
             IOrderTotalCalculationService orderTotalCalculationService,
+            IPaymentPluginManager paymentPluginManager,
             IPaymentService paymentService,
             IPdfService pdfService,
             IPriceCalculationService priceCalculationService,
@@ -114,9 +115,9 @@ namespace Nop.Services.Orders
             IProductAttributeFormatter productAttributeFormatter,
             IProductAttributeParser productAttributeParser,
             IProductService productService,
-            IProviderManager<IShippingRateComputationMethod> shippingProviderManager,
             IRewardPointService rewardPointService,
             IShipmentService shipmentService,
+            IShippingPluginManager shippingPluginManager,
             IShippingService shippingService,
             IShoppingCartService shoppingCartService,
             IStateProvinceService stateProvinceService,
@@ -151,6 +152,7 @@ namespace Nop.Services.Orders
             _logger = logger;
             _orderService = orderService;
             _orderTotalCalculationService = orderTotalCalculationService;
+            _paymentPluginManager = paymentPluginManager;
             _paymentService = paymentService;
             _pdfService = pdfService;
             _priceCalculationService = priceCalculationService;
@@ -158,9 +160,9 @@ namespace Nop.Services.Orders
             _productAttributeFormatter = productAttributeFormatter;
             _productAttributeParser = productAttributeParser;
             _productService = productService;
-            _shippingProviderManager = shippingProviderManager;
             _rewardPointService = rewardPointService;
             _shipmentService = shipmentService;
+            _shippingPluginManager = shippingPluginManager;
             _shippingService = shippingService;
             _shoppingCartService = shoppingCartService;
             _stateProvinceService = stateProvinceService;
@@ -552,7 +554,7 @@ namespace Nop.Services.Orders
                 details.ShippingStatus = ShippingStatus.ShippingNotRequired;
 
             //LoadAllShippingRateComputationMethods
-            var shippingRateComputationMethods = _shippingProviderManager.LoadActiveProviders(_shippingSettings.ActiveShippingRateComputationMethodSystemNames, _workContext.CurrentCustomer, _storeContext.CurrentStore.Id);
+            var shippingRateComputationMethods = _shippingPluginManager.LoadActivePlugins(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id);
 
             //shipping total
             var orderShippingTotalInclTax = _orderTotalCalculationService.GetShoppingCartShippingTotal(details.Cart, true, shippingRateComputationMethods, out var _, out var shippingTotalDiscounts);
@@ -604,7 +606,7 @@ namespace Nop.Services.Orders
 
             //recurring or standard shopping cart?
             details.IsRecurringShoppingCart = _shoppingCartService.ShoppingCartIsRecurring(details.Cart);
-            if (!details.IsRecurringShoppingCart) 
+            if (!details.IsRecurringShoppingCart)
                 return details;
 
             var recurringCyclesError = _shoppingCartService.GetRecurringCycleInfo(details.Cart,
@@ -813,7 +815,7 @@ namespace Nop.Services.Orders
             _orderService.UpdateOrder(order);
 
             //reward points history
-            if (details.RedeemedRewardPointsAmount <= decimal.Zero) 
+            if (details.RedeemedRewardPointsAmount <= decimal.Zero)
                 return order;
 
             _rewardPointService.AddRewardPointsHistoryEntry(details.Customer, -details.RedeemedRewardPoints, order.StoreId,
@@ -1188,7 +1190,7 @@ namespace Nop.Services.Orders
                 var vendorId = orderItem.Product.VendorId;
                 //find existing
                 var vendor = vendors.FirstOrDefault(v => v.Id == vendorId);
-                if (vendor != null) 
+                if (vendor != null)
                     continue;
 
                 //not found. load by Id
@@ -1367,13 +1369,11 @@ namespace Nop.Services.Orders
             var skipPaymentWorkflow = details.OrderTotal == decimal.Zero;
             if (!skipPaymentWorkflow)
             {
-                var paymentMethod =
-                    _paymentService.LoadPaymentMethodBySystemName(processPaymentRequest.PaymentMethodSystemName);
-                if (paymentMethod == null)
-                    throw new NopException("Payment method couldn't be loaded");
+                var paymentMethod = _paymentPluginManager.LoadPluginBySystemName(processPaymentRequest.PaymentMethodSystemName)
+                    ?? throw new NopException("Payment method couldn't be loaded");
 
                 //ensure that payment method is active
-                if (!_paymentService.IsPaymentMethodActive(paymentMethod))
+                if (!_paymentPluginManager.IsPluginActive(paymentMethod))
                     throw new NopException("Payment method is not active");
 
                 if (details.IsRecurringShoppingCart)
@@ -1677,7 +1677,7 @@ namespace Nop.Services.Orders
             var discountUsageHistoryForOrder = _discountService.GetAllDiscountUsageHistory(null, updatedOrder.Customer.Id, updatedOrder.Id);
             foreach (var discount in updateOrderParameters.AppliedDiscounts)
             {
-                if (discountUsageHistoryForOrder.Any(history => history.DiscountId == discount.Id)) 
+                if (discountUsageHistoryForOrder.Any(history => history.DiscountId == discount.Id))
                     continue;
 
                 var d = _discountService.GetDiscountById(discount.Id);
@@ -1805,11 +1805,10 @@ namespace Nop.Services.Orders
                 var skipPaymentWorkflow = details.OrderTotal == decimal.Zero;
                 if (!skipPaymentWorkflow)
                 {
-                    var paymentMethod = _paymentService.LoadPaymentMethodBySystemName(processPaymentRequest.PaymentMethodSystemName);
-                    if (paymentMethod == null)
-                        throw new NopException("Payment method couldn't be loaded");
+                    var paymentMethod = _paymentPluginManager.LoadPluginBySystemName(processPaymentRequest.PaymentMethodSystemName)
+                        ?? throw new NopException("Payment method couldn't be loaded");
 
-                    if (!_paymentService.IsPaymentMethodActive(paymentMethod))
+                    if (!_paymentPluginManager.IsPluginActive(paymentMethod))
                         throw new NopException("Payment method is not active");
 
                     //Old credit card info
@@ -2684,7 +2683,7 @@ namespace Nop.Services.Orders
                     //mark payment status as 'Refunded' if the order total amount is fully refunded
                     order.PaymentStatus = order.OrderTotal == totalAmountRefunded && result.NewPaymentStatus == PaymentStatus.PartiallyRefunded ? PaymentStatus.Refunded : result.NewPaymentStatus;
                     _orderService.UpdateOrder(order);
-                    
+
                     //add a note
                     AddOrderNote(order, $"Order has been partially refunded. Amount = {amountToRefund}");
 
@@ -3006,7 +3005,7 @@ namespace Nop.Services.Orders
                 throw new ArgumentNullException(nameof(cart));
 
             //min order amount sub-total validation
-            if (!cart.Any() || _orderSettings.MinOrderSubtotalAmount <= decimal.Zero) 
+            if (!cart.Any() || _orderSettings.MinOrderSubtotalAmount <= decimal.Zero)
                 return true;
 
             //subtotal
@@ -3028,7 +3027,7 @@ namespace Nop.Services.Orders
             if (cart == null)
                 throw new ArgumentNullException(nameof(cart));
 
-            if (!cart.Any() || _orderSettings.MinOrderTotalAmount <= decimal.Zero) 
+            if (!cart.Any() || _orderSettings.MinOrderTotalAmount <= decimal.Zero)
                 return true;
 
             var shoppingCartTotalBase = _orderTotalCalculationService.GetShoppingCartTotal(cart);

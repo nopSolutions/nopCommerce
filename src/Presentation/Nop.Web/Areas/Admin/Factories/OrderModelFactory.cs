@@ -67,6 +67,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IOrderProcessingService _orderProcessingService;
         private readonly IOrderReportService _orderReportService;
         private readonly IOrderService _orderService;
+        private readonly IPaymentPluginManager _paymentPluginManager;
         private readonly IPaymentService _paymentService;
         private readonly IPictureService _pictureService;
         private readonly IPriceCalculationService _priceCalculationService;
@@ -111,6 +112,7 @@ namespace Nop.Web.Areas.Admin.Factories
             IOrderProcessingService orderProcessingService,
             IOrderReportService orderReportService,
             IOrderService orderService,
+            IPaymentPluginManager paymentPluginManager,
             IPaymentService paymentService,
             IPictureService pictureService,
             IPriceCalculationService priceCalculationService,
@@ -151,6 +153,7 @@ namespace Nop.Web.Areas.Admin.Factories
             _orderProcessingService = orderProcessingService;
             _orderReportService = orderReportService;
             _orderService = orderService;
+            _paymentPluginManager = paymentPluginManager;
             _paymentService = paymentService;
             _pictureService = pictureService;
             _priceCalculationService = priceCalculationService;
@@ -518,7 +521,7 @@ namespace Nop.Web.Areas.Admin.Factories
             model.SubscriptionTransactionId = order.SubscriptionTransactionId;
 
             //payment method info
-            var pm = _paymentService.LoadPaymentMethodBySystemName(order.PaymentMethodSystemName);
+            var pm = _paymentPluginManager.LoadPluginBySystemName(order.PaymentMethodSystemName);
             model.PaymentMethod = pm != null ? pm.PluginDescriptor.FriendlyName : order.PaymentMethodSystemName;
             model.PaymentStatus = _localizationService.GetLocalizedEnum(order.PaymentStatus);
 
@@ -853,7 +856,7 @@ namespace Nop.Web.Areas.Admin.Factories
             _baseAdminModelFactory.PrepareWarehouses(searchModel.AvailableWarehouses);
 
             //prepare available payment methods
-            searchModel.AvailablePaymentMethods = _paymentService.LoadAllPaymentMethods().Select(method =>
+            searchModel.AvailablePaymentMethods = _paymentPluginManager.LoadAllPlugins().Select(method =>
                 new SelectListItem { Text = method.PluginDescriptor.FriendlyName, Value = method.PluginDescriptor.SystemName }).ToList();
             searchModel.AvailablePaymentMethods.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = string.Empty });
 
@@ -1326,7 +1329,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = shipments.Select(shipment =>
                 {
                     //fill in model values from the entity
-                    var shipmentModel = shipment.ToModel<ShipmentModel>();                     
+                    var shipmentModel = shipment.ToModel<ShipmentModel>();
 
                     //convert dates to the user time
                     shipmentModel.ShippedDate = shipment.ShippedDateUtc.HasValue
@@ -1618,7 +1621,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = orderNotes.PaginationByRequestModel(searchModel).Select(orderNote =>
                 {
                     //fill in model values from the entity
-                    var orderNoteModel = orderNote.ToModel<OrderNoteModel>(); 
+                    var orderNoteModel = orderNote.ToModel<OrderNoteModel>();
 
                     //convert dates to the user time
                     orderNoteModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(orderNote.CreatedOnUtc, DateTimeKind.Utc);

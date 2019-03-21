@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Plugins;
 
@@ -7,7 +7,7 @@ namespace Nop.Services.Directory
     /// <summary>
     /// Exchange rate provider interface
     /// </summary>
-    public partial interface IExchangeRateProvider : IProvider
+    public partial interface IExchangeRateProvider : IPlugin
     {
         /// <summary>
         /// Gets currency live rates

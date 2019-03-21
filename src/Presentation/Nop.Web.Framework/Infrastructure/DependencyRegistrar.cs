@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -45,6 +45,7 @@ using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Shipping;
 using Nop.Services.Shipping.Date;
+using Nop.Services.Shipping.Pickup;
 using Nop.Services.Stores;
 using Nop.Services.Tasks;
 using Nop.Services.Tax;
@@ -207,7 +208,6 @@ namespace Nop.Web.Framework.Infrastructure
             builder.RegisterType<GdprService>().As<IGdprService>().InstancePerLifetimeScope();
             builder.RegisterType<PollService>().As<IPollService>().InstancePerLifetimeScope();
             builder.RegisterType<BlogService>().As<IBlogService>().InstancePerLifetimeScope();
-            builder.RegisterType<WidgetService>().As<IWidgetService>().InstancePerLifetimeScope();
             builder.RegisterType<TopicService>().As<ITopicService>().InstancePerLifetimeScope();
             builder.RegisterType<NewsService>().As<INewsService>().InstancePerLifetimeScope();
             builder.RegisterType<DateTimeHelper>().As<IDateTimeHelper>().InstancePerLifetimeScope();
@@ -226,7 +226,16 @@ namespace Nop.Web.Framework.Infrastructure
             builder.RegisterType<EventPublisher>().As<IEventPublisher>().SingleInstance();
             builder.RegisterType<SettingService>().As<ISettingService>().InstancePerLifetimeScope();
 
-            builder.RegisterGeneric(typeof(ProviderManager<>)).As(typeof(IProviderManager<>)).InstancePerLifetimeScope();
+            //plugin managers
+            builder.RegisterGeneric(typeof(PluginManager<>)).As(typeof(IPluginManager<>)).InstancePerLifetimeScope();
+            builder.RegisterType<AuthenticationPluginManager>().As<IAuthenticationPluginManager>().InstancePerLifetimeScope();
+            builder.RegisterType<WidgetPluginManager>().As<IWidgetPluginManager>().InstancePerLifetimeScope();
+            builder.RegisterType<ExchangeRatePluginManager>().As<IExchangeRatePluginManager>().InstancePerLifetimeScope();
+            builder.RegisterType<DiscountPluginManager>().As<IDiscountPluginManager>().InstancePerLifetimeScope();
+            builder.RegisterType<PaymentPluginManager>().As<IPaymentPluginManager>().InstancePerLifetimeScope();
+            builder.RegisterType<PickupPluginManager>().As<IPickupPluginManager>().InstancePerLifetimeScope();
+            builder.RegisterType<ShippingPluginManager>().As<IShippingPluginManager>().InstancePerLifetimeScope();
+            builder.RegisterType<TaxPluginManager>().As<ITaxPluginManager>().InstancePerLifetimeScope();
 
             builder.RegisterType<ActionContextAccessor>().As<IActionContextAccessor>().InstancePerLifetimeScope();
 
@@ -265,10 +274,7 @@ namespace Nop.Web.Framework.Infrastructure
         /// <summary>
         /// Gets order of this dependency registrar implementation
         /// </summary>
-        public int Order
-        {
-            get { return 0; }
-        }
+        public int Order => 0;
     }
 
 
@@ -277,9 +283,8 @@ namespace Nop.Web.Framework.Infrastructure
     /// </summary>
     public class SettingsSource : IRegistrationSource
     {
-        static readonly MethodInfo BuildMethod = typeof(SettingsSource).GetMethod(
-            "BuildRegistration",
-            BindingFlags.Static | BindingFlags.NonPublic);
+        private static readonly MethodInfo _buildMethod =
+            typeof(SettingsSource).GetMethod("BuildRegistration", BindingFlags.Static | BindingFlags.NonPublic);
 
         /// <summary>
         /// Registrations for
@@ -287,19 +292,18 @@ namespace Nop.Web.Framework.Infrastructure
         /// <param name="service">Service</param>
         /// <param name="registrations">Registrations</param>
         /// <returns>Registrations</returns>
-        public IEnumerable<IComponentRegistration> RegistrationsFor(
-            Service service,
+        public IEnumerable<IComponentRegistration> RegistrationsFor(Service service,
             Func<Service, IEnumerable<IComponentRegistration>> registrations)
         {
             var ts = service as TypedService;
             if (ts != null && typeof(ISettings).IsAssignableFrom(ts.ServiceType))
             {
-                var buildMethod = BuildMethod.MakeGenericMethod(ts.ServiceType);
+                var buildMethod = _buildMethod.MakeGenericMethod(ts.ServiceType);
                 yield return (IComponentRegistration)buildMethod.Invoke(null, null);
             }
         }
 
-        static IComponentRegistration BuildRegistration<TSettings>() where TSettings : ISettings, new()
+        private static IComponentRegistration BuildRegistration<TSettings>() where TSettings : ISettings, new()
         {
             return RegistrationBuilder
                 .ForDelegate((c, p) =>
@@ -320,7 +324,7 @@ namespace Nop.Web.Framework.Infrastructure
         /// <summary>
         /// Is adapter for individual components
         /// </summary>
-        public bool IsAdapterForIndividualComponents { get { return false; } }
+        public bool IsAdapterForIndividualComponents => false;
     }
 
 }

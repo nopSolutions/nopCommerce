@@ -1,7 +1,6 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Tax;
-using Nop.Core.Plugins;
 using Nop.Services.Configuration;
 using Nop.Services.Security;
 using Nop.Services.Tax;
@@ -18,11 +17,10 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Fields
 
         private readonly IPermissionService _permissionService;
-        private readonly IProviderManager<ITaxProvider> _taxProviderManager;
         private readonly ISettingService _settingService;
         private readonly ITaxCategoryService _taxCategoryService;
         private readonly ITaxModelFactory _taxModelFactory;
-        private readonly ITaxService _taxService;
+        private readonly ITaxPluginManager _taxPluginManager;
         private readonly TaxSettings _taxSettings;
 
         #endregion
@@ -30,26 +28,24 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Ctor
 
         public TaxController(IPermissionService permissionService,
-            IProviderManager<ITaxProvider> taxProviderManager,
             ISettingService settingService,
             ITaxCategoryService taxCategoryService,
             ITaxModelFactory taxModelFactory,
-            ITaxService taxService,
+            ITaxPluginManager taxPluginManager,
             TaxSettings taxSettings)
         {
             _permissionService = permissionService;
-            _taxProviderManager = taxProviderManager;
             _settingService = settingService;
             _taxCategoryService = taxCategoryService;
             _taxModelFactory = taxModelFactory;
-            _taxService = taxService;
+            _taxPluginManager = taxPluginManager;
             _taxSettings = taxSettings;
         }
 
         #endregion
 
         #region Methods
-        
+
         #region Tax Providers
 
         public virtual IActionResult List()
@@ -88,7 +84,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (string.IsNullOrEmpty(systemName))
                 return RedirectToAction("Providers");
 
-            var taxProvider = _taxProviderManager.LoadProviderBySystemName(systemName);
+            var taxProvider = _taxPluginManager.LoadPluginBySystemName(systemName);
             if (taxProvider == null)
                 return RedirectToAction("Providers");
 

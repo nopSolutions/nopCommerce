@@ -29,6 +29,7 @@ namespace Nop.Services.Tests.Discounts
         private Mock<IEventPublisher> _eventPublisher;
         private Mock<ILocalizationService> _localizationService;
         private Mock<ICategoryService> _categoryService;
+        private IDiscountPluginManager _discountPluginManager;
         private IDiscountService _discountService;
         private Mock<IStoreContext> _storeContext;
         private Mock<ICustomerService> _customerService;
@@ -85,20 +86,21 @@ namespace Nop.Services.Tests.Discounts
             _discountRequirementRepo.Setup(x => x.Table).Returns(new List<DiscountRequirement>().AsQueryable());
 
             _discountUsageHistoryRepo = new Mock<IRepository<DiscountUsageHistory>>();
-            
+
             var loger = new Mock<ILogger>();
             var webHelper = new Mock<IWebHelper>();
 
-            var pluginService = new PluginService(_customerService.Object, loger.Object , CommonHelper.DefaultFileProvider, webHelper.Object);
-            
+            var pluginService = new PluginService(_customerService.Object, loger.Object, CommonHelper.DefaultFileProvider, webHelper.Object);
+
             _localizationService = new Mock<ILocalizationService>();
             _categoryService = new Mock<ICategoryService>();
 
+            _discountPluginManager = new DiscountPluginManager(pluginService);
             _discountService = new DiscountService(_categoryService.Object,
                 _customerService.Object,
+                _discountPluginManager,
                 _eventPublisher.Object,
                 _localizationService.Object,
-                pluginService,
                 _categoryRepo.Object,
                 _discountRepo.Object,
                 _discountRequirementRepo.Object,
@@ -120,7 +122,7 @@ namespace Nop.Services.Tests.Discounts
         [Test]
         public void Can_load_discountRequirementRules()
         {
-            var rules = _discountService.LoadAllDiscountRequirementRules();
+            var rules = _discountPluginManager.LoadAllPlugins();
             rules.ShouldNotBeNull();
             rules.Any().ShouldBeTrue();
         }
@@ -128,7 +130,7 @@ namespace Nop.Services.Tests.Discounts
         [Test]
         public void Can_load_discountRequirementRuleBySystemKeyword()
         {
-            var rule = _discountService.LoadDiscountRequirementRuleBySystemName("TestDiscountRequirementRule");
+            var rule = _discountPluginManager.LoadPluginBySystemName("TestDiscountRequirementRule");
             rule.ShouldNotBeNull();
         }
 
@@ -284,7 +286,7 @@ namespace Nop.Services.Tests.Discounts
         static DiscountExtensions()
         {
             _discountService = new DiscountService(null, null, null, null,
-                null,null,null,null,null, null, null, null, null);
+                null, null, null, null, null, null, null, null, null);
         }
 
         public static decimal GetDiscountAmount(this Discount discount, decimal amount)

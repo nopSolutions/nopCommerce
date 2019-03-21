@@ -1,4 +1,4 @@
-using Nop.Core.Plugins;
+﻿using Nop.Core.Plugins;
 using Nop.Services.Shipping.Tracking;
 
 namespace Nop.Services.Shipping
@@ -6,7 +6,7 @@ namespace Nop.Services.Shipping
     /// <summary>
     /// Provides an interface of shipping rate computation method
     /// </summary>
-    public partial interface IShippingRateComputationMethod : IProvider
+    public partial interface IShippingRateComputationMethod : IPlugin
     {
         /// <summary>
         /// Gets a shipping rate computation method type

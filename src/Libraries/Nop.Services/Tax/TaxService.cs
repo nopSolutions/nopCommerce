@@ -1,5 +1,4 @@
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Nop.Core;
@@ -10,11 +9,9 @@ using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
-using Nop.Core.Plugins;
 using Nop.Services.Common;
 using Nop.Services.Directory;
 using Nop.Services.Logging;
-using Nop.Services.Plugins;
 
 namespace Nop.Services.Tax
 {
@@ -32,10 +29,9 @@ namespace Nop.Services.Tax
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IGeoLookupService _geoLookupService;
         private readonly ILogger _logger;
-        private readonly IPluginService _pluginService;
-        private readonly IProviderManager<ITaxProvider> _taxProviderManager;
         private readonly IStateProvinceService _stateProvinceService;
         private readonly IStoreContext _storeContext;
+        private readonly ITaxPluginManager _taxPluginManager;
         private readonly IWebHelper _webHelper;
         private readonly IWorkContext _workContext;
         private readonly ShippingSettings _shippingSettings;
@@ -52,10 +48,9 @@ namespace Nop.Services.Tax
             IGenericAttributeService genericAttributeService,
             IGeoLookupService geoLookupService,
             ILogger logger,
-            IPluginService pluginService,
-            IProviderManager<ITaxProvider> taxProviderManager,
             IStateProvinceService stateProvinceService,
             IStoreContext storeContext,
+            ITaxPluginManager taxPluginManager,
             IWebHelper webHelper,
             IWorkContext workContext,
             ShippingSettings shippingSettings,
@@ -68,10 +63,9 @@ namespace Nop.Services.Tax
             _genericAttributeService = genericAttributeService;
             _geoLookupService = geoLookupService;
             _logger = logger;
-            _pluginService = pluginService;
-            _taxProviderManager = taxProviderManager;
             _stateProvinceService = stateProvinceService;
             _storeContext = storeContext;
+            _taxPluginManager = taxPluginManager;
             _webHelper = webHelper;
             _workContext = workContext;
             _shippingSettings = shippingSettings;
@@ -260,7 +254,7 @@ namespace Nop.Services.Tax
             isTaxable = true;
 
             //active tax provider
-            var activeTaxProvider = _taxProviderManager.LoadActiveProvider(_taxSettings.ActiveTaxProviderSystemName, customer);
+            var activeTaxProvider = _taxPluginManager.LoadPrimaryPlugin(customer, _storeContext.CurrentStore.Id);
             if (activeTaxProvider == null)
                 return;
 

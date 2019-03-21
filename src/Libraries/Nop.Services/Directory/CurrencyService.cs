@@ -1,14 +1,11 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
-using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
-using Nop.Core.Plugins;
 using Nop.Services.Events;
-using Nop.Services.Plugins;
 using Nop.Services.Stores;
 
 namespace Nop.Services.Directory
@@ -22,8 +19,7 @@ namespace Nop.Services.Directory
 
         private readonly CurrencySettings _currencySettings;
         private readonly IEventPublisher _eventPublisher;
-        private readonly IPluginService _pluginService;
-        private readonly IProviderManager<IExchangeRateProvider> _exchangeRateProviderManager;
+        private readonly IExchangeRatePluginManager _exchangeRatePluginManager;
         private readonly IRepository<Currency> _currencyRepository;
         private readonly IStaticCacheManager _cacheManager;
         private readonly IStoreMappingService _storeMappingService;
@@ -34,16 +30,14 @@ namespace Nop.Services.Directory
 
         public CurrencyService(CurrencySettings currencySettings,
             IEventPublisher eventPublisher,
-            IPluginService pluginService,
-            IProviderManager<IExchangeRateProvider> exchangeRateProviderManager,
+            IExchangeRatePluginManager exchangeRatePluginManager,
             IRepository<Currency> currencyRepository,
             IStaticCacheManager cacheManager,
             IStoreMappingService storeMappingService)
         {
             _currencySettings = currencySettings;
             _eventPublisher = eventPublisher;
-            _pluginService = pluginService;
-            _exchangeRateProviderManager = exchangeRateProviderManager;
+            _exchangeRatePluginManager = exchangeRatePluginManager;
             _currencyRepository = currencyRepository;
             _cacheManager = cacheManager;
             _storeMappingService = storeMappingService;
@@ -54,22 +48,6 @@ namespace Nop.Services.Directory
         #region Methods
 
         #region Currency
-
-        /// <summary>
-        /// Gets currency live rates
-        /// </summary>
-        /// <param name="exchangeRateCurrencyCode">Exchange rate currency code</param>
-        /// <param name="customer">Load records allowed only to a specified customer; pass null to ignore ACL permissions</param>
-        /// <returns>Exchange rates</returns>
-        public virtual IList<ExchangeRate> GetCurrencyLiveRates(string exchangeRateCurrencyCode, Customer customer = null)
-        {
-            var exchangeRateProvider = _exchangeRateProviderManager
-                .LoadActiveProvider(_currencySettings.ActiveExchangeRateProviderSystemName, customer: customer);
-            if (exchangeRateProvider == null)
-                throw new Exception("Active exchange rate provider cannot be loaded");
-
-            return exchangeRateProvider.GetCurrencyLiveRates(exchangeRateCurrencyCode);
-        }
 
         /// <summary>
         /// Deletes currency
@@ -102,19 +80,19 @@ namespace Nop.Services.Directory
             if (currencyId == 0)
                 return null;
 
-            Currency LoadCurrencyFunc()
+            Currency loadCurrencyFunc()
             {
                 return _currencyRepository.GetById(currencyId);
             }
 
             if (!loadCacheableCopy)
-                return LoadCurrencyFunc();
+                return loadCurrencyFunc();
 
             //cacheable copy
             var key = string.Format(NopDirectoryDefaults.CurrenciesByIdCacheKey, currencyId);
             return _cacheManager.Get(key, () =>
             {
-                var currency = LoadCurrencyFunc();
+                var currency = loadCurrencyFunc();
                 if (currency == null)
                     return null;
                 return new CurrencyForCaching(currency);
@@ -144,10 +122,11 @@ namespace Nop.Services.Directory
         /// <returns>Currencies</returns>
         public virtual IList<Currency> GetAllCurrencies(bool showHidden = false, int storeId = 0, bool loadCacheableCopy = true)
         {
-            IList<Currency> LoadCurrenciesFunc()
+            IList<Currency> loadCurrenciesFunc()
             {
                 var query = _currencyRepository.Table;
-                if (!showHidden) query = query.Where(c => c.Published);
+                if (!showHidden)
+                    query = query.Where(c => c.Published);
                 query = query.OrderBy(c => c.DisplayOrder).ThenBy(c => c.Id);
                 return query.ToList();
             }
@@ -160,14 +139,14 @@ namespace Nop.Services.Directory
                 currencies = _cacheManager.Get(key, () =>
                 {
                     var result = new List<Currency>();
-                    foreach (var currency in LoadCurrenciesFunc())
+                    foreach (var currency in loadCurrenciesFunc())
                         result.Add(new CurrencyForCaching(currency));
                     return result;
                 });
             }
             else
             {
-                currencies = LoadCurrenciesFunc();
+                currencies = loadCurrenciesFunc();
             }
 
             //store mapping
@@ -224,6 +203,23 @@ namespace Nop.Services.Directory
         #endregion
 
         #region Conversions
+
+        /// <summary>
+        /// Gets live rates regarding the passed currency
+        /// </summary>
+        /// <param name="currencyCode">Currency code; pass null to use primary exchange rate currency</param>
+        /// <returns>Exchange rates</returns>
+        public virtual IList<ExchangeRate> GetCurrencyLiveRates(string currencyCode = null)
+        {
+            var exchangeRateProvider = _exchangeRatePluginManager.LoadPrimaryPlugin()
+                ?? throw new Exception("Active exchange rate provider cannot be loaded");
+
+            currencyCode = currencyCode
+                ?? GetCurrencyById(_currencySettings.PrimaryExchangeRateCurrencyId)?.CurrencyCode
+                ?? throw new NopException("Primary exchange rate currency is not set");
+
+            return exchangeRateProvider.GetCurrencyLiveRates(currencyCode);
+        }
 
         /// <summary>
         /// Converts currency

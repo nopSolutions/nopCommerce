@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
@@ -13,17 +13,6 @@ namespace Nop.Services.Shipping
     /// </summary>
     public partial interface IShippingService
     {
-        #region Shipping rate computation methods
-
-        /// <summary>
-        /// Is shipping rate computation method active
-        /// </summary>
-        /// <param name="srcm">Shipping rate computation method</param>
-        /// <returns>Result</returns>
-        bool IsShippingRateComputationMethodActive(IShippingRateComputationMethod srcm);
-
-        #endregion
-
         #region Shipping methods
 
         /// <summary>
@@ -102,18 +91,7 @@ namespace Nop.Services.Shipping
         void UpdateWarehouse(Warehouse warehouse);
 
         #endregion
-
-        #region Pickup points
-
-        /// <summary>
-        /// Is pickup point provider active
-        /// </summary>
-        /// <param name="pickupPointProvider">Pickup point provider</param>
-        /// <returns>Result</returns>
-        bool IsPickupPointProviderActive(IPickupPointProvider pickupPointProvider);
-
-        #endregion
-
+        
         #region Workflow
 
         /// <summary>

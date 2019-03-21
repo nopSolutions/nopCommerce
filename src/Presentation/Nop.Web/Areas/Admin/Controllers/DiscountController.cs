@@ -29,6 +29,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly ICategoryService _categoryService;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IDiscountModelFactory _discountModelFactory;
+        private readonly IDiscountPluginManager _discountPluginManager;
         private readonly IDiscountService _discountService;
         private readonly ILocalizationService _localizationService;
         private readonly IManufacturerService _manufacturerService;
@@ -45,6 +46,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             ICategoryService categoryService,
             ICustomerActivityService customerActivityService,
             IDiscountModelFactory discountModelFactory,
+            IDiscountPluginManager discountPluginManager,
             IDiscountService discountService,
             ILocalizationService localizationService,
             IManufacturerService manufacturerService,
@@ -57,6 +59,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             _categoryService = categoryService;
             _customerActivityService = customerActivityService;
             _discountModelFactory = discountModelFactory;
+            _discountPluginManager = discountPluginManager;
             _discountService = discountService;
             _localizationService = localizationService;
             _manufacturerService = manufacturerService;
@@ -282,13 +285,11 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (string.IsNullOrEmpty(systemName))
                 throw new ArgumentNullException(nameof(systemName));
 
-            var discountRequirementRule = _discountService.LoadDiscountRequirementRuleBySystemName(systemName);
-            if (discountRequirementRule == null)
-                throw new ArgumentException("Discount requirement rule could not be loaded");
+            var discountRequirementRule = _discountPluginManager.LoadPluginBySystemName(systemName)
+                ?? throw new ArgumentException("Discount requirement rule could not be loaded");
 
-            var discount = _discountService.GetDiscountById(discountId);
-            if (discount == null)
-                throw new ArgumentException("Discount could not be loaded");
+            var discount = _discountService.GetDiscountById(discountId)
+                ?? throw new ArgumentException("Discount could not be loaded");
 
             var url = discountRequirementRule.GetConfigurationUrl(discount.Id, discountRequirementId);
 
@@ -731,7 +732,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //try to get a discount with the specified id
             var unused = _discountService.GetDiscountById(discountId)
                 ?? throw new ArgumentException("No discount found with the specified id", nameof(discountId));
-                
+
             //try to get a discount usage history entry with the specified id
             var discountUsageHistoryEntry = _discountService.GetDiscountUsageHistoryById(id)
                 ?? throw new ArgumentException("No discount usage history entry found with the specified id", nameof(id));

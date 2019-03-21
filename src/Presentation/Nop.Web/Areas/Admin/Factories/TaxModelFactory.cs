@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Linq;
-using Nop.Core.Domain.Tax;
-using Nop.Core.Plugins;
 using Nop.Services.Tax;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Tax;
@@ -16,24 +14,18 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly IProviderManager<ITaxProvider> _taxProviderManager;
         private readonly ITaxCategoryService _taxCategoryService;
-        private readonly ITaxService _taxService;
-        private readonly TaxSettings _taxSettings;
+        private readonly ITaxPluginManager _taxPluginManager;
 
         #endregion
 
         #region Ctor
 
-        public TaxModelFactory(IProviderManager<ITaxProvider> taxProviderManager,
-            ITaxCategoryService taxCategoryService,
-            ITaxService taxService,
-            TaxSettings taxSettings)
+        public TaxModelFactory(ITaxCategoryService taxCategoryService,
+            ITaxPluginManager taxPluginManager)
         {
-            _taxProviderManager = taxProviderManager;
             _taxCategoryService = taxCategoryService;
-            _taxService = taxService;
-            _taxSettings = taxSettings;
+            _taxPluginManager = taxPluginManager;
         }
 
         #endregion
@@ -84,7 +76,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get tax providers
-            var taxProviders = _taxProviderManager.LoadAllProviders();
+            var taxProviders = _taxPluginManager.LoadAllPlugins();
 
             //prepare grid model
             var model = new TaxProviderListModel
@@ -96,8 +88,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     //fill in additional values (not existing in the entity)
                     taxProviderModel.ConfigurationUrl = provider.GetConfigurationPageUrl();
-                    taxProviderModel.IsPrimaryTaxProvider = taxProviderModel.SystemName
-                        .Equals(_taxSettings.ActiveTaxProviderSystemName, StringComparison.InvariantCultureIgnoreCase);
+                    taxProviderModel.IsPrimaryTaxProvider = _taxPluginManager.IsPluginActive(provider);
 
                     return taxProviderModel;
                 }),

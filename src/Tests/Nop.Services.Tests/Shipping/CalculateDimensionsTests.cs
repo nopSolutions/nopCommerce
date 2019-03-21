@@ -41,8 +41,8 @@ namespace Nop.Services.Tests.Shipping
         private ShoppingCartSettings _shoppingCartSettings;
         private ShippingService _shippingService;
         private Mock<IPriceCalculationService> _priceCalcService;
-        private ProviderManager<IPickupPointProvider> _pickUpProviderManager;
-        private ProviderManager<IShippingRateComputationMethod> _shippingProviderManager;
+        private IPickupPluginManager _pickupPluginManager;
+        private IShippingPluginManager _shippingPluginManager;
 
         [SetUp]
         public new void SetUp()
@@ -71,10 +71,10 @@ namespace Nop.Services.Tests.Shipping
             var loger = new Mock<ILogger>();
             var webHelper = new Mock<IWebHelper>();
 
-            var pluginService = new PluginService(customerService.Object, loger.Object , CommonHelper.DefaultFileProvider, webHelper.Object);
-            _pickUpProviderManager = new ProviderManager<IPickupPointProvider>(pluginService);
-            _shippingProviderManager = new ProviderManager<IShippingRateComputationMethod>(pluginService);
-            
+            var pluginService = new PluginService(customerService.Object, loger.Object, CommonHelper.DefaultFileProvider, webHelper.Object);
+            _pickupPluginManager = new PickupPluginManager(pluginService, _shippingSettings);
+            _shippingPluginManager = new ShippingPluginManager(pluginService, _shippingSettings);
+
             _localizationService = new Mock<ILocalizationService>();
             _addressService = new Mock<IAddressService>();
             _genericAttributeService = new Mock<IGenericAttributeService>();
@@ -93,14 +93,13 @@ namespace Nop.Services.Tests.Shipping
                 _genericAttributeService.Object,
                 _localizationService.Object,
                 _logger,
-                pluginService,
+                _pickupPluginManager,
                 _priceCalcService.Object,
                 _productAttributeParser.Object,
                 _productService.Object,
-                _pickUpProviderManager,
-                _shippingProviderManager,
                 _shippingMethodRepository.Object,
                 _warehouseRepository.Object,
+                _shippingPluginManager,
                 _storeContext.Object,
                 _shippingSettings,
                 _shoppingCartSettings);
@@ -147,7 +146,7 @@ namespace Nop.Services.Tests.Shipping
             width.ShouldEqual(0);
             height.ShouldEqual(0);
         }
-        
+
         [Test]
         public void can_calculate_with_single_item_and_qty_1_should_ignore_cubic_method()
         {
@@ -210,7 +209,7 @@ namespace Nop.Services.Tests.Shipping
                     }
                 })
             };
-            
+
             _shippingService.GetDimensions(items, out var width, out var length, out var height);
             Math.Round(length, 2).ShouldEqual(2.88);
             Math.Round(width, 2).ShouldEqual(2.88);
@@ -257,15 +256,15 @@ namespace Nop.Services.Tests.Shipping
             var items = new List<GetShippingOptionRequest.PackageItem>();
             for (var i = 0; i < 8; i++)
                 items.Add(new GetShippingOptionRequest.PackageItem(new ShoppingCartItem
-                        {
-                            Quantity = 1,
-                            Product = new Product
-                                {
-                                    Length = 1,
-                                    Width = 1,
-                                    Height = 1
-                                }
-                        }));
+                {
+                    Quantity = 1,
+                    Product = new Product
+                    {
+                        Length = 1,
+                        Width = 1,
+                        Height = 1
+                    }
+                }));
 
             _shippingService.GetDimensions(items, out var width, out var length, out var height);
             Math.Round(length, 2).ShouldEqual(2);

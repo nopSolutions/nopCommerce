@@ -14,15 +14,15 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly IExternalAuthenticationService _externalAuthenticationService;
+        private readonly IAuthenticationPluginManager _authenticationPluginManager;
 
         #endregion
 
         #region Ctor
 
-        public ExternalAuthenticationMethodModelFactory(IExternalAuthenticationService externalAuthenticationService)
+        public ExternalAuthenticationMethodModelFactory(IAuthenticationPluginManager authenticationPluginManager)
         {
-            _externalAuthenticationService = externalAuthenticationService;
+            _authenticationPluginManager = authenticationPluginManager;
         }
 
         #endregion
@@ -58,7 +58,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get external authentication methods
-            var externalAuthenticationMethods = _externalAuthenticationService.LoadAllExternalAuthenticationMethods();
+            var externalAuthenticationMethods = _authenticationPluginManager.LoadAllPlugins();
 
             //prepare grid model
             var model = new ExternalAuthenticationMethodListModel
@@ -69,7 +69,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     var externalAuthenticationMethodModel = method.ToPluginModel<ExternalAuthenticationMethodModel>();
 
                     //fill in additional values (not existing in the entity)
-                    externalAuthenticationMethodModel.IsActive = _externalAuthenticationService.IsExternalAuthenticationMethodActive(method);
+                    externalAuthenticationMethodModel.IsActive = _authenticationPluginManager.IsPluginActive(method);
                     externalAuthenticationMethodModel.ConfigurationUrl = method.GetConfigurationPageUrl();
 
                     return externalAuthenticationMethodModel;

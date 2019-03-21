@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Core;
 using Nop.Core.Domain.Directory;
-using Nop.Core.Plugins;
 using Nop.Services.Directory;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
@@ -25,11 +23,10 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly CurrencySettings _currencySettings;
         private readonly ICurrencyService _currencyService;
         private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly IExchangeRatePluginManager _exchangeRatePluginManager;
         private readonly ILocalizationService _localizationService;
         private readonly ILocalizedModelFactory _localizedModelFactory;
-        private readonly IProviderManager<IExchangeRateProvider> _exchangeRateProviderManager;
         private readonly IStoreMappingSupportedModelFactory _storeMappingSupportedModelFactory;
-        private readonly IWorkContext _workContext;
 
         #endregion
 
@@ -38,20 +35,18 @@ namespace Nop.Web.Areas.Admin.Factories
         public CurrencyModelFactory(CurrencySettings currencySettings,
             ICurrencyService currencyService,
             IDateTimeHelper dateTimeHelper,
+            IExchangeRatePluginManager exchangeRatePluginManager,
             ILocalizationService localizationService,
             ILocalizedModelFactory localizedModelFactory,
-            IProviderManager<IExchangeRateProvider> exchangeRateProviderManager,
-            IStoreMappingSupportedModelFactory storeMappingSupportedModelFactory,
-            IWorkContext workContext)
+            IStoreMappingSupportedModelFactory storeMappingSupportedModelFactory)
         {
             _currencySettings = currencySettings;
             _currencyService = currencyService;
             _dateTimeHelper = dateTimeHelper;
+            _exchangeRatePluginManager = exchangeRatePluginManager;
             _localizationService = localizationService;
             _localizedModelFactory = localizedModelFactory;
-            _exchangeRateProviderManager = exchangeRateProviderManager;
             _storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
-            _workContext = workContext;
         }
 
         #endregion
@@ -71,14 +66,13 @@ namespace Nop.Web.Areas.Admin.Factories
             model.AutoUpdateEnabled = _currencySettings.AutoUpdateEnabled;
 
             //prepare available exchange rate providers
-            var availableExchangeRateProviders = _exchangeRateProviderManager.LoadAllProviders(customer: _workContext.CurrentCustomer)
-                .OrderBy(tp => tp.PluginDescriptor).ToList();
+            var availableExchangeRateProviders = _exchangeRatePluginManager.LoadAllPlugins();
+
             model.ExchangeRateProviders = availableExchangeRateProviders.Select(provider => new SelectListItem
             {
                 Text = provider.PluginDescriptor.FriendlyName,
                 Value = provider.PluginDescriptor.SystemName,
-                Selected = provider.PluginDescriptor.SystemName
-                    .Equals(_currencySettings.ActiveExchangeRateProviderSystemName, StringComparison.InvariantCultureIgnoreCase)
+                Selected = _exchangeRatePluginManager.IsPluginActive(provider)
             }).ToList();
 
             //prepare exchange rates
@@ -95,12 +89,8 @@ namespace Nop.Web.Areas.Admin.Factories
             if (models == null)
                 throw new ArgumentNullException(nameof(models));
 
-            //get primary exchange currency
-            var primaryExchangeCurrency = _currencyService.GetCurrencyById(_currencySettings.PrimaryExchangeRateCurrencyId, false)
-                ?? throw new NopException("Primary exchange rate currency is not set");
-
             //get exchange rates
-            var exchangeRates = _currencyService.GetCurrencyLiveRates(primaryExchangeCurrency.CurrencyCode);
+            var exchangeRates = _currencyService.GetCurrencyLiveRates();
 
             //filter by existing currencies
             var currencies = _currencyService.GetAllCurrencies(true, loadCacheableCopy: false);

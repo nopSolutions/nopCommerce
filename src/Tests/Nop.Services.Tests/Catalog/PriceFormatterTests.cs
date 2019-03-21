@@ -30,14 +30,14 @@ namespace Nop.Services.Tests.Catalog
         private Mock<IEventPublisher> _eventPublisher;
         private Mock<IStoreMappingService> _storeMappingService;
         private Mock<IMeasureService> _measureService;
-        private ProviderManager<IExchangeRateProvider> _exchangeRateProviderManager;
+        private IExchangeRatePluginManager _exchangeRatePluginManager;
         private ICurrencyService _currencyService;
         private CurrencySettings _currencySettings;
         private Mock<IWorkContext> _workContext;
         private Mock<ILocalizationService> _localizationService;
         private TaxSettings _taxSettings;
         private IPriceFormatter _priceFormatter;
-        
+
         [SetUp]
         public new void SetUp()
         {
@@ -52,12 +52,12 @@ namespace Nop.Services.Tests.Catalog
                 Id = 1,
                 Name = "Euro",
                 CurrencyCode = "EUR",
-                DisplayLocale =  "",
+                DisplayLocale = "",
                 CustomFormatting = "€0.00",
                 DisplayOrder = 1,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc= DateTime.UtcNow
+                UpdatedOnUtc = DateTime.UtcNow
             };
             var currency2 = new Currency
             {
@@ -69,8 +69,8 @@ namespace Nop.Services.Tests.Catalog
                 DisplayOrder = 2,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc= DateTime.UtcNow
-            };            
+                UpdatedOnUtc = DateTime.UtcNow
+            };
             _currencyRepo = new Mock<IRepository<Currency>>();
             _currencyRepo.Setup(x => x.Table).Returns(new List<Currency> { currency1, currency2 }.AsQueryable());
 
@@ -84,21 +84,26 @@ namespace Nop.Services.Tests.Catalog
             var loger = new Mock<ILogger>();
             var webHelper = new Mock<IWebHelper>();
 
-            var pluginService = new PluginService(customerService.Object, loger.Object , CommonHelper.DefaultFileProvider, webHelper.Object);
-            _exchangeRateProviderManager = new ProviderManager<IExchangeRateProvider>(pluginService);
-            _currencyService = new CurrencyService(_currencySettings, null, pluginService, _exchangeRateProviderManager, _currencyRepo.Object, cacheManager, _storeMappingService.Object);
+            var pluginService = new PluginService(customerService.Object, loger.Object, CommonHelper.DefaultFileProvider, webHelper.Object);
+            _exchangeRatePluginManager = new ExchangeRatePluginManager(_currencySettings, pluginService);
+            _currencyService = new CurrencyService(_currencySettings,
+                null,
+                _exchangeRatePluginManager,
+                _currencyRepo.Object,
+                cacheManager,
+                _storeMappingService.Object);
 
             _taxSettings = new TaxSettings();
 
             _localizationService = new Mock<ILocalizationService>();
             _localizationService.Setup(x => x.GetResource("Products.InclTaxSuffix", 1, false, string.Empty, false)).Returns("{0} incl tax");
             _localizationService.Setup(x => x.GetResource("Products.ExclTaxSuffix", 1, false, string.Empty, false)).Returns("{0} excl tax");
-            
+
             _priceFormatter = new PriceFormatter(_currencySettings, _currencyService, _localizationService.Object,
                 _measureService.Object, _workContext.Object, _taxSettings);
 
             var nopEngine = new Mock<NopEngine>();
-           
+
             nopEngine.Setup(x => x.ServiceProvider).Returns(new TestServiceProvider());
             EngineContext.Replace(nopEngine.Object);
         }
@@ -119,7 +124,7 @@ namespace Nop.Services.Tests.Catalog
                 Id = 1,
                 Name = "Euro",
                 CurrencyCode = "EUR",
-                DisplayLocale =  "",
+                DisplayLocale = "",
                 CustomFormatting = "€0.00"
             };
             var language = new Language
@@ -197,7 +202,7 @@ namespace Nop.Services.Tests.Catalog
             };
             _currencySettings.DisplayCurrencyLabel = true;
             _priceFormatter.FormatPrice(1234.5M, true, currency, language, false, false).ShouldEqual("$1,234.50 (USD)");
-            
+
             _currencySettings.DisplayCurrencyLabel = false;
             _priceFormatter.FormatPrice(1234.5M, true, currency, language, false, false).ShouldEqual("$1,234.50");
         }

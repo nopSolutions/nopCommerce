@@ -1,5 +1,4 @@
-using System.Collections.Generic;
-using Nop.Core.Domain.Customers;
+﻿using System.Collections.Generic;
 using Nop.Core.Domain.Directory;
 
 namespace Nop.Services.Directory
@@ -10,14 +9,6 @@ namespace Nop.Services.Directory
     public partial interface ICurrencyService
     {
         #region Currency
-
-        /// <summary>
-        /// Gets currency live rates
-        /// </summary>
-        /// <param name="exchangeRateCurrencyCode">Exchange rate currency code</param>
-        /// <param name="customer">Load records allowed only to a specified customer; pass null to ignore ACL permissions</param>
-        /// <returns>Exchange rates</returns>
-        IList<ExchangeRate> GetCurrencyLiveRates(string exchangeRateCurrencyCode, Customer customer = null);
 
         /// <summary>
         /// Deletes currency
@@ -65,6 +56,13 @@ namespace Nop.Services.Directory
         #endregion
 
         #region Conversions
+
+        /// <summary>
+        /// Gets live rates regarding the passed currency
+        /// </summary>
+        /// <param name="currencyCode">Currency code; pass null to use primary exchange rate currency</param>
+        /// <returns>Exchange rates</returns>
+        IList<ExchangeRate> GetCurrencyLiveRates(string currencyCode = null);
 
         /// <summary>
         /// Converts currency
