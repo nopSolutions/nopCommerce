@@ -812,10 +812,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     foreach (var error in modelState.Errors)
                         _notificationService.ErrorNotification(error.ErrorMessage);
             }
-
-            //selected tab
-            SaveSelectedTabName();
-
+            
             return RedirectToAction("Order");
         }
 
@@ -1005,10 +1002,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             _customerActivityService.InsertActivity("EditSettings", _localizationService.GetResource("ActivityLog.EditSettings"));
 
             _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
-
-            //selected tab
-            SaveSelectedTabName();
-
+            
             return RedirectToAction("CustomerUser");
         }
 
@@ -1130,10 +1124,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 gdprConsent = model.ToEntity(gdprConsent);
                 _gdprService.UpdateConsent(gdprConsent);
-
-                //selected tab
-                SaveSelectedTabName();
-
+                
                 //locales                
                 UpdateGDPRConsentLocales(gdprConsent, model);
 

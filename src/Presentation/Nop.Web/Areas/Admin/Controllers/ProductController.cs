@@ -860,10 +860,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 if (!continueEditing)
                     return RedirectToAction("List");
-
-                //selected tab
-                SaveSelectedTabName();
-
+                
                 return RedirectToAction("Edit", new { id = product.Id });
             }
 
@@ -1042,10 +1039,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 if (!continueEditing)
                     return RedirectToAction("List");
-
-                //selected tab
-                SaveSelectedTabName();
-
+                
                 return RedirectToAction("Edit", new { id = product.Id });
             }
 
@@ -2643,10 +2637,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 SaveSelectedPanelName("product-product-attributes");
                 return RedirectToAction("Edit", new { id = product.Id });
             }
-
-            //selected tab
-            SaveSelectedTabName();
-
+            
             return RedirectToAction("ProductAttributeMappingEdit", new { id = productAttributeMapping.Id });
         }
 
@@ -2725,10 +2716,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 SaveSelectedPanelName("product-product-attributes");
                 return RedirectToAction("Edit", new { id = product.Id });
             }
-
-            //selected tab
-            SaveSelectedTabName();
-
+            
             return RedirectToAction("ProductAttributeMappingEdit", new { id = productAttributeMapping.Id });
         }
 

@@ -318,10 +318,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 if (!continueEditing)
                     return RedirectToAction("ReturnRequestReasonList");
-
-                //selected tab
-                SaveSelectedTabName();
-
+                
                 return RedirectToAction("ReturnRequestReasonEdit", new { id = returnRequestReason.Id });
             }
 
@@ -455,10 +452,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 if (!continueEditing)
                     return RedirectToAction("ReturnRequestActionList");
-
-                //selected tab
-                SaveSelectedTabName();
-
+                
                 return RedirectToAction("ReturnRequestActionEdit", new { id = returnRequestAction.Id });
             }
 

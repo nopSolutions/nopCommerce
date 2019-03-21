@@ -136,10 +136,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 if (!continueEditing)
                     return RedirectToAction("List");
-
-                //selected tab
-                SaveSelectedTabName();
-
+                
                 return RedirectToAction("Edit", new { id = vendorAttribute.Id });
             }
 
@@ -192,10 +189,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Vendors.VendorAttributes.Updated"));
                 if (!continueEditing)
                     return RedirectToAction("List");
-
-                //selected tab
-                SaveSelectedTabName();
-
+                
                 return RedirectToAction("Edit", new { id = vendorAttribute.Id });
             }
 

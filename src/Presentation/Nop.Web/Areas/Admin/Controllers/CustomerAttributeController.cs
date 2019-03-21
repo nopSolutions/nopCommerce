@@ -140,10 +140,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 if (!continueEditing)
                     return RedirectToAction("List");
-
-                //selected tab
-                SaveSelectedTabName();
-
+                
                 return RedirectToAction("Edit", new { id = customerAttribute.Id });
             }
             
@@ -200,10 +197,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (!continueEditing)
                 return RedirectToAction("List");
-
-            //selected tab
-            SaveSelectedTabName();
-
+            
             return RedirectToAction("Edit", new { id = customerAttribute.Id });
         }
 
