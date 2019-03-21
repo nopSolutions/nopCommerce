@@ -449,6 +449,12 @@ set @resources='
   <LocaleResource Name="Enums.Nop.Core.Domain.Gdpr.GdprRequestType.ProfileChanged">
     <Value>User changed profile</Value>
   </LocaleResource>
+  <LocaleResource Name="ScheduleTasks.Error">
+    <Value>The "{0}" scheduled task failed with the "{1}" error (Task type: "{2}". Store name: "{3}". Task run address: "{4}").</Value>
+  </LocaleResource>    
+  <LocaleResource Name="ScheduleTasks.TimeoutError">
+    <Value>A scheduled task canceled. Timeout expired.</Value>
+  </LocaleResource> 
 </Language>'
 
 CREATE TABLE #LocaleStringResourceTmp
@@ -1429,7 +1435,6 @@ SET [Description] = 'Shipping by land transport'
 WHERE [Name] = 'Ground'
 GO
 
-
 --delete setting
 DELETE FROM [Setting]
 WHERE [Name] = N'producteditorsettings.onecolumnproductpage'
@@ -1533,5 +1538,13 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'mediasettings.useabsolut
 BEGIN
     INSERT [Setting] ([Name], [Value], [StoreId])
     VALUES (N'mediasettings.useabsoluteimagepath', N'True', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'commonsettings.scheduletaskruntimeout')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'commonsettings.scheduletaskruntimeout', N'', 0)
 END
 GO

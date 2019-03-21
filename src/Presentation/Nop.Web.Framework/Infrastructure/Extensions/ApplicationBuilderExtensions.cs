@@ -55,7 +55,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             else
             {
                 //or use special exception handler
-                application.UseExceptionHandler("/errorpage.htm");
+                application.UseExceptionHandler("/Error/Error");
             }
 
             //log errors
