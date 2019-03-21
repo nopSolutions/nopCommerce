@@ -35,13 +35,13 @@
             </div>
 
             <nop-panels id="templates-panels">
-                <nop-panel asp-name="templates-category" asp-title="@T("Admin.System.Templates.Category")" asp-hide-block-attribute-name="@hideCategoryBlockAttributeName" asp-hide="@hideCategoryBlock">@await Html.PartialAsync("_List.Category", Model.TemplatesCategory)</nop-panel>
-                <nop-panel asp-name="templates-manufacturer" asp-title="@T("Admin.System.Templates.Manufacturer")" asp-hide-block-attribute-name="@hideManufacturerBlockAttributeName" asp-hide="@hideManufacturerBlock">@await Html.PartialAsync("_List.Manufacturer", Model.TemplatesManufacturer)</nop-panel>
-                <nop-panel asp-name="templates-product" asp-title="@T("Admin.System.Templates.Product")" asp-hide-block-attribute-name="@hideProductBlockAttributeName" asp-hide="@hideProductBlock">@await Html.PartialAsync("_List.Product", Model.TemplatesProduct)</nop-panel>
-                <nop-panel asp-name="templates-topic" asp-title="@T("Admin.System.Templates.Topic")" asp-hide-block-attribute-name="@hideTopicBlockAttributeName" asp-hide="@hideTopicBlock">@await Html.PartialAsync("_List.Topic", Model.TemplatesTopic)</nop-panel>
+                <nop-panel asp-name="templates-category" asp-icon="fa fa-sitemap" asp-title="@T("Admin.System.Templates.Category")" asp-hide-block-attribute-name="@hideCategoryBlockAttributeName" asp-hide="@hideCategoryBlock">@await Html.PartialAsync("_List.Category", Model.TemplatesCategory)</nop-panel>
+                <nop-panel asp-name="templates-manufacturer" asp-icon="fa fa-industry" asp-title="@T("Admin.System.Templates.Manufacturer")" asp-hide-block-attribute-name="@hideManufacturerBlockAttributeName" asp-hide="@hideManufacturerBlock">@await Html.PartialAsync("_List.Manufacturer", Model.TemplatesManufacturer)</nop-panel>
+                <nop-panel asp-name="templates-product" asp-icon="fa fa-cube" asp-title="@T("Admin.System.Templates.Product")" asp-hide-block-attribute-name="@hideProductBlockAttributeName" asp-hide="@hideProductBlock">@await Html.PartialAsync("_List.Product", Model.TemplatesProduct)</nop-panel>
+                <nop-panel asp-name="templates-topic" asp-icon="fa fa-book" asp-title="@T("Admin.System.Templates.Topic")" asp-hide-block-attribute-name="@hideTopicBlockAttributeName" asp-hide="@hideTopicBlock">@await Html.PartialAsync("_List.Topic", Model.TemplatesTopic)</nop-panel>
+                
+                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.TemplatesDetailsBlock, additionalData = Model })
             </nop-panels>
-
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.TemplatesDetailsBlock, additionalData = Model })
         </div>
     </div>
 </form>

@@ -121,6 +121,7 @@
         public static string LogListButtons => "admin_log_list_buttons";
         public static string MaintenanceBottom => "admin_maintenance_bottom";
         public static string MaintenanceButtons => "admin_maintenance_buttons";
+        public static string MaintenanceDetailsBlock => "admin_maintenance_details_block";
         public static string MaintenanceTop => "admin_maintenance_top";
         public static string ManufacturerDetailsBlock => "admin_manufacturer_details_block";
         public static string ManufacturerDetailsButtons => "admin_manufacturer_details_buttons";

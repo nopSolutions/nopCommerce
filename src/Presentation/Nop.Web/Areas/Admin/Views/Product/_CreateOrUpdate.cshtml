@@ -85,13 +85,14 @@
             <nop-panel asp-name="product-seo" asp-icon="fa fa-search-plus" asp-title="@T("Admin.Common.SEO")" asp-hide-block-attribute-name="@hideSeoBlockAttributeName" asp-hide="@hideSeoBlock" asp-advanced="@(!Model.ProductEditorSettingsModel.Seo)">@await Html.PartialAsync("_CreateOrUpdate.SEO", Model)</nop-panel>
             <nop-panel asp-name="product-related-products" asp-icon="fa fa-object-group" asp-title="@T("Admin.Catalog.Products.RelatedProducts")" asp-hide-block-attribute-name="@hideRelatedProductsBlockAttributeName" asp-hide="@hideRelatedProductsBlock" asp-advanced="@(!Model.ProductEditorSettingsModel.RelatedProducts)">@await Html.PartialAsync("_CreateOrUpdate.RelatedProducts", Model)</nop-panel>
             <nop-panel asp-name="product-crosssells-products" asp-icon="fa fa-random" asp-title="@T("Admin.Catalog.Products.CrossSells")" asp-hide-block-attribute-name="@hideCrossSellsProductsBlockAttributeName" asp-hide="@hideCrossSellsProductsBlock" asp-advanced="@(!Model.ProductEditorSettingsModel.CrossSellsProducts)">@await Html.PartialAsync("_CreateOrUpdate.CrossSellsProducts", Model)</nop-panel>
+            
             @if (Model.Id > 0)
             {
                 <nop-panel asp-name="product-purchased-with-orders" asp-icon="fa fa-cart-arrow-down" asp-title="@T("Admin.Catalog.Products.PurchasedWithOrders")" asp-hide-block-attribute-name="@hidePurchasedWithOrdersBlockAttributeName" asp-hide="@hidePurchasedWithOrdersBlock" asp-advanced="@(!Model.ProductEditorSettingsModel.PurchasedWithOrders)">@await Html.PartialAsync("_CreateOrUpdate.PurchasedWithOrders", Model)</nop-panel>
                 <nop-panel asp-name="product-stock-quantity-history" asp-icon="fa fa-history" asp-title="@T("Admin.Catalog.Products.StockQuantityHistory")" asp-hide-block-attribute-name="@hideStockQuantityHistoryBlockAttributeName" asp-hide="@hideStockQuantityHistoryBlock" asp-advanced="@(!Model.ProductEditorSettingsModel.StockQuantityHistory)">@await Html.PartialAsync("_CreateOrUpdate.StockQuantityHistory", Model)</nop-panel>
             }
+            
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductDetailsBlock, additionalData = Model })
         </nop-panels>
-
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductDetailsBlock, additionalData = Model })
     </div>
 </div>
