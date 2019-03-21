@@ -21,6 +21,29 @@ namespace Nop.Web.Areas.Admin.Controllers
     public abstract partial class BaseAdminController : BaseController
     {
         /// <summary>
+        /// Save selected panel name
+        /// </summary>
+        /// <param name="panelName">Panel name to save</param>
+        /// <param name="persistForTheNextRequest">A value indicating whether a message should be persisted for the next request. Pass null to ignore</param>
+        protected virtual void SaveSelectedPanelName(string tabName, bool persistForTheNextRequest = true)
+        {
+            //keep this method synchronized with
+            //"GetSelectedPanelName" method of \Nop.Web.Framework\Extensions\HtmlExtensions.cs
+            if (string.IsNullOrEmpty(tabName))
+                throw new ArgumentNullException(nameof(tabName));
+
+            const string dataKey = "nop.selected-panel-name";
+            if (persistForTheNextRequest)
+            {
+                TempData[dataKey] = tabName;
+            }
+            else
+            {
+                ViewData[dataKey] = tabName;
+            }
+        }
+
+        /// <summary>
         /// Save selected tab name
         /// </summary>
         /// <param name="tabName">Tab name to save; empty to automatically detect it</param>

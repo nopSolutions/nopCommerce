@@ -127,6 +127,27 @@ namespace Nop.Web.Framework.Extensions
         }
 
         /// <summary>
+        /// Gets a selected panel name (used in admin area to store selected panel name)
+        /// </summary>
+        /// <param name="helper">HtmlHelper</param>
+        /// <returns>Name</returns>
+        public static string GetSelectedPanelName(this IHtmlHelper helper)
+        {
+            //keep this method synchronized with
+            //"SaveSelectedPanelName" method of \Area\Admin\Controllers\BaseAdminController.cs
+            var tabName = string.Empty;
+            const string dataKey = "nop.selected-panel-name";
+
+            if (helper.ViewData.ContainsKey(dataKey))
+                tabName = helper.ViewData[dataKey].ToString();
+
+            if (helper.ViewContext.TempData.ContainsKey(dataKey))
+                tabName = helper.ViewContext.TempData[dataKey].ToString();
+
+            return tabName;
+        }
+
+        /// <summary>
         /// Gets a selected tab name (used in admin area to store selected tab name)
         /// </summary>
         /// <param name="helper">HtmlHelper</param>

@@ -221,8 +221,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
-            //select "return request" tab
-            SaveSelectedTabName("tab-returnrequest");
+            //select an appropriate panel
+            SaveSelectedPanelName("ordersettings-return-request");
 
             //we just redirect a user to the order settings page
             return RedirectToAction("Order", "Setting");
@@ -358,8 +358,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
-            //select "return request" tab
-            SaveSelectedTabName("tab-returnrequest");
+            //select an appropriate panel
+            SaveSelectedPanelName("ordersettings-return-request");
 
             //we just redirect a user to the order settings page
             return RedirectToAction("Order", "Setting");

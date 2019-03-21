@@ -100,6 +100,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
             {
                 Attributes =
                 {
+                    new KeyValuePair<string, string>("id", Name),
                     new KeyValuePair<string, string>("data-panel-name", Name),
                 }
             };
