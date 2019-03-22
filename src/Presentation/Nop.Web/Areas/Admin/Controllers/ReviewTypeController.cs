@@ -83,6 +83,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
+            //select an appropriate panel
+            SaveSelectedPanelName("catalogsettings-review-types");
+
             //we just redirect a user to the catalog settings page
             return RedirectToAction("Catalog", "Setting");
         }
