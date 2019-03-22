@@ -168,17 +168,14 @@ namespace Nop.Services.Orders
                 if (!customerEnteredPricesEqual)
                     return false;
             }
+            
+            if (!shoppingCartItem.Product.IsRental) 
+                return true;
 
             //rental products
-            if (shoppingCartItem.Product.IsRental)
-            {
-                var rentalInfoEqual = shoppingCartItem.RentalStartDateUtc == rentalStartDate && shoppingCartItem.RentalEndDateUtc == rentalEndDate;
-                if (!rentalInfoEqual)
-                    return false;
-            }
-
-            //found?
-            return true;
+            var rentalInfoEqual = shoppingCartItem.RentalStartDateUtc == rentalStartDate && shoppingCartItem.RentalEndDateUtc == rentalEndDate;
+            
+            return rentalInfoEqual;
         }
 
         #endregion
