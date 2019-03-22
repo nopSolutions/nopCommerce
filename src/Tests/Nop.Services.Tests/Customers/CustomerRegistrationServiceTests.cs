@@ -168,7 +168,7 @@ namespace Nop.Services.Tests.Customers
             _customerCustomerRoleMappingRepo = new Mock<IRepository<CustomerCustomerRoleMapping>>();
             
              _customerService = new CustomerService(new CustomerSettings(),
-                new NopNullCache(),
+                new TestCacheManager(),
                 null,
                 null,
                 _eventPublisher.Object,
@@ -179,7 +179,7 @@ namespace Nop.Services.Tests.Customers
                 _customerRoleRepo.Object,
                 _genericAttributeRepo.Object,
                  _shoppingCartRepo.Object,
-                 new NopNullCache(),
+                 new TestCacheManager(),
                 null);
 
             _customerRegistrationService = new CustomerRegistrationService(_customerSettings,

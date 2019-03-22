@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Extensions.Caching.Memory;
 using Moq;
 using Nop.Core;
 using Nop.Core.Caching;
@@ -16,6 +15,7 @@ using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Plugins;
+using Nop.Tests;
 
 namespace Nop.Services.Tests
 {
@@ -74,7 +74,7 @@ namespace Nop.Services.Tests
 
         public static IDiscountService Init()
         {
-            var cacheManager = new TestMemoryCacheManager(new Mock<IMemoryCache>().Object);
+            var cacheManager = new TestCacheManager();
             var discountRepo = new Mock<IRepository<Discount>>();
             var discountRequirementRepo = new Mock<IRepository<DiscountRequirement>>();
             discountRequirementRepo.Setup(x => x.Table).Returns(new List<DiscountRequirement>().AsQueryable());

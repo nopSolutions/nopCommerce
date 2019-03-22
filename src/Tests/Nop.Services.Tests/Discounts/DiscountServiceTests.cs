@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Extensions.Caching.Memory;
 using Moq;
 using Nop.Core;
 using Nop.Core.Data;
@@ -80,7 +79,7 @@ namespace Nop.Services.Tests.Discounts
             _productRepo = new Mock<IRepository<Product>>();
             _productRepo.Setup(x => x.Table).Returns(new List<Product>().AsQueryable());
 
-            var cacheManager = new TestMemoryCacheManager(new Mock<IMemoryCache>().Object);
+            var cacheManager = new TestCacheManager();
             _discountRequirementRepo = new Mock<IRepository<DiscountRequirement>>();
             _discountRequirementRepo.Setup(x => x.Table).Returns(new List<DiscountRequirement>().AsQueryable());
 

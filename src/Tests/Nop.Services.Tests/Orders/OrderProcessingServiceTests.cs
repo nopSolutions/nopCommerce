@@ -145,7 +145,7 @@ namespace Nop.Services.Tests.Orders
             _shoppingCartSettings = new ShoppingCartSettings();
             _catalogSettings = new CatalogSettings();
             
-            var cacheManager = new NopNullCache();
+            var cacheManager = new TestCacheManager();
 
             _currencySettings = new CurrencySettings();
           

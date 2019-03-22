@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -266,6 +266,7 @@ namespace Nop.Core.Caching
             _db.KeyDelete(key);
             _perRequestCacheManager.Remove(key);
         }
+
 
         /// <summary>
         /// Removes items by key pattern

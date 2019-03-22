@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO.Compression;
 using System.Linq;
+using EasyCaching.Core;
+using EasyCaching.InMemory;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
@@ -390,6 +392,19 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                         new GZipCompressorFactory(new GZipCompressionSettings { Level = CompressionLevel.Fastest })
                     };
                 });
+        }
+
+        /// <summary>
+        /// Add and configure EasyCaching service
+        /// </summary>
+        /// <param name="services">Collection of service descriptors</param>
+        public static void AddEasyCaching(this IServiceCollection services)
+        {
+            services.AddEasyCaching(option =>
+            {
+                //use memory cache
+                option.UseInMemory("nopCommerce_memory_cache");
+            });
         }
     }
 }
