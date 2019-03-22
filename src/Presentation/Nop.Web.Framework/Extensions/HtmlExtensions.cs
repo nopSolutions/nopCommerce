@@ -32,12 +32,13 @@ namespace Nop.Web.Framework.Extensions
         /// <param name="localizedTemplate">Template with localizable values</param>
         /// <param name="standardTemplate">Template for standard (default) values</param>
         /// <param name="ignoreIfSeveralStores">A value indicating whether to ignore localization if we have multiple stores</param>
+        /// <param name="cssClass">CSS class for localizedTemplate</param>
         /// <returns></returns>
         public static IHtmlContent LocalizedEditor<T, TLocalizedModelLocal>(this IHtmlHelper<T> helper,
             string name,
             Func<int, HelperResult> localizedTemplate,
             Func<T, HelperResult> standardTemplate,
-            bool ignoreIfSeveralStores = false)
+            bool ignoreIfSeveralStores = false, string cssClass = "")
             where T : ILocalizedModel<TLocalizedModelLocal>
             where TLocalizedModelLocal : ILocalizedLocaleModel
         {
@@ -53,7 +54,8 @@ namespace Nop.Web.Framework.Extensions
             if (localizationSupported)
             {
                 var tabStrip = new StringBuilder();
-                tabStrip.AppendLine($"<div id=\"{name}\" class=\"nav-tabs-custom nav-tabs-localized-fields\">");
+                var cssClassWithSpace = !String.IsNullOrEmpty(cssClass) ? " " + cssClass : null;
+                tabStrip.AppendLine($"<div id=\"{name}\" class=\"nav-tabs-custom nav-tabs-localized-fields{cssClassWithSpace}\">");
                 
                 //render input contains selected tab name
                 var tabNameToSelect = GetSelectedTabName(helper, name);
