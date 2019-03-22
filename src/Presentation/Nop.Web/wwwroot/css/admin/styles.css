@@ -222,11 +222,8 @@ ul.common-list {
 }
 
 .panel-search .search-body {
-  margin-top: 15px;
-}
-
-.panel-search .search-body {
     display: none;
+    margin-top: 15px;
 }
 
 .panel-search.collapsed {

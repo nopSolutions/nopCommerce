@@ -78,6 +78,7 @@
         public static string DashboardOrderreportsAfter => "admin_dashboard_orderreports_after";
         public static string DashboardTop => "admin_dashboard_top";
         public static string DatesAndRangesButtons => "admin_dates_and_ranges_buttons";
+        public static string DatesAndRangesDetailsBlock => "admin_dates_and_ranges_details_block";
         public static string DeliveryDateDetailsBottomp => "admin_delivery_date_details_bottomp";
         public static string DeliveryDateDetailsButtons => "admin_delivery_date_details_buttons";
         public static string DeliveryDateDetailsTop => "admin_delivery_date_details_top";

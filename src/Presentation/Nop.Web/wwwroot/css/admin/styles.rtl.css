@@ -222,12 +222,9 @@ ul.common-list {
     cursor: pointer;
 }
 
-.search-row.opened {
-    margin-bottom: 15px;
-}
-
 .panel-search .search-body {
     display: none;
+    margin-top: 15px;
 }
 
 .panel-search.collapsed {
