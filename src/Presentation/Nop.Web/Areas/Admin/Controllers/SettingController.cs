@@ -131,7 +131,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Utilites
 
-        protected virtual void UpdateGDPRConsentLocales(GdprConsent gdprConsent, GdprConsentModel model)
+        protected virtual void UpdateGdprConsentLocales(GdprConsent gdprConsent, GdprConsentModel model)
         {
             foreach (var localized in model.Locales)
             {
@@ -1081,7 +1081,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _gdprService.InsertConsent(gdprConsent);
 
                 //locales                
-                UpdateGDPRConsentLocales(gdprConsent, model);
+                UpdateGdprConsentLocales(gdprConsent, model);
 
                 _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Settings.Gdpr.Consent.Added"));
 
@@ -1124,9 +1124,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 gdprConsent = model.ToEntity(gdprConsent);
                 _gdprService.UpdateConsent(gdprConsent);
-                
+
                 //locales                
-                UpdateGDPRConsentLocales(gdprConsent, model);
+                UpdateGdprConsentLocales(gdprConsent, model);
 
                 _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Settings.Gdpr.Consent.Updated"));
 
