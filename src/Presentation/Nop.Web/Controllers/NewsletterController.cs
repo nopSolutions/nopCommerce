@@ -104,7 +104,7 @@ namespace Nop.Web.Controllers
         {
             var subscription = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByGuid(token);
             if (subscription == null)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             if (active)
             {

@@ -419,7 +419,7 @@ namespace Nop.Web.Controllers
                                 _localizationService.GetResource("ActivityLog.PublicStore.Login"), customer);
 
                             if (string.IsNullOrEmpty(returnUrl) || !Url.IsLocalUrl(returnUrl))
-                                return RedirectToRoute("HomePage");
+                                return RedirectToRoute("Homepage");
 
                             return Redirect(returnUrl);
                         }
@@ -499,7 +499,7 @@ namespace Nop.Web.Controllers
                 TempData[$"{NopCookieDefaults.Prefix}{NopCookieDefaults.IgnoreEuCookieLawWarning}"] = true; 
             }
 
-            return RedirectToRoute("HomePage");
+            return RedirectToRoute("Homepage");
         }
 
         #endregion
@@ -567,7 +567,7 @@ namespace Nop.Web.Controllers
         {
             var customer = _customerService.GetCustomerByEmail(email);
             if (customer == null)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             if (string.IsNullOrEmpty(_genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.PasswordRecoveryTokenAttribute)))
             {
@@ -606,7 +606,7 @@ namespace Nop.Web.Controllers
         {
             var customer = _customerService.GetCustomerByEmail(email);
             if (customer == null)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             //validate token
             if (!_customerService.IsPasswordRecoveryTokenValid(customer, token))
@@ -930,7 +930,7 @@ namespace Nop.Web.Controllers
                             }
                         default:
                             {
-                                return RedirectToRoute("HomePage");
+                                return RedirectToRoute("Homepage");
                             }
                     }
                 }
@@ -959,7 +959,7 @@ namespace Nop.Web.Controllers
         public virtual IActionResult RegisterResult(string returnUrl)
         {
             if (string.IsNullOrEmpty(returnUrl) || !Url.IsLocalUrl(returnUrl))
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             return Redirect(returnUrl);
         }
@@ -1006,7 +1006,7 @@ namespace Nop.Web.Controllers
         {
             var customer = _customerService.GetCustomerByEmail(email);
             if (customer == null)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             var cToken = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.AccountActivationTokenAttribute);
             if (string.IsNullOrEmpty(cToken))
@@ -1017,7 +1017,7 @@ namespace Nop.Web.Controllers
                     });
 
             if (!cToken.Equals(token, StringComparison.InvariantCultureIgnoreCase))
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             //activate user account
             customer.Active = true;
@@ -1253,7 +1253,7 @@ namespace Nop.Web.Controllers
         {
             var customer = _customerService.GetCustomerByEmail(email);
             if (customer == null)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             var cToken = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.EmailRevalidationTokenAttribute);
             if (string.IsNullOrEmpty(cToken))
@@ -1263,13 +1263,13 @@ namespace Nop.Web.Controllers
                 });
 
             if (!cToken.Equals(token, StringComparison.InvariantCultureIgnoreCase))
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             if (string.IsNullOrEmpty(customer.EmailToRevalidate))
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             if (_customerSettings.UserRegistrationType != UserRegistrationType.EmailValidation)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             //change email
             try
@@ -1487,11 +1487,11 @@ namespace Nop.Web.Controllers
         {
             var orderItem = _orderService.GetOrderItemByGuid(orderItemId);
             if (orderItem == null)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             var product = orderItem.Product;
             if (product == null || !product.HasUserAgreement)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             var model = _customerModelFactory.PrepareUserAgreementModel(orderItem, product);
             return View(model);

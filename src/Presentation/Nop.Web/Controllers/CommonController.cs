@@ -126,11 +126,11 @@ namespace Nop.Web.Controllers
 
             //home page
             if (string.IsNullOrEmpty(returnUrl))
-                returnUrl = Url.RouteUrl("HomePage");
+                returnUrl = Url.RouteUrl("Homepage");
 
             //prevent open redirection attack
             if (!Url.IsLocalUrl(returnUrl))
-                returnUrl = Url.RouteUrl("HomePage");
+                returnUrl = Url.RouteUrl("Homepage");
 
             //language part in URL
             if (_localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
@@ -158,11 +158,11 @@ namespace Nop.Web.Controllers
 
             //home page
             if (string.IsNullOrEmpty(returnUrl))
-                returnUrl = Url.RouteUrl("HomePage");
+                returnUrl = Url.RouteUrl("Homepage");
 
             //prevent open redirection attack
             if (!Url.IsLocalUrl(returnUrl))
-                returnUrl = Url.RouteUrl("HomePage");
+                returnUrl = Url.RouteUrl("Homepage");
 
             return Redirect(returnUrl);
         }
@@ -176,11 +176,11 @@ namespace Nop.Web.Controllers
 
             //home page
             if (string.IsNullOrEmpty(returnUrl))
-                returnUrl = Url.RouteUrl("HomePage");
+                returnUrl = Url.RouteUrl("Homepage");
 
             //prevent open redirection attack
             if (!Url.IsLocalUrl(returnUrl))
-                returnUrl = Url.RouteUrl("HomePage");
+                returnUrl = Url.RouteUrl("Homepage");
 
             return Redirect(returnUrl);
         }
@@ -237,11 +237,11 @@ namespace Nop.Web.Controllers
         public virtual IActionResult ContactVendor(int vendorId)
         {
             if (!_vendorSettings.AllowCustomersToContactVendors)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             var vendor = _vendorService.GetVendorById(vendorId);
             if (vendor == null || !vendor.Active || vendor.Deleted)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             var model = new ContactVendorModel();
             model = _commonModelFactory.PrepareContactVendorModel(model, vendor, false);
@@ -254,11 +254,11 @@ namespace Nop.Web.Controllers
         public virtual IActionResult ContactVendorSend(ContactVendorModel model, bool captchaValid)
         {
             if (!_vendorSettings.AllowCustomersToContactVendors)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             var vendor = _vendorService.GetVendorById(model.VendorId);
             if (vendor == null || !vendor.Active || vendor.Deleted)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             //validate CAPTCHA
             if (_captchaSettings.Enabled && _captchaSettings.ShowOnContactUsPage && !captchaValid)
@@ -290,7 +290,7 @@ namespace Nop.Web.Controllers
         public virtual IActionResult Sitemap(SitemapPageModel pageModel)
         {
             if (!_sitemapSettings.SitemapEnabled)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             var model = _commonModelFactory.PrepareSitemapModel(pageModel);
             return View(model);
@@ -314,11 +314,11 @@ namespace Nop.Web.Controllers
 
             //home page
             if (string.IsNullOrEmpty(returnUrl))
-                returnUrl = Url.RouteUrl("HomePage");
+                returnUrl = Url.RouteUrl("Homepage");
 
             //prevent open redirection attack
             if (!Url.IsLocalUrl(returnUrl))
-                returnUrl = Url.RouteUrl("HomePage");
+                returnUrl = Url.RouteUrl("Homepage");
 
             return Redirect(returnUrl);
         }
@@ -371,21 +371,21 @@ namespace Nop.Web.Controllers
             if (HttpContext.Items["nop.RedirectFromGenericPathRoute"] == null ||
                 !Convert.ToBoolean(HttpContext.Items["nop.RedirectFromGenericPathRoute"]))
             {
-                url = Url.RouteUrl("HomePage");
+                url = Url.RouteUrl("Homepage");
                 permanentRedirect = false;
             }
 
             //home page
             if (string.IsNullOrEmpty(url))
             {
-                url = Url.RouteUrl("HomePage");
+                url = Url.RouteUrl("Homepage");
                 permanentRedirect = false;
             }
 
             //prevent open redirection attack
             if (!Url.IsLocalUrl(url))
             {
-                url = Url.RouteUrl("HomePage");
+                url = Url.RouteUrl("Homepage");
                 permanentRedirect = false;
             }
 

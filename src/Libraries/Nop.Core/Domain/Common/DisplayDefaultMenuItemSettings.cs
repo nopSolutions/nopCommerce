@@ -10,7 +10,7 @@ namespace Nop.Core.Domain.Common
         /// <summary>
         /// Gets or sets a value indicating whether to display "home page" menu item
         /// </summary>
-        public bool DisplayHomePageMenuItem { get; set; }
+        public bool DisplayHomepageMenuItem { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to display "new products" menu item

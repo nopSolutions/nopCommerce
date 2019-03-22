@@ -225,7 +225,7 @@ namespace Nop.Web.Controllers
             }
             if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
             {
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
             }
 
             //disable "order completed" page?
@@ -1692,7 +1692,7 @@ namespace Nop.Web.Controllers
             {
                 //validation
                 if (!_orderSettings.OnePageCheckoutEnabled)
-                    return RedirectToRoute("HomePage");
+                    return RedirectToRoute("Homepage");
 
                 if (_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed)
                     return Challenge();
@@ -1702,17 +1702,17 @@ namespace Nop.Web.Controllers
                 customerId: _workContext.CurrentCustomer.Id, pageSize: 1)
                     .FirstOrDefault();
                 if (order == null)
-                    return RedirectToRoute("HomePage");
+                    return RedirectToRoute("Homepage");
 
                 var paymentMethod = _paymentService.LoadPaymentMethodBySystemName(order.PaymentMethodSystemName);
                 if (paymentMethod == null)
-                    return RedirectToRoute("HomePage");
+                    return RedirectToRoute("Homepage");
                 if (paymentMethod.PaymentMethodType != PaymentMethodType.Redirection)
-                    return RedirectToRoute("HomePage");
+                    return RedirectToRoute("Homepage");
 
                 //ensure that order has been just placed
                 if ((DateTime.UtcNow - order.CreatedOnUtc).TotalMinutes > 3)
-                    return RedirectToRoute("HomePage");
+                    return RedirectToRoute("Homepage");
 
                 //Redirection will not work on one page checkout page because it's AJAX request.
                 //That's why we process it here

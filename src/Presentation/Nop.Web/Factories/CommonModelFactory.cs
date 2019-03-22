@@ -560,8 +560,8 @@ namespace Nop.Web.Factories
                 model.Items.Add(new SitemapModel.SitemapItemModel
                 {
                     GroupTitle = commonGroupTitle,
-                    Name = _localizationService.GetResource("HomePage"),
-                    Url = urlHelper.RouteUrl("HomePage")
+                    Name = _localizationService.GetResource("Homepage"),
+                    Url = urlHelper.RouteUrl("Homepage")
                 });
 
                 //search

@@ -454,7 +454,73 @@ set @resources='
   </LocaleResource>    
   <LocaleResource Name="ScheduleTasks.TimeoutError">
     <Value>A scheduled task canceled. Timeout expired.</Value>
-  </LocaleResource> 
+  </LocaleResource>
+   <LocaleResource Name="Admin.Catalog.Categories.Fields.ShowOnHomePage">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.ShowOnHomePage.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.ShowOnHomePage">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.ShowOnHomePage.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultMenuItemSettings.DisplayHomePageMenuItem">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultMenuItemSettings.DisplayHomePageMenuItem.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.ShowOnHomePage">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Polls.Fields.ShowOnHomePage">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Polls.Fields.ShowOnHomePage.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="HomePage">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="HomePage.Products">
+    <Value></Value>
+  </LocaleResource>
+   <LocaleResource Name="Admin.Catalog.Categories.Fields.ShowOnHomepage">
+    <Value>Show on home page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.ShowOnHomepage.Hint">
+    <Value>Check if you want to show a category on home page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.ShowOnHomepage">
+    <Value>Show on home page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.ShowOnHomepage.Hint">
+    <Value>Check to display this product on your store''s home page. Recommended for your most popular products.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultMenuItemSettings.DisplayHomepageMenuItem">
+    <Value>Display "Home page"</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultMenuItemSettings.DisplayHomepageMenuItem.Hint">
+    <Value>Check if "Home page" menu item should be displayed in the top menu.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.ShowOnHomepage">
+    <Value>Show on home page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Polls.Fields.ShowOnHomepage">
+    <Value>Show on home page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Polls.Fields.ShowOnHomepage.Hint">
+    <Value>Check if you want to show poll on the home page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Homepage">
+    <Value>Home page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Homepage.Products">
+    <Value>Featured products</Value>
+  </LocaleResource>
 </Language>'
 
 CREATE TABLE #LocaleStringResourceTmp
@@ -1547,4 +1613,14 @@ BEGIN
     INSERT [Setting] ([Name], [Value], [StoreId])
     VALUES (N'commonsettings.scheduletaskruntimeout', N'', 0)
 END
+GO
+
+--rename columns
+EXEC sp_RENAME 'Category.ShowOnHomePage' , 'ShowOnHomepage', 'COLUMN'
+GO
+
+EXEC sp_RENAME 'Poll.ShowOnHomePage' , 'ShowOnHomepage', 'COLUMN'
+GO
+
+EXEC sp_RENAME 'Product.ShowOnHomePage' , 'ShowOnHomepage', 'COLUMN'
 GO

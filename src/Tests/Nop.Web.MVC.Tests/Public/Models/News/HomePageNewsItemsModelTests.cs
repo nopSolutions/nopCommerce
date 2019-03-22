@@ -6,13 +6,13 @@ using NUnit.Framework;
 namespace Nop.Web.MVC.Tests.Public.Models.News
 {
     [TestFixture]
-    public class HomePageNewsItemsModelTests
+    public class HomepageNewsItemsModelTests
     {
         [Test]
         public void Can_clone()
         {	    
             //create
-            var model1 = new HomePageNewsItemsModel
+            var model1 = new HomepageNewsItemsModel
             {
                 WorkingLanguageId = 1,
             };
@@ -47,7 +47,7 @@ namespace Nop.Web.MVC.Tests.Public.Models.News
             model1.NewsItems.Add(newsItemModel1);
 
             //clone
-            var model2 = (HomePageNewsItemsModel)model1.Clone();
+            var model2 = (HomepageNewsItemsModel)model1.Clone();
             model2.WorkingLanguageId.ShouldEqual(1);
             model2.NewsItems.ShouldNotBeNull();
             model2.NewsItems.Count.ShouldEqual(1);

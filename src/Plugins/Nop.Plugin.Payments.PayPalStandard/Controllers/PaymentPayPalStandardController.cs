@@ -597,7 +597,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
             if (order != null)
                 return RedirectToRoute("OrderDetails", new { orderId = order.Id });
 
-            return RedirectToRoute("HomePage");
+            return RedirectToRoute("Homepage");
         }
 
         #endregion

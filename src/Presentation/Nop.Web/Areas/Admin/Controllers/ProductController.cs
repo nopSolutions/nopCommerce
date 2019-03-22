@@ -811,8 +811,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                     model.VendorId = _workContext.CurrentVendor.Id;
 
                 //vendors cannot edit "Show on home page" property
-                if (_workContext.CurrentVendor != null && model.ShowOnHomePage)
-                    model.ShowOnHomePage = false;
+                if (_workContext.CurrentVendor != null && model.ShowOnHomepage)
+                    model.ShowOnHomepage = false;
 
                 //product
                 var product = model.ToEntity<Product>();
@@ -923,8 +923,8 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 //we do not validate maximum number of products per vendor when editing existing products (only during creation of new products)
                 //vendors cannot edit "Show on home page" property
-                if (_workContext.CurrentVendor != null && model.ShowOnHomePage != product.ShowOnHomePage)
-                    model.ShowOnHomePage = product.ShowOnHomePage;
+                if (_workContext.CurrentVendor != null && model.ShowOnHomepage != product.ShowOnHomepage)
+                    model.ShowOnHomepage = product.ShowOnHomepage;
 
                 //some previously used values
                 var prevTotalStockQuantity = _productService.GetTotalStockQuantity(product);

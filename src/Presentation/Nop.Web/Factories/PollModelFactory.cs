@@ -115,13 +115,13 @@ namespace Nop.Web.Factories
         /// Prepare the home page poll models
         /// </summary>
         /// <returns>List of the poll model</returns>
-        public virtual List<PollModel> PrepareHomePagePollModels()
+        public virtual List<PollModel> PrepareHomepagePollModels()
         {
             var cacheKey = string.Format(NopModelCacheDefaults.HomepagePollsModelKey, 
                 _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
 
             var cachedPolls = _cacheManager.Get(cacheKey, () =>
-                _pollService.GetPolls(_storeContext.CurrentStore.Id, _workContext.WorkingLanguage.Id, loadShownOnHomePageOnly: true)
+                _pollService.GetPolls(_storeContext.CurrentStore.Id, _workContext.WorkingLanguage.Id, loadShownOnHomepageOnly: true)
                     .Select(poll => PreparePollModel(poll, false)).ToList());
 
             //"AlreadyVoted" property of "PollModel" object depends on the current customer. Let's update it.

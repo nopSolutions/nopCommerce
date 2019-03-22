@@ -46,8 +46,8 @@ namespace Nop.Web.Areas.Admin.Models.Polls
         [NopResourceDisplayName("Admin.ContentManagement.Polls.Fields.Published")]
         public bool Published { get; set; }
 
-        [NopResourceDisplayName("Admin.ContentManagement.Polls.Fields.ShowOnHomePage")]
-        public bool ShowOnHomePage { get; set; }
+        [NopResourceDisplayName("Admin.ContentManagement.Polls.Fields.ShowOnHomepage")]
+        public bool ShowOnHomepage { get; set; }
 
         [NopResourceDisplayName("Admin.ContentManagement.Polls.Fields.AllowGuestsToVote")]
         public bool AllowGuestsToVote { get; set; }

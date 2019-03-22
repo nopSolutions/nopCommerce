@@ -161,7 +161,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (poll == null)
             {
                 model.Published = true;
-                model.ShowOnHomePage = true;
+                model.ShowOnHomepage = true;
             }
 
             //prepare available languages

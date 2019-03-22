@@ -323,13 +323,13 @@ namespace Nop.Services.Catalog
         /// Gets all products displayed on the home page
         /// </summary>
         /// <returns>Products</returns>
-        public virtual IList<Product> GetAllProductsDisplayedOnHomePage()
+        public virtual IList<Product> GetAllProductsDisplayedOnHomepage()
         {
             var query = from p in _productRepository.Table
                         orderby p.DisplayOrder, p.Id
                         where p.Published &&
                         !p.Deleted &&
-                        p.ShowOnHomePage
+                        p.ShowOnHomepage
                         select p;
             var products = query.ToList();
             return products;

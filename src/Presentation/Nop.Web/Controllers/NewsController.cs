@@ -87,7 +87,7 @@ namespace Nop.Web.Controllers
         public virtual IActionResult List(NewsPagingFilteringModel command)
         {
             if (!_newsSettings.Enabled)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             var model = _newsModelFactory.PrepareNewsItemListModel(command);
             return View(model);
@@ -118,16 +118,16 @@ namespace Nop.Web.Controllers
         public virtual IActionResult NewsItem(int newsItemId)
         {
             if (!_newsSettings.Enabled)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             var newsItem = _newsService.GetNewsById(newsItemId);
             if (newsItem == null)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             var hasAdminAccess = _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && _permissionService.Authorize(StandardPermissionProvider.ManageNews);
             //access to News preview
             if ((!newsItem.Published || !_newsService.IsNewsAvailable(newsItem)) && !hasAdminAccess)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             var model = new NewsItemModel();
             model = _newsModelFactory.PrepareNewsItemModel(model, newsItem, true);
@@ -146,11 +146,11 @@ namespace Nop.Web.Controllers
         public virtual IActionResult NewsCommentAdd(int newsItemId, NewsItemModel model, bool captchaValid)
         {
             if (!_newsSettings.Enabled)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             var newsItem = _newsService.GetNewsById(newsItemId);
             if (newsItem == null || !newsItem.Published || !newsItem.AllowComments)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             //validate CAPTCHA
             if (_captchaSettings.Enabled && _captchaSettings.ShowOnNewsCommentPage && !captchaValid)
