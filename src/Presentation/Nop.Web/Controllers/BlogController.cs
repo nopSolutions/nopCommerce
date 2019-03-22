@@ -91,7 +91,7 @@ namespace Nop.Web.Controllers
         public virtual IActionResult List(BlogPagingFilteringModel command)
         {
             if (!_blogSettings.Enabled)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             var model = _blogModelFactory.PrepareBlogPostListModel(command);
             return View("List", model);
@@ -100,7 +100,7 @@ namespace Nop.Web.Controllers
         public virtual IActionResult BlogByTag(BlogPagingFilteringModel command)
         {
             if (!_blogSettings.Enabled)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             var model = _blogModelFactory.PrepareBlogPostListModel(command);
             return View("List", model);
@@ -109,7 +109,7 @@ namespace Nop.Web.Controllers
         public virtual IActionResult BlogByMonth(BlogPagingFilteringModel command)
         {
             if (!_blogSettings.Enabled)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             var model = _blogModelFactory.PrepareBlogPostListModel(command);
             return View("List", model);
@@ -141,16 +141,16 @@ namespace Nop.Web.Controllers
         public virtual IActionResult BlogPost(int blogPostId)
         {
             if (!_blogSettings.Enabled)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             var blogPost = _blogService.GetBlogPostById(blogPostId);
             if (blogPost == null)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             var hasAdminAccess = _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && _permissionService.Authorize(StandardPermissionProvider.ManageBlog);
             //access to Blog preview
             if (!_blogService.BlogPostIsAvailable(blogPost) && !hasAdminAccess)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             //Store mapping
             if (!_storeMappingService.Authorize(blogPost))
@@ -173,11 +173,11 @@ namespace Nop.Web.Controllers
         public virtual IActionResult BlogCommentAdd(int blogPostId, BlogPostModel model, bool captchaValid)
         {
             if (!_blogSettings.Enabled)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             var blogPost = _blogService.GetBlogPostById(blogPostId);
             if (blogPost == null || !blogPost.AllowComments)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             if (_workContext.CurrentCustomer.IsGuest() && !_blogSettings.AllowNotRegisteredUsersToLeaveComments)
             {

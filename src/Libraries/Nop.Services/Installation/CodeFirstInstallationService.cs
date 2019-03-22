@@ -5851,7 +5851,7 @@ namespace Nop.Services.Installation
                 },
                 new Topic
                 {
-                    SystemName = "HomePageText",
+                    SystemName = "HomepageText",
                     IncludeInSitemap = false,
                     IsPasswordProtected = false,
                     DisplayOrder = 1,
@@ -6574,7 +6574,7 @@ namespace Nop.Services.Installation
                 NotifyAboutPrivateMessages = false,
                 PMSubjectMaxLength = 450,
                 PMTextMaxLength = 4000,
-                HomePageActiveDiscussionsTopicCount = 5,
+                HomepageActiveDiscussionsTopicCount = 5,
                 ActiveDiscussionsFeedEnabled = false,
                 ActiveDiscussionsFeedCount = 25,
                 ForumFeedsEnabled = false,
@@ -6611,7 +6611,7 @@ namespace Nop.Services.Installation
 
             settingService.SaveSetting(new DisplayDefaultMenuItemSettings
             {
-                DisplayHomePageMenuItem = !installSampleData,
+                DisplayHomepageMenuItem = !installSampleData,
                 DisplayNewProductsMenuItem = !installSampleData,
                 DisplayProductSearchMenuItem = !installSampleData,
                 DisplayCustomerInfoMenuItem = !installSampleData,
@@ -6941,7 +6941,7 @@ namespace Nop.Services.Installation
                 PictureId = pictureService.InsertPicture(_fileProvider.ReadAllBytes(sampleImagesPath + "category_electronics.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName("Electronics")).Id,
                 IncludeInTopMenu = true,
                 Published = true,
-                ShowOnHomePage = true,
+                ShowOnHomepage = true,
                 DisplayOrder = 2,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
@@ -7015,7 +7015,7 @@ namespace Nop.Services.Installation
                 PictureId = pictureService.InsertPicture(_fileProvider.ReadAllBytes(sampleImagesPath + "category_apparel.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName("Apparel")).Id,
                 IncludeInTopMenu = true,
                 Published = true,
-                ShowOnHomePage = true,
+                ShowOnHomepage = true,
                 DisplayOrder = 3,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
@@ -7089,7 +7089,7 @@ namespace Nop.Services.Installation
                 PictureId = pictureService.InsertPicture(_fileProvider.ReadAllBytes(sampleImagesPath + "category_digital_downloads.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName("Digital downloads")).Id,
                 IncludeInTopMenu = true,
                 Published = true,
-                ShowOnHomePage = true,
+                ShowOnHomepage = true,
                 DisplayOrder = 4,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
@@ -7270,7 +7270,7 @@ namespace Nop.Services.Installation
                 OrderMinimumQuantity = 1,
                 OrderMaximumQuantity = 10000,
                 Published = true,
-                ShowOnHomePage = true,
+                ShowOnHomepage = true,
                 MarkAsNew = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow,
@@ -7559,7 +7559,7 @@ namespace Nop.Services.Installation
                 OrderMinimumQuantity = 2,
                 OrderMaximumQuantity = 10000,
                 Published = true,
-                ShowOnHomePage = true,
+                ShowOnHomepage = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow,
                 ProductCategories =
@@ -7730,7 +7730,7 @@ namespace Nop.Services.Installation
                 OrderMinimumQuantity = 1,
                 OrderMaximumQuantity = 10000,
                 Published = true,
-                //ShowOnHomePage = true,
+                //ShowOnHomepage = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow,
                 ProductCategories =
@@ -8623,7 +8623,7 @@ namespace Nop.Services.Installation
                 OrderMinimumQuantity = 1,
                 OrderMaximumQuantity = 10000,
                 Published = true,
-                ShowOnHomePage = true,
+                ShowOnHomepage = true,
                 MarkAsNew = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow,
@@ -9206,7 +9206,7 @@ namespace Nop.Services.Installation
                 OrderMinimumQuantity = 1,
                 OrderMaximumQuantity = 10000,
                 Published = true,
-                //ShowOnHomePage = true,
+                //ShowOnHomepage = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow,
                 ProductAttributeMappings =
@@ -10622,7 +10622,7 @@ namespace Nop.Services.Installation
                 NotifyAdminForQuantityBelow = 1,
                 AllowBackInStockSubscriptions = false,
                 Published = true,
-                ShowOnHomePage = true,
+                ShowOnHomepage = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow,
                 ProductCategories =
@@ -11106,7 +11106,7 @@ namespace Nop.Services.Installation
                 Name = "Do you like nopCommerce?",
                 SystemKeyword = string.Empty,
                 Published = true,
-                ShowOnHomePage = true,
+                ShowOnHomepage = true,
                 DisplayOrder = 1
             };
             poll1.PollAnswers.Add(new PollAnswer

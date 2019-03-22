@@ -23,7 +23,7 @@
     $(document).ready(function() {
         @if (!Model.IsLoggedInAsVendor)
         {
-            <text>$("#@Html.IdFor(model => model.ShowOnHomePage)").click(toggleShowOnHomePage);</text>
+            <text>$("#@Html.IdFor(model => model.ShowOnHomepage)").click(toggleShowOnHomepage);</text>
         }
         $("#@Html.IdFor(model => model.ProductTypeId)").change(toggleProductType);
         $("#@Html.IdFor(model => model.RequireOtherProducts)").click(toggleRequireOtherProducts);
@@ -31,15 +31,15 @@
 
         @if (!Model.IsLoggedInAsVendor)
         {
-            <text>toggleShowOnHomePage();</text>
+            <text>toggleShowOnHomepage();</text>
         }
         toggleProductType();
         toggleRequireOtherProducts();
         toggleMarkAsNew();
     });
 
-    function toggleShowOnHomePage() {
-        if ($('#@Html.IdFor(model => model.ShowOnHomePage)').is(':checked')) {
+    function toggleShowOnHomepage() {
+        if ($('#@Html.IdFor(model => model.ShowOnHomepage)').is(':checked')) {
             $('#pnlDisplayOrder').show();
         } else {
             $('#pnlDisplayOrder').hide();
@@ -385,16 +385,16 @@
             <span asp-validation-for="ManufacturerPartNumber"></span>
         </div>
     </div>
-    <div class="form-group @(Model.ProductEditorSettingsModel.ShowOnHomePage ? null : "advanced-setting")" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
+    <div class="form-group @(Model.ProductEditorSettingsModel.ShowOnHomepage ? null : "advanced-setting")" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
         <div class="col-md-3">
-            <nop-label asp-for="ShowOnHomePage" />
+            <nop-label asp-for="ShowOnHomepage" />
         </div>
         <div class="col-md-9">
-            <nop-editor asp-for="ShowOnHomePage" />
-            <span asp-validation-for="ShowOnHomePage"></span>
+            <nop-editor asp-for="ShowOnHomepage" />
+            <span asp-validation-for="ShowOnHomepage"></span>
         </div>
     </div>
-    <nop-nested-setting asp-for="ShowOnHomePage">
+    <nop-nested-setting asp-for="ShowOnHomepage">
         <div class="form-group @(Model.ProductEditorSettingsModel.DisplayOrder ? null : "advanced-setting")" id="pnlDisplayOrder" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
             <div class="col-md-3">
                 <nop-label asp-for="DisplayOrder" />

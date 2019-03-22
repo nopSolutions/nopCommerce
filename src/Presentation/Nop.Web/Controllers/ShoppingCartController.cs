@@ -832,7 +832,7 @@ namespace Nop.Web.Controllers
             {
                 return Json(new
                 {
-                    redirect = Url.RouteUrl("HomePage")
+                    redirect = Url.RouteUrl("Homepage")
                 });
             }
 
@@ -1288,7 +1288,7 @@ namespace Nop.Web.Controllers
         public virtual IActionResult Cart()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart))
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             var cart = _shoppingCartService.GetShoppingCart(_workContext.CurrentCustomer, ShoppingCartType.ShoppingCart, _storeContext.CurrentStore.Id);
             var model = new ShoppingCartModel();
@@ -1301,7 +1301,7 @@ namespace Nop.Web.Controllers
         public virtual IActionResult UpdateCart(IFormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart))
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             var cart = _shoppingCartService.GetShoppingCart(_workContext.CurrentCustomer, ShoppingCartType.ShoppingCart, _storeContext.CurrentStore.Id);
 
@@ -1368,7 +1368,7 @@ namespace Nop.Web.Controllers
             {
                 return Redirect(returnUrl);
             }
-            return RedirectToRoute("HomePage");
+            return RedirectToRoute("Homepage");
         }
 
         [HttpPost, ActionName("Cart")]
@@ -1604,13 +1604,13 @@ namespace Nop.Web.Controllers
         public virtual IActionResult Wishlist(Guid? customerGuid)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.EnableWishlist))
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             var customer = customerGuid.HasValue ?
                 _customerService.GetCustomerByGuid(customerGuid.Value)
                 : _workContext.CurrentCustomer;
             if (customer == null)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             var cart = _shoppingCartService.GetShoppingCart(customer, ShoppingCartType.Wishlist, _storeContext.CurrentStore.Id);
 
@@ -1624,7 +1624,7 @@ namespace Nop.Web.Controllers
         public virtual IActionResult UpdateWishlist(IFormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.EnableWishlist))
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             var cart = _shoppingCartService.GetShoppingCart(_workContext.CurrentCustomer, ShoppingCartType.Wishlist, _storeContext.CurrentStore.Id);
 
@@ -1685,16 +1685,16 @@ namespace Nop.Web.Controllers
         public virtual IActionResult AddItemsToCartFromWishlist(Guid? customerGuid, IFormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart))
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             if (!_permissionService.Authorize(StandardPermissionProvider.EnableWishlist))
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             var pageCustomer = customerGuid.HasValue
                 ? _customerService.GetCustomerByGuid(customerGuid.Value)
                 : _workContext.CurrentCustomer;
             if (pageCustomer == null)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             var pageCart = _shoppingCartService.GetShoppingCart(pageCustomer, ShoppingCartType.Wishlist, _storeContext.CurrentStore.Id);
 
@@ -1754,12 +1754,12 @@ namespace Nop.Web.Controllers
         public virtual IActionResult EmailWishlist()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.EnableWishlist) || !_shoppingCartSettings.EmailWishlistEnabled)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             var cart = _shoppingCartService.GetShoppingCart(_workContext.CurrentCustomer, ShoppingCartType.Wishlist, _storeContext.CurrentStore.Id);
 
             if (!cart.Any())
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             var model = new WishlistEmailAFriendModel();
             model = _shoppingCartModelFactory.PrepareWishlistEmailAFriendModel(model, false);
@@ -1773,12 +1773,12 @@ namespace Nop.Web.Controllers
         public virtual IActionResult EmailWishlistSend(WishlistEmailAFriendModel model, bool captchaValid)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.EnableWishlist) || !_shoppingCartSettings.EmailWishlistEnabled)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             var cart = _shoppingCartService.GetShoppingCart(_workContext.CurrentCustomer, ShoppingCartType.Wishlist, _storeContext.CurrentStore.Id);
 
             if (!cart.Any())
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             //validate CAPTCHA
             if (_captchaSettings.Enabled && _captchaSettings.ShowOnEmailWishlistToFriendPage && !captchaValid)

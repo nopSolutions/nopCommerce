@@ -2196,10 +2196,10 @@
   <LocaleResource Name="Admin.Catalog.Categories.Fields.SeName.Hint">
     <Value>Set a search engine friendly page name e.g. 'the-best-category' to make your page URL 'http://www.yourStore.com/the-best-category'. Leave empty to generate it automatically based on the name of the category.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Categories.Fields.ShowOnHomePage">
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.ShowOnHomepage">
     <Value>Show on home page</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Categories.Fields.ShowOnHomePage.Hint">
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.ShowOnHomepage.Hint">
     <Value>Check if you want to show a category on home page.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Import.CategoriesArentImported">
@@ -3216,10 +3216,10 @@
   <LocaleResource Name="Admin.Catalog.Products.Fields.ShortDescription.Hint">
     <Value>Short description is the text that is displayed in product list i.e. сategory / manufacturer pages.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Fields.ShowOnHomePage">
+  <LocaleResource Name="Admin.Catalog.Products.Fields.ShowOnHomepage">
     <Value>Show on home page</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Fields.ShowOnHomePage.Hint">
+  <LocaleResource Name="Admin.Catalog.Products.Fields.ShowOnHomepage.Hint">
     <Value>Check to display this product on your store's home page. Recommended for your most popular products.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.Sku">
@@ -6813,10 +6813,10 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultMenuItemSettings.DisplayForumsMenuItem.Hint">
     <Value>Check if "Forums" menu item should be displayed in the top menu.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultMenuItemSettings.DisplayHomePageMenuItem">
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultMenuItemSettings.DisplayHomepageMenuItem">
     <Value>Display "Home page"</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultMenuItemSettings.DisplayHomePageMenuItem.Hint">
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultMenuItemSettings.DisplayHomepageMenuItem.Hint">
     <Value>Check if "Home page" menu item should be displayed in the top menu.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultMenuItemSettings.DisplayNewProductsMenuItem">
@@ -7842,7 +7842,7 @@
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.ShipSeparately">
     <Value>Ship separately</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.ShowOnHomePage">
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.ShowOnHomepage">
     <Value>Show on home page</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.SpecificationAttributes">
@@ -9795,10 +9795,10 @@
   <LocaleResource Name="Admin.ContentManagement.Polls.Fields.Published.Hint">
     <Value>Determines whether this poll is published (visible) in your store.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Polls.Fields.ShowOnHomePage">
+  <LocaleResource Name="Admin.ContentManagement.Polls.Fields.ShowOnHomepage">
     <Value>Show on home page</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Polls.Fields.ShowOnHomePage.Hint">
+  <LocaleResource Name="Admin.ContentManagement.Polls.Fields.ShowOnHomepage.Hint">
     <Value>Check if you want to show poll on the home page.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Polls.Fields.StartDate">
@@ -15816,10 +15816,10 @@
   <LocaleResource Name="GiftCardAttribute.From.Virtual">
     <Value><![CDATA[From: {0} <{1}>]]></Value>
   </LocaleResource>
-  <LocaleResource Name="HomePage">
+  <LocaleResource Name="Homepage">
     <Value>Home page</Value>
   </LocaleResource>
-  <LocaleResource Name="HomePage.Products">
+  <LocaleResource Name="Homepage.Products">
     <Value>Featured products</Value>
   </LocaleResource>
   <LocaleResource Name="Languages">

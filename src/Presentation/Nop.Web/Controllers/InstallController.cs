@@ -180,7 +180,7 @@ namespace Nop.Web.Controllers
         public virtual IActionResult Index()
         {
             if (DataSettingsManager.DatabaseIsInstalled)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             var model = new InstallModel
             {
@@ -213,7 +213,7 @@ namespace Nop.Web.Controllers
         public virtual IActionResult Index(InstallModel model)
         {
             if (DataSettingsManager.DatabaseIsInstalled)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             if (model.DatabaseConnectionString != null)
                 model.DatabaseConnectionString = model.DatabaseConnectionString.Trim();
@@ -388,7 +388,7 @@ namespace Nop.Web.Controllers
                     webHelper.RestartAppDomain();
 
                     //Redirect to home page
-                    return RedirectToRoute("HomePage");
+                    return RedirectToRoute("Homepage");
                 }
                 catch (Exception exception)
                 {
@@ -410,7 +410,7 @@ namespace Nop.Web.Controllers
         public virtual IActionResult ChangeLanguage(string language)
         {
             if (DataSettingsManager.DatabaseIsInstalled)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             _locService.SaveCurrentLanguage(language);
 
@@ -422,14 +422,14 @@ namespace Nop.Web.Controllers
         public virtual IActionResult RestartInstall()
         {
             if (DataSettingsManager.DatabaseIsInstalled)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             //restart application
             var webHelper = EngineContext.Current.Resolve<IWebHelper>();
             webHelper.RestartAppDomain();
 
             //Redirect to home page
-            return RedirectToRoute("HomePage");
+            return RedirectToRoute("Homepage");
         }
 
         #endregion

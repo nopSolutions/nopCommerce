@@ -262,6 +262,16 @@
                 }
             };
         </script>
+        @{ 
+            //scroll to a selected panel (if specified)
+            var selectedPanelName = this.Html.GetSelectedPanelName();
+            if (!String.IsNullOrEmpty(selectedPanelName))
+            {
+                <script>
+                    location.hash = '#@(selectedPanelName)';
+                </script>
+            }
+        }
         @Html.NopCssFiles(ResourceLocation.Footer)
         @Html.NopScripts(ResourceLocation.Footer)
         <a id="backTop" class="btn btn-back-top bg-teal"></a>

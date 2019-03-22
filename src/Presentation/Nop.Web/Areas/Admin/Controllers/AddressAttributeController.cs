@@ -92,8 +92,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
-            //select "address form fields" tab
-            SaveSelectedTabName("tab-addressformfields");
+            //select an appropriate panel
+            SaveSelectedPanelName("customersettings-addressformfields");
 
             //we just redirect a user to the address settings page
             return RedirectToAction("CustomerUser", "Setting");
@@ -145,9 +145,6 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 if (!continueEditing)
                     return RedirectToAction("List");
-
-                //selected tab
-                SaveSelectedTabName();
 
                 return RedirectToAction("Edit", new { id = addressAttribute.Id });
             }
@@ -203,9 +200,6 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 if (!continueEditing)
                     return RedirectToAction("List");
-
-                //selected tab
-                SaveSelectedTabName();
 
                 return RedirectToAction("Edit", new { id = addressAttribute.Id });
             }

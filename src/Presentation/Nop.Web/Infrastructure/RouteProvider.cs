@@ -24,7 +24,7 @@ namespace Nop.Web.Infrastructure
             routeBuilder.MapRoute(name: "areaRoute", template: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
             //home page
-            routeBuilder.MapLocalizedRoute("HomePage", "",
+            routeBuilder.MapLocalizedRoute("Homepage", "",
 				new { controller = "Home", action = "Index" });
 
             //login
