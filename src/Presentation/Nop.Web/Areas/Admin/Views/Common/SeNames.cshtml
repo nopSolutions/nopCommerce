@@ -26,27 +26,36 @@
     <div class="form-horizontal">
         <div class="panel-group">
             @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.SenamesTop })
-            <div class="panel panel-default panel-search">
+            <div class="panel panel-default panel-search collapsed">
                 <div class="panel-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <div class="col-md-4">
-                                    <nop-label asp-for="SeName" />
+                    <div class="row search-row">
+                        <div class="search-text">@T("Admin.Common.Search")</div>
+                        <div class="icon-search"><i class="fa fa-search" aria-hidden="true"></i></div>
+                        <div class="icon-collapse"><i class="fa fa-angle-down" aria-hidden="true"></i></div>
+                    </div>
+
+                    <div class="search-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="SeName" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-editor asp-for="SeName" />
+                                    </div>
                                 </div>
-                                <div class="col-md-8">
-                                    <nop-editor asp-for="SeName" />
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-md-8 col-md-offset-4">
-                                    <button type="button" id="search-senames" class="btn btn-primary btn-search"><i class="fa fa-search"></i>@T("Admin.Common.Search")</button>
+                                <div class="form-group">
+                                    <div class="col-md-8 col-md-offset-4">
+                                        <button type="button" id="search-senames" class="btn btn-primary btn-search"><i class="fa fa-search"></i>@T("Admin.Common.Search")</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+
             <div class="panel panel-default">
                 <div class="panel-body">
                     <div id="sename-grid"></div>

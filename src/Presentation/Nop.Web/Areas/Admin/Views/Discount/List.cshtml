@@ -24,56 +24,64 @@
 <div class="content">
     <div class="form-horizontal">
         <div class="panel-group">
-            <div class="panel panel-default panel-search">
+            <div class="panel panel-default panel-search collapsed">
                 <div class="panel-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <div class="col-md-4">
-                                    <nop-label asp-for="SearchDiscountName"/>
+                    <div class="row search-row">
+                        <div class="search-text">@T("Admin.Common.Search")</div>
+                        <div class="icon-search"><i class="fa fa-search" aria-hidden="true"></i></div>
+                        <div class="icon-collapse"><i class="fa fa-angle-down" aria-hidden="true"></i></div>
+                    </div>
+
+                    <div class="search-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="SearchDiscountName" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-editor asp-for="SearchDiscountName" />
+                                    </div>
                                 </div>
-                                <div class="col-md-8">
-                                    <nop-editor asp-for="SearchDiscountName"/>
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="SearchDiscountCouponCode" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-editor asp-for="SearchDiscountCouponCode" />
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-md-4">
-                                    <nop-label asp-for="SearchDiscountCouponCode"/>
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="SearchDiscountTypeId" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-select asp-for="SearchDiscountTypeId" asp-items="Model.AvailableDiscountTypes" />
+                                    </div>
                                 </div>
-                                <div class="col-md-8">
-                                    <nop-editor asp-for="SearchDiscountCouponCode"/>
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="SearchStartDate" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-editor asp-for="SearchStartDate" />
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-md-4">
-                                    <nop-label asp-for="SearchDiscountTypeId"/>
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="SearchEndDate" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-editor asp-for="SearchEndDate" />
+                                    </div>
                                 </div>
-                                <div class="col-md-8">
-                                    <nop-select asp-for="SearchDiscountTypeId" asp-items="Model.AvailableDiscountTypes"/>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-md-4">
-                                    <nop-label asp-for="SearchStartDate"/>
-                                </div>
-                                <div class="col-md-8">
-                                    <nop-editor asp-for="SearchStartDate"/>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-md-4">
-                                    <nop-label asp-for="SearchEndDate"/>
-                                </div>
-                                <div class="col-md-8">
-                                    <nop-editor asp-for="SearchEndDate"/>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-md-8 col-md-offset-4">
-                                    <button type="button" id="search-discounts" class="btn btn-primary btn-search">
-                                        <i class="fa fa-search"></i>
-                                        @T("Admin.Common.Search")
-                                    </button>
+                                <div class="form-group">
+                                    <div class="col-md-8 col-md-offset-4">
+                                        <button type="button" id="search-discounts" class="btn btn-primary btn-search">
+                                            <i class="fa fa-search"></i>
+                                            @T("Admin.Common.Search")
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
