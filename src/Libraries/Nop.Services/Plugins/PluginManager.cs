@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Domain.Customers;
-using Nop.Core.Plugins;
 
 namespace Nop.Services.Plugins
 {
@@ -21,7 +20,7 @@ namespace Nop.Services.Plugins
         #region Fields
 
         private readonly IPluginService _pluginService;
-        private Dictionary<string, IList<TPlugin>> _plugins = new Dictionary<string, IList<TPlugin>>();
+        private readonly Dictionary<string, IList<TPlugin>> _plugins = new Dictionary<string, IList<TPlugin>>();
 
         #endregion
 

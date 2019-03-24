@@ -10,7 +10,7 @@ using Nop.Core;
 using Nop.Core.ComponentModel;
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
-using Nop.Core.Plugins;
+using Nop.Services.Plugins;
 
 namespace Nop.Web.Framework.Infrastructure.Extensions
 {

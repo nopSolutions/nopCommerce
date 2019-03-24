@@ -1,6 +1,6 @@
 ﻿using System;
-using Nop.Core.Plugins;
 using Nop.Services.Discounts;
+using Nop.Services.Plugins;
 
 namespace Nop.Services.Tests.Discounts
 {

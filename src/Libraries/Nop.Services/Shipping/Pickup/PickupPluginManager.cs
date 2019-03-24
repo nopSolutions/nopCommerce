@@ -8,7 +8,7 @@ using Nop.Services.Plugins;
 namespace Nop.Services.Shipping.Pickup
 {
     /// <summary>
-    /// Represents a pickup pont plugin manager implementation
+    /// Represents a pickup point plugin manager implementation
     /// </summary>
     public partial class PickupPluginManager : PluginManager<IPickupPointProvider>, IPickupPluginManager
     {

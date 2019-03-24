@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
-using Nop.Core.Plugins;
+using Nop.Services.Plugins;
 using Nop.Web.Areas.Admin.Models.Plugins;
+using Nop.Web.Areas.Admin.Models.Plugins.Marketplace;
 
 namespace Nop.Web.Areas.Admin.Factories
 {

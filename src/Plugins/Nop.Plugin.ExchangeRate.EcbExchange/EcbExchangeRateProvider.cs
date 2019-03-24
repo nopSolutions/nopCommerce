@@ -5,10 +5,10 @@ using System.Linq;
 using System.Net;
 using System.Xml;
 using Nop.Core;
-using Nop.Core.Plugins;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
+using Nop.Services.Plugins;
 
 namespace Nop.Plugin.ExchangeRate.EcbExchange
 {

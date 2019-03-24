@@ -1,4 +1,4 @@
-﻿namespace Nop.Core.Plugins
+﻿namespace Nop.Services.Plugins.Marketplace
 {
     /// <summary>
     /// Category for the official marketplace
