@@ -6,11 +6,13 @@ using System.Reflection;
 using System.Text;
 using System.Threading;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
+using Nop.Core;
 using Nop.Core.ComponentModel;
 using Nop.Core.Configuration;
+using Nop.Core.Infrastructure;
 using Nop.Core.Plugins;
 
-namespace Nop.Core.Infrastructure.Extensions
+namespace Nop.Web.Framework.Infrastructure.Extensions
 {
     /// <summary>
     /// Represents application part manager extensions
@@ -159,7 +161,8 @@ namespace Nop.Core.Infrastructure.Extensions
                     //see http://go.microsoft.com/fwlink/?LinkId=155569 for more information.
                     assembly = Assembly.UnsafeLoadFrom(assemblyFile);
                 }
-                else throw;
+                else
+                    throw;
             }
 
             //register the plugin definition
@@ -177,7 +180,7 @@ namespace Nop.Core.Infrastructure.Extensions
         /// <param name="config">Nop config</param>
         /// <param name="fileProvider">Nop file provider</param>
         /// <returns>Assembly</returns>
-        private static Assembly PerformFileDeploy(this ApplicationPartManager applicationPartManager, 
+        private static Assembly PerformFileDeploy(this ApplicationPartManager applicationPartManager,
             string assemblyFile, string shadowCopyDirectory, NopConfig config, INopFileProvider fileProvider)
         {
             //ensure for proper directory structure
@@ -195,7 +198,7 @@ namespace Nop.Core.Infrastructure.Extensions
                 if (assemblyFile.EndsWith(".dll"))
                 {
                     _fileProvider.DeleteFile(assemblyFile.Substring(0, assemblyFile.Length - 4) + ".deps.json");
-                } 
+                }
 
                 return assembly;
             }
@@ -482,7 +485,7 @@ namespace Nop.Core.Infrastructure.Extensions
 
                             //if it's found, set it as original assembly file
                             pluginDescriptor.OriginalAssemblyFile = mainPluginFile;
-                            
+
                             //need to deploy if plugin is already installed
                             var needToDeploy = PluginsInfo.InstalledPluginNames.Contains(pluginName);
 

@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.IO.Compression;
 using System.Linq;
+using System.Net;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -49,26 +51,39 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         /// </summary>
         /// <param name="services">Collection of service descriptors</param>
         /// <param name="configuration">Configuration of the application</param>
+        /// <param name="hostingEnvironment">Hosting environment</param>
         /// <returns>Configured service provider</returns>
-        public static IServiceProvider ConfigureApplicationServices(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceProvider ConfigureApplicationServices(this IServiceCollection services,
+            IConfiguration configuration, IHostingEnvironment hostingEnvironment)
         {
+            //most of API providers require TLS 1.2 nowadays
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
             //add NopConfig configuration parameters
-            services.ConfigureStartupConfig<NopConfig>(configuration.GetSection("Nop"));
+            var nopConfig = services.ConfigureStartupConfig<NopConfig>(configuration.GetSection("Nop"));
+
             //add hosting configuration parameters
             services.ConfigureStartupConfig<HostingConfig>(configuration.GetSection("Hosting"));
+
             //add accessor to HttpContext
             services.AddHttpContextAccessor();
 
-            //create, initialize and configure the engine
-            var engine = EngineContext.Create();
-            engine.Initialize(services);
-            var serviceProvider = engine.ConfigureServices(services, configuration);
+            //create default file provider
+            CommonHelper.DefaultFileProvider = new NopFileProvider(hostingEnvironment);
 
+            //initialize plugins
+            var mvcCoreBuilder = services.AddMvcCore();
+            mvcCoreBuilder.PartManager.InitializePlugins(nopConfig);
+
+            //create engine and configure service provider
+            var engine = EngineContext.Create();
+            var serviceProvider = engine.ConfigureServices(services, configuration, nopConfig);
+
+            //further actions are performed only when the database is installed
             if (!DataSettingsManager.DatabaseIsInstalled)
                 return serviceProvider;
 
-            //implement schedule tasks
-            //database is already installed, so start scheduled tasks
+            //initialize and start schedule tasks
             TaskManager.Instance.Initialize();
             TaskManager.Instance.Start();
 

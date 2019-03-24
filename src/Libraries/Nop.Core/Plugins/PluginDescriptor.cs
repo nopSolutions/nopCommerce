@@ -220,13 +220,13 @@ namespace Nop.Core.Plugins
         /// Gets or sets the original assembly file that a shadow copy was made from it
         /// </summary>
         [JsonIgnore]
-        public virtual string OriginalAssemblyFile { get; internal set; }
+        public virtual string OriginalAssemblyFile { get; set; }
 
         /// <summary>
         /// Gets or sets the assembly that has been shadow copied that is active in the application
         /// </summary>
         [JsonIgnore]
-        public virtual Assembly ReferencedAssembly { get; internal set; }
+        public virtual Assembly ReferencedAssembly { get; set; }
 
         /// <summary>
         /// Gets or sets the value indicating whether need to show the plugin on plugins page
