@@ -251,7 +251,7 @@ namespace Nop.Services.Authentication.External
             if (!string.IsNullOrEmpty(returnUrl))
                 return new RedirectResult(returnUrl);
 
-            return new RedirectToRouteResult("HomePage", null);
+            return new RedirectToRouteResult("Homepage", null);
         }
 
         #endregion

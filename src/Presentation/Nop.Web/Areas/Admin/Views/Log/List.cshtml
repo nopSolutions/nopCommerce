@@ -31,48 +31,56 @@
     <div class="content">
         <div class="form-horizontal">
             <div class="panel-group">
-                <div class="panel panel-default panel-search">
+                <div class="panel panel-default panel-search collapsed">
                     <div class="panel-body">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <div class="col-md-4">
-                                        <nop-label asp-for="CreatedOnFrom" />
+                        <div class="row search-row">
+                            <div class="search-text">@T("Admin.Common.Search")</div>
+                            <div class="icon-search"><i class="fa fa-search" aria-hidden="true"></i></div>
+                            <div class="icon-collapse"><i class="fa fa-angle-down" aria-hidden="true"></i></div>
+                        </div>
+
+                        <div class="search-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="CreatedOnFrom" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-editor asp-for="CreatedOnFrom" />
+                                        </div>
                                     </div>
-                                    <div class="col-md-8">
-                                        <nop-editor asp-for="CreatedOnFrom" />
+                                    <div class="form-group">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="CreatedOnTo" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-editor asp-for="CreatedOnTo" />
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="col-md-4">
-                                        <nop-label asp-for="CreatedOnTo" />
+                                    <div class="form-group">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="Message" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-editor asp-for="Message" />
+                                        </div>
                                     </div>
-                                    <div class="col-md-8">
-                                        <nop-editor asp-for="CreatedOnTo" />
+                                    <div class="form-group">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="LogLevelId" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-select asp-for="LogLevelId" asp-items="Model.AvailableLogLevels" />
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="col-md-4">
-                                        <nop-label asp-for="Message" />
-                                    </div>
-                                    <div class="col-md-8">
-                                        <nop-editor asp-for="Message" />
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="col-md-4">
-                                        <nop-label asp-for="LogLevelId" />
-                                    </div>
-                                    <div class="col-md-8">
-                                        <nop-select asp-for="LogLevelId" asp-items="Model.AvailableLogLevels" />
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="col-md-8 col-md-offset-4">
-                                        <button type="button" id="search-log" class="btn btn-primary btn-search">
-                                            <i class="fa fa-search"></i>
-                                            @T("Admin.Common.Search")
-                                        </button>
+                                    <div class="form-group">
+                                        <div class="col-md-8 col-md-offset-4">
+                                            <button type="button" id="search-log" class="btn btn-primary btn-search">
+                                                <i class="fa fa-search"></i>
+                                                @T("Admin.Common.Search")
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

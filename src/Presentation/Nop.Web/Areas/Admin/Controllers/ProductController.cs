@@ -811,8 +811,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                     model.VendorId = _workContext.CurrentVendor.Id;
 
                 //vendors cannot edit "Show on home page" property
-                if (_workContext.CurrentVendor != null && model.ShowOnHomePage)
-                    model.ShowOnHomePage = false;
+                if (_workContext.CurrentVendor != null && model.ShowOnHomepage)
+                    model.ShowOnHomepage = false;
 
                 //product
                 var product = model.ToEntity<Product>();
@@ -860,10 +860,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 if (!continueEditing)
                     return RedirectToAction("List");
-
-                //selected tab
-                SaveSelectedTabName();
-
+                
                 return RedirectToAction("Edit", new { id = product.Id });
             }
 
@@ -926,8 +923,8 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 //we do not validate maximum number of products per vendor when editing existing products (only during creation of new products)
                 //vendors cannot edit "Show on home page" property
-                if (_workContext.CurrentVendor != null && model.ShowOnHomePage != product.ShowOnHomePage)
-                    model.ShowOnHomePage = product.ShowOnHomePage;
+                if (_workContext.CurrentVendor != null && model.ShowOnHomepage != product.ShowOnHomepage)
+                    model.ShowOnHomepage = product.ShowOnHomepage;
 
                 //some previously used values
                 var prevTotalStockQuantity = _productService.GetTotalStockQuantity(product);
@@ -1042,10 +1039,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 if (!continueEditing)
                     return RedirectToAction("List");
-
-                //selected tab
-                SaveSelectedTabName();
-
+                
                 return RedirectToAction("Edit", new { id = product.Id });
             }
 
@@ -1756,7 +1750,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return RedirectToAction("ProductSpecAttributeAddOrEdit",
                     new { productId = psa.ProductId, specificationId = psa.Id });
 
-            SaveSelectedTabName("tab-specification-attributes");
+            //select an appropriate panel
+            SaveSelectedPanelName("product-specification-attributes");
             return RedirectToAction("Edit", new { id = model.ProductId });
         }
 
@@ -1790,8 +1785,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             var psa = _specificationAttributeService.GetProductSpecificationAttributeById(model.SpecificationId);
             if (psa == null)
             {
-                SaveSelectedTabName("tab-specification-attributes");
-
+                //select an appropriate panel
+                SaveSelectedPanelName("product-specification-attributes");
                 _notificationService.ErrorNotification("No product specification attribute found with the specified id");
                 return RedirectToAction("Edit", new { id = model.ProductId });
 
@@ -1830,7 +1825,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                     new { productId = psa.ProductId, specificationId = model.SpecificationId });
             }
 
-            SaveSelectedTabName("tab-specification-attributes");
+            //select an appropriate panel
+            SaveSelectedPanelName("product-specification-attributes");
             return RedirectToAction("Edit", new { id = psa.ProductId });
         }
 
@@ -1855,7 +1851,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 _notificationService.ErrorNotification(ex);
 
-                SaveSelectedTabName("tab-specification-attributes");
+                //select an appropriate panel
+                SaveSelectedPanelName("product-specification-attributes");
                 return RedirectToAction("Edit", new { id = productId });
             }
         }
@@ -1870,8 +1867,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             var psa = _specificationAttributeService.GetProductSpecificationAttributeById(model.SpecificationId);
             if (psa == null)
             {
-                SaveSelectedTabName("tab-specification-attributes");
-
+                //select an appropriate panel
+                SaveSelectedPanelName("product-specification-attributes");
                 _notificationService.ErrorNotification("No product specification attribute found with the specified id");
                 return RedirectToAction("Edit", new { id = model.ProductId });
             }
@@ -1885,7 +1882,8 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             _specificationAttributeService.DeleteProductSpecificationAttribute(psa);
 
-            SaveSelectedTabName("tab-specification-attributes");
+            //select an appropriate panel
+            SaveSelectedPanelName("product-specification-attributes");
             return RedirectToAction("Edit", new { id = psa.ProductId });
         }
 
@@ -2635,14 +2633,11 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (!continueEditing)
             {
-                SaveSelectedTabName("tab-product-attributes");
-
+                //select an appropriate panel
+                SaveSelectedPanelName("product-product-attributes");
                 return RedirectToAction("Edit", new { id = product.Id });
             }
-
-            //selected tab
-            SaveSelectedTabName();
-
+            
             return RedirectToAction("ProductAttributeMappingEdit", new { id = productAttributeMapping.Id });
         }
 
@@ -2717,14 +2712,11 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (!continueEditing)
             {
-                SaveSelectedTabName("tab-product-attributes");
-
+                //select an appropriate panel
+                SaveSelectedPanelName("product-product-attributes");
                 return RedirectToAction("Edit", new { id = product.Id });
             }
-
-            //selected tab
-            SaveSelectedTabName();
-
+            
             return RedirectToAction("ProductAttributeMappingEdit", new { id = productAttributeMapping.Id });
         }
 
@@ -2750,8 +2742,8 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.Attributes.Deleted"));
 
-            SaveSelectedTabName("tab-product-attributes");
-
+            //select an appropriate panel
+            SaveSelectedPanelName("product-product-attributes");
             return RedirectToAction("Edit", new { id = productAttributeMapping.ProductId });
         }
 

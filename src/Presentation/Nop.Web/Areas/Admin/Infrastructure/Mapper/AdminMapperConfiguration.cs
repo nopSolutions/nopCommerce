@@ -972,7 +972,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
             CreateMap<ForumSettingsModel, ForumSettings>()
                 .ForMember(settings => settings.ForumSearchTermMinimumLength, options => options.Ignore())
                 .ForMember(settings => settings.ForumSubscriptionsPageSize, options => options.Ignore())
-                .ForMember(settings => settings.HomePageActiveDiscussionsTopicCount, options => options.Ignore())
+                .ForMember(settings => settings.HomepageActiveDiscussionsTopicCount, options => options.Ignore())
                 .ForMember(settings => settings.LatestCustomerPostsPageSize, options => options.Ignore())
                 .ForMember(settings => settings.PMSubjectMaxLength, options => options.Ignore())
                 .ForMember(settings => settings.PMTextMaxLength, options => options.Ignore())
@@ -991,7 +991,8 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.GdprConsentSearchModel, options => options.Ignore())
                 .ForMember(model => model.GdprEnabled_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.LogNewsletterConsent_OverrideForStore, options => options.Ignore())
-                .ForMember(model => model.LogPrivacyPolicyConsent_OverrideForStore, options => options.Ignore());
+                .ForMember(model => model.LogPrivacyPolicyConsent_OverrideForStore, options => options.Ignore())
+                .ForMember(model => model.LogUserProfileChanges_OverrideForStore, options => options.Ignore());
             CreateMap<GdprSettingsModel, GdprSettings>();
 
             CreateMap<GdprConsent, GdprConsentModel>();
@@ -1074,6 +1075,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
             CreateMap<MediaSettingsModel, MediaSettings>()
                 .ForMember(settings => settings.AutoCompleteSearchThumbPictureSize, options => options.Ignore())
                 .ForMember(settings => settings.AzureCacheControlHeader, options => options.Ignore())
+                .ForMember(settings => settings.UseAbsoluteImagePath, options => options.Ignore())
                 .ForMember(settings => settings.ImageSquarePictureSize, options => options.Ignore());
         }
 
@@ -1287,11 +1289,13 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.UploadedFileGuid, options => options.Ignore())
                 .ForMember(model => model.ReturnRequestStatusStr, options => options.Ignore());
             CreateMap<ReturnRequestModel, ReturnRequest>()
+                 .ForMember(entity => entity.CustomNumber, options => options.Ignore())
                  .ForMember(entity => entity.StoreId, options => options.Ignore())
                  .ForMember(entity => entity.OrderItemId, options => options.Ignore())
                  .ForMember(entity => entity.UploadedFileId, options => options.Ignore())
                  .ForMember(entity => entity.CreatedOnUtc, options => options.Ignore())
                  .ForMember(entity => entity.ReturnRequestStatus, options => options.Ignore())
+                 .ForMember(entity => entity.CustomerId, options => options.Ignore())
                  .ForMember(entity => entity.Customer, options => options.Ignore())
                  .ForMember(entity => entity.UpdatedOnUtc, options => options.Ignore());
 

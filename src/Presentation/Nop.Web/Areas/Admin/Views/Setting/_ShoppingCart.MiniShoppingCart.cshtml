@@ -1,0 +1,36 @@
+@model ShoppingCartSettingsModel
+
+<div class="panel-body">
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="MiniShoppingCartEnabled_OverrideForStore" asp-input="MiniShoppingCartEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="MiniShoppingCartEnabled" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="MiniShoppingCartEnabled" />
+            <span asp-validation-for="MiniShoppingCartEnabled"></span>
+        </div>
+    </div>
+    <nop-nested-setting asp-for="MiniShoppingCartEnabled">
+        <div class="form-group advanced-setting" id="pnlMiniShoppingCartProductNumber">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="MiniShoppingCartProductNumber_OverrideForStore" asp-input="MiniShoppingCartProductNumber" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="MiniShoppingCartProductNumber" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="MiniShoppingCartProductNumber" />
+                <span asp-validation-for="MiniShoppingCartProductNumber"></span>
+            </div>
+        </div>
+        <div class="form-group advanced-setting" id="pnlShowProductImagesInMiniShoppingCart">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="ShowProductImagesInMiniShoppingCart_OverrideForStore" asp-input="ShowProductImagesInMiniShoppingCart" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="ShowProductImagesInMiniShoppingCart" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="ShowProductImagesInMiniShoppingCart" />
+                <span asp-validation-for="ShowProductImagesInMiniShoppingCart"></span>
+            </div>
+        </div>
+    </nop-nested-setting>
+</div>

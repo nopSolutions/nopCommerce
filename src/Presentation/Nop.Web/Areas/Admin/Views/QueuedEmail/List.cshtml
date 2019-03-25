@@ -30,79 +30,87 @@
     <div class="content">
         <div class="form-horizontal">
             <div class="panel-group">
-                <div class="panel panel-default panel-search">
+                <div class="panel panel-default panel-search collapsed">
                     <div class="panel-body">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <div class="col-md-4">
-                                        <nop-label asp-for="SearchStartDate" />
-                                    </div>
-                                    <div class="col-md-8">
-                                        <nop-editor asp-for="SearchStartDate" />
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="col-md-4">
-                                        <nop-label asp-for="SearchEndDate" />
-                                    </div>
-                                    <div class="col-md-8">
-                                        <nop-editor asp-for="SearchEndDate" />
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="col-md-4">
-                                        <nop-label asp-for="SearchFromEmail" />
-                                    </div>
-                                    <div class="col-md-8">
-                                        <nop-editor asp-for="SearchFromEmail" />
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="col-md-4">
-                                        <nop-label asp-for="SearchToEmail" />
-                                    </div>
-                                    <div class="col-md-8">
-                                        <nop-editor asp-for="SearchToEmail" />
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="col-md-4">
-                                        <nop-label asp-for="SearchLoadNotSent" />
-                                    </div>
-                                    <div class="col-md-8">
-                                        <nop-editor asp-for="SearchLoadNotSent" />
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="col-md-4">
-                                        <nop-label asp-for="SearchMaxSentTries" />
-                                    </div>
-                                    <div class="col-md-8">
-                                        <nop-editor asp-for="SearchMaxSentTries" />
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="col-md-4">
-                                        <nop-label asp-for="GoDirectlyToNumber" />
-                                    </div>
-                                    <div class="col-md-8">
-                                        <div class="custom-input-group input-group-short">
-                                            <nop-editor asp-for="GoDirectlyToNumber" />
-                                            <span class="custom-input-group-btn">
-                                                <button type="submit" id="go-to-email-by-number" name="go-to-email-by-number" class="btn btn-info btn-flat">
-                                                    @T("Admin.Common.Go")
-                                                </button>
-                                            </span>
+                        <div class="row search-row">
+                            <div class="search-text">@T("Admin.Common.Search")</div>
+                            <div class="icon-search"><i class="fa fa-search" aria-hidden="true"></i></div>
+                            <div class="icon-collapse"><i class="fa fa-angle-down" aria-hidden="true"></i></div>
+                        </div>
+
+                        <div class="search-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="SearchStartDate" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-editor asp-for="SearchStartDate" />
                                         </div>
                                     </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="col-md-8 col-md-offset-4">
-                                        <button type="button"  id="search-queuedemails" class="btn btn-primary btn-search">
-                                            <i class="fa fa-search"></i>
-                                            @T("Admin.Common.Search")
-                                        </button>
+                                    <div class="form-group">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="SearchEndDate" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-editor asp-for="SearchEndDate" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="SearchFromEmail" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-editor asp-for="SearchFromEmail" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="SearchToEmail" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-editor asp-for="SearchToEmail" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="SearchLoadNotSent" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-editor asp-for="SearchLoadNotSent" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="SearchMaxSentTries" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-editor asp-for="SearchMaxSentTries" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="GoDirectlyToNumber" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="custom-input-group input-group-short">
+                                                <nop-editor asp-for="GoDirectlyToNumber" />
+                                                <span class="custom-input-group-btn">
+                                                    <button type="submit" id="go-to-email-by-number" name="go-to-email-by-number" class="btn btn-info btn-flat">
+                                                        @T("Admin.Common.Go")
+                                                    </button>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-8 col-md-offset-4">
+                                            <button type="button" id="search-queuedemails" class="btn btn-primary btn-search">
+                                                <i class="fa fa-search"></i>
+                                                @T("Admin.Common.Search")
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

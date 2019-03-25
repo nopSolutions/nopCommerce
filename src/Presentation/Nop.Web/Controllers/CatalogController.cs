@@ -234,7 +234,7 @@ namespace Nop.Web.Controllers
         {
             //we don't allow viewing of vendors if "vendors" block is hidden
             if (_vendorSettings.VendorsBlockItemsToDisplay == 0)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             var model = _catalogModelFactory.PrepareVendorAllModels();
             return View(model);

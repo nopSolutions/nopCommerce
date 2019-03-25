@@ -157,9 +157,10 @@ namespace Nop.Web.Infrastructure.Cache
         /// <remarks>
         /// {0} : product id
         /// {1} : language id
-        /// {2} : current store ID
+        /// {2} : comma separated list of customer roles
+        /// {3} : current store ID
         /// </remarks>
-        public static string ProductTagByProductModelKey => "Nop.pres.producttag.byproduct-{0}-{1}-{2}";
+        public static string ProductTagByProductModelKey => "Nop.pres.producttag.byproduct-{0}-{1}-{2}-{3}";
         public static string ProductTagByProductPatternKey => "Nop.pres.producttag.byproduct";
 
         /// <summary>

@@ -31,69 +31,76 @@
 <form asp-controller="FixedByWeightByTotal" asp-action="Configure" method="post" id="shipping-byweight-form">
     <div class="panel-group advanced-setting">
         <div class="form-horizontal">
-            
-                <div class="panel panel-default panel-search">
+                <div class="panel panel-default panel-search collapsed">
                     <div class="panel-body">
-                        <div class="row">
-                            <div class="col-md-5">
-                                <div class="form-group">
-                                    <div class="col-md-4">
-                                        <nop-label asp-for="SearchStoreId"/>
-                                    </div>
-                                    <div class="col-md-8">
-                                        <nop-select asp-for="SearchStoreId" asp-items="Model.AvailableStores"/>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="col-md-4">
-                                        <nop-label asp-for="SearchWarehouseId"/>
-                                    </div>
-                                    <div class="col-md-8">
-                                        <nop-select asp-for="SearchWarehouseId" asp-items="Model.AvailableWarehouses"/>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="col-md-4">
-                                        <nop-label asp-for="SearchShippingMethodId"/>
-                                    </div>
-                                    <div class="col-md-8">
-                                        <nop-select asp-for="SearchShippingMethodId" asp-items="Model.AvailableShippingMethods"/>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-7">
-                                <div class="form-group">
-                                    <div class="col-md-4">
-                                        <nop-label asp-for="SearchCountryId"/>
-                                    </div>
-                                    <div class="col-md-8">
-                                        <nop-select asp-for="SearchCountryId" asp-items="Model.AvailableCountries"/>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="col-md-4">
-                                        <nop-label asp-for="SearchStateProvinceId"/>
-                                    </div>
-                                    <div class="col-md-8">
-                                        <nop-select asp-for="SearchStateProvinceId" asp-items="Model.AvailableStates"/>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="col-md-4">
-                                        <nop-label asp-for="SearchZip"/>
-                                    </div>
-                                    <div class="col-md-8">
-                                        <nop-editor asp-for="SearchZip"/>
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="row search-row">
+                            <div class="search-text">@T("Admin.Common.Search")</div>
+                            <div class="icon-search"><i class="fa fa-search" aria-hidden="true"></i></div>
+                            <div class="icon-collapse"><i class="fa fa-angle-down" aria-hidden="true"></i></div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-7 col-md-offset-5">
-                                <button type="button" id="search-shipping-byweight-records" class="btn btn-primary btn-search">
-                                    <i class="fa fa-search"></i>
-                                    @T("Admin.Common.Search")
-                                </button>
+                        
+                        <div class="search-body">
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <div class="form-group">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="SearchStoreId" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-select asp-for="SearchStoreId" asp-items="Model.AvailableStores" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="SearchWarehouseId" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-select asp-for="SearchWarehouseId" asp-items="Model.AvailableWarehouses" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="SearchShippingMethodId" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-select asp-for="SearchShippingMethodId" asp-items="Model.AvailableShippingMethods" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-7">
+                                    <div class="form-group">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="SearchCountryId" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-select asp-for="SearchCountryId" asp-items="Model.AvailableCountries" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="SearchStateProvinceId" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-select asp-for="SearchStateProvinceId" asp-items="Model.AvailableStates" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="SearchZip" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-editor asp-for="SearchZip" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-7 col-md-offset-5">
+                                    <button type="button" id="search-shipping-byweight-records" class="btn btn-primary btn-search">
+                                        <i class="fa fa-search"></i>
+                                        @T("Admin.Common.Search")
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>

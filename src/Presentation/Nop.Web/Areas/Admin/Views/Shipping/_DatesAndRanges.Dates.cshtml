@@ -1,0 +1,74 @@
+@model DatesRangesSearchModel
+
+<div class="panel-body">
+    <p>
+        <em>@T("Admin.Configuration.Shipping.DeliveryDates.Hint")</em>
+    </p>
+    <div id="deliverydate-grid"></div>
+
+    <script>
+        $(document).ready(function() {
+            $("#deliverydate-grid").kendoGrid({
+                dataSource: {
+                    type: "json",
+                    transport: {
+                        read: {
+                            url: "@Html.Raw(Url.Action("DeliveryDates", "Shipping"))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        }
+                    },
+                    schema: {
+                        data: "Data",
+                        total: "Total",
+                        errors: "Errors"
+                    },
+                    error: function(e) {
+                        display_kendoui_grid_error(e);
+                        // Cancel the changes
+                        this.cancelChanges();
+                    },
+                    pageSize: @(Model.DeliveryDateSearchModel.PageSize),
+                    serverPaging: true,
+                    serverFiltering: true,
+                    serverSorting: true
+                },
+                pageable: {
+                    refresh: true,
+                    pageSizes: [@(Model.DeliveryDateSearchModel.AvailablePageSizes)],
+                    @await Html.PartialAsync("_GridPagerMessages")
+                },
+                editable: {
+                    confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                    mode: "inline"
+                },
+                scrollable: false,
+                columns: [
+                {
+                    field: "Name",
+                    title: "@T("Admin.Configuration.Shipping.DeliveryDates.Fields.Name")",
+                    width: 300
+                }, {
+                    field: "DisplayOrder",
+                    title: "@T("Admin.Configuration.Shipping.DeliveryDates.Fields.DisplayOrder")",
+                    width: 100
+                }, {
+                    field: "Id",
+                    title: "@T("Admin.Common.Edit")",
+                    width: 80,
+                    headerAttributes: { style: "text-align:center" },
+                    attributes: { style: "text-align:center" },
+                    template: '<a class="btn btn-default" href="EditDeliveryDate/#=Id#"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>'
+                    }
+                ]
+            });
+        });
+    </script>
+</div>
+<div class="panel-footer">
+    <a asp-action="CreateDeliveryDate" class="btn btn-primary">
+        <i class="fa fa-plus-square"></i>
+        @T("Admin.Common.AddNew")
+    </a>
+</div>

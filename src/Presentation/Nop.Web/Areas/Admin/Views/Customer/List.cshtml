@@ -66,127 +66,133 @@
     <div class="content">
         <div class="form-horizontal">
             <div class="panel-group">
-                <div class="panel panel-default panel-search">
+                <div class="panel panel-default panel-search collapsed">
                     <div class="panel-body">
-                        <div class="row">
-                            <div class="col-md-5">
-                                <div class="form-group">
-                                    <div class="col-md-4">
-                                        <nop-label asp-for="SearchEmail" />
-                                    </div>
-                                    <div class="col-md-8">
-                                        <nop-editor asp-for="SearchEmail" />
-                                    </div>
-                                </div>
-                                @if (Model.UsernamesEnabled)
-                                {
+                        <div class="row search-row">
+                            <div class="search-text">@T("Admin.Common.Search")</div>
+                            <div class="icon-search"><i class="fa fa-search" aria-hidden="true"></i></div>
+                            <div class="icon-collapse"><i class="fa fa-angle-down" aria-hidden="true"></i></div>
+                        </div>
+                        <div class="search-body">
+                            <div class="row">
+                                <div class="col-md-5">
                                     <div class="form-group">
                                         <div class="col-md-4">
-                                            <nop-label asp-for="SearchUsername" />
+                                            <nop-label asp-for="SearchEmail" />
                                         </div>
                                         <div class="col-md-8">
-                                            <nop-editor asp-for="SearchUsername" />
+                                            <nop-editor asp-for="SearchEmail" />
                                         </div>
                                     </div>
-                                }
-                                <div class="form-group">
-                                    <div class="col-md-4">
-                                        <nop-label asp-for="SearchFirstName" />
-                                    </div>
-                                    <div class="col-md-8">
-                                        <nop-editor asp-for="SearchFirstName" />
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="col-md-4">
-                                        <nop-label asp-for="SearchLastName" />
-                                    </div>
-                                    <div class="col-md-8">
-                                        <nop-editor asp-for="SearchLastName" />
-                                    </div>
-                                </div>
-                                @if (Model.DateOfBirthEnabled)
-                                {
+                                    @if (Model.UsernamesEnabled)
+                                    {
+                                        <div class="form-group">
+                                            <div class="col-md-4">
+                                                <nop-label asp-for="SearchUsername" />
+                                            </div>
+                                            <div class="col-md-8">
+                                                <nop-editor asp-for="SearchUsername" />
+                                            </div>
+                                        </div>
+                                    }
                                     <div class="form-group">
                                         <div class="col-md-4">
-                                            <nop-label asp-for="SearchDayOfBirth" />
+                                            <nop-label asp-for="SearchFirstName" />
                                         </div>
                                         <div class="col-md-8">
-                                            @{
-                                                var monthOfBirthValues = new List<SelectListItem>();
-                                                monthOfBirthValues.Add(new SelectListItem { Text = T("Admin.Customers.Customers.List.SearchDateOfBirth.Month").Text, Value = "0" });
-                                                for (var i = 1; i <= 12; i++)
-                                                {
-                                                    monthOfBirthValues.Add(new SelectListItem { Text = i.ToString(CultureInfo.InvariantCulture), Value = i.ToString(CultureInfo.InvariantCulture) });
+                                            <nop-editor asp-for="SearchFirstName" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="SearchLastName" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-editor asp-for="SearchLastName" />
+                                        </div>
+                                    </div>
+                                    @if (Model.DateOfBirthEnabled)
+                                    {
+                                        <div class="form-group">
+                                            <div class="col-md-4">
+                                                <nop-label asp-for="SearchDayOfBirth" />
+                                            </div>
+                                            <div class="col-md-8">
+                                                @{
+                                                    var monthOfBirthValues = new List<SelectListItem>();
+                                                    monthOfBirthValues.Add(new SelectListItem { Text = T("Admin.Customers.Customers.List.SearchDateOfBirth.Month").Text, Value = "0" });
+                                                    for (var i = 1; i <= 12; i++)
+                                                    {
+                                                        monthOfBirthValues.Add(new SelectListItem { Text = i.ToString(CultureInfo.InvariantCulture), Value = i.ToString(CultureInfo.InvariantCulture) });
+                                                    }
+                                                    var dayOfBirthValues = new List<SelectListItem>();
+                                                    dayOfBirthValues.Add(new SelectListItem { Text = T("Admin.Customers.Customers.List.SearchDateOfBirth.Day").Text, Value = "0" });
+                                                    for (var i = 1; i <= 31; i++)
+                                                    {
+                                                        dayOfBirthValues.Add(new SelectListItem { Text = i.ToString(CultureInfo.InvariantCulture), Value = i.ToString(CultureInfo.InvariantCulture) });
+                                                    }
                                                 }
-                                                var dayOfBirthValues = new List<SelectListItem>();
-                                                dayOfBirthValues.Add(new SelectListItem { Text = T("Admin.Customers.Customers.List.SearchDateOfBirth.Day").Text, Value = "0" });
-                                                for (var i = 1; i <= 31; i++)
-                                                {
-                                                    dayOfBirthValues.Add(new SelectListItem { Text = i.ToString(CultureInfo.InvariantCulture), Value = i.ToString(CultureInfo.InvariantCulture) });
-                                                }
-                                            }
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <nop-select asp-for="SearchMonthOfBirth" asp-items="@monthOfBirthValues" />
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <nop-select asp-for="SearchDayOfBirth" asp-items="@dayOfBirthValues" />
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <nop-select asp-for="SearchMonthOfBirth" asp-items="@monthOfBirthValues" />
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <nop-select asp-for="SearchDayOfBirth" asp-items="@dayOfBirthValues" />
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                                }
-                            </div>
-                            <div class="col-md-7">
-                                @if (Model.CompanyEnabled)
-                                {
-                                    <div class="form-group">
-                                        <div class="col-md-4">
-                                            <nop-label asp-for="SearchCompany" />
-                                        </div>
-                                        <div class="col-md-8">
-                                            <nop-editor asp-for="SearchCompany" />
-                                        </div>
-                                    </div>
-                                }
-                                @if (Model.PhoneEnabled)
-                                {
-                                    <div class="form-group">
-                                        <div class="col-md-4">
-                                            <nop-label asp-for="SearchPhone" />
-                                        </div>
-                                        <div class="col-md-8">
-                                            <nop-editor asp-for="SearchPhone" />
-                                        </div>
-                                    </div>
-                                }
-                                @if (Model.ZipPostalCodeEnabled)
-                                {
-                                    <div class="form-group">
-                                        <div class="col-md-4">
-                                            <nop-label asp-for="SearchZipPostalCode" />
-                                        </div>
-                                        <div class="col-md-8">
-                                            <nop-editor asp-for="SearchZipPostalCode" />
-                                        </div>
-                                    </div>
-                                }
-                                <div class="form-group">
-                                    <div class="col-md-4">
-                                        <nop-label asp-for="SearchIpAddress" />
-                                    </div>
-                                    <div class="col-md-8">
-                                        <nop-editor asp-for="SearchIpAddress" />
-                                    </div>
+                                    }
                                 </div>
-                                <div class="form-group">
-                                    <div class="col-md-4">
-                                        <nop-label asp-for="SelectedCustomerRoleIds" />
+                                <div class="col-md-7">
+                                    @if (Model.CompanyEnabled)
+                                    {
+                                        <div class="form-group">
+                                            <div class="col-md-4">
+                                                <nop-label asp-for="SearchCompany" />
+                                            </div>
+                                            <div class="col-md-8">
+                                                <nop-editor asp-for="SearchCompany" />
+                                            </div>
+                                        </div>
+                                    }
+                                    @if (Model.PhoneEnabled)
+                                    {
+                                        <div class="form-group">
+                                            <div class="col-md-4">
+                                                <nop-label asp-for="SearchPhone" />
+                                            </div>
+                                            <div class="col-md-8">
+                                                <nop-editor asp-for="SearchPhone" />
+                                            </div>
+                                        </div>
+                                    }
+                                    @if (Model.ZipPostalCodeEnabled)
+                                    {
+                                        <div class="form-group">
+                                            <div class="col-md-4">
+                                                <nop-label asp-for="SearchZipPostalCode" />
+                                            </div>
+                                            <div class="col-md-8">
+                                                <nop-editor asp-for="SearchZipPostalCode" />
+                                            </div>
+                                        </div>
+                                    }
+                                    <div class="form-group">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="SearchIpAddress" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-editor asp-for="SearchIpAddress" />
+                                        </div>
                                     </div>
-                                    <div class="col-md-8">
-                                        <nop-select asp-for="SelectedCustomerRoleIds" asp-items="Model.AvailableCustomerRoles" asp-multiple="true" />
-                                        <script>
+                                    <div class="form-group">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="SelectedCustomerRoleIds" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-select asp-for="SelectedCustomerRoleIds" asp-items="Model.AvailableCustomerRoles" asp-multiple="true" />
+                                            <script>
                                             $(document).ready(function() {
                                                 var rolesIdsInput =
                                                     $('#@Html.IdFor(model => model.SelectedCustomerRoleIds)')
@@ -209,17 +215,18 @@
                                                     </text>
                                                 }
                                             });
-                                        </script>
+                                            </script>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-7 col-md-offset-5">
-                                <button type="button" id="search-customers" class="btn btn-primary btn-search">
-                                    <i class="fa fa-search"></i>
-                                    @T("Admin.Common.Search")
-                                </button>
+                            <div class="row">
+                                <div class="col-md-7 col-md-offset-5">
+                                    <button type="button" id="search-customers" class="btn btn-primary btn-search">
+                                        <i class="fa fa-search"></i>
+                                        @T("Admin.Common.Search")
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>

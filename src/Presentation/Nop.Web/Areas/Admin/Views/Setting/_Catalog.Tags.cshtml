@@ -1,0 +1,124 @@
+@model CatalogSettingsModel
+
+<div class="panel-body">
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="NumberOfProductTags_OverrideForStore" asp-input="NumberOfProductTags" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="NumberOfProductTags" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="NumberOfProductTags" />
+            <span asp-validation-for="NumberOfProductTags"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ProductsByTagAllowCustomersToSelectPageSize_OverrideForStore" asp-input="ProductsByTagAllowCustomersToSelectPageSize" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ProductsByTagAllowCustomersToSelectPageSize" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ProductsByTagAllowCustomersToSelectPageSize" />
+            <span asp-validation-for="ProductsByTagAllowCustomersToSelectPageSize"></span>
+        </div>
+    </div>
+    <nop-nested-setting asp-for="ProductsByTagAllowCustomersToSelectPageSize">
+        <div class="form-group" id="pnlProductsByTagPageSize">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="ProductsByTagPageSize_OverrideForStore" asp-input="ProductsByTagPageSize" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="ProductsByTagPageSize" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="ProductsByTagPageSize" />
+                <span asp-validation-for="ProductsByTagPageSize"></span>
+            </div>
+        </div>
+        <div class="form-group" id="pnlProductsByTagPageSizeOptions">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="ProductsByTagPageSizeOptions_OverrideForStore" asp-input="ProductsByTagPageSizeOptions" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="ProductsByTagPageSizeOptions" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="ProductsByTagPageSizeOptions" />
+                <span asp-validation-for="ProductsByTagPageSizeOptions"></span>
+            </div>
+        </div>
+    </nop-nested-setting>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#@Html.IdFor(model => model.ShowCategoryProductNumber)").click(toggleShowCategoryProductNumberIncludingSubcategories);
+        $("#@Html.IdFor(model => model.EmailAFriendEnabled)").click(toggleEmailAFriend);
+        $("#@Html.IdFor(model => model.RecentlyViewedProductsEnabled)").click(toggleRecentlyViewedProducts);
+        $("#@Html.IdFor(model => model.NewProductsEnabled)").click(toggleNewProducts);
+        $("#@Html.IdFor(model => model.ShowBestsellersOnHomepage)").click(toggleBestsellersOnHomepage);
+        $("#@Html.IdFor(model => model.ProductsAlsoPurchasedEnabled)").click(toggleProductsAlsoPurchasedNumber);
+        $("#@Html.IdFor(model => model.ProductsByTagAllowCustomersToSelectPageSize)").click(toggleProductsByTagPageSize);
+
+        toggleShowCategoryProductNumberIncludingSubcategories();
+        toggleEmailAFriend();
+        toggleRecentlyViewedProducts();
+        toggleNewProducts();
+        toggleBestsellersOnHomepage();
+        toggleProductsAlsoPurchasedNumber();
+        toggleProductsByTagPageSize();
+    });
+
+    function toggleShowCategoryProductNumberIncludingSubcategories() {
+        if ($('#@Html.IdFor(model => model.ShowCategoryProductNumber)').is(':checked')) {
+            $('#pnlShowCategoryProductNumberIncludingSubcategories').show();
+        } else {
+            $('#pnlShowCategoryProductNumberIncludingSubcategories').hide();
+        }
+    }
+
+    function toggleEmailAFriend() {
+        if ($('#@Html.IdFor(model => model.EmailAFriendEnabled)').is(':checked')) {
+            $('#pnlAllowAnonymousUsersToEmailAFriend').show();
+        } else {
+            $('#pnlAllowAnonymousUsersToEmailAFriend').hide();
+        }
+    }
+
+    function toggleRecentlyViewedProducts() {
+        if ($('#@Html.IdFor(model => model.RecentlyViewedProductsEnabled)').is(':checked')) {
+            $('#pnlRecentlyViewedProductsNumber').show();
+        } else {
+            $('#pnlRecentlyViewedProductsNumber').hide();
+        }
+    }
+
+    function toggleNewProducts() {
+        if ($('#@Html.IdFor(model => model.NewProductsEnabled)').is(':checked')) {
+            $('#pnlNewProductsNumber').show();
+        } else {
+            $('#pnlNewProductsNumber').hide();
+        }
+    }
+
+    function toggleBestsellersOnHomepage() {
+        if ($('#@Html.IdFor(model => model.ShowBestsellersOnHomepage)').is(':checked')) {
+            $('#pnlNumberOfBestsellersOnHomepage').show();
+        } else {
+            $('#pnlNumberOfBestsellersOnHomepage').hide();
+        }
+    }
+
+    function toggleProductsAlsoPurchasedNumber() {
+        if ($('#@Html.IdFor(model => model.ProductsAlsoPurchasedEnabled)').is(':checked')) {
+            $('#pnlProductsAlsoPurchasedNumber').show();
+        } else {
+            $('#pnlProductsAlsoPurchasedNumber').hide();
+        }
+    }
+
+    function toggleProductsByTagPageSize() {
+        if ($('#@Html.IdFor(model => model.ProductsByTagAllowCustomersToSelectPageSize)').is(':checked')) {
+            $('#pnlProductsByTagPageSize').hide();
+            $('#pnlProductsByTagPageSizeOptions').show();
+        } else {
+            $('#pnlProductsByTagPageSize').show();
+            $('#pnlProductsByTagPageSizeOptions').hide();
+        }
+    }
+</script>

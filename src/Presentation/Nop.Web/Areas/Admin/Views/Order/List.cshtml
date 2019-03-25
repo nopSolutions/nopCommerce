@@ -12,8 +12,6 @@
     Html.SetActiveMenuItemSystemName("Orders");
 }
 
-
-
 <form asp-controller="Order" asp-action="List" method="post">
     <div class="content-header clearfix">
         <h1 class="pull-left">
@@ -87,11 +85,12 @@
             <div class="panel-group">
                 <div class="panel panel-default panel-search collapsed">
                     <div class="panel-body">
-                        <div class="row search-row" style="padding-left: 45px; padding-right: 30px; position: relative;">
-                            <div class="search-text">Search</div>
+                        <div class="row search-row">
+                            <div class="search-text">@T("Admin.Common.Search")</div>
                             <div class="icon-search"><i class="fa fa-search" aria-hidden="true"></i></div>
                             <div class="icon-collapse"><i class="fa fa-angle-down" aria-hidden="true"></i></div>
                         </div>
+
                         <div class="search-body">
                             <div class="row">
                                 <div class="col-md-5">

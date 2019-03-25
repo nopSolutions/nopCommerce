@@ -161,10 +161,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 if (!continueEditing)
                     return RedirectToAction("NewsItems");
-
-                //selected tab
-                SaveSelectedTabName();
-
+                
                 return RedirectToAction("NewsItemEdit", new { id = newsItem.Id });
             }
 
@@ -222,9 +219,6 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 if (!continueEditing)
                     return RedirectToAction("NewsItems");
-
-                //selected tab
-                SaveSelectedTabName();
 
                 return RedirectToAction("NewsItemEdit", new { id = newsItem.Id });
             }

@@ -4,9 +4,9 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.News
 {
-    public partial class HomePageNewsItemsModel : BaseNopModel, ICloneable
+    public partial class HomepageNewsItemsModel : BaseNopModel, ICloneable
     {
-        public HomePageNewsItemsModel()
+        public HomepageNewsItemsModel()
         {
             NewsItems = new List<NewsItemModel>();
         }

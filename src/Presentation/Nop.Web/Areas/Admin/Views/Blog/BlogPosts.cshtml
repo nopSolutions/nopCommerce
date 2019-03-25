@@ -24,24 +24,32 @@
         <div class="panel-group">
 
             @*hide the entire search block if no elements are displayed*@
-            <div class="panel panel-default panel-search" @(Model.BlogPosts.HideStoresList ? Html.Raw("style=\"display:none\"") : null)>
+            <div class="panel panel-default panel-search collapsed" @(Model.BlogPosts.HideStoresList ? Html.Raw("style=\"display:none\"") : null)>
                 <div class="panel-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <div class="col-md-4">
-                                    <nop-label asp-for="BlogPosts.SearchStoreId" />
+                    <div class="row search-row">
+                        <div class="search-text">@T("Admin.Common.Search")</div>
+                        <div class="icon-search"><i class="fa fa-search" aria-hidden="true"></i></div>
+                        <div class="icon-collapse"><i class="fa fa-angle-down" aria-hidden="true"></i></div>
+                    </div>
+
+                    <div class="search-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="BlogPosts.SearchStoreId" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-select asp-for="BlogPosts.SearchStoreId" asp-items="Model.BlogPosts.AvailableStores" />
+                                    </div>
                                 </div>
-                                <div class="col-md-8">
-                                    <nop-select asp-for="BlogPosts.SearchStoreId" asp-items="Model.BlogPosts.AvailableStores" />
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-md-8 col-md-offset-4">
-                                    <button type="button" id="search-blogpost" class="btn btn-primary btn-search">
-                                        <i class="fa fa-search"></i>
-                                        @T("Admin.Common.Search")
-                                    </button>
+                                <div class="form-group">
+                                    <div class="col-md-8 col-md-offset-4">
+                                        <button type="button" id="search-blogpost" class="btn btn-primary btn-search">
+                                            <i class="fa fa-search"></i>
+                                            @T("Admin.Common.Search")
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>

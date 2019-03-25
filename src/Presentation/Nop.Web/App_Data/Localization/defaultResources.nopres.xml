@@ -2196,10 +2196,10 @@
   <LocaleResource Name="Admin.Catalog.Categories.Fields.SeName.Hint">
     <Value>Set a search engine friendly page name e.g. 'the-best-category' to make your page URL 'http://www.yourStore.com/the-best-category'. Leave empty to generate it automatically based on the name of the category.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Categories.Fields.ShowOnHomePage">
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.ShowOnHomepage">
     <Value>Show on home page</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Categories.Fields.ShowOnHomePage.Hint">
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.ShowOnHomepage.Hint">
     <Value>Check if you want to show a category on home page.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Import.CategoriesArentImported">
@@ -3216,10 +3216,10 @@
   <LocaleResource Name="Admin.Catalog.Products.Fields.ShortDescription.Hint">
     <Value>Short description is the text that is displayed in product list i.e. сategory / manufacturer pages.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Fields.ShowOnHomePage">
+  <LocaleResource Name="Admin.Catalog.Products.Fields.ShowOnHomepage">
     <Value>Show on home page</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Fields.ShowOnHomePage.Hint">
+  <LocaleResource Name="Admin.Catalog.Products.Fields.ShowOnHomepage.Hint">
     <Value>Check to display this product on your store's home page. Recommended for your most popular products.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.Sku">
@@ -6504,6 +6504,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Gdpr.LogPrivacyPolicyConsent.Hint">
     <Value>Check to log "accept privacy policy" consent (if this feature is enabled in your store).</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.LogUserProfileChanges">
+    <Value>Log user profile changes</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.LogUserProfileChanges.Hint">
+    <Value>Check to log user profile changes (if this feature is enabled in your store).</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon">
     <Value>General settings</Value>
   </LocaleResource>
@@ -6807,10 +6813,10 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultMenuItemSettings.DisplayForumsMenuItem.Hint">
     <Value>Check if "Forums" menu item should be displayed in the top menu.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultMenuItemSettings.DisplayHomePageMenuItem">
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultMenuItemSettings.DisplayHomepageMenuItem">
     <Value>Display "Home page"</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultMenuItemSettings.DisplayHomePageMenuItem.Hint">
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultMenuItemSettings.DisplayHomepageMenuItem.Hint">
     <Value>Check if "Home page" menu item should be displayed in the top menu.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultMenuItemSettings.DisplayNewProductsMenuItem">
@@ -6936,12 +6942,6 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.GenerateProductMetaDescription.Hint">
     <Value>When enabled, product META descriptions will be automatically generated (if not specified on the product details page) based on product short description.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.GooglePlusLink">
-    <Value>Google+ page URL</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.GooglePlusLink.Hint">
-    <Value>Specify your Google+ page URL. Leave empty if you have no such page.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.HoneypotEnabled">
     <Value>Enable honeypot</Value>
   </LocaleResource>
@@ -7041,11 +7041,20 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SeoFriendlyUrlsForLanguagesEnabled.Hint">
     <Value>When enabled, your URLs will be http://www.yourStore.com/en/ or http://www.yourStore.com/ru/ (SEO friendly).</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.Sitemap.Instructions">
+    <Value><![CDATA[<p>These settings do not apply to sitemap.xml, only for your site map. You can configure generation for sitemap.xml on <a href="{0}">all settings page</a></p>]]></Value>
+  </LocaleResource>  
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SitemapEnabled">
     <Value>Sitemap enabled</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SitemapEnabled.Hint">
     <Value>Check to enable sitemap.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SitemapIncludeBlogPosts">
+    <Value>Sitemap includes blog posts</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SitemapIncludeBlogPosts.Hint">
+    <Value>Check if you want to include blog posts in sitemap.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SitemapIncludeCategories">
     <Value>Sitemap includes categories</Value>
@@ -7059,6 +7068,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SitemapIncludeManufacturers.Hint">
     <Value>Check if you want to include manufacturers in sitemap.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SitemapIncludeNews">
+    <Value>Sitemap includes news items</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SitemapIncludeNews.Hint">
+    <Value>Check if you want to include news items in sitemap.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SitemapIncludeProducts">
     <Value>Sitemap includes products</Value>
   </LocaleResource>
@@ -7070,6 +7085,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SitemapIncludeProductTags.Hint">
     <Value>Check if you want to include product tags in sitemap.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SitemapIncludeTopics">
+    <Value>Sitemap includes topics</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SitemapIncludeTopics.Hint">
+    <Value>Check if you want to include topics in sitemap.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SitemapPageSize">
     <Value>Sitemap page size</Value>
@@ -7821,7 +7842,7 @@
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.ShipSeparately">
     <Value>Ship separately</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.ShowOnHomePage">
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.ShowOnHomepage">
     <Value>Show on home page</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.SpecificationAttributes">
@@ -8982,6 +9003,12 @@
   <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.EndDate.Hint">
     <Value>Set the blog post end date in Coordinated Universal Time (UTC). You can also leave it empty.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.IncludeInSitemap">
+    <Value>Include in sitemap</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.IncludeInSitemap.Hint">
+    <Value>Check to include this blog post in the sitemap.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.Language">
     <Value>Language</Value>
   </LocaleResource>
@@ -9768,10 +9795,10 @@
   <LocaleResource Name="Admin.ContentManagement.Polls.Fields.Published.Hint">
     <Value>Determines whether this poll is published (visible) in your store.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Polls.Fields.ShowOnHomePage">
+  <LocaleResource Name="Admin.ContentManagement.Polls.Fields.ShowOnHomepage">
     <Value>Show on home page</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Polls.Fields.ShowOnHomePage.Hint">
+  <LocaleResource Name="Admin.ContentManagement.Polls.Fields.ShowOnHomepage.Hint">
     <Value>Check if you want to show poll on the home page.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Polls.Fields.StartDate">
@@ -15222,6 +15249,9 @@
   <LocaleResource Name="Enums.Nop.Core.Domain.Gdpr.GdprRequestType.ExportData">
     <Value>Export data</Value>
   </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Gdpr.GdprRequestType.ProfileChanged">
+    <Value>User changed profile</Value>
+  </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Domain.Logging.LogLevel.Debug">
     <Value>Debug</Value>
   </LocaleResource>
@@ -15440,9 +15470,6 @@
   </LocaleResource>
   <LocaleResource Name="Footer.FollowUs.Facebook">
     <Value>Facebook</Value>
-  </LocaleResource>
-  <LocaleResource Name="Footer.FollowUs.GooglePlus">
-    <Value>Google+</Value>
   </LocaleResource>
   <LocaleResource Name="Footer.FollowUs.RSS">
     <Value>RSS</Value>
@@ -15789,10 +15816,10 @@
   <LocaleResource Name="GiftCardAttribute.From.Virtual">
     <Value><![CDATA[From: {0} <{1}>]]></Value>
   </LocaleResource>
-  <LocaleResource Name="HomePage">
+  <LocaleResource Name="Homepage">
     <Value>Home page</Value>
   </LocaleResource>
-  <LocaleResource Name="HomePage.Products">
+  <LocaleResource Name="Homepage.Products">
     <Value>Featured products</Value>
   </LocaleResource>
   <LocaleResource Name="Languages">
@@ -17322,6 +17349,12 @@
   <LocaleResource Name="RewardPoints.NoHistory">
     <Value>There is no balance history yet</Value>
   </LocaleResource>
+  <LocaleResource Name="ScheduleTasks.Error">
+    <Value>The "{0}" scheduled task failed with the "{1}" error (Task type: "{2}". Store name: "{3}". Task run address: "{4}").</Value>
+  </LocaleResource>
+  <LocaleResource Name="ScheduleTasks.TimeoutError">
+    <Value>A scheduled task canceled. Timeout expired.</Value>
+  </LocaleResource>  
   <LocaleResource Name="Search">
     <Value>Search</Value>
   </LocaleResource>
@@ -17730,6 +17763,9 @@
   <LocaleResource Name="Sitemap">
     <Value>Sitemap</Value>
   </LocaleResource>
+  <LocaleResource Name="Sitemap.BlogPosts">
+    <Value>Blog posts</Value>
+  </LocaleResource>
   <LocaleResource Name="Sitemap.Categories">
     <Value>Categories</Value>
   </LocaleResource>
@@ -17741,6 +17777,9 @@
   </LocaleResource>
   <LocaleResource Name="Sitemap.Manufacturers">
     <Value>Manufacturers</Value>
+  </LocaleResource>
+  <LocaleResource Name="Sitemap.News">
+    <Value>News</Value>
   </LocaleResource>
   <LocaleResource Name="Sitemap.Products">
     <Value>Products</Value>

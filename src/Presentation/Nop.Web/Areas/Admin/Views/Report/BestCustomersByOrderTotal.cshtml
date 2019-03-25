@@ -19,56 +19,64 @@
 <div class="content">
     <div class="form-horizontal">
         <div class="panel-group">
-            <div class="panel panel-default panel-search">
+            <div class="panel panel-default panel-search collapsed">
                 <div class="panel-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <div class="col-md-4">
-                                    <nop-label asp-for="BestCustomersByOrderTotal.StartDate"/>
+                    <div class="row search-row">
+                        <div class="search-text">@T("Admin.Common.Search")</div>
+                        <div class="icon-search"><i class="fa fa-search" aria-hidden="true"></i></div>
+                        <div class="icon-collapse"><i class="fa fa-angle-down" aria-hidden="true"></i></div>
+                    </div>
+
+                    <div class="search-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="BestCustomersByOrderTotal.StartDate" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-editor asp-for="BestCustomersByOrderTotal.StartDate" />
+                                    </div>
                                 </div>
-                                <div class="col-md-8">
-                                    <nop-editor asp-for="BestCustomersByOrderTotal.StartDate"/>
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="BestCustomersByOrderTotal.EndDate" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-editor asp-for="BestCustomersByOrderTotal.EndDate" />
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-md-4">
-                                    <nop-label asp-for="BestCustomersByOrderTotal.EndDate"/>
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="BestCustomersByOrderTotal.OrderStatusId" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-select asp-for="BestCustomersByOrderTotal.OrderStatusId" asp-items="Model.BestCustomersByOrderTotal.AvailableOrderStatuses" />
+                                    </div>
                                 </div>
-                                <div class="col-md-8">
-                                    <nop-editor asp-for="BestCustomersByOrderTotal.EndDate"/>
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="BestCustomersByOrderTotal.PaymentStatusId" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-select asp-for="BestCustomersByOrderTotal.PaymentStatusId" asp-items="Model.BestCustomersByOrderTotal.AvailablePaymentStatuses" />
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-md-4">
-                                    <nop-label asp-for="BestCustomersByOrderTotal.OrderStatusId"/>
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="BestCustomersByOrderTotal.ShippingStatusId" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-select asp-for="BestCustomersByOrderTotal.ShippingStatusId" asp-items="Model.BestCustomersByOrderTotal.AvailableShippingStatuses" />
+                                    </div>
                                 </div>
-                                <div class="col-md-8">
-                                    <nop-select asp-for="BestCustomersByOrderTotal.OrderStatusId" asp-items="Model.BestCustomersByOrderTotal.AvailableOrderStatuses"/>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-md-4">
-                                    <nop-label asp-for="BestCustomersByOrderTotal.PaymentStatusId"/>
-                                </div>
-                                <div class="col-md-8">
-                                    <nop-select asp-for="BestCustomersByOrderTotal.PaymentStatusId" asp-items="Model.BestCustomersByOrderTotal.AvailablePaymentStatuses"/>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-md-4">
-                                    <nop-label asp-for="BestCustomersByOrderTotal.ShippingStatusId"/>
-                                </div>
-                                <div class="col-md-8">
-                                    <nop-select asp-for="BestCustomersByOrderTotal.ShippingStatusId" asp-items="Model.BestCustomersByOrderTotal.AvailableShippingStatuses"/>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-md-8 col-md-offset-3">
-                                    <button type="button" id="search-best-customers-ordertotal" class="btn btn-primary btn-search">
-                                        <i class="fa fa-line-chart"></i>
-                                        @T("Admin.Reports.Customers.RunReport")
-                                    </button>
+                                <div class="form-group">
+                                    <div class="col-md-8 col-md-offset-3">
+                                        <button type="button" id="search-best-customers-ordertotal" class="btn btn-primary btn-search">
+                                            <i class="fa fa-line-chart"></i>
+                                            @T("Admin.Reports.Customers.RunReport")
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>

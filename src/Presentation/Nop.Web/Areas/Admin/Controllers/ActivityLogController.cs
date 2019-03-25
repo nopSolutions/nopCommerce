@@ -79,9 +79,6 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.ActivityLog.ActivityLogType.Updated"));
 
-            //selected tab
-            SaveSelectedTabName();
-
             return RedirectToAction("ActivityTypes");
         }
 

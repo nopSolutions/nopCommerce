@@ -17,12 +17,13 @@
     <div class="form-horizontal">
         <nop-panels id="gift-card-panels">
             <nop-panel asp-name="gift-card-info" asp-icon="fa fa-info" asp-title="@T("Admin.GiftCards.Info")" asp-hide-block-attribute-name="@hideInfoBlockAttributeName" asp-hide="@hideInfoBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-panel>
-        @if (Model.Id > 0)
-        {
-            <nop-panel asp-name="gift-card-usage-history" asp-icon="fa fa-history" asp-title="@T("Admin.GiftCards.History")" asp-hide-block-attribute-name="@hideUsageHistoryBlockAttributeName" asp-hide="@HideUsageHistoryBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.History", Model)</nop-panel>
-        }
-        </nop-panels>
+            
+            @if (Model.Id > 0)
+            {
+                <nop-panel asp-name="gift-card-usage-history" asp-icon="fa fa-history" asp-title="@T("Admin.GiftCards.History")" asp-hide-block-attribute-name="@hideUsageHistoryBlockAttributeName" asp-hide="@HideUsageHistoryBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.History", Model)</nop-panel>
+            }
         
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.GiftCardDetailsBlock, additionalData = Model })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.GiftCardDetailsBlock, additionalData = Model })
+        </nop-panels>
     </div>
 </div>
