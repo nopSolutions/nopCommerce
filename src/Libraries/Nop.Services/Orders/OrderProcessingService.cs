@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -1532,7 +1532,7 @@ namespace Nop.Services.Orders
             try
             {
                 if (processPaymentRequest.OrderGuid == Guid.Empty)
-                    processPaymentRequest.OrderGuid = Guid.NewGuid();
+                    throw new Exception("Order GUID is not generated");
 
                 //prepare order details
                 var details = PreparePlaceOrderDetails(processPaymentRequest);
