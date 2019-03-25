@@ -110,6 +110,16 @@ namespace Nop.Core.Domain.Common
         public bool EnableHtmlMinification { get; set; }
 
         /// <summary>
+        /// A value indicating whether JS file bundling and minification is enabled
+        /// </summary>
+        public bool EnableJsBundling { get; set; }
+
+        /// <summary>
+        /// A value indicating whether CSS file bundling and minification is enabled
+        /// </summary>
+        public bool EnableCssBundling { get; set; }
+
+        /// <summary>
         /// The length of time, in milliseconds, before the running schedule task times out. Set null to use default value
         /// </summary>
         public int? ScheduleTaskRunTimeout { get; set; }

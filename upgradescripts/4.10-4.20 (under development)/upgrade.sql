@@ -1537,7 +1537,6 @@ DELETE FROM [Setting]
 WHERE [Name] = N'commonsettings.minificationenabled'
 GO
 
-
 --new setting
 IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'commonsettings.enablehtmlminification')
 BEGIN
@@ -1635,4 +1634,30 @@ EXEC sp_RENAME 'Poll.ShowOnHomePage' , 'ShowOnHomepage', 'COLUMN'
 GO
 
 EXEC sp_RENAME 'Product.ShowOnHomePage' , 'ShowOnHomepage', 'COLUMN'
+GO
+
+--delete setting
+DELETE FROM [Setting]
+WHERE [Name] = N'seosettings.enablejsbundling'
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'commonsettings.enablejsbundling')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'commonsettings.enablejsbundling', N'False', 0)
+END
+GO
+
+--delete setting
+DELETE FROM [Setting]
+WHERE [Name] = N'seosettings.enablecssbundling'
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'commonsettings.enablecssbundling')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'commonsettings.enablecssbundling', N'False', 0)
+END
 GO
