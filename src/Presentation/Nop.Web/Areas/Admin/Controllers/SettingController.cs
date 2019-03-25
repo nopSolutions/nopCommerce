@@ -1214,6 +1214,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             sitemapSettings.SitemapIncludeNews = model.SitemapSettings.SitemapIncludeNews;
             sitemapSettings.SitemapIncludeTopics = model.SitemapSettings.SitemapIncludeTopics;
 
+            //minification
+            commonSettings.EnableHtmlMinification = model.MinificationSettings.EnableHtmlMinification;
+            _settingService.SaveSettingOverridablePerStore(commonSettings, x => x.EnableHtmlMinification, model.MinificationSettings.EnableHtmlMinification_OverrideForStore, storeScope, false);
+
             //use response compression
             commonSettings.UseResponseCompression = model.StoreInformationSettings.UseResponseCompression;
 

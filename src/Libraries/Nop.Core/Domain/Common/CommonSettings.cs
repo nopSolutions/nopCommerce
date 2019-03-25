@@ -107,7 +107,7 @@ namespace Nop.Core.Domain.Common
         /// <summary>
         /// Gets or sets a value indicating whether to enable markup minification
         /// </summary>
-        public bool MinificationEnabled { get; set; }
+        public bool EnableHtmlMinification { get; set; }
 
         /// <summary>
         /// The length of time, in milliseconds, before the running schedule task times out. Set null to use default value

@@ -63,6 +63,16 @@
     </div>
     <div class="form-group advanced-setting">
         <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="MinificationSettings.EnableHtmlMinification_OverrideForStore" asp-input="MinificationSettings.EnableHtmlMinification" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="MinificationSettings.EnableHtmlMinification" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="MinificationSettings.EnableHtmlMinification" />
+            <span asp-validation-for="MinificationSettings.EnableHtmlMinification"></span>
+        </div>
+    </div>
+    <div class="form-group advanced-setting">
+        <div class="col-md-3">
             <nop-override-store-checkbox asp-for="SeoSettings.EnableJsBundling_OverrideForStore" asp-input="SeoSettings.EnableJsBundling" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="SeoSettings.EnableJsBundling" />
         </div>

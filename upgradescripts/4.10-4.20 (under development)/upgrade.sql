@@ -521,6 +521,12 @@ set @resources='
   <LocaleResource Name="Homepage.Products">
     <Value>Featured products</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EnableHtmlMinification">
+    <Value>Html minification</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EnableHtmlMinification.Hint">
+    <Value>Allows you to minify HTML pages as well as compress them, thereby increasing the download speed. Please note that after applying this setting, you need to restart the application.</Value>
+  </LocaleResource>
 </Language>'
 
 CREATE TABLE #LocaleStringResourceTmp
@@ -1526,11 +1532,17 @@ DELETE FROM [Setting]
 WHERE [Name] = N'adminareasettings.usenestedsetting'
 GO
 
+--delete setting
+DELETE FROM [Setting]
+WHERE [Name] = N'commonsettings.minificationenabled'
+GO
+
+
 --new setting
-IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'commonsettings.minificationenabled')
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'commonsettings.enablehtmlminification')
 BEGIN
     INSERT [Setting] ([Name], [Value], [StoreId])
-    VALUES (N'commonsettings.minificationenabled', N'true', 0)
+    VALUES (N'commonsettings.enablehtmlminification', N'True', 0)
 END
 GO
 

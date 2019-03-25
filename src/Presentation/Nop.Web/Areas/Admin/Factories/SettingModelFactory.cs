@@ -380,6 +380,31 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
+        /// Prepare minification settings model
+        /// </summary>
+        /// <returns>Minification settings model</returns>
+        protected virtual MinificationSettingsModel PrepareMinificationSettingsModel()
+        {
+            //load settings for a chosen store scope
+            var storeId = _storeContext.ActiveStoreScopeConfiguration;
+            var minificationSettings = _settingService.LoadSetting<CommonSettings>(storeId);
+
+            //fill in model values from the entity
+            var model = new MinificationSettingsModel
+            {
+                EnableHtmlMinification = minificationSettings.EnableHtmlMinification
+            };
+
+            if (storeId <= 0)
+                return model;
+
+            //fill in overridden values
+            model.EnableHtmlMinification_OverrideForStore = _settingService.SettingExists(minificationSettings, x => x.EnableHtmlMinification, storeId);
+
+            return model;
+        }
+
+        /// <summary>
         /// Prepare SEO settings model
         /// </summary>
         /// <returns>SEO settings model</returns>
@@ -1399,6 +1424,9 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare Sitemap settings model
             model.SitemapSettings = PrepareSitemapSettingsModel();
+
+            //prepare Minification settings model
+            model.MinificationSettings = PrepareMinificationSettingsModel();
 
             //prepare SEO settings model
             model.SeoSettings = PrepareSeoSettingsModel();
