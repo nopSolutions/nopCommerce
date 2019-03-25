@@ -527,6 +527,9 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EnableHtmlMinification.Hint">
     <Value>Allows you to minify HTML pages as well as compress them, thereby increasing the download speed. Please note that after applying this setting, you need to restart the application.</Value>
   </LocaleResource>
+    <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.BlockTitle.Minification">
+    <Value>Minification</Value>
+  </LocaleResource>
 </Language>'
 
 CREATE TABLE #LocaleStringResourceTmp
@@ -1532,16 +1535,20 @@ DELETE FROM [Setting]
 WHERE [Name] = N'adminareasettings.usenestedsetting'
 GO
 
---delete setting
-DELETE FROM [Setting]
-WHERE [Name] = N'commonsettings.minificationenabled'
-GO
-
 --new setting
-IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'commonsettings.enablehtmlminification')
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'commonsettings.minificationenabled')
 BEGIN
     INSERT [Setting] ([Name], [Value], [StoreId])
-    VALUES (N'commonsettings.enablehtmlminification', N'True', 0)
+    VALUES (N'commonsettings.minificationenabled', N'True', 0)
+END
+GO
+
+--update setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'commonsettings.enablehtmlminification')
+BEGIN
+	UPDATE [Setting]
+	SET [Name] = 'commonsettings.enablehtmlminification'
+	WHERE [Name] = 'commonsettings.minificationenabled'
 END
 GO
 
@@ -1636,28 +1643,20 @@ GO
 EXEC sp_RENAME 'Product.ShowOnHomePage' , 'ShowOnHomepage', 'COLUMN'
 GO
 
---delete setting
-DELETE FROM [Setting]
-WHERE [Name] = N'seosettings.enablejsbundling'
-GO
-
---new setting
+--update setting
 IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'commonsettings.enablejsbundling')
 BEGIN
-    INSERT [Setting] ([Name], [Value], [StoreId])
-    VALUES (N'commonsettings.enablejsbundling', N'False', 0)
+	UPDATE [Setting]
+	SET [Name] = 'commonsettings.enablejsbundling'
+	WHERE [Name] = 'seosettings.enablejsbundling'
 END
 GO
 
---delete setting
-DELETE FROM [Setting]
-WHERE [Name] = N'seosettings.enablecssbundling'
-GO
-
---new setting
+--update setting
 IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'commonsettings.enablecssbundling')
 BEGIN
-    INSERT [Setting] ([Name], [Value], [StoreId])
-    VALUES (N'commonsettings.enablecssbundling', N'False', 0)
+	UPDATE [Setting]
+	SET [Name] = 'commonsettings.enablecssbundling'
+	WHERE [Name] = 'seosettings.enablecssbundling'
 END
 GO
