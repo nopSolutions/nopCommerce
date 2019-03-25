@@ -178,7 +178,7 @@ ul.common-list {
 }
 
 .panel.collapsible-panel >.panel-heading span {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 400;
 }
 
@@ -200,12 +200,12 @@ ul.common-list {
     width: 45px;
     position: absolute;
     left: 0;
-    top: 14px;
+    top: 12px;
     text-align: center;
 }
 
 .panel.collapsible-panel .panel-heading i.panel-icon {
-    font-size: 18px;
+    font-size: 16px;
     padding-right: 0 !important;
 }
 
@@ -221,13 +221,13 @@ ul.common-list {
     cursor: pointer;
 }
 
-.panel-search .search-body {
+.panel-search .search-body.closed {
     display: none;
-    margin-top: 15px;
 }
 
-.panel-search.collapsed {
-    cursor: pointer;
+.panel-search .search-body {
+    display: block;
+    margin-top: 15px;
 }
 
 .icon-search {
@@ -872,6 +872,11 @@ td.k-state-focused.k-state-selected {
 }
 .content-header .btn {
     margin-bottom: 5px;
+}
+
+.content-header .btn-group {
+    margin-left: 3px;
+    margin-right: 3px;
 }
 .content-header .btn-group .dropdown-menu input,
 .content-header .btn-group .dropdown-menu button,

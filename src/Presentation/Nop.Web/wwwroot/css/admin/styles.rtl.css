@@ -141,127 +141,126 @@ ul.common-list {
 
 /*COLLAPSIBLE BLOCKS*/
 #ajaxBusy span.no-ajax-loader {
-    background: none;
+  background: none;
 }
 
 .panel.collapsible-panel {
-    margin-bottom: 10px;
-    border-top: 3px solid #d2d6de;
-    border-left: none;
-    border-right: none;
-    border-bottom: none;
-    box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+  margin-bottom: 10px;
+  border-top: 3px solid #d2d6de;
+  border-left: none;
+  border-right: none;
+  border-bottom: none;
+  box-shadow: 0 1px 1px rgba(0,0,0,0.1);
 }
 
 .panel.collapsible-panel textarea {
-    resize: vertical;
+  resize: vertical;
 }
 
-.panel.collapsible-panel .sub-panel {
-   margin-bottom: 5px;
+.panel.collapsible-panel .sub-panel, .panel.collapsible-panel .panel.sub-panel {
+  margin-bottom: 5px;
 }
 
 .panel.collapsible-panel .panel {
-   margin-bottom: 0;
+  margin-bottom: 0;
 }
 
-.panel.collapsible-panel .panel-heading {
-    padding-right: 30px;
-    position: relative;
-    cursor: pointer;
+.panel.collapsible-panel >.panel-heading {
+  padding-right: 30px;
+  position: relative;
+  cursor: pointer;
 }
 
 .panel.collapsible-panel > .panel-heading {
-    background-color: #ffffff;
-    color: #444;
-    border-bottom: 1px solid #f4f4f4;
-    padding-left: 45px;
+  background-color: #ffffff;
+  color: #444;
+  border-bottom: 1px solid #f4f4f4;
+  padding-left: 45px;
 }
 
 .panel.collapsible-panel >.panel-heading span {
-    font-size: 18px;
-    font-weight: 400;
+  font-size: 16px;
+  font-weight: 400;
 }
 
 .panel.collapsible-panel .panel-heading i.toggle-icon {
-    position: absolute;
-    right: 5px;
-    top: 14px;
+  position: absolute;
+  right: 5px;
+  top: 14px;
 }
 
 .panel.collapsible-panel .panel-container .panel-group {
-    margin-bottom: 0;
+  margin-bottom: 0;
 }
 
 .panel.collapsible-panel .panel-container {
-   overflow: hidden;
+  overflow: hidden;
 }
 
 .panel.collapsible-panel .panel-heading div.icon-container {
-    width: 45px;
-    position: absolute;
-    left: 0;
-    top: 14px;
-    text-align: center;
+  width: 45px;
+  position: absolute;
+  left: 0;
+  top: 12px;
+  text-align: center;
 }
 
 .panel.collapsible-panel .panel-heading i.panel-icon {
-    font-size: 18px;
-    padding-right: 0 !important;
+  font-size: 16px;
+  padding-right: 0 !important;
 }
 
 .panel.collapsible-panel .panel-container.collapsed {
-    display: none;
+  display: none;
 }
 
 /*Search block collapse*/
 .search-row {
-    padding-left: 50px;
-    padding-right: 30px;
-    position: relative;
-    cursor: pointer;
+  padding-left: 50px;
+  padding-right: 30px;
+  position: relative;
+  cursor: pointer;
+}
+
+.panel-search .search-body.closed {
+  display: none;
 }
 
 .panel-search .search-body {
-    display: none;
-    margin-top: 15px;
-}
-
-.panel-search.collapsed {
-    cursor: pointer;
+  display: block;
+  margin-top: 15px;
 }
 
 .icon-search {
-    position: absolute;
-    left: 0;
-    top: 3px;
-    text-align: center;
-    width: 50px;
+  position: absolute;
+  left: 0;
+  top: 3px;
+  text-align: center;
+  width: 50px;
 }
 
 .icon-search i{
-    font-size: 18px;
-    padding-right: 0!important;
+  font-size: 18px;
+  padding-right: 0!important;
 }
 
 .icon-collapse {
-    position: absolute;
-    right: 0;
-    top: 3px;
-    text-align: center;
-    width: 42px;
+  position: absolute;
+  right: 0;
+  top: 3px;
+  text-align: center;
+  width: 42px;
 }
 
 .icon-collapse i{
-    font-size: 20px;
-    padding-right: 0!important;
-    font-weight: bold;
+  font-size: 20px;
+  padding-right: 0!important;
+  font-weight: bold;
 }
 
 .search-text {
-    font-size: 18px;
+  font-size: 18px;
 }
-
 /*DISCOUNT*/
 .requirement-container {
     margin-bottom: 5px;
@@ -883,6 +882,12 @@ td.k-state-focused.k-state-selected {
 .content-header .btn {
     margin-bottom: 5px;
 }
+
+.content-header .btn-group {
+  margin-left: 3px;
+  margin-right: 3px;
+}
+
 .content-header .btn-group .dropdown-menu input,
 .content-header .btn-group .dropdown-menu button,
 .content-header .btn-group .dropdown-menu a {

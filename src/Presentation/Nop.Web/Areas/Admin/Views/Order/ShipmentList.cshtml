@@ -8,6 +8,10 @@
     Html.SetActiveMenuItemSystemName("Shipments");
 }
 
+@{
+    const string hideSearchBlockAttributeName = "ShipmentsPage.HideSearchBlock";
+    var hideSearchBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSearchBlockAttributeName);
+}
 
 <form asp-controller="Order" asp-action="ShipmentList" method="post">
     <div class="content-header clearfix">
@@ -51,15 +55,15 @@
     <div class="content">
         <div class="form-horizontal">
             <div class="panel-group">
-                <div class="panel panel-default panel-search collapsed">
+                <div class="panel panel-default panel-search">
                     <div class="panel-body">
-                        <div class="row search-row">
+                        <div class="row search-row @(!hideSearchBlock ? "opened" : "")" data-hideAttribute="@hideSearchBlockAttributeName">
                             <div class="search-text">@T("Admin.Common.Search")</div>
                             <div class="icon-search"><i class="fa fa-search" aria-hidden="true"></i></div>
                             <div class="icon-collapse"><i class="fa fa-angle-down" aria-hidden="true"></i></div>
                         </div>
 
-                        <div class="search-body">
+                        <div class="search-body @(hideSearchBlock ? "closed" : "")">
                             <div class="row">
                                 <div class="col-md-5">
                                     <div class="form-group">
@@ -406,7 +410,7 @@
                                 },
                                 error: function(xhr, ajaxOptions, thrownError) {
                                     $('#setAsDeliveredSelectedFailed-info').html(thrownError);
-                                    $("#setAsDeliveredSelectedFailed").click(); 
+                                    $("#setAsDeliveredSelectedFailed").click();
                                 },
                                 traditional: true
                             });
@@ -435,7 +439,7 @@
                             updateMasterCheckbox();
                         });
                     });
-                    
+
                     function onDataBound(e) {
                         $('#shipments-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]').each(function() {
                             var currentId = $(this).val();
@@ -456,7 +460,7 @@
             </div>
         </div>
     </div>
- </form>
+</form>
 
 @*export selected (Excel). We don't use GET approach because it's limited to 2K-4K chars and won't work for large number of entities*@
 <form asp-controller="Order" asp-action="PdfPackagingSlipSelected" method="post" id="pdf-packaging-slip-selected-form">
@@ -467,13 +471,13 @@
 <nop-alert asp-alert-id="setAsDeliveredSelectedFailed" />
 
 <script>
-                $(document).ready(function () {
-                    $('#exportpackagingslips-selected').click(function (e) {
-                        e.preventDefault();
-                        var ids = selectedIds.join(",");
-                        $('#pdf-packaging-slip-selected-form #selectedIds').val(ids);
-                        $('#pdf-packaging-slip-selected-form').submit();
-                        return false;
-                    });
-                });
+    $(document).ready(function () {
+        $('#exportpackagingslips-selected').click(function (e) {
+            e.preventDefault();
+            var ids = selectedIds.join(",");
+            $('#pdf-packaging-slip-selected-form #selectedIds').val(ids);
+            $('#pdf-packaging-slip-selected-form').submit();
+            return false;
+        });
+    });
 </script>
