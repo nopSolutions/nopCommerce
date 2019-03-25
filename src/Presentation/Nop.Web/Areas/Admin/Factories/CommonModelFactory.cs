@@ -93,6 +93,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IWorkContext _workContext;
         private readonly MeasureSettings _measureSettings;
         private readonly TaxSettings _taxSettings;
+        private readonly IHttpClientFactory _httpClientFactory;
 
         #endregion
 
@@ -127,7 +128,9 @@ namespace Nop.Web.Areas.Admin.Factories
             IWidgetService widgetService,
             IWorkContext workContext,
             MeasureSettings measureSettings,
-            TaxSettings taxSettings)
+            TaxSettings taxSettings,
+            IHttpClientFactory httpClientFactory
+            )
         {
             _adminAreaSettings = adminAreaSettings;
             _catalogSettings = catalogSettings;
@@ -159,6 +162,7 @@ namespace Nop.Web.Areas.Admin.Factories
             _workContext = workContext;
             _measureSettings = measureSettings;
             _taxSettings = taxSettings;
+            _httpClientFactory = httpClientFactory;
         }
 
         #endregion
@@ -213,23 +217,18 @@ namespace Nop.Web.Areas.Admin.Factories
 
             try
             {
-                using (var client = new HttpClient())
-                {
-                    //specify request timeout
-                    client.Timeout = TimeSpan.FromMilliseconds(2000);
+                var url = string.Format(NOPCOMMERCE_WARNING_URL, local, currentStoreUrl);
+                var client = _httpClientFactory.CreateClient("copyrightWarning");
+                var warning = client.GetStringAsync(url).Result;
 
-                    var url = string.Format(NOPCOMMERCE_WARNING_URL, local, currentStoreUrl);
-                    var warning = client.GetStringAsync(url).Result;
-
-                    if (!String.IsNullOrEmpty(warning))
-                        models.Add(new SystemWarningModel
-                        {
-                            Level = SystemWarningLevel.CopyrightRemovalKey,
-                            Text = warning,
-                            //this text could contain links. so don't encode it
-                            DontEncode = true
-                        });
-                }
+                if (!String.IsNullOrEmpty(warning))
+                    models.Add(new SystemWarningModel
+                    {
+                        Level = SystemWarningLevel.CopyrightRemovalKey,
+                        Text = warning,
+                        //this text could contain links. so don't encode it
+                        DontEncode = true
+                    });
             }
             catch
             {

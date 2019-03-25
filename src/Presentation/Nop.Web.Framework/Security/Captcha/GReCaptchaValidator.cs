@@ -27,7 +27,10 @@ namespace Nop.Web.Framework.Security.Captcha
         /// Challenge
         /// </summary>
         public string Challenge { get; set; }
-
+        /// <summary>
+        /// HttpClient factory
+        /// </summary>
+        public IHttpClientFactory HttpClientFactory { get; set; }
         /// <summary>
         /// Parse response
         /// </summary>
@@ -53,7 +56,7 @@ namespace Nop.Web.Framework.Security.Captcha
         public GReCaptchaResponse Validate()
         {
             GReCaptchaResponse result = null;
-            var httpClient = new HttpClient();
+            var httpClient = HttpClientFactory.CreateClient();
             var requestUri = string.Empty;
             requestUri = string.Format(RECAPTCHA_VERIFY_URL, SecretKey, Response, RemoteIp);
 
@@ -72,11 +75,7 @@ namespace Nop.Web.Framework.Security.Captcha
                 result = new GReCaptchaResponse { IsValid = false };
                 result.ErrorCodes.Add("Unknown error");
             }
-            finally
-            {
-                httpClient.Dispose();
-            }
-
+            
             return result;
         }
     }

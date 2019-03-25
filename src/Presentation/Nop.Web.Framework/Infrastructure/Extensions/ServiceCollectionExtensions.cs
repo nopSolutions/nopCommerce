@@ -387,5 +387,20 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                     };
                 });
         }
+
+        /// <summary>
+        /// Add and configure http clients for the application
+        /// </summary>
+        /// <param name="services">Collection of service descriptors</param>
+        public static void AddNopHttpClient(this IServiceCollection services)
+        {
+            // add default HttpClient
+            services.AddHttpClient();
+            // named httpClient for prepare copyright removal key warning model 
+            services.AddHttpClient("copyrightWarning", c =>
+            {
+                c.Timeout = TimeSpan.FromMilliseconds(2000);
+            });
+        }
     }
 }

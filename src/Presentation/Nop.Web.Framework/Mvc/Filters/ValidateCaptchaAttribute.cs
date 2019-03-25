@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Primitives;
@@ -45,15 +46,17 @@ namespace Nop.Web.Framework.Mvc.Filters
 
             private readonly string _actionParameterName;
             private readonly CaptchaSettings _captchaSettings;
+            private readonly IHttpClientFactory _httpFactory;
 
             #endregion
 
             #region Ctor
 
-            public ValidateCaptchaFilter(string actionParameterName, CaptchaSettings captchaSettings)
+            public ValidateCaptchaFilter(string actionParameterName, CaptchaSettings captchaSettings, IHttpClientFactory httpFactory)
             {
                 _actionParameterName = actionParameterName;
                 _captchaSettings = captchaSettings;
+                _httpFactory = httpFactory;
             }
 
             #endregion
@@ -82,7 +85,8 @@ namespace Nop.Web.Framework.Mvc.Filters
                         SecretKey = _captchaSettings.ReCaptchaPrivateKey,
                         RemoteIp = context.HttpContext.Connection.RemoteIpAddress?.ToString(),
                         Response = !StringValues.IsNullOrEmpty(captchaResponseValue) ? captchaResponseValue : gCaptchaResponseValue,
-                        Challenge = captchaChallengeValue
+                        Challenge = captchaChallengeValue,
+                        HttpClientFactory = _httpFactory
                     };
 
                     //validate request

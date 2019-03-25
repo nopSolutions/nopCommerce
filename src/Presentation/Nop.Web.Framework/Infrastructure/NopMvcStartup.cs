@@ -24,6 +24,9 @@ namespace Nop.Web.Framework.Infrastructure
             //add WebMarkupMin services to the services container
             services.AddNopWebMarkupMin();
 
+            //add HttpClient factory to the service container
+            services.AddNopHttpClient();
+
             //add and configure MVC feature
             services.AddNopMvc();
 
