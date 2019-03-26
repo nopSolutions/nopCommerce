@@ -531,7 +531,11 @@ namespace Nop.Web.Factories
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            var productTagsCacheKey = string.Format(NopModelCacheDefaults.ProductTagByProductModelKey, product.Id, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
+            var productTagsCacheKey = string.Format(NopModelCacheDefaults.ProductTagByProductModelKey, 
+                product.Id, 
+                _workContext.WorkingLanguage.Id,
+                string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
+                _storeContext.CurrentStore.Id);
             var model = _cacheManager.Get(productTagsCacheKey, () =>
                 _productTagService.GetAllProductTagsByProductId(product.Id)
                 //filter by store

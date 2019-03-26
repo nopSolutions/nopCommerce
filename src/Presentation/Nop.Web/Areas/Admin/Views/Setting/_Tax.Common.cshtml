@@ -1,0 +1,34 @@
+@model TaxSettingsModel
+
+<div class="panel-body">
+    <div class="form-group advanced-setting">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="DefaultTaxCategoryId_OverrideForStore" asp-input="DefaultTaxCategoryId" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="DefaultTaxCategoryId" />
+        </div>
+        <div class="col-md-9">
+            <nop-select asp-for="DefaultTaxCategoryId" asp-items="Model.TaxCategories" />
+            <span asp-validation-for="DefaultTaxCategoryId"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="TaxBasedOn_OverrideForStore" asp-input="TaxBasedOn" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="TaxBasedOn" />
+        </div>
+        <div class="col-md-9">
+            <nop-select asp-for="TaxBasedOn" asp-items="Model.TaxBasedOnValues" />
+            <span asp-validation-for="TaxBasedOn"></span>
+        </div>
+    </div>
+    <div class="form-group advanced-setting">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="TaxBasedOnPickupPointAddress_OverrideForStore" asp-input="TaxBasedOnPickupPointAddress" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="TaxBasedOnPickupPointAddress" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="TaxBasedOnPickupPointAddress" />
+            <span asp-validation-for="TaxBasedOnPickupPointAddress"></span>
+        </div>
+    </div>
+</div>

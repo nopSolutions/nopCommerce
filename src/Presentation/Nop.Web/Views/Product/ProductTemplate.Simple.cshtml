@@ -56,10 +56,8 @@
         <form asp-route="Product" asp-route-sename="@Model.SeName" method="post" id="product-details-form">
             <div itemscope itemtype="http://schema.org/Product" data-productid="@Model.Id">
                 <div class="product-essential">
-                    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductDetailsBeforePictures, additionalData = Model })
                     <!--product pictures-->
                     @await Html.PartialAsync("_ProductDetailsPictures", Model)
-                    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductDetailsAfterPictures, additionalData = Model })
                     <div class="overview">
                         @await Html.PartialAsync("_Discontinued", Model)
                         <div class="product-name">

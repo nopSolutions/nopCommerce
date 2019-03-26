@@ -1,169 +1,173 @@
 ﻿@model MeasureSearchModel
 
-<div id="measuredimension-grid"></div>
-<script>
-    $(document).ready(function() {
-        $("#measuredimension-grid").kendoGrid({
-            dataSource: {
-                type: "json",
-                transport: {
-                    read: {
-                        url: "@Html.Raw(Url.Action("Dimensions", "Measure"))",
-                        type: "POST",
-                        dataType: "json",
-                        data: addAntiForgeryToken
-                    },
-                    create: {
-                        url: "@Html.Raw(Url.Action("DimensionAdd", "Measure"))",
-                        type: "POST",
-                        dataType: "json",
-                        data: addAntiForgeryToken
-                    },
-                    update: {
-                        url: "@Html.Raw(Url.Action("DimensionUpdate", "Measure"))",
-                        type: "POST",
-                        dataType: "json",
-                        data: addAntiForgeryToken
-                    },
-                    destroy: {
-                        url: "@Html.Raw(Url.Action("DimensionDelete", "Measure"))",
-                        type: "POST",
-                        dataType: "json",
-                        data: addAntiForgeryToken
-                    }
-                },
-                schema: {
-                    data: "Data",
-                    total: "Total",
-                    errors: "Errors",
-                    model: {
-                        id: "Id",
-                        fields: {
-                            Name: { editable: true, type: "string" },
-                            SystemKeyword: { editable: true, type: "string" },
-                            Ratio: { editable: true, type: "number" },
-                            DisplayOrder: { editable: true, type: "number" },
-                            IsPrimaryDimension: { editable: false, type: "boolean" },
-                            Id: { editable: false, type: "number" }
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div id="measuredimension-grid"></div>
+        <script>
+        $(document).ready(function() {
+            $("#measuredimension-grid").kendoGrid({
+                dataSource: {
+                    type: "json",
+                    transport: {
+                        read: {
+                            url: "@Html.Raw(Url.Action("Dimensions", "Measure"))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        },
+                        create: {
+                            url: "@Html.Raw(Url.Action("DimensionAdd", "Measure"))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        },
+                        update: {
+                            url: "@Html.Raw(Url.Action("DimensionUpdate", "Measure"))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        },
+                        destroy: {
+                            url: "@Html.Raw(Url.Action("DimensionDelete", "Measure"))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
                         }
-                    }
-                },
-                requestEnd: function(e) {
-                    if (e.type == "create" || e.type == "update") {
-                        this.read();
-                    }
-                },
-                error: function(e) {
-                    display_kendoui_grid_error(e);
-                    // Cancel the changes
-                    this.cancelChanges();
-                },
-                pageSize: @(Model.MeasureDimensionSearchModel.PageSize),
-                serverPaging: true,
-                serverFiltering: true,
-                serverSorting: true
-            },
-            pageable: {
-                refresh: true,
-                pageSizes: [@(Model.MeasureDimensionSearchModel.AvailablePageSizes)],
-                @await Html.PartialAsync("_GridPagerMessages")
-            },
-            toolbar: [{ name: "create", text: "@T("Admin.Common.AddNewRecord")" }],
-            editable: {
-                confirmation: "@T("Admin.Common.DeleteConfirmation")",
-                mode: "inline"
-            },
-            scrollable: false,
-            columns: [
-                {
-                    field: "Name",
-                    title: "@T("Admin.Configuration.Shipping.Measures.Dimensions.Fields.Name")",
-                    width: 300
-                }, {
-                    field: "SystemKeyword",
-                    title: "@T("Admin.Configuration.Shipping.Measures.Dimensions.Fields.SystemKeyword")",
-                    width: 200
-                }, {
-                    field: "Ratio",
-                    title: "@T("Admin.Configuration.Shipping.Measures.Dimensions.Fields.Ratio")",
-                    width: 200,
-                    editor: function(container, options) {
-                        $('<input name="' + options.field + '"/>')
-                            .appendTo(container)
-                            .kendoNumericTextBox({
-                                format: "{0:n8}",
-                                decimals: 8
-                            });
-                    }
-                }, {
-                    field: "DisplayOrder",
-                    title: "@T("Admin.Configuration.Shipping.Measures.Dimensions.Fields.DisplayOrder")",
-                    //integer format
-                    format: "{0:0}",
-                    width: 100
-                }, {
-                    field: "IsPrimaryDimension",
-                    title: "@T("Admin.Configuration.Shipping.Measures.Dimensions.Fields.IsPrimaryDimension")",
-                    width: 150,
-                    headerAttributes: { style: "text-align:center" },
-                    attributes: { style: "text-align:center" },
-                    template: '# if(IsPrimaryDimension) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
-                }, {
-                    field: "Id",
-                    title: "@T("Admin.Configuration.Shipping.Measures.Dimensions.Fields.MarkAsPrimaryDimension")",
-                    width: 150,
-                    template: '<a onclick="markAsPrimaryDimension(#=Id#)" class="btn bg-green">@T("Admin.Configuration.Shipping.Measures.Dimensions.Fields.MarkAsPrimaryDimension")</a>'
-                }, {
-                    command: [
-                        {
-                            name: "edit",
-                            text: {
-                                edit: "@T("Admin.Common.Edit")",
-                                update: "@T("Admin.Common.Update")",
-                                cancel: "@T("Admin.Common.Cancel")"
+                    },
+                    schema: {
+                        data: "Data",
+                        total: "Total",
+                        errors: "Errors",
+                        model: {
+                            id: "Id",
+                            fields: {
+                                Name: { editable: true, type: "string" },
+                                SystemKeyword: { editable: true, type: "string" },
+                                Ratio: { editable: true, type: "number" },
+                                DisplayOrder: { editable: true, type: "number" },
+                                IsPrimaryDimension: { editable: false, type: "boolean" },
+                                Id: { editable: false, type: "number" }
                             }
-                        }, {
-                            name: "destroy",
-                            text: "@T("Admin.Common.Delete")"
                         }
-                    ],
-                    width: 200
-                }
-            ]
-        });
-    });
-</script>
-<button type="submit" class="btn btn-default" id="btnMarkAsPrimaryDimension" style="display:none" />
-
-<script>
-    var selectedId;
-
-    function markAsPrimaryDimension(id) {
-        selectedId = id;
-        $("#btnMarkAsPrimaryDimension").click();
-    };
-
-    $(document).ready(function () {
-        $("#btnMarkAsPrimaryDimension-action-confirmation-submit-button").bind("click", function () {
-            var postData = {
-                id: selectedId
-            };
-            addAntiForgeryToken(postData);
-            $.ajax({
-                cache: false,
-                type: "POST",
-                url: "@(Url.Action("MarkAsPrimaryDimension", "Measure"))",
-                data: postData,
-                success: function (data) {
-                    var grid = $("#measuredimension-grid").data('kendoGrid');
-                    grid.dataSource.read();
+                    },
+                    requestEnd: function(e) {
+                        if (e.type == "create" || e.type == "update") {
+                            this.read();
+                        }
+                    },
+                    error: function(e) {
+                        display_kendoui_grid_error(e);
+                        // Cancel the changes
+                        this.cancelChanges();
+                    },
+                    pageSize: @(Model.MeasureDimensionSearchModel.PageSize),
+                    serverPaging: true,
+                    serverFiltering: true,
+                    serverSorting: true
                 },
-                error: function (xhr, ajaxOptions, thrownError) {
-                    $("#markAsPrimaryDimensionAlert").click();
-                }
+                pageable: {
+                    refresh: true,
+                    pageSizes: [@(Model.MeasureDimensionSearchModel.AvailablePageSizes)],
+                    @await Html.PartialAsync("_GridPagerMessages")
+                },
+                toolbar: [{ name: "create", text: "@T("Admin.Common.AddNewRecord")" }],
+                editable: {
+                    confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                    mode: "inline"
+                },
+                scrollable: false,
+                columns: [
+                    {
+                        field: "Name",
+                        title: "@T("Admin.Configuration.Shipping.Measures.Dimensions.Fields.Name")",
+                        width: 300
+                    }, {
+                        field: "SystemKeyword",
+                        title: "@T("Admin.Configuration.Shipping.Measures.Dimensions.Fields.SystemKeyword")",
+                        width: 200
+                    }, {
+                        field: "Ratio",
+                        title: "@T("Admin.Configuration.Shipping.Measures.Dimensions.Fields.Ratio")",
+                        width: 200,
+                        editor: function(container, options) {
+                            $('<input name="' + options.field + '"/>')
+                                .appendTo(container)
+                                .kendoNumericTextBox({
+                                    format: "{0:n8}",
+                                    decimals: 8
+                                });
+                        }
+                    }, {
+                        field: "DisplayOrder",
+                        title: "@T("Admin.Configuration.Shipping.Measures.Dimensions.Fields.DisplayOrder")",
+                        //integer format
+                        format: "{0:0}",
+                        width: 100
+                    }, {
+                        field: "IsPrimaryDimension",
+                        title: "@T("Admin.Configuration.Shipping.Measures.Dimensions.Fields.IsPrimaryDimension")",
+                        width: 150,
+                        headerAttributes: { style: "text-align:center" },
+                        attributes: { style: "text-align:center" },
+                        template: '# if(IsPrimaryDimension) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
+                    }, {
+                        field: "Id",
+                        title: "@T("Admin.Configuration.Shipping.Measures.Dimensions.Fields.MarkAsPrimaryDimension")",
+                        width: 150,
+                        template: '<a onclick="markAsPrimaryDimension(#=Id#)" class="btn bg-green">@T("Admin.Configuration.Shipping.Measures.Dimensions.Fields.MarkAsPrimaryDimension")</a>'
+                    }, {
+                        command: [
+                            {
+                                name: "edit",
+                                text: {
+                                    edit: "@T("Admin.Common.Edit")",
+                                    update: "@T("Admin.Common.Update")",
+                                    cancel: "@T("Admin.Common.Cancel")"
+                                }
+                            }, {
+                                name: "destroy",
+                                text: "@T("Admin.Common.Delete")"
+                            }
+                        ],
+                        width: 200
+                    }
+                ]
             });
-            $('#btnMarkAsPrimaryDimension-action-confirmation').modal('toggle');
         });
-    });        
-</script>
+        </script>
+        <button type="submit" class="btn btn-default" id="btnMarkAsPrimaryDimension" style="display:none" />
+
+        <script>
+            var selectedId;
+
+            function markAsPrimaryDimension(id) {
+                selectedId = id;
+                $("#btnMarkAsPrimaryDimension").click();
+            };
+
+            $(document).ready(function () {
+                $("#btnMarkAsPrimaryDimension-action-confirmation-submit-button").bind("click", function () {
+                    var postData = {
+                        id: selectedId
+                    };
+                    addAntiForgeryToken(postData);
+                    $.ajax({
+                        cache: false,
+                        type: "POST",
+                        url: "@(Url.Action("MarkAsPrimaryDimension", "Measure"))",
+                        data: postData,
+                        success: function (data) {
+                            var grid = $("#measuredimension-grid").data('kendoGrid');
+                            grid.dataSource.read();
+                        },
+                        error: function (xhr, ajaxOptions, thrownError) {
+                            $("#markAsPrimaryDimensionAlert").click();
+                        }
+                    });
+                    $('#btnMarkAsPrimaryDimension-action-confirmation').modal('toggle');
+                });
+            });
+        </script>
+    </div>
+</div>
 <nop-alert asp-alert-id="markAsPrimaryDimensionAlert" asp-alert-message="@T("Admin.Configuration.Shipping.Measures.Dimensions.MarkAsPrimaryDimension.Alert.FailedToUpdate")" />

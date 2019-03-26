@@ -182,7 +182,7 @@ namespace Nop.Web.Controllers
         public virtual IActionResult ApplyVendor()
         {
             if (!_vendorSettings.AllowCustomersToApplyForVendorAccount)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return Challenge();
@@ -198,7 +198,7 @@ namespace Nop.Web.Controllers
         public virtual IActionResult ApplyVendorSubmit(ApplyVendorModel model, bool captchaValid, IFormFile uploadedFile)
         {
             if (!_vendorSettings.AllowCustomersToApplyForVendorAccount)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return Challenge();

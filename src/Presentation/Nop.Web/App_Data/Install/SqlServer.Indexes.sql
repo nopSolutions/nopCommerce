@@ -82,7 +82,7 @@ GO
 CREATE NONCLUSTERED INDEX [IX_Product_Published] ON [Product] ([Published] ASC)
 GO
 
-CREATE NONCLUSTERED INDEX [IX_Product_ShowOnHomepage] ON [Product] ([ShowOnHomePage] ASC)
+CREATE NONCLUSTERED INDEX [IX_Product_ShowOnHomepage] ON [Product] ([ShowOnHomepage] ASC)
 GO
 
 CREATE NONCLUSTERED INDEX [IX_Product_ParentGroupedProductId] ON [Product] ([ParentGroupedProductId] ASC)

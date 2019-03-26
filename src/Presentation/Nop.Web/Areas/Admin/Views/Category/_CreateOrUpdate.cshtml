@@ -36,8 +36,8 @@
             <nop-panel asp-name="category-mappings" asp-icon="fa fa-bookmark" asp-title="@T("Admin.Catalog.Categories.Mappings")" asp-hide-block-attribute-name="@hideMappingsBlockAttributeName" asp-hide="@hideMappingsBlock" asp-advanced="true">@await Html.PartialAsync("_CreateOrUpdate.Mappings", Model)</nop-panel>
             <nop-panel asp-name="category-seo" asp-icon="fa fa-search-plus" asp-title="@T("Admin.Common.SEO")" asp-hide-block-attribute-name="@hideSeoBlockAttributeName" asp-hide="@hideSeoBlock" asp-advanced="true">@await Html.PartialAsync("_CreateOrUpdate.Seo", Model)</nop-panel>
             <nop-panel asp-name="category-products" asp-icon="fa fa-th-list" asp-title="@T("Admin.Catalog.Categories.Products")" asp-hide-block-attribute-name="@hideProductsBlockAttributeName" asp-hide="@hideProductsBlock" asp-advanced="true">@await Html.PartialAsync("_CreateOrUpdate.Products", Model)</nop-panel>
+            
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CategoryDetailsBlock, additionalData = Model })
         </nop-panels>
-
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CategoryDetailsBlock, additionalData = Model })
     </div>
 </div>

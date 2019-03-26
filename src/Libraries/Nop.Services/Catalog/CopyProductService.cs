@@ -623,7 +623,7 @@ namespace Nop.Services.Catalog
                 VendorId = product.VendorId,
                 ProductTemplateId = product.ProductTemplateId,
                 AdminComment = product.AdminComment,
-                ShowOnHomePage = product.ShowOnHomePage,
+                ShowOnHomepage = product.ShowOnHomepage,
                 MetaKeywords = product.MetaKeywords,
                 MetaDescription = product.MetaDescription,
                 MetaTitle = product.MetaTitle,

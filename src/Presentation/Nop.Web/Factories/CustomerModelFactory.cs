@@ -47,12 +47,12 @@ namespace Nop.Web.Factories
         private readonly ForumSettings _forumSettings;
         private readonly GdprSettings _gdprSettings;
         private readonly IAddressModelFactory _addressModelFactory;
+        private readonly IAuthenticationPluginManager _authenticationPluginManager;
         private readonly ICountryService _countryService;
         private readonly ICustomerAttributeParser _customerAttributeParser;
         private readonly ICustomerAttributeService _customerAttributeService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IDownloadService _downloadService;
-        private readonly IExternalAuthenticationService _externalAuthenticationService;
         private readonly IGdprService _gdprService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
@@ -86,12 +86,12 @@ namespace Nop.Web.Factories
             ForumSettings forumSettings,
             GdprSettings gdprSettings,
             IAddressModelFactory addressModelFactory,
+            IAuthenticationPluginManager authenticationPluginManager,
             ICountryService countryService,
             ICustomerAttributeParser customerAttributeParser,
             ICustomerAttributeService customerAttributeService,
             IDateTimeHelper dateTimeHelper,
             IDownloadService downloadService,
-            IExternalAuthenticationService externalAuthenticationService,
             IGdprService gdprService,
             IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
@@ -121,12 +121,12 @@ namespace Nop.Web.Factories
             _forumSettings = forumSettings;
             _gdprSettings = gdprSettings;
             _addressModelFactory = addressModelFactory;
+            _authenticationPluginManager = authenticationPluginManager;
             _countryService = countryService;
             _customerAttributeParser = customerAttributeParser;
             _customerAttributeService = customerAttributeService;
             _dateTimeHelper = dateTimeHelper;
             _downloadService = downloadService;
-            _externalAuthenticationService = externalAuthenticationService;
             _gdprService = gdprService;
             _genericAttributeService = genericAttributeService;
             _localizationService = localizationService;
@@ -405,12 +405,13 @@ namespace Nop.Web.Factories
 
             //external authentication
             model.AllowCustomersToRemoveAssociations = _externalAuthenticationSettings.AllowCustomersToRemoveAssociations;
-            model.NumberOfExternalAuthenticationProviders = _externalAuthenticationService
-                .LoadActiveExternalAuthenticationMethods(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id).Count;
+            model.NumberOfExternalAuthenticationProviders = _authenticationPluginManager
+                .LoadActivePlugins(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id)
+                .Count;
             foreach (var record in customer.ExternalAuthenticationRecords)
             {
-                var authMethod = _externalAuthenticationService.LoadExternalAuthenticationMethodBySystemName(record.ProviderSystemName);
-                if (authMethod == null || !_externalAuthenticationService.IsExternalAuthenticationMethodActive(authMethod))
+                var authMethod = _authenticationPluginManager.LoadPluginBySystemName(record.ProviderSystemName);
+                if (!_authenticationPluginManager.IsPluginActive(authMethod))
                     continue;
 
                 model.AssociatedExternalAuthRecords.Add(new CustomerInfoModel.AssociatedExternalAuthModel
@@ -542,7 +543,8 @@ namespace Nop.Web.Factories
             }
 
             //custom customer attributes
-            var customAttributes = PrepareCustomCustomerAttributes(_workContext.CurrentCustomer, overrideCustomCustomerAttributesXml); foreach (var attribute in customAttributes)
+            var customAttributes = PrepareCustomCustomerAttributes(_workContext.CurrentCustomer, overrideCustomCustomerAttributesXml);
+            foreach (var attribute in customAttributes)
                 model.CustomerAttributes.Add(attribute);
 
             //GDPR

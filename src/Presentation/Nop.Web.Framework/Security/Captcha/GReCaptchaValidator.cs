@@ -54,8 +54,7 @@ namespace Nop.Web.Framework.Security.Captcha
         {
             GReCaptchaResponse result = null;
             var httpClient = new HttpClient();
-            var requestUri = string.Empty;
-            requestUri = string.Format(RECAPTCHA_VERIFY_URL, SecretKey, Response, RemoteIp);
+            var requestUri = string.Format(RECAPTCHA_VERIFY_URL, SecretKey, Response, RemoteIp);
 
             try
             {

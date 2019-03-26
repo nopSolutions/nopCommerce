@@ -59,7 +59,7 @@ namespace Nop.Web.Controllers
         {
             if (!_forumSettings.ForumsEnabled)
             {
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
             }
 
             var model = _forumModelFactory.PrepareBoardsIndexModel();
@@ -70,7 +70,7 @@ namespace Nop.Web.Controllers
         {
             if (!_forumSettings.ForumsEnabled)
             {
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
             }
 
             var model = _forumModelFactory.PrepareActiveDiscussionsModel(forumId, pageNumber);
@@ -81,7 +81,7 @@ namespace Nop.Web.Controllers
         {
             if (!_forumSettings.ForumsEnabled)
             {
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
             }
 
             if (!_forumSettings.ActiveDiscussionsFeedEnabled)
@@ -123,7 +123,7 @@ namespace Nop.Web.Controllers
         {
             if (!_forumSettings.ForumsEnabled)
             {
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
             }
 
             var forumGroup = _forumService.GetForumGroupById(id);
@@ -140,7 +140,7 @@ namespace Nop.Web.Controllers
         {
             if (!_forumSettings.ForumsEnabled)
             {
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
             }
 
             var forum = _forumService.GetForumById(id);
@@ -155,7 +155,7 @@ namespace Nop.Web.Controllers
         {
             if (!_forumSettings.ForumsEnabled)
             {
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
             }
 
             if (!_forumSettings.ForumFeedsEnabled)
@@ -252,7 +252,7 @@ namespace Nop.Web.Controllers
         {
             if (!_forumSettings.ForumsEnabled)
             {
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
             }
 
             var forumTopic = _forumService.GetTopicById(id);
@@ -321,7 +321,7 @@ namespace Nop.Web.Controllers
         {
             if (!_forumSettings.ForumsEnabled)
             {
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
             }
 
             var forumTopic = _forumService.GetTopicById(id);
@@ -340,7 +340,7 @@ namespace Nop.Web.Controllers
         {
             if (!_forumSettings.ForumsEnabled)
             {
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
             }
 
             var forumTopic = _forumService.GetTopicById(model.Id);
@@ -369,7 +369,7 @@ namespace Nop.Web.Controllers
             {
                 return Json(new
                 {
-                    redirect = Url.RouteUrl("HomePage"),
+                    redirect = Url.RouteUrl("Homepage"),
                 });
             }
 
@@ -403,7 +403,7 @@ namespace Nop.Web.Controllers
         {
             if (!_forumSettings.ForumsEnabled)
             {
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
             }
 
             var forum = _forumService.GetForumById(id);
@@ -428,7 +428,7 @@ namespace Nop.Web.Controllers
         {
             if (!_forumSettings.ForumsEnabled)
             {
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
             }
 
             var forum = _forumService.GetForumById(model.ForumId);
@@ -538,7 +538,7 @@ namespace Nop.Web.Controllers
         {
             if (!_forumSettings.ForumsEnabled)
             {
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
             }
 
             var forumTopic = _forumService.GetTopicById(id);
@@ -563,7 +563,7 @@ namespace Nop.Web.Controllers
         {
             if (!_forumSettings.ForumsEnabled)
             {
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
             }
 
             var forumTopic = _forumService.GetTopicById(model.Id);
@@ -692,7 +692,7 @@ namespace Nop.Web.Controllers
             {
                 return Json(new
                 {
-                    redirect = Url.RouteUrl("HomePage"),
+                    redirect = Url.RouteUrl("Homepage"),
                 });
             }
 
@@ -736,7 +736,7 @@ namespace Nop.Web.Controllers
         {
             if (!_forumSettings.ForumsEnabled)
             {
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
             }
 
             var forumTopic = _forumService.GetTopicById(id);
@@ -760,7 +760,7 @@ namespace Nop.Web.Controllers
         {
             if (!_forumSettings.ForumsEnabled)
             {
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
             }
 
             var forumTopic = _forumService.GetTopicById(model.ForumTopicId);
@@ -854,7 +854,7 @@ namespace Nop.Web.Controllers
         {
             if (!_forumSettings.ForumsEnabled)
             {
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
             }
 
             var forumPost = _forumService.GetPostById(id);
@@ -878,7 +878,7 @@ namespace Nop.Web.Controllers
         {
             if (!_forumSettings.ForumsEnabled)
             {
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
             }
 
             var forumPost = _forumService.GetPostById(model.Id);
@@ -978,7 +978,7 @@ namespace Nop.Web.Controllers
         {
             if (!_forumSettings.ForumsEnabled)
             {
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
             }
 
             var model = _forumModelFactory.PrepareSearchModel(searchterms, adv, forumId, within, limitDays, page);

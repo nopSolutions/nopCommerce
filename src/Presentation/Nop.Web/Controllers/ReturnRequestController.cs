@@ -95,7 +95,7 @@ namespace Nop.Web.Controllers
                 return Challenge();
 
             if (!_orderProcessingService.IsReturnRequestAllowed(order))
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             var model = new SubmitReturnRequestModel();
             model = _returnRequestModelFactory.PrepareSubmitReturnRequestModel(model, order);
@@ -111,7 +111,7 @@ namespace Nop.Web.Controllers
                 return Challenge();
 
             if (!_orderProcessingService.IsReturnRequestAllowed(order))
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             var count = 0;
 

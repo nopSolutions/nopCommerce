@@ -9,7 +9,6 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Nop.Core;
 using Nop.Core.Infrastructure;
-using Nop.Core.Plugins;
 using Nop.Services.Common;
 using Nop.Services.Themes;
 

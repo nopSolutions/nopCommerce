@@ -135,7 +135,7 @@ namespace Nop.Web.Controllers
                 //is this one an associated products?
                 var parentGroupedProduct = _productService.GetProductById(product.ParentGroupedProductId);
                 if (parentGroupedProduct == null)
-                    return RedirectToRoute("HomePage");
+                    return RedirectToRoute("Homepage");
 
                 return RedirectToRoute("Product", new { SeName = _urlRecordService.GetSeName(parentGroupedProduct) });
             }
@@ -273,7 +273,7 @@ namespace Nop.Web.Controllers
         {
             var product = _productService.GetProductById(productId);
             if (product == null || product.Deleted || !product.Published || !product.AllowCustomerReviews)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             var model = new ProductReviewsModel();
             model = _productModelFactory.PrepareProductReviewsModel(model, product);
@@ -312,7 +312,7 @@ namespace Nop.Web.Controllers
         {
             var product = _productService.GetProductById(productId);
             if (product == null || product.Deleted || !product.Published || !product.AllowCustomerReviews)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             //validate CAPTCHA
             if (_captchaSettings.Enabled && _captchaSettings.ShowOnProductReviewPage && !captchaValid)
@@ -489,7 +489,7 @@ namespace Nop.Web.Controllers
         {
             var product = _productService.GetProductById(productId);
             if (product == null || product.Deleted || !product.Published || !_catalogSettings.EmailAFriendEnabled)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             var model = new ProductEmailAFriendModel();
             model = _productModelFactory.PrepareProductEmailAFriendModel(model, product, false);
@@ -504,7 +504,7 @@ namespace Nop.Web.Controllers
         {
             var product = _productService.GetProductById(model.ProductId);
             if (product == null || product.Deleted || !product.Published || !_catalogSettings.EmailAFriendEnabled)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             //validate CAPTCHA
             if (_captchaSettings.Enabled && _captchaSettings.ShowOnEmailProductToFriendPage && !captchaValid)
@@ -579,10 +579,10 @@ namespace Nop.Web.Controllers
         {
             var product = _productService.GetProductById(productId);
             if (product == null)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             if (!_catalogSettings.CompareProductsEnabled)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             _compareProductsService.RemoveProductFromCompareList(productId);
 
@@ -593,7 +593,7 @@ namespace Nop.Web.Controllers
         public virtual IActionResult CompareProducts()
         {
             if (!_catalogSettings.CompareProductsEnabled)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             var model = new CompareProductsModel
             {
@@ -618,7 +618,7 @@ namespace Nop.Web.Controllers
         public virtual IActionResult ClearCompareList()
         {
             if (!_catalogSettings.CompareProductsEnabled)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             _compareProductsService.ClearCompareProducts();
 

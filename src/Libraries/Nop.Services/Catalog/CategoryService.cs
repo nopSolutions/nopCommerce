@@ -292,13 +292,13 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Categories</returns>
-        public virtual IList<Category> GetAllCategoriesDisplayedOnHomePage(bool showHidden = false)
+        public virtual IList<Category> GetAllCategoriesDisplayedOnHomepage(bool showHidden = false)
         {
             var query = from c in _categoryRepository.Table
                         orderby c.DisplayOrder, c.Id
                         where c.Published &&
                         !c.Deleted &&
-                        c.ShowOnHomePage
+                        c.ShowOnHomepage
                         select c;
 
             var categories = query.ToList();

@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
-using Nop.Core.Plugins;
 using Nop.Services.Payments;
+using Nop.Services.Plugins;
 
 namespace Nop.Services.Tests.Payments
 {

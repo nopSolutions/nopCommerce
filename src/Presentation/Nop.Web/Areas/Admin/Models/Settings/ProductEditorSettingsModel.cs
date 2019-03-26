@@ -33,8 +33,8 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.ACL")]
         public bool ACL { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.ShowOnHomePage")]
-        public bool ShowOnHomePage { get; set; }
+        [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.ShowOnHomepage")]
+        public bool ShowOnHomepage { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.DisplayOrder")]
         public bool DisplayOrder { get; set; }

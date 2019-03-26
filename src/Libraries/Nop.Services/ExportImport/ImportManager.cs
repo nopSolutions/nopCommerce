@@ -484,8 +484,8 @@ namespace Nop.Services.ExportImport
                     case "PriceRanges":
                         category.PriceRanges = property.StringValue;
                         break;
-                    case "ShowOnHomePage":
-                        category.ShowOnHomePage = property.BooleanValue;
+                    case "ShowOnHomepage":
+                        category.ShowOnHomepage = property.BooleanValue;
                         break;
                     case "IncludeInTopMenu":
                         category.IncludeInTopMenu = property.BooleanValue;
@@ -1321,10 +1321,10 @@ namespace Nop.Services.ExportImport
                             case "ProductTemplate":
                                 product.ProductTemplateId = property.IntValue;
                                 break;
-                            case "ShowOnHomePage":
+                            case "ShowOnHomepage":
                                 //vendor can't change this field
                                 if (_workContext.CurrentVendor == null)
-                                    product.ShowOnHomePage = property.BooleanValue;
+                                    product.ShowOnHomepage = property.BooleanValue;
                                 break;
                             case "MetaKeywords":
                                 product.MetaKeywords = property.StringValue;

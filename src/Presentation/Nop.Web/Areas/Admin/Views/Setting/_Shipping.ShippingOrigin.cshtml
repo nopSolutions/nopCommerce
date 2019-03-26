@@ -1,0 +1,15 @@
+@model ShippingSettingsModel
+
+<div class="panel-body">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <nop-override-store-checkbox asp-for="ShippingOriginAddress_OverrideForStore" asp-parent-container="pnlShippingOriginAddress" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            @T("Admin.Configuration.Settings.Shipping.ShippingOriginAddress")
+        </div>
+        <div class="panel-body">
+            <div id="pnlShippingOriginAddress">
+                <nop-editor asp-for="ShippingOriginAddress" asp-template="Address"/>
+            </div>
+        </div>
+    </div>
+</div>

@@ -7,6 +7,11 @@
     Html.SetActiveMenuItemSystemName("Polls");
 }
 
+@{
+    const string hideSearchBlockAttributeName = "PollsPage.HideSearchBlock";
+    var hideSearchBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSearchBlockAttributeName);
+}
+
 <nop-antiforgery-token />
 <div class="content-header clearfix">
     <h1 class="pull-left">
@@ -24,26 +29,34 @@
 <div class="content">
     <div class="form-horizontal">
         <div class="panel-group">
-            
+
             @*hide the entire search block if no elements are displayed*@
             <div class="panel panel-default panel-search" @(Model.HideStoresList ? Html.Raw("style=\"display:none\"") : null)>
                 <div class="panel-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <div class="col-md-4">
-                                    <nop-label asp-for="SearchStoreId" />
+                    <div class="row search-row @(!hideSearchBlock ? "opened" : "")" data-hideAttribute="@hideSearchBlockAttributeName">
+                        <div class="search-text">@T("Admin.Common.Search")</div>
+                        <div class="icon-search"><i class="fa fa-search" aria-hidden="true"></i></div>
+                        <div class="icon-collapse"><i class="fa fa-angle-down" aria-hidden="true"></i></div>
+                    </div>
+
+                    <div class="search-body @(hideSearchBlock ? "closed" : "")">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="SearchStoreId" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-select asp-for="SearchStoreId" asp-items="Model.AvailableStores" />
+                                    </div>
                                 </div>
-                                <div class="col-md-8">
-                                    <nop-select asp-for="SearchStoreId" asp-items="Model.AvailableStores" />
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-md-8 col-md-offset-4">
-                                    <button type="button" id="search-poll" class="btn btn-primary btn-search">
-                                        <i class="fa fa-search"></i>
-                                        @T("Admin.Common.Search")
-                                    </button>
+                                <div class="form-group">
+                                    <div class="col-md-8 col-md-offset-4">
+                                        <button type="button" id="search-poll" class="btn btn-primary btn-search">
+                                            <i class="fa fa-search"></i>
+                                            @T("Admin.Common.Search")
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -118,12 +131,12 @@
                                     attributes: { style: "text-align:center" },
                                     template: '# if(Published) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
                                 }, {
-                                    field: "ShowOnHomePage",
-                                    title: "@T("Admin.ContentManagement.Polls.Fields.ShowOnHomePage")",
+                                    field: "ShowOnHomepage",
+                                    title: "@T("Admin.ContentManagement.Polls.Fields.ShowOnHomepage")",
                                     width: 150,
                                     headerAttributes: { style: "text-align:center" },
                                     attributes: { style: "text-align:center" },
-                                    template: '# if(ShowOnHomePage) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
+                                    template: '# if(ShowOnHomepage) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
                                 }, {
                                     field: "StartDateUtc",
                                     title: "@T("Admin.ContentManagement.Polls.Fields.StartDate")",

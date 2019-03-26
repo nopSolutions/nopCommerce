@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
@@ -13,12 +13,12 @@ using Nop.Core.Configuration;
 using Nop.Core.Data;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Security;
-using Nop.Core.Plugins;
 using Nop.Data;
 using Nop.Data.Extensions;
 using Nop.Services.Configuration;
 using Nop.Services.Events;
 using Nop.Services.Logging;
+using Nop.Services.Plugins;
 
 namespace Nop.Services.Localization
 {

@@ -1,9 +1,9 @@
 ﻿@model TopMenuModel
 <ul class="top-menu notmobile">
     @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HeaderMenuBefore })
-    @if (Model.DisplayHomePageMenuItem)
+    @if (Model.DisplayHomepageMenuItem)
     {
-        <li><a href="@Url.RouteUrl("HomePage")">@T("HomePage")</a></li>
+        <li><a href="@Url.RouteUrl("Homepage")">@T("Homepage")</a></li>
     }
     @if (!Model.UseAjaxMenu)
     {
@@ -56,9 +56,9 @@
     <div class="menu-toggle">@responsiveMenuTitle</div>
     <ul class="top-menu mobile">
         @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.MobHeaderMenuBefore })
-        @if (Model.DisplayHomePageMenuItem)
+        @if (Model.DisplayHomepageMenuItem)
         {
-            <li><a href="@Url.RouteUrl("HomePage")">@T("HomePage")</a></li>
+            <li><a href="@Url.RouteUrl("Homepage")">@T("Homepage")</a></li>
         }
         @if (!Model.UseAjaxMenu)
         {

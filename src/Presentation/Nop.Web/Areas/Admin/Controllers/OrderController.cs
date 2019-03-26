@@ -1424,8 +1424,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             //prepare model
             model = _orderModelFactory.PrepareOrderModel(model, order);
 
-            //selected tab
-            SaveSelectedTabName(persistForTheNextRequest: false);
+            //selected panel
+            SaveSelectedPanelName("order-billing-shipping", persistForTheNextRequest: false);
 
             return View(model);
         }
@@ -1531,8 +1531,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             foreach (var warning in updateOrderParameters.Warnings)
                 _notificationService.WarningNotification(warning);
 
-            //selected tab
-            SaveSelectedTabName(persistForTheNextRequest: false);
+            //selected panel
+            SaveSelectedPanelName("order-products", persistForTheNextRequest: false);
 
             return View(model);
         }
@@ -1572,8 +1572,8 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Orders.OrderItem.DeleteAssociatedGiftCardRecordError"));
 
-                //selected tab
-                SaveSelectedTabName(persistForTheNextRequest: false);
+                //selected panel
+                SaveSelectedPanelName("order-products", persistForTheNextRequest: false);
 
                 return View(model);
             }
@@ -1610,8 +1610,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 foreach (var warning in updateOrderParameters.Warnings)
                     _notificationService.WarningNotification(warning);
 
-                //selected tab
-                SaveSelectedTabName(persistForTheNextRequest: false);
+                //selected panel
+                SaveSelectedPanelName("order-products", persistForTheNextRequest: false);
 
                 return View(model);
             }
@@ -1649,8 +1649,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             //prepare model
             var model = _orderModelFactory.PrepareOrderModel(null, order);
 
-            //selected tab
-            SaveSelectedTabName(persistForTheNextRequest: false);
+            //selected panel
+            SaveSelectedPanelName("order-products", persistForTheNextRequest: false);
 
             return View(model);
         }
@@ -1687,9 +1687,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             //prepare model
             var model = _orderModelFactory.PrepareOrderModel(null, order);
 
-            //selected tab
-            SaveSelectedTabName(persistForTheNextRequest: false);
-
+            //selected panel
+            SaveSelectedPanelName("order-products", persistForTheNextRequest: false);
             return View(model);
         }
 
@@ -1983,6 +1982,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 foreach (var warning in updateOrderParameters.Warnings)
                     _notificationService.WarningNotification(warning);
 
+                //selected panel
+                SaveSelectedPanelName("order-products");
                 return RedirectToAction("Edit", "Order", new { id = order.Id });
             }
 

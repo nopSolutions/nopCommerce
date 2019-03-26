@@ -51,7 +51,7 @@ namespace Nop.Web.Controllers
             var hasAdminAccess = _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && _permissionService.Authorize(StandardPermissionProvider.ManageTopics);
             //access to Topics preview
             if (model == null || (!model.Published && !hasAdminAccess))
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
             
             //display "edit" (manage) link
             if (hasAdminAccess)
@@ -66,7 +66,7 @@ namespace Nop.Web.Controllers
         {
             var model = _topicModelFactory.PrepareTopicModelBySystemName(systemName);
             if (model == null)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             ViewBag.IsPopup = true;
 

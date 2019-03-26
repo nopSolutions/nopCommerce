@@ -4,7 +4,7 @@ using System.Security.AccessControl;
 using System.Security.Principal;
 using Nop.Core.Data;
 using Nop.Core.Infrastructure;
-using Nop.Core.Plugins;
+using Nop.Services.Plugins;
 
 namespace Nop.Web.Framework.Security
 {

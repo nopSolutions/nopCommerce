@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Moq;
 using Nop.Core;
 using Nop.Core.Infrastructure;
-using Nop.Core.Plugins;
+using Nop.Services.Plugins;
 using Nop.Services.Tests.Directory;
 using Nop.Services.Tests.Discounts;
 using Nop.Services.Tests.Payments;

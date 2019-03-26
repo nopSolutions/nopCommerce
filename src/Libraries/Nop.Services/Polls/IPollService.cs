@@ -21,13 +21,13 @@ namespace Nop.Services.Polls
         /// <param name="storeId">The store identifier; pass 0 to load all records</param>
         /// <param name="languageId">Language identifier; pass 0 to load all records</param>
         /// <param name="showHidden">Whether to show hidden records (not published, not started and expired)</param>
-        /// <param name="loadShownOnHomePageOnly">Retrieve only shown on home page polls</param>
+        /// <param name="loadShownOnHomepageOnly">Retrieve only shown on home page polls</param>
         /// <param name="systemKeyword">The poll system keyword; pass null to load all records</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Polls</returns>
         IPagedList<Poll> GetPolls(int storeId, int languageId = 0, bool
-            showHidden = false, bool loadShownOnHomePageOnly = false, string systemKeyword = null,
+            showHidden = false, bool loadShownOnHomepageOnly = false, string systemKeyword = null,
             int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>

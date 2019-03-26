@@ -257,18 +257,20 @@ function WrapAndSaveBlockData() {
 
 //collapse search block
 $(document).ready(function () {
-  $(".row.search-row").click(ToggleSearchBlock);
+  $(".row.search-row").click(ToggleSearchBlockAndSavePreferences);
 });
 
-function ToggleSearchBlock() {
+function ToggleSearchBlockAndSavePreferences() {
     $(this).parents(".panel-search").find(".search-body").slideToggle();
     var icon = $(this).find(".icon-collapse i");
     if ($(this).hasClass("opened")) {
       icon.removeClass("fa-angle-up");
       icon.addClass("fa-angle-down");
+      saveUserPreferences(rootAppPath + 'admin/preferences/savepreference', $(this).attr("data-hideAttribute"), true);
     } else {
       icon.addClass("fa-angle-up");
       icon.removeClass("fa-angle-down");
+      saveUserPreferences(rootAppPath + 'admin/preferences/savepreference', $(this).attr("data-hideAttribute"), false);
     }
 
     $(this).toggleClass("opened");

@@ -55,7 +55,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             else
             {
                 //or use special exception handler
-                application.UseExceptionHandler("/errorpage.htm");
+                application.UseExceptionHandler("/Error/Error");
             }
 
             //log errors
@@ -313,6 +313,10 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public static void UseNopWebMarkupMin(this IApplicationBuilder application)
         {
+            //check whether database is installed
+            if (!DataSettingsManager.DatabaseIsInstalled)
+                return;
+
             application.UseWebMarkupMin();
         }
     }
