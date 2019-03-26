@@ -107,7 +107,17 @@ namespace Nop.Core.Domain.Common
         /// <summary>
         /// Gets or sets a value indicating whether to enable markup minification
         /// </summary>
-        public bool MinificationEnabled { get; set; }
+        public bool EnableHtmlMinification { get; set; }
+
+        /// <summary>
+        /// A value indicating whether JS file bundling and minification is enabled
+        /// </summary>
+        public bool EnableJsBundling { get; set; }
+
+        /// <summary>
+        /// A value indicating whether CSS file bundling and minification is enabled
+        /// </summary>
+        public bool EnableCssBundling { get; set; }
 
         /// <summary>
         /// The length of time, in milliseconds, before the running schedule task times out. Set null to use default value
