@@ -52,8 +52,8 @@ namespace Nop.Web.Controllers
 
             var model = _topicModelFactory.PrepareTopicModelById(topicId, hasAdminAccess);
             if (model == null)
-                return RedirectToRoute("Homepage");
-            
+                return InvokeHttp404();
+
             //display "edit" (manage) link
             if (hasAdminAccess)
                 DisplayEditLink(Url.Action("Edit", "Topic", new { id = model.Id, area = AreaNames.Admin }));
@@ -67,7 +67,7 @@ namespace Nop.Web.Controllers
         {
             var model = _topicModelFactory.PrepareTopicModelBySystemName(systemName);
             if (model == null)
-                return RedirectToRoute("Homepage");
+                return InvokeHttp404();
 
             ViewBag.IsPopup = true;
 

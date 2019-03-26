@@ -126,7 +126,7 @@ namespace Nop.Web.Controllers
 
             var newsItem = _newsService.GetNewsById(newsItemId);
             if (newsItem == null)
-                return RedirectToRoute("Homepage");
+                return InvokeHttp404();
 
             var notAvailable =
                 //published?
@@ -139,7 +139,7 @@ namespace Nop.Web.Controllers
             //We should allows him (her) to use "Preview" functionality
             var hasAdminAccess = _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && _permissionService.Authorize(StandardPermissionProvider.ManageNews);
             if (notAvailable && !hasAdminAccess)
-                return RedirectToRoute("Homepage");
+                return InvokeHttp404();
 
             var model = new NewsItemModel();
             model = _newsModelFactory.PrepareNewsItemModel(model, newsItem, true);
