@@ -37,13 +37,11 @@ namespace Nop.Services.Directory
             if (!_currencySettings.AutoUpdateEnabled)
                 return;
 
-            var primaryCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryExchangeRateCurrencyId).CurrencyCode;
-            var exchangeRates = _currencyService.GetCurrencyLiveRates(primaryCurrencyCode);
-
+            var exchangeRates = _currencyService.GetCurrencyLiveRates();
             foreach (var exchageRate in exchangeRates)
             {
                 var currency = _currencyService.GetCurrencyByCode(exchageRate.CurrencyCode, false);
-                if (currency == null) 
+                if (currency == null)
                     continue;
 
                 currency.Rate = exchageRate.Rate;

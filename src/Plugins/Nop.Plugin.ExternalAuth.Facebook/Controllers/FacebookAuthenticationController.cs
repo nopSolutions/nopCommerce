@@ -23,32 +23,41 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
         #region Fields
 
         private readonly FacebookExternalAuthSettings _facebookExternalAuthSettings;
+        private readonly IAuthenticationPluginManager _authenticationPluginManager;
         private readonly IExternalAuthenticationService _externalAuthenticationService;
         private readonly ILocalizationService _localizationService;
         private readonly INotificationService _notificationService;
         private readonly IOptionsMonitorCache<FacebookOptions> _optionsCache;
         private readonly IPermissionService _permissionService;
         private readonly ISettingService _settingService;
+        private readonly IStoreContext _storeContext;
+        private readonly IWorkContext _workContext;
 
         #endregion
 
         #region Ctor
 
         public FacebookAuthenticationController(FacebookExternalAuthSettings facebookExternalAuthSettings,
+            IAuthenticationPluginManager authenticationPluginManager,
             IExternalAuthenticationService externalAuthenticationService,
             ILocalizationService localizationService,
             INotificationService notificationService,
             IOptionsMonitorCache<FacebookOptions> optionsCache,
             IPermissionService permissionService,
-            ISettingService settingService)
+            ISettingService settingService,
+            IStoreContext storeContext,
+            IWorkContext workContext)
         {
             _facebookExternalAuthSettings = facebookExternalAuthSettings;
+            _authenticationPluginManager = authenticationPluginManager;
             _externalAuthenticationService = externalAuthenticationService;
             _localizationService = localizationService;
             _notificationService = notificationService;
             _optionsCache = optionsCache;
             _permissionService = permissionService;
             _settingService = settingService;
+            _storeContext = storeContext;
+            _workContext = workContext;
         }
 
         #endregion
@@ -98,11 +107,16 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
 
         public IActionResult Login(string returnUrl)
         {
-            if (!_externalAuthenticationService.ExternalAuthenticationMethodIsAvailable(FacebookAuthenticationDefaults.ProviderSystemName))
+            var methodIsAvailable = _authenticationPluginManager
+                .IsPluginActive(FacebookAuthenticationDefaults.ProviderSystemName, _workContext.CurrentCustomer, _storeContext.CurrentStore.Id);
+            if (!methodIsAvailable)
                 throw new NopException("Facebook authentication module cannot be loaded");
 
-            if (string.IsNullOrEmpty(_facebookExternalAuthSettings.ClientKeyIdentifier) || string.IsNullOrEmpty(_facebookExternalAuthSettings.ClientSecret))
+            if (string.IsNullOrEmpty(_facebookExternalAuthSettings.ClientKeyIdentifier) ||
+                string.IsNullOrEmpty(_facebookExternalAuthSettings.ClientSecret))
+            {
                 throw new NopException("Facebook authentication module not configured");
+            }
 
             //configure login callback action
             var authenticationProperties = new AuthenticationProperties
@@ -117,7 +131,7 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
         public async Task<IActionResult> LoginCallback(string returnUrl)
         {
             //authenticate Facebook user
-            var authenticateResult =  await HttpContext.AuthenticateAsync(FacebookDefaults.AuthenticationScheme);
+            var authenticateResult = await HttpContext.AuthenticateAsync(FacebookDefaults.AuthenticationScheme);
             if (!authenticateResult.Succeeded || !authenticateResult.Principal.Claims.Any())
                 return RedirectToRoute("Login");
 

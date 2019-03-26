@@ -521,6 +521,24 @@ set @resources='
   <LocaleResource Name="Homepage.Products">
     <Value>Featured products</Value>
   </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Plugins.LoadPluginsMode.All">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Plugins.LoadPluginsMode.InstalledOnly">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Plugins.LoadPluginsMode.NotInstalledOnly">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Services.Plugins.LoadPluginsMode.All">
+    <Value>All</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Services.Plugins.LoadPluginsMode.InstalledOnly">
+    <Value>Installed</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Services.Plugins.LoadPluginsMode.NotInstalledOnly">
+    <Value>Not installed</Value>
+  </LocaleResource>
 </Language>'
 
 CREATE TABLE #LocaleStringResourceTmp

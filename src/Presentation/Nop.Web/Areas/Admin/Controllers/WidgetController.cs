@@ -19,7 +19,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly IPermissionService _permissionService;
         private readonly ISettingService _settingService;
         private readonly IWidgetModelFactory _widgetModelFactory;
-        private readonly IWidgetService _widgetService;
+        private readonly IWidgetPluginManager _widgetPluginManager;
         private readonly WidgetSettings _widgetSettings;
 
         #endregion
@@ -30,14 +30,14 @@ namespace Nop.Web.Areas.Admin.Controllers
             IPermissionService permissionService,
             ISettingService settingService,
             IWidgetModelFactory widgetModelFactory,
-            IWidgetService widgetService,
+            IWidgetPluginManager widgetPluginManager,
             WidgetSettings widgetSettings)
         {
             _eventPublisher = eventPublisher;
             _permissionService = permissionService;
             _settingService = settingService;
             _widgetModelFactory = widgetModelFactory;
-            _widgetService = widgetService;
+            _widgetPluginManager = widgetPluginManager;
             _widgetSettings = widgetSettings;
         }
 
@@ -79,8 +79,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageWidgets))
                 return AccessDeniedView();
 
-            var widget = _widgetService.LoadWidgetBySystemName(model.SystemName);
-            if (_widgetService.IsWidgetActive(widget))
+            var widget = _widgetPluginManager.LoadPluginBySystemName(model.SystemName);
+            if (_widgetPluginManager.IsPluginActive(widget, _widgetSettings.ActiveWidgetSystemNames))
             {
                 if (!model.IsActive)
                 {

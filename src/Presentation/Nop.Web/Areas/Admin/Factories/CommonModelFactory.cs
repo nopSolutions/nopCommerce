@@ -16,9 +16,7 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
-using Nop.Core.Domain.Tax;
 using Nop.Core.Infrastructure;
-using Nop.Core.Plugins;
 using Nop.Services.Authentication.External;
 using Nop.Services.Catalog;
 using Nop.Services.Cms;
@@ -67,10 +65,11 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly CatalogSettings _catalogSettings;
         private readonly CurrencySettings _currencySettings;
         private readonly IActionContextAccessor _actionContextAccessor;
+        private readonly IAuthenticationPluginManager _authenticationPluginManager;
         private readonly ICurrencyService _currencyService;
         private readonly ICustomerService _customerService;
         private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IExternalAuthenticationService _externalAuthenticationService;
+        private readonly IExchangeRatePluginManager _exchangeRatePluginManager;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
@@ -78,21 +77,22 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IMeasureService _measureService;
         private readonly INopFileProvider _fileProvider;
         private readonly IOrderService _orderService;
-        private readonly IPaymentService _paymentService;
+        private readonly IPaymentPluginManager _paymentPluginManager;
+        private readonly IPickupPluginManager _pickupPluginManager;
         private readonly IPluginService _pluginService;
         private readonly IProductService _productService;
         private readonly IReturnRequestService _returnRequestService;
         private readonly ISearchTermService _searchTermService;
-        private readonly IShippingService _shippingService;
+        private readonly IShippingPluginManager _shippingPluginManager;
         private readonly IStoreContext _storeContext;
         private readonly IStoreService _storeService;
+        private readonly ITaxPluginManager _taxPluginManager;
         private readonly IUrlHelperFactory _urlHelperFactory;
         private readonly IUrlRecordService _urlRecordService;
         private readonly IWebHelper _webHelper;
-        private readonly IWidgetService _widgetService;
+        private readonly IWidgetPluginManager _widgetPluginManager;
         private readonly IWorkContext _workContext;
         private readonly MeasureSettings _measureSettings;
-        private readonly TaxSettings _taxSettings;
 
         #endregion
 
@@ -102,63 +102,67 @@ namespace Nop.Web.Areas.Admin.Factories
             CatalogSettings catalogSettings,
             CurrencySettings currencySettings,
             IActionContextAccessor actionContextAccessor,
+            IAuthenticationPluginManager authenticationPluginManager,
             ICurrencyService currencyService,
             ICustomerService customerService,
             IDateTimeHelper dateTimeHelper,
-            IExternalAuthenticationService externalAuthenticationService,
             INopFileProvider fileProvider,
+            IExchangeRatePluginManager exchangeRatePluginManager,
             IHttpContextAccessor httpContextAccessor,
             ILanguageService languageService,
             ILocalizationService localizationService,
             IMaintenanceService maintenanceService,
             IMeasureService measureService,
             IOrderService orderService,
-            IPaymentService paymentService,
+            IPaymentPluginManager paymentPluginManager,
+            IPickupPluginManager pickupPluginManager,
             IPluginService pluginService,
             IProductService productService,
             IReturnRequestService returnRequestService,
             ISearchTermService searchTermService,
-            IShippingService shippingService,
+            IShippingPluginManager shippingPluginManager,
             IStoreContext storeContext,
             IStoreService storeService,
+            ITaxPluginManager taxPluginManager,
             IUrlHelperFactory urlHelperFactory,
             IUrlRecordService urlRecordService,
             IWebHelper webHelper,
-            IWidgetService widgetService,
+            IWidgetPluginManager widgetPluginManager,
             IWorkContext workContext,
-            MeasureSettings measureSettings,
-            TaxSettings taxSettings)
+            MeasureSettings measureSettings)
         {
             _adminAreaSettings = adminAreaSettings;
             _catalogSettings = catalogSettings;
             _currencySettings = currencySettings;
             _actionContextAccessor = actionContextAccessor;
+            _authenticationPluginManager = authenticationPluginManager;
             _currencyService = currencyService;
             _customerService = customerService;
             _dateTimeHelper = dateTimeHelper;
-            _externalAuthenticationService = externalAuthenticationService;
-            _fileProvider = fileProvider;
+            _exchangeRatePluginManager = exchangeRatePluginManager;
             _httpContextAccessor = httpContextAccessor;
             _languageService = languageService;
             _localizationService = localizationService;
             _maintenanceService = maintenanceService;
             _measureService = measureService;
+            _fileProvider = fileProvider;
             _orderService = orderService;
-            _paymentService = paymentService;
+            _paymentPluginManager = paymentPluginManager;
+            _pickupPluginManager = pickupPluginManager;
             _pluginService = pluginService;
             _productService = productService;
             _returnRequestService = returnRequestService;
             _searchTermService = searchTermService;
-            _shippingService = shippingService;
+            _shippingPluginManager = shippingPluginManager;
             _storeContext = storeContext;
             _storeService = storeService;
+            _taxPluginManager = taxPluginManager;
             _urlHelperFactory = urlHelperFactory;
             _urlRecordService = urlRecordService;
             _webHelper = webHelper;
-            _widgetService = widgetService;
+            _widgetPluginManager = widgetPluginManager;
             _workContext = workContext;
             _measureSettings = measureSettings;
-            _taxSettings = taxSettings;
         }
 
         #endregion
@@ -221,7 +225,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     var url = string.Format(NOPCOMMERCE_WARNING_URL, local, currentStoreUrl);
                     var warning = client.GetStringAsync(url).Result;
 
-                    if (!String.IsNullOrEmpty(warning))
+                    if (!string.IsNullOrEmpty(warning))
                         models.Add(new SystemWarningModel
                         {
                             Level = SystemWarningLevel.CopyrightRemovalKey,
@@ -389,7 +393,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(models));
 
             //check whether payment methods activated
-            if (_paymentService.LoadActivePaymentMethods().Any())
+            if (_paymentPluginManager.LoadAllPlugins().Any())
             {
                 models.Add(new SystemWarningModel
                 {
@@ -566,33 +570,31 @@ namespace Nop.Web.Areas.Admin.Factories
                 switch (plugin)
                 {
                     case IPaymentMethod paymentMethod:
-                        isEnabled = _paymentService.IsPaymentMethodActive(paymentMethod);
+                        isEnabled = _paymentPluginManager.IsPluginActive(paymentMethod);
                         break;
 
                     case IShippingRateComputationMethod shippingRateComputationMethod:
-                        isEnabled =
-                            _shippingService.IsShippingRateComputationMethodActive(shippingRateComputationMethod);
+                        isEnabled = _shippingPluginManager.IsPluginActive(shippingRateComputationMethod);
                         break;
 
                     case IPickupPointProvider pickupPointProvider:
-                        isEnabled = _shippingService.IsPickupPointProviderActive(pickupPointProvider);
+                        isEnabled = _pickupPluginManager.IsPluginActive(pickupPointProvider);
                         break;
 
-                    case ITaxProvider _:
-                        isEnabled = plugin.PluginDescriptor.SystemName
-                            .Equals(_taxSettings.ActiveTaxProviderSystemName, StringComparison.InvariantCultureIgnoreCase);
+                    case ITaxProvider taxProvider:
+                        isEnabled = _taxPluginManager.IsPluginActive(taxProvider);
                         break;
 
                     case IExternalAuthenticationMethod externalAuthenticationMethod:
-                        isEnabled = _externalAuthenticationService.IsExternalAuthenticationMethodActive(externalAuthenticationMethod);
+                        isEnabled = _authenticationPluginManager.IsPluginActive(externalAuthenticationMethod);
                         break;
 
                     case IWidgetPlugin widgetPlugin:
-                        isEnabled = _widgetService.IsWidgetActive(widgetPlugin);
+                        isEnabled = _widgetPluginManager.IsPluginActive(widgetPlugin);
                         break;
 
                     case IExchangeRateProvider exchangeRateProvider:
-                        isEnabled = exchangeRateProvider.PluginDescriptor.SystemName == _currencySettings.ActiveExchangeRateProviderSystemName;
+                        isEnabled = _exchangeRatePluginManager.IsPluginActive(exchangeRateProvider);
                         break;
                 }
 
