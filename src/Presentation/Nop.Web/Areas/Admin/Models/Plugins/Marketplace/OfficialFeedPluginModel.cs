@@ -1,6 +1,6 @@
 ﻿using Nop.Web.Framework.Models;
 
-namespace Nop.Web.Areas.Admin.Models.Plugins
+namespace Nop.Web.Areas.Admin.Models.Plugins.Marketplace
 {
     /// <summary>
     /// Represents an official feed plugin model

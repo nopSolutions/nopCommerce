@@ -13,7 +13,6 @@ using System.Xml;
 using Nop.Core;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Shipping;
-using Nop.Core.Plugins;
 using Nop.Plugin.Shipping.UPS.Domain;
 using Nop.Services.Configuration;
 using Nop.Services.Directory;
@@ -21,6 +20,7 @@ using Nop.Services.Discounts;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Orders;
+using Nop.Services.Plugins;
 using Nop.Services.Shipping;
 using Nop.Services.Shipping.Tracking;
 

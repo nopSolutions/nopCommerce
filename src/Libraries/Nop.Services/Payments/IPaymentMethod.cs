@@ -1,7 +1,7 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
 using Nop.Core.Domain.Orders;
-using Nop.Core.Plugins;
+using Nop.Services.Plugins;
 
 namespace Nop.Services.Payments
 {

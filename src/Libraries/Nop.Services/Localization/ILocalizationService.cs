@@ -5,7 +5,7 @@ using Nop.Core;
 using Nop.Core.Configuration;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Security;
-using Nop.Core.Plugins;
+using Nop.Services.Plugins;
 
 namespace Nop.Services.Localization
 {

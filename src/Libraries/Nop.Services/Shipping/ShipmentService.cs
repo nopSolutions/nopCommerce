@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
@@ -7,6 +7,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Services.Events;
+using Nop.Services.Shipping.Pickup;
 using Nop.Services.Shipping.Tracking;
 
 namespace Nop.Services.Shipping
@@ -19,26 +20,29 @@ namespace Nop.Services.Shipping
         #region Fields
 
         private readonly IEventPublisher _eventPublisher;
+        private readonly IPickupPluginManager _pickupPluginManager;
         private readonly IRepository<OrderItem> _orderItemRepository;
         private readonly IRepository<Shipment> _shipmentRepository;
         private readonly IRepository<ShipmentItem> _siRepository;
-        private readonly IShippingService _shippingService;
+        private readonly IShippingPluginManager _shippingPluginManager;
 
         #endregion
 
         #region Ctor
 
         public ShipmentService(IEventPublisher eventPublisher,
+            IPickupPluginManager pickupPluginManager,
             IRepository<OrderItem> orderItemRepository,
             IRepository<Shipment> shipmentRepository,
             IRepository<ShipmentItem> siRepository,
-            IShippingService shippingService)
+            IShippingPluginManager shippingPluginManager)
         {
             _eventPublisher = eventPublisher;
+            _pickupPluginManager = pickupPluginManager;
             _orderItemRepository = orderItemRepository;
             _shipmentRepository = shipmentRepository;
             _siRepository = siRepository;
-            _shippingService = shippingService;
+            _shippingPluginManager = shippingPluginManager;
         }
 
         #endregion
@@ -317,14 +321,14 @@ namespace Nop.Services.Shipping
         {
             if (!shipment.Order.PickUpInStore)
             {
-                var shippingRateComputationMethod = _shippingService
-                    .LoadShippingRateComputationMethodBySystemName(shipment.Order.ShippingRateComputationMethodSystemName);
+                var shippingRateComputationMethod = _shippingPluginManager
+                    .LoadPluginBySystemName(shipment.Order.ShippingRateComputationMethodSystemName);
                 return shippingRateComputationMethod?.ShipmentTracker;
             }
             else
             {
-                var pickupPointProvider = _shippingService
-                    .LoadPickupPointProviderBySystemName(shipment.Order.ShippingRateComputationMethodSystemName);
+                var pickupPointProvider = _pickupPluginManager
+                    .LoadPluginBySystemName(shipment.Order.ShippingRateComputationMethodSystemName);
                 return pickupPointProvider?.ShipmentTracker;
             }
         }

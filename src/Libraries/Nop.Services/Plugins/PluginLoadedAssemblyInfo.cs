@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Nop.Core.Plugins
+namespace Nop.Services.Plugins
 {
     /// <summary>
     /// Represents an information about assembly which loaded by plugins

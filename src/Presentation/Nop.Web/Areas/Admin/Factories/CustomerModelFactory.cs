@@ -51,6 +51,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IAddressAttributeFormatter _addressAttributeFormatter;
         private readonly IAddressAttributeModelFactory _addressAttributeModelFactory;
         private readonly IAffiliateService _affiliateService;
+        private readonly IAuthenticationPluginManager _authenticationPluginManager;
         private readonly IBackInStockSubscriptionService _backInStockSubscriptionService;
         private readonly IBaseAdminModelFactory _baseAdminModelFactory;
         private readonly ICustomerActivityService _customerActivityService;
@@ -58,7 +59,6 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly ICustomerAttributeService _customerAttributeService;
         private readonly ICustomerService _customerService;
         private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IExternalAuthenticationService _externalAuthenticationService;
         private readonly IGdprService _gdprService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IGeoLookupService _geoLookupService;
@@ -89,6 +89,7 @@ namespace Nop.Web.Areas.Admin.Factories
             IAddressAttributeFormatter addressAttributeFormatter,
             IAddressAttributeModelFactory addressAttributeModelFactory,
             IAffiliateService affiliateService,
+            IAuthenticationPluginManager authenticationPluginManager,
             IBackInStockSubscriptionService backInStockSubscriptionService,
             IBaseAdminModelFactory baseAdminModelFactory,
             ICustomerActivityService customerActivityService,
@@ -96,7 +97,6 @@ namespace Nop.Web.Areas.Admin.Factories
             ICustomerAttributeService customerAttributeService,
             ICustomerService customerService,
             IDateTimeHelper dateTimeHelper,
-            IExternalAuthenticationService externalAuthenticationService,
             IGdprService gdprService,
             IGenericAttributeService genericAttributeService,
             IGeoLookupService geoLookupService,
@@ -123,6 +123,7 @@ namespace Nop.Web.Areas.Admin.Factories
             _addressAttributeFormatter = addressAttributeFormatter;
             _addressAttributeModelFactory = addressAttributeModelFactory;
             _affiliateService = affiliateService;
+            _authenticationPluginManager = authenticationPluginManager;
             _backInStockSubscriptionService = backInStockSubscriptionService;
             _baseAdminModelFactory = baseAdminModelFactory;
             _customerActivityService = customerActivityService;
@@ -130,7 +131,6 @@ namespace Nop.Web.Areas.Admin.Factories
             _customerAttributeService = customerAttributeService;
             _customerService = customerService;
             _dateTimeHelper = dateTimeHelper;
-            _externalAuthenticationService = externalAuthenticationService;
             _gdprService = gdprService;
             _genericAttributeService = genericAttributeService;
             _geoLookupService = geoLookupService;
@@ -186,7 +186,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             foreach (var record in customer.ExternalAuthenticationRecords)
             {
-                var method = _externalAuthenticationService.LoadExternalAuthenticationMethodBySystemName(record.ProviderSystemName);
+                var method = _authenticationPluginManager.LoadPluginBySystemName(record.ProviderSystemName);
                 if (method == null)
                     continue;
 
@@ -598,7 +598,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = customers.Select(customer =>
                 {
                     //fill in model values from the entity
-                    var customerModel = customer.ToModel<CustomerModel>();                    
+                    var customerModel = customer.ToModel<CustomerModel>();
 
                     //convert dates to the user time
                     customerModel.Email = customer.IsRegistered() ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
@@ -807,7 +807,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = rewardPoints.Select(historyEntry =>
                 {
                     //fill in model values from the entity        
-                    var rewardPointsHistoryModel = historyEntry.ToModel<CustomerRewardPointsModel>();                    
+                    var rewardPointsHistoryModel = historyEntry.ToModel<CustomerRewardPointsModel>();
 
                     //convert dates to the user time
                     var activatingDate = _dateTimeHelper.ConvertToUserTime(historyEntry.CreatedOnUtc, DateTimeKind.Utc);
@@ -927,7 +927,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     //convert dates to the user time
                     orderModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc);
-                    
+
                     //fill in additional values (not existing in the entity)
                     orderModel.StoreName = _storeService.GetStoreById(order.StoreId)?.Name ?? "Unknown";
                     orderModel.OrderStatus = _localizationService.GetLocalizedEnum(order.OrderStatus);
@@ -971,7 +971,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     //fill in additional values (not existing in the entity)
                     shoppingCartItemModel.ProductName = item.Product.Name;
-                    shoppingCartItemModel.Store = _storeService.GetStoreById(item.StoreId)?.Name ?? "Unknown";                    
+                    shoppingCartItemModel.Store = _storeService.GetStoreById(item.StoreId)?.Name ?? "Unknown";
                     shoppingCartItemModel.AttributeInfo = _productAttributeFormatter.FormatAttributes(item.Product, item.AttributesXml);
                     shoppingCartItemModel.UnitPrice = _priceFormatter.FormatPrice(_taxService.GetProductPrice(item.Product, _priceCalculationService.GetUnitPrice(item), out var _));
                     shoppingCartItemModel.Total = _priceFormatter.FormatPrice(_taxService.GetProductPrice(item.Product, _priceCalculationService.GetSubTotal(item), out _));
@@ -1053,7 +1053,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     //fill in model values from the entity
                     var subscriptionModel = subscription.ToModel<CustomerBackInStockSubscriptionModel>();
-                    
+
                     //convert dates to the user time
                     subscriptionModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(subscription.CreatedOnUtc, DateTimeKind.Utc);
 
@@ -1109,7 +1109,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = customers.Select(customer =>
                 {
                     //fill in model values from the entity
-                    var customerModel = customer.ToModel<OnlineCustomerModel>();                    
+                    var customerModel = customer.ToModel<OnlineCustomerModel>();
 
                     //convert dates to the user time
                     customerModel.LastActivityDate = _dateTimeHelper.ConvertToUserTime(customer.LastActivityDateUtc, DateTimeKind.Utc);
@@ -1163,7 +1163,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             var customerId = 0;
             var customerInfo = "";
-            if (!String.IsNullOrEmpty(searchModel.SearchEmail))
+            if (!string.IsNullOrEmpty(searchModel.SearchEmail))
             {
                 var customer = _customerService.GetCustomerByEmail(searchModel.SearchEmail);
                 if (customer != null)
@@ -1192,7 +1192,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     var requestModel = log.ToModel<GdprLogModel>();
 
                     //fill in additional values (not existing in the entity)
-                    requestModel.CustomerInfo = customer != null && !customer.Deleted && !String.IsNullOrEmpty(customer.Email) ? customer.Email : log.CustomerInfo;
+                    requestModel.CustomerInfo = customer != null && !customer.Deleted && !string.IsNullOrEmpty(customer.Email) ? customer.Email : log.CustomerInfo;
                     requestModel.RequestType = _localizationService.GetLocalizedEnum(log.RequestType);
                     requestModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(log.CreatedOnUtc, DateTimeKind.Utc);
 

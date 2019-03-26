@@ -34,6 +34,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly ICategoryService _categoryService;
         private readonly ICurrencyService _currencyService;
         private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly IDiscountPluginManager _discountPluginManager;
         private readonly IDiscountService _discountService;
         private readonly ILocalizationService _localizationService;
         private readonly IManufacturerService _manufacturerService;
@@ -52,6 +53,7 @@ namespace Nop.Web.Areas.Admin.Factories
             ICategoryService categoryService,
             ICurrencyService currencyService,
             IDateTimeHelper dateTimeHelper,
+            IDiscountPluginManager discountPluginManager,
             IDiscountService discountService,
             ILocalizationService localizationService,
             IManufacturerService manufacturerService,
@@ -66,6 +68,7 @@ namespace Nop.Web.Areas.Admin.Factories
             _categoryService = categoryService;
             _currencyService = currencyService;
             _dateTimeHelper = dateTimeHelper;
+            _discountPluginManager = discountPluginManager;
             _discountService = discountService;
             _localizationService = localizationService;
             _manufacturerService = manufacturerService;
@@ -255,7 +258,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 model = model ?? discount.ToModel<DiscountModel>();
 
                 //prepare available discount requirement rules
-                var discountRules = _discountService.LoadAllDiscountRequirementRules();
+                var discountRules = _discountPluginManager.LoadAllPlugins();
                 foreach (var discountRule in discountRules)
                 {
                     model.AvailableDiscountRequirementRules.Add(new SelectListItem
@@ -349,7 +352,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 }
 
                 //or try to get name and configuration URL for the requirement
-                var requirementRule = _discountService.LoadDiscountRequirementRuleBySystemName(requirement.DiscountRequirementRuleSystemName);
+                var requirementRule = _discountPluginManager.LoadPluginBySystemName(requirement.DiscountRequirementRuleSystemName);
                 if (requirementRule == null)
                     return null;
 
@@ -387,7 +390,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     //fill in model values from the entity
                     var discountUsageHistoryModel = historyEntry.ToModel<DiscountUsageHistoryModel>();
-                    
+
                     //convert dates to the user time
                     discountUsageHistoryModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(historyEntry.CreatedOnUtc, DateTimeKind.Utc);
 
@@ -535,7 +538,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new DiscountCategoryListModel
             {
                 //fill in model values from the entity
-                Data = discountCategories.Select(category => 
+                Data = discountCategories.Select(category =>
                 {
                     var discountCategoryModel = category.ToModel<DiscountCategoryModel>();
 

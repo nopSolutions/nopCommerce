@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using Nop.Core;
 using Nop.Core.Domain.Logging;
@@ -24,7 +24,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
         private readonly IStoreContext _storeContext;
         private readonly IStoreService _storeService;
         private readonly IWebHelper _webHelper;
-        private readonly IWidgetService _widgetService;
+        private readonly IWidgetPluginManager _widgetPluginManager;
 
         public EventConsumer(ICategoryService categoryService,
             ILogger logger,
@@ -33,16 +33,16 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
             IStoreContext storeContext,
             IStoreService storeService,
             IWebHelper webHelper,
-            IWidgetService widgetService)
+            IWidgetPluginManager widgetPluginManager)
         {
-            _logger = logger;
             _categoryService = categoryService;
+            _logger = logger;
             _productService = productService;
             _settingService = settingService;
             _storeContext = storeContext;
             _storeService = storeService;
             _webHelper = webHelper;
-            _widgetService = widgetService;
+            _widgetPluginManager = widgetPluginManager;
         }
 
         private string FixIllegalJavaScriptChars(string text)
@@ -57,8 +57,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
 
         private bool IsPluginEnabled()
         {
-            return _widgetService.LoadWidgetBySystemName("Widgets.GoogleAnalytics") is GoogleAnalyticsPlugin plugin
-                && _widgetService.IsWidgetActive(plugin);
+            return _widgetPluginManager.IsPluginActive("Widgets.GoogleAnalytics");
         }
 
         private void ProcessOrderEvent(Order order, bool add)

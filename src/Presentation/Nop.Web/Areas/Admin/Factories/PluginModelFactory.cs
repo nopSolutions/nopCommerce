@@ -4,19 +4,19 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Caching;
-using Nop.Core.Domain.Tax;
-using Nop.Core.Plugins;
 using Nop.Services.Authentication.External;
 using Nop.Services.Cms;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Payments;
 using Nop.Services.Plugins;
+using Nop.Services.Plugins.Marketplace;
 using Nop.Services.Shipping;
 using Nop.Services.Shipping.Pickup;
 using Nop.Services.Tax;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Plugins;
+using Nop.Web.Areas.Admin.Models.Plugins.Marketplace;
 using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;
 
@@ -30,56 +30,60 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Fields
 
         private readonly IAclSupportedModelFactory _aclSupportedModelFactory;
+        private readonly IAuthenticationPluginManager _authenticationPluginManager;
         private readonly IBaseAdminModelFactory _baseAdminModelFactory;
-        private readonly IExternalAuthenticationService _externalAuthenticationService;
         private readonly ILocalizationService _localizationService;
         private readonly ILocalizedModelFactory _localizedModelFactory;
+        private readonly ILogger _logger;
         private readonly IOfficialFeedManager _officialFeedManager;
-        private readonly IPaymentService _paymentService;
+        private readonly IPaymentPluginManager _paymentPluginManager;
+        private readonly IPickupPluginManager _pickupPluginManager;
         private readonly IPluginService _pluginService;
-        private readonly IShippingService _shippingService;
+        private readonly IShippingPluginManager _shippingPluginManager;
         private readonly IStaticCacheManager _cacheManager;
         private readonly IStoreMappingSupportedModelFactory _storeMappingSupportedModelFactory;
-        private readonly IWidgetService _widgetService;
+        private readonly ITaxPluginManager _taxPluginManager;
+        private readonly IWidgetPluginManager _widgetPluginManager;
         private readonly IWorkContext _workContext;
-        private readonly TaxSettings _taxSettings;
-        private readonly ILogger _logger;
 
         #endregion
 
         #region Ctor
 
         public PluginModelFactory(IAclSupportedModelFactory aclSupportedModelFactory,
+            IAuthenticationPluginManager authenticationPluginManager,
             IBaseAdminModelFactory baseAdminModelFactory,
-            IExternalAuthenticationService externalAuthenticationService,
             ILocalizationService localizationService,
             ILocalizedModelFactory localizedModelFactory,
+            ILogger logger,
             IOfficialFeedManager officialFeedManager,
-            IPaymentService paymentService,
+            IPaymentPluginManager paymentPluginManager,
+            IPickupPluginManager pickupPluginManager,
             IPluginService pluginService,
+            IShippingPluginManager shippingPluginManager,
             IShippingService shippingService,
             IStaticCacheManager cacheManager,
             IStoreMappingSupportedModelFactory storeMappingSupportedModelFactory,
-            IWidgetService widgetService,
-            IWorkContext workContext,
-            TaxSettings taxSettings,
-            ILogger logger)
+            ITaxPluginManager taxPluginManager,
+            IWidgetPluginManager widgetPluginManager,
+            IWorkContext workContext)
         {
             _aclSupportedModelFactory = aclSupportedModelFactory;
+            _authenticationPluginManager = authenticationPluginManager;
             _baseAdminModelFactory = baseAdminModelFactory;
-            _externalAuthenticationService = externalAuthenticationService;
             _localizationService = localizationService;
             _localizedModelFactory = localizedModelFactory;
+            _logger = logger;
             _officialFeedManager = officialFeedManager;
-            _paymentService = paymentService;
+            _paymentPluginManager = paymentPluginManager;
+            _pickupPluginManager = pickupPluginManager;
             _pluginService = pluginService;
-            _shippingService = shippingService;
+            _shippingPluginManager = shippingPluginManager;
             _cacheManager = cacheManager;
             _storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
-            _widgetService = widgetService;
+            _taxPluginManager = taxPluginManager;
+            _widgetPluginManager = widgetPluginManager;
             _workContext = workContext;
-            _taxSettings = taxSettings;
-            _logger = logger;
         }
 
         #endregion
@@ -107,28 +111,27 @@ namespace Nop.Web.Areas.Admin.Factories
             switch (plugin)
             {
                 case IPaymentMethod paymentMethod:
-                    model.IsEnabled = _paymentService.IsPaymentMethodActive(paymentMethod);
+                    model.IsEnabled = _paymentPluginManager.IsPluginActive(paymentMethod);
                     break;
 
                 case IShippingRateComputationMethod shippingRateComputationMethod:
-                    model.IsEnabled = _shippingService.IsShippingRateComputationMethodActive(shippingRateComputationMethod);
+                    model.IsEnabled = _shippingPluginManager.IsPluginActive(shippingRateComputationMethod);
                     break;
 
                 case IPickupPointProvider pickupPointProvider:
-                    model.IsEnabled = _shippingService.IsPickupPointProviderActive(pickupPointProvider);
+                    model.IsEnabled = _pickupPluginManager.IsPluginActive(pickupPointProvider);
                     break;
 
-                case ITaxProvider _:
-                    model.IsEnabled = plugin.PluginDescriptor.SystemName
-                        .Equals(_taxSettings.ActiveTaxProviderSystemName, StringComparison.InvariantCultureIgnoreCase);
+                case ITaxProvider taxProvider:
+                    model.IsEnabled = _taxPluginManager.IsPluginActive(taxProvider);
                     break;
 
                 case IExternalAuthenticationMethod externalAuthenticationMethod:
-                    model.IsEnabled = _externalAuthenticationService.IsExternalAuthenticationMethodActive(externalAuthenticationMethod);
+                    model.IsEnabled = _authenticationPluginManager.IsPluginActive(externalAuthenticationMethod);
                     break;
 
                 case IWidgetPlugin widgetPlugin:
-                    model.IsEnabled = _widgetService.IsWidgetActive(widgetPlugin);
+                    model.IsEnabled = _widgetPluginManager.IsPluginActive(widgetPlugin);
                     break;
 
                 default:

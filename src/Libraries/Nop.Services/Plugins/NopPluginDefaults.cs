@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Nop.Core.Plugins
+namespace Nop.Services.Plugins
 {
     /// <summary>
     /// Represents default values related to plugins

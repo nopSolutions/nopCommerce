@@ -1,4 +1,4 @@
-namespace Nop.Core.Plugins
+namespace Nop.Services.Plugins
 {
     /// <summary>
     /// Represents a mode to load plugins
