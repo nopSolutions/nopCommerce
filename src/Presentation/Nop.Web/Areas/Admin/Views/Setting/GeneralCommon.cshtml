@@ -29,6 +29,9 @@
     const string hideSEOBlockAttributeName = "GeneralCommonSettingsPage.HideSEOBlock";
     var hideSEOBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSEOBlockAttributeName, defaultValue: true);
 
+    const string hideMinificationBlockAttributeName = "GeneralCommonSettingsPage.HideMinificationBlock";
+    var hideMinificationBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideMinificationBlockAttributeName, defaultValue: true);
+
     const string hideSecurityBlockAttributeName = "GeneralCommonSettingsPage.HideSecurityBlock";
     var hideSecurityBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSecurityBlockAttributeName, defaultValue: true);
 
@@ -76,13 +79,14 @@
                 <nop-panel asp-name="generalcommon-socialmedia" asp-icon="fa fa-share-square-o" asp-title="@T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.SocialMedia")" asp-hide-block-attribute-name="@hideSocialMediaBlockAttributeName" asp-hide="@hideSocialMediaBlock" asp-advanced="false">@await Html.PartialAsync("_GeneralCommon.SocialMedia", Model)</nop-panel>
                 <nop-panel asp-name="generalcommon-sitemap" asp-icon="fa fa-sitemap" asp-title="@T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.Sitemap")" asp-hide-block-attribute-name="@hideSitemapBlockAttributeName" asp-hide="@hideSitemapBlock" asp-advanced="true">@await Html.PartialAsync("_GeneralCommon.Sitemap", Model)</nop-panel>
                 <nop-panel asp-name="generalcommon-seo" asp-icon="fa fa-search-plus" asp-title="@T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.SEO")" asp-hide-block-attribute-name="@hideSEOBlockAttributeName" asp-hide="@hideSEOBlock" asp-advanced="false">@await Html.PartialAsync("_GeneralCommon.SEO", Model)</nop-panel>
+                <nop-panel asp-name="generalcommon-minification" asp-icon="fa fa-compress" asp-title="@T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.Minification")" asp-hide-block-attribute-name="@hideMinificationBlockAttributeName" asp-hide="@hideMinificationBlock" asp-advanced="false">@await Html.PartialAsync("_GeneralCommon.Minification", Model)</nop-panel>
                 <nop-panel asp-name="generalcommon-security" asp-icon="fa fa-shield" asp-title="@T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.Security")" asp-hide-block-attribute-name="@hideSecurityBlockAttributeName" asp-hide="@hideSecurityBlock" asp-advanced="true">@await Html.PartialAsync("_GeneralCommon.Security", Model)</nop-panel>
                 <nop-panel asp-name="generalcommon-captcha" asp-icon="fa fa-lock" asp-title="@T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.Captcha")" asp-hide-block-attribute-name="@hideCaptchaBlockAttributeName" asp-hide="@hideCaptchaBlock" asp-advanced="true">@await Html.PartialAsync("_GeneralCommon.Captcha", Model)</nop-panel>
                 <nop-panel asp-name="generalcommon-pdf" asp-icon="fa fa-file-pdf-o" asp-title="@T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.Pdf")" asp-hide-block-attribute-name="@hidePDFBlockAttributeName" asp-hide="@hidePDFBlock" asp-advanced="true">@await Html.PartialAsync("_GeneralCommon.Pdf", Model)</nop-panel>
                 <nop-panel asp-name="generalcommon-localization" asp-icon="fa fa-globe" asp-title="@T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.Localization")" asp-hide-block-attribute-name="@hideLocalizationBlockAttributeName" asp-hide="@hideLocalizationBlock" asp-advanced="true">@await Html.PartialAsync("_GeneralCommon.Localization", Model)</nop-panel>
                 <nop-panel asp-name="generalcommon-fulltext" asp-icon="fa fa-search-plus" asp-title="@T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.FullText")" asp-hide-block-attribute-name="@hideFullTextBlockAttributeName" asp-hide="@hideFullTextBlock" asp-advanced="true">@await Html.PartialAsync("_GeneralCommon.FullText", Model)</nop-panel>
                 <nop-panel asp-name="generalcommon-adminarea" asp-icon="fa fa-clipboard" asp-title="@T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.AdminArea")" asp-hide-block-attribute-name="@hideAdminAreaBlockAttributeName" asp-hide="@hideAdminAreaBlock" asp-advanced="true">@await Html.PartialAsync("_GeneralCommon.AdminArea", Model)</nop-panel>
-                
+
                 @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.GeneralCommonDetailsBlock, additionalData = Model })
             </nop-panels>
         </div>

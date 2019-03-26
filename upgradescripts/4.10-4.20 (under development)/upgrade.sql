@@ -539,6 +539,15 @@ set @resources='
   <LocaleResource Name="Enums.Nop.Services.Plugins.LoadPluginsMode.NotInstalledOnly">
     <Value>Not installed</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EnableHtmlMinification">
+    <Value>Html minification</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EnableHtmlMinification.Hint">
+    <Value>Allows you to minify HTML pages as well as compress them, thereby increasing the download speed. Please note that after applying this setting, you need to restart the application.</Value>
+  </LocaleResource>
+    <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.BlockTitle.Minification">
+    <Value>Minification</Value>
+  </LocaleResource>
 </Language>'
 
 CREATE TABLE #LocaleStringResourceTmp
@@ -1548,7 +1557,16 @@ GO
 IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'commonsettings.minificationenabled')
 BEGIN
     INSERT [Setting] ([Name], [Value], [StoreId])
-    VALUES (N'commonsettings.minificationenabled', N'true', 0)
+    VALUES (N'commonsettings.minificationenabled', N'True', 0)
+END
+GO
+
+--update setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'commonsettings.enablehtmlminification')
+BEGIN
+	UPDATE [Setting]
+	SET [Name] = 'commonsettings.enablehtmlminification'
+	WHERE [Name] = 'commonsettings.minificationenabled'
 END
 GO
 
@@ -1641,4 +1659,22 @@ EXEC sp_RENAME 'Poll.ShowOnHomePage' , 'ShowOnHomepage', 'COLUMN'
 GO
 
 EXEC sp_RENAME 'Product.ShowOnHomePage' , 'ShowOnHomepage', 'COLUMN'
+GO
+
+--update setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'commonsettings.enablejsbundling')
+BEGIN
+	UPDATE [Setting]
+	SET [Name] = 'commonsettings.enablejsbundling'
+	WHERE [Name] = 'seosettings.enablejsbundling'
+END
+GO
+
+--update setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'commonsettings.enablecssbundling')
+BEGIN
+	UPDATE [Setting]
+	SET [Name] = 'commonsettings.enablecssbundling'
+	WHERE [Name] = 'seosettings.enablecssbundling'
+END
 GO
