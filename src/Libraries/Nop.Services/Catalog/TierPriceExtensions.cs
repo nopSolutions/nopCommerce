@@ -38,9 +38,13 @@ namespace Nop.Services.Catalog
 
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
-
-            return source.Where(tierPrice => tierPrice.CustomerRole == null ||
-                customer.CustomerRoles.Where(role => role.Active).Select(role => role.Id).Contains(tierPrice.CustomerRole.Id));
+            
+            return source.Where(tierPrice => 
+               //tier prices without custoemr role specified
+               !tierPrice.CustomerRoleId.HasValue || 
+               tierPrice.CustomerRoleId.Value == 0 ||
+               //validate customer role if specified
+               customer.GetCustomerRoleIds().Contains(tierPrice.CustomerRoleId.Value));
         }
 
         /// <summary>
