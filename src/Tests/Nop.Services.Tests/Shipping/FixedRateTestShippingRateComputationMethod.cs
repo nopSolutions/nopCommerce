@@ -1,6 +1,6 @@
 ﻿using System;
 using Nop.Core.Domain.Shipping;
-using Nop.Core.Plugins;
+using Nop.Services.Plugins;
 using Nop.Services.Shipping;
 using Nop.Services.Shipping.Tracking;
 

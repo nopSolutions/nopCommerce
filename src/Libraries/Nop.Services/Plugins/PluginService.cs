@@ -4,7 +4,6 @@ using System.Linq;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Infrastructure;
-using Nop.Core.Plugins;
 using Nop.Services.Customers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;

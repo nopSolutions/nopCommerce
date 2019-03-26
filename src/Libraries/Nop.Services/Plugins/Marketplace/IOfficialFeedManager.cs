@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
+using Nop.Core;
 
-namespace Nop.Core.Plugins
+namespace Nop.Services.Plugins.Marketplace
 {
     /// <summary>
     /// Official feed manager (official plugins from www.nopCommerce.com site)

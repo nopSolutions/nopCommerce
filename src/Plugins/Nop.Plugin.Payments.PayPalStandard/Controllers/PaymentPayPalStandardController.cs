@@ -30,7 +30,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IOrderProcessingService _orderProcessingService;
         private readonly IOrderService _orderService;
-        private readonly IPaymentService _paymentService;
+        private readonly IPaymentPluginManager _paymentPluginManager;
         private readonly IPermissionService _permissionService;
         private readonly ILocalizationService _localizationService;
         private readonly ILogger _logger;
@@ -45,11 +45,10 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
 
         #region Ctor
 
-        public PaymentPayPalStandardController(
-            IGenericAttributeService genericAttributeService,
+        public PaymentPayPalStandardController(IGenericAttributeService genericAttributeService,
             IOrderProcessingService orderProcessingService,
             IOrderService orderService,
-            IPaymentService paymentService,
+            IPaymentPluginManager paymentPluginManager,
             IPermissionService permissionService,
             ILocalizationService localizationService,
             ILogger logger,
@@ -63,16 +62,16 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
             _genericAttributeService = genericAttributeService;
             _orderService = orderService;
             _orderProcessingService = orderProcessingService;
-            _paymentService = paymentService;
+            _paymentPluginManager = paymentPluginManager;
             _permissionService = permissionService;
             _localizationService = localizationService;
             _logger = logger;
             _notificationService = notificationService;
             _settingService = settingService;
-            _shoppingCartSettings = shoppingCartSettings;
             _storeContext = storeContext;
             _webHelper = webHelper;
             _workContext = workContext;
+            _shoppingCartSettings = shoppingCartSettings;
         }
 
         #endregion
@@ -174,8 +173,8 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
         {
             var tx = _webHelper.QueryString<string>("tx");
 
-            if (!(_paymentService.LoadPaymentMethodBySystemName("Payments.PayPalStandard") is PayPalStandardPaymentProcessor processor)
-                || !_paymentService.IsPaymentMethodActive(processor))
+            if (!(_paymentPluginManager.LoadPluginBySystemName("Payments.PayPalStandard") is PayPalStandardPaymentProcessor processor)
+                || !_paymentPluginManager.IsPluginActive(processor))
             {
                 throw new NopException("PayPal Standard module cannot be loaded");
             }
@@ -313,8 +312,8 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
             }
             var strRequest = Encoding.ASCII.GetString(parameters);
 
-            if (!(_paymentService.LoadPaymentMethodBySystemName("Payments.PayPalStandard") is PayPalStandardPaymentProcessor processor)
-                || !_paymentService.IsPaymentMethodActive(processor))
+            if (!(_paymentPluginManager.LoadPluginBySystemName("Payments.PayPalStandard") is PayPalStandardPaymentProcessor processor)
+                || !_paymentPluginManager.IsPluginActive(processor))
             {
                 throw new NopException("PayPal Standard module cannot be loaded");
             }

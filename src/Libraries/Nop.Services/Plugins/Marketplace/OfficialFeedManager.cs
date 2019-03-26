@@ -3,8 +3,9 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Xml;
+using Nop.Core;
 
-namespace Nop.Core.Plugins
+namespace Nop.Services.Plugins.Marketplace
 {
     /// <summary>
     /// Official feed manager (official plugins from www.nopCommerce.com site)

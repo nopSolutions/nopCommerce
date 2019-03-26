@@ -17,7 +17,6 @@ using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
-using Nop.Services.Plugins;
 using Nop.Services.Shipping;
 using Nop.Web.Extensions;
 using Nop.Web.Factories;
@@ -45,8 +44,8 @@ namespace Nop.Web.Controllers
         private readonly ILogger _logger;
         private readonly IOrderProcessingService _orderProcessingService;
         private readonly IOrderService _orderService;
+        private readonly IPaymentPluginManager _paymentPluginManager;
         private readonly IPaymentService _paymentService;
-        private readonly IPluginService _pluginService;
         private readonly IShippingService _shippingService;
         private readonly IShoppingCartService _shoppingCartService;
         private readonly IStateProvinceService _stateProvinceService;
@@ -74,8 +73,8 @@ namespace Nop.Web.Controllers
             ILogger logger,
             IOrderProcessingService orderProcessingService,
             IOrderService orderService,
+            IPaymentPluginManager paymentPluginManager,
             IPaymentService paymentService,
-            IPluginService pluginService,
             IShippingService shippingService,
             IShoppingCartService shoppingCartService,
             IStateProvinceService stateProvinceService,
@@ -99,8 +98,8 @@ namespace Nop.Web.Controllers
             _logger = logger;
             _orderProcessingService = orderProcessingService;
             _orderService = orderService;
+            _paymentPluginManager = paymentPluginManager;
             _paymentService = paymentService;
-            _pluginService = pluginService;
             _shippingService = shippingService;
             _shoppingCartService = shoppingCartService;
             _stateProvinceService = stateProvinceService;
@@ -157,10 +156,9 @@ namespace Nop.Web.Controllers
             //if we have only "button" payment methods available (displayed onthe shopping cart page, not during checkout),
             //then we should allow standard checkout
             //all payment methods (do not filter by country here as it could be not specified yet)
-            var paymentMethods = _paymentService
-                .LoadActivePaymentMethods(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id)
-                .Where(pm => !pm.HidePaymentMethod(cart))
-                .ToList();
+            var paymentMethods = _paymentPluginManager
+                .LoadActivePlugins(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id)
+                .Where(pm => !pm.HidePaymentMethod(cart)).ToList();
             //payment methods displayed during checkout (not with "Button" type)
             var nonButtonPaymentMethods = paymentMethods
                 .Where(pm => pm.PaymentMethodType != PaymentMethodType.Button)
@@ -745,9 +743,7 @@ namespace Nop.Web.Controllers
             if (string.IsNullOrEmpty(paymentmethod))
                 return PaymentMethod();
 
-            var paymentMethodInst = _paymentService.LoadPaymentMethodBySystemName(paymentmethod,
-                _workContext.CurrentCustomer, _storeContext.CurrentStore.Id);
-            if (paymentMethodInst == null || !_paymentService.IsPaymentMethodActive(paymentMethodInst))
+            if (!_paymentPluginManager.IsPluginActive(paymentmethod, _workContext.CurrentCustomer, _storeContext.CurrentStore.Id))
                 return PaymentMethod();
 
             //save
@@ -784,7 +780,7 @@ namespace Nop.Web.Controllers
             //load payment method
             var paymentMethodSystemName = _genericAttributeService.GetAttribute<string>(_workContext.CurrentCustomer,
                 NopCustomerDefaults.SelectedPaymentMethodAttribute, _storeContext.CurrentStore.Id);
-            var paymentMethod = _paymentService.LoadPaymentMethodBySystemName(paymentMethodSystemName);
+            var paymentMethod = _paymentPluginManager.LoadPluginBySystemName(paymentMethodSystemName);
             if (paymentMethod == null)
                 return RedirectToRoute("CheckoutPaymentMethod");
 
@@ -835,7 +831,7 @@ namespace Nop.Web.Controllers
             //load payment method
             var paymentMethodSystemName = _genericAttributeService.GetAttribute<string>(_workContext.CurrentCustomer,
                 NopCustomerDefaults.SelectedPaymentMethodAttribute, _storeContext.CurrentStore.Id);
-            var paymentMethod = _paymentService.LoadPaymentMethodBySystemName(paymentMethodSystemName);
+            var paymentMethod = _paymentPluginManager.LoadPluginBySystemName(paymentMethodSystemName);
             if (paymentMethod == null)
                 return RedirectToRoute("CheckoutPaymentMethod");
 
@@ -1014,9 +1010,9 @@ namespace Nop.Web.Controllers
                         NopCustomerDefaults.SelectedPaymentMethodAttribute,
                         selectedPaymentMethodSystemName, _storeContext.CurrentStore.Id);
 
-                    var paymentMethodInst = _paymentService.LoadPaymentMethodBySystemName(selectedPaymentMethodSystemName,
-                        _workContext.CurrentCustomer, _storeContext.CurrentStore.Id);
-                    if (paymentMethodInst == null || !_paymentService.IsPaymentMethodActive(paymentMethodInst))
+                    var paymentMethodInst = _paymentPluginManager
+                        .LoadPluginBySystemName(selectedPaymentMethodSystemName, _workContext.CurrentCustomer, _storeContext.CurrentStore.Id);
+                    if (!_paymentPluginManager.IsPluginActive(paymentMethodInst))
                         throw new Exception("Selected payment method can't be parsed");
 
                     return OpcLoadStepAfterPaymentMethod(paymentMethodInst, cart);
@@ -1126,14 +1122,13 @@ namespace Nop.Web.Controllers
                 if (_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed)
                     throw new Exception("Anonymous checkout is not allowed");
 
-                int.TryParse(model.Form["billing_address_id"], out int billingAddressId);
+                int.TryParse(model.Form["billing_address_id"], out var billingAddressId);
 
                 if (billingAddressId > 0)
                 {
                     //existing address
-                    var address = _workContext.CurrentCustomer.Addresses.FirstOrDefault(a => a.Id == billingAddressId);
-                    if (address == null)
-                        throw new Exception("Address can't be loaded");
+                    var address = _workContext.CurrentCustomer.Addresses.FirstOrDefault(a => a.Id == billingAddressId)
+                        ?? throw new Exception("Address can't be loaded");
 
                     _workContext.CurrentCustomer.BillingAddress = address;
                     _customerService.UpdateCustomer(_workContext.CurrentCustomer);
@@ -1306,14 +1301,13 @@ namespace Nop.Web.Controllers
                     _genericAttributeService.SaveAttribute<PickupPoint>(_workContext.CurrentCustomer, NopCustomerDefaults.SelectedPickupPointAttribute, null, _storeContext.CurrentStore.Id);
                 }
 
-                int.TryParse(model.Form["shipping_address_id"], out int shippingAddressId);
+                int.TryParse(model.Form["shipping_address_id"], out var shippingAddressId);
 
                 if (shippingAddressId > 0)
                 {
                     //existing address
-                    var address = _workContext.CurrentCustomer.Addresses.FirstOrDefault(a => a.Id == shippingAddressId);
-                    if (address == null)
-                        throw new Exception("Address can't be loaded");
+                    var address = _workContext.CurrentCustomer.Addresses.FirstOrDefault(a => a.Id == shippingAddressId)
+                        ?? throw new Exception("Address can't be loaded");
 
                     _workContext.CurrentCustomer.ShippingAddress = address;
                     _customerService.UpdateCustomer(_workContext.CurrentCustomer);
@@ -1508,9 +1502,9 @@ namespace Nop.Web.Controllers
                     });
                 }
 
-                var paymentMethodInst = _paymentService.LoadPaymentMethodBySystemName(paymentmethod,
-                    _workContext.CurrentCustomer, _storeContext.CurrentStore.Id);
-                if (paymentMethodInst == null || !_paymentService.IsPaymentMethodActive(paymentMethodInst))
+                var paymentMethodInst = _paymentPluginManager
+                    .LoadPluginBySystemName(paymentmethod, _workContext.CurrentCustomer, _storeContext.CurrentStore.Id);
+                if (!_paymentPluginManager.IsPluginActive(paymentMethodInst))
                     throw new Exception("Selected payment method can't be parsed");
 
                 //save
@@ -1547,9 +1541,8 @@ namespace Nop.Web.Controllers
 
                 var paymentMethodSystemName = _genericAttributeService.GetAttribute<string>(_workContext.CurrentCustomer,
                     NopCustomerDefaults.SelectedPaymentMethodAttribute, _storeContext.CurrentStore.Id);
-                var paymentMethod = _paymentService.LoadPaymentMethodBySystemName(paymentMethodSystemName);
-                if (paymentMethod == null)
-                    throw new Exception("Payment method is not selected");
+                var paymentMethod = _paymentPluginManager.LoadPluginBySystemName(paymentMethodSystemName)
+                    ?? throw new Exception("Payment method is not selected");
 
                 var warnings = paymentMethod.ValidatePaymentForm(form);
                 foreach (var warning in warnings)
@@ -1641,7 +1634,7 @@ namespace Nop.Web.Controllers
                         Order = placeOrderResult.PlacedOrder
                     };
 
-                    var paymentMethod = _paymentService.LoadPaymentMethodBySystemName(placeOrderResult.PlacedOrder.PaymentMethodSystemName);
+                    var paymentMethod = _paymentPluginManager.LoadPluginBySystemName(placeOrderResult.PlacedOrder.PaymentMethodSystemName);
                     if (paymentMethod == null)
                         //payment method could be null if order total is 0
                         //success
@@ -1704,7 +1697,7 @@ namespace Nop.Web.Controllers
                 if (order == null)
                     return RedirectToRoute("Homepage");
 
-                var paymentMethod = _paymentService.LoadPaymentMethodBySystemName(order.PaymentMethodSystemName);
+                var paymentMethod = _paymentPluginManager.LoadPluginBySystemName(order.PaymentMethodSystemName);
                 if (paymentMethod == null)
                     return RedirectToRoute("Homepage");
                 if (paymentMethod.PaymentMethodType != PaymentMethodType.Redirection)

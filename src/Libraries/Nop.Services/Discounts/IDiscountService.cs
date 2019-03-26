@@ -168,23 +168,6 @@ namespace Nop.Services.Discounts
         /// <param name="discountRequirement">Discount requirement</param>
         void DeleteDiscountRequirement(DiscountRequirement discountRequirement);
 
-        /// <summary>
-        /// Load discount requirement rule by system name
-        /// </summary>
-        /// <param name="systemName">System name</param>
-        /// <param name="customer">Load records allowed only to a specified customer; pass null to ignore ACL permissions</param>
-        /// <param name="storeId">Load records allowed only on the specified store; pass 0 to ignore store mappings</param>
-        /// <returns>Found discount requirement rule</returns>
-        IDiscountRequirementRule LoadDiscountRequirementRuleBySystemName(string systemName,
-            Customer customer = null, int storeId = 0);
-
-        /// <summary>
-        /// Load all discount requirement rules
-        /// </summary>
-        /// <param name="customer">Load records allowed only to a specified customer; pass null to ignore ACL permissions</param>
-        /// <returns>Discount requirement rules</returns>
-        IList<IDiscountRequirementRule> LoadAllDiscountRequirementRules(Customer customer = null);
-
         #endregion
 
         #region Validation

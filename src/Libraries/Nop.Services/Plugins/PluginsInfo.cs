@@ -5,7 +5,7 @@ using System.Text;
 using Newtonsoft.Json;
 using Nop.Core.Infrastructure;
 
-namespace Nop.Core.Plugins
+namespace Nop.Services.Plugins
 {
     /// <summary>
     /// Represents an information about plugins

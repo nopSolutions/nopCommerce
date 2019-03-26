@@ -20,7 +20,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly ISettingService _settingService;
         private readonly ITaxCategoryService _taxCategoryService;
         private readonly ITaxModelFactory _taxModelFactory;
-        private readonly ITaxService _taxService;
+        private readonly ITaxPluginManager _taxPluginManager;
         private readonly TaxSettings _taxSettings;
 
         #endregion
@@ -31,21 +31,21 @@ namespace Nop.Web.Areas.Admin.Controllers
             ISettingService settingService,
             ITaxCategoryService taxCategoryService,
             ITaxModelFactory taxModelFactory,
-            ITaxService taxService,
+            ITaxPluginManager taxPluginManager,
             TaxSettings taxSettings)
         {
             _permissionService = permissionService;
             _settingService = settingService;
             _taxCategoryService = taxCategoryService;
             _taxModelFactory = taxModelFactory;
-            _taxService = taxService;
+            _taxPluginManager = taxPluginManager;
             _taxSettings = taxSettings;
         }
 
         #endregion
 
         #region Methods
-        
+
         #region Tax Providers
 
         public virtual IActionResult List()
@@ -84,7 +84,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (string.IsNullOrEmpty(systemName))
                 return RedirectToAction("Providers");
 
-            var taxProvider = _taxService.LoadTaxProviderBySystemName(systemName);
+            var taxProvider = _taxPluginManager.LoadPluginBySystemName(systemName);
             if (taxProvider == null)
                 return RedirectToAction("Providers");
 

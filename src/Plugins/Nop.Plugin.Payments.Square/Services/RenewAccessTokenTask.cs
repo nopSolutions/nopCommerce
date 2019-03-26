@@ -18,7 +18,7 @@ namespace Nop.Plugin.Payments.Square.Services
 
         private readonly ILocalizationService _localizationService;
         private readonly ILogger _logger;
-        private readonly IPaymentService _paymentService;
+        private readonly IPaymentPluginManager _paymentPluginManager;
         private readonly ISettingService _settingService;
         private readonly SquarePaymentManager _squarePaymentManager;
         private readonly SquarePaymentSettings _squarePaymentSettings;
@@ -29,14 +29,14 @@ namespace Nop.Plugin.Payments.Square.Services
 
         public RenewAccessTokenTask(ILocalizationService localizationService,
             ILogger logger,
-            IPaymentService paymentService,
+            IPaymentPluginManager paymentPluginManager,
             ISettingService settingService,
             SquarePaymentManager squarePaymentManager,
             SquarePaymentSettings squarePaymentSettings)
         {
             _localizationService = localizationService;
             _logger = logger;
-            _paymentService = paymentService;
+            _paymentPluginManager = paymentPluginManager;
             _settingService = settingService;
             _squarePaymentManager = squarePaymentManager;
             _squarePaymentSettings = squarePaymentSettings;
@@ -52,7 +52,7 @@ namespace Nop.Plugin.Payments.Square.Services
         public void Execute()
         {
             //whether plugin is active
-            if (!_paymentService.IsPaymentMethodActive(_paymentService.LoadPaymentMethodBySystemName(SquarePaymentDefaults.SystemName)))
+            if (!_paymentPluginManager.IsPluginActive(SquarePaymentDefaults.SystemName))
                 return;
 
             //do not execute for sandbox environment

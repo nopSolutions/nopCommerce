@@ -1,5 +1,4 @@
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Nop.Core;
@@ -13,7 +12,6 @@ using Nop.Core.Domain.Tax;
 using Nop.Services.Common;
 using Nop.Services.Directory;
 using Nop.Services.Logging;
-using Nop.Services.Plugins;
 
 namespace Nop.Services.Tax
 {
@@ -31,9 +29,9 @@ namespace Nop.Services.Tax
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IGeoLookupService _geoLookupService;
         private readonly ILogger _logger;
-        private readonly IPluginService _pluginService;
         private readonly IStateProvinceService _stateProvinceService;
         private readonly IStoreContext _storeContext;
+        private readonly ITaxPluginManager _taxPluginManager;
         private readonly IWebHelper _webHelper;
         private readonly IWorkContext _workContext;
         private readonly ShippingSettings _shippingSettings;
@@ -50,9 +48,9 @@ namespace Nop.Services.Tax
             IGenericAttributeService genericAttributeService,
             IGeoLookupService geoLookupService,
             ILogger logger,
-            IPluginService pluginService,
             IStateProvinceService stateProvinceService,
             IStoreContext storeContext,
+            ITaxPluginManager taxPluginManager,
             IWebHelper webHelper,
             IWorkContext workContext,
             ShippingSettings shippingSettings,
@@ -65,9 +63,9 @@ namespace Nop.Services.Tax
             _genericAttributeService = genericAttributeService;
             _geoLookupService = geoLookupService;
             _logger = logger;
-            _pluginService = pluginService;
             _stateProvinceService = stateProvinceService;
             _storeContext = storeContext;
+            _taxPluginManager = taxPluginManager;
             _webHelper = webHelper;
             _workContext = workContext;
             _shippingSettings = shippingSettings;
@@ -256,7 +254,7 @@ namespace Nop.Services.Tax
             isTaxable = true;
 
             //active tax provider
-            var activeTaxProvider = LoadActiveTaxProvider(customer);
+            var activeTaxProvider = _taxPluginManager.LoadPrimaryPlugin(customer, _storeContext.CurrentStore.Id);
             if (activeTaxProvider == null)
                 return;
 
@@ -301,43 +299,6 @@ namespace Nop.Services.Tax
         #endregion
 
         #region Methods
-
-        #region Tax providers
-
-        /// <summary>
-        /// Load active tax provider
-        /// </summary>
-        /// <param name="customer">Load records allowed only to a specified customer; pass null to ignore ACL permissions</param>
-        /// <returns>Active tax provider</returns>
-        public virtual ITaxProvider LoadActiveTaxProvider(Customer customer = null)
-        {
-            var taxProvider = LoadTaxProviderBySystemName(_taxSettings.ActiveTaxProviderSystemName) ??
-                              LoadAllTaxProviders(customer).FirstOrDefault();
-            return taxProvider;
-        }
-
-        /// <summary>
-        /// Load tax provider by system name
-        /// </summary>
-        /// <param name="systemName">System name</param>
-        /// <returns>Found tax provider</returns>
-        public virtual ITaxProvider LoadTaxProviderBySystemName(string systemName)
-        {
-            var descriptor = _pluginService.GetPluginDescriptorBySystemName<ITaxProvider>(systemName);
-            return descriptor?.Instance<ITaxProvider>();
-        }
-
-        /// <summary>
-        /// Load all tax providers
-        /// </summary>
-        /// <param name="customer">Load records allowed only to a specified customer; pass null to ignore ACL permissions</param>
-        /// <returns>Tax providers</returns>
-        public virtual IList<ITaxProvider> LoadAllTaxProviders(Customer customer = null)
-        {
-            return _pluginService.GetPlugins<ITaxProvider>(customer: customer).ToList();
-        }
-
-        #endregion
 
         #region Product price
 

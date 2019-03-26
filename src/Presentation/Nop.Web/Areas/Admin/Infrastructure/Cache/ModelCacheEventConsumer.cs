@@ -3,7 +3,6 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Configuration;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Events;
-using Nop.Core.Plugins;
 using Nop.Services.Events;
 using Nop.Services.Plugins;
 

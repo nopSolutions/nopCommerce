@@ -178,7 +178,7 @@ ul.common-list {
 }
 
 .panel.collapsible-panel >.panel-heading span {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 400;
 }
 
@@ -200,12 +200,12 @@ ul.common-list {
     width: 45px;
     position: absolute;
     left: 0;
-    top: 14px;
+    top: 12px;
     text-align: center;
 }
 
 .panel.collapsible-panel .panel-heading i.panel-icon {
-    font-size: 18px;
+    font-size: 16px;
     padding-right: 0 !important;
 }
 
@@ -221,13 +221,13 @@ ul.common-list {
     cursor: pointer;
 }
 
-.panel-search .search-body {
+.panel-search .search-body.closed {
     display: none;
-    margin-top: 15px;
 }
 
-.panel-search.collapsed {
-    cursor: pointer;
+.panel-search .search-body {
+    display: block;
+    margin-top: 15px;
 }
 
 .icon-search {
@@ -872,6 +872,11 @@ td.k-state-focused.k-state-selected {
 }
 .content-header .btn {
     margin-bottom: 5px;
+}
+
+.content-header .btn-group {
+    margin-left: 3px;
+    margin-right: 3px;
 }
 .content-header .btn-group .dropdown-menu input,
 .content-header .btn-group .dropdown-menu button,
@@ -1534,9 +1539,27 @@ span.grid-report-item.red {
     margin: 9px 9px 0px 0px;
 }
 
+/*Upload picture block*/
+.upload-picture-block {
+    display: table-row;
+    width: 100%;
+}
+.upload-picture-block .qq-upload-success{
+    word-break: break-all;
+}
+.upload-picture-block .picture-container {
+    display: table-cell;
+    vertical-align: top;
+}
+.upload-picture-block .upload-button-container {
+    display: table-cell;
+    padding-left: 25px;
+    vertical-align: middle;
+}
+
 @media (max-width: 1200px) {
-    /* HEADER */
-    .main-header .navbar-custom-menu {
+  /* HEADER */
+  .main-header .navbar-custom-menu {
         float: none;
     }
     .main-header .navbar-custom-menu > .navbar-nav {
@@ -1668,4 +1691,17 @@ span.grid-report-item.red {
     .form-horizontal .panel-popup .label-wrapper {
         float: left;
     }
+}
+
+@media (max-width: 572px) {
+  .upload-picture-block .picture-container {
+      display: block;
+      vertical-align: top;
+  }
+
+  .upload-picture-block .upload-button-container {
+      display: block;
+      padding-left: 0;
+      vertical-align: top;
+  }
 }
