@@ -145,15 +145,17 @@ namespace Nop.Web.Controllers
 
             var blogPost = _blogService.GetBlogPostById(blogPostId);
             if (blogPost == null)
-                return RedirectToRoute("Homepage");
+                return InvokeHttp404();
 
+            var notAvailable =
+                //availability dates
+                !_blogService.BlogPostIsAvailable(blogPost) ||
+                //Store mapping
+                !_storeMappingService.Authorize(blogPost);
+            //Check whether the current user has a "Manage blog" permission (usually a store owner)
+            //We should allows him (her) to use "Preview" functionality
             var hasAdminAccess = _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && _permissionService.Authorize(StandardPermissionProvider.ManageBlog);
-            //access to Blog preview
-            if (!_blogService.BlogPostIsAvailable(blogPost) && !hasAdminAccess)
-                return RedirectToRoute("Homepage");
-
-            //Store mapping
-            if (!_storeMappingService.Authorize(blogPost))
+            if (notAvailable && !hasAdminAccess)
                 return InvokeHttp404();
 
             //display "edit" (manage) link

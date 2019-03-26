@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.WebUtilities;
 using Nop.Core;
 using Nop.Core.Caching;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Seo;
 using Nop.Core.Infrastructure;
 using Nop.Services.Seo;
@@ -26,14 +27,15 @@ namespace Nop.Web.Framework.UI
 
         private static readonly object s_lock = new object();
 
-        private readonly SeoSettings _seoSettings;
+        private readonly BundleFileProcessor _processor;
+        private readonly CommonSettings _commonSettings;
         private readonly IActionContextAccessor _actionContextAccessor;
         private readonly IHostingEnvironment _hostingEnvironment;
-        private readonly IStaticCacheManager _cacheManager;
         private readonly INopFileProvider _fileProvider;
+        private readonly IStaticCacheManager _cacheManager;
         private readonly IUrlHelperFactory _urlHelperFactory;
         private readonly IUrlRecordService _urlRecordService;
-        private readonly BundleFileProcessor _processor;
+        private readonly SeoSettings _seoSettings;
 
         private readonly List<string> _titleParts;
         private readonly List<string> _metaDescriptionParts;
@@ -44,8 +46,8 @@ namespace Nop.Web.Framework.UI
         private readonly List<string> _canonicalUrlParts;
         private readonly List<string> _headCustomParts;
         private readonly List<string> _pageCssClassParts;
-        private string _editPageUrl;
         private string _activeAdminMenuSystemName;
+        private string _editPageUrl;
 
         //in minutes
         private const int RecheckBundledFilesPeriod = 120;
@@ -54,22 +56,26 @@ namespace Nop.Web.Framework.UI
 
         #region Ctor
         
-        public PageHeadBuilder(SeoSettings seoSettings,
+        public PageHeadBuilder(
+            CommonSettings commonSettings,
             IActionContextAccessor actionContextAccessor,
             IHostingEnvironment hostingEnvironment,
-            IStaticCacheManager cacheManager,
             INopFileProvider fileProvider,
+            IStaticCacheManager cacheManager,
             IUrlHelperFactory urlHelperFactory,
-            IUrlRecordService urlRecordService)
+            IUrlRecordService urlRecordService,
+            SeoSettings seoSettings         
+            )
         {
-            _seoSettings = seoSettings;
+            _processor = new BundleFileProcessor();
+            _commonSettings = commonSettings;
             _actionContextAccessor = actionContextAccessor;
             _hostingEnvironment = hostingEnvironment;
-            _cacheManager = cacheManager;
             _fileProvider = fileProvider;
+            _cacheManager = cacheManager;            
             _urlHelperFactory = urlHelperFactory;
             _urlRecordService = urlRecordService;
-            _processor = new BundleFileProcessor();
+            _seoSettings = seoSettings;
 
             _titleParts = new List<string>();
             _metaDescriptionParts = new List<string>();
@@ -328,7 +334,7 @@ namespace Nop.Web.Framework.UI
             if (!bundleFiles.HasValue)
             {
                 //use setting if no value is specified
-                bundleFiles = _seoSettings.EnableJsBundling;
+                bundleFiles = _commonSettings.EnableJsBundling;
             }
 
             if (bundleFiles.Value)
@@ -537,7 +543,7 @@ namespace Nop.Web.Framework.UI
             if (!bundleFiles.HasValue)
             {
                 //use setting if no value is specified
-                bundleFiles = _seoSettings.EnableCssBundling;
+                bundleFiles = _commonSettings.EnableCssBundling;
             }
 
             //CSS bundling is not allowed in virtual directories

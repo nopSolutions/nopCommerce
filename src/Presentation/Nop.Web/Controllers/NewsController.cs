@@ -13,6 +13,7 @@ using Nop.Services.Messages;
 using Nop.Services.News;
 using Nop.Services.Security;
 using Nop.Services.Seo;
+using Nop.Services.Stores;
 using Nop.Web.Factories;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
@@ -38,6 +39,7 @@ namespace Nop.Web.Controllers
         private readonly INewsService _newsService;
         private readonly IPermissionService _permissionService;
         private readonly IStoreContext _storeContext;
+        private readonly IStoreMappingService _storeMappingService;
         private readonly IUrlRecordService _urlRecordService;
         private readonly IWebHelper _webHelper;
         private readonly IWorkContext _workContext;
@@ -57,6 +59,7 @@ namespace Nop.Web.Controllers
             INewsService newsService,
             IPermissionService permissionService,
             IStoreContext storeContext,
+            IStoreMappingService storeMappingService,
             IUrlRecordService urlRecordService,
             IWebHelper webHelper,
             IWorkContext workContext,
@@ -72,6 +75,7 @@ namespace Nop.Web.Controllers
             _newsService = newsService;
             _permissionService = permissionService;
             _storeContext = storeContext;
+            _storeMappingService = storeMappingService;
             _urlRecordService = urlRecordService;
             _webHelper = webHelper;
             _workContext = workContext;
@@ -122,12 +126,20 @@ namespace Nop.Web.Controllers
 
             var newsItem = _newsService.GetNewsById(newsItemId);
             if (newsItem == null)
-                return RedirectToRoute("Homepage");
+                return InvokeHttp404();
 
+            var notAvailable =
+                //published?
+                !newsItem.Published ||
+                //availability dates
+                !_newsService.IsNewsAvailable(newsItem) ||
+                //Store mapping
+                !_storeMappingService.Authorize(newsItem);
+            //Check whether the current user has a "Manage news" permission (usually a store owner)
+            //We should allows him (her) to use "Preview" functionality
             var hasAdminAccess = _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && _permissionService.Authorize(StandardPermissionProvider.ManageNews);
-            //access to News preview
-            if ((!newsItem.Published || !_newsService.IsNewsAvailable(newsItem)) && !hasAdminAccess)
-                return RedirectToRoute("Homepage");
+            if (notAvailable && !hasAdminAccess)
+                return InvokeHttp404();
 
             var model = new NewsItemModel();
             model = _newsModelFactory.PrepareNewsItemModel(model, newsItem, true);

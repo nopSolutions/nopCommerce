@@ -377,7 +377,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 {
                     options.AllowMinificationInDevelopmentEnvironment = true;
                     options.AllowCompressionInDevelopmentEnvironment = true;
-                    options.DisableMinification = !EngineContext.Current.Resolve<CommonSettings>().MinificationEnabled;
+                    options.DisableMinification = !EngineContext.Current.Resolve<CommonSettings>().EnableHtmlMinification;
                     options.DisableCompression = options.DisableMinification;
                     options.DisablePoweredByHttpHeaders = true;
                 })
