@@ -47,10 +47,11 @@ namespace Nop.Web.Controllers
         [HttpsRequirement(SslRequirement.No)]
         public virtual IActionResult TopicDetails(int topicId)
         {
-            var model = _topicModelFactory.PrepareTopicModelById(topicId);
+            //allow administrators to preview any topic
             var hasAdminAccess = _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && _permissionService.Authorize(StandardPermissionProvider.ManageTopics);
-            //access to Topics preview
-            if (model == null || (!model.Published && !hasAdminAccess))
+
+            var model = _topicModelFactory.PrepareTopicModelById(topicId, hasAdminAccess);
+            if (model == null)
                 return RedirectToRoute("Homepage");
             
             //display "edit" (manage) link

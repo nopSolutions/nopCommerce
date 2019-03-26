@@ -215,8 +215,9 @@ namespace Nop.Web.Infrastructure.Cache
         /// {1} : language id
         /// {2} : store id
         /// {3} : comma separated list of customer roles
+        /// {4} : show hidden records?
         /// </remarks>
-        public static string TopicModelByIdKey => "Nop.pres.topic.details.byid-{0}-{1}-{2}-{3}";
+        public static string TopicModelByIdKey => "Nop.pres.topic.details.byid-{0}-{1}-{2}-{3}-{4}";
         /// <summary>
         /// Key for TopicModel caching
         /// </summary>
