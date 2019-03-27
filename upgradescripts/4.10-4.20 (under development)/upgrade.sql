@@ -1678,3 +1678,12 @@ BEGIN
 	WHERE [Name] = 'seosettings.enablecssbundling'
 END
 GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'paymentsettings.regenerateorderguidinterval')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'paymentsettings.regenerateorderguidinterval', N'180', 0)
+END
+GO
+

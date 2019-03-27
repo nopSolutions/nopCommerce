@@ -6482,7 +6482,8 @@ namespace Nop.Services.Installation
                 BypassPaymentMethodSelectionIfOnlyOne = true,
                 ShowPaymentMethodDescriptions = true,
                 SkipPaymentInfoStepForRedirectionPaymentMethods = false,
-                CancelRecurringPaymentsAfterFailedPayment = false
+                CancelRecurringPaymentsAfterFailedPayment = false,
+                RegenerateOrderGuidInterval = 180
             });
 
             settingService.SaveSetting(new TaxSettings
