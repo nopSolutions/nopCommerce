@@ -143,14 +143,17 @@
                 </div>
 
                 <div class="panel panel-default">
-                    <div class="panel-body">
-                        <table id="shipments-grid" class="table table-bordered table-hover dataTable" width="100%"></table>
+                    <div class="panel-body">                        
+                        @await Html.PartialAsync("Table", Model.Grid)                  
 
+
+                        
+                        @*<table id="shipments-grid" class="table table-bordered table-hover dataTable" width="100%"></table>
                         <script>
                             function getdetail(d) {
                                 return '<table id="detail' + d.Id + '" class="table table-bordered table-hover dataTable" width="100%" style="padding-left:2%;"></table>';
                             }
-                            
+
                             $(document).ready(function () {
 
                                 var table = $('#shipments-grid').DataTable({
@@ -309,8 +312,8 @@
                                     }
                                 });
                              });
-                        </script>
-
+                        </script>*@
+                        
                         @*<div id="shipments-grid"></div>
         <script>
             $(document).ready(function () {

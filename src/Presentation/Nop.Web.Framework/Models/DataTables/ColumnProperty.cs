@@ -51,6 +51,11 @@
         /// </summary>
         public bool IsMasterCheckBox { get; set; }
 
+        /// <summary>
+        /// Class to assign to each cell in the column.
+        /// </summary>
+        public StyleColumn? ClassName { get; set; }
+
         #endregion
     }
 }

@@ -5,13 +5,14 @@ namespace Nop.Web.Framework.Models.DataTables
     /// <summary>
     /// Represents base DataTables model
     /// </summary>
-    public partial class DataTablesModel : BaseNopModel
+    //public partial class DataTablesModel : BaseNopModel //Commented becouse issue with model binding in .net core 2.2
+    public partial class DataTablesModel
     {
         #region Const
 
-        private const string DEFAULT_DOM = "lrtip";
+        protected const string DEFAULT_DOM = "lrtip";
 
-        private const string DEFAULT_PAGING_TYPE = "full_numbers";
+        protected const string DEFAULT_PAGING_TYPE = "full_numbers";
 
         #endregion
 
@@ -28,6 +29,7 @@ namespace Nop.Web.Framework.Models.DataTables
             Processing = true;
             Paging = true;
             PagingType = DEFAULT_PAGING_TYPE;
+            IsChildTable = false;
 
             Filters = new List<string>();
             ColumnCollection = new List<ColumnProperty>();
@@ -129,6 +131,16 @@ namespace Nop.Web.Framework.Models.DataTables
         /// See also https://datatables.net/reference/option/footerCallback
         /// </summary>
         public string FooterCallback { get; set; }
+
+        /// <summary>
+        /// Gets or sets indicate of child table
+        /// </summary>
+        public bool IsChildTable { get; set; }
+
+        /// <summary>
+        /// Gets or sets child table
+        /// </summary>
+        public DataTablesModel ChildTable { get; set; }
 
         /// <summary>
         /// Gets or set column collection 

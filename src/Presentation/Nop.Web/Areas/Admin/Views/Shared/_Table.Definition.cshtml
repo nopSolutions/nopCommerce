@@ -1,0 +1,267 @@
+﻿@model DataTablesModel
+
+@using System.Net;
+@using System.Runtime.Serialization;
+@using Nop.Web.Framework.Models.DataTables;
+
+@{
+    //the locale which MomentJS should use - the default is en (English).
+    var locale = "en";
+}
+
+@functions
+{
+    string GetUrl(DataUrl dataUrl)
+    {
+        return !string.IsNullOrEmpty(dataUrl?.ActionName) && !string.IsNullOrEmpty(dataUrl.ControllerName)
+            ? Url.Action(dataUrl.ActionName, dataUrl.ControllerName, dataUrl.RouteValues)
+            : !string.IsNullOrEmpty(dataUrl.Url)
+            ? $"{(dataUrl.Url.StartsWith("~/", StringComparison.Ordinal) ? Url.Content(dataUrl.Url) : dataUrl.Url).TrimEnd('/')}/"
+            : string.Empty;
+    }
+
+    string GetEnumValue(Type type, object value)
+    {
+        return type.GetMember(value.ToString())?[0]
+            ?.GetCustomAttributes(false).OfType<EnumMemberAttribute>().FirstOrDefault()
+            ?.Value;
+    }
+}
+
+@if (!string.IsNullOrEmpty(Model.HeaderCallback))
+{
+    <text>
+        headerCallback: function (tfoot, data, start, end, display) {
+            return @(Model.HeaderCallback)(tfoot, data, start, end, display)
+        },
+    </text>
+}
+@if (!string.IsNullOrEmpty(Model.FooterCallback))
+{
+    <text>
+        footerCallback: function (tfoot, data, start, end, display) {
+            return @(Model.FooterCallback)(tfoot, data, start, end, display)
+        },
+    </text>
+}
+@if (Model.Processing)
+{
+    <text>
+        processing: @Model.Processing.ToString().ToLower(),
+    </text>
+}
+@if (Model.ServerSide)
+{
+    <text>
+        serverSide: @Model.ServerSide.ToString().ToLower(),
+    </text>
+}
+@if (Model.Data != null)
+{
+    <text>
+        data: @Html.Raw(Model.Data.ToString()),
+    </text>
+}
+else
+{
+    <text>
+        ajax:
+        {
+            url: '@Html.Raw(GetUrl(Model.UrlRead))',
+            type: '@WebRequestMethods.Http.Post',
+            dataType: 'json',
+            data: function(data) {
+                @if (Model.IsChildTable)
+                {
+                     <text>
+                        data.@Model.Filters.FirstOrDefault() = row.data().Id;
+                    </text>
+                }
+                else
+                {
+                    @foreach (var filter in Model.Filters)
+                    {
+                        <text>
+                            data.@filter = $('#@filter').val();
+                        </text>
+                    }
+                }
+                
+                addAntiForgeryToken(data);
+                return data;
+            }
+        },
+    </text>
+}
+paging: @Model.Paging.ToString().ToLower(),
+pagingType: '@Model.PagingType',
+language: @await Html.PartialAsync("_GridLocalization"),
+pageLength: @Model.Length,
+lengthMenu: [@Model.LengthMenu],
+ordering: @Model.Ordering.ToString().ToLower(),
+fixedHeader: @Model.FixedHeader.ToString().ToLower(),
+dom: '@Model.Dom',
+columnDefs: [
+    @foreach (var definition in Model.ColumnDefinitions)
+    {
+        <text>
+        {
+            targets: @definition.Targets,
+            visible: @definition.Visible.ToString().ToLower(),
+            searchable: @definition.Searchable.ToString().ToLower(),
+            @if (definition.ClassName.HasValue)
+            {
+                <text>
+                    className: '@GetEnumValue(typeof(StyleColumn), definition.ClassName.Value)',
+                </text>
+            }
+            @if (!string.IsNullOrEmpty(definition.Width))
+            {
+                <text>
+                    width: '@definition.Width'
+                </text>
+            }
+        },
+        </text>
+    }
+],
+columns: [
+    @foreach (var column in Model.ColumnCollection)
+    {
+        <text>
+        {
+            data: '@column.Data',
+            @if (!string.IsNullOrEmpty(column.Title) && !column.IsMasterCheckBox)
+            {
+                <text>
+                    title: '@Html.Raw(column.Title)',
+                </text>
+            }
+            else
+            {
+                if (!string.IsNullOrEmpty(column.Title) && column.IsMasterCheckBox)
+                {
+                    <text>
+                        title: '<div class="checkbox"><label><input id="mastercheckbox" type="checkbox"/>@column.Title</label></div>',
+                    </text>
+                }
+                else
+                {
+                    if (string.IsNullOrEmpty(column.Title) && column.IsMasterCheckBox)
+                    {
+                        <text>
+                            title: '<input id="mastercheckbox" type="checkbox"/>',
+                        </text>
+                    }
+                }
+            }
+            width: '@column.Width',
+            @if (column.AutoWidth)
+            {
+                <text>
+                    autoWidth: @column.AutoWidth.ToString().ToLower(),
+                </text>
+            }
+            @if (column.ClassName.HasValue)
+            {
+                <text>
+                    className: '@GetEnumValue(typeof(StyleColumn), column.ClassName.Value)',
+                </text>
+            }
+            @switch (column.Render)
+            {
+                case RenderLink link:
+                    <text>
+                        render: function (data, type, row, meta) {
+                            @if (!string.IsNullOrEmpty(link.Title))
+                            {
+                                <text>
+                                    return '<a href="@GetUrl(link.Url)' + row.@link.Url.DataId + '">@link.Title</a>'
+                                </text>
+                            }
+                            else
+                            {
+                                <text>
+                                    return '<a href="@GetUrl(link.Url)' + row.@link.Url.DataId + '">' + data + '</a>'
+                                </text>
+                            }
+                        }
+                    </text>
+                    break;
+                case RenderDate date:
+                    <text>
+                        render: function (data, type, row, meta) {
+                            return moment(data).locale('@locale').format('@date.Format');
+                        }
+                    </text>
+                    break;
+                case RenderButton button:
+                    <text>
+                        render: function (data, type, row, meta) {
+                            return '<a href="#" class="@GetEnumValue(typeof(StyleButton), button.Style)" onclick=ActionData("' + data + '");>@button.Title</a>'
+                        }
+                    </text>
+                    break;
+                case RenderButtonEdit buttonEdit:
+                    <text>
+                        render: function (data, type, row, meta) {
+                            return '<a class="@GetEnumValue(typeof(StyleButton), buttonEdit.Style)" href="@GetUrl(buttonEdit.Url)' + data + '"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>'
+                        }
+                    </text>
+                    break;
+                case RenderPicture picture:
+                    <text>
+                        render: function (data, type, row, meta) {
+                            @if (!string.IsNullOrEmpty(picture.Src))
+                            {
+                                <text>
+                                    return '<img src="@picture.Src"/>'
+                                </text>
+                            }
+                            else
+                            {
+                                <text>
+                                    return '<img src="' + data + '"/>'
+                                </text>
+                            }
+                        }
+                    </text>
+                    break;
+                case RenderCheckBox checkBox:
+                    <text>
+                        render: function (data, type, row, meta) {
+                            return (data === 'true')
+                                ? '<input name="@checkBox.Name" value="' + row.Id + '" type="checkbox" class="checkboxGroups" checked="checked" />'
+                                : '<input name="@checkBox.Name" value="' + row.Id + '" type="checkbox" class="checkboxGroups" />';
+                        }
+                    </text>
+                    break;
+                case RenderBoolean renderBoolean:
+                    <text>
+                        render: function (data, type, row) {
+                            return (data == true)
+                                ? '<i class="fa fa-check true-icon"></i>'
+                                : '<i class="fa fa-close false-icon"></i>';
+                        }
+                    </text>
+                    break;
+                case RenderCustom custom:
+                    <text>
+                        render: function (data, type, row, meta) {
+                            return @(custom.FunctionName)(data, type, row, meta)
+                        }
+                    </text>
+                    break;
+                case RenderDetailCaret caret:
+                    <text>
+                        render: function (data, type, row, meta) {
+                            return '<i class="fa fa-caret-right" aria-hidden="true"></i>'
+                        }
+                    </text>
+                    break;
+            }
+        },
+        </text>
+    }
+]
+           

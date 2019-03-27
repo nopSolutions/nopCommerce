@@ -23,6 +23,12 @@ namespace Nop.Web.Framework.Models.DataTables
         /// Body content will be at center
         /// </summary>
         [EnumMember(Value = "dt-body-center")]
-        CenterBody = 3
+        CenterBody = 3,
+
+        /// <summary>
+        /// Master-detail control element
+        /// </summary>
+        [EnumMember(Value = "details-control")]
+        DetailsControl = 4
     }
 }
