@@ -103,15 +103,19 @@ namespace Nop.Services.Tasks
 
         private void TimerHandler(object state)
         {
-            _timer.Change(-1, -1);
-            Run();
-            if (RunOnlyOnce)
+            try
             {
-                Dispose();
+                _timer.Change(-1, -1);
+                Run();
+
+                if (RunOnlyOnce)
+                    Dispose();
+                else
+                    _timer.Change(Interval, Interval);
             }
-            else
+            catch
             {
-                _timer.Change(Interval, Interval);
+                // ignore
             }
         }
 
