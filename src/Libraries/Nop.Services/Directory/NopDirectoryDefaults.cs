@@ -11,6 +11,14 @@
         /// Gets a key for caching
         /// </summary>
         /// <remarks>
+        /// {0} : country ID
+        /// </remarks>
+        public static string CountriesByIdCacheKey => "Nop.country.id-{0}";
+
+        /// <summary>
+        /// Gets a key for caching
+        /// </summary>
+        /// <remarks>
         /// {0} : language ID
         /// {1} : show hidden records?
         /// </remarks>

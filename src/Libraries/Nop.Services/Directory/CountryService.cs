@@ -146,7 +146,8 @@ namespace Nop.Services.Directory
             if (countryId == 0)
                 return null;
 
-            return _countryRepository.GetById(countryId);
+            var key = string.Format(NopDirectoryDefaults.CountriesByIdCacheKey, countryId);
+            return _cacheManager.Get(key, () => _countryRepository.GetById(countryId));
         }
 
         /// <summary>
