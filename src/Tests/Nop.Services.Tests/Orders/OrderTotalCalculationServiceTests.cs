@@ -186,6 +186,7 @@ namespace Nop.Services.Tests.Orders
                 _geoLookupService.Object,
                 _logger,
                 _stateProvinceService.Object,
+                new NopNullCache(),
                 _storeContext.Object,
                 _taxPluginManager,
                 _webHelper.Object,

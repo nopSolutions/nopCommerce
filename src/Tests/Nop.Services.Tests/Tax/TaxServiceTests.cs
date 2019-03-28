@@ -75,6 +75,8 @@ namespace Nop.Services.Tests.Tax
             var pluginService = new PluginService(customerService.Object, loger.Object, CommonHelper.DefaultFileProvider, _webHelper.Object);
             _taxPluginManager = new TaxPluginManager(pluginService, _taxSettings);
 
+            var cacheManager = new NopNullCache();
+
             _taxService = new TaxService(_addressSettings,
                 _customerSettings,
                 _addressService.Object,
@@ -83,6 +85,7 @@ namespace Nop.Services.Tests.Tax
                 _geoLookupService.Object,
                 _logger.Object,
                 _stateProvinceService.Object,
+                cacheManager,
                 _storeContext.Object,
                 _taxPluginManager,
                 _webHelper.Object,

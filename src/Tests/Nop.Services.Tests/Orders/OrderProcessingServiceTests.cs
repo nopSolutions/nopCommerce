@@ -216,6 +216,7 @@ namespace Nop.Services.Tests.Orders
                 _geoLookupService.Object,
                 _logger,
                 _stateProvinceService.Object,
+                cacheManager,
                 _storeContext.Object,
                 _taxPluginManager,
                 _webHelper.Object,

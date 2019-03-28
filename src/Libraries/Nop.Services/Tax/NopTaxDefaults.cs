@@ -22,5 +22,20 @@
         /// Gets a key pattern to clear cache
         /// </summary>
         public static string TaxCategoriesPatternCacheKey => "Nop.taxcategory.";
+
+
+        /// <summary>
+        /// Gets a key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : address ID
+        /// </remarks>
+        public static string TaxAddressByAddressIdCacheKey => "Nop.taxaddress.address.id-{0}-";
+
+        /// <summary>
+        /// Gets a key pattern to clear cache
+        /// </summary>
+        public static string TaxAddressPatternCacheKey => "Nop.taxaddress.address.id-{0}-";
+
     }
 }
