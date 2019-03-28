@@ -134,7 +134,7 @@ namespace Nop.Services.Tax
         /// <summary>
         /// Gets a default tax address
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Address</returns>
         protected virtual CalculateTaxRequest.TaxAddress LoadDefaultTaxAddress()
         {
             var addressId = _taxSettings.DefaultTaxAddressId;
@@ -151,7 +151,7 @@ namespace Nop.Services.Tax
         /// Gets or sets a pickup point address for tax calculation
         /// </summary>
         /// <param name="pickupPoint">Pickup point</param>
-        /// <returns></returns>
+        /// <returns>Address</returns>
         protected virtual CalculateTaxRequest.TaxAddress LoadPickupPointTaxAddress(PickupPoint pickupPoint)
         {
             if (pickupPoint == null)
@@ -175,7 +175,7 @@ namespace Nop.Services.Tax
         /// Prepare TaxAddress object based on a specific address
         /// </summary>
         /// <param name="address">Address</param>
-        /// <returns>Result</returns>
+        /// <returns>Address</returns>
         protected virtual CalculateTaxRequest.TaxAddress PrepareTaxAddress(Address address)
         {
             if (address == null)
