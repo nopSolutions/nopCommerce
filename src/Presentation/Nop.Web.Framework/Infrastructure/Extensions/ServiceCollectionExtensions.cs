@@ -24,6 +24,7 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Security;
 using Nop.Core.Http;
 using Nop.Core.Infrastructure;
+using Nop.Core.Redis;
 using Nop.Data;
 using Nop.Services.Authentication;
 using Nop.Services.Authentication.External;
@@ -192,7 +193,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         {
             //check whether to persist data protection in Redis
             var nopConfig = services.BuildServiceProvider().GetRequiredService<NopConfig>();
-            if (nopConfig.RedisCachingEnabled && nopConfig.PersistDataProtectionKeysToRedis)
+            if (nopConfig.RedisEnabled && nopConfig.UseRedisToStoreDataProtectionKeys)
             {
                 //store keys in Redis
                 services.AddDataProtection().PersistKeysToRedis(() =>
