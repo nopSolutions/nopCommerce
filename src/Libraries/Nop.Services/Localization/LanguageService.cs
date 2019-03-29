@@ -77,7 +77,7 @@ namespace Nop.Services.Localization
             _languageRepository.Delete(language);
 
             //cache
-            _cacheManager.RemoveByPattern(NopLocalizationDefaults.LanguagesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopLocalizationDefaults.LanguagesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(language);
@@ -172,7 +172,7 @@ namespace Nop.Services.Localization
             _languageRepository.Insert(language);
 
             //cache
-            _cacheManager.RemoveByPattern(NopLocalizationDefaults.LanguagesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopLocalizationDefaults.LanguagesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(language);
@@ -194,7 +194,7 @@ namespace Nop.Services.Localization
             _languageRepository.Update(language);
 
             //cache
-            _cacheManager.RemoveByPattern(NopLocalizationDefaults.LanguagesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopLocalizationDefaults.LanguagesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(language);

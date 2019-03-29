@@ -31,7 +31,7 @@ namespace Nop.Services.Tax.Cache
 
         public void HandleEvent(EntityUpdatedEvent<Address> eventMessage)
         {
-            _cacheManager.RemoveByPattern(string.Format(NopTaxDefaults.TaxAddressPatternCacheKey, eventMessage.Entity.Id));
+            _cacheManager.RemoveByPrefix(string.Format(NopTaxDefaults.TaxAddressPrefixCacheKey, eventMessage.Entity.Id));
         }
 
         #endregion

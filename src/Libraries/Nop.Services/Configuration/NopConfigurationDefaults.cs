@@ -13,6 +13,6 @@
         /// <summary>
         /// Gets a key pattern to clear cache
         /// </summary>
-        public static string SettingsPatternCacheKey => "Nop.setting.";
+        public static string SettingsPrefixCacheKey => "Nop.setting.";
     }
 }

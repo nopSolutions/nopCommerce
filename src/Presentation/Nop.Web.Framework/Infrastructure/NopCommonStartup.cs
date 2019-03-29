@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using EasyCaching.Core;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Infrastructure;
@@ -41,6 +42,9 @@ namespace Nop.Web.Framework.Infrastructure
 
             //add theme support
             services.AddThemes();
+
+            //add Easy caching
+            services.AddEasyCaching();
         }
 
         /// <summary>
@@ -66,6 +70,9 @@ namespace Nop.Web.Framework.Infrastructure
 
             //use request localization
             application.UseRequestLocalization();
+
+            //easy caching
+            application.UseEasyCaching();
         }
 
         /// <summary>

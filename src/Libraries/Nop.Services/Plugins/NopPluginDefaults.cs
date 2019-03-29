@@ -98,6 +98,6 @@ namespace Nop.Services.Plugins
         /// <summary>
         /// Gets a key to clear cache
         /// </summary>
-        public static string AdminNavigationPluginsPatternCacheKey => "Nop.plugins.adminnavigation";
+        public static string AdminNavigationPluginsPrefixCacheKey => "Nop.plugins.adminnavigation";
     }
 }

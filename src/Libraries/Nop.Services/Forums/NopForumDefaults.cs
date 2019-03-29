@@ -21,11 +21,11 @@
         /// <summary>
         /// Gets a key pattern to clear cache
         /// </summary>
-        public static string ForumGroupPatternCacheKey => "Nop.forumgroup.";
+        public static string ForumGroupPrefixCacheKey => "Nop.forumgroup.";
 
         /// <summary>
         /// Gets a key pattern to clear cache
         /// </summary>
-        public static string ForumPatternCacheKey => "Nop.forum.";
+        public static string ForumPrefixCacheKey => "Nop.forum.";
     }
 }

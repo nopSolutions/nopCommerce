@@ -61,7 +61,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Infrastructure.Cache
         public void HandleEvent(EntityInsertedEvent<TaxRate> eventMessage)
         {
             //clear cache
-            _cacheManager.RemoveByPattern(TAXRATE_PATTERN_KEY);
+            _cacheManager.RemoveByPrefix(TAXRATE_PATTERN_KEY);
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Infrastructure.Cache
         public void HandleEvent(EntityUpdatedEvent<TaxRate> eventMessage)
         {
             //clear cache
-            _cacheManager.RemoveByPattern(TAXRATE_PATTERN_KEY);
+            _cacheManager.RemoveByPrefix(TAXRATE_PATTERN_KEY);
         }
 
         /// <summary>
@@ -81,7 +81,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Infrastructure.Cache
         public void HandleEvent(EntityDeletedEvent<TaxRate> eventMessage)
         {
             //clear cache
-            _cacheManager.RemoveByPattern(TAXRATE_PATTERN_KEY);
+            _cacheManager.RemoveByPrefix(TAXRATE_PATTERN_KEY);
         }
 
         /// <summary>

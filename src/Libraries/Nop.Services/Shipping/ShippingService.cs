@@ -141,7 +141,7 @@ namespace Nop.Services.Shipping
 
             _shippingMethodRepository.Delete(shippingMethod);
 
-            _cacheManager.RemoveByPattern(NopShippingDefaults.ShippingMethodsPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopShippingDefaults.ShippingMethodsPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(shippingMethod);
@@ -205,7 +205,7 @@ namespace Nop.Services.Shipping
 
             _shippingMethodRepository.Insert(shippingMethod);
 
-            _cacheManager.RemoveByPattern(NopShippingDefaults.ShippingMethodsPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopShippingDefaults.ShippingMethodsPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(shippingMethod);
@@ -222,7 +222,7 @@ namespace Nop.Services.Shipping
 
             _shippingMethodRepository.Update(shippingMethod);
 
-            _cacheManager.RemoveByPattern(NopShippingDefaults.ShippingMethodsPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopShippingDefaults.ShippingMethodsPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(shippingMethod);
@@ -259,7 +259,7 @@ namespace Nop.Services.Shipping
             _warehouseRepository.Delete(warehouse);
 
             //clear cache
-            _cacheManager.RemoveByPattern(NopShippingDefaults.WarehousesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopShippingDefaults.WarehousesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(warehouse);
@@ -304,7 +304,7 @@ namespace Nop.Services.Shipping
             _warehouseRepository.Insert(warehouse);
 
             //clear cache
-            _cacheManager.RemoveByPattern(NopShippingDefaults.WarehousesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopShippingDefaults.WarehousesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(warehouse);
@@ -322,7 +322,7 @@ namespace Nop.Services.Shipping
             _warehouseRepository.Update(warehouse);
 
             //clear cache
-            _cacheManager.RemoveByPattern(NopShippingDefaults.WarehousesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopShippingDefaults.WarehousesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(warehouse);

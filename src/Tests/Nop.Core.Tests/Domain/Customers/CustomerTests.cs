@@ -178,7 +178,7 @@ namespace Nop.Core.Tests.Domain.Customers
             var _customerRoleRepo = new Mock<IRepository<CustomerRole>>();
 
             var _customerService = new CustomerService(new CustomerSettings(), 
-                new NopNullCache(), 
+                new TestCacheManager(), 
                 null,
                 null,
                 _eventPublisher.Object,
@@ -189,7 +189,7 @@ namespace Nop.Core.Tests.Domain.Customers
                 _customerRoleRepo.Object,
                 _genericAttributeRepo.Object,
                 _shoppingCartRepo.Object,
-                new NopNullCache(),
+                new TestCacheManager(),
                 null);
 
             var customer = new TestCustomer();

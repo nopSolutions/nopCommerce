@@ -79,7 +79,7 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException(nameof(reviewType));
 
             _reviewTypeRepository.Insert(reviewType);
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ReviewTypeByPatternKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ReviewTypeByPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(reviewType);
@@ -95,7 +95,7 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException(nameof(reviewType));
 
             _reviewTypeRepository.Update(reviewType);
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ReviewTypeByPatternKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ReviewTypeByPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(reviewType);
@@ -111,7 +111,7 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException(nameof(reviewType));
 
             _reviewTypeRepository.Delete(reviewType);
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ReviewTypeByPatternKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ReviewTypeByPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(reviewType);
