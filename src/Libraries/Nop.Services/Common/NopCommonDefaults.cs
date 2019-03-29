@@ -39,12 +39,12 @@
         /// <summary>
         /// Gets a key pattern to clear cache
         /// </summary>
-        public static string AddressAttributesPatternCacheKey => "Nop.addressattribute.";
+        public static string AddressAttributesPrefixCacheKey => "Nop.addressattribute.";
 
         /// <summary>
         /// Gets a key pattern to clear cache
         /// </summary>
-        public static string AddressAttributeValuesPatternCacheKey => "Nop.addressattributevalue.";
+        public static string AddressAttributeValuesPrefixCacheKey => "Nop.addressattributevalue.";
 
         /// <summary>
         /// Gets a name of the custom address attribute control
@@ -69,7 +69,7 @@
         /// <summary>
         /// Gets a key pattern to clear cache
         /// </summary>
-        public static string AddressesPatternCacheKey => "Nop.address.";
+        public static string AddressesPrefixCacheKey => "Nop.address.";
 
         #endregion
 
@@ -87,7 +87,7 @@
         /// <summary>
         /// Gets a key pattern to clear cache
         /// </summary>
-        public static string GenericAttributePatternCacheKey => "Nop.genericattribute.";
+        public static string GenericAttributePrefixCacheKey => "Nop.genericattribute.";
 
         #endregion
 

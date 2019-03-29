@@ -19,7 +19,7 @@
         /// <summary>
         /// Gets a key pattern to clear cache
         /// </summary>
-        public static string AclRecordPatternCacheKey => "Nop.aclrecord.";
+        public static string AclRecordPrefixCacheKey => "Nop.aclrecord.";
 
         #endregion
 
@@ -45,7 +45,7 @@
         /// <summary>
         /// Gets a key pattern to clear cache
         /// </summary>
-        public static string PermissionsPatternCacheKey => "Nop.permission.";
+        public static string PermissionsPrefixCacheKey => "Nop.permission.";
 
         #endregion
     }

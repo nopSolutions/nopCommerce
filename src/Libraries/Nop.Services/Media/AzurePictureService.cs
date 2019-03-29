@@ -211,7 +211,7 @@ namespace Nop.Services.Media
             }
             while (continuationToken != null);
 
-            _cacheManager.RemoveByPattern(NopMediaDefaults.ThumbsPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopMediaDefaults.ThumbsPrefixCacheKey);
         }
 
         /// <summary>
@@ -261,7 +261,7 @@ namespace Nop.Services.Media
 
             await blockBlob.UploadFromByteArrayAsync(binary, 0, binary.Length);
 
-            _cacheManager.RemoveByPattern(NopMediaDefaults.ThumbsPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopMediaDefaults.ThumbsPrefixCacheKey);
         }
 
         #endregion

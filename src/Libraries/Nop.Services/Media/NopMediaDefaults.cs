@@ -16,7 +16,7 @@
         /// <summary>
         /// Gets a key pattern to clear cache
         /// </summary>
-        public static string ThumbsPatternCacheKey => "Nop.azure.thumb";
+        public static string ThumbsPrefixCacheKey => "Nop.azure.thumb";
 
         /// <summary>
         /// Gets a multiple thumb directories length

@@ -50,7 +50,7 @@ namespace Nop.Services.Directory
 
             _stateProvinceRepository.Delete(stateProvince);
 
-            _cacheManager.RemoveByPattern(NopDirectoryDefaults.StateProvincesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopDirectoryDefaults.StateProvincesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(stateProvince);
@@ -148,7 +148,7 @@ namespace Nop.Services.Directory
 
             _stateProvinceRepository.Insert(stateProvince);
 
-            _cacheManager.RemoveByPattern(NopDirectoryDefaults.StateProvincesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopDirectoryDefaults.StateProvincesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(stateProvince);
@@ -165,7 +165,7 @@ namespace Nop.Services.Directory
 
             _stateProvinceRepository.Update(stateProvince);
 
-            _cacheManager.RemoveByPattern(NopDirectoryDefaults.StateProvincesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopDirectoryDefaults.StateProvincesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(stateProvince);

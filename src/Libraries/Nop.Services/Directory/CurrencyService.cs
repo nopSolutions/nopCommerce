@@ -80,7 +80,7 @@ namespace Nop.Services.Directory
 
             _currencyRepository.Delete(currency);
 
-            _cacheManager.RemoveByPattern(NopDirectoryDefaults.CurrenciesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopDirectoryDefaults.CurrenciesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(currency);
@@ -190,7 +190,7 @@ namespace Nop.Services.Directory
 
             _currencyRepository.Insert(currency);
 
-            _cacheManager.RemoveByPattern(NopDirectoryDefaults.CurrenciesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopDirectoryDefaults.CurrenciesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(currency);
@@ -210,7 +210,7 @@ namespace Nop.Services.Directory
 
             _currencyRepository.Update(currency);
 
-            _cacheManager.RemoveByPattern(NopDirectoryDefaults.CurrenciesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopDirectoryDefaults.CurrenciesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(currency);

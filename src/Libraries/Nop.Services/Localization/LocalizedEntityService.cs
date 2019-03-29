@@ -129,7 +129,7 @@ namespace Nop.Services.Localization
             _localizedPropertyRepository.Delete(localizedProperty);
 
             //cache
-            _cacheManager.RemoveByPattern(NopLocalizationDefaults.LocalizedPropertyPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopLocalizationDefaults.LocalizedPropertyPrefixCacheKey);
         }
 
         /// <summary>
@@ -208,7 +208,7 @@ namespace Nop.Services.Localization
             _localizedPropertyRepository.Insert(localizedProperty);
 
             //cache
-            _cacheManager.RemoveByPattern(NopLocalizationDefaults.LocalizedPropertyPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopLocalizationDefaults.LocalizedPropertyPrefixCacheKey);
         }
 
         /// <summary>
@@ -223,7 +223,7 @@ namespace Nop.Services.Localization
             _localizedPropertyRepository.Update(localizedProperty);
 
             //cache
-            _cacheManager.RemoveByPattern(NopLocalizationDefaults.LocalizedPropertyPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopLocalizationDefaults.LocalizedPropertyPrefixCacheKey);
         }
 
         /// <summary>

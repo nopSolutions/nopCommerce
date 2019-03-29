@@ -21,6 +21,6 @@
         /// <summary>
         /// Gets a key pattern to clear cache
         /// </summary>
-        public static string TaxCategoriesPatternCacheKey => "Nop.taxcategory.";
+        public static string TaxCategoriesPrefixCacheKey => "Nop.taxcategory.";
     }
 }

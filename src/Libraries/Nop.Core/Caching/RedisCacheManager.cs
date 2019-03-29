@@ -46,19 +46,19 @@ namespace Nop.Core.Caching
         #region Utilities
 
         /// <summary>
-        /// Gets the list of cache keys
+        /// Gets the list of cache keys prefix
         /// </summary>
         /// <param name="endPoint">Network address</param>
-        /// <param name="pattern">String key pattern</param>
+        /// <param name="prefix">String key pattern</param>
         /// <returns>List of cache keys</returns>
-        protected virtual IEnumerable<RedisKey> GetKeys(EndPoint endPoint, string pattern = null)
+        protected virtual IEnumerable<RedisKey> GetKeys(EndPoint endPoint, string prefix = null)
         {
             var server = _connectionWrapper.GetServer(endPoint);
 
             //we can use the code below (commented), but it requires administration permission - ",allowAdmin=true"
             //server.FlushDatabase();
 
-            var keys = server.Keys(_db.Database, string.IsNullOrEmpty(pattern) ? null : $"*{pattern}*");
+            var keys = server.Keys(_db.Database, string.IsNullOrEmpty(prefix) ? null : $"{prefix}*");
 
             //we should always persist the data protection key list
             keys = keys.Where(key => !key.ToString().Equals(NopCachingDefaults.RedisDataProtectionKey, StringComparison.OrdinalIgnoreCase));
@@ -269,16 +269,16 @@ namespace Nop.Core.Caching
 
 
         /// <summary>
-        /// Removes items by key pattern
+        /// Removes items by key prefix
         /// </summary>
-        /// <param name="pattern">String key pattern</param>
-        public virtual void RemoveByPattern(string pattern)
+        /// <param name="prefix">String key prefix</param>
+        public virtual void RemoveByPrefix(string prefix)
         {
-            _perRequestCacheManager.RemoveByPattern(pattern);
+            _perRequestCacheManager.RemoveByPrefix(prefix);
 
             foreach (var endPoint in _connectionWrapper.GetEndPoints())
             {
-                var keys = GetKeys(endPoint, pattern);
+                var keys = GetKeys(endPoint, prefix);
 
                 _db.KeyDelete(keys.ToArray());
             }

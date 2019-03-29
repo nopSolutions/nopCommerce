@@ -19,7 +19,7 @@
         /// <summary>
         /// Gets a key pattern to clear cache
         /// </summary>
-        public static string CountriesPatternCacheKey => "Nop.country.";
+        public static string CountriesPrefixCacheKey => "Nop.country.";
 
         #endregion
 
@@ -44,7 +44,7 @@
         /// <summary>
         /// Gets a key pattern to clear cache
         /// </summary>
-        public static string CurrenciesPatternCacheKey => "Nop.currency.";
+        public static string CurrenciesPrefixCacheKey => "Nop.currency.";
 
         #endregion
 
@@ -79,12 +79,12 @@
         /// <summary>
         /// Gets a key pattern to clear cache
         /// </summary>
-        public static string MeasureDimensionsPatternCacheKey => "Nop.measuredimension.";
+        public static string MeasureDimensionsPrefixCacheKey => "Nop.measuredimension.";
 
         /// <summary>
         /// Gets a key pattern to clear cache
         /// </summary>
-        public static string MeasureWeightsPatternCacheKey => "Nop.measureweight.";
+        public static string MeasureWeightsPrefixCacheKey => "Nop.measureweight.";
 
         #endregion
 
@@ -103,7 +103,7 @@
         /// <summary>
         /// Gets a key pattern to clear cache
         /// </summary>
-        public static string StateProvincesPatternCacheKey => "Nop.stateprovince.";
+        public static string StateProvincesPrefixCacheKey => "Nop.stateprovince.";
 
         #endregion
     }

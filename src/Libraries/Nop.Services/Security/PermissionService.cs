@@ -109,8 +109,8 @@ namespace Nop.Services.Security
 
             _permissionRecordRepository.Delete(permission);
 
-            _cacheManager.RemoveByPattern(NopSecurityDefaults.PermissionsPatternCacheKey);
-            _staticCacheManager.RemoveByPattern(NopSecurityDefaults.PermissionsPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopSecurityDefaults.PermissionsPrefixCacheKey);
+            _staticCacheManager.RemoveByPrefix(NopSecurityDefaults.PermissionsPrefixCacheKey);
         }
 
         /// <summary>
@@ -169,8 +169,8 @@ namespace Nop.Services.Security
 
             _permissionRecordRepository.Insert(permission);
 
-            _cacheManager.RemoveByPattern(NopSecurityDefaults.PermissionsPatternCacheKey);
-            _staticCacheManager.RemoveByPattern(NopSecurityDefaults.PermissionsPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopSecurityDefaults.PermissionsPrefixCacheKey);
+            _staticCacheManager.RemoveByPrefix(NopSecurityDefaults.PermissionsPrefixCacheKey);
         }
 
         /// <summary>
@@ -184,8 +184,8 @@ namespace Nop.Services.Security
 
             _permissionRecordRepository.Update(permission);
 
-            _cacheManager.RemoveByPattern(NopSecurityDefaults.PermissionsPatternCacheKey);
-            _staticCacheManager.RemoveByPattern(NopSecurityDefaults.PermissionsPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopSecurityDefaults.PermissionsPrefixCacheKey);
+            _staticCacheManager.RemoveByPrefix(NopSecurityDefaults.PermissionsPrefixCacheKey);
         }
 
         /// <summary>

@@ -66,10 +66,10 @@ namespace Nop.Tests
 
 
         /// <summary>
-        /// Removes items by key pattern
+        /// Removes items by key prefix
         /// </summary>
-        /// <param name="pattern">String key pattern</param>
-        public virtual void RemoveByPattern(string pattern)
+        /// <param name="prefix">String key prefix</param>
+        public virtual void RemoveByPrefix(string prefix)
         {
         }
 

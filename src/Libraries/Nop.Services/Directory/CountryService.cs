@@ -63,7 +63,7 @@ namespace Nop.Services.Directory
 
             _countryRepository.Delete(country);
 
-            _cacheManager.RemoveByPattern(NopDirectoryDefaults.CountriesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopDirectoryDefaults.CountriesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(country);
@@ -220,7 +220,7 @@ namespace Nop.Services.Directory
 
             _countryRepository.Insert(country);
 
-            _cacheManager.RemoveByPattern(NopDirectoryDefaults.CountriesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopDirectoryDefaults.CountriesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(country);
@@ -237,7 +237,7 @@ namespace Nop.Services.Directory
 
             _countryRepository.Update(country);
 
-            _cacheManager.RemoveByPattern(NopDirectoryDefaults.CountriesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopDirectoryDefaults.CountriesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(country);

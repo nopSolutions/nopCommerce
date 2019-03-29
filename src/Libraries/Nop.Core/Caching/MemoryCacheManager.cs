@@ -123,12 +123,12 @@ namespace Nop.Core.Caching
         }
 
         /// <summary>
-        /// Removes items by key pattern
+        /// Removes items by key prefix
         /// </summary>
-        /// <param name="pattern">String key pattern</param>
-        public void RemoveByPattern(string pattern)
+        /// <param name="prefix">String key prefix</param>
+        public void RemoveByPrefix(string prefix)
         {
-            _provider.RemoveByPrefix(pattern);
+            _provider.RemoveByPrefix(prefix);
         }
 
         /// <summary>
