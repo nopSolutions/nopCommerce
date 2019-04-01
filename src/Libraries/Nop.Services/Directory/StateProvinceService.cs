@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Caching;
@@ -80,14 +80,17 @@ namespace Nop.Services.Directory
             if (string.IsNullOrEmpty(abbreviation))
                 return null;
 
-            var query = _stateProvinceRepository.Table.Where(state => state.Abbreviation == abbreviation);
+            var key = string.Format(NopDirectoryDefaults.StateProvincesByAbbreviationCacheKey, abbreviation, countryId.HasValue ? countryId.Value : 0);
+            return _cacheManager.Get(key, () =>
+            {
+                var query = _stateProvinceRepository.Table.Where(state => state.Abbreviation == abbreviation);
 
-            //filter by country
-            if (countryId.HasValue)
-                query = query.Where(state => state.CountryId == countryId);
+                //filter by country
+                if (countryId.HasValue)
+                    query = query.Where(state => state.CountryId == countryId);
 
-            var stateProvince = query.FirstOrDefault();
-            return stateProvince;
+                return query.FirstOrDefault();
+            });
         }
 
         /// <summary>

@@ -186,11 +186,14 @@ namespace Nop.Services.Directory
             if (string.IsNullOrEmpty(twoLetterIsoCode))
                 return null;
 
-            var query = from c in _countryRepository.Table
-                        where c.TwoLetterIsoCode == twoLetterIsoCode
-                        select c;
-            var country = query.FirstOrDefault();
-            return country;
+            var key = string.Format(NopDirectoryDefaults.CountriesByTwoLetterCodeCacheKey, twoLetterIsoCode);
+            return _cacheManager.Get(key, () =>
+            {
+                var query = from c in _countryRepository.Table
+                            where c.TwoLetterIsoCode == twoLetterIsoCode
+                            select c;
+                return query.FirstOrDefault();
+            });
         }
 
         /// <summary>
@@ -203,11 +206,14 @@ namespace Nop.Services.Directory
             if (string.IsNullOrEmpty(threeLetterIsoCode))
                 return null;
 
-            var query = from c in _countryRepository.Table
-                        where c.ThreeLetterIsoCode == threeLetterIsoCode
-                        select c;
-            var country = query.FirstOrDefault();
-            return country;
+            var key = string.Format(NopDirectoryDefaults.CountriesByThreeLetterCodeCacheKey, threeLetterIsoCode);
+            return _cacheManager.Get(key, () =>
+            {
+                var query = from c in _countryRepository.Table
+                            where c.ThreeLetterIsoCode == threeLetterIsoCode
+                            select c;
+                return query.FirstOrDefault();
+            });
         }
 
         /// <summary>

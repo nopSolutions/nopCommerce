@@ -19,6 +19,22 @@
         /// Gets a key for caching
         /// </summary>
         /// <remarks>
+        /// {0} : Two letter ISO code
+        /// </remarks>
+        public static string CountriesByTwoLetterCodeCacheKey => "Nop.country.twoletter-{0}";
+
+        /// <summary>
+        /// Gets a key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : Two letter ISO code
+        /// </remarks>
+        public static string CountriesByThreeLetterCodeCacheKey => "Nop.country.threeletter-{0}";
+
+        /// <summary>
+        /// Gets a key for caching
+        /// </summary>
+        /// <remarks>
         /// {0} : language ID
         /// {1} : show hidden records?
         /// </remarks>
@@ -107,6 +123,16 @@
         /// {2} : show hidden records?
         /// </remarks>
         public static string StateProvincesAllCacheKey => "Nop.stateprovince.all-{0}-{1}-{2}";
+
+        /// <summary>
+        /// Gets a key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : abbreviation
+        /// {1} : country ID
+        /// </remarks>
+        public static string StateProvincesByAbbreviationCacheKey => "Nop.stateprovince.abbreviationcountryid-{0}";
+
 
         /// <summary>
         /// Gets a key pattern to clear cache
