@@ -421,5 +421,15 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 option.UseInMemory("nopCommerce_memory_cache");
             });
         }
+
+        /// <summary>
+        /// Add and configure default HTTP clients
+        /// </summary>
+        /// <param name="services">Collection of service descriptors</param>
+        public static void AddNopHttpClients(this IServiceCollection services)
+        {
+            //default client
+            services.AddHttpClient();
+        }
     }
 }
