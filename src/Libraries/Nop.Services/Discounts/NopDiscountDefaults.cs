@@ -21,7 +21,7 @@
         /// <summary>
         /// Gets a key pattern to clear cache
         /// </summary>
-        public static string DiscountRequirementPatternCacheKey => "Nop.discounts.requirements";
+        public static string DiscountRequirementPrefixCacheKey => "Nop.discounts.requirements";
 
         /// <summary>
         /// Key for caching
@@ -36,7 +36,7 @@
         /// <summary>
         /// Gets a key pattern to clear cache
         /// </summary>
-        public static string DiscountAllPatternCacheKey => "Nop.discounts.all";
+        public static string DiscountAllPrefixCacheKey => "Nop.discounts.all";
 
         /// <summary>
         /// Key for category IDs of a discount
@@ -51,7 +51,7 @@
         /// <summary>
         /// Gets a key pattern to clear cache
         /// </summary>
-        public static string DiscountCategoryIdsPatternCacheKey => "Nop.discounts.categoryids";
+        public static string DiscountCategoryIdsPrefixCacheKey => "Nop.discounts.categoryids";
 
         /// <summary>
         /// Key for manufacturer IDs of a discount
@@ -66,6 +66,6 @@
         /// <summary>
         /// Gets a key pattern to clear cache
         /// </summary>
-        public static string DiscountManufacturerIdsPatternCacheKey => "Nop.discounts.manufacturerids";
+        public static string DiscountManufacturerIdsPrefixCacheKey => "Nop.discounts.manufacturerids";
     }
 }

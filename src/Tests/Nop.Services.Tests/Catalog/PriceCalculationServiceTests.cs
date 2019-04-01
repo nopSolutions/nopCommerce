@@ -62,7 +62,7 @@ namespace Nop.Services.Tests.Catalog
             _shoppingCartSettings = new ShoppingCartSettings();
             _catalogSettings = new CatalogSettings();
 
-            _cacheManager = new MemoryCacheManager(new Mock<IMemoryCache>().Object);
+            _cacheManager = new TestCacheManager();
             _workContext = new Mock<IWorkContext>();
 
             _discountService = TestDiscountService.Init();

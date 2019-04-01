@@ -73,7 +73,7 @@ namespace Nop.Services.Topics
             _topicRepository.Delete(topic);
 
             //cache
-            _cacheManager.RemoveByPattern(NopTopicDefaults.TopicsPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopTopicDefaults.TopicsPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(topic);
@@ -189,7 +189,7 @@ namespace Nop.Services.Topics
             _topicRepository.Insert(topic);
 
             //cache
-            _cacheManager.RemoveByPattern(NopTopicDefaults.TopicsPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopTopicDefaults.TopicsPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(topic);
@@ -207,7 +207,7 @@ namespace Nop.Services.Topics
             _topicRepository.Update(topic);
 
             //cache
-            _cacheManager.RemoveByPattern(NopTopicDefaults.TopicsPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopTopicDefaults.TopicsPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(topic);

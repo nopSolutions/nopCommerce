@@ -64,7 +64,7 @@ namespace Nop.Services.Common
             _addressRepository.Delete(address);
 
             //cache
-            _cacheManager.RemoveByPattern(NopCommonDefaults.AddressesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCommonDefaults.AddressesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(address);
@@ -136,7 +136,7 @@ namespace Nop.Services.Common
             _addressRepository.Insert(address);
 
             //cache
-            _cacheManager.RemoveByPattern(NopCommonDefaults.AddressesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCommonDefaults.AddressesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(address);
@@ -160,7 +160,7 @@ namespace Nop.Services.Common
             _addressRepository.Update(address);
 
             //cache
-            _cacheManager.RemoveByPattern(NopCommonDefaults.AddressesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCommonDefaults.AddressesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(address);

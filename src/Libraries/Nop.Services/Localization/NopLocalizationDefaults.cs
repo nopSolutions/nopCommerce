@@ -26,7 +26,7 @@
         /// <summary>
         /// Gets a key pattern to clear cache
         /// </summary>
-        public static string LanguagesPatternCacheKey => "Nop.language.";
+        public static string LanguagesPrefixCacheKey => "Nop.language.";
 
         #endregion
 
@@ -68,7 +68,7 @@
         /// <summary>
         /// Gets a key pattern to clear cache
         /// </summary>
-        public static string LocaleStringResourcesPatternCacheKey => "Nop.lsr.";
+        public static string LocaleStringResourcesPrefixCacheKey => "Nop.lsr.";
 
         /// <summary>
         /// Gets a prefix of locale resources for the admin area
@@ -113,7 +113,7 @@
         /// <summary>
         /// Gets a key pattern to clear cache
         /// </summary>
-        public static string LocalizedPropertyPatternCacheKey => "Nop.localizedproperty.";
+        public static string LocalizedPropertyPrefixCacheKey => "Nop.localizedproperty.";
 
         #endregion
     }
