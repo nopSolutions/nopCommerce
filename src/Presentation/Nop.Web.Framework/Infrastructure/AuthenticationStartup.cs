@@ -33,18 +33,11 @@ namespace Nop.Web.Framework.Infrastructure
         {
             //configure authentication
             application.UseNopAuthentication();
-
-            //set request culture
-            application.UseCulture();
         }
 
         /// <summary>
         /// Gets order of this startup configuration implementation
         /// </summary>
-        public int Order
-        {
-            //authentication should be loaded before MVC
-            get { return 500; }
-        }
+        public int Order => 500; //authentication should be loaded before MVC
     }
 }

@@ -25,8 +25,8 @@ namespace Nop.Web.Framework.Infrastructure
             //add options feature
             services.AddOptions();
 
-            //add memory cache
-            services.AddMemoryCache();
+            //add Easy caching
+            services.AddEasyCaching();
 
             //add distributed memory cache
             services.AddDistributedMemoryCache();
@@ -42,9 +42,6 @@ namespace Nop.Web.Framework.Infrastructure
 
             //add theme support
             services.AddThemes();
-
-            //add Easy caching
-            services.AddEasyCaching();
         }
 
         /// <summary>
@@ -70,6 +67,9 @@ namespace Nop.Web.Framework.Infrastructure
 
             //use request localization
             application.UseRequestLocalization();
+
+            //set request culture
+            application.UseCulture();
 
             //easy caching
             application.UseEasyCaching();
