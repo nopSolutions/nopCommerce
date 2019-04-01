@@ -71,22 +71,33 @@ else
             type: '@WebRequestMethods.Http.Post',
             dataType: 'json',
             data: function(data) {
-                @if (Model.IsChildTable)
-                {
-                     <text>
-                        data.@Model.Filters.FirstOrDefault() = row.data().Id;
-                    </text>
-                }
-                else
-                {
-                    @foreach (var filter in Model.Filters)
+                    @if (Model.IsChildTable)
                     {
                         <text>
-                            data.@filter = $('#@filter').val();
+                            data.@Model.Filters.FirstOrDefault() = row.data().Id;
                         </text>
                     }
-                }
-                
+                    else
+                    {
+                        @if (Model.TypeOfSearchModel != null)
+                        {
+                            @foreach (var filter in Model.Filters)
+                            {
+                                @if (Model.TypeOfSearchModel.GetProperty(filter).PropertyType == typeof(bool))
+                                {
+                                    <text>
+                                        data.@filter = $('#@filter').is(':checked');
+                                    </text>
+                                }
+                                else
+                                {
+                                    <text>
+                                        data.@filter = $('#@filter').val();
+                                    </text>
+                                }     
+                            }
+                        }
+                    }
                 addAntiForgeryToken(data);
                 return data;
             }

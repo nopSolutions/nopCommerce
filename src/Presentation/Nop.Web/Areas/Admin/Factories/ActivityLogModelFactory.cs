@@ -125,6 +125,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 UrlRead = new DataUrl("ListLogs", "ActivityLog", null),
                 UrlAction = new DataUrl("ActivityLogDelete", "ActivityLog", null),
                 SearchButtonId = "search-log",
+                TypeOfSearchModel = typeof(ActivityLogSearchModel),
                 Length = searchModel.PageSize,
                 LengthMenu = searchModel.AvailablePageSizes
             };

@@ -622,6 +622,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Name = "products-grid",
                 UrlRead = new DataUrl("ProductList", "Product", null),
                 DeleteSelected = new DataUrl("DeleteSelected", "Product", null),
+                TypeOfSearchModel = typeof(ProductSearchModel),
                 SearchButtonId = "search-products",
                 Length = searchModel.PageSize,
                 LengthMenu = searchModel.AvailablePageSizes

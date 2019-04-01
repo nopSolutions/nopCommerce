@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Nop.Web.Framework.Models.DataTables
 {
@@ -151,6 +152,11 @@ namespace Nop.Web.Framework.Models.DataTables
         /// Gets or sets column defininition
         /// </summary>
         public IList<ColumnDefinition> ColumnDefinitions { get; set; }
+
+        /// <summary>
+        /// Gets or sets type of search model
+        /// </summary>
+        public Type TypeOfSearchModel { get; set; } 
 
         #endregion
     }
