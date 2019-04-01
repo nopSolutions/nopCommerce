@@ -5,6 +5,11 @@
     /// </summary>
     public static partial class NopCommonDefaults
     {
+        /// <summary>
+        /// Gets a request path to the keep alive URL
+        /// </summary>
+        public static string KeepAlivePath => "keepalive/index";
+
         #region Address attributes
 
         /// <summary>

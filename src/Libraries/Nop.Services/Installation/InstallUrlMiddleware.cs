@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Nop.Core;
 using Nop.Core.Data;
 
-namespace Nop.Core.Http
+namespace Nop.Services.Installation
 {
     /// <summary>
     /// Represents middleware that checks whether database is installed and redirects to installation URL in otherwise
@@ -38,7 +39,7 @@ namespace Nop.Core.Http
             //whether database is installed
             if (!DataSettingsManager.DatabaseIsInstalled)
             {
-                var installUrl = $"{webHelper.GetStoreLocation()}{NopHttpDefaults.InstallPath}";
+                var installUrl = $"{webHelper.GetStoreLocation()}{NopInstallationDefaults.InstallPath}";
                 if (!webHelper.GetThisPageUrl(false).StartsWith(installUrl, StringComparison.InvariantCultureIgnoreCase))
                 {
                     //redirect

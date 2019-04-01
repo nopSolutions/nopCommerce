@@ -6,6 +6,11 @@
     public static partial class NopInstallationDefaults
     {
         /// <summary>
+        /// Gets a request path to the install URL
+        /// </summary>
+        public static string InstallPath => "install";
+
+        /// <summary>
         /// Gets a path to the localization resources file
         /// </summary>
         public static string LocalizationResourcesPath => "~/App_Data/Localization/";

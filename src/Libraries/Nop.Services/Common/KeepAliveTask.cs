@@ -1,6 +1,5 @@
 ﻿using System.Net;
 using Nop.Core;
-using Nop.Core.Http;
 using Nop.Services.Tasks;
 
 namespace Nop.Services.Common
@@ -32,7 +31,7 @@ namespace Nop.Services.Common
         /// </summary>
         public void Execute()
         {
-            var keepAliveUrl = $"{_webHelper.GetStoreLocation()}{NopHttpDefaults.KeepAlivePath}";
+            var keepAliveUrl = $"{_webHelper.GetStoreLocation()}{NopCommonDefaults.KeepAlivePath}";
             using (var wc = new WebClient())
             {
                 wc.DownloadString(keepAliveUrl);

@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Nop.Core;
 using Nop.Core.Data;
 
-namespace Nop.Core.Http
+namespace Nop.Services.Common
 {
     /// <summary>
     /// Represents middleware that checks whether request is for keep alive
@@ -38,10 +39,10 @@ namespace Nop.Core.Http
             //TODO test. ensure that no guest record is created
 
             //whether database is installed
-            if (!DataSettingsManager.DatabaseIsInstalled)
+            if (DataSettingsManager.DatabaseIsInstalled)
             {
                 //keep alive page requested (we ignore it to prevent creating a guest customer records)
-                var keepAliveUrl = $"{webHelper.GetStoreLocation()}{NopHttpDefaults.KeepAlivePath}";
+                var keepAliveUrl = $"{webHelper.GetStoreLocation()}{NopCommonDefaults.KeepAlivePath}";
                 if (webHelper.GetThisPageUrl(false).StartsWith(keepAliveUrl, StringComparison.InvariantCultureIgnoreCase))
                     return;
             }
