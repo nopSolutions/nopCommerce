@@ -1,18 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Xml;
 using System.Xml.Linq;
-using Nop.Core;
 
-namespace Nop.Web.Framework.Mvc.Rss
+namespace Nop.Core.Rss
 {
     /// <summary>
-    /// The class representing the RSS feed
+    /// Represents the RSS feed
     /// </summary>
-    public class RssFeed
+    public partial class RssFeed
     {
+        #region Ctor
+
         /// <summary>
-        /// Ctor
+        /// Initialize new instance of RSS feed
         /// </summary>
         /// <param name="title">Title</param>
         /// <param name="description">Description</param>
@@ -20,32 +22,23 @@ namespace Nop.Web.Framework.Mvc.Rss
         /// <param name="lastBuildDate">Last build date</param>
         public RssFeed(string title, string description, Uri link, DateTimeOffset lastBuildDate)
         {
-            Init(title, description, link, lastBuildDate);
-        }
-
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="link">URL</param>
-        public RssFeed(Uri link)
-        {
-            Init(string.Empty, string.Empty, link, DateTimeOffset.Now);
-        }
-
-        /// <summary>
-        /// Initialize base filds of rss feed
-        /// </summary>
-        /// <param name="title">Title</param>
-        /// <param name="description">Description</param>
-        /// <param name="link">Link</param>
-        /// <param name="lastBuildDate">Last build date</param>
-        private void Init(string title, string description, Uri link, DateTimeOffset lastBuildDate)
-        {
             Title = new XElement(NopRssDefaults.Title, title);
             Description = new XElement(NopRssDefaults.Description, description);
             Link = new XElement(NopRssDefaults.Link, link);
             LastBuildDate = new XElement(NopRssDefaults.LastBuildDate, lastBuildDate.ToString("r"));
         }
+
+        /// <summary>
+        /// Initialize new instance of RSS feed
+        /// </summary>
+        /// <param name="link">URL</param>
+        public RssFeed(Uri link) : this(string.Empty, string.Empty, link, DateTimeOffset.Now)
+        {
+        }
+
+        #endregion
+
+        #region Properties
 
         /// <summary>
         /// Attribute extension
@@ -68,15 +61,34 @@ namespace Nop.Web.Framework.Mvc.Rss
         public XElement Title { get; private set; }
 
         /// <summary>
-        /// Load rss feed from xml reader
+        /// Description
         /// </summary>
-        /// <param name="reader"></param>
-        /// <returns></returns>
-        public static RssFeed Load(XmlReader reader)
+        public XElement Description { get; private set; }
+
+        /// <summary>
+        /// Link
+        /// </summary>
+        public XElement Link { get; private set; }
+
+        /// <summary>
+        /// Last build date
+        /// </summary>
+        public XElement LastBuildDate { get; private set; }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Load RSS feed from the passed stream
+        /// </summary>
+        /// <param name="stream">Stream</param>
+        /// <returns>RSS feed</returns>
+        public static RssFeed Load(Stream stream)
         {
             try
             {
-                var document = XDocument.Load(reader);
+                var document = XDocument.Load(stream);
 
                 var channel = document.Root?.Element(NopRssDefaults.Channel);
 
@@ -106,24 +118,9 @@ namespace Nop.Web.Framework.Mvc.Rss
         }
 
         /// <summary>
-        /// Description
+        /// Get content of this RSS feed
         /// </summary>
-        public XElement Description { get; private set; }
-
-        /// <summary>
-        /// Link
-        /// </summary>
-        public XElement Link { get; private set; }
-
-        /// <summary>
-        /// Last build date
-        /// </summary>
-        public XElement LastBuildDate { get; private set; }
-
-        /// <summary>
-        /// Get content of RSS feed  
-        /// </summary>
-        /// <returns></returns>
+        /// <returns>Content of RSS feed</returns>
         public string GetContent()
         {
             var document = new XDocument();
@@ -148,5 +145,7 @@ namespace Nop.Web.Framework.Mvc.Rss
 
             return document.ToString();
         }
+
+        #endregion
     }
 }

@@ -6,10 +6,10 @@ using Microsoft.AspNetCore.Http;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Common;
+using Nop.Core.Rss;
 using Nop.Services.Configuration;
 using Nop.Web.Areas.Admin.Infrastructure.Cache;
 using Nop.Web.Areas.Admin.Models.Home;
-using Nop.Web.Framework.Mvc.Rss;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
