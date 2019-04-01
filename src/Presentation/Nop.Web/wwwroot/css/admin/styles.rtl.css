@@ -883,11 +883,6 @@ td.k-state-focused.k-state-selected {
     margin-bottom: 5px;
 }
 
-.content-header .btn-group {
-  margin-left: 3px;
-  margin-right: 3px;
-}
-
 .content-header .btn-group .dropdown-menu input,
 .content-header .btn-group .dropdown-menu button,
 .content-header .btn-group .dropdown-menu a {
@@ -1569,6 +1564,12 @@ span.grid-report-item.red {
   display: table-cell;
   padding-left: 25px;
   vertical-align: middle;
+}
+
+/*fix for inline-block buttons*/
+.content-header .pull-right > .btn, .content-header .pull-right > .btn-group {
+  float: right;
+  margin-right: 3px;
 }
 
 @media (max-width: 1200px) {
