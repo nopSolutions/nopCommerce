@@ -432,6 +432,9 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             //default client
             services.AddHttpClient();
 
+            //client to request current store
+            services.AddHttpClient<StoreHttpClient>();
+
             //client to request nopCommerce official site
             services.AddHttpClient<NopHttpClient>();
         }
