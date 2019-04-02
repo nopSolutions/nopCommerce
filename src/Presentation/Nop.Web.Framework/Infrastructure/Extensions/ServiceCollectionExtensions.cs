@@ -35,6 +35,7 @@ using Nop.Services.Tasks;
 using Nop.Web.Framework.FluentValidation;
 using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Mvc.Routing;
+using Nop.Web.Framework.Security.Captcha;
 using Nop.Web.Framework.Themes;
 using StackExchange.Profiling.Storage;
 using WebMarkupMin.AspNet.Brotli;
@@ -437,6 +438,9 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
 
             //client to request nopCommerce official site
             services.AddHttpClient<NopHttpClient>();
+
+            //client to request reCAPTCHA service
+            services.AddHttpClient<CaptchaHttpClient>();
         }
     }
 }
