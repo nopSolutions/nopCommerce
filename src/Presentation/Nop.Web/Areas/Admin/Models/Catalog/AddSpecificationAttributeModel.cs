@@ -8,7 +8,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
     /// <summary>
     /// Represents a model for adding or editing a specification attribute
     /// </summary>
-    public partial class AddSpecificationAttributeModel : BaseNopEntityModel
+    public partial class AddSpecificationAttributeModel : BaseNopEntityModel, ILocalizedModel<AddSpecificationAttributeLocalizedModel>
     {
         #region Ctor
 
@@ -21,6 +21,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
             AttributeTypeName = string.Empty;
             Value = string.Empty;
             ValueRaw = string.Empty;
+            Locales = new List<AddSpecificationAttributeLocalizedModel>();
         }
 
         #endregion
@@ -62,6 +63,8 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
         public int SpecificationAttributeOptionId { get; set; }
 
         public IList<SelectListItem> AvailableOptions { get; set; }
+
+        public IList<AddSpecificationAttributeLocalizedModel> Locales { get; set; }
 
         #endregion
     }

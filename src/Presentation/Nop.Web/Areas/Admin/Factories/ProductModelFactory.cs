@@ -1401,10 +1401,10 @@ namespace Nop.Web.Areas.Admin.Factories
                             productSpecificationAttributeModel.SpecificationAttributeOptionId = attribute.SpecificationAttributeOptionId;
                             break;
                         case SpecificationAttributeType.CustomText:
-                            productSpecificationAttributeModel.ValueRaw = WebUtility.HtmlEncode(attribute.CustomValue);
+                            productSpecificationAttributeModel.ValueRaw = WebUtility.HtmlEncode(_localizationService.GetLocalized(attribute, x => x.CustomValue, _workContext.WorkingLanguage.Id));
                             break;
                         case SpecificationAttributeType.CustomHtmlText:
-                            productSpecificationAttributeModel.ValueRaw = attribute.CustomValue;
+                            productSpecificationAttributeModel.ValueRaw = _localizationService.GetLocalized(attribute, x => x.CustomValue, _workContext.WorkingLanguage.Id);
                             break;
                         case SpecificationAttributeType.Hyperlink:
                             productSpecificationAttributeModel.ValueRaw = attribute.CustomValue;
@@ -1427,6 +1427,8 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>Product specification attribute model</returns>
         public virtual AddSpecificationAttributeModel PrepareAddSpecificationAttributeModel(int productId, int? specificationId)
         {
+            Action<AddSpecificationAttributeLocalizedModel, int> localizedModelConfiguration = null;
+
             if (!specificationId.HasValue)
             {
                 return new AddSpecificationAttributeModel
@@ -1435,13 +1437,14 @@ namespace Nop.Web.Areas.Admin.Factories
                             () => _specificationAttributeService.GetSpecificationAttributesWithOptions())
                         .Select(sa => new SelectListItem {Text = sa.Name, Value = sa.Id.ToString()})
                         .ToList(),
-                    ProductId = productId
+                    ProductId = productId,
+                    Locales = _localizedModelFactory.PrepareLocalizedModels(localizedModelConfiguration)
                 };
 
             }
 
             var attribute = _specificationAttributeService.GetProductSpecificationAttributeById(specificationId.Value);
-
+            
             if (attribute == null)
             {
                 throw new ArgumentException("No specification attribute found with the specified id");
@@ -1485,6 +1488,27 @@ namespace Nop.Web.Areas.Admin.Factories
                 default:
                     throw new ArgumentOutOfRangeException(nameof(attribute.AttributeType));
             }
+
+            localizedModelConfiguration = (locale, languageId) =>
+            {
+                switch (attribute.AttributeType)
+                {
+                    case SpecificationAttributeType.CustomHtmlText:
+                        locale.ValueRaw = _localizationService.GetLocalized(attribute, entity => entity.CustomValue, languageId, false, false);
+                        break;
+                    case SpecificationAttributeType.CustomText:
+                        locale.Value = _localizationService.GetLocalized(attribute, entity => entity.CustomValue, languageId, false, false);
+                        break;
+                    case SpecificationAttributeType.Option:
+                        break;
+                    case SpecificationAttributeType.Hyperlink:
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            };
+
+            model.Locales = _localizedModelFactory.PrepareLocalizedModels(localizedModelConfiguration);
 
             return model;
         }
