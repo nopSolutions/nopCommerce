@@ -198,7 +198,33 @@
                             function renderColumnPrice(data, type, row, meta) {
                                 return (row.ProductTypeId != @((int)ProductType.GroupedProduct) ) ? data : null;
                             }
+
+                            $(document).ready(function () {
+                                $('#delete-selected-action-confirmation-submit-button').bind('click', function () {
+                                    var postData = {
+                                        selectedIds: selectedIds
+                                    };
+                                    addAntiForgeryToken(postData);
+                                    $.ajax({
+                                        cache: false,
+                                        type: 'POST',
+                                        url: "@(Url.Action("DeleteSelected", "Product"))",
+                                        data: postData,
+                                        complete: function (data) {
+                                            $('#@Model.Grid.Name').DataTable().ajax.reload();
+                                        },
+                                        error: function (xhr, ajaxOptions, thrownError) {
+                                            $('#deleteSelectedFailed-info').html(thrownError);
+                                            $('#deleteSelectedFailed').click();
+                                        }
+                                    });
+                                    $('#delete-selected-action-confirmation').modal('toggle');
+                                    return false;
+                                });
+                            });
+
                         </script>
+                        <nop-alert asp-alert-id="deleteSelectedFailed" />
                     </div>
                 </div>
             </div>

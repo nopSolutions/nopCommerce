@@ -57,11 +57,6 @@ namespace Nop.Web.Framework.Models.DataTables
         public DataUrl UrlAction { get; set; }
 
         /// <summary>
-        /// Gets or sets url for delete selected items
-        /// </summary>
-        public DataUrl DeleteSelected { get; set; }
-
-        /// <summary>
         /// Gets or sets search button Id
         /// </summary>
         public string SearchButtonId { get; set; }
