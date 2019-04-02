@@ -14,6 +14,7 @@ using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
+using Nop.Core.Http;
 using Nop.Core.Infrastructure;
 using Nop.Services.Catalog;
 using Nop.Services.Directory;
@@ -784,7 +785,7 @@ namespace Nop.Services.ExportImport
             var filePath = _fileProvider.Combine(tempDirectory, fileName);
             try
             {
-                var client = _httpClientFactory.CreateClient();
+                var client = _httpClientFactory.CreateClient(NopHttpDefaults.DefaultHttpClient);
                 var fileData = client.GetByteArrayAsync(urlString).Result;
                 using (var fs = new FileStream(filePath, FileMode.OpenOrCreate))
                 {

@@ -431,16 +431,16 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         public static void AddNopHttpClients(this IServiceCollection services)
         {
             //default client
-            services.AddHttpClient();
+            services.AddHttpClient(NopHttpDefaults.DefaultHttpClient).WithProxy();
 
             //client to request current store
             services.AddHttpClient<StoreHttpClient>();
 
             //client to request nopCommerce official site
-            services.AddHttpClient<NopHttpClient>();
+            services.AddHttpClient<NopHttpClient>().WithProxy();
 
             //client to request reCAPTCHA service
-            services.AddHttpClient<CaptchaHttpClient>();
+            services.AddHttpClient<CaptchaHttpClient>().WithProxy();
         }
     }
 }

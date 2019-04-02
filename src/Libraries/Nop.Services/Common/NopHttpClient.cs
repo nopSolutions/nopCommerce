@@ -50,6 +50,15 @@ namespace Nop.Services.Common
         #region Methods
 
         /// <summary>
+        /// Check whether the site is available
+        /// </summary>
+        /// <returns>The asynchronous task whose result determines that request is completed</returns>
+        public virtual async Task PingAsync()
+        {
+            await _httpClient.GetStringAsync("/");
+        }
+
+        /// <summary>
         /// Check the current store for the copyright removal key
         /// </summary>
         /// <returns>The asynchronous task whose result contains the warning text</returns>

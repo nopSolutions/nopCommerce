@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Nop.Core;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Tasks;
+using Nop.Core.Http;
 using Nop.Core.Infrastructure;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
@@ -61,7 +62,7 @@ namespace Nop.Services.Tasks
                 try
                 {
                     //create and configure client
-                    var client = EngineContext.Current.Resolve<IHttpClientFactory>().CreateClient();
+                    var client = EngineContext.Current.Resolve<IHttpClientFactory>().CreateClient(NopHttpDefaults.DefaultHttpClient);
                     if (_timeout.HasValue)
                         client.Timeout = TimeSpan.FromMilliseconds(_timeout.Value);
 

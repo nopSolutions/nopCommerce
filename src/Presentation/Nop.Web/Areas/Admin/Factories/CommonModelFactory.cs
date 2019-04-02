@@ -675,16 +675,20 @@ namespace Nop.Web.Areas.Admin.Factories
             if (!_proxySettings.Enabled)
                 return;
 
-            if (_webHelper.IsProxySettingsValid())
+            try
             {
+                _nopHttpClient.PingAsync().Wait();
+
+                //connection is OK
                 models.Add(new SystemWarningModel
                 {
                     Level = SystemWarningLevel.Pass,
                     Text = _localizationService.GetResource("Admin.System.Warnings.ProxyConnection.OK")
                 });
             }
-            else
+            catch
             {
+                //connection failed
                 models.Add(new SystemWarningModel
                 {
                     Level = SystemWarningLevel.Fail,
