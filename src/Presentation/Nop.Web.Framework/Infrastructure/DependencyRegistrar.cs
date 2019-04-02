@@ -91,7 +91,7 @@ namespace Nop.Web.Framework.Infrastructure
 
             //plugins
             builder.RegisterType<PluginService>().As<IPluginService>().InstancePerLifetimeScope();
-            builder.RegisterType<OfficialFeedManager>().As<IOfficialFeedManager>().InstancePerLifetimeScope();
+            builder.RegisterType<OfficialFeedManager>().AsSelf().InstancePerLifetimeScope();
 
             //cache manager
             builder.RegisterType<PerRequestCacheManager>().As<ICacheManager>().InstancePerLifetimeScope();

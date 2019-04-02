@@ -27,6 +27,7 @@ using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Services.Authentication;
 using Nop.Services.Authentication.External;
+using Nop.Services.Common;
 using Nop.Services.Logging;
 using Nop.Services.Plugins;
 using Nop.Services.Security;
@@ -430,6 +431,9 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         {
             //default client
             services.AddHttpClient();
+
+            //client to request nopCommerce official site
+            services.AddHttpClient<NopHttpClient>();
         }
     }
 }

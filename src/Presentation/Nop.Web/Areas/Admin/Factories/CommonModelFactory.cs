@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Net.Http;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
 using Microsoft.AspNetCore.Http;
@@ -46,19 +45,6 @@ namespace Nop.Web.Areas.Admin.Factories
     /// </summary>
     public partial class CommonModelFactory : ICommonModelFactory
     {
-        #region Constants
-
-        /// <summary>
-        /// nopCommerce warning URL
-        /// </summary>
-        /// <remarks>
-        /// {0} : store URL
-        /// {1} : whether the store based is on the localhost
-        /// </remarks>
-        private const string NOPCOMMERCE_WARNING_URL = "https://www.nopcommerce.com/SiteWarnings.aspx?local={0}&url={1}";
-
-        #endregion
-
         #region Fields
 
         private readonly AdminAreaSettings _adminAreaSettings;
@@ -93,6 +79,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IWidgetPluginManager _widgetPluginManager;
         private readonly IWorkContext _workContext;
         private readonly MeasureSettings _measureSettings;
+        private readonly NopHttpClient _nopHttpClient;
 
         #endregion
 
@@ -129,7 +116,8 @@ namespace Nop.Web.Areas.Admin.Factories
             IWebHelper webHelper,
             IWidgetPluginManager widgetPluginManager,
             IWorkContext workContext,
-            MeasureSettings measureSettings)
+            MeasureSettings measureSettings,
+            NopHttpClient nopHttpClient)
         {
             _adminAreaSettings = adminAreaSettings;
             _catalogSettings = catalogSettings;
@@ -163,6 +151,7 @@ namespace Nop.Web.Areas.Admin.Factories
             _widgetPluginManager = widgetPluginManager;
             _workContext = workContext;
             _measureSettings = measureSettings;
+            _nopHttpClient = nopHttpClient;
         }
 
         #endregion
@@ -212,33 +201,22 @@ namespace Nop.Web.Areas.Admin.Factories
             if (!_adminAreaSettings.CheckCopyrightRemovalKey)
                 return;
 
-            var currentStoreUrl = _storeContext.CurrentStore.Url;
-            var local = _webHelper.IsLocalRequest(_httpContextAccessor.HttpContext.Request);
-
+            //try to get a warning
+            var warning = string.Empty;
             try
             {
-                using (var client = new HttpClient())
-                {
-                    //specify request timeout
-                    client.Timeout = TimeSpan.FromMilliseconds(2000);
-
-                    var url = string.Format(NOPCOMMERCE_WARNING_URL, local, currentStoreUrl);
-                    var warning = client.GetStringAsync(url).Result;
-
-                    if (!string.IsNullOrEmpty(warning))
-                        models.Add(new SystemWarningModel
-                        {
-                            Level = SystemWarningLevel.CopyrightRemovalKey,
-                            Text = warning,
-                            //this text could contain links. so don't encode it
-                            DontEncode = true
-                        });
-                }
+                warning = _nopHttpClient.GetCopyrightWarningAsync().Result;
             }
-            catch
+            catch { }
+            if (string.IsNullOrEmpty(warning))
+                return;
+
+            models.Add(new SystemWarningModel
             {
-                //ignore exceptions
-            }
+                Level = SystemWarningLevel.CopyrightRemovalKey,
+                Text = warning,
+                DontEncode = true //this text could contain links, so don't encode it
+            });
         }
 
         /// <summary>

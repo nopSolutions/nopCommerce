@@ -7,7 +7,6 @@ using Nop.Core.Caching;
 using Nop.Services.Authentication.External;
 using Nop.Services.Cms;
 using Nop.Services.Localization;
-using Nop.Services.Logging;
 using Nop.Services.Payments;
 using Nop.Services.Plugins;
 using Nop.Services.Plugins.Marketplace;
@@ -34,8 +33,6 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IBaseAdminModelFactory _baseAdminModelFactory;
         private readonly ILocalizationService _localizationService;
         private readonly ILocalizedModelFactory _localizedModelFactory;
-        private readonly ILogger _logger;
-        private readonly IOfficialFeedManager _officialFeedManager;
         private readonly IPaymentPluginManager _paymentPluginManager;
         private readonly IPickupPluginManager _pickupPluginManager;
         private readonly IPluginService _pluginService;
@@ -45,6 +42,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly ITaxPluginManager _taxPluginManager;
         private readonly IWidgetPluginManager _widgetPluginManager;
         private readonly IWorkContext _workContext;
+        private readonly OfficialFeedManager _officialFeedManager;
 
         #endregion
 
@@ -55,8 +53,6 @@ namespace Nop.Web.Areas.Admin.Factories
             IBaseAdminModelFactory baseAdminModelFactory,
             ILocalizationService localizationService,
             ILocalizedModelFactory localizedModelFactory,
-            ILogger logger,
-            IOfficialFeedManager officialFeedManager,
             IPaymentPluginManager paymentPluginManager,
             IPickupPluginManager pickupPluginManager,
             IPluginService pluginService,
@@ -66,15 +62,14 @@ namespace Nop.Web.Areas.Admin.Factories
             IStoreMappingSupportedModelFactory storeMappingSupportedModelFactory,
             ITaxPluginManager taxPluginManager,
             IWidgetPluginManager widgetPluginManager,
-            IWorkContext workContext)
+            IWorkContext workContext,
+            OfficialFeedManager officialFeedManager)
         {
             _aclSupportedModelFactory = aclSupportedModelFactory;
             _authenticationPluginManager = authenticationPluginManager;
             _baseAdminModelFactory = baseAdminModelFactory;
             _localizationService = localizationService;
             _localizedModelFactory = localizedModelFactory;
-            _logger = logger;
-            _officialFeedManager = officialFeedManager;
             _paymentPluginManager = paymentPluginManager;
             _pickupPluginManager = pickupPluginManager;
             _pluginService = pluginService;
@@ -84,6 +79,7 @@ namespace Nop.Web.Areas.Admin.Factories
             _taxPluginManager = taxPluginManager;
             _widgetPluginManager = widgetPluginManager;
             _workContext = workContext;
+            _officialFeedManager = officialFeedManager;
         }
 
         #endregion
@@ -261,21 +257,8 @@ namespace Nop.Web.Areas.Admin.Factories
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
-            IList<OfficialFeedVersion> pluginVersions = new List<OfficialFeedVersion>();
-            IList<OfficialFeedCategory> pluginCategories = new List<OfficialFeedCategory>();
-
-            //ensure that no exception is thrown when www.nopcommerce.com website is not available
-            try
-            {
-                pluginVersions = _officialFeedManager.GetVersions();
-                pluginCategories = _officialFeedManager.GetCategories();
-            }
-            catch (Exception ex)
-            {
-                _logger.Error("No access to the list of plugins. Website www.nopcommerce.com is not available.", ex);
-            }
-
             //prepare available versions
+            var pluginVersions = _officialFeedManager.GetVersions();
             searchModel.AvailableVersions.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             foreach (var version in pluginVersions)
                 searchModel.AvailableVersions.Add(new SelectListItem { Text = version.Name, Value = version.Id.ToString() });
@@ -289,7 +272,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 currentVersionItem.Selected = true;
             }
 
-            //prepare available plugin categories            
+            //prepare available plugin categories
+            var pluginCategories = _officialFeedManager.GetCategories();
             searchModel.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             foreach (var pluginCategory in pluginCategories)
             {
@@ -345,20 +329,11 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get plugins
-            IPagedList<OfficialFeedPlugin> plugins = null;
-            try
-            {
-                //ensure that no exception is thrown when www.nopcommerce.com website is not available
-                plugins = _officialFeedManager.GetAllPlugins(categoryId: searchModel.SearchCategoryId,
-                    versionId: searchModel.SearchVersionId,
-                    price: searchModel.SearchPriceId,
-                    searchTerm: searchModel.SearchName,
-                    pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
-            }
-            catch (Exception ex)
-            {
-                _logger.Error("No access to the list of plugins. Website www.nopcommerce.com is not available.", ex);
-            }
+            var plugins = _officialFeedManager.GetAllPlugins(categoryId: searchModel.SearchCategoryId,
+                versionId: searchModel.SearchVersionId,
+                price: searchModel.SearchPriceId,
+                searchTerm: searchModel.SearchName,
+                pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
             var model = new OfficialFeedPluginListModel
