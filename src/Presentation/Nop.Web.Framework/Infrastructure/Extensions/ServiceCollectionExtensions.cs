@@ -315,6 +315,9 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 configuration.ImplicitlyValidateChildProperties = true;
             });
 
+            //register controllers as services, it'll allow to override them
+            mvcBuilder.AddControllersAsServices();
+
             return mvcBuilder;
         }
 
