@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Net.Http;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
 using Microsoft.AspNetCore.Http;
@@ -16,6 +15,7 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Security;
 using Nop.Core.Infrastructure;
 using Nop.Services.Authentication.External;
 using Nop.Services.Catalog;
@@ -46,19 +46,6 @@ namespace Nop.Web.Areas.Admin.Factories
     /// </summary>
     public partial class CommonModelFactory : ICommonModelFactory
     {
-        #region Constants
-
-        /// <summary>
-        /// nopCommerce warning URL
-        /// </summary>
-        /// <remarks>
-        /// {0} : store URL
-        /// {1} : whether the store based is on the localhost
-        /// </remarks>
-        private const string NOPCOMMERCE_WARNING_URL = "https://www.nopcommerce.com/SiteWarnings.aspx?local={0}&url={1}";
-
-        #endregion
-
         #region Fields
 
         private readonly AdminAreaSettings _adminAreaSettings;
@@ -93,6 +80,8 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IWidgetPluginManager _widgetPluginManager;
         private readonly IWorkContext _workContext;
         private readonly MeasureSettings _measureSettings;
+        private readonly NopHttpClient _nopHttpClient;
+        private readonly ProxySettings _proxySettings;
 
         #endregion
 
@@ -129,7 +118,9 @@ namespace Nop.Web.Areas.Admin.Factories
             IWebHelper webHelper,
             IWidgetPluginManager widgetPluginManager,
             IWorkContext workContext,
-            MeasureSettings measureSettings)
+            MeasureSettings measureSettings,
+            NopHttpClient nopHttpClient,
+            ProxySettings proxySettings)
         {
             _adminAreaSettings = adminAreaSettings;
             _catalogSettings = catalogSettings;
@@ -163,6 +154,8 @@ namespace Nop.Web.Areas.Admin.Factories
             _widgetPluginManager = widgetPluginManager;
             _workContext = workContext;
             _measureSettings = measureSettings;
+            _nopHttpClient = nopHttpClient;
+            _proxySettings = proxySettings;
         }
 
         #endregion
@@ -212,33 +205,22 @@ namespace Nop.Web.Areas.Admin.Factories
             if (!_adminAreaSettings.CheckCopyrightRemovalKey)
                 return;
 
-            var currentStoreUrl = _storeContext.CurrentStore.Url;
-            var local = _webHelper.IsLocalRequest(_httpContextAccessor.HttpContext.Request);
-
+            //try to get a warning
+            var warning = string.Empty;
             try
             {
-                using (var client = new HttpClient())
-                {
-                    //specify request timeout
-                    client.Timeout = TimeSpan.FromMilliseconds(2000);
-
-                    var url = string.Format(NOPCOMMERCE_WARNING_URL, local, currentStoreUrl);
-                    var warning = client.GetStringAsync(url).Result;
-
-                    if (!string.IsNullOrEmpty(warning))
-                        models.Add(new SystemWarningModel
-                        {
-                            Level = SystemWarningLevel.CopyrightRemovalKey,
-                            Text = warning,
-                            //this text could contain links. so don't encode it
-                            DontEncode = true
-                        });
-                }
+                warning = _nopHttpClient.GetCopyrightWarningAsync().Result;
             }
-            catch
+            catch { }
+            if (string.IsNullOrEmpty(warning))
+                return;
+
+            models.Add(new SystemWarningModel
             {
-                //ignore exceptions
-            }
+                Level = SystemWarningLevel.CopyrightRemovalKey,
+                Text = warning,
+                DontEncode = true //this text could contain links, so don't encode it
+            });
         }
 
         /// <summary>
@@ -681,6 +663,41 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
+        /// Prepare proxy connection warning model
+        /// </summary>
+        /// <param name="models">List of system warning models</param>
+        protected virtual void PrepareProxyConnectionWarningModel(IList<SystemWarningModel> models)
+        {
+            if (models == null)
+                throw new ArgumentNullException(nameof(models));
+
+            //whether proxy is enabled
+            if (!_proxySettings.Enabled)
+                return;
+
+            try
+            {
+                _nopHttpClient.PingAsync().Wait();
+
+                //connection is OK
+                models.Add(new SystemWarningModel
+                {
+                    Level = SystemWarningLevel.Pass,
+                    Text = _localizationService.GetResource("Admin.System.Warnings.ProxyConnection.OK")
+                });
+            }
+            catch
+            {
+                //connection failed
+                models.Add(new SystemWarningModel
+                {
+                    Level = SystemWarningLevel.Fail,
+                    Text = _localizationService.GetResource("Admin.System.Warnings.ProxyConnection.Failed")
+                });
+            }
+        }
+
+        /// <summary>
         /// Prepare system warning models
         /// </summary>
         /// <returns>List of system warning models</returns>
@@ -720,6 +737,9 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //not active plugins
             PreparePluginsEnabledWarningModel(models);
+
+            //proxy connection
+            PrepareProxyConnectionWarningModel(models);
 
             return models;
         }

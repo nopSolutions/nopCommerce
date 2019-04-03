@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Xml.Linq;
-using Nop.Core;
 
-namespace Nop.Web.Framework.Mvc.Rss
+namespace Nop.Core.Rss
 {
     /// <summary>
-    /// The class representing the item of RSS feed
+    /// Represents the item of RSS feed
     /// </summary>
-    public class RssItem
+    public partial class RssItem
     {
         /// <summary>
-        /// Ctor
+        /// Initialize new instance of RSS feed item
         /// </summary>
         /// <param name="title">Title</param>
         /// <param name="content">Content</param>
@@ -20,11 +19,15 @@ namespace Nop.Web.Framework.Mvc.Rss
         /// <param name="pubDate">Last build date</param>
         public RssItem(string title, string content, Uri link, string id, DateTimeOffset pubDate)
         {
-            Init(title, content, link, id, pubDate);
+            Title = new XElement(NopRssDefaults.Title, title);
+            Content = new XElement(NopRssDefaults.Description, content);
+            Link = new XElement(NopRssDefaults.Link, link);
+            Id = new XElement(NopRssDefaults.Guid, new XAttribute("isPermaLink", false), id);
+            PubDate = new XElement(NopRssDefaults.PubDate, pubDate.ToString("r"));
         }
 
         /// <summary>
-        /// Ctor
+        /// Initialize new instance of RSS feed item
         /// </summary>
         /// <param name="item">XML view of rss item</param>
         public RssItem(XContainer item)
@@ -38,19 +41,6 @@ namespace Nop.Web.Framework.Mvc.Rss
             var pubDate = pubDateValue == null ? DateTimeOffset.Now : DateTimeOffset.ParseExact(pubDateValue, "r", null);
             var id = item.Element(NopRssDefaults.Guid)?.Value ?? string.Empty;
 
-            Init(title, content, link, id, pubDate);
-        }
-
-        /// <summary>
-        /// Initialize base filds of rss item
-        /// </summary>
-        /// <param name="title">Title</param>
-        /// <param name="content">Content</param>
-        /// <param name="link">Link</param>
-        /// <param name="id">Unique identifier</param>
-        /// <param name="pubDate">Last build date</param>
-        private void Init(string title, string content, Uri link, string id, DateTimeOffset pubDate)
-        {
             Title = new XElement(NopRssDefaults.Title, title);
             Content = new XElement(NopRssDefaults.Description, content);
             Link = new XElement(NopRssDefaults.Link, link);
@@ -58,13 +48,15 @@ namespace Nop.Web.Framework.Mvc.Rss
             PubDate = new XElement(NopRssDefaults.PubDate, pubDate.ToString("r"));
         }
 
+        #region Methods
+
         /// <summary>
         /// Get representation item of RSS feed as XElement object
         /// </summary>
         /// <returns></returns>
         public XElement ToXElement()
         {
-            var element = new XElement(NopRssDefaults.Item, Id, Link, Title, Content);  //__"item"
+            var element = new XElement(NopRssDefaults.Item, Id, Link, Title, Content);
 
             foreach (var elementExtensions in ElementExtensions)
             {
@@ -73,6 +65,10 @@ namespace Nop.Web.Framework.Mvc.Rss
 
             return element;
         }
+
+        #endregion
+
+        #region Properties
 
         /// <summary>
         /// Title
@@ -123,5 +119,7 @@ namespace Nop.Web.Framework.Mvc.Rss
         /// Element extensions
         /// </summary>
         public List<XElement> ElementExtensions { get; } = new List<XElement>();
+
+        #endregion
     }
 }

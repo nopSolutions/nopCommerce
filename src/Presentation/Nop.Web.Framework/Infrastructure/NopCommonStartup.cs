@@ -34,6 +34,9 @@ namespace Nop.Web.Framework.Infrastructure
             //add HTTP sesion state feature
             services.AddHttpSession();
 
+            //add default HTTP clients
+            services.AddNopHttpClients();
+
             //add anti-forgery
             services.AddAntiForgery();
 

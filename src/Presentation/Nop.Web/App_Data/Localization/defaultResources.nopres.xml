@@ -14142,6 +14142,12 @@
   <LocaleResource Name="Admin.System.Warnings.PrimaryCurrency.Set">
     <Value>Primary store currency is set</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.Warnings.ProxyConnection.Failed">
+    <Value>Proxy connection failed</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Warnings.ProxyConnection.OK">
+    <Value>Proxy connection is OK</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.System.Warnings.URL.Match">
     <Value>Specified store URL matches this store URL</Value>
   </LocaleResource>

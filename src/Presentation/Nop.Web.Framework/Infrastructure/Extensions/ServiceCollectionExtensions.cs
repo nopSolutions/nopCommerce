@@ -27,6 +27,7 @@ using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Services.Authentication;
 using Nop.Services.Authentication.External;
+using Nop.Services.Common;
 using Nop.Services.Logging;
 using Nop.Services.Plugins;
 using Nop.Services.Security;
@@ -34,6 +35,7 @@ using Nop.Services.Tasks;
 using Nop.Web.Framework.FluentValidation;
 using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Mvc.Routing;
+using Nop.Web.Framework.Security.Captcha;
 using Nop.Web.Framework.Themes;
 using StackExchange.Profiling.Storage;
 using WebMarkupMin.AspNet.Brotli;
@@ -420,6 +422,25 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 //use memory cache
                 option.UseInMemory("nopCommerce_memory_cache");
             });
+        }
+
+        /// <summary>
+        /// Add and configure default HTTP clients
+        /// </summary>
+        /// <param name="services">Collection of service descriptors</param>
+        public static void AddNopHttpClients(this IServiceCollection services)
+        {
+            //default client
+            services.AddHttpClient(NopHttpDefaults.DefaultHttpClient).WithProxy();
+
+            //client to request current store
+            services.AddHttpClient<StoreHttpClient>();
+
+            //client to request nopCommerce official site
+            services.AddHttpClient<NopHttpClient>().WithProxy();
+
+            //client to request reCAPTCHA service
+            services.AddHttpClient<CaptchaHttpClient>().WithProxy();
         }
     }
 }

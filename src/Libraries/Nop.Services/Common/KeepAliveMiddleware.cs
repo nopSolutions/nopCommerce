@@ -36,8 +36,6 @@ namespace Nop.Services.Common
         /// <returns>Task</returns>
         public async Task Invoke(HttpContext context, IWebHelper webHelper)
         {
-            //TODO test. ensure that no guest record is created
-
             //whether database is installed
             if (DataSettingsManager.DatabaseIsInstalled)
             {

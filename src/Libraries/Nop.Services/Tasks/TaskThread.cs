@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Nop.Core;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Tasks;
+using Nop.Core.Http;
 using Nop.Core.Infrastructure;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
@@ -21,19 +22,19 @@ namespace Nop.Services.Tasks
         #region Fields
 
         private static readonly string _scheduleTaskUrl;
-        private static readonly IStoreContext _storeContext;
+        private static readonly int? _timeout;
+
         private readonly Dictionary<string, string> _tasks;
         private Timer _timer;
         private bool _disposed;
-        private static readonly int? _timeout;
 
         #endregion
 
-        #region Ctors
+        #region Ctor
 
         static TaskThread()
-        {            _storeContext = EngineContext.Current.Resolve<IStoreContext>();
-            _scheduleTaskUrl = $"{_storeContext.CurrentStore.Url}{NopTaskDefaults.ScheduleTaskPath}";
+        {
+            _scheduleTaskUrl = $"{EngineContext.Current.Resolve<IStoreContext>().CurrentStore.Url}{NopTaskDefaults.ScheduleTaskPath}";
             _timeout = EngineContext.Current.Resolve<CommonSettings>().ScheduleTaskRunTimeout;
         }
 
@@ -54,33 +55,24 @@ namespace Nop.Services.Tasks
 
             StartedUtc = DateTime.UtcNow;
             IsRunning = true;
+
             foreach (var taskName in _tasks.Keys)
             {
                 var taskType = _tasks[taskName];
-
-                //create and send post data
-                var postData = new List<KeyValuePair<string, string>>
-                {
-                    new KeyValuePair<string, string>("taskType", taskType)
-                };
-
                 try
                 {
-                    using (var client = new HttpClient())
-                    {
-                        if (_timeout.HasValue)
-                        {
-                            client.Timeout = TimeSpan.FromMilliseconds(_timeout.Value);
-                        }
+                    //create and configure client
+                    var client = EngineContext.Current.Resolve<IHttpClientFactory>().CreateClient(NopHttpDefaults.DefaultHttpClient);
+                    if (_timeout.HasValue)
+                        client.Timeout = TimeSpan.FromMilliseconds(_timeout.Value);
 
-                        var task = client.PostAsync(_scheduleTaskUrl, new FormUrlEncodedContent(postData));
-                        task.Wait();
-                    }
+                    //send post data
+                    var data = new FormUrlEncodedContent(new[] { new KeyValuePair<string, string>(nameof(taskType), taskType) });
+                    client.PostAsync(_scheduleTaskUrl, data).Wait();
                 }
                 catch (Exception ex)
                 {
                     var _serviceScopeFactory = EngineContext.Current.Resolve<IServiceScopeFactory>();
-                    
                     using (var scope = _serviceScopeFactory.CreateScope())
                     {
                         // Resolve
@@ -106,13 +98,9 @@ namespace Nop.Services.Tasks
             _timer.Change(-1, -1);
             Run();
             if (RunOnlyOnce)
-            {
                 Dispose();
-            }
             else
-            {
                 _timer.Change(Interval, Interval);
-            }
         }
 
         #endregion
@@ -141,9 +129,7 @@ namespace Nop.Services.Tasks
         public void InitTimer()
         {
             if (_timer == null)
-            {
                 _timer = new Timer(TimerHandler, null, InitInterval, Interval);
-            }
         }
 
         /// <summary>
@@ -153,9 +139,7 @@ namespace Nop.Services.Tasks
         public void AddTask(ScheduleTask task)
         {
             if (!_tasks.ContainsKey(task.Name))
-            {
                 _tasks.Add(task.Name, task.Type);
-            }
         }
 
         #endregion

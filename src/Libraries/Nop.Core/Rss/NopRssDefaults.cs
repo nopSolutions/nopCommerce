@@ -1,9 +1,11 @@
 ﻿
-namespace Nop.Web.Framework.Mvc.Rss
+namespace Nop.Core.Rss
 {
+    /// <summary>
+    /// Represents default values related to RSS feed
+    /// </summary>
     public static partial class NopRssDefaults
     {
-
         /// <summary>
         /// Gets default name for Title element
         /// </summary>
