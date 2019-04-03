@@ -166,7 +166,7 @@ ul.common-list {
 }
 
 .panel.collapsible-panel >.panel-heading {
-  padding-right: 30px;
+  padding-right: 45px;
   position: relative;
   cursor: pointer;
 }
@@ -175,7 +175,7 @@ ul.common-list {
   background-color: #ffffff;
   color: #444;
   border-bottom: 1px solid #f4f4f4;
-  padding-left: 45px;
+  padding-left: 30px;
 }
 
 .panel.collapsible-panel >.panel-heading span {
@@ -185,8 +185,9 @@ ul.common-list {
 
 .panel.collapsible-panel .panel-heading i.toggle-icon {
   position: absolute;
-  right: 5px;
-  top: 14px;
+  left: 15px;
+  top: 15px;
+  font-size: 12px;
 }
 
 .panel.collapsible-panel .panel-container .panel-group {
@@ -200,13 +201,13 @@ ul.common-list {
 .panel.collapsible-panel .panel-heading div.icon-container {
   width: 45px;
   position: absolute;
-  left: 0;
-  top: 12px;
+  right: 0;
+  top: 11px;
   text-align: center;
 }
 
 .panel.collapsible-panel .panel-heading i.panel-icon {
-  font-size: 16px;
+  font-size: 14px;
   padding-right: 0 !important;
 }
 
