@@ -6,7 +6,7 @@ namespace Nop.Web.Framework.Models.DataTables
     /// <summary>
     /// Represents base DataTables model
     /// </summary>
-    //public partial class DataTablesModel : BaseNopModel //Commented becouse issue with model binding in .net core 2.2
+    //public partial class DataTablesModel : BaseNopModel
     public partial class DataTablesModel
     {
         #region Const
@@ -30,7 +30,6 @@ namespace Nop.Web.Framework.Models.DataTables
             Processing = true;
             Paging = true;
             PagingType = DEFAULT_PAGING_TYPE;
-            IsChildTable = false;
 
             Filters = new List<string>();
             ColumnCollection = new List<ColumnProperty>();
@@ -151,7 +150,7 @@ namespace Nop.Web.Framework.Models.DataTables
         /// <summary>
         /// Gets or sets type of search model
         /// </summary>
-        public Type TypeOfSearchModel { get; set; } 
+        public Type SearchModelType { get; set; } 
 
         #endregion
     }

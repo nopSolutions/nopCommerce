@@ -800,7 +800,7 @@ namespace Nop.Web.Areas.Admin.Factories
             {
                 Name = "orders-grid",
                 UrlRead = new DataUrl("OrderList", "Order", null),
-                TypeOfSearchModel = typeof(OrderSearchModel),
+                SearchModelType = typeof(OrderSearchModel),
                 SearchButtonId = "search-orders",
                 Length = searchModel.PageSize,
                 LengthMenu = searchModel.AvailablePageSizes,
@@ -943,7 +943,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Name = "shipments-grid",
                 UrlRead = new DataUrl("ShipmentListSelect", "Order", null),
                 SearchButtonId = "search-shipments",
-                TypeOfSearchModel = typeof(ShipmentSearchModel),
+                SearchModelType = typeof(ShipmentSearchModel),
                 Length = searchModel.PageSize,
                 LengthMenu = searchModel.AvailablePageSizes
             };
@@ -967,7 +967,7 @@ namespace Nop.Web.Areas.Admin.Factories
             {
                 new ColumnProperty(null)
                 {
-                    Render = new RenderDetailCaret(),
+                    Render = new RenderChildCaret(),
                     Width = "5",
                     ClassName =  StyleColumn.DetailsControl,
                 },
@@ -1050,7 +1050,7 @@ namespace Nop.Web.Areas.Admin.Factories
             {
                 Name = "shipments-grid",
                 UrlRead = new DataUrl("ShipmentsItemsByShipmentId", "Order", null),
-                TypeOfSearchModel = typeof(ShipmentItemSearchModel),
+                SearchModelType = typeof(ShipmentItemSearchModel),
                 IsChildTable = true,
                 Paging = false,
                 Length = searchModel.PageSize,

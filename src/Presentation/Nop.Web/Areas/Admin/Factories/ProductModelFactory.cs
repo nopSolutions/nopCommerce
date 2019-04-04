@@ -621,7 +621,7 @@ namespace Nop.Web.Areas.Admin.Factories
             {
                 Name = "products-grid",
                 UrlRead = new DataUrl("ProductList", "Product", null),
-                TypeOfSearchModel = typeof(ProductSearchModel),
+                SearchModelType = typeof(ProductSearchModel),
                 SearchButtonId = "search-products",
                 Length = searchModel.PageSize,
                 LengthMenu = searchModel.AvailablePageSizes

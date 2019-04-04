@@ -79,11 +79,11 @@ else
                     }
                     else
                     {
-                        @if (Model.TypeOfSearchModel != null)
+                        @if (Model.SearchModelType != null)
                         {
                             @foreach (var filter in Model.Filters)
                             {
-                                @if (Model.TypeOfSearchModel.GetProperty(filter).PropertyType == typeof(bool))
+                                @if (Model.SearchModelType.GetProperty(filter).PropertyType == typeof(bool))
                                 {
                                     <text>
                                         data.@filter = $('#@filter').is(':checked');
@@ -263,7 +263,7 @@ columns: [
                         }
                     </text>
                     break;
-                case RenderDetailCaret caret:
+                case RenderChildCaret caret:
                     <text>
                         render: function (data, type, row, meta) {
                             return '<i class="fa fa-caret-right" aria-hidden="true"></i>'

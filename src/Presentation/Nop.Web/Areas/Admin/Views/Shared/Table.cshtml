@@ -113,12 +113,12 @@
 {
     <text>
         <script>
-            function getdetail(d) {
-                return '<table id="detail' + d.Id + '" class="table table-bordered table-hover dataTable" width="100%" style="padding-left:2%;"></table>';
+            function getchild(d) {
+                return '<table id="child' + d.Id + '" class="table table-bordered table-hover dataTable" width="100%" style="padding-left:2%;"></table>';
             }
             $(document).ready(function () {
-                // Add event listener for opening and closing details
-                $('#@Model.Name tbody').on('click', 'td.details-control', function () {
+                // Add event listener for opening and closing childs
+                $('#@Model.Name tbody').on('click', 'td.childs-control', function () {
                     var tr = $(this).closest('tr');
                     var tdi = tr.find('i.fa');
                     var row = $('#@Model.Name').DataTable().row(tr);
@@ -132,8 +132,8 @@
                     }
                     else {
                         // Open this row
-                        row.child(getdetail(row.data())).show();
-                        var classid = '#detail' + row.data().Id;
+                        row.child(getchild(row.data())).show();
+                        var classid = '#child' + row.data().Id;
                         $(classid).DataTable({
                         @await Html.PartialAsync("_Table.Definition", Model.ChildTable)
                         }).draw;
