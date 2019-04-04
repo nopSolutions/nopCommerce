@@ -803,30 +803,29 @@ namespace Nop.Web.Areas.Admin.Factories
             {
                 Name = "orders-grid",
                 UrlRead = new DataUrl("OrderList", "Order", null),
-                SearchModelType = typeof(OrderSearchModel),
                 SearchButtonId = "search-orders",
                 Length = searchModel.PageSize,
                 LengthMenu = searchModel.AvailablePageSizes,
             };
 
             //prepare filters to search
-            model.Filters = new List<string>()
+            model.Filters = new List<FilterParameter>()
             {
-                nameof(searchModel.StartDate),
-                nameof(searchModel.EndDate),
-                nameof(searchModel.OrderStatusIds),
-                nameof(searchModel.PaymentStatusIds),
-                nameof(searchModel.ShippingStatusIds),
-                nameof(searchModel.StoreId),
-                nameof(searchModel.VendorId),
-                nameof(searchModel.WarehouseId),
-                nameof(searchModel.BillingEmail),
-                nameof(searchModel.BillingPhone),
-                nameof(searchModel.BillingLastName),
-                nameof(searchModel.BillingCountryId),
-                nameof(searchModel.PaymentMethodSystemName),
-                nameof(searchModel.ProductId),
-                nameof(searchModel.OrderNotes)
+                new FilterParameter(nameof(searchModel.StartDate)),
+                new FilterParameter(nameof(searchModel.EndDate)),
+                new FilterParameter(nameof(searchModel.OrderStatusIds)),
+                new FilterParameter(nameof(searchModel.PaymentStatusIds)),
+                new FilterParameter(nameof(searchModel.ShippingStatusIds)),
+                new FilterParameter(nameof(searchModel.StoreId)),
+                new FilterParameter(nameof(searchModel.VendorId)),
+                new FilterParameter(nameof(searchModel.WarehouseId)),
+                new FilterParameter(nameof(searchModel.BillingEmail)),
+                new FilterParameter(nameof(searchModel.BillingPhone)),
+                new FilterParameter(nameof(searchModel.BillingLastName)),
+                new FilterParameter(nameof(searchModel.BillingCountryId)),
+                new FilterParameter(nameof(searchModel.PaymentMethodSystemName)),
+                new FilterParameter(nameof(searchModel.ProductId)),
+                new FilterParameter(nameof(searchModel.OrderNotes))
             };
 
             //prepare model columns
@@ -946,23 +945,22 @@ namespace Nop.Web.Areas.Admin.Factories
                 Name = "shipments-grid",
                 UrlRead = new DataUrl("ShipmentListSelect", "Order", null),
                 SearchButtonId = "search-shipments",
-                SearchModelType = typeof(ShipmentSearchModel),
                 Length = searchModel.PageSize,
                 LengthMenu = searchModel.AvailablePageSizes
             };
 
             //prepare filters to search
-            model.Filters = new List<string>()
+            model.Filters = new List<FilterParameter>()
             {
-                nameof(searchModel.StartDate),
-                nameof(searchModel.EndDate),
-                nameof(searchModel.TrackingNumber),
-                nameof(searchModel.CountryId),
-                nameof(searchModel.StateProvinceId),
-                nameof(searchModel.County),
-                nameof(searchModel.City),
-                nameof(searchModel.WarehouseId),
-                nameof(searchModel.LoadNotShipped)
+                new FilterParameter(nameof(searchModel.StartDate)),
+                new FilterParameter(nameof(searchModel.EndDate)),
+                new FilterParameter(nameof(searchModel.TrackingNumber)),
+                new FilterParameter(nameof(searchModel.CountryId)),
+                new FilterParameter(nameof(searchModel.StateProvinceId)),
+                new FilterParameter(nameof(searchModel.County)),
+                new FilterParameter(nameof(searchModel.City)),
+                new FilterParameter(nameof(searchModel.WarehouseId)),
+                new FilterParameter(nameof(searchModel.LoadNotShipped), typeof(bool))
             };
 
             //prepare model columns
@@ -1053,7 +1051,7 @@ namespace Nop.Web.Areas.Admin.Factories
             {
                 Name = "shipments-grid",
                 UrlRead = new DataUrl("ShipmentsItemsByShipmentId", "Order", null),
-                SearchModelType = typeof(ShipmentItemSearchModel),
+                
                 IsChildTable = true,
                 Paging = false,
                 Length = searchModel.PageSize,
@@ -1061,9 +1059,9 @@ namespace Nop.Web.Areas.Admin.Factories
             };
 
             //prepare filters to search
-            detailModel.Filters = new List<string>()
+            detailModel.Filters = new List<FilterParameter>()
             {
-                nameof(searchChildModel.ShipmentId)
+                new FilterParameter(nameof(searchChildModel.ShipmentId))
             };
 
             detailModel.ColumnCollection = new List<ColumnProperty>

@@ -74,25 +74,25 @@ else
                     @if (Model.IsChildTable)
                     {
                         <text>
-                            data.@Model.Filters.FirstOrDefault() = row.data().Id;
+                            data.@Model.Filters.FirstOrDefault()?.Name = row.data().Id;
                         </text>
                     }
                     else
                     {
-                        @if (Model.SearchModelType != null)
+                        @if (Model.Filters != null)
                         {
                             @foreach (var filter in Model.Filters)
                             {
-                                @if (Model.SearchModelType.GetProperty(filter).PropertyType == typeof(bool))
+                                @if (filter.Type == typeof(bool))
                                 {
                                     <text>
-                                        data.@filter = $('#@filter').is(':checked');
+                                        data.@filter.Name = $('#@filter.Name').is(':checked');
                                     </text>
                                 }
                                 else
                                 {
                                     <text>
-                                        data.@filter = $('#@filter').val();
+                                        data.@filter.Name = $('#@filter.Name').val();
                                     </text>
                                 }     
                             }

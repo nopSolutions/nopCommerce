@@ -31,7 +31,7 @@ namespace Nop.Web.Framework.Models.DataTables
             Paging = true;
             PagingType = DEFAULT_PAGING_TYPE;
 
-            Filters = new List<string>();
+            Filters = new List<FilterParameter>();
             ColumnCollection = new List<ColumnProperty>();
             ColumnDefinitions = new List<ColumnDefinition>();
         }
@@ -61,9 +61,9 @@ namespace Nop.Web.Framework.Models.DataTables
         public string SearchButtonId { get; set; }
 
         /// <summary>
-        /// Gets or set filters name controls
+        /// Gets or set filters controls
         /// </summary>
-        public IList<string> Filters { get; set; }
+        public IList<FilterParameter> Filters { get; set; }
 
         /// <summary>
         /// Gets or sets data for table (ajax, json, array)
@@ -146,12 +146,7 @@ namespace Nop.Web.Framework.Models.DataTables
         /// Gets or sets column defininition
         /// </summary>
         public IList<ColumnDefinition> ColumnDefinitions { get; set; }
-
-        /// <summary>
-        /// Gets or sets type of search model
-        /// </summary>
-        public Type SearchModelType { get; set; } 
-
+        
         #endregion
     }
 }

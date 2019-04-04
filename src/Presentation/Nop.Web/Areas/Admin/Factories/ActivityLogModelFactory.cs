@@ -125,18 +125,17 @@ namespace Nop.Web.Areas.Admin.Factories
                 UrlRead = new DataUrl("ListLogs", "ActivityLog", null),
                 UrlAction = new DataUrl("ActivityLogDelete", "ActivityLog", null),
                 SearchButtonId = "search-log",
-                SearchModelType = typeof(ActivityLogSearchModel),
                 Length = searchModel.PageSize,
                 LengthMenu = searchModel.AvailablePageSizes
             };
 
             //prepare filters to search
-            model.Filters = new List<string>()
+            model.Filters = new List<FilterParameter>()
             {
-                nameof(ActivityLogSearchModel.CreatedOnTo),
-                nameof(ActivityLogSearchModel.CreatedOnFrom),
-                nameof(ActivityLogSearchModel.IpAddress),
-                nameof(ActivityLogSearchModel.ActivityLogTypeId)
+                new FilterParameter(nameof(searchModel.CreatedOnTo)),
+                new FilterParameter(nameof(searchModel.CreatedOnFrom)),
+                new FilterParameter(nameof(searchModel.IpAddress)),
+                new FilterParameter(nameof(searchModel.ActivityLogTypeId))
             };
 
             //prepare model columns

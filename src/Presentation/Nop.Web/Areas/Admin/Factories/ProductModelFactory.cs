@@ -621,24 +621,23 @@ namespace Nop.Web.Areas.Admin.Factories
             {
                 Name = "products-grid",
                 UrlRead = new DataUrl("ProductList", "Product", null),
-                SearchModelType = typeof(ProductSearchModel),
                 SearchButtonId = "search-products",
                 Length = searchModel.PageSize,
                 LengthMenu = searchModel.AvailablePageSizes
             };
 
             //prepare filters to search
-            model.Filters = new List<string>()
+            model.Filters = new List<FilterParameter>()
             {
-                nameof(searchModel.SearchProductName),
-                nameof(searchModel.SearchCategoryId),
-                nameof(searchModel.SearchIncludeSubCategories),
-                nameof(searchModel.SearchManufacturerId),
-                nameof(searchModel.SearchStoreId),
-                nameof(searchModel.SearchWarehouseId),
-                nameof(searchModel.SearchVendorId),
-                nameof(searchModel.SearchProductTypeId),
-                nameof(searchModel.SearchPublishedId)
+                new FilterParameter(nameof(searchModel.SearchProductName)),
+                new FilterParameter(nameof(searchModel.SearchCategoryId)),
+                new FilterParameter(nameof(searchModel.SearchIncludeSubCategories)),
+                new FilterParameter(nameof(searchModel.SearchManufacturerId)),
+                new FilterParameter(nameof(searchModel.SearchStoreId)),
+                new FilterParameter(nameof(searchModel.SearchWarehouseId)),
+                new FilterParameter(nameof(searchModel.SearchVendorId)),
+                new FilterParameter(nameof(searchModel.SearchProductTypeId)),
+                new FilterParameter(nameof(searchModel.SearchPublishedId))
             };
 
             //prepare model columns
