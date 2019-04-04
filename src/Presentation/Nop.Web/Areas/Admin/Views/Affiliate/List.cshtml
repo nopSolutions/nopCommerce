@@ -59,7 +59,7 @@
                             @T("Admin.Affiliates.Description")
                         </p>
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-5">
                                 <div class="form-group">
                                     <div class="col-md-4">
                                         <nop-label asp-for="SearchFirstName" />
@@ -76,6 +76,8 @@
                                         <nop-editor asp-for="SearchLastName" />
                                     </div>
                                 </div>
+                            </div>
+                            <div class="col-md-7">
                                 <div class="form-group">
                                     <div class="col-md-4">
                                         <nop-label asp-for="SearchFriendlyUrlName" />
@@ -92,7 +94,7 @@
                                         <nop-editor asp-for="LoadOnlyWithOrders" />
                                     </div>
                                 </div>
-                                <nop-nested-setting asp-for="LoadOnlyWithOrders" >
+                                <nop-nested-setting asp-for="LoadOnlyWithOrders">
                                     <div class="form-group" id="pnlOrdersCreatedFromUtc">
                                         <div class="col-md-4">
                                             <nop-label asp-for="OrdersCreatedFromUtc" />
@@ -110,14 +112,14 @@
                                         </div>
                                     </div>
                                 </nop-nested-setting>
-                                <div class="form-group">
-                                    <div class="col-md-8 col-md-offset-4">
-                                        <button type="button" id="search-affiliates" class="btn btn-primary btn-search">
-                                            <i class="fa fa-search"></i>
-                                            @T("Admin.Common.Search")
-                                        </button>
-                                    </div>
-                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-7 col-md-offset-5">
+                                <button type="button" id="search-affiliates" class="btn btn-primary btn-search">
+                                    <i class="fa fa-search"></i>
+                                    @T("Admin.Common.Search")
+                                </button>
                             </div>
                         </div>
                     </div>
