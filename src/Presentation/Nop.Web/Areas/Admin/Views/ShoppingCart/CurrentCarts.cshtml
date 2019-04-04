@@ -38,9 +38,11 @@
                         <div class="icon-search"><i class="fa fa-search" aria-hidden="true"></i></div>
                         <div class="icon-collapse"><i class="fa fa-angle-down" aria-hidden="true"></i></div>
                     </div>
+
                     <div class="search-body @(hideSearchBlock ? "closed" : "")">
+
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-5">
                                 <div class="form-group">
                                     <div class="col-md-4">
                                         <nop-label asp-for="StartDate" />
@@ -55,30 +57,6 @@
                                     </div>
                                     <div class="col-md-8">
                                         <nop-editor asp-for="EndDate" />
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="col-md-4">
-                                        <nop-label asp-for="ShoppingCartType" />
-                                    </div>
-                                    <div class="col-md-8">
-                                        <nop-select asp-for="ShoppingCartType" asp-items="@Model.AvailableShoppingCartTypes" />
-                                    </div>
-                                </div>
-                                <div class="form-group" @(Model.HideStoresList ? Html.Raw("style=\"display:none\"") : null)>
-                                    <div class="col-md-4">
-                                        <nop-label asp-for="StoreId" />
-                                    </div>
-                                    <div class="col-md-8">
-                                        <nop-select asp-for="StoreId" asp-items="Model.AvailableStores" />
-                                    </div>
-                                </div>
-                                <div class="form-group" @(Model.AvailableCountries.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
-                                    <div class="col-md-4">
-                                        <nop-label asp-for="BillingCountryId" />
-                                    </div>
-                                    <div class="col-md-8">
-                                        <nop-select asp-for="BillingCountryId" asp-items="Model.AvailableCountries" />
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -116,14 +94,40 @@
                                         </script>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="col-md-7">
                                 <div class="form-group">
-                                    <div class="col-md-8 col-md-offset-4">
-                                        <button type="button" id="search-shopping-carts" class="btn btn-primary btn-search">
-                                            <i class="fa fa-search"></i>
-                                            @T("Admin.Common.Search")
-                                        </button>
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="ShoppingCartType" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-select asp-for="ShoppingCartType" asp-items="@Model.AvailableShoppingCartTypes" />
                                     </div>
                                 </div>
+                                <div class="form-group" @(Model.HideStoresList ? Html.Raw("style=\"display:none\"") : null)>
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="StoreId" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-select asp-for="StoreId" asp-items="Model.AvailableStores" />
+                                    </div>
+                                </div>
+                                <div class="form-group" @(Model.AvailableCountries.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="BillingCountryId" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-select asp-for="BillingCountryId" asp-items="Model.AvailableCountries" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-7 col-md-offset-5">
+                                <button type="button" id="search-shopping-carts" class="btn btn-primary btn-search">
+                                    <i class="fa fa-search"></i>
+                                    @T("Admin.Common.Search")
+                                </button>
                             </div>
                         </div>
                     </div>

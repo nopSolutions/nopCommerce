@@ -38,24 +38,9 @@
                     </div>
 
                     <div class="search-body @(hideSearchBlock ? "closed" : "")">
+
                         <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <div class="col-md-4">
-                                        <nop-label asp-for="ActivatedId" />
-                                    </div>
-                                    <div class="col-md-8">
-                                        <nop-select asp-for="ActivatedId" asp-items="Model.ActivatedList" />
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="col-md-4">
-                                        <nop-label asp-for="CouponCode" />
-                                    </div>
-                                    <div class="col-md-8">
-                                        <nop-editor asp-for="CouponCode" />
-                                    </div>
-                                </div>
+                            <div class="col-md-5">
                                 <div class="form-group">
                                     <div class="col-md-4">
                                         <nop-label asp-for="RecipientName" />
@@ -65,13 +50,31 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <div class="col-md-8 col-md-offset-4">
-                                        <button type="button" id="search-giftcards" class="btn btn-primary btn-search">
-                                            <i class="fa fa-search"></i>
-                                            @T("Admin.Common.Search")
-                                        </button>
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="ActivatedId" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-select asp-for="ActivatedId" asp-items="Model.ActivatedList" />
                                     </div>
                                 </div>
+                            </div>
+                            <div class="col-md-7">
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="CouponCode" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-editor asp-for="CouponCode" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-7 col-md-offset-5">
+                                <button type="button" id="search-giftcards" class="btn btn-primary btn-search">
+                                    <i class="fa fa-search"></i>
+                                    @T("Admin.Common.Search")
+                                </button>
                             </div>
                         </div>
                     </div>

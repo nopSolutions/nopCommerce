@@ -36,15 +36,7 @@
 
                         <div class="search-body @(hideSearchBlock ? "closed" : "")">
                             <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <div class="col-md-4">
-                                            <nop-label asp-for="SearchRequestTypeId" />
-                                        </div>
-                                        <div class="col-md-8">
-                                            <nop-select asp-for="SearchRequestTypeId" asp-items="Model.AvailableRequestTypes" />
-                                        </div>
-                                    </div>
+                                <div class="col-md-5">
                                     <div class="form-group">
                                         <div class="col-md-4">
                                             <nop-label asp-for="SearchEmail" />
@@ -53,14 +45,24 @@
                                             <nop-editor asp-for="SearchEmail" />
                                         </div>
                                     </div>
+                                </div>
+                                <div class="col-md-7">
                                     <div class="form-group">
-                                        <div class="col-md-8 col-md-offset-4">
-                                            <button type="button" id="search-log" class="btn btn-primary btn-search">
-                                                <i class="fa fa-search"></i>
-                                                @T("Admin.Common.Search")
-                                            </button>
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="SearchRequestTypeId" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-select asp-for="SearchRequestTypeId" asp-items="Model.AvailableRequestTypes" />
                                         </div>
                                     </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-7 col-md-offset-5">
+                                    <button type="button" id="search-log" class="btn btn-primary btn-search">
+                                        <i class="fa fa-search"></i>
+                                        @T("Admin.Common.Search")
+                                    </button>
                                 </div>
                             </div>
                         </div>
