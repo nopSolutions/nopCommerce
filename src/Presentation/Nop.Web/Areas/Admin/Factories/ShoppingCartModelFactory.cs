@@ -14,6 +14,7 @@ using Nop.Services.Stores;
 using Nop.Services.Tax;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.ShoppingCart;
+using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
