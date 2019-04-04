@@ -48,7 +48,7 @@
 
                     <div class="search-body @(hideSearchBlock ? "closed" : "")">
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-5">
                                 <div class="form-group">
                                     <div class="col-md-4">
                                         <nop-label asp-for="CreatedOnFrom" />
@@ -65,6 +65,8 @@
                                         <nop-editor asp-for="CreatedOnTo" />
                                     </div>
                                 </div>
+                            </div>
+                            <div class="col-md-7">
                                 <div class="form-group">
                                     <div class="col-md-4">
                                         <nop-label asp-for="SearchApprovedId" />
@@ -81,15 +83,14 @@
                                         <nop-editor asp-for="SearchText" />
                                     </div>
                                 </div>
-
-                                <div class="form-group">
-                                    <div class="col-md-8 col-md-offset-4">
-                                        <button type="button" id="search-comments" class="btn btn-primary btn-search">
-                                            <i class="fa fa-search"></i>
-                                            @T("Admin.Common.Search")
-                                        </button>
-                                    </div>
-                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-7 col-md-offset-5">
+                                <button type="button" id="search-comments" class="btn btn-primary btn-search">
+                                    <i class="fa fa-search"></i>
+                                    @T("Admin.Common.Search")
+                                </button>
                             </div>
                         </div>
                     </div>
