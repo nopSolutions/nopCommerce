@@ -18,6 +18,7 @@
                             <span asp-validation-for="Name"></span>
                         </div>
                     </div>
+                    <nop-editor asp-for="Address" asp-template="Address" />
                     <div class="form-group">
                         <div class="col-md-3">
                             <nop-label asp-for="AdminComment" />
@@ -27,7 +28,6 @@
                             <span asp-validation-for="AdminComment"></span>
                         </div>
                     </div>
-                    <nop-editor asp-for="Address" asp-template="Address" />
                 </div>
             </div>
             @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.WarehouseDetailsBottom, additionalData = Model })
