@@ -2,58 +2,49 @@
 
 <div class="panel-body">
     @(Html.LocalizedEditor<TopicModel, TopicLocalizedModel>("topic-info-localized",
-    @<div>
-        <div class="form-group">
-            <div class="col-md-3">
-                <nop-label asp-for="@Model.Locales[item].Title" />
-            </div>
-            <div class="col-md-9">
-                <nop-editor asp-for="@Model.Locales[item].Title" />
-                <span asp-validation-for="@Model.Locales[item].Title"></span>
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-md-3">
-                <nop-label asp-for="@Model.Locales[item].Body" />
-            </div>
-            <div class="col-md-9">
-                <nop-editor asp-for="@Model.Locales[item].Body" asp-template="RichEditor" />
-                <span asp-validation-for="@Model.Locales[item].Body"></span>
-            </div>
-        </div>
-        <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
-    </div>
-,
-    @<div>
-        <div class="form-group">
-            <div class="col-md-3">
-                <nop-label asp-for="Title" />
-            </div>
-            <div class="col-md-9">
-                <nop-editor asp-for="Title" />
-                <span asp-validation-for="Title"></span>
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-md-3">
-                <nop-label asp-for="Body" />
-            </div>
-            <div class="col-md-9">
-                <nop-editor asp-for="Body" asp-template="RichEditor" />
-                <span asp-validation-for="Body"></span>
-            </div>
-        </div>
-    </div>
-))
-    <div class="form-group advanced-setting">
-        <div class="col-md-3">
-            <nop-label asp-for="SystemName" />
-        </div>
-        <div class="col-md-9">
-            <nop-editor asp-for="SystemName"/>
-            <span asp-validation-for="SystemName"></span>
-        </div>
-    </div>
+                                    @<div>
+                                        <div class="form-group">
+                                            <div class="col-md-3">
+                                                <nop-label asp-for="@Model.Locales[item].Title" />
+                                            </div>
+                                            <div class="col-md-9">
+                                                <nop-editor asp-for="@Model.Locales[item].Title" />
+                                                <span asp-validation-for="@Model.Locales[item].Title"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-3">
+                                                <nop-label asp-for="@Model.Locales[item].Body" />
+                                            </div>
+                                            <div class="col-md-9">
+                                                <nop-editor asp-for="@Model.Locales[item].Body" asp-template="RichEditor" />
+                                                <span asp-validation-for="@Model.Locales[item].Body"></span>
+                                            </div>
+                                        </div>
+                                        <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
+                                    </div>
+                                                                                                ,
+                                                                                                    @<div>
+                                                                                                        <div class="form-group">
+                                                                                                            <div class="col-md-3">
+                                                                                                                <nop-label asp-for="Title" />
+                                                                                                            </div>
+                                                                                                            <div class="col-md-9">
+                                                                                                                <nop-editor asp-for="Title" />
+                                                                                                                <span asp-validation-for="Title"></span>
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                        <div class="form-group">
+                                                                                                            <div class="col-md-3">
+                                                                                                                <nop-label asp-for="Body" />
+                                                                                                            </div>
+                                                                                                            <div class="col-md-9">
+                                                                                                                <nop-editor asp-for="Body" asp-template="RichEditor" />
+                                                                                                                <span asp-validation-for="Body"></span>
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                                                                                                                                        ))
     @if (Model.Id > 0)
     {
         <div class="form-group">
@@ -65,35 +56,6 @@
             </div>
         </div>
     }
-    <div class="form-group advanced-setting">
-        <div class="col-md-3">
-            <nop-label asp-for="Published" />
-        </div>
-        <div class="col-md-9">
-            <nop-editor asp-for="Published" />
-            <span asp-validation-for="Published"></span>
-        </div>
-    </div>
-    <div class="form-group advanced-setting">
-        <div class="col-md-3">
-            <nop-label asp-for="IsPasswordProtected" />
-        </div>
-        <div class="col-md-9">
-            <nop-editor asp-for="IsPasswordProtected" />
-            <span asp-validation-for="IsPasswordProtected"></span>
-        </div>
-    </div>
-    <nop-nested-setting asp-for="IsPasswordProtected">
-        <div class="form-group advanced-setting" id="pnlPasswordEnabled">
-            <div class="col-md-3">
-                <nop-label asp-for="Password" />
-            </div>
-            <div class="col-md-9">
-                <nop-editor asp-for="Password" />
-                <span asp-validation-for="Password"></span>
-            </div>
-        </div>
-    </nop-nested-setting>
     <div class="form-group">
         <div class="col-md-3">
             <nop-label asp-for="IncludeInTopMenu" />
@@ -141,12 +103,41 @@
     </div>
     <div class="form-group advanced-setting">
         <div class="col-md-3">
+            <nop-label asp-for="Published" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="Published" />
+            <span asp-validation-for="Published"></span>
+        </div>
+    </div>
+    <div class="form-group advanced-setting">
+        <div class="col-md-3">
+            <nop-label asp-for="IsPasswordProtected" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="IsPasswordProtected" />
+            <span asp-validation-for="IsPasswordProtected"></span>
+        </div>
+    </div>
+    <nop-nested-setting asp-for="IsPasswordProtected">
+        <div class="form-group advanced-setting" id="pnlPasswordEnabled">
+            <div class="col-md-3">
+                <nop-label asp-for="Password" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="Password" />
+                <span asp-validation-for="Password"></span>
+            </div>
+        </div>
+    </nop-nested-setting>
+    <div class="form-group advanced-setting">
+        <div class="col-md-3">
             <nop-label asp-for="SelectedCustomerRoleIds" />
         </div>
         <div class="col-md-9">
             <div class="row">
                 <div class="col-md-4">
-                    <nop-select asp-for="SelectedCustomerRoleIds" asp-items="Model.AvailableCustomerRoles" asp-multiple="true"/>
+                    <nop-select asp-for="SelectedCustomerRoleIds" asp-items="Model.AvailableCustomerRoles" asp-multiple="true" />
                     <script>
                         $(document).ready(function() {
                             var rolesIdsInput = $('#@Html.IdFor(model => model.SelectedCustomerRoleIds)').data("kendoMultiSelect");
@@ -213,15 +204,6 @@
     </div>
     <div class="form-group advanced-setting">
         <div class="col-md-3">
-            <nop-label asp-for="DisplayOrder" />
-        </div>
-        <div class="col-md-9">
-            <nop-editor asp-for="DisplayOrder" />
-            <span asp-validation-for="DisplayOrder"></span>
-        </div>
-    </div>
-    <div class="form-group advanced-setting">
-        <div class="col-md-3">
             <nop-label asp-for="AccessibleWhenStoreClosed" />
         </div>
         <div class="col-md-9">
@@ -236,6 +218,24 @@
         <div class="col-md-9">
             <nop-select asp-for="TopicTemplateId" asp-items="Model.AvailableTopicTemplates" />
             <span asp-validation-for="TopicTemplateId"></span>
+        </div>
+    </div>
+    <div class="form-group advanced-setting">
+        <div class="col-md-3">
+            <nop-label asp-for="DisplayOrder" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="DisplayOrder" />
+            <span asp-validation-for="DisplayOrder"></span>
+        </div>
+    </div>
+    <div class="form-group advanced-setting">
+        <div class="col-md-3">
+            <nop-label asp-for="SystemName" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="SystemName" />
+            <span asp-validation-for="SystemName"></span>
         </div>
     </div>
 </div>
