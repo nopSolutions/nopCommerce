@@ -54,7 +54,7 @@
                             </script>
                             <div class="scroll-wrapper">
                                 <table class="table table-hover table-bordered">
-                                    <tbody>
+                                    <thead>
                                         <tr>
                                             <th scope="col">
                                                 <strong>@T("Admin.Configuration.ACL.Permission")</strong>
@@ -71,6 +71,8 @@
                                                 </th>
                                             }
                                         </tr>
+                                    </thead>
+                                    <tbody>
                                         @foreach (var pr in Model.AvailablePermissions)
                                         {
                                             <tr>

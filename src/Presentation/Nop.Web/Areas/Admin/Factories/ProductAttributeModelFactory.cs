@@ -7,6 +7,7 @@ using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -184,12 +185,12 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(productAttribute));
 
             //get predefined product attribute values
-            var values = _productAttributeService.GetPredefinedProductAttributeValues(productAttribute.Id);
+            var values = _productAttributeService.GetPredefinedProductAttributeValues(productAttribute.Id).ToPagedList(searchModel);
 
             //prepare list model
             var model = new PredefinedProductAttributeValueListModel
             {
-                Data = values.PaginationByRequestModel(searchModel).Select(value =>
+                Data = values.Select(value =>
                 {
                     //fill in model values from the entity
                     var predefinedProductAttributeValueModel = value.ToModel<PredefinedProductAttributeValueModel>();
@@ -201,7 +202,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     return predefinedProductAttributeValueModel;
                 }),
-                Total = values.Count
+                Total = values.TotalCount
             };
 
             return model;

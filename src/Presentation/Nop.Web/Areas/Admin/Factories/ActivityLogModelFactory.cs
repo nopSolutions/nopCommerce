@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
 using Nop.Services.Helpers;
+using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Logging;
+using Nop.Web.Framework.Models.DataTables;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -16,6 +20,7 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Fields
 
         private readonly IBaseAdminModelFactory _baseAdminModelFactory;
+        private readonly ILocalizationService _localizationService;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IDateTimeHelper _dateTimeHelper;
 
@@ -24,12 +29,171 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Ctor
 
         public ActivityLogModelFactory(IBaseAdminModelFactory baseAdminModelFactory,
+            ILocalizationService localizationService,
             ICustomerActivityService customerActivityService,
             IDateTimeHelper dateTimeHelper)
         {
             _baseAdminModelFactory = baseAdminModelFactory;
+            _localizationService = localizationService;
             _customerActivityService = customerActivityService;
             _dateTimeHelper = dateTimeHelper;
+        }
+
+        #endregion
+
+        #region Utilities
+
+        /// <summary>
+        /// Prepare activity log type models
+        /// </summary>
+        /// <returns>List of activity log type models</returns>
+        protected virtual IList<ActivityLogTypeModel> PrepareActivityLogTypeModels()
+        {
+            //prepare available activity log types
+            var availableActivityTypes = _customerActivityService.GetAllActivityTypes();
+            var models = availableActivityTypes.Select(activityType => activityType.ToModel<ActivityLogTypeModel>()).ToList();
+
+            return models;
+        }
+
+        /// <summary>
+        /// Prepare activity log type datatables models
+        /// </summary>
+        /// <param name="searchModel">Activity log types search model</param>
+        /// <returns>Datatables model</returns>
+        protected virtual DataTablesModel PrepareActivityLogTypeGridModel(ActivityLogTypeSearchModel searchModel)
+        {
+            //prepare common properties
+            var model = new DataTablesModel
+            {
+                Name = "activityLogType-grid",
+                Paging = false,
+                ServerSide = false,
+                Length = searchModel.PageSize,
+                LengthMenu = searchModel.AvailablePageSizes
+            };
+
+            //prepare model columns
+            model.ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(ActivityLogTypeModel.Name))
+                {
+                    Title = _localizationService.GetResource("Admin.Configuration.ActivityLog.ActivityLogType.Fields.Name"),
+                    AutoWidth = true
+                },
+                new ColumnProperty(nameof(ActivityLogTypeModel.Enabled))
+                {
+                    IsMasterCheckBox = true,
+                    Title = _localizationService.GetResource("Admin.Configuration.ActivityLog.ActivityLogType.Fields.Enabled"),
+                    Width =  "100",
+                    Render = new RenderCheckBox("checkbox_activity_types")
+                }
+            };
+
+            //prepare column definitions
+            model.ColumnDefinitions = new List<ColumnDefinition>
+            {
+                new ColumnDefinition()
+                {
+                    Targets = "-1",
+                    ClassName =  StyleColumn.CenterAll
+                }
+            };
+
+            //prepare grid data
+            model.Data = JsonConvert.SerializeObject(searchModel.ActivityLogTypeListModel.Select(typeModel => new
+            {
+                Id = typeModel.Id,
+                Name = typeModel.Name,
+                Enabled = typeModel.Enabled.ToString().ToLowerInvariant()
+            }).ToList());
+
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare activity log datatables models
+        /// </summary>
+        /// <param name="searchModel">Activity log search model</param>
+        /// <returns>Datatables model</returns>
+        protected virtual DataTablesModel PrepareActivityLogGridModel(ActivityLogSearchModel searchModel)
+        {
+            //prepare common properties
+            var model = new DataTablesModel
+            {
+                Name = "activityLog-grid",
+                UrlRead = new DataUrl("ListLogs", "ActivityLog", null),
+                UrlAction = new DataUrl("ActivityLogDelete", "ActivityLog", null),
+                SearchButtonId = "search-log",
+                SearchModelType = typeof(ActivityLogSearchModel),
+                Length = searchModel.PageSize,
+                LengthMenu = searchModel.AvailablePageSizes
+            };
+
+            //prepare filters to search
+            model.Filters = new List<string>()
+            {
+                nameof(ActivityLogSearchModel.CreatedOnTo),
+                nameof(ActivityLogSearchModel.CreatedOnFrom),
+                nameof(ActivityLogSearchModel.IpAddress),
+                nameof(ActivityLogSearchModel.ActivityLogTypeId)
+            };
+
+            //prepare model columns
+            model.ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(ActivityLogModel.Id)),
+                new ColumnProperty(nameof(ActivityLogModel.CustomerId)),
+                new ColumnProperty(nameof(ActivityLogModel.ActivityLogTypeName))
+                {
+                    Title = _localizationService.GetResource("Admin.Configuration.ActivityLog.ActivityLog.Fields.ActivityLogType"),
+                    Width = "200"
+                },
+                new ColumnProperty(nameof(ActivityLogModel.CustomerEmail))
+                {
+                    Title = _localizationService.GetResource("Admin.Configuration.ActivityLog.ActivityLog.Fields.Customer"),
+                    Width = "100",
+                    Render = new RenderLink(new DataUrl("~/Admin/Customer/Edit", nameof(ActivityLogModel.CustomerId)))
+                },
+                new ColumnProperty(nameof(ActivityLogModel.IpAddress))
+                {
+                    Title = _localizationService.GetResource("Admin.Customers.Customers.ActivityLog.IpAddress"),
+                    Width = "100"
+                },
+                new ColumnProperty(nameof(ActivityLogModel.Comment))
+                {
+                    Title = _localizationService.GetResource("Admin.Configuration.ActivityLog.ActivityLog.Fields.Comment")
+                },
+                new ColumnProperty(nameof(ActivityLogModel.CreatedOn))
+                {
+                    Title = _localizationService.GetResource("Admin.System.Log.Fields.CreatedOn"),
+                    Width = "200",
+                    Render = new RenderDate()
+                },
+                new ColumnProperty(nameof(ActivityLogModel.Id))
+                {
+                    Title = _localizationService.GetResource("Admin.Common.Delete"),
+                    Render = new RenderButton(_localizationService.GetResource("Admin.Common.Delete")) { Style = StyleButton.Danger }
+                }
+            };
+
+            //prepare column definitions
+            model.ColumnDefinitions = new List<ColumnDefinition>
+            {
+                new ColumnDefinition()
+                {
+                    Targets = "[0, 1]",
+                    Visible = false
+                },
+                new ColumnDefinition()
+                {
+                    Targets = "-1",
+                    ClassName =  StyleColumn.CenterAll,
+                    Width = "100"
+                }
+            };
+
+            return model;
         }
 
         #endregion
@@ -37,33 +201,22 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Methods
 
         /// <summary>
-        /// Prepare activity log container model
+        /// Prepare activity log types search model
         /// </summary>
-        /// <param name="activityLogContainerModel">Activity log container model</param>
-        /// <returns>Activity log container model</returns>
-        public virtual ActivityLogContainerModel PrepareActivityLogContainerModel(ActivityLogContainerModel activityLogContainerModel)
+        /// <param name="searchModel">Activity log types search model</param>
+        /// <returns>Activity log types search model</returns>
+        public virtual ActivityLogTypeSearchModel PrepareActivityLogTypeSearchModel(ActivityLogTypeSearchModel searchModel)
         {
-            if (activityLogContainerModel == null)
-                throw new ArgumentNullException(nameof(activityLogContainerModel));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
-            //prepare nested models
-            PrepareActivityLogSearchModel(activityLogContainerModel.ListLogs);
-            activityLogContainerModel.ListTypes = PrepareActivityLogTypeModels();
+            searchModel.ActivityLogTypeListModel = PrepareActivityLogTypeModels();
 
-            return activityLogContainerModel;
-        }
+            //prepare grid
+            searchModel.SetGridPageSize();
+            searchModel.Grid = PrepareActivityLogTypeGridModel(searchModel);
 
-        /// <summary>
-        /// Prepare activity log type models
-        /// </summary>
-        /// <returns>List of activity log type models</returns>
-        public virtual IList<ActivityLogTypeModel> PrepareActivityLogTypeModels()
-        {
-            //prepare available activity log types
-            var availableActivityTypes = _customerActivityService.GetAllActivityTypes();
-            var models = availableActivityTypes.Select(activityType => activityType.ToModel<ActivityLogTypeModel>()).ToList();
-
-            return models;
+            return searchModel;
         }
 
         /// <summary>
@@ -79,8 +232,9 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare available activity log types
             _baseAdminModelFactory.PrepareActivityLogTypes(searchModel.ActivityLogType);
 
-            //prepare page parameters
+            //prepare grid
             searchModel.SetGridPageSize();
+            searchModel.Grid = PrepareActivityLogGridModel(searchModel);
 
             return searchModel;
         }
@@ -94,7 +248,7 @@ namespace Nop.Web.Areas.Admin.Factories
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
-            
+
             //get parameters to filter log
             var startDateValue = searchModel.CreatedOnFrom == null ? null
                 : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.CreatedOnFrom.Value, _dateTimeHelper.CurrentTimeZone);
@@ -109,9 +263,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new ActivityLogListModel
+            var model = new ActivityLogListModel().PrepareToGrid(searchModel, activityLog, () =>
             {
-                Data = activityLog.Select(logItem =>
+                return activityLog.Select(logItem =>
                 {
                     //fill in model values from the entity
                     var logItemModel = logItem.ToModel<ActivityLogModel>();
@@ -123,9 +277,8 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     return logItemModel;
 
-                }),
-                Total = activityLog.TotalCount
-            };
+                });
+            });
 
             return model;
         }

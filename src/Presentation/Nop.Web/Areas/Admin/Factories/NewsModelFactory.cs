@@ -14,6 +14,7 @@ using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.News;
 using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -79,7 +80,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var newsItem = _newsService.GetNewsById(filterByNewsItemId ?? 0);
             PrepareNewsCommentSearchModel(newsContentModel.NewsComments, newsItem);
 
-            
+
 
             return newsContentModel;
         }
@@ -249,7 +250,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 approved: isApprovedOnly,
                 fromUtc: createdOnFromValue,
                 toUtc: createdOnToValue,
-                commentText: searchModel.SearchText);
+                commentText: searchModel.SearchText).ToPagedList(searchModel);
 
             //prepare store names (to avoid loading for each comment)
             var storeNames = _storeService.GetAllStores().ToDictionary(store => store.Id, store => store.Name);
@@ -257,10 +258,10 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare list model
             var model = new NewsCommentListModel
             {
-                Data = comments.PaginationByRequestModel(searchModel).Select(newsComment =>
+                Data = comments.Select(newsComment =>
                 {
                     //fill in model values from the entity
-                    var commentModel = newsComment.ToModel<NewsCommentModel>();                        
+                    var commentModel = newsComment.ToModel<NewsCommentModel>();
 
                     //convert dates to the user time
                     commentModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(newsComment.CreatedOnUtc, DateTimeKind.Utc);
@@ -274,7 +275,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     return commentModel;
                 }),
-                Total = comments.Count
+                Total = comments.TotalCount
             };
 
             return model;

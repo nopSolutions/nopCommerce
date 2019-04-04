@@ -10,7 +10,7 @@ using Nop.Services.Seo;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Areas.Admin.Models.Customers;
-using Nop.Web.Framework.Extensions;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -75,12 +75,12 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get customer roles
-            var customerRoles = _customerService.GetAllCustomerRoles(true);
+            var customerRoles = _customerService.GetAllCustomerRoles(true).ToPagedList(searchModel);
 
             //prepare grid model
             var model = new CustomerRoleListModel
             {
-                Data = customerRoles.PaginationByRequestModel(searchModel).Select(role =>
+                Data = customerRoles.Select(role =>
                 {
                     //fill in model values from the entity
                     var customerRoleModel = role.ToModel<CustomerRoleModel>();
@@ -90,7 +90,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     return customerRoleModel;
                 }),
-                Total = customerRoles.Count
+                Total = customerRoles.TotalCount
             };
 
             return model;
@@ -184,7 +184,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new CustomerRoleProductListModel
             {
                 //fill in model values from the entity
-                Data = products.Select(product => 
+                Data = products.Select(product =>
                 {
                     var productModel = product.ToModel<ProductModel>();
                     productModel.SeName = _urlRecordService.GetSeName(product, 0, true, false);

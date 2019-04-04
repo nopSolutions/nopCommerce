@@ -9,6 +9,7 @@ using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Messages;
 using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -87,7 +88,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get message templates
-            var messageTemplates = _messageTemplateService.GetAllMessageTemplates(storeId: searchModel.SearchStoreId);
+            var messageTemplates = _messageTemplateService
+                .GetAllMessageTemplates(storeId: searchModel.SearchStoreId).ToPagedList(searchModel);
 
             //prepare store names (to avoid loading for each message template)
             var stores = _storeService.GetAllStores().Select(store => new { store.Id, store.Name }).ToList();
@@ -95,7 +97,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare list model
             var model = new MessageTemplateListModel
             {
-                Data = messageTemplates.PaginationByRequestModel(searchModel).Select(messageTemplate =>
+                Data = messageTemplates.Select(messageTemplate =>
                 {
                     //fill in model values from the entity
                     var messageTemplateModel = messageTemplate.ToModel<MessageTemplateModel>();
@@ -113,7 +115,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     return messageTemplateModel;
                 }),
-                Total = messageTemplates.Count
+                Total = messageTemplates.TotalCount
             };
 
             return model;

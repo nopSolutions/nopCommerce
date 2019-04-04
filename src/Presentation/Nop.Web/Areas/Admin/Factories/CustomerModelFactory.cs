@@ -31,8 +31,8 @@ using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Areas.Admin.Models.Customers;
 using Nop.Web.Areas.Admin.Models.ShoppingCart;
-using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -249,39 +249,39 @@ namespace Nop.Web.Areas.Admin.Factories
                         case AttributeControlType.DropdownList:
                         case AttributeControlType.RadioList:
                         case AttributeControlType.Checkboxes:
+                        {
+                            if (!string.IsNullOrEmpty(selectedCustomerAttributes))
                             {
-                                if (!string.IsNullOrEmpty(selectedCustomerAttributes))
-                                {
-                                    //clear default selection
-                                    foreach (var item in attributeModel.Values)
-                                        item.IsPreSelected = false;
+                                //clear default selection
+                                foreach (var item in attributeModel.Values)
+                                    item.IsPreSelected = false;
 
-                                    //select new values
-                                    var selectedValues = _customerAttributeParser.ParseCustomerAttributeValues(selectedCustomerAttributes);
-                                    foreach (var attributeValue in selectedValues)
-                                        foreach (var item in attributeModel.Values)
-                                            if (attributeValue.Id == item.Id)
-                                                item.IsPreSelected = true;
-                                }
+                                //select new values
+                                var selectedValues = _customerAttributeParser.ParseCustomerAttributeValues(selectedCustomerAttributes);
+                                foreach (var attributeValue in selectedValues)
+                                    foreach (var item in attributeModel.Values)
+                                        if (attributeValue.Id == item.Id)
+                                            item.IsPreSelected = true;
                             }
-                            break;
+                        }
+                        break;
                         case AttributeControlType.ReadonlyCheckboxes:
-                            {
-                                //do nothing
-                                //values are already pre-set
-                            }
-                            break;
+                        {
+                            //do nothing
+                            //values are already pre-set
+                        }
+                        break;
                         case AttributeControlType.TextBox:
                         case AttributeControlType.MultilineTextbox:
+                        {
+                            if (!string.IsNullOrEmpty(selectedCustomerAttributes))
                             {
-                                if (!string.IsNullOrEmpty(selectedCustomerAttributes))
-                                {
-                                    var enteredText = _customerAttributeParser.ParseValues(selectedCustomerAttributes, attribute.Id);
-                                    if (enteredText.Any())
-                                        attributeModel.DefaultValue = enteredText[0];
-                                }
+                                var enteredText = _customerAttributeParser.ParseValues(selectedCustomerAttributes, attribute.Id);
+                                if (enteredText.Any())
+                                    attributeModel.DefaultValue = enteredText[0];
                             }
-                            break;
+                        }
+                        break;
                         case AttributeControlType.Datepicker:
                         case AttributeControlType.ColorSquares:
                         case AttributeControlType.ImageSquares:
@@ -844,12 +844,13 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //get customer addresses
             var addresses = customer.Addresses
-                .OrderByDescending(address => address.CreatedOnUtc).ThenByDescending(address => address.Id).ToList();
+                .OrderByDescending(address => address.CreatedOnUtc).ThenByDescending(address => address.Id).ToList()
+                .ToPagedList(searchModel);
 
             //prepare list model
             var model = new CustomerAddressListModel
             {
-                Data = addresses.PaginationByRequestModel(searchModel).Select(address =>
+                Data = addresses.Select(address =>
                 {
                     //fill in model values from the entity        
                     var addressModel = address.ToModel<AddressModel>();
@@ -861,7 +862,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     return addressModel;
                 }),
-                Total = addresses.Count
+                Total = addresses.TotalCount
             };
 
             return model;
@@ -959,12 +960,14 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(customer));
 
             //get customer shopping cart
-            var shoppingCart = customer.ShoppingCartItems.Where(item => item.ShoppingCartTypeId == searchModel.ShoppingCartTypeId).ToList();
+            var shoppingCart = customer.ShoppingCartItems
+                .Where(item => item.ShoppingCartTypeId == searchModel.ShoppingCartTypeId).ToList()
+                .ToPagedList(searchModel);
 
             //prepare list model
             var model = new CustomerShoppingCartListModel
             {
-                Data = shoppingCart.PaginationByRequestModel(searchModel).Select(item =>
+                Data = shoppingCart.Select(item =>
                 {
                     //fill in model values from the entity
                     var shoppingCartItemModel = item.ToModel<ShoppingCartItemModel>();
@@ -980,7 +983,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     return shoppingCartItemModel;
                 }),
-                Total = shoppingCart.Count
+                Total = shoppingCart.TotalCount
             };
 
             return model;

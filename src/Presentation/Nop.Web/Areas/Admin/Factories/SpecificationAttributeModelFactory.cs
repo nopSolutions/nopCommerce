@@ -5,8 +5,8 @@ using Nop.Services.Catalog;
 using Nop.Services.Localization;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Catalog;
-using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -180,12 +180,13 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(specificationAttribute));
 
             //get specification attribute options
-            var options = _specificationAttributeService.GetSpecificationAttributeOptionsBySpecificationAttribute(specificationAttribute.Id);
+            var options = _specificationAttributeService
+                .GetSpecificationAttributeOptionsBySpecificationAttribute(specificationAttribute.Id).ToPagedList(searchModel);
 
             //prepare list model
             var model = new SpecificationAttributeOptionListModel
             {
-                Data = options.PaginationByRequestModel(searchModel).Select(option =>
+                Data = options.Select(option =>
                 {
                     //fill in model values from the entity
                     var optionModel = option.ToModel<SpecificationAttributeOptionModel>();
@@ -196,7 +197,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     return optionModel;
                 }),
-                Total = options.Count
+                Total = options.TotalCount
             };
 
             return model;
@@ -266,7 +267,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new SpecificationAttributeProductListModel
             {
                 //fill in model values from the entity
-                Data = products.Select(product => 
+                Data = products.Select(product =>
                 {
                     var specificationAttributeProductModel = product.ToModel<SpecificationAttributeProductModel>();
                     specificationAttributeProductModel.ProductId = product.Id;

@@ -18,6 +18,7 @@ using Nop.Web.Areas.Admin.Models.Plugins;
 using Nop.Web.Areas.Admin.Models.Plugins.Marketplace;
 using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -181,12 +182,13 @@ namespace Nop.Web.Areas.Admin.Factories
             //filter visible plugins
             var plugins = _pluginService.GetPluginDescriptors<IPlugin>(group: group, loadMode: loadMode)
                 .Where(p => p.ShowInPluginsList)
-                .OrderBy(plugin => plugin.Group).ToList();
+                .OrderBy(plugin => plugin.Group).ToList()
+                .ToPagedList(searchModel);
 
             //prepare list model
             var model = new PluginListModel
             {
-                Data = plugins.PaginationByRequestModel(searchModel).Select(pluginDescriptor =>
+                Data = plugins.Select(pluginDescriptor =>
                 {
                     //fill in model values from the entity
                     var pluginModel = pluginDescriptor.ToPluginModel<PluginModel>();
@@ -198,7 +200,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     return pluginModel;
                 }),
-                Total = plugins.Count
+                Total = plugins.TotalCount
             };
 
             return model;
@@ -312,8 +314,7 @@ namespace Nop.Web.Areas.Admin.Factories
             });
 
             //prepare page parameters
-            searchModel.PageSize = 15;
-            searchModel.AvailablePageSizes = "15";
+            searchModel.SetGridPageSize(15, "15");
 
             return searchModel;
         }

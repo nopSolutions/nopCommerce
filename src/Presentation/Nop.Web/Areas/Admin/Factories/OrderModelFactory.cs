@@ -37,6 +37,8 @@ using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Areas.Admin.Models.Orders;
 using Nop.Web.Areas.Admin.Models.Reports;
 using Nop.Web.Framework.Extensions;
+using Nop.Web.Framework.Models.DataTables;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -789,6 +791,315 @@ namespace Nop.Web.Areas.Admin.Factories
             return searchModel;
         }
 
+        /// <summary>
+        /// Prepare oreder datatables model
+        /// </summary>
+        /// <param name="searchModel">Order search model</param>
+        /// <returns>Order datatables model</returns>
+        protected virtual DataTablesModel PrepareOrderGridModel(OrderSearchModel searchModel)
+        {
+            //prepare common properties
+            var model = new DataTablesModel
+            {
+                Name = "orders-grid",
+                UrlRead = new DataUrl("OrderList", "Order", null),
+                SearchModelType = typeof(OrderSearchModel),
+                SearchButtonId = "search-orders",
+                Length = searchModel.PageSize,
+                LengthMenu = searchModel.AvailablePageSizes,
+            };
+
+            //prepare filters to search
+            model.Filters = new List<string>()
+            {
+                nameof(searchModel.StartDate),
+                nameof(searchModel.EndDate),
+                nameof(searchModel.OrderStatusIds),
+                nameof(searchModel.PaymentStatusIds),
+                nameof(searchModel.ShippingStatusIds),
+                nameof(searchModel.StoreId),
+                nameof(searchModel.VendorId),
+                nameof(searchModel.WarehouseId),
+                nameof(searchModel.BillingEmail),
+                nameof(searchModel.BillingPhone),
+                nameof(searchModel.BillingLastName),
+                nameof(searchModel.BillingCountryId),
+                nameof(searchModel.PaymentMethodSystemName),
+                nameof(searchModel.ProductId),
+                nameof(searchModel.OrderNotes)
+            };
+
+            //prepare model columns
+            model.ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(OrderModel.CustomerId)),
+                new ColumnProperty(nameof(OrderModel.OrderStatusId)),
+                new ColumnProperty(nameof(OrderModel.Id))
+                {
+                    IsMasterCheckBox = true,
+                    Render = new RenderCheckBox("checkbox_orders"),
+                    Width = "50",
+                },
+                new ColumnProperty(nameof(OrderModel.CustomOrderNumber))
+                {
+                    Title = _localizationService.GetResource("Admin.Orders.Fields.CustomOrderNumber"),
+                    Width = "80"
+                }
+            };
+
+            //a vendor does not have access to this functionality
+            if (!searchModel.IsLoggedInAsVendor)
+            {
+                model.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.OrderStatus))
+                {
+                    Title = _localizationService.GetResource("Admin.Orders.Fields.OrderStatus"),
+                    Width = "100",
+                    Render = new RenderCustom("renderColumnOrderStatus")
+                });
+            }
+
+            model.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.PaymentStatus))
+            {
+                Title = _localizationService.GetResource("Admin.Orders.Fields.PaymentStatus"),
+                Width = "150"
+            });
+
+            //a vendor does not have access to this functionality
+            if (!searchModel.IsLoggedInAsVendor)
+            {
+                model.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.ShippingStatus))
+                {
+                    Title = _localizationService.GetResource("Admin.Orders.Fields.ShippingStatus"),
+                    Width = "150"
+                });
+            }
+
+            model.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.CustomerEmail))
+            {
+                Title = _localizationService.GetResource("Admin.Orders.Fields.Customer"),
+                Width = "250",
+                Render = new RenderLink(new DataUrl("~/Admin/Customer/Edit", nameof(OrderModel.CustomerId)))
+            });
+            model.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.StoreName))
+            {
+                Title = _localizationService.GetResource("Admin.Orders.Fields.Store"),
+                Width = "100"
+            });
+            model.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.CreatedOn))
+            {
+                Title = _localizationService.GetResource("Admin.Orders.Fields.CreatedOn"),
+                Width = "100",
+                Render = new RenderDate()
+            });
+
+            //a vendor does not have access to this functionality
+            if (!searchModel.IsLoggedInAsVendor)
+            {
+                model.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.OrderTotal))
+                {
+                    Title = _localizationService.GetResource("Admin.Orders.Fields.OrderTotal"),
+                    Width = "100",
+                });
+            }
+
+            model.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.Id))
+            {
+                Title = _localizationService.GetResource("Admin.Common.View"),
+                Width = "50",
+                Render = new RenderButtonEdit(new DataUrl("Edit"))
+            });
+
+            //prepare column definitions
+            model.ColumnDefinitions = new List<ColumnDefinition>
+            {
+                new ColumnDefinition()
+                {
+                    Targets = "[0,1]",
+                    Visible = false
+                },
+                new ColumnDefinition()
+                {
+                    Targets = "2",
+                    ClassName =  StyleColumn.CenterAll,
+                    Width = "50"
+                },
+                new ColumnDefinition()
+                {
+                    Targets = "-1",
+                    ClassName =  StyleColumn.CenterAll
+                }
+            };
+
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare shipment datatables model
+        /// </summary>
+        /// <param name="searchModel">Shipment search model</param>
+        /// <returns>Shipment  datatables model</returns>
+        protected virtual DataTablesModel PrepareShipmentGridModel(ShipmentSearchModel searchModel)
+        {
+            //prepare common properties
+            var model = new DataTablesModel
+            {
+                Name = "shipments-grid",
+                UrlRead = new DataUrl("ShipmentListSelect", "Order", null),
+                SearchButtonId = "search-shipments",
+                SearchModelType = typeof(ShipmentSearchModel),
+                Length = searchModel.PageSize,
+                LengthMenu = searchModel.AvailablePageSizes
+            };
+
+            //prepare filters to search
+            model.Filters = new List<string>()
+            {
+                nameof(searchModel.StartDate),
+                nameof(searchModel.EndDate),
+                nameof(searchModel.TrackingNumber),
+                nameof(searchModel.CountryId),
+                nameof(searchModel.StateProvinceId),
+                nameof(searchModel.County),
+                nameof(searchModel.City),
+                nameof(searchModel.WarehouseId),
+                nameof(searchModel.LoadNotShipped)
+            };
+
+            //prepare model columns
+            model.ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(null)
+                {
+                    Render = new RenderChildCaret(),
+                    Width = "5",
+                    ClassName =  StyleColumn.DetailsControl,
+                },
+                new ColumnProperty(nameof(ShipmentModel.Id))
+                {
+                    IsMasterCheckBox = true,
+                    Render = new RenderCheckBox("checkbox_shipments"),
+                    Width = "10",
+                },
+            };
+
+            model.ColumnCollection.Add(new ColumnProperty(nameof(ShipmentModel.Id))
+            {
+                Title = _localizationService.GetResource("Admin.Orders.Shipments.ID"),
+                Width = "50"                
+            });
+
+            model.ColumnCollection.Add(new ColumnProperty(nameof(ShipmentModel.CustomOrderNumber))
+            {
+                Title = _localizationService.GetResource("Admin.Orders.Shipments.CustomOrderNumber"),
+                Width = "100"
+            });
+
+            model.ColumnCollection.Add(new ColumnProperty(nameof(ShipmentModel.TrackingNumber))
+            {
+                Title = _localizationService.GetResource("Admin.Orders.Shipments.TrackingNumber"),
+                Width = "100"
+            });
+
+            model.ColumnCollection.Add(new ColumnProperty(nameof(ShipmentModel.TotalWeight))
+            {
+                Title = _localizationService.GetResource("Admin.Orders.Shipments.TotalWeight"),
+                Width = "100"
+            });
+
+            model.ColumnCollection.Add(new ColumnProperty(nameof(ShipmentModel.ShippedDate))
+            {
+                Title = _localizationService.GetResource("Admin.Orders.Shipments.ShippedDate"),
+                Width = "200",
+                Render = new RenderDate()
+            });
+            model.ColumnCollection.Add(new ColumnProperty(nameof(ShipmentModel.DeliveryDate))
+            {
+                Title = _localizationService.GetResource("Admin.Orders.Shipments.DeliveryDate"),
+                Width = "200",
+                Render = new RenderDate()
+            });
+
+            model.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.Id))
+            {
+                Title = _localizationService.GetResource("Admin.Common.View"),
+                Width = "50",
+                Render = new RenderButtonEdit(new DataUrl("~/Admin/Order/ShipmentDetails/"))
+            });
+
+            //prepare column definitions
+            model.ColumnDefinitions = new List<ColumnDefinition>
+            {
+                new ColumnDefinition()
+                {
+                    Targets = "[0]",                    
+                    Searchable = false
+                },
+                new ColumnDefinition()
+                {
+                    Targets = "[1]",
+                    Searchable = false
+                },
+                new ColumnDefinition()
+                {
+                    Targets = "-1",
+                    ClassName =  StyleColumn.CenterAll
+                }
+            };
+
+            var searchChildModel = new ShipmentItemSearchModel();
+
+            //prepare common properties for detail table
+            var detailModel = new DataTablesModel
+            {
+                Name = "shipments-grid",
+                UrlRead = new DataUrl("ShipmentsItemsByShipmentId", "Order", null),
+                SearchModelType = typeof(ShipmentItemSearchModel),
+                IsChildTable = true,
+                Paging = false,
+                Length = searchModel.PageSize,
+                LengthMenu = searchModel.AvailablePageSizes
+            };
+
+            //prepare filters to search
+            detailModel.Filters = new List<string>()
+            {
+                nameof(searchChildModel.ShipmentId)
+            };
+
+            detailModel.ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(ShipmentItemModel.ProductName))
+                {
+                    Title = _localizationService.GetResource("Admin.Orders.Shipments.Products.ProductName"),
+                    Width = "400"
+                },
+                new ColumnProperty(nameof(ShipmentItemModel.ShippedFromWarehouse))
+                {
+                    Title = _localizationService.GetResource("Admin.Orders.Shipments.Products.Warehouse"),
+                    Width = "150"
+                },
+                new ColumnProperty(nameof(ShipmentItemModel.QuantityInThisShipment))
+                {
+                    Title = _localizationService.GetResource("Admin.Orders.Shipments.Products.QtyShipped"),
+                    Width = "150"
+                },
+                new ColumnProperty(nameof(ShipmentItemModel.ItemWeight))
+                {
+                    Title = _localizationService.GetResource("Admin.Orders.Shipments.Products.ItemWeight"),
+                    Width = "150"
+                },
+                new ColumnProperty(nameof(ShipmentItemModel.ItemDimensions))
+                {
+                    Title = _localizationService.GetResource("Admin.Orders.Shipments.Products.ItemDimensions"),
+                    Width = "150"
+                }
+            };
+
+            model.ChildTable = detailModel;
+
+            return model;
+        }
+
         #endregion
 
         #region Methods
@@ -865,10 +1176,11 @@ namespace Nop.Web.Areas.Admin.Factories
                 .Select(country => new SelectListItem { Text = country.Name, Value = country.Id.ToString() }).ToList();
             searchModel.AvailableCountries.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
 
-            searchModel.HideStoresList = _catalogSettings.IgnoreStoreLimitations || searchModel.AvailableStores.SelectionIsNotPossible();
-
-            //prepare page parameters
+            //prepare grid
             searchModel.SetGridPageSize();
+            searchModel.Grid = PrepareOrderGridModel(searchModel);
+
+            searchModel.HideStoresList = _catalogSettings.IgnoreStoreLimitations || searchModel.AvailableStores.SelectionIsNotPossible();
 
             return searchModel;
         }
@@ -916,10 +1228,10 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new OrderListModel
+            var model = new OrderListModel().PrepareToGrid(searchModel, orders, () =>
             {
                 //fill in model values from the entity
-                Data = orders.Select(order =>
+                return orders.Select(order =>
                 {
                     //fill in model values from the entity
                     var orderModel = new OrderModel
@@ -930,6 +1242,7 @@ namespace Nop.Web.Areas.Admin.Factories
                         ShippingStatusId = order.ShippingStatusId,
                         CustomerEmail = order.BillingAddress.Email,
                         CustomerFullName = $"{order.BillingAddress.FirstName} {order.BillingAddress.LastName}",
+                        CustomerId = order.CustomerId,
                         CustomOrderNumber = order.CustomOrderNumber
                     };
 
@@ -944,9 +1257,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     orderModel.OrderTotal = _priceFormatter.FormatPrice(order.OrderTotal, true, false);
 
                     return orderModel;
-                }),
-                Total = orders.TotalCount
-            };
+                });
+            });
 
             return model;
         }
@@ -1287,6 +1599,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
+            searchModel.Grid = PrepareShipmentGridModel(searchModel);
 
             return searchModel;
         }
@@ -1323,10 +1636,10 @@ namespace Nop.Web.Areas.Admin.Factories
                 searchModel.PageSize);
 
             //prepare list model
-            var model = new ShipmentListModel
+            var model = new ShipmentListModel().PrepareToGrid(searchModel, shipments, () =>
             {
                 //fill in model values from the entity
-                Data = shipments.Select(shipment =>
+                return shipments.Select(shipment =>
                 {
                     //fill in model values from the entity
                     var shipmentModel = shipment.ToModel<ShipmentModel>();
@@ -1348,9 +1661,8 @@ namespace Nop.Web.Areas.Admin.Factories
                         shipmentModel.TotalWeight = $"{shipment.TotalWeight:F2} [{_measureService.GetMeasureWeightById(_measureSettings.BaseWeightId)?.Name}]";
 
                     return shipmentModel;
-                }),
-                Total = shipments.TotalCount
-            };
+                });
+            });
 
             return model;
         }
@@ -1507,11 +1819,13 @@ namespace Nop.Web.Areas.Admin.Factories
 
             shipments = shipments.OrderBy(shipment => shipment.CreatedOnUtc).ToList();
 
+            var pagedShipments = shipments.ToPagedList(searchModel);
+
             //prepare list model
             var model = new OrderShipmentListModel
             {
                 //fill in model values from the entity
-                Data = shipments.PaginationByRequestModel(searchModel).Select(shipment =>
+                Data = pagedShipments.Select(shipment =>
                 {
                     //fill in model values from the entity
                     var shipmentModel = shipment.ToModel<ShipmentModel>();
@@ -1535,7 +1849,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     return shipmentModel;
                 }),
-                Total = shipments.Count
+                Total = pagedShipments.TotalCount
             };
 
             return model;
@@ -1556,13 +1870,13 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(shipment));
 
             //get shipments
-            var shipmentItems = shipment.ShipmentItems.ToList();
+            var shipmentItems = shipment.ShipmentItems.ToList().ToPagedList(searchModel);
 
             //prepare list model
-            var model = new ShipmentItemListModel
+            var model = new ShipmentItemListModel().PrepareToGrid(searchModel, shipmentItems, () =>
             {
                 //fill in model values from the entity
-                Data = shipmentItems.PaginationByRequestModel(searchModel).Select(item =>
+                return shipmentItems.Select(item =>
                 {
                     //fill in model values from the entity
                     var shipmentItemModel = new ShipmentItemModel
@@ -1590,9 +1904,8 @@ namespace Nop.Web.Areas.Admin.Factories
                         $"{orderItem.Product.Length:F2} x {orderItem.Product.Width:F2} x {orderItem.Product.Height:F2} [{baseDimension}]";
 
                     return shipmentItemModel;
-                }),
-                Total = shipmentItems.Count
-            };
+                });
+            });
 
             return model;
         }
@@ -1612,13 +1925,13 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(order));
 
             //get notes
-            var orderNotes = order.OrderNotes.OrderByDescending(on => on.CreatedOnUtc).ToList();
+            var orderNotes = order.OrderNotes.OrderByDescending(on => on.CreatedOnUtc).ToList().ToPagedList(searchModel);
 
             //prepare list model
             var model = new OrderNoteListModel
             {
                 //fill in model values from the entity
-                Data = orderNotes.PaginationByRequestModel(searchModel).Select(orderNote =>
+                Data = orderNotes.Select(orderNote =>
                 {
                     //fill in model values from the entity
                     var orderNoteModel = orderNote.ToModel<OrderNoteModel>();
@@ -1632,7 +1945,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     return orderNoteModel;
                 }),
-                Total = orderNotes.Count
+                Total = orderNotes.TotalCount
             };
 
             return model;
@@ -1649,8 +1962,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //prepare page parameters
-            searchModel.PageSize = 5;
-            searchModel.AvailablePageSizes = "5";
+            searchModel.SetGridPageSize(5, "5");
 
             return searchModel;
         }
@@ -1710,10 +2022,12 @@ namespace Nop.Web.Areas.Admin.Factories
                 _orderReportService.OrderAverageReport(0, OrderStatus.Cancelled)
             };
 
+            var pagedList = new PagedList<OrderAverageReportLineSummary>(report, 0, int.MaxValue);
+
             //prepare list model
             var model = new OrderAverageReportListModel
             {
-                Data = report.Select(reportItem => new OrderAverageReportModel
+                Data = pagedList.Select(reportItem => new OrderAverageReportModel
                 {
                     OrderStatus = _localizationService.GetLocalizedEnum(reportItem.OrderStatus),
                     SumTodayOrders = _priceFormatter.FormatPrice(reportItem.SumTodayOrders, true, false),
@@ -1722,7 +2036,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     SumThisYearOrders = _priceFormatter.FormatPrice(reportItem.SumThisYearOrders, true, false),
                     SumAllTimeOrders = _priceFormatter.FormatPrice(reportItem.SumAllTimeOrders, true, false)
                 }),
-                Total = report.Count
+                Total = pagedList.TotalCount
             };
 
             return model;
@@ -1781,11 +2095,13 @@ namespace Nop.Web.Areas.Admin.Factories
                 ViewLink = urlHelper.Action("List", "Order", new { orderStatuses = string.Join(",", orderStatuses) })
             });
 
+            var pagedList = new PagedList<OrderIncompleteReportModel>(orderIncompleteReportModels, 0, int.MaxValue);
+
             //prepare list model
             var model = new OrderIncompleteReportListModel
             {
-                Data = orderIncompleteReportModels,
-                Total = orderIncompleteReportModels.Count
+                Data = pagedList,
+                Total = pagedList.TotalCount
             };
 
             return model;
