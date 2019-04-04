@@ -384,19 +384,19 @@ set @resources='
     <Value>Search by a specific store.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Fields.PageSizeOptions">
-    <Value>Page Size options</Value>
+    <Value>Page size options</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.PageSizeOptions">
-    <Value>Page Size options</Value>
+    <Value>Page size options</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductsByTagPageSizeOptions">
-    <Value>''Products by tag'' Page Size options</Value>
+    <Value>''Products by tag'' page size options</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.SearchPagePageSizeOptions">
     <Value>Search page. Page size options</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Vendors.Fields.PageSizeOptions">
-    <Value>Page Size options</Value>
+    <Value>Page size options</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.IncludeInSitemap">
     <Value>Include in sitemap</Value>
@@ -559,6 +559,15 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.List.SearchIncludeSubCategories.Hint">
     <Value>Check to search in subcategories.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.PageSizeOptions.ShouldHaveUniqueItems">
+    <Value>Page size options should not have duplicate items.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.PageSizeOptions.ShouldHaveUniqueItems">
+    <Value>Page size options should have unique items.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.PageSizeOptions.ShouldHaveUniqueItems">
+    <Value>Page size options should have unique items.</Value>
   </LocaleResource>
 </Language>'
 
