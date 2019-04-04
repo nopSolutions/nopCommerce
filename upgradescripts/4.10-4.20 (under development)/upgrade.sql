@@ -554,6 +554,12 @@ set @resources='
   <LocaleResource Name="Admin.System.Warnings.ProxyConnection.OK">
     <Value>Proxy connection is OK</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.List.SearchIncludeSubCategories">
+    <Value>Search subcategories</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.List.SearchIncludeSubCategories.Hint">
+    <Value>Check to search in subcategories.</Value>
+  </LocaleResource>
 </Language>'
 
 CREATE TABLE #LocaleStringResourceTmp

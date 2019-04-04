@@ -3349,10 +3349,10 @@
     <Value>Search by a specific category.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.List.SearchIncludeSubCategories">
-    <Value>Search sub categories</Value>
+    <Value>Search subcategories</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.List.SearchIncludeSubCategories.Hint">
-    <Value>Check to search in sub categories.</Value>
+    <Value>Check to search in subcategories.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.List.SearchManufacturer">
     <Value>Manufacturer</Value>
