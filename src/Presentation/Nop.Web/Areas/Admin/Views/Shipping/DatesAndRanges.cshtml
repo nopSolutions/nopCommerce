@@ -12,7 +12,7 @@
     var hideDatesBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideDatesBlockAttributeName);
 
     const string hideRangesBlockAttributeName = "DatesAndRangesPage.HideRangesBlock";
-    var hideRangesBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideRangesBlockAttributeName, defaultValue: true);
+    var hideRangesBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideRangesBlockAttributeName);
 }
 
 
