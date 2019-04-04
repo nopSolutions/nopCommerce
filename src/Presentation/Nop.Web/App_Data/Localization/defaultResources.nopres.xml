@@ -2226,9 +2226,6 @@
   <LocaleResource Name="Admin.Catalog.Categories.List.SearchStore.Hint">
     <Value>Search by a specific store.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Categories.Manage">
-    <Value>Manage Categories</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Mappings">
     <Value>Mappings</Value>
   </LocaleResource>
@@ -8760,9 +8757,6 @@
   <LocaleResource Name="Admin.Configuration.Shipping.Restrictions.Description">
     <Value>Please mark the checkbox(es) for the country or countries in which you want the shipping method(s) not available</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Shipping.Restrictions.Manage">
-    <Value>Shipping method restrictions</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Shipping.Restrictions.Updated">
     <Value>The settings have been updated successfully.</Value>
   </LocaleResource>
@@ -9251,9 +9245,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Forums.ForumGroup.Updated">
     <Value>The forum group has been updated successfully.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Forums.Manage">
-    <Value>Manage Forums</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates">
     <Value>Message templates</Value>

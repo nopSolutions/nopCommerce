@@ -2,7 +2,7 @@
 
 @{
     //page title
-    ViewBag.Title = T("Admin.Catalog.Categories.Manage").Text;
+    ViewBag.Title = T("Admin.Catalog.Categories").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Categories");
 }
@@ -15,7 +15,7 @@
 <nop-antiforgery-token />
 <div class="content-header clearfix">
     <h1 class="pull-left">
-        @T("Admin.Catalog.Categories.Manage")
+        @T("Admin.Catalog.Categories")
     </h1>
     <div class="pull-right">
         <a asp-action="Create" class="btn bg-blue">
