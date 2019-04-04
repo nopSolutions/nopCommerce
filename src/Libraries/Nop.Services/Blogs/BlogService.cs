@@ -199,7 +199,7 @@ namespace Nop.Services.Blogs
         }
 
         /// <summary>
-        /// Inserts an blog post
+        /// Inserts a blog post
         /// </summary>
         /// <param name="blogPost">Blog post</param>
         public virtual void InsertBlogPost(BlogPost blogPost)

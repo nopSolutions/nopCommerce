@@ -71,7 +71,7 @@ namespace Nop.Services.Blogs
         IList<BlogPostTag> GetAllBlogPostTags(int storeId, int languageId, bool showHidden = false);
 
         /// <summary>
-        /// Inserts an blog post
+        /// Inserts a blog post
         /// </summary>
         /// <param name="blogPost">Blog post</param>
         void InsertBlogPost(BlogPost blogPost);
