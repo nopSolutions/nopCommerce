@@ -2,6 +2,8 @@
 @model IList<ActivityLogTypeModel>
 
 @{
+    //page title
+    ViewBag.Title = T("Admin.Configuration.ActivityLog.ActivityLogType").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Activity types");
 }
