@@ -335,7 +335,71 @@
         {
             @await Html.PartialAsync("_CustomerAttributes", Model.CustomerAttributes)
         }
-
+        <div class="form-group">
+            <div class="col-md-3">
+                <nop-label asp-for="IsTaxExempt" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="IsTaxExempt" />
+                <span asp-validation-for="IsTaxExempt"></span>
+            </div>
+        </div>
+        @if (Model.DisplayVatNumber)
+        {
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-label asp-for="VatNumber" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="VatNumber" />
+                    <div class="margin-t-5">
+                        (@string.Format(T("Admin.Customers.Customers.Fields.VatNumberStatus").Text, Model.VatNumberStatusNote))
+                        <button type="submit" name="markVatNumberAsValid" class="btn btn-primary">
+                            @T("Admin.Customers.Customers.Fields.VatNumber.MarkAsValid")
+                        </button>
+                        <button type="submit" name="markVatNumberAsInvalid" class="btn bg-red">
+                            @T("Admin.Customers.Customers.Fields.VatNumber.MarkAsInvalid")
+                        </button>
+                    </div>
+                    <span asp-validation-for="VatNumber"></span>
+                </div>
+            </div>
+        }
+        @if (Model.AllowCustomersToSetTimeZone)
+        {
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-label asp-for="TimeZoneId" />
+                </div>
+                <div class="col-md-9">
+                    <nop-select asp-for="TimeZoneId" asp-items="Model.AvailableTimeZones" />
+                    <span asp-validation-for="TimeZoneId"></span>
+                </div>
+            </div>
+        }
+        @if (Model.AvailableNewsletterSubscriptionStores != null && Model.AvailableNewsletterSubscriptionStores.Count > 0)
+        {
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-label asp-for="SelectedNewsletterSubscriptionStoreIds" />
+                </div>
+                <div class="col-md-9">
+                    @foreach (var store in Model.AvailableNewsletterSubscriptionStores)
+                    {
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" name="SelectedNewsletterSubscriptionStoreIds" value="@store.Value" checked="@store.Selected" />
+                                (@(store.Text))
+                            </label>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+        else
+        {
+            @T("Admin.Customers.Customers.Fields.CustomerRoles.NoRoles")
+        }
         <div class="form-group">
             <div class="col-md-3">
                 <nop-label asp-for="SelectedCustomerRoleIds" />
@@ -380,36 +444,6 @@
                 <em>@T("Admin.Customers.Customers.VendorShouldBeInVendorsRole")</em>
             </div>
         </div>
-        <div class="form-group">
-            <div class="col-md-3">
-                <nop-label asp-for="AdminComment" />
-            </div>
-            <div class="col-md-9">
-                <nop-textarea asp-for="AdminComment" />
-                <span asp-validation-for="AdminComment"></span>
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-md-3">
-                <nop-label asp-for="IsTaxExempt" />
-            </div>
-            <div class="col-md-9">
-                <nop-editor asp-for="IsTaxExempt" />
-                <span asp-validation-for="IsTaxExempt"></span>
-            </div>
-        </div>
-        @if (Model.AllowCustomersToSetTimeZone)
-        {
-            <div class="form-group">
-                <div class="col-md-3">
-                    <nop-label asp-for="TimeZoneId" />
-                </div>
-                <div class="col-md-9">
-                    <nop-select asp-for="TimeZoneId" asp-items="Model.AvailableTimeZones" />
-                    <span asp-validation-for="TimeZoneId"></span>
-                </div>
-            </div>
-        }
         @if (Model.AffiliateId > 0)
         {
             <div class="form-group">
@@ -424,50 +458,6 @@
                 </div>
             </div>
         }
-        @if (Model.DisplayVatNumber)
-        {
-            <div class="form-group">
-                <div class="col-md-3">
-                    <nop-label asp-for="VatNumber" />
-                </div>
-                <div class="col-md-9">
-                    <nop-editor asp-for="VatNumber" />
-                    <div class="margin-t-5">
-                        (@string.Format(T("Admin.Customers.Customers.Fields.VatNumberStatus").Text, Model.VatNumberStatusNote))
-                        <button type="submit" name="markVatNumberAsValid" class="btn btn-primary">
-                            @T("Admin.Customers.Customers.Fields.VatNumber.MarkAsValid")
-                        </button>
-                        <button type="submit" name="markVatNumberAsInvalid" class="btn bg-red">
-                            @T("Admin.Customers.Customers.Fields.VatNumber.MarkAsInvalid")
-                        </button>
-                    </div>
-                    <span asp-validation-for="VatNumber"></span>
-                </div>
-            </div>
-        }
-        @if (Model.AvailableNewsletterSubscriptionStores != null && Model.AvailableNewsletterSubscriptionStores.Count > 0)
-        {
-            <div class="form-group">
-                <div class="col-md-3">
-                    <nop-label asp-for="SelectedNewsletterSubscriptionStoreIds" />
-                </div>
-                <div class="col-md-9">
-                    @foreach (var store in Model.AvailableNewsletterSubscriptionStores)
-                    {
-                        <div class="checkbox">
-                            <label>
-                                <input type="checkbox" name="SelectedNewsletterSubscriptionStoreIds" value="@store.Value" checked="@store.Selected" />
-                                (@(store.Text))
-                            </label>
-                        </div>
-                    }
-                </div>
-            </div>
-        }
-        else
-        {
-            @T("Admin.Customers.Customers.Fields.CustomerRoles.NoRoles")
-        }
         <div class="form-group">
             <div class="col-md-3">
                 <nop-label asp-for="Active" />
@@ -475,6 +465,15 @@
             <div class="col-md-9">
                 <nop-editor asp-for="Active" />
                 <span asp-validation-for="Active"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-3">
+                <nop-label asp-for="AdminComment" />
+            </div>
+            <div class="col-md-9">
+                <nop-textarea asp-for="AdminComment" />
+                <span asp-validation-for="AdminComment"></span>
             </div>
         </div>
         @if (Model.Id > 0 && !string.IsNullOrEmpty(Model.RegisteredInStore))
