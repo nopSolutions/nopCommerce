@@ -12,19 +12,19 @@
     var hideCheckoutBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideCheckoutBlockAttributeName);
 
     const string hideOrderTotalsBlockAttributeName = "OrderSettingsPage.HideOrderTotalsBlock";
-    var hideOrderTotalsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideOrderTotalsBlockAttributeName);
+    var hideOrderTotalsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideOrderTotalsBlockAttributeName, defaultValue: true);
 
     const string hideCommonBlockAttributeName = "OrderSettingsPage.HideCommonBlock";
-    var hideCommonBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideCommonBlockAttributeName);
+    var hideCommonBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideCommonBlockAttributeName, defaultValue: true);
 
     const string hidePdfInvoiceBlockAttributeName = "OrderSettingsPage.HidePdfInvoiceBlock";
-    var hidePdfInvoiceBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hidePdfInvoiceBlockAttributeName);
+    var hidePdfInvoiceBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hidePdfInvoiceBlockAttributeName, defaultValue: true);
 
     const string hideGiftCardsBlockAttributeName = "OrderSettingsPage.HideGiftCardsBlock";
-    var hideGiftCardsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideGiftCardsBlockAttributeName);
+    var hideGiftCardsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideGiftCardsBlockAttributeName, defaultValue: true);
 
     const string hideReturnRequestBlockAttributeName = "OrderSettingsPage.HideReturnRequestBlock";
-    var hideReturnRequestBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideReturnRequestBlockAttributeName);
+    var hideReturnRequestBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideReturnRequestBlockAttributeName, defaultValue: true);
 }
 
 <form asp-controller="Setting" asp-action="Order" method="post">
