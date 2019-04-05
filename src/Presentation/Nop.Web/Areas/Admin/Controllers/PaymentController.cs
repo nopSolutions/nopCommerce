@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using Nop.Core.Domain.Payments;
@@ -145,7 +146,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         //we use 2048 value because in some cases default value (1024) is too small for this action
         [RequestFormLimits(ValueCountLimit = 2048)]
         [HttpPost, ActionName("MethodRestrictions")]
-        public virtual IActionResult MethodRestrictionsSave(PaymentMethodsModel model)
+        public virtual IActionResult MethodRestrictionsSave(PaymentMethodsModel model, IFormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePaymentMethods))
                 return AccessDeniedView();
@@ -156,8 +157,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             foreach (var pm in paymentMethods)
             {
                 var formKey = "restrict_" + pm.PluginDescriptor.SystemName;
-                var countryIdsToRestrict = (!StringValues.IsNullOrEmpty(model.Form[formKey])
-                        ? model.Form[formKey].ToString().Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList()
+                var countryIdsToRestrict = (!StringValues.IsNullOrEmpty(form[formKey])
+                        ? form[formKey].ToString().Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList()
                         : new List<string>())
                     .Select(x => Convert.ToInt32(x)).ToList();
 

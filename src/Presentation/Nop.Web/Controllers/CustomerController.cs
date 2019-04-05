@@ -265,7 +265,8 @@ namespace Nop.Web.Controllers
             return attributesXml;
         }
 
-        protected virtual void LogGdpr(Customer customer, CustomerInfoModel oldCustomerInfoModel, CustomerInfoModel newCustomerInfoModel)
+        protected virtual void LogGdpr(Customer customer, CustomerInfoModel oldCustomerInfoModel, 
+            CustomerInfoModel newCustomerInfoModel, IFormCollection form)
         {
             try
             {
@@ -275,7 +276,7 @@ namespace Nop.Web.Controllers
                 {
                     var previousConsentValue = _gdprService.IsConsentAccepted(consent.Id, _workContext.CurrentCustomer.Id);
                     var controlId = $"consent{consent.Id}";
-                    var cbConsent = newCustomerInfoModel.Form[controlId];
+                    var cbConsent = form[controlId];
                     if (!StringValues.IsNullOrEmpty(cbConsent) && cbConsent.ToString().Equals("on"))
                     {
                         //agree
@@ -672,7 +673,7 @@ namespace Nop.Web.Controllers
         [PublicAntiForgery]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
-        public virtual IActionResult Register(RegisterModel model, string returnUrl, bool captchaValid)
+        public virtual IActionResult Register(RegisterModel model, string returnUrl, bool captchaValid, IFormCollection form)
         {
             //check whether registration is allowed
             if (_customerSettings.UserRegistrationType == UserRegistrationType.Disabled)
@@ -693,7 +694,7 @@ namespace Nop.Web.Controllers
             customer.RegisteredInStoreId = _storeContext.CurrentStore.Id;
 
             //custom customer attributes
-            var customerAttributesXml = ParseCustomCustomerAttributes(model.Form);
+            var customerAttributesXml = ParseCustomCustomerAttributes(form);
             var customerAttributeWarnings = _customerAttributeParser.GetAttributeWarnings(customerAttributesXml);
             foreach (var error in customerAttributeWarnings)
             {
@@ -836,7 +837,7 @@ namespace Nop.Web.Controllers
                         foreach (var consent in consents)
                         {
                             var controlId = $"consent{consent.Id}";
-                            var cbConsent = model.Form[controlId];
+                            var cbConsent = form[controlId];
                             if (!StringValues.IsNullOrEmpty(cbConsent) && cbConsent.ToString().Equals("on"))
                             {
                                 //agree
@@ -1051,7 +1052,7 @@ namespace Nop.Web.Controllers
 
         [HttpPost]
         [PublicAntiForgery]
-        public virtual IActionResult Info(CustomerInfoModel model)
+        public virtual IActionResult Info(CustomerInfoModel model, IFormCollection form)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return Challenge();
@@ -1065,7 +1066,7 @@ namespace Nop.Web.Controllers
                 oldCustomerModel = _customerModelFactory.PrepareCustomerInfoModel(oldCustomerModel, customer, false);
 
             //custom customer attributes
-            var customerAttributesXml = ParseCustomCustomerAttributes(model.Form);
+            var customerAttributesXml = ParseCustomCustomerAttributes(form);
             var customerAttributeWarnings = _customerAttributeParser.GetAttributeWarnings(customerAttributesXml);
             foreach (var error in customerAttributeWarnings)
             {
@@ -1205,7 +1206,7 @@ namespace Nop.Web.Controllers
 
                     //GDPR
                     if (_gdprSettings.GdprEnabled)
-                        LogGdpr(customer, oldCustomerModel, model);
+                        LogGdpr(customer, oldCustomerModel, model, form);
 
                     return RedirectToRoute("CustomerInfo");
                 }
@@ -1359,7 +1360,7 @@ namespace Nop.Web.Controllers
 
         [HttpPost]
         [PublicAntiForgery]
-        public virtual IActionResult AddressAdd(CustomerAddressEditModel model)
+        public virtual IActionResult AddressAdd(CustomerAddressEditModel model, IFormCollection form)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return Challenge();
@@ -1367,7 +1368,7 @@ namespace Nop.Web.Controllers
             var customer = _workContext.CurrentCustomer;
 
             //custom address attributes
-            var customAttributes = _addressAttributeParser.ParseCustomAddressAttributes(model.Form);
+            var customAttributes = _addressAttributeParser.ParseCustomAddressAttributes(form);
             var customAttributeWarnings = _addressAttributeParser.GetAttributeWarnings(customAttributes);
             foreach (var error in customAttributeWarnings)
             {
@@ -1427,7 +1428,7 @@ namespace Nop.Web.Controllers
 
         [HttpPost]
         [PublicAntiForgery]
-        public virtual IActionResult AddressEdit(CustomerAddressEditModel model, int addressId)
+        public virtual IActionResult AddressEdit(CustomerAddressEditModel model, int addressId, IFormCollection form)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return Challenge();
@@ -1440,7 +1441,7 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("CustomerAddresses");
 
             //custom address attributes
-            var customAttributes = _addressAttributeParser.ParseCustomAddressAttributes(model.Form);
+            var customAttributes = _addressAttributeParser.ParseCustomAddressAttributes(form);
             var customAttributeWarnings = _addressAttributeParser.GetAttributeWarnings(customAttributes);
             foreach (var error in customAttributeWarnings)
             {

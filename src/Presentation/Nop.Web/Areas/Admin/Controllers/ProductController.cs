@@ -595,10 +595,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
         }
 
-        protected virtual void SaveConditionAttributes(ProductAttributeMapping productAttributeMapping, ProductAttributeConditionModel model)
+        protected virtual void SaveConditionAttributes(ProductAttributeMapping productAttributeMapping, 
+            ProductAttributeConditionModel model, IFormCollection form)
         {
             string attributesXml = null;
-            var form = model.Form;
             if (model.EnableCondition)
             {
                 var attribute = _productAttributeService.GetProductAttributeMappingById(model.SelectedProductAttributeId);
@@ -2719,7 +2719,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public virtual IActionResult ProductAttributeMappingEdit(ProductAttributeMappingModel model, bool continueEditing)
+        public virtual IActionResult ProductAttributeMappingEdit(ProductAttributeMappingModel model, bool continueEditing, IFormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -2757,7 +2757,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             UpdateLocales(productAttributeMapping, model);
 
-            SaveConditionAttributes(productAttributeMapping, model.ConditionModel);
+            SaveConditionAttributes(productAttributeMapping, model.ConditionModel, form);
 
             _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.Attributes.Updated"));
 
@@ -3176,7 +3176,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult ProductAttributeCombinationCreatePopup(int productId, ProductAttributeCombinationModel model)
+        public virtual IActionResult ProductAttributeCombinationCreatePopup(int productId, ProductAttributeCombinationModel model, IFormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -3192,7 +3192,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //attributes
             var warnings = new List<string>();
-            var attributesXml = GetAttributesXmlForProductAttributeCombination(model.Form, warnings, product.Id);
+            var attributesXml = GetAttributesXmlForProductAttributeCombination(form, warnings, product.Id);
 
             warnings.AddRange(_shoppingCartService.GetShoppingCartItemAttributeWarnings(_workContext.CurrentCustomer,
                 ShoppingCartType.ShoppingCart, product, 1, attributesXml, true));
@@ -3314,7 +3314,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult ProductAttributeCombinationEditPopup(ProductAttributeCombinationModel model)
+        public virtual IActionResult ProductAttributeCombinationEditPopup(ProductAttributeCombinationModel model, IFormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -3335,7 +3335,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //attributes
             var warnings = new List<string>();
-            var attributesXml = GetAttributesXmlForProductAttributeCombination(model.Form, warnings, product.Id);
+            var attributesXml = GetAttributesXmlForProductAttributeCombination(form, warnings, product.Id);
 
             warnings.AddRange(_shoppingCartService.GetShoppingCartItemAttributeWarnings(_workContext.CurrentCustomer,
                 ShoppingCartType.ShoppingCart, product, 1, attributesXml, true));

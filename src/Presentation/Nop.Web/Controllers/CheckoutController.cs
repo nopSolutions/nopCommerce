@@ -273,7 +273,7 @@ namespace Nop.Web.Controllers
 
         #region Methods (multistep checkout)
 
-        public virtual IActionResult BillingAddress()
+        public virtual IActionResult BillingAddress(IFormCollection form)
         {
             //validation
             if (_orderSettings.CheckoutDisabled)
@@ -304,7 +304,7 @@ namespace Nop.Web.Controllers
 
                 TryValidateModel(model);
                 TryValidateModel(model.BillingNewAddress);
-                return NewBillingAddress(model);
+                return NewBillingAddress(model, form);
             }
 
             return View(model);
@@ -346,7 +346,7 @@ namespace Nop.Web.Controllers
 
         [HttpPost, ActionName("BillingAddress")]
         [FormValueRequired("nextstep")]
-        public virtual IActionResult NewBillingAddress(CheckoutBillingAddressModel model)
+        public virtual IActionResult NewBillingAddress(CheckoutBillingAddressModel model, IFormCollection form)
         {
             //validation
             if (_orderSettings.CheckoutDisabled)
@@ -364,7 +364,7 @@ namespace Nop.Web.Controllers
                 return Challenge();
 
             //custom address attributes
-            var customAttributes = _addressAttributeParser.ParseCustomAddressAttributes(model.Form);
+            var customAttributes = _addressAttributeParser.ParseCustomAddressAttributes(form);
             var customAttributeWarnings = _addressAttributeParser.GetAttributeWarnings(customAttributes);
             foreach (var error in customAttributeWarnings)
             {
@@ -474,7 +474,7 @@ namespace Nop.Web.Controllers
 
         [HttpPost, ActionName("ShippingAddress")]
         [FormValueRequired("nextstep")]
-        public virtual IActionResult NewShippingAddress(CheckoutShippingAddressModel model)
+        public virtual IActionResult NewShippingAddress(CheckoutShippingAddressModel model, IFormCollection form)
         {
             //validation
             if (_orderSettings.CheckoutDisabled)
@@ -507,7 +507,7 @@ namespace Nop.Web.Controllers
                     _workContext.CurrentCustomer.ShippingAddress = null;
                     _customerService.UpdateCustomer(_workContext.CurrentCustomer);
 
-                    var pickupPoint = model.Form["pickup-points-id"].ToString().Split(new[] { "___" }, StringSplitOptions.None);
+                    var pickupPoint = form["pickup-points-id"].ToString().Split(new[] { "___" }, StringSplitOptions.None);
                     var pickupPoints = _shippingService.GetPickupPoints(_workContext.CurrentCustomer.BillingAddress,
                         _workContext.CurrentCustomer, pickupPoint[1], _storeContext.CurrentStore.Id).PickupPoints.ToList();
                     var selectedPoint = pickupPoints.FirstOrDefault(x => x.Id.Equals(pickupPoint[0]));
@@ -533,7 +533,7 @@ namespace Nop.Web.Controllers
             }
 
             //custom address attributes
-            var customAttributes = _addressAttributeParser.ParseCustomAddressAttributes(model.Form);
+            var customAttributes = _addressAttributeParser.ParseCustomAddressAttributes(form);
             var customAttributeWarnings = _addressAttributeParser.GetAttributeWarnings(customAttributes);
             foreach (var error in customAttributeWarnings)
             {
@@ -1138,7 +1138,7 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        public virtual IActionResult OpcSaveBilling(CheckoutBillingAddressModel model)
+        public virtual IActionResult OpcSaveBilling(CheckoutBillingAddressModel model, IFormCollection form)
         {
             try
             {
@@ -1157,7 +1157,7 @@ namespace Nop.Web.Controllers
                 if (_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed)
                     throw new Exception("Anonymous checkout is not allowed");
 
-                int.TryParse(model.Form["billing_address_id"], out var billingAddressId);
+                int.TryParse(form["billing_address_id"], out var billingAddressId);
 
                 if (billingAddressId > 0)
                 {
@@ -1174,7 +1174,7 @@ namespace Nop.Web.Controllers
                     var newAddress = model.BillingNewAddress;
 
                     //custom address attributes
-                    var customAttributes = _addressAttributeParser.ParseCustomAddressAttributes(model.Form);
+                    var customAttributes = _addressAttributeParser.ParseCustomAddressAttributes(form);
                     var customAttributeWarnings = _addressAttributeParser.GetAttributeWarnings(customAttributes);
                     foreach (var error in customAttributeWarnings)
                     {
@@ -1280,7 +1280,7 @@ namespace Nop.Web.Controllers
             }
         }
 
-        public virtual IActionResult OpcSaveShipping(CheckoutShippingAddressModel model)
+        public virtual IActionResult OpcSaveShipping(CheckoutShippingAddressModel model, IFormCollection form)
         {
             try
             {
@@ -1311,7 +1311,7 @@ namespace Nop.Web.Controllers
                         _workContext.CurrentCustomer.ShippingAddress = null;
                         _customerService.UpdateCustomer(_workContext.CurrentCustomer);
 
-                        var pickupPoint = model.Form["pickup-points-id"].ToString().Split(new[] { "___" }, StringSplitOptions.None);
+                        var pickupPoint = form["pickup-points-id"].ToString().Split(new[] { "___" }, StringSplitOptions.None);
                         var pickupPoints = _shippingService.GetPickupPoints(_workContext.CurrentCustomer.BillingAddress,
                             _workContext.CurrentCustomer, pickupPoint[1], _storeContext.CurrentStore.Id).PickupPoints.ToList();
                         var selectedPoint = pickupPoints.FirstOrDefault(x => x.Id.Equals(pickupPoint[0]));
@@ -1336,7 +1336,7 @@ namespace Nop.Web.Controllers
                     _genericAttributeService.SaveAttribute<PickupPoint>(_workContext.CurrentCustomer, NopCustomerDefaults.SelectedPickupPointAttribute, null, _storeContext.CurrentStore.Id);
                 }
 
-                int.TryParse(model.Form["shipping_address_id"], out var shippingAddressId);
+                int.TryParse(form["shipping_address_id"], out var shippingAddressId);
 
                 if (shippingAddressId > 0)
                 {
@@ -1353,7 +1353,7 @@ namespace Nop.Web.Controllers
                     var newAddress = model.ShippingNewAddress;
 
                     //custom address attributes
-                    var customAttributes = _addressAttributeParser.ParseCustomAddressAttributes(model.Form);
+                    var customAttributes = _addressAttributeParser.ParseCustomAddressAttributes(form);
                     var customAttributeWarnings = _addressAttributeParser.GetAttributeWarnings(customAttributes);
                     foreach (var error in customAttributeWarnings)
                     {
