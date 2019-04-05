@@ -6,8 +6,7 @@ namespace Nop.Web.Framework.Models.DataTables
     /// <summary>
     /// Represents base DataTables model
     /// </summary>
-    //public partial class DataTablesModel : BaseNopModel
-    public partial class DataTablesModel
+    public partial class DataTablesModel : BaseNopModel
     {
         #region Const
 

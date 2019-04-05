@@ -118,7 +118,7 @@
             }
             $(document).ready(function () {
                 // Add event listener for opening and closing childs
-                $('#@Model.Name tbody').on('click', 'td.details-control', function () {
+                $('#@Model.Name tbody').on('click', 'td.child-control', function () {
                     var tr = $(this).closest('tr');
                     var tdi = tr.find('i.fa');
                     var row = $('#@Model.Name').DataTable().row(tr);

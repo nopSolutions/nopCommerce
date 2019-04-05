@@ -26,9 +26,9 @@ namespace Nop.Web.Framework.Models.DataTables
         CenterBody = 3,
 
         /// <summary>
-        /// Master-detail control element
+        /// Parent-child control element
         /// </summary>
-        [EnumMember(Value = "details-control")]
-        DetailsControl = 4
+        [EnumMember(Value = "child-control")]
+        ChildControl = 4
     }
 }

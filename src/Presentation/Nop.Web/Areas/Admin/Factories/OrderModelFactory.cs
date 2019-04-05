@@ -970,7 +970,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     Render = new RenderChildCaret(),
                     Width = "5",
-                    ClassName =  StyleColumn.DetailsControl,
+                    ClassName =  StyleColumn.ChildControl,
                 },
                 new ColumnProperty(nameof(ShipmentModel.Id))
                 {
