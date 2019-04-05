@@ -1,12 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Domain.Catalog;
 using Nop.Services.Catalog;
 using Nop.Services.Localization;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Catalog;
-using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;
+using Nop.Web.Framework.Models.DataTables;
 using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
@@ -88,6 +89,54 @@ namespace Nop.Web.Areas.Admin.Factories
             return searchModel;
         }
 
+        /// <summary>
+        /// Prepare product attributes datatables model
+        /// </summary>
+        /// <param name="searchModel">Product attributes search model</param>
+        /// <returns>Product attributes datatables model</returns>
+        protected virtual DataTablesModel PrepareProductAttributesGridModel(ProductAttributeSearchModel searchModel)
+        {
+            //prepare common properties
+            var model = new DataTablesModel
+            {
+                Name = "products-grid",
+                UrlRead = new DataUrl("List", "ProductAttribute", null),
+                Length = searchModel.PageSize,
+                LengthMenu = searchModel.AvailablePageSizes
+            };
+
+            //prepare filters to search
+            model.Filters = null;
+
+            //prepare model columns
+            model.ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(ProductAttributeModel.Name))
+                {
+                    Title = _localizationService.GetResource("Admin.Catalog.Attributes.ProductAttributes.Fields.Name"),
+                    Width = "400"
+                },                
+                new ColumnProperty(nameof(ProductAttributeModel.Id))
+                {
+                    Title = _localizationService.GetResource("Admin.Common.Edit"),
+                    Width = "100",
+                    Render = new RenderButtonEdit(new DataUrl("Edit"))
+                }
+            };
+
+            //prepare column definitions
+            model.ColumnDefinitions = new List<ColumnDefinition>
+            {
+                new ColumnDefinition()
+                {
+                    Targets = "-1",
+                    ClassName =  StyleColumn.CenterAll
+                }
+            };
+
+            return model;
+        }
+
         #endregion
 
         #region Methods
@@ -104,6 +153,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
+            searchModel.Grid = PrepareProductAttributesGridModel(searchModel);
 
             return searchModel;
         }
@@ -123,12 +173,12 @@ namespace Nop.Web.Areas.Admin.Factories
                 .GetAllProductAttributes(pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new ProductAttributeListModel
+            var model = new ProductAttributeListModel().PrepareToGrid(searchModel, productAttributes, () =>
             {
                 //fill in model values from the entity
-                Data = productAttributes.Select(attribute => attribute.ToModel<ProductAttributeModel>()),
-                Total = productAttributes.TotalCount
-            };
+                return productAttributes.Select(attribute => attribute.ToModel<ProductAttributeModel>());
+                
+            });
 
             return model;
         }
