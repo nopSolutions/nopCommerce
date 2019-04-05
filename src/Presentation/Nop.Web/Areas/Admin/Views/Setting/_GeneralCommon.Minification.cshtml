@@ -1,7 +1,7 @@
 ﻿@model GeneralCommonSettingsModel
 
 <div class="panel-body">
-    <div class="form-group">
+    <div class="form-group advanced-setting">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="MinificationSettings.EnableHtmlMinification_OverrideForStore" asp-input="MinificationSettings.EnableHtmlMinification" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="MinificationSettings.EnableHtmlMinification" />
