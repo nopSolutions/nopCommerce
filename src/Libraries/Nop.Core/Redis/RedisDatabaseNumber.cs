@@ -16,6 +16,10 @@
         /// <summary>
         /// Database for plugins
         /// </summary>
-        Plugin = 3
+        Plugin = 3,
+        /// <summary>
+        /// Database for data protection keys
+        /// </summary>
+        DataProtectionKeys = 4
     }
 }

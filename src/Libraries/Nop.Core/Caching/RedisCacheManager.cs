@@ -60,9 +60,6 @@ namespace Nop.Core.Caching
 
             var keys = server.Keys(_db.Database, string.IsNullOrEmpty(prefix) ? null : $"{prefix}*");
 
-            //we should always persist the data protection key list
-            keys = keys.Where(key => !key.ToString().Equals(NopCachingDefaults.RedisDataProtectionKey, StringComparison.OrdinalIgnoreCase));
-
             return keys;
         }
         
@@ -258,10 +255,6 @@ namespace Nop.Core.Caching
         /// <param name="key">Key of cached item</param>
         public virtual void Remove(string key)
         {
-            //we should always persist the data protection key list
-            if (key.Equals(NopCachingDefaults.RedisDataProtectionKey, StringComparison.OrdinalIgnoreCase))
-                return;
-
             //remove item from caches
             _db.KeyDelete(key);
             _perRequestCacheManager.Remove(key);

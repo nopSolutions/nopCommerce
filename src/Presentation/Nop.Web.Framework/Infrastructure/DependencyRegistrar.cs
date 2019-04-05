@@ -97,13 +97,18 @@ namespace Nop.Web.Framework.Infrastructure
             //cache manager
             builder.RegisterType<PerRequestCacheManager>().As<ICacheManager>().InstancePerLifetimeScope();
 
-            //static cache manager
-            if (config.RedisEnabled && config.UseRedisForCaching)
+            //redis connection wrapper
+            if (config.RedisEnabled)
             {
                 builder.RegisterType<RedisConnectionWrapper>()
                     .As<ILocker>()
                     .As<IRedisConnectionWrapper>()
                     .SingleInstance();
+            }
+
+            //static cache manager
+            if (config.RedisEnabled && config.UseRedisForCaching)
+            {
                 builder.RegisterType<RedisCacheManager>().As<IStaticCacheManager>().InstancePerLifetimeScope();
             }
             else
