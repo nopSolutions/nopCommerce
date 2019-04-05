@@ -531,10 +531,10 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
-        /// Prepare product datatables model
+        /// Prepare customer datatables model
         /// </summary>
-        /// <param name="searchModel">Product search model</param>
-        /// <returns>Product datatables model</returns>
+        /// <param name="searchModel">Customer search model</param>
+        /// <returns>Customer datatables model</returns>
         protected virtual DataTablesModel PrepareCustomerGridModel(CustomerSearchModel searchModel)
         {
             //prepare common properties
