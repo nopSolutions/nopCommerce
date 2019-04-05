@@ -90,7 +90,6 @@ namespace Nop.Web.Areas.Admin.Factories
             return searchModel;
         }
 
-
         /// <summary>
         /// Prepare category datatables model
         /// </summary>
@@ -153,6 +152,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             return model;
         }
+        
         #endregion
 
         #region Methods
