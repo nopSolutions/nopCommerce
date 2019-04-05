@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Nop.Core;
 using Nop.Core.ComponentModel;
 using Nop.Core.Configuration;
+using Nop.Core.Redis;
 using Nop.Core.Infrastructure;
 using Nop.Services.Plugins;
 
@@ -55,9 +56,6 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 _baseAppLibraries.AddRange(_fileProvider.GetFiles(refsPathName, "*.dll")
                     .Select(fileName => _fileProvider.GetFileName(fileName)));
             }
-
-            //load plugins info (names of already installed, going to be installed, going to be uninstalled and going to be deleted plugins)
-            PluginsInfo = PluginsInfo.LoadPluginInfo(_fileProvider);
         }
 
         #endregion
@@ -67,10 +65,10 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         /// <summary>
         /// Gets access to information about plugins
         /// </summary>
-        private static PluginsInfo PluginsInfo
+        private static IPluginsInfo PluginsInfo
         {
-            get => Singleton<PluginsInfo>.Instance;
-            set => Singleton<PluginsInfo>.Instance = value;
+            get => Singleton<IPluginsInfo>.Instance;
+            set => Singleton<IPluginsInfo>.Instance = value;
         }
 
         #endregion
@@ -350,6 +348,36 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             return true;
         }
 
+        /// <summary>
+        /// Load plugins info (names of already installed, going to be installed, going to be uninstalled and going to be deleted plugins)
+        /// </summary>
+        /// <param name="config"></param>
+        private static void LoadPluginsInfo(NopConfig config)
+        {
+            var useRedisToStorePluginsInfo = config.RedisEnabled && config.UseRedisToStorePluginsInfo;
+
+            //we use the main IRedisConnectionWrapper implementation since the DI isn't initialized yet
+            PluginsInfo = useRedisToStorePluginsInfo
+                ? new RedisPluginsInfo(_fileProvider, new RedisConnectionWrapper(config))
+                : new PluginsInfo(_fileProvider);
+
+            if (PluginsInfo.LoadPluginInfo() || useRedisToStorePluginsInfo || !config.RedisEnabled) 
+                return;
+
+            var redisPluginsInfo = new RedisPluginsInfo(_fileProvider, new RedisConnectionWrapper(config));
+
+            if (!redisPluginsInfo.LoadPluginInfo()) 
+                return;
+            
+            //copy plugins info data from redis 
+            PluginsInfo.CopyFrom(redisPluginsInfo);
+            PluginsInfo.Save();
+                    
+            //clear redis plugins info data
+            redisPluginsInfo = new RedisPluginsInfo(_fileProvider, new RedisConnectionWrapper(config));
+            redisPluginsInfo.Save();
+        }
+
         #endregion
 
         #region Methods
@@ -366,6 +394,8 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
 
             if (config == null)
                 throw new ArgumentNullException(nameof(config));
+            
+            LoadPluginsInfo(config);
 
             //perform with locked access to resources
             using (new ReaderWriteLockDisposable(_locker))

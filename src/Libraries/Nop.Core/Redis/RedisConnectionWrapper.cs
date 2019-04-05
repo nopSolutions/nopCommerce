@@ -1,12 +1,13 @@
 using System;
 using System.Linq;
 using System.Net;
+using Nop.Core.Caching;
 using Nop.Core.Configuration;
 using RedLockNet.SERedis;
 using RedLockNet.SERedis.Configuration;
 using StackExchange.Redis;
 
-namespace Nop.Core.Caching
+namespace Nop.Core.Redis
 {
     /// <summary>
     /// Represents Redis connection wrapper implementation
@@ -43,7 +44,7 @@ namespace Nop.Core.Caching
         /// <returns></returns>
         protected string GetConnectionString()
         {
-            return _config.RedisCachingConnectionString;
+            return _config.RedisConnectionString;
         }
 
         /// <summary>
@@ -100,9 +101,9 @@ namespace Nop.Core.Caching
         /// </summary>
         /// <param name="db">Database number; pass null to use the default value</param>
         /// <returns>Redis cache database</returns>
-        public IDatabase GetDatabase(int? db = null)
+        public IDatabase GetDatabase(RedisDatabaseNumber db = RedisDatabaseNumber.Default)
         {
-            return GetConnection().GetDatabase(db ?? -1);
+            return GetConnection().GetDatabase((int)db);
         }
 
         /// <summary>
@@ -127,14 +128,14 @@ namespace Nop.Core.Caching
         /// <summary>
         /// Delete all the keys of the database
         /// </summary>
-        /// <param name="db">Database number; pass null to use the default value</param>
-        public void FlushDatabase(int? db = null)
+        /// <param name="db">Database number</param>
+        public void FlushDatabase(RedisDatabaseNumber db = RedisDatabaseNumber.Default)
         {
             var endPoints = GetEndPoints();
 
             foreach (var endPoint in endPoints)
             {
-                GetServer(endPoint).FlushDatabase(db ?? -1);
+                GetServer(endPoint).FlushDatabase((int)db);
             }
         }
 

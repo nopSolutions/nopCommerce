@@ -2,7 +2,7 @@ using System;
 using System.Net;
 using StackExchange.Redis;
 
-namespace Nop.Core.Caching
+namespace Nop.Core.Redis
 {
     /// <summary>
     /// Represents Redis connection wrapper
@@ -12,9 +12,9 @@ namespace Nop.Core.Caching
         /// <summary>
         /// Obtain an interactive connection to a database inside Redis
         /// </summary>
-        /// <param name="db">Database number; pass null to use the default value</param>
+        /// <param name="db">Database number</param>
         /// <returns>Redis cache database</returns>
-        IDatabase GetDatabase(int? db = null);
+        IDatabase GetDatabase(RedisDatabaseNumber db = RedisDatabaseNumber.Default);
 
         /// <summary>
         /// Obtain a configuration API for an individual server
@@ -32,7 +32,7 @@ namespace Nop.Core.Caching
         /// <summary>
         /// Delete all the keys of the database
         /// </summary>
-        /// <param name="db">Database number; pass null to use the default value</param>
-        void FlushDatabase(int? db = null);
+        /// <param name="db">Database number</param>
+        void FlushDatabase(RedisDatabaseNumber db = RedisDatabaseNumber.Default);
     }
 }
