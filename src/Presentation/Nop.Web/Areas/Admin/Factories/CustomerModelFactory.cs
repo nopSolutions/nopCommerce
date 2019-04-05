@@ -738,6 +738,58 @@ namespace Nop.Web.Areas.Admin.Factories
             return model;
         }
 
+        /// <summary>
+        /// Prepare Gdpr log datatables model
+        /// </summary>
+        /// <param name="searchModel">Gdpr log search model</param>
+        /// <returns>Gdpr log datatables model</returns>
+        protected virtual DataTablesModel PrepareGdprLogGridModel(GdprLogSearchModel searchModel)
+        {
+            //prepare common properties
+            var model = new DataTablesModel
+            {
+                Name = "log-grid",
+                UrlRead = new DataUrl("GdprLogList", "Customer", null),
+                SearchButtonId = "search-log",
+                Length = searchModel.PageSize,
+                LengthMenu = searchModel.AvailablePageSizes
+            };
+
+            //prepare filters to search
+            model.Filters = new List<FilterParameter>()
+            {
+                new FilterParameter(nameof(searchModel.SearchRequestTypeId)),
+                new FilterParameter(nameof(searchModel.SearchEmail))                
+            };
+
+            //prepare model columns
+            model.ColumnCollection = new List<ColumnProperty>
+            {                
+                new ColumnProperty(nameof(GdprLogModel.CustomerInfo))
+                {
+                    Title = _localizationService.GetResource("Admin.Customers.GdprLog.Fields.CustomerInfo")
+                },
+                new ColumnProperty(nameof(GdprLogModel.RequestType))
+                {
+                    Title = _localizationService.GetResource("Admin.Customers.GdprLog.Fields.RequestType")
+                },
+                new ColumnProperty(nameof(GdprLogModel.RequestDetails))
+                {
+                    Title = _localizationService.GetResource("Admin.Customers.GdprLog.Fields.RequestDetails")
+                },
+                new ColumnProperty(nameof(GdprLogModel.CreatedOn))
+                {
+                    Title = _localizationService.GetResource("Admin.Customers.GdprLog.Fields.CreatedOn"),
+                    Render = new RenderDate()
+                }                
+            };
+
+            //prepare column definitions
+            model.ColumnDefinitions = null;
+
+            return model;
+        }
+
         #endregion
 
         #region Methods
@@ -1359,6 +1411,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
+            searchModel.Grid = PrepareGdprLogGridModel(searchModel);
 
             return searchModel;
         }
@@ -1394,9 +1447,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new GdprLogListModel
+            var model = new GdprLogListModel().PrepareToGrid(searchModel, gdprLog, () =>
             {
-                Data = gdprLog.Select(log =>
+                return gdprLog.Select(log =>
                 {
                     //fill in model values from the entity
                     var customer = _customerService.GetCustomerById(log.CustomerId);
@@ -1409,9 +1462,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     requestModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(log.CreatedOnUtc, DateTimeKind.Utc);
 
                     return requestModel;
-                }),
-                Total = gdprLog.TotalCount
-            };
+                });
+            });
 
             return model;
         }

@@ -112,30 +112,35 @@ lengthMenu: [@Model.LengthMenu],
 ordering: @Model.Ordering.ToString().ToLower(),
 fixedHeader: @Model.FixedHeader.ToString().ToLower(),
 dom: '@Model.Dom',
-columnDefs: [
-    @foreach (var definition in Model.ColumnDefinitions)
-    {
-        <text>
+@if (Model.ColumnDefinitions != null)
+{
+ <text>
+    columnDefs: [
+        @foreach(var definition in Model.ColumnDefinitions)
         {
-            targets: @definition.Targets,
-            visible: @definition.Visible.ToString().ToLower(),
-            searchable: @definition.Searchable.ToString().ToLower(),
-            @if (definition.ClassName.HasValue)
+            <text>
             {
-                <text>
-                    className: '@GetEnumValue(typeof(StyleColumn), definition.ClassName.Value)',
-                </text>
-            }
-            @if (!string.IsNullOrEmpty(definition.Width))
-            {
-                <text>
-                    width: '@definition.Width'
-                </text>
-            }
-        },
-        </text>
-    }
-],
+                targets: @definition.Targets,
+                visible: @definition.Visible.ToString().ToLower(),
+                searchable: @definition.Searchable.ToString().ToLower(),
+                @if(definition.ClassName.HasValue)
+                {
+                    <text>
+                        className: '@GetEnumValue(typeof(StyleColumn), definition.ClassName.Value)',
+                    </text>
+                }
+                @if(!string.IsNullOrEmpty(definition.Width))
+                {
+                    <text>
+                        width: '@definition.Width'
+                    </text>
+                }
+            },
+            </text>
+        }
+    ],
+</text>
+}
 columns: [
     @foreach (var column in Model.ColumnCollection)
     {
