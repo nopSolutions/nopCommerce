@@ -674,6 +674,70 @@ namespace Nop.Web.Areas.Admin.Factories
             return model;
         }
 
+        /// <summary>
+        /// Prepare online customers datatables model
+        /// </summary>
+        /// <param name="searchModel">Online customers search model</param>
+        /// <returns>Online customers datatables model</returns>
+        protected virtual DataTablesModel PrepareOnlineCustomerGridModel(OnlineCustomerSearchModel searchModel)
+        {
+            //prepare common properties
+            var model = new DataTablesModel
+            {
+                Name = "onlinecustomers-grid",
+                UrlRead = new DataUrl("List", "OnlineCustomer", null),
+                Length = searchModel.PageSize,
+                LengthMenu = searchModel.AvailablePageSizes
+            };
+
+            //prepare filters to search
+            model.Filters = null;
+
+            //prepare model columns
+            model.ColumnCollection = new List<ColumnProperty>()
+            {
+                new ColumnProperty(nameof(OnlineCustomerModel.CustomerInfo))
+                {
+                    Title = _localizationService.GetResource("Admin.Customers.OnlineCustomers.Fields.CustomerInfo"),
+                    Width = "100",
+                    Render = new RenderLink(new DataUrl("~/Admin/Customer/Edit", nameof(CustomerModel.Id)))
+                },
+                new ColumnProperty(nameof(OnlineCustomerModel.LastIpAddress))
+                {
+                    Title = _localizationService.GetResource("Admin.Customers.OnlineCustomers.Fields.IPAddress"),
+                    Width = "100"                   
+                },
+                new ColumnProperty(nameof(OnlineCustomerModel.Location))
+                {
+                    Title = _localizationService.GetResource("Admin.Customers.OnlineCustomers.Fields.Location"),
+                    Width = "100"
+                },
+                new ColumnProperty(nameof(OnlineCustomerModel.LastActivityDate))
+                {
+                    Title = _localizationService.GetResource("Admin.Customers.OnlineCustomers.Fields.LastActivityDate"),
+                    Width = "200",
+                    Render = new RenderDate()
+                },
+                new ColumnProperty(nameof(OnlineCustomerModel.LastVisitedPage))
+                {
+                    Title = _localizationService.GetResource("Admin.Customers.OnlineCustomers.Fields.LastVisitedPage"),
+                    Width = "100"
+                }
+            };
+
+            //prepare column definitions
+            model.ColumnDefinitions = new List<ColumnDefinition>
+            {
+                new ColumnDefinition()
+                {
+                    Targets = "-1",
+                    ClassName =  StyleColumn.CenterAll
+                }
+            };
+
+            return model;
+        }
+
         #endregion
 
         #region Methods
@@ -1229,6 +1293,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
+            searchModel.Grid = PrepareOnlineCustomerGridModel(searchModel);
 
             return searchModel;
         }
@@ -1252,9 +1317,9 @@ namespace Nop.Web.Areas.Admin.Factories
                  pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new OnlineCustomerListModel
+            var model = new OnlineCustomerListModel().PrepareToGrid(searchModel, customers, () =>
             {
-                Data = customers.Select(customer =>
+                return customers.Select(customer =>
                 {
                     //fill in model values from the entity
                     var customerModel = customer.ToModel<OnlineCustomerModel>();
@@ -1273,9 +1338,8 @@ namespace Nop.Web.Areas.Admin.Factories
                         : _localizationService.GetResource("Admin.Customers.OnlineCustomers.Fields.LastVisitedPage.Disabled");
 
                     return customerModel;
-                }),
-                Total = customers.TotalCount
-            };
+                });
+            });
 
             return model;
         }
