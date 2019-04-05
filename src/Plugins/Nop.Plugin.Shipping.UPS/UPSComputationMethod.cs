@@ -7,12 +7,14 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Net;
+using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
 using System.Xml;
 using Nop.Core;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Shipping;
+using Nop.Core.Http;
 using Nop.Plugin.Shipping.UPS.Domain;
 using Nop.Services.Configuration;
 using Nop.Services.Directory;
@@ -49,6 +51,7 @@ namespace Nop.Plugin.Shipping.UPS
         private readonly ICurrencyService _currencyService;
         private readonly CurrencySettings _currencySettings;
         private readonly IOrderTotalCalculationService _orderTotalCalculationService;
+        private readonly IHttpClientFactory _httpClientFactory;
         private readonly ILogger _logger;
         private readonly ILocalizationService _localizationService;
         private readonly IWebHelper _webHelper;
@@ -67,6 +70,7 @@ namespace Nop.Plugin.Shipping.UPS
             ICurrencyService currencyService,
             CurrencySettings currencySettings,
             IOrderTotalCalculationService orderTotalCalculationService,
+            IHttpClientFactory httpClientFactory,
             ILogger logger,
             ILocalizationService localizationService,
             IWebHelper webHelper)
@@ -79,6 +83,7 @@ namespace Nop.Plugin.Shipping.UPS
             _currencyService = currencyService;
             _currencySettings = currencySettings;
             _orderTotalCalculationService = orderTotalCalculationService;
+            _httpClientFactory = httpClientFactory;
             _logger = logger;
             _localizationService = localizationService;
             _webHelper = webHelper;
@@ -462,23 +467,18 @@ namespace Nop.Plugin.Shipping.UPS
 
         }
 
-        private string DoRequest(string url, string requestString)
+        /// <summary>
+        /// Request UPS services
+        /// </summary>
+        /// <param name="requestData">Data to post</param>
+        /// <returns>The asynchronous task whose result contains the response data</returns>
+        private async Task<string> RequestAsync(string requestData)
         {
-            var bytes = Encoding.ASCII.GetBytes(requestString);
-            var request = (HttpWebRequest)WebRequest.Create(url);
-            request.Method = WebRequestMethods.Http.Post;
-            request.ContentType = MimeTypes.ApplicationXWwwFormUrlencoded;
-            request.ContentLength = bytes.Length;
-            using (var requestStream = request.GetRequestStream())
-                requestStream.Write(bytes, 0, bytes.Length);
-            using (var response = request.GetResponse())
-            {
-                string responseXml;
-                using (var reader = new StreamReader(response.GetResponseStream()))
-                    responseXml = reader.ReadToEnd();
-
-                return responseXml;
-            }
+            var httpClient = _httpClientFactory.CreateClient(NopHttpDefaults.DefaultHttpClient);
+            var requestContent = new StringContent(requestData, Encoding.UTF8, MimeTypes.ApplicationXWwwFormUrlencoded);
+            var response = await httpClient.PostAsync(_upsSettings.Url, requestContent);
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadAsStringAsync();
         }
 
         private string GetCustomerClassificationCode(UPSCustomerClassification customerClassification)
@@ -805,7 +805,7 @@ namespace Nop.Plugin.Shipping.UPS
                 if (_upsSettings.Tracing)
                     _traceMessages.AppendLine("Request:").AppendLine(requestString);
 
-                var responseXml = DoRequest(_upsSettings.Url, requestString);
+                var responseXml = RequestAsync(requestString).Result;
                 if (_upsSettings.Tracing)
                     _traceMessages.AppendLine("Response:").AppendLine(responseXml);
 
@@ -834,7 +834,7 @@ namespace Nop.Plugin.Shipping.UPS
                     if (_upsSettings.Tracing)
                         _traceMessages.AppendLine("Request:").AppendLine(requestString);
 
-                    responseXml = DoRequest(_upsSettings.Url, requestString);
+                    responseXml = RequestAsync(requestString).Result;
                     if (_upsSettings.Tracing)
                         _traceMessages.AppendLine("Response:").AppendLine(responseXml);
 
