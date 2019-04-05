@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Net.Http.Headers;
 using Moq;
 using Nop.Core.Configuration;
@@ -12,6 +13,7 @@ namespace Nop.Core.Tests
     public class WebHelperTests
     {
         private DefaultHttpContext _httpContext;
+        private Mock<IApplicationLifetime> _applicationLifetime;
         private Mock<INopFileProvider> _fileProvider;
         private IWebHelper _webHelper;
 
@@ -26,8 +28,9 @@ namespace Nop.Core.Tests
             _httpContext.Request.Headers.Add(HeaderNames.Host, "www.Example.com");
 
             _fileProvider = new Mock<INopFileProvider>();
+            _applicationLifetime = new Mock<IApplicationLifetime>();
 
-            _webHelper = new WebHelper(new HostingConfig(), new FakeHttpContextAccessor(_httpContext), _fileProvider.Object);
+            _webHelper = new WebHelper(new HostingConfig(), _applicationLifetime.Object, new FakeHttpContextAccessor(_httpContext), _fileProvider.Object);
         }
 
         [Test]

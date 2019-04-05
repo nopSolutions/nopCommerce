@@ -95,12 +95,20 @@ namespace Nop.Services.Tasks
 
         private void TimerHandler(object state)
         {
-            _timer.Change(-1, -1);
-            Run();
-            if (RunOnlyOnce)
-                Dispose();
-            else
-                _timer.Change(Interval, Interval);
+            try
+            {
+                _timer.Change(-1, -1);
+                Run();
+
+                if (RunOnlyOnce)
+                    Dispose();
+                else
+                    _timer.Change(Interval, Interval);
+            }
+            catch
+            {
+                // ignore
+            }
         }
 
         #endregion
