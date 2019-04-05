@@ -9840,6 +9840,9 @@
   <LocaleResource Name="Admin.ContentManagement.Topics.Deleted">
     <Value>The topic has been deleted successfully.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Display">
+    <Value>Display</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Topics.EditTopicDetails">
     <Value>Edit topic details</Value>
   </LocaleResource>

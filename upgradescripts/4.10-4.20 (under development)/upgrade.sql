@@ -578,6 +578,9 @@ set @resources='
   <LocaleResource Name="Admin.ContentManagement.Forums.Manage">
     <Value></Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Display">
+    <Value>Display</Value>
+  </LocaleResource>
 </Language>'
 
 CREATE TABLE #LocaleStringResourceTmp
