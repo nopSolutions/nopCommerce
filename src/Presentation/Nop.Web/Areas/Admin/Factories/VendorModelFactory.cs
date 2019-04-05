@@ -14,6 +14,7 @@ using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Areas.Admin.Models.Vendors;
 using Nop.Web.Framework.Factories;
+using Nop.Web.Framework.Models.DataTables;
 using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
@@ -247,6 +248,69 @@ namespace Nop.Web.Areas.Admin.Factories
             return searchModel;
         }
 
+        /// <summary>
+        /// Prepare vendor datatables model
+        /// </summary>
+        /// <param name="searchModel">Vendor search model</param>
+        /// <returns>Vendor datatables model</returns>
+        protected virtual DataTablesModel PrepareVendorGridModel(VendorSearchModel searchModel)
+        {
+            //prepare common properties
+            var model = new DataTablesModel
+            {
+                Name = "vendors-grid",
+                UrlRead = new DataUrl("List", "Vendor", null),
+                SearchButtonId = "search-vendors",
+                Length = searchModel.PageSize,
+                LengthMenu = searchModel.AvailablePageSizes
+            };
+
+            //prepare filters to search
+            model.Filters = new List<FilterParameter>()
+            {
+                new FilterParameter(nameof(searchModel.SearchName))                
+            };
+
+            //prepare model columns
+            model.ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(VendorModel.Name))
+                {
+                    Title = _localizationService.GetResource("Admin.Vendors.Fields.Name"),
+                    Width = "300"
+                },
+                new ColumnProperty(nameof(VendorModel.Email))
+                {
+                    Title = _localizationService.GetResource("Admin.Vendors.Fields.Email"),
+                    Width = "300"
+                },
+                new ColumnProperty(nameof(VendorModel.Active))
+                {
+                    Title = _localizationService.GetResource("Admin.Vendors.Fields.Active"),
+                    Width = "50",
+                    Render = new RenderBoolean()
+                },
+                new ColumnProperty(nameof(VendorModel.Id))
+                {
+                    Title = _localizationService.GetResource("Admin.Common.Edit"),
+                    Width = "50",
+                    Render = new RenderButtonEdit(new DataUrl("Edit"))
+                }                
+            };
+
+            //prepare column definitions
+            model.ColumnDefinitions = new List<ColumnDefinition>
+            {
+                new ColumnDefinition()
+                {
+                    Targets = "[-1, -2]",
+                    ClassName =  StyleColumn.CenterAll
+                }
+            };
+
+            return model;
+        }
+
         #endregion
 
         #region Methods
@@ -263,6 +327,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
+            searchModel.Grid = PrepareVendorGridModel(searchModel);
 
             return searchModel;
         }
@@ -283,18 +348,17 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new VendorListModel
+            var model = new VendorListModel().PrepareToGrid(searchModel, vendors, () =>
             {
                 //fill in model values from the entity
-                Data = vendors.Select(vendor =>
+                return vendors.Select(vendor =>
                 {
                     var vendorModel = vendor.ToModel<VendorModel>();
                     vendorModel.SeName = _urlRecordService.GetSeName(vendor, 0, true, false);
 
                     return vendorModel;
-                }),
-                Total = vendors.TotalCount
-            };
+                });
+            });
 
             return model;
         }
