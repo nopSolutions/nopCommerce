@@ -207,7 +207,7 @@ columns: [
                 case RenderDate date:
                     <text>
                         render: function (data, type, row, meta) {
-                            return moment(data).locale('@locale').format('@date.Format');
+                            return (data) ? moment(data).locale('@locale').format('@date.Format') : null;
                         }
                     </text>
                     break;

@@ -18,6 +18,7 @@ using Nop.Services.Seo;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Areas.Admin.Models.Discounts;
+using Nop.Web.Framework.Models.DataTables;
 using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
@@ -173,6 +174,100 @@ namespace Nop.Web.Areas.Admin.Factories
             return searchModel;
         }
 
+        /// <summary>
+        /// Prepare вiscount datatables model
+        /// </summary>
+        /// <param name="searchModel">Discount search model</param>
+        /// <returns>Discount datatables model</returns>
+        protected virtual DataTablesModel PrepareDiscountGridModel(DiscountSearchModel searchModel)
+        {
+            //prepare common properties
+            var model = new DataTablesModel
+            {
+                Name = "discounts-grid",
+                UrlRead = new DataUrl("List", "Discount", null),
+                SearchButtonId = "search-discounts",
+                Length = searchModel.PageSize,
+                LengthMenu = searchModel.AvailablePageSizes
+            };
+
+            //prepare filters to search
+            model.Filters = new List<FilterParameter>()
+            {
+                new FilterParameter(nameof(searchModel.SearchDiscountTypeId)),
+                new FilterParameter(nameof(searchModel.SearchDiscountCouponCode)),
+                new FilterParameter(nameof(searchModel.SearchDiscountName)),
+                new FilterParameter(nameof(searchModel.SearchStartDate)),
+                new FilterParameter(nameof(searchModel.SearchEndDate))
+            };
+
+            //prepare model columns
+            model.ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(DiscountModel.UsePercentage)),
+                new ColumnProperty(nameof(DiscountModel.DiscountPercentage)),
+                new ColumnProperty(nameof(DiscountModel.DiscountAmount)),
+                new ColumnProperty(nameof(DiscountModel.PrimaryStoreCurrencyCode)),
+
+                new ColumnProperty(nameof(DiscountModel.Name))
+                {
+                    Title = _localizationService.GetResource("Admin.Promotions.Discounts.Fields.Name"),
+                     Width = "350"
+                },
+                new ColumnProperty(nameof(DiscountModel.DiscountTypeName))
+                {
+                    Title = _localizationService.GetResource("Admin.Promotions.Discounts.Fields.DiscountType"),
+                     Width = "250"
+                },
+                new ColumnProperty(nameof(DiscountModel.DiscountAmount))
+                {
+                    Title = _localizationService.GetResource("Admin.Promotions.Discounts.Fields.Discount"),
+                     Width = "200",
+                     Render = new RenderCustom("renderColumnDiscount")
+                },
+                new ColumnProperty(nameof(DiscountModel.StartDateUtc))
+                {
+                    Title = _localizationService.GetResource("Admin.Promotions.Discounts.Fields.StartDate"),
+                     Width = "200",
+                     Render = new RenderDate()
+                },
+                new ColumnProperty(nameof(DiscountModel.EndDateUtc))
+                {
+                    Title = _localizationService.GetResource("Admin.Promotions.Discounts.Fields.EndDate"),
+                     Width = "200",
+                     Render = new RenderDate()
+                },
+                new ColumnProperty(nameof(DiscountModel.TimesUsed))
+                {
+                    Title = _localizationService.GetResource("Admin.Promotions.Discounts.Fields.TimesUsed"),
+                     Width = "200"
+                },
+                new ColumnProperty(nameof(DiscountModel.Id))
+                {
+                    Title = _localizationService.GetResource("Admin.Common.Edit"),
+                    Width = "100",
+                    Render = new RenderButtonEdit(new DataUrl("Edit"))
+                }
+            };
+
+            //prepare column definitions
+            model.ColumnDefinitions = new List<ColumnDefinition>
+            {
+                new ColumnDefinition()
+                {
+                    Targets = "[0,1,2,3]",
+                    Visible = false
+                },
+                new ColumnDefinition()
+                {
+                    Targets = "-1",
+                    ClassName =  StyleColumn.CenterAll
+                }
+            };
+
+            return model;
+        }
+
         #endregion
 
         #region Methods
@@ -192,6 +287,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
+            searchModel.Grid = PrepareDiscountGridModel(searchModel);
 
             return searchModel;
         }
@@ -222,9 +318,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 endDateUtc: endDateUtc).ToPagedList(searchModel);
 
             //prepare list model
-            var model = new DiscountListModel
+            var model = new DiscountListModel().PrepareToGrid(searchModel, discounts, () =>
             {
-                Data = discounts.Select(discount =>
+                return discounts.Select(discount =>
                 {
                     //fill in model values from the entity
                     var discountModel = discount.ToModel<DiscountModel>();
@@ -236,9 +332,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     discountModel.TimesUsed = _discountService.GetAllDiscountUsageHistory(discount.Id, pageSize: 1).TotalCount;
 
                     return discountModel;
-                }),
-                Total = discounts.TotalCount
-            };
+                });
+            });
 
             return model;
         }
