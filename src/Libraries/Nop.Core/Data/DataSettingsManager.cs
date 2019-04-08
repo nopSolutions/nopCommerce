@@ -3,6 +3,7 @@ using System.IO;
 using System.Text;
 using Newtonsoft.Json;
 using Nop.Core.Infrastructure;
+using Microsoft.Extensions.Configuration;
 
 namespace Nop.Core.Data
 {
@@ -30,6 +31,20 @@ namespace Nop.Core.Data
         {
             if (!reloadSettings && Singleton<DataSettings>.Instance != null)
                 return Singleton<DataSettings>.Instance;
+
+            //check whether a connection string exists in environment
+            var environmentConnectionString = LoadEnvironmentConnectionString();
+
+            if (!string.IsNullOrWhiteSpace(environmentConnectionString))
+            {
+                var dataSettings = new DataSettings
+                {
+                    DataProvider = DataProviderType.SqlServer,
+                    DataConnectionString = environmentConnectionString
+                };
+                Singleton<DataSettings>.Instance = dataSettings;
+                return Singleton<DataSettings>.Instance;
+            }
 
             fileProvider = fileProvider ?? CommonHelper.DefaultFileProvider;
             filePath = filePath ?? fileProvider.MapPath(NopDataSettingsDefaults.FilePath);
@@ -135,6 +150,20 @@ namespace Nop.Core.Data
 
                 return _databaseIsInstalled.Value;
             }
+        }
+
+        #endregion
+
+        #region Utilities
+        private static string LoadEnvironmentConnectionString()
+        {
+            var builder = new ConfigurationBuilder();
+            builder.AddEnvironmentVariables();
+
+            var configuration = builder.Build();
+
+            return configuration.GetConnectionString("DataConnectionString");
+
         }
 
         #endregion
