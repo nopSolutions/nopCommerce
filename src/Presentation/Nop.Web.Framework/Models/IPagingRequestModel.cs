@@ -7,13 +7,13 @@ namespace Nop.Web.Framework.Models
     public partial interface IPagingRequestModel
     {
         /// <summary>
-        /// Gets or sets a page number
+        /// Gets a page number
         /// </summary>
-        int Page { get; set; }
+        int Page { get; }
 
         /// <summary>
-        /// Gets or sets a page size
+        /// Gets a page size
         /// </summary>
-        int PageSize { get; set; }
+        int PageSize { get; }
     }
 }

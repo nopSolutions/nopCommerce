@@ -145,8 +145,8 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Bestseller brief search model</param>
         /// <returns>Bestseller brief list model</returns>
-        BestsellerBriefListModel PrepareBestsellerBriefListModel(BestsellerBriefSearchModel searchModel);        
-        
+        BestsellerBriefListModel PrepareBestsellerBriefListModel(BestsellerBriefSearchModel searchModel);
+
         /// <summary>
         /// Prepare order average line summary report list model
         /// </summary>

@@ -8,8 +8,8 @@ using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Directory;
-using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -124,8 +124,7 @@ namespace Nop.Web.Areas.Admin.Factories
             PrepareExchangeRateProviderModel(searchModel.ExchangeRateProviderModel, prepareExchangeRates);
 
             //prepare page parameters
-            searchModel.SetGridPageSize();
-            searchModel.PageSize = 1000;
+            searchModel.SetGridPageSize(1000);
 
             return searchModel;
         }
@@ -141,12 +140,12 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get currencies
-            var currencies = _currencyService.GetAllCurrencies(showHidden: true, loadCacheableCopy: false);
+            var currencies = _currencyService.GetAllCurrencies(showHidden: true, loadCacheableCopy: false).ToPagedList(searchModel);
 
             //prepare list model
             var model = new CurrencyListModel
             {
-                Data = currencies.PaginationByRequestModel(searchModel).Select(currency =>
+                Data = currencies.Select(currency =>
                 {
                     //fill in model values from the entity
                     var currencyModel = currency.ToModel<CurrencyModel>();
@@ -157,7 +156,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     return currencyModel;
                 }),
-                Total = currencies.Count
+                Total = currencies.TotalCount
             };
 
             return model;

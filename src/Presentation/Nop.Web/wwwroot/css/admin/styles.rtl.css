@@ -816,6 +816,36 @@ td.k-state-focused.k-state-selected {
     padding-left: 30px;
 }
 
+/*CSS loader */
+div.dataTables_wrapper {
+    position: relative;
+}
+
+div.dataTables_wrapper div.dataTables_processing {
+    border: none;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    margin-left: auto;
+    margin-top: auto;
+    z-index: 50;
+    background: rgba(255,255,255,0.7);
+    -ms-border-radius: 3px;
+    border-radius: 3px;
+}
+
+div.dataTables_wrapper div.dataTables_processing .fa {
+    padding-right: 0 !important;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-left: -15px;
+    margin-top: -15px;
+    color: #000;
+    font-size: 30px;
+}
+
 /* NAV BAR */
 .navbar-custom-menu > .navbar-nav > li {
     height: 50px;

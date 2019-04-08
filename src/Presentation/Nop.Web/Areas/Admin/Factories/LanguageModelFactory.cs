@@ -1,11 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using Nop.Core;
 using Nop.Core.Domain.Localization;
 using Nop.Services.Localization;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Localization;
-using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -93,14 +95,14 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get languages
-            var languages = _languageService.GetAllLanguages(showHidden: true, loadCacheableCopy: false);
+            var languages = _languageService.GetAllLanguages(showHidden: true, loadCacheableCopy: false).ToPagedList(searchModel);
 
             //prepare list model
             var model = new LanguageListModel
             {
                 //fill in model values from the entity
-                Data = languages.PaginationByRequestModel(searchModel).Select(language => language.ToModel<LanguageModel>()),
-                Total = languages.Count
+                Data = languages.Select(language => language.ToModel<LanguageModel>()),
+                Total = languages.TotalCount
             };
 
             return model;
@@ -166,18 +168,21 @@ namespace Nop.Web.Areas.Admin.Factories
             if (!string.IsNullOrEmpty(searchModel.SearchResourceValue))
                 localeResources = localeResources.Where(l => l.Value.Value.ToLowerInvariant().Contains(searchModel.SearchResourceValue.ToLowerInvariant()));
 
+            var pagedLocaleResources = new PagedList<KeyValuePair<string, KeyValuePair<int, string>>>(localeResources,
+                searchModel.Page - 1, searchModel.PageSize);
+
             //prepare list model
             var model = new LocaleResourceListModel
             {
                 //fill in model values from the entity
-                Data = localeResources.PaginationByRequestModel(searchModel).Select(localeResource => new LocaleResourceModel
+                Data = pagedLocaleResources.Select(localeResource => new LocaleResourceModel
                 {
                     LanguageId = language.Id,
                     Id = localeResource.Value.Key,
                     ResourceName = localeResource.Key,
                     ResourceValue = localeResource.Value.Value
                 }),
-                Total = localeResources.Count()
+                Total = pagedLocaleResources.TotalCount
             };
 
             return model;

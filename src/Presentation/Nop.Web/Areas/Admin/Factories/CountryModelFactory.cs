@@ -5,8 +5,8 @@ using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Directory;
-using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -97,20 +97,20 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get countries
-            var countries = _countryService.GetAllCountries(showHidden: true);
+            var countries = _countryService.GetAllCountries(showHidden: true).ToPagedList(searchModel);
 
             //prepare list model
             var model = new CountryListModel
             {
                 //fill in model values from the entity
-                Data = countries.PaginationByRequestModel(searchModel).Select(country =>
+                Data = countries.Select(country =>
                 {
                     var countryModel = country.ToModel<CountryModel>();
                     countryModel.NumberOfStates = country.StateProvinces?.Count ?? 0;
 
                     return countryModel;
                 }),
-                Total = countries.Count
+                Total = countries.TotalCount
             };
 
             return model;
@@ -179,14 +179,14 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(country));
 
             //get comments
-            var states = _stateProvinceService.GetStateProvincesByCountryId(country.Id, showHidden: true);
+            var states = _stateProvinceService.GetStateProvincesByCountryId(country.Id, showHidden: true).ToPagedList(searchModel);
 
             //prepare list model
             var model = new StateProvinceListModel
             {
                 //fill in model values from the entity
-                Data = states.PaginationByRequestModel(searchModel).Select(state => state.ToModel<StateProvinceModel>()),
-                Total = states.Count
+                Data = states.Select(state => state.ToModel<StateProvinceModel>()),
+                Total = states.TotalCount
             };
 
             return model;

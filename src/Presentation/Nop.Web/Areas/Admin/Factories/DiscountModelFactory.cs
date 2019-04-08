@@ -18,7 +18,7 @@ using Nop.Services.Seo;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Areas.Admin.Models.Discounts;
-using Nop.Web.Framework.Extensions;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -219,12 +219,12 @@ namespace Nop.Web.Areas.Admin.Factories
                 couponCode: searchModel.SearchDiscountCouponCode,
                 discountName: searchModel.SearchDiscountName,
                 startDateUtc: startDateUtc,
-                endDateUtc: endDateUtc);
+                endDateUtc: endDateUtc).ToPagedList(searchModel);
 
             //prepare list model
             var model = new DiscountListModel
             {
-                Data = discounts.PaginationByRequestModel(searchModel).Select(discount =>
+                Data = discounts.Select(discount =>
                 {
                     //fill in model values from the entity
                     var discountModel = discount.ToModel<DiscountModel>();
@@ -237,7 +237,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     return discountModel;
                 }),
-                Total = discounts.Count
+                Total = discounts.TotalCount
             };
 
             return model;

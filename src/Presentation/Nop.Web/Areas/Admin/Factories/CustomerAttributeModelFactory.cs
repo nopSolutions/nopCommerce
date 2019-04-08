@@ -5,8 +5,8 @@ using Nop.Services.Customers;
 using Nop.Services.Localization;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Customers;
-using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -92,12 +92,12 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get customer attributes
-            var customerAttributes = _customerAttributeService.GetAllCustomerAttributes();
+            var customerAttributes = _customerAttributeService.GetAllCustomerAttributes().ToPagedList(searchModel);
 
             //prepare list model
             var model = new CustomerAttributeListModel
             {
-                Data = customerAttributes.PaginationByRequestModel(searchModel).Select(attribute =>
+                Data = customerAttributes.Select(attribute =>
                 {
                     //fill in model values from the entity
                     var attributeModel = attribute.ToModel<CustomerAttributeModel>();
@@ -107,7 +107,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     return attributeModel;
                 }),
-                Total = customerAttributes.Count
+                Total = customerAttributes.TotalCount
             };
 
             return model;
@@ -163,15 +163,15 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(customerAttribute));
 
             //get customer attribute values
-            var customerAttributeValues = _customerAttributeService.GetCustomerAttributeValues(customerAttribute.Id);
+            var customerAttributeValues = _customerAttributeService
+                .GetCustomerAttributeValues(customerAttribute.Id).ToPagedList(searchModel);
 
             //prepare list model
             var model = new CustomerAttributeValueListModel
             {
                 //fill in model values from the entity
-                Data = customerAttributeValues.PaginationByRequestModel(searchModel)
-                    .Select(value => value.ToModel<CustomerAttributeValueModel>()),
-                Total = customerAttributeValues.Count
+                Data = customerAttributeValues.Select(value => value.ToModel<CustomerAttributeValueModel>()),
+                Total = customerAttributeValues.TotalCount
             };
 
             return model;

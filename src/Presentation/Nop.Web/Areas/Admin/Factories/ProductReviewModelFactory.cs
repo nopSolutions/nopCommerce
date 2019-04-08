@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
@@ -8,9 +9,12 @@ using Nop.Core.Html;
 using Nop.Services.Catalog;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
+using Nop.Services.Stores;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Framework.Extensions;
+using Nop.Web.Framework.Models.DataTables;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -27,7 +31,8 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly ILocalizationService _localizationService;
         private readonly IProductService _productService;
         private readonly IReviewTypeService _reviewTypeService;
-        private readonly IWorkContext _workContext;        
+        private readonly IStoreService _storeService;
+        private readonly IWorkContext _workContext;
 
         #endregion
 
@@ -39,6 +44,7 @@ namespace Nop.Web.Areas.Admin.Factories
             ILocalizationService localizationService,
             IProductService productService,
             IReviewTypeService reviewTypeService,
+            IStoreService storeService,
             IWorkContext workContext)
         {
             _catalogSettings = catalogSettings;
@@ -47,7 +53,136 @@ namespace Nop.Web.Areas.Admin.Factories
             _localizationService = localizationService;
             _productService = productService;
             _reviewTypeService = reviewTypeService;
+            _storeService = storeService;
             _workContext = workContext;
+        }
+
+        #endregion
+
+        #region Utilites
+
+        /// <summary>
+        /// Prepare product review datatables model
+        /// </summary>
+        /// <param name="searchModel">Product review search model</param>
+        /// <returns>Product review datatables model</returns>
+        protected virtual DataTablesModel PrepareProductReviewGridModel(ProductReviewSearchModel searchModel)
+        {
+            //prepare common properties
+            var model = new DataTablesModel
+            {
+                Name = "productreviews-grid",
+                UrlRead = new DataUrl("List", "ProductReview", null),
+                SearchButtonId = "search-productreviews",
+                Length = searchModel.PageSize,
+                LengthMenu = searchModel.AvailablePageSizes
+            };
+
+            //prepare filters to search
+            model.Filters = new List<FilterParameter>()
+            {
+                new FilterParameter(nameof(searchModel.CreatedOnFrom)),
+                new FilterParameter(nameof(searchModel.CreatedOnTo)),
+                new FilterParameter(nameof(searchModel.SearchText)),
+                new FilterParameter(nameof(searchModel.SearchStoreId)),
+                new FilterParameter(nameof(searchModel.SearchProductId)),
+                new FilterParameter(nameof(searchModel.SearchApprovedId))                
+            };
+
+            //prepare model columns
+            model.ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(ProductReviewModel.Id))
+                {
+                    IsMasterCheckBox = true,
+                    Render = new RenderCheckBox("checkbox_product_reviews"),
+                    Width = "50",
+                },
+                new ColumnProperty(nameof(ProductReviewModel.StoreName))
+                {
+                    Title = _localizationService.GetResource("Admin.Catalog.ProductReviews.Fields.Store"),
+                    Width = "150"
+                },
+                new ColumnProperty(nameof(ProductReviewModel.ProductName))
+                {
+                    Title = _localizationService.GetResource("Admin.Catalog.ProductReviews.Fields.Product"),
+                    Width = "200",
+                    Render = new RenderLink(new DataUrl("~/Admin/Product/Edit", nameof(ProductReviewModel.ProductId)))
+                },
+                new ColumnProperty(nameof(ProductReviewModel.CustomerInfo))
+                {
+                    Title = _localizationService.GetResource("Admin.Catalog.ProductReviews.Fields.Customer"),
+                    Width = "200",
+                    Render = new RenderLink(new DataUrl("~/Admin/Customer/Edit", nameof(ProductReviewModel.CustomerId)))
+                },
+                new ColumnProperty(nameof(ProductReviewModel.Title))
+                {
+                    Title = _localizationService.GetResource("Admin.Catalog.ProductReviews.Fields.Title"),
+                    Width = "200"
+                },
+                new ColumnProperty(nameof(ProductReviewModel.ReviewText))
+                {
+                    Title = _localizationService.GetResource("Admin.Catalog.ProductReviews.Fields.ReviewText"),
+                    Width = "400"
+                },
+                new ColumnProperty(nameof(ProductReviewModel.ReplyText))
+                {
+                    Title = _localizationService.GetResource("Admin.Catalog.ProductReviews.Fields.ReplyText"),
+                    Width = "400"
+                },
+                new ColumnProperty(nameof(ProductReviewModel.Rating))
+                {
+                    Title = _localizationService.GetResource("Admin.Catalog.ProductReviews.Fields.Rating"),
+                    Width = "100"
+                },
+                new ColumnProperty(nameof(ProductReviewModel.IsApproved))
+                {
+                    Title = _localizationService.GetResource("Admin.Catalog.ProductReviews.Fields.IsApproved"),
+                    Width = "100",
+                    Render = new RenderBoolean()
+                },
+                new ColumnProperty(nameof(ProductReviewModel.CreatedOn))
+                {
+                    Title = _localizationService.GetResource("Admin.Catalog.ProductReviews.Fields.CreatedOn"),
+                    Width = "200",
+                    Render = new RenderDate()
+                },
+                new ColumnProperty(nameof(ProductReviewModel.Id))
+                {
+                    Title = _localizationService.GetResource("Admin.Common.Edit"),
+                    Width = "100",
+                    Render = new RenderButtonEdit(new DataUrl("Edit"))
+                }
+            };
+
+            //prepare column definitions
+            model.ColumnDefinitions = new List<ColumnDefinition>
+            {
+                new ColumnDefinition()
+                {
+                    Targets = "0",
+                    Visible = searchModel.IsLoggedInAsVendor ? false : true,
+                    ClassName =  StyleColumn.CenterAll
+                },
+                new ColumnDefinition()
+                {
+                    Targets = "1",
+                    Visible = _storeService.GetAllStores().Count > 1 ? true : false,
+                    Width = "50"
+                },
+                new ColumnDefinition()
+                {
+                    Targets = "[8]",
+                    ClassName =  StyleColumn.CenterBody
+                },
+                new ColumnDefinition()
+                {
+                    Targets = "[-1]",
+                    ClassName =  StyleColumn.CenterAll
+                }
+            };
+
+            return model;
         }
 
         #endregion
@@ -90,6 +225,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
+            searchModel.Grid = PrepareProductReviewGridModel(searchModel);
 
             return searchModel;
         }
@@ -125,9 +261,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new ProductReviewListModel
+            var model = new ProductReviewListModel().PrepareToGrid(searchModel, productReviews, () =>
             {
-                Data = productReviews.Select(productReview =>
+                return productReviews.Select(productReview =>
                 {
                     //fill in model values from the entity
                     var productReviewModel = productReview.ToModel<ProductReviewModel>();
@@ -144,9 +280,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     productReviewModel.ReplyText = HtmlHelper.FormatText(productReview.ReplyText, false, true, false, false, false, false);
 
                     return productReviewModel;
-                }),
-                Total = productReviews.TotalCount
-            };
+                });
+            });
 
             return model;
         }
@@ -215,7 +350,7 @@ namespace Nop.Web.Areas.Admin.Factories
             searchModel.IsAnyReviewTypes = productReview.ProductReviewReviewTypeMappingEntries.Any();
 
             //prepare page parameters
-            searchModel.SetGridPageSize();
+            searchModel.SetGridPageSize();            
 
             return searchModel;
         }
@@ -235,12 +370,13 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(productReview));
 
             //get product review and review type mappings
-            var productReviewReviewTypeMappings = _reviewTypeService.GetProductReviewReviewTypeMappingsByProductReviewId(productReview.Id);
+            var productReviewReviewTypeMappings = _reviewTypeService
+                .GetProductReviewReviewTypeMappingsByProductReviewId(productReview.Id).ToPagedList(searchModel);
 
             //prepare grid model
             var model = new ProductReviewReviewTypeMappingListModel
             {
-                Data = productReviewReviewTypeMappings.PaginationByRequestModel(searchModel).Select(productReviewReviewTypeMapping =>
+                Data = productReviewReviewTypeMappings.Select(productReviewReviewTypeMapping =>
                 {
                     //fill in model values from the entity
                     var productReviewReviewTypeMappingModel = productReviewReviewTypeMapping.ToModel<ProductReviewReviewTypeMappingModel>();
@@ -254,11 +390,11 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     return productReviewReviewTypeMappingModel;
                 }),
-                Total = productReviewReviewTypeMappings.Count
+                Total = productReviewReviewTypeMappings.TotalCount
             };
 
             return model;
-        }        
+        }
 
         #endregion
     }

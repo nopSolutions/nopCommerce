@@ -1,6 +1,6 @@
 ﻿@model ProductSearchModel
 
-@using Nop.Core.Domain.Catalog
+@using Nop.Core.Domain.Catalog;
 
 @{
     //page title
@@ -203,213 +203,57 @@
                         </div>
                     </div>
 
-                    <div class="panel panel-default">
-                        <div class="panel-body">
-                            <div id="products-grid"></div>
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        @await Html.PartialAsync("Table", Model.Grid)
 
-                            <script>
-                            $(document).ready(function() {
-                                $("#products-grid").kendoGrid({
-                                    dataSource: {
-                                        type: "json",
-                                        transport: {
-                                            read: {
-                                                url: "@Html.Raw(Url.Action("ProductList", "Product"))",
-                                                type: "POST",
-                                                dataType: "json",
-                                                data: function() {
-                                                    var data = {
-                                                        SearchProductName: $('#@Html.IdFor(model => model.SearchProductName)').val(),
-                                                        SearchCategoryId: $('#SearchCategoryId').val(),
-                                                        SearchIncludeSubCategories: $('#@Html.IdFor(model => model.SearchIncludeSubCategories)').is(':checked'),
-                                                        SearchManufacturerId: $('#SearchManufacturerId').val(),
-                                                        SearchStoreId: $('#SearchStoreId').val(),
-                                                        SearchWarehouseId: $('#SearchWarehouseId').val(),
-                                                        SearchVendorId: $('#SearchVendorId').val(),
-                                                        SearchProductTypeId: $('#SearchProductTypeId').val(),
-                                                        SearchPublishedId: $('#SearchPublishedId').val()
-                                                    };
-                                                    addAntiForgeryToken(data);
-                                                    return data;
-                                                }
-                                            }
+                        <script>
+                            function renderColumnPrice(data, type, row, meta) {
+                                return (row.ProductTypeId != @((int)ProductType.GroupedProduct) ) ? data : null;
+                            }
+
+                            $(document).ready(function () {
+                                $('#delete-selected-action-confirmation-submit-button').bind('click', function () {
+                                    var postData = {
+                                        selectedIds: selectedIds
+                                    };
+                                    addAntiForgeryToken(postData);
+                                    $.ajax({
+                                        cache: false,
+                                        type: 'POST',
+                                        url: "@(Url.Action("DeleteSelected", "Product"))",
+                                        data: postData,
+                                        complete: function (data) {
+                                            $('#@Model.Grid.Name').DataTable().ajax.reload();
                                         },
-                                        schema: {
-                                            data: "Data",
-                                            total: "Total",
-                                            errors: "Errors"
-                                        },
-                                        error: function(e) {
-                                            display_kendoui_grid_error(e);
-                                            // Cancel the changes
-                                            this.cancelChanges();
-                                        },
-                                        pageSize: @(Model.PageSize),
-                                        serverPaging: true,
-                                        serverFiltering: true,
-                                        serverSorting: true
-                                    },
-                                    pageable: {
-                                        refresh: true,
-                                        pageSizes: [@(Model.AvailablePageSizes)],
-                                        @await Html.PartialAsync("_GridPagerMessages")
-                                    },
-                                    editable: {
-                                        confirmation: "@T("Admin.Common.DeleteConfirmation")",
-                                        mode: "inline"
-                                    },
-                                    scrollable: false,
-                                    dataBound: onDataBound,
-                                    columns: [
-                                        {
-                                            field: "Id",
-                                            headerTemplate: "<input id='mastercheckbox' type='checkbox'/>",
-                                            headerAttributes: { style: "text-align:center" },
-                                            attributes: { style: "text-align:center" },
-                                            template: "<input type='checkbox' value='#=Id#' class='checkboxGroups'/>",
-                                            width: 50
-                                        },
-                                        {
-                                            field: "PictureThumbnailUrl",
-                                            title: "@T("Admin.Catalog.Products.Fields.PictureThumbnailUrl")",
-                                            template: '<img src="#=PictureThumbnailUrl#" />',
-                                            width: 100
-                                        },
-                                        {
-                                            field: "Name",
-                                            title: "@T("Admin.Catalog.Products.Fields.Name")",
-                                            width: 300
-                                        }, {
-                                            field: "Sku",
-                                            title: "@T("Admin.Catalog.Products.Fields.Sku")",
-                                            width: 100
-                                        }, {
-                                            field: "Price",
-                                            title: "@T("Admin.Catalog.Products.Fields.Price")",
-                                            width: 150,
-                                            //if not a grouped product, then display
-                                            template: "# if(ProductTypeId != @((int) ProductType.GroupedProduct)) {# #:Price# #}  #"
-                                        }, {
-                                            field: "StockQuantityStr",
-                                            title: "@T("Admin.Catalog.Products.Fields.StockQuantity")",
-                                            width: 100
-                                        }, {
-                                            field: "ProductTypeName",
-                                            title: "@T("Admin.Catalog.Products.Fields.ProductType")",
-                                            width: 100
-                                        }, {
-                                            field: "Published",
-                                            title: "@T("Admin.Catalog.Products.Fields.Published")",
-                                            width: 100,
-                                            template: '# if(Published) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
-                                        }, {
-                                            field: "Id",
-                                            title: "@T("Admin.Common.Edit")",
-                                            width: 100,
-                                            headerAttributes: { style: "text-align:center" },
-                                            attributes: { style: "text-align:center" },
-                                            template: '<a class="btn btn-default" href="Edit/#=Id#"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>'
+                                        error: function (xhr, ajaxOptions, thrownError) {
+                                            $('#deleteSelectedFailed-info').html(thrownError);
+                                            $('#deleteSelectedFailed').click();
                                         }
-                                    ]
+                                    });
+                                    $('#delete-selected-action-confirmation').modal('toggle');
+                                    return false;
                                 });
                             });
-                            </script>
-                        </div>
+
+                        </script>
+                        <nop-alert asp-alert-id="deleteSelectedFailed" />
                     </div>
                 </div>
             </div>
         </div>
-
-        <script>
-        var selectedIds = [];
-
+    </div>
+    <script>
         $(document).ready(function () {
-            //search button
-            $('#search-products').click(function () {
-                //search
-                var grid = $('#products-grid').data('kendoGrid');
-                grid.dataSource.page(1); //new search. Set page size to 1
-                //grid.dataSource.read(); we already loaded the grid above using "page" function
-                //clear selected checkboxes
-                $('.checkboxGroups').attr('checked', false).change();
-                selectedIds = [];
-                return false;
-            });
-
             $("#@Html.IdFor(model => model.GoDirectlyToSku)").keydown(function (event) {
                 if (event.keyCode === 13) {
                     $("#go-to-product-by-sku").click();
                     return false;
                 }
             });
-            //delete selected
-            $("#delete-selected-action-confirmation-submit-button").bind("click", function () {
-                var postData = {
-                    selectedIds: selectedIds
-                };
-                addAntiForgeryToken(postData);
-                $.ajax({
-                    cache: false,
-                    type: "POST",
-                    url: "@(Url.Action("DeleteSelected", "Product"))",
-                    data: postData,
-                    complete: function (data) {
-                        //reload grid
-                        var grid = $('#products-grid').data('kendoGrid');
-                        grid.dataSource.read();
-                    },
-                    error: function (xhr, ajaxOptions, thrownError) {
-                        $('#deleteSelectedFailed-info').html(thrownError);
-                        $("#deleteSelectedFailed").click();
-                    }
-                });
-                $('#delete-selected-action-confirmation').modal('toggle');
-                return false;
-            });
-
-            $('#mastercheckbox').click(function () {
-                $('.checkboxGroups').attr('checked', $(this).is(':checked')).change();
-            });
-
-            //wire up checkboxes.
-            $('#products-grid').on('change', 'input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]', function (e) {
-                var $check = $(this);
-                var checked = jQuery.inArray($check.val(), selectedIds);
-                if ($check.is(":checked") == true) {
-                    if (checked == -1) {
-                        //add id to selectedIds.
-                        selectedIds.push($check.val());
-                    }
-                } else if (checked > -1) {
-                    //remove id from selectedIds.
-                    selectedIds = $.grep(selectedIds, function (item, index) {
-                        return item != $check.val();
-                    });
-                }
-                updateMasterCheckbox();
-            });
         });
-
-        function onDataBound(e) {
-            $('#products-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]').each(function () {
-                var currentId = $(this).val();
-                var checked = jQuery.inArray(currentId, selectedIds);
-                //set checked based on if current checkbox's value is in selectedIds.
-                $(this).attr('checked', checked > -1);
-            });
-
-            updateMasterCheckbox();
-        }
-
-        function updateMasterCheckbox() {
-            var numChkBoxes = $('#products-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]').length;
-            var numChkBoxesChecked = $('#products-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]:checked').length;
-            $('#mastercheckbox').attr('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
-        }
-        </script>
-    </form>
-    @*<nop-delete-confirmation asp-button-id="delete-selected" />*@
-    <nop-alert asp-alert-id="deleteSelectedFailed" />
+    </script>
+</form>
 
     @*import products form*@
     <div id="importexcel-window" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="importexcel-window-title">
@@ -459,19 +303,17 @@
         <input type="hidden" id="selectedIds" name="selectedIds" value="" />
     </form>
 
-
-
-    <script>
-        $(document).ready(function () {
-            $('#exportxml-selected').click(function (e) {
-                e.preventDefault();
-                var ids = selectedIds.join(",");
-                $('#export-xml-selected-form #selectedIds').val(ids);
-                $('#export-xml-selected-form').submit();
-                return false;
-            });
+<script>
+    $(document).ready(function () {
+        $('#exportxml-selected').click(function (e) {
+            e.preventDefault();
+            var ids = selectedIds.join(",");
+            $('#export-xml-selected-form #selectedIds').val(ids);
+            $('#export-xml-selected-form').submit();
+            return false;
         });
-    </script>
+    });
+</script>
 
     @*export selected (Excel). We don't use GET approach because it's limited to 2K-4K chars and won't work for large number of entities*@
     <form asp-controller="Product" asp-action="ExportExcelSelected" method="post" id="export-excel-selected-form">

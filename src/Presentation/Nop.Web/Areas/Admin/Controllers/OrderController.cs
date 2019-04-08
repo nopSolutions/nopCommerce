@@ -2147,6 +2147,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return Content(string.Empty);
 
             //prepare model
+            searchModel.SetGridPageSize();
             var model = _orderModelFactory.PrepareShipmentItemListModel(searchModel, shipment);
 
             return Json(model);

@@ -166,7 +166,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="product">Product</param>
         /// <returns>Product order list model</returns>
         ProductOrderListModel PrepareProductOrderListModel(ProductOrderSearchModel searchModel, Product product);
-        
+
         /// <summary>
         /// Prepare bulk edit product search model
         /// </summary>

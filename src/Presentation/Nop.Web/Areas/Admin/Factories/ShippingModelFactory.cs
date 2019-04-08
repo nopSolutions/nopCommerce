@@ -13,8 +13,8 @@ using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Areas.Admin.Models.Directory;
 using Nop.Web.Areas.Admin.Models.Shipping;
-using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -155,12 +155,12 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get shipping providers
-            var shippingProviders = _shippingPluginManager.LoadAllPlugins();
+            var shippingProviders = _shippingPluginManager.LoadAllPlugins().ToPagedList(searchModel);
 
             //prepare grid model
             var model = new ShippingProviderListModel
             {
-                Data = shippingProviders.PaginationByRequestModel(searchModel).Select(provider =>
+                Data = shippingProviders.Select(provider =>
                 {
                     //fill in model values from the entity
                     var shippingProviderModel = provider.ToPluginModel<ShippingProviderModel>();
@@ -172,7 +172,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     return shippingProviderModel;
                 }),
-                Total = shippingProviders.Count
+                Total = shippingProviders.TotalCount
             };
 
             return model;
@@ -205,12 +205,12 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get pickup point providers
-            var pickupPointProviders = _pickupPluginManager.LoadAllPlugins();
+            var pickupPointProviders = _pickupPluginManager.LoadAllPlugins().ToPagedList(searchModel);
 
             //prepare grid model
             var model = new PickupPointProviderListModel
             {
-                Data = pickupPointProviders.PaginationByRequestModel(searchModel).Select(provider =>
+                Data = pickupPointProviders.Select(provider =>
                 {
                     //fill in model values from the entity
                     var pickupPointProviderModel = provider.ToPluginModel<PickupPointProviderModel>();
@@ -222,7 +222,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     return pickupPointProviderModel;
                 }),
-                Total = pickupPointProviders.Count
+                Total = pickupPointProviders.TotalCount
             };
 
             return model;
@@ -255,14 +255,14 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get shipping methods
-            var shippingMethods = _shippingService.GetAllShippingMethods();
+            var shippingMethods = _shippingService.GetAllShippingMethods().ToPagedList(searchModel);
 
             //prepare grid model
             var model = new ShippingMethodListModel
             {
                 //fill in model values from the entity
-                Data = shippingMethods.PaginationByRequestModel(searchModel).Select(method => method.ToModel<ShippingMethodModel>()),
-                Total = shippingMethods.Count
+                Data = shippingMethods.Select(method => method.ToModel<ShippingMethodModel>()),
+                Total = shippingMethods.TotalCount
             };
 
             return model;
@@ -328,14 +328,14 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get delivery dates
-            var deliveryDates = _dateRangeService.GetAllDeliveryDates();
+            var deliveryDates = _dateRangeService.GetAllDeliveryDates().ToPagedList(searchModel);
 
             //prepare grid model
             var model = new DeliveryDateListModel
             {
                 //fill in model values from the entity
-                Data = deliveryDates.PaginationByRequestModel(searchModel).Select(date => date.ToModel<DeliveryDateModel>()),
-                Total = deliveryDates.Count
+                Data = deliveryDates.Select(date => date.ToModel<DeliveryDateModel>()),
+                Total = deliveryDates.TotalCount
             };
 
             return model;
@@ -382,15 +382,14 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get product availability ranges
-            var productAvailabilityRanges = _dateRangeService.GetAllProductAvailabilityRanges();
+            var productAvailabilityRanges = _dateRangeService.GetAllProductAvailabilityRanges().ToPagedList(searchModel);
 
             //prepare grid model
             var model = new ProductAvailabilityRangeListModel
             {
                 //fill in model values from the entity
-                Data = productAvailabilityRanges.PaginationByRequestModel(searchModel)
-                    .Select(range => range.ToModel<ProductAvailabilityRangeModel>()),
-                Total = productAvailabilityRanges.Count
+                Data = productAvailabilityRanges.Select(range => range.ToModel<ProductAvailabilityRangeModel>()),
+                Total = productAvailabilityRanges.TotalCount
             };
 
             return model;
@@ -454,14 +453,14 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get warehouses
-            var warehouses = _shippingService.GetAllWarehouses();
+            var warehouses = _shippingService.GetAllWarehouses().ToPagedList(searchModel);
 
             //prepare list model
             var model = new WarehouseListModel
             {
                 //fill in model values from the entity
-                Data = warehouses.PaginationByRequestModel(searchModel).Select(warehouse => warehouse.ToModel<WarehouseModel>()),
-                Total = warehouses.Count
+                Data = warehouses.Select(warehouse => warehouse.ToModel<WarehouseModel>()),
+                Total = warehouses.TotalCount
             };
 
             return model;
