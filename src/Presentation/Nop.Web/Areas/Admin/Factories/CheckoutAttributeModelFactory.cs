@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Domain.Catalog;
@@ -10,6 +11,7 @@ using Nop.Services.Orders;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Orders;
 using Nop.Web.Framework.Factories;
+using Nop.Web.Framework.Models.DataTables;
 using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
@@ -127,6 +129,69 @@ namespace Nop.Web.Areas.Admin.Factories
             return searchModel;
         }
 
+        /// <summary>
+        /// Prepare checkout attribute datatables model
+        /// </summary>
+        /// <param name="searchModel">Checkout attribute search model</param>
+        /// <returns>Checkout attribute datatables model</returns>
+        protected virtual DataTablesModel PrepareCheckoutAttributeGridModel(CheckoutAttributeSearchModel searchModel)
+        {
+            //prepare common properties
+            var model = new DataTablesModel
+            {
+                Name = "checkoutattributes-grid",
+                UrlRead = new DataUrl("List", "CheckoutAttribute", null),
+                Length = searchModel.PageSize,
+                LengthMenu = searchModel.AvailablePageSizes
+            };
+
+            //prepare filters to search
+            model.Filters = null;
+
+            //prepare model columns
+            model.ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(CheckoutAttributeModel.Name))
+                {
+                    Title = _localizationService.GetResource("Admin.Catalog.Attributes.CheckoutAttributes.Fields.Name")
+                },
+                new ColumnProperty(nameof(CheckoutAttributeModel.AttributeControlTypeName))
+                {
+                    Title = _localizationService.GetResource("Admin.Catalog.Attributes.CheckoutAttributes.Fields.AttributeControlType"),
+                    Width = "200"
+                },
+                new ColumnProperty(nameof(CheckoutAttributeModel.IsRequired))
+                {
+                    Title = _localizationService.GetResource("Admin.Catalog.Attributes.CheckoutAttributes.Fields.IsRequired"),
+                    Width = "100",
+                    Render = new RenderBoolean()
+                },
+                new ColumnProperty(nameof(CheckoutAttributeModel.DisplayOrder))
+                {
+                    Title = _localizationService.GetResource("Admin.Catalog.Attributes.CheckoutAttributes.Fields.DisplayOrder"),
+                    Width = "100"
+                },
+                new ColumnProperty(nameof(CheckoutAttributeModel.Id))
+                {
+                    Title = _localizationService.GetResource("Admin.Common.Edit"),
+                    Width = "100",
+                    Render = new RenderButtonEdit(new DataUrl("Edit"))
+                }
+            };
+
+            //prepare column definitions
+            model.ColumnDefinitions = new List<ColumnDefinition>
+            {
+                new ColumnDefinition()
+                {
+                    Targets = "-1",
+                    ClassName =  StyleColumn.CenterAll
+                }
+            };
+
+            return model;
+        }
+
         #endregion
 
         #region Methods
@@ -143,6 +208,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
+            searchModel.Grid = PrepareCheckoutAttributeGridModel(searchModel);
 
             return searchModel;
         }
@@ -161,9 +227,9 @@ namespace Nop.Web.Areas.Admin.Factories
             var checkoutAttributes = _checkoutAttributeService.GetAllCheckoutAttributes().ToPagedList(searchModel);
 
             //prepare list model
-            var model = new CheckoutAttributeListModel
+            var model = new CheckoutAttributeListModel().PrepareToGrid(searchModel, checkoutAttributes, () =>
             {
-                Data = checkoutAttributes.Select(attribute =>
+                return checkoutAttributes.Select(attribute =>
                 {
                     //fill in model values from the entity
                     var attributeModel = attribute.ToModel<CheckoutAttributeModel>();
@@ -172,9 +238,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     attributeModel.AttributeControlTypeName = _localizationService.GetLocalizedEnum(attribute.AttributeControlType);
 
                     return attributeModel;
-                }),
-                Total = checkoutAttributes.TotalCount
-            };
+                });
+            });
 
             return model;
         }
