@@ -231,13 +231,13 @@ columns: [
                             @if (!string.IsNullOrEmpty(picture.Src))
                             {
                                 <text>
-                                    return '<img src="@picture.Src"/>'
+                                    return '<img src="@(picture.SrcPrefix)@(picture.Src)"/>'
                                 </text>
                             }
                             else
                             {
                                 <text>
-                                    return '<img src="' + data + '"/>'
+                                    return '<img src="@(picture.SrcPrefix)' + data + '"/>'
                                 </text>
                             }
                         }
