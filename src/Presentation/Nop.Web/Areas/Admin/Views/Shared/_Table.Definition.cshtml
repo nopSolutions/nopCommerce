@@ -225,6 +225,13 @@ columns: [
                         }
                     </text>
                     break;
+                case RenderButtonCustom buttonCustom:
+                    <text>
+                        render: function (data, type, row, meta) {
+                            return '<a class="@GetEnumValue(typeof(StyleButton), buttonCustom.Style)" href="@buttonCustom.Url' + data + '">@buttonCustom.Title</a>'
+                        }
+                    </text>
+                    break;
                 case RenderPicture picture:
                     <text>
                         render: function (data, type, row, meta) {

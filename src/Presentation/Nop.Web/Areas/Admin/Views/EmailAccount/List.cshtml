@@ -27,14 +27,6 @@
             <div class="panel panel-default">
                 <div class="panel-body">
                     @await Html.PartialAsync("Table", Model.Grid)
-
-                    <script>
-                        function renderColumnMark(data, type, row, meta) {
-                            var link = '@Url.Content("~/Admin/EmailAccount/MarkAsDefaultEmail/")' + data;
-                            var title = '@T("Admin.Configuration.EmailAccounts.Fields.MarkAsDefaultEmail")';
-                            return '<a href="' + link + '" class="btn bg-green">' + title + '</a>';
-                            }
-                    </script>
                 </div>
             </div>
         </div>

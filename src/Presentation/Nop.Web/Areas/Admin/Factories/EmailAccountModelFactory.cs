@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Nop.Core.Domain.Messages;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
@@ -19,20 +21,26 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Fields
 
         private readonly EmailAccountSettings _emailAccountSettings;
+        private readonly IActionContextAccessor _actionContextAccessor;
         private readonly IEmailAccountService _emailAccountService;
         private readonly ILocalizationService _localizationService;
+        private readonly IUrlHelperFactory _urlHelperFactory;
 
         #endregion
 
         #region Ctor
 
         public EmailAccountModelFactory(EmailAccountSettings emailAccountSettings,
+            IActionContextAccessor actionContextAccessor,
             IEmailAccountService emailAccountService,
-            ILocalizationService localizationService)
+            ILocalizationService localizationService,
+            IUrlHelperFactory urlHelperFactory)
         {
             _emailAccountSettings = emailAccountSettings;
+            _actionContextAccessor = actionContextAccessor;
             _emailAccountService = emailAccountService;
             _localizationService = localizationService;
+            _urlHelperFactory = urlHelperFactory;
         }
 
         #endregion
@@ -46,6 +54,8 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>Email account datatables model</returns>
         protected virtual DataTablesModel PrepareEmailAccountGridModel(EmailAccountSearchModel searchModel)
         {
+            var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
+
             //prepare common properties
             var model = new DataTablesModel
             {
@@ -79,9 +89,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 new ColumnProperty(nameof(EmailAccountModel.Id))
                 {
                     Title = _localizationService.GetResource("Admin.Configuration.EmailAccounts.Fields.MarkAsDefaultEmail"),
-                    Width = "200",
-                    Render = new RenderCustom("renderColumnMark")
-                    
+                    Width = "200",                    
+                    Render = new RenderButtonCustom(urlHelper.Content("~/Admin/EmailAccount/MarkAsDefaultEmail/"), StyleButton.Success, _localizationService.GetResource("Admin.Configuration.EmailAccounts.Fields.MarkAsDefaultEmail"))
+
                 },
                 new ColumnProperty(nameof(EmailAccountModel.Id))
                 {
