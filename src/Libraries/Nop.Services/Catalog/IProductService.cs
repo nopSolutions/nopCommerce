@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
@@ -104,6 +104,7 @@ namespace Nop.Services.Catalog
         /// true - load only "Published" products
         /// false - load only "Unpublished" products
         /// </param>
+        /// <param name="totalRecordsOutput">Set to return total records</param>
         /// <returns>Products</returns>
         IPagedList<Product> SearchProducts(
             int pageIndex = 0,
@@ -129,7 +130,8 @@ namespace Nop.Services.Catalog
             IList<int> filteredSpecs = null,
             ProductSortingEnum orderBy = ProductSortingEnum.Position,
             bool showHidden = false,
-            bool? overridePublished = null);
+            bool? overridePublished = null,
+            int? totalRecordsOutput = null);
 
         /// <summary>
         /// Search products
@@ -164,6 +166,7 @@ namespace Nop.Services.Catalog
         /// true - load only "Published" products
         /// false - load only "Unpublished" products
         /// </param>
+        /// <param name="totalRecordsOutput">Set to return total records</param>
         /// <returns>Products</returns>
         IPagedList<Product> SearchProducts(
             out IList<int> filterableSpecificationAttributeOptionIds,
@@ -191,7 +194,8 @@ namespace Nop.Services.Catalog
             IList<int> filteredSpecs = null,
             ProductSortingEnum orderBy = ProductSortingEnum.Position,
             bool showHidden = false,
-            bool? overridePublished = null);
+            bool? overridePublished = null,
+            int? totalRecordsOutput = null);
 
         /// <summary>
         /// Gets products by product attribute

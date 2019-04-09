@@ -5526,6 +5526,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.NewProductsNumber.Hint">
     <Value>The number of products to display when 'New products' page is enabled.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.NewProductsPageSize">
+    <Value>Number of products per page for 'New products' page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.NewProductsPageSize.Hint">
+    <Value>The number of products per page to display when 'New products' page is enabled.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.NotifyCustomerAboutProductReviewReply">
     <Value>Notify customer about product review reply</Value>
   </LocaleResource>

@@ -1514,8 +1514,9 @@ namespace Nop.Web.Factories
                 markedAsNewOnly: true,
                 orderBy: ProductSortingEnum.CreatedOn,
                 pageIndex: command.PageNumber - 1,
-                pageSize: _catalogSettings.NewProductsNumber);
-
+                pageSize: _catalogSettings.NewProductsPageSize,
+                totalRecordsOutput: _catalogSettings.NewProductsNumber);
+        
             model.Products = _productModelFactory.PrepareProductOverviewModels(products).ToList();
             model.PagingFilteringContext.LoadPagedList(products);
 

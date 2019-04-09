@@ -143,14 +143,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public bool RecentlyViewedProductsEnabled { get; set; }
         public bool RecentlyViewedProductsEnabled_OverrideForStore { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.NewProductsNumber")]
-        public int NewProductsNumber { get; set; }
-        public bool NewProductsNumber_OverrideForStore { get; set; }
-
-        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.NewProductsEnabled")]
-        public bool NewProductsEnabled { get; set; }
-        public bool NewProductsEnabled_OverrideForStore { get; set; }
-
+       
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.CompareProductsEnabled")]
         public bool CompareProductsEnabled { get; set; }
         public bool CompareProductsEnabled_OverrideForStore { get; set; }
@@ -218,6 +211,14 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ProductsByTagPageSizeOptions")]
         public string ProductsByTagPageSizeOptions { get; set; }
         public bool ProductsByTagPageSizeOptions_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.NewProductsNumber")]
+        public int NewProductsNumber { get; set; }
+        public bool NewProductsNumber_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.NewProductsEnabled")]
+        public bool NewProductsEnabled { get; set; }
+        public bool NewProductsEnabled_OverrideForStore { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.NewProductsPageSize")]
         public int NewProductsPageSize { get; set;  }

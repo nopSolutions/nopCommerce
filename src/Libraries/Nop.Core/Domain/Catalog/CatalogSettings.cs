@@ -171,16 +171,6 @@ namespace Nop.Core.Domain.Catalog
         public bool RecentlyViewedProductsEnabled { get; set; }
 
         /// <summary>
-        /// Gets or sets a number of products on the "New products" page
-        /// </summary>
-        public int NewProductsNumber { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether "New products" page is enabled
-        /// </summary>
-        public bool NewProductsEnabled { get; set; }
-
-        /// <summary>
         /// Gets or sets a value indicating whether "Compare products" feature is enabled
         /// </summary>
         public bool CompareProductsEnabled { get; set; }
@@ -459,6 +449,16 @@ namespace Nop.Core.Domain.Catalog
         /// Get or set a value indicating whether it's necessary to show the date for pre-order availability in a public store
         /// </summary>
         public bool DisplayDatePreOrderAvailability { get; set; }
+
+        /// <summary>
+        /// Gets or sets a number of products on the "New products" page
+        /// </summary>
+        public int NewProductsNumber { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether "New products" page is enabled
+        /// </summary>
+        public bool NewProductsEnabled { get; set; }
 
         /// <summary>
         /// Gets or sets a number of products per page on 'New products' page
