@@ -24,6 +24,19 @@ namespace Nop.Web.Framework.Models.DataTables
             Title = title;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the RenderButtonEdit class
+        /// </summary>
+        /// <param name="style">Style of button</param>
+        /// <param name="functionName">Function name on click button</param>
+        /// <param name="title">Title button</param>
+        public RenderButtonCustom(StyleButton style, string functionName, string title)
+        {
+            OnClickFunctionName = functionName;
+            Style = style;
+            Title = title;
+        }
+
         #endregion
 
         #region Properties
@@ -42,6 +55,11 @@ namespace Nop.Web.Framework.Models.DataTables
         /// Gets or sets button title
         /// </summary>
         public string Title { get; set; }
+
+        /// <summary>
+        /// Gets or sets function name on click button
+        /// </summary>
+        public string OnClickFunctionName { get; set; }
 
         #endregion
     }

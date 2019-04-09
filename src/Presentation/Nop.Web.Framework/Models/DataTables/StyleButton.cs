@@ -42,6 +42,13 @@ namespace Nop.Web.Framework.Models.DataTables
         /// Orange style
         /// </summary>
         [EnumMember(Value = "btn btn-warning")]
-        Warning
+        Warning,
+
+        /// <summary>
+        /// Olive style
+        /// </summary>
+        [EnumMember(Value = "btn bg-olive")]
+        Olive        
+
     }
 }
