@@ -26,78 +26,15 @@
         <div class="panel-group">
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <div id="email-accounts-grid"></div>
+                    @await Html.PartialAsync("Table", Model.Grid)
 
                     <script>
-                        $(document).ready(function() {
-                            $("#email-accounts-grid").kendoGrid({
-                                dataSource: {
-                                    type: "json",
-                                    transport: {
-                                        read: {
-                                            url: "@Html.Raw(Url.Action("List", "EmailAccount"))",
-                                            type: "POST",
-                                            dataType: "json",
-                                            data: addAntiForgeryToken
-                                        }
-                                    },
-                                    schema: {
-                                        data: "Data",
-                                        total: "Total",
-                                        errors: "Errors"
-                                    },
-                                    error: function(e) {
-                                        display_kendoui_grid_error(e);
-                                        // Cancel the changes
-                                        this.cancelChanges();
-                                    },
-                                    pageSize: @(Model.PageSize),
-                                    serverPaging: true,
-                                    serverFiltering: true,
-                                    serverSorting: true
-                                },
-                                pageable: {
-                                    refresh: true,
-                                    pageSizes: [@(Model.AvailablePageSizes)],
-                                    @await Html.PartialAsync("_GridPagerMessages")
-                                },
-                                editable: {
-                                    confirmation: "@T("Admin.Common.DeleteConfirmation")",
-                                    mode: "inline"
-                                },
-                                scrollable: false,
-                                columns: [
-                                {
-                                    field: "Email",
-                                    title: "@T("Admin.Configuration.EmailAccounts.Fields.Email")"
-                                }, {
-                                    field: "DisplayName",
-                                    title: "@T("Admin.Configuration.EmailAccounts.Fields.DisplayName")",
-                                    width: 200
-                                }, {
-                                    field: "IsDefaultEmailAccount",
-                                    title: "@T("Admin.Configuration.EmailAccounts.Fields.IsDefaultEmailAccount")",
-                                    width: 200,
-                                    headerAttributes: { style: "text-align:center" },
-                                    attributes: { style: "text-align:center" },
-                                    template: '# if(IsDefaultEmailAccount) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
-                                }, {
-                                    field: "Id",
-                                    title: "@T("Admin.Configuration.EmailAccounts.Fields.MarkAsDefaultEmail")",
-                                    template: '<a href="@Url.Content("~/Admin/EmailAccount/MarkAsDefaultEmail/")#=Id#" class="btn bg-green">@T("Admin.Configuration.EmailAccounts.Fields.MarkAsDefaultEmail")</a>'
-                                }, {
-                                    field: "Id",
-                                    title: "@T("Admin.Common.Edit")",
-                                    width: 100,
-                                    headerAttributes: { style: "text-align:center" },
-                                    attributes: { style: "text-align:center" },
-                                    template: '<a class="btn btn-default" href="Edit/#=Id#"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>'
-                                    }
-                                ]
-                            });
-                        });
+                        function renderColumnMark(data, type, row, meta) {
+                            var link = '@Url.Content("~/Admin/EmailAccount/MarkAsDefaultEmail/")' + data;
+                            var title = '@T("Admin.Configuration.EmailAccounts.Fields.MarkAsDefaultEmail")';
+                            return '<a href="' + link + '" class="btn bg-green">' + title + '</a>';
+                            }
                     </script>
-
                 </div>
             </div>
         </div>
