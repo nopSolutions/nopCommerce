@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Polls;
@@ -9,6 +10,7 @@ using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Polls;
 using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;
+using Nop.Web.Framework.Models.DataTables;
 using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
@@ -24,6 +26,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IBaseAdminModelFactory _baseAdminModelFactory;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ILanguageService _languageService;
+        private readonly ILocalizationService _localizationService;
         private readonly IPollService _pollService;
         private readonly IStoreMappingSupportedModelFactory _storeMappingSupportedModelFactory;
 
@@ -35,6 +38,7 @@ namespace Nop.Web.Areas.Admin.Factories
             IBaseAdminModelFactory baseAdminModelFactory,
             IDateTimeHelper dateTimeHelper,
             ILanguageService languageService,
+            ILocalizationService localizationService,
             IPollService pollService,
             IStoreMappingSupportedModelFactory storeMappingSupportedModelFactory)
         {
@@ -42,6 +46,7 @@ namespace Nop.Web.Areas.Admin.Factories
             _baseAdminModelFactory = baseAdminModelFactory;
             _dateTimeHelper = dateTimeHelper;
             _languageService = languageService;
+            _localizationService = localizationService;
             _pollService = pollService;
             _storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
         }
@@ -72,6 +77,91 @@ namespace Nop.Web.Areas.Admin.Factories
             return searchModel;
         }
 
+        /// <summary>
+        /// Prepare poll datatables model
+        /// </summary>
+        /// <param name="searchModel">Poll search model</param>
+        /// <returns>Poll datatables model</returns>
+        protected virtual DataTablesModel PreparePollGridModel(PollSearchModel searchModel)
+        {
+            //prepare common properties
+            var model = new DataTablesModel
+            {
+                Name = "polls-grid",
+                UrlRead = new DataUrl("List", "Poll", null),
+                SearchButtonId = "search-poll",
+                Length = searchModel.PageSize,
+                LengthMenu = searchModel.AvailablePageSizes
+            };
+
+            //prepare filters to search
+            model.Filters = new List<FilterParameter>()
+            {
+                new FilterParameter(nameof(searchModel.SearchStoreId))
+            };
+
+            //prepare model columns
+            model.ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(PollModel.Name))
+                {
+                    Title = _localizationService.GetResource("Admin.ContentManagement.Polls.Fields.Name")
+                },
+                new ColumnProperty(nameof(PollModel.LanguageName))
+                {
+                    Title = _localizationService.GetResource("Admin.ContentManagement.Polls.Fields.Language"),
+                    Width = "100"
+                },
+                new ColumnProperty(nameof(PollModel.DisplayOrder))
+                {
+                    Title = _localizationService.GetResource("Admin.ContentManagement.Polls.Fields.DisplayOrder"),
+                    Width = "200"
+                },
+                new ColumnProperty(nameof(PollModel.Published))
+                {
+                    Title = _localizationService.GetResource("Admin.ContentManagement.Polls.Fields.Published"),
+                    Width = "100",
+                    Render = new RenderBoolean()
+                },
+                new ColumnProperty(nameof(PollModel.ShowOnHomepage))
+                {
+                    Title = _localizationService.GetResource("Admin.ContentManagement.Polls.Fields.ShowOnHomepage"),
+                    Width = "100",
+                    Render = new RenderBoolean()
+                },
+                new ColumnProperty(nameof(PollModel.StartDateUtc))
+                {
+                    Title = _localizationService.GetResource("Admin.ContentManagement.Polls.Fields.StartDate"),
+                    Width = "200",
+                    Render = new RenderDate()
+                },
+                new ColumnProperty(nameof(PollModel.EndDateUtc))
+                {
+                    Title = _localizationService.GetResource("Admin.ContentManagement.Polls.Fields.EndDate"),
+                    Width = "200",
+                    Render = new RenderDate()
+                },
+                new ColumnProperty(nameof(PollModel.Id))
+                {
+                    Title = _localizationService.GetResource("Admin.Common.Edit"),
+                    Width = "100",
+                    Render = new RenderButtonEdit(new DataUrl("Edit"))
+                }
+            };
+
+            //prepare column definitions
+            model.ColumnDefinitions = new List<ColumnDefinition>
+            {
+                new ColumnDefinition()
+                {
+                    Targets = "[-1,3,4]",
+                    ClassName =  StyleColumn.CenterAll
+                }
+            };
+
+            return model;
+        }
+
         #endregion
 
         #region Methods
@@ -93,6 +183,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
+            searchModel.Grid = PreparePollGridModel(searchModel);
 
             return searchModel;
         }
@@ -113,9 +204,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new PollListModel
+            var model = new PollListModel().PrepareToGrid(searchModel, polls, () =>
             {
-                Data = polls.Select(poll =>
+                return polls.Select(poll =>
                 {
                     //fill in model values from the entity
                     var pollModel = poll.ToModel<PollModel>();
@@ -130,9 +221,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     pollModel.LanguageName = _languageService.GetLanguageById(poll.LanguageId)?.Name;
 
                     return pollModel;
-                }),
-                Total = polls.TotalCount
-            };
+                });
+            });
 
             return model;
         }
