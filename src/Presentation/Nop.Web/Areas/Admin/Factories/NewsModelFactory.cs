@@ -67,10 +67,10 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Utilites
 
         /// <summary>
-        /// Prepare category datatables model
+        /// Prepare news item datatables model
         /// </summary>
-        /// <param name="searchModel">Category search model</param>
-        /// <returns>Category datatables model</returns>
+        /// <param name="searchModel">News item search model</param>
+        /// <returns>News item datatables model</returns>
         protected virtual DataTablesModel PrepareNewsItemGridModel(NewsItemSearchModel searchModel)
         {
             //prepare common properties
@@ -137,7 +137,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     Title = _localizationService.GetResource("Admin.Common.Edit"),
                     Width = "100",
-                    Render = new RenderButtonEdit(new DataUrl("Edit"))
+                    Render = new RenderButtonEdit(new DataUrl("NewsItemEdit"))
                 }
             };
 
