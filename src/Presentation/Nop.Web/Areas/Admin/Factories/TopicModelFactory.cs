@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -13,6 +14,7 @@ using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Topics;
 using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;
+using Nop.Web.Framework.Models.DataTables;
 using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
@@ -67,6 +69,109 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #endregion
 
+        #region Utilites
+
+        /// <summary>
+        /// Prepare topic datatables model
+        /// </summary>
+        /// <param name="searchModel">Topic search model</param>
+        /// <returns>Topic datatables model</returns>
+        protected virtual DataTablesModel PrepareTopicGridModel(TopicSearchModel searchModel)
+        {
+            //prepare common properties
+            var model = new DataTablesModel
+            {
+                Name = "topics-grid",
+                UrlRead = new DataUrl("List", "Topic", null),
+                SearchButtonId = "search-topics",
+                Length = searchModel.PageSize,
+                LengthMenu = searchModel.AvailablePageSizes
+            };
+
+            //prepare filters to search
+            model.Filters = new List<FilterParameter>()
+            {
+                new FilterParameter(nameof(searchModel.SearchKeywords)),
+                new FilterParameter(nameof(searchModel.SearchStoreId))
+            };
+
+            //prepare model columns
+            model.ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(TopicModel.SystemName))
+                {
+                    Title = _localizationService.GetResource("Admin.ContentManagement.Topics.Fields.SystemName")
+                },
+                new ColumnProperty(nameof(TopicModel.Published))
+                {
+                    Title = _localizationService.GetResource("Admin.ContentManagement.Topics.Fields.Published"),
+                    Width = "150",
+                    Render = new RenderBoolean()
+                },
+                new ColumnProperty(nameof(TopicModel.IsPasswordProtected))
+                {
+                    Title = _localizationService.GetResource("Admin.ContentManagement.Topics.Fields.IsPasswordProtected"),
+                    Width = "150",
+                    Render = new RenderBoolean()
+                },
+                new ColumnProperty(nameof(TopicModel.IncludeInSitemap))
+                {
+                    Title = _localizationService.GetResource("Admin.ContentManagement.Topics.Fields.IncludeInSitemap"),
+                    Width = "150",
+                    Render = new RenderBoolean()
+                },
+                new ColumnProperty(nameof(TopicModel.IncludeInTopMenu))
+                {
+                    Title = _localizationService.GetResource("Admin.ContentManagement.Topics.Fields.IncludeInTopMenu"),
+                    Width = "150",
+                    Render = new RenderBoolean()
+                },
+                new ColumnProperty(nameof(TopicModel.IncludeInFooterColumn1))
+                {
+                    Title = _localizationService.GetResource("Admin.ContentManagement.Topics.Fields.IncludeInFooterColumn1"),
+                    Width = "150",
+                    Render = new RenderBoolean()
+                },
+                new ColumnProperty(nameof(TopicModel.IncludeInFooterColumn2))
+                {
+                    Title = _localizationService.GetResource("Admin.ContentManagement.Topics.Fields.IncludeInFooterColumn2"),
+                    Width = "150",
+                    Render = new RenderBoolean()
+                },
+                new ColumnProperty(nameof(TopicModel.IncludeInFooterColumn3))
+                {
+                    Title = _localizationService.GetResource("Admin.ContentManagement.Topics.Fields.IncludeInFooterColumn3"),
+                    Width = "150",
+                    Render = new RenderBoolean()
+                },
+                new ColumnProperty(nameof(TopicModel.DisplayOrder))
+                {
+                    Title = _localizationService.GetResource("Admin.ContentManagement.Topics.Fields.DisplayOrder"),
+                    Width = "100",
+                },
+                new ColumnProperty(nameof(TopicModel.Id))
+                {
+                    Title = _localizationService.GetResource("Admin.Common.Edit"),
+                    Width = "100",
+                    Render = new RenderButtonEdit(new DataUrl("Edit"))
+                }
+            };
+
+            //prepare column definitions
+            model.ColumnDefinitions = new List<ColumnDefinition>
+            {
+                new ColumnDefinition()
+                {
+                    Targets = "[-1,1,2,3,4,5,6,7]",
+                    ClassName =  StyleColumn.CenterAll
+                }
+            };
+
+            return model;
+        }
+
+        #endregion
+
         #region Methods
 
         /// <summary>
@@ -86,6 +191,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
+            searchModel.Grid = PrepareTopicGridModel(searchModel);
 
             return searchModel;
         }
@@ -116,9 +222,9 @@ namespace Nop.Web.Areas.Admin.Factories
             var pagedTopics = topics.ToList().ToPagedList(searchModel);
 
             //prepare grid model
-            var model = new TopicListModel
+            var model = new TopicListModel().PrepareToGrid(searchModel, pagedTopics, () =>
             {
-                Data = pagedTopics.Select(topic =>
+                return pagedTopics.Select(topic =>
                 {
                     //fill in model values from the entity
                     var topicModel = topic.ToModel<TopicModel>();
@@ -129,9 +235,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     topicModel.SeName = _urlRecordService.GetSeName(topic, 0, true, false);
 
                     return topicModel;
-                }),
-                Total = pagedTopics.TotalCount
-            };
+                });
+            });
 
             return model;
         }
