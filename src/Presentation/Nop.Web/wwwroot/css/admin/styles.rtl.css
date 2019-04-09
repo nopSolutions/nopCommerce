@@ -1332,6 +1332,10 @@ span.grid-report-item.red {
     position: relative;
 }
 
+.basic-settings-mode .parent-setting.opened + .nested-setting .form-group.parent-setting.parent-setting-advanced.opened div + div input[type=checkbox] {
+    margin-right: 0;
+}
+
 .parent-setting.opened + .nested-setting .form-group {
     margin-bottom: 0;
     position: relative;
@@ -1402,6 +1406,15 @@ span.grid-report-item.red {
 
 .basic-settings-mode .parent-setting.parent-setting-advanced.opened div[class^="col-md-"] + div[class^="col-md-"]:before {
     display: none;
+}
+
+.basic-settings-mode .parent-setting.opened + .nested-setting .form-group.parent-setting.parent-setting-advanced.opened div[class^="col-md-"] + div[class^="col-md-"]:before {
+    display: block;
+    margin-top: -33px;
+}
+
+.basic-settings-mode .parent-setting.opened + .nested-setting .form-group.parent-setting.parent-setting-advanced.opened > div[class^="col-md-"] + div[class^="col-md-"]:after {
+    display: block;
 }
 
 /*advanced settings*/
