@@ -74,10 +74,10 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
-        /// Prepare product review datatables model
+        /// Prepare language datatables model
         /// </summary>
-        /// <param name="searchModel">Product review search model</param>
-        /// <returns>Product review datatables model</returns>
+        /// <param name="searchModel">Language search model</param>
+        /// <returns>Language datatables model</returns>
         protected virtual DataTablesModel PrepareLanguageGridModel(LanguageSearchModel searchModel)
         {
             //prepare common properties
@@ -97,7 +97,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 new ColumnProperty(nameof(LanguageModel.Name))
                 {
                     Title = _localizationService.GetResource("Admin.Configuration.Languages.Fields.Name"),
-                    AutoWidth = true
+                    Width = "auto"
                 },
                 new ColumnProperty(nameof(LanguageModel.FlagImageFileName))
                 {
@@ -139,12 +139,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 },
                 new ColumnDefinition()
                 {
-                    Targets = "4",
-                    ClassName =  StyleColumn.CenterAll
-                },
-                new ColumnDefinition()
-                {
-                    Targets = "5",
+                    Targets = "[4,5]",
                     ClassName =  StyleColumn.CenterAll
                 }
             };
