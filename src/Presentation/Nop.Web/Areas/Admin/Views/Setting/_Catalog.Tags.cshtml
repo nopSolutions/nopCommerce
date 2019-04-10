@@ -59,7 +59,6 @@
         toggleEmailAFriend();
         toggleRecentlyViewedProducts();
         toggleNewProducts();
-        toggleNewProductsPageSize();
         toggleBestsellersOnHomepage();
         toggleProductsAlsoPurchasedNumber();
         toggleProductsByTagPageSize();
@@ -90,17 +89,12 @@
     }
 
     function toggleNewProducts() {
+        console.log('#pnlNewProductsNumber');
         if ($('#@Html.IdFor(model => model.NewProductsEnabled)').is(':checked')) {
             $('#pnlNewProductsNumber').show();
-        } else {
-            $('#pnlNewProductsNumber').hide();
-        }
-    }
-
-    function toggleNewProductsPageSize() {
-        if ($('#@Html.IdFor(model => model.NewProductsEnabled)').is(':checked')) {
             $('#pnlNewProductsPageSize').show();
         } else {
+            $('#pnlNewProductsNumber').hide();
             $('#pnlNewProductsPageSize').hide();
         }
     }
