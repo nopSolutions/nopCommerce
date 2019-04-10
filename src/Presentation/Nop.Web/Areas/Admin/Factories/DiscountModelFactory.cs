@@ -175,7 +175,7 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
-        /// Prepare вiscount datatables model
+        /// Prepare discount datatables model
         /// </summary>
         /// <param name="searchModel">Discount search model</param>
         /// <returns>Discount datatables model</returns>
