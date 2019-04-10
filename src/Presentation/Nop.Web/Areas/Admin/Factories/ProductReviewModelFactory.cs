@@ -59,7 +59,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #endregion
 
-        #region Utilites
+        #region Utilities
 
         /// <summary>
         /// Prepare product review datatables model

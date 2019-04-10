@@ -64,7 +64,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #endregion
 
-        #region Utilites
+        #region Utilities
 
         /// <summary>
         /// Prepare blog post datatables model

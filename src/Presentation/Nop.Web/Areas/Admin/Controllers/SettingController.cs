@@ -129,7 +129,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #endregion
 
-        #region Utilites
+        #region Utilities
 
         protected virtual void UpdateGdprConsentLocales(GdprConsent gdprConsent, GdprConsentModel model)
         {
