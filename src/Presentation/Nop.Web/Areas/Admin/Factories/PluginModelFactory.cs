@@ -187,6 +187,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     Title = _localizationService.GetResource("Admin.Configuration.Plugins.OfficialFeed.Download"),
                     Width = "150",
+                    ClassName =  StyleColumn.CenterAll,
                     Render = new RenderCustom("renderColumnUrl")
                 },
                 new ColumnProperty(nameof(OfficialFeedPluginModel.CategoryName))
@@ -198,16 +199,6 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     Title = _localizationService.GetResource("Admin.Configuration.Plugins.OfficialFeed.SupportedVersions"),
                     Width = "200"
-                }
-            };
-
-            //prepare column definitions
-            model.ColumnDefinitions = new List<ColumnDefinition>
-            {
-                new ColumnDefinition()
-                {
-                    Targets = "3",
-                    ClassName =  StyleColumn.CenterAll
                 }
             };
 

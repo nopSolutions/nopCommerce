@@ -147,30 +147,35 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     Title = _localizationService.GetResource("Admin.Configuration.Currencies.Fields.IsPrimaryExchangeRateCurrency"),
                     Width = "250",
+                    ClassName =  StyleColumn.CenterAll,
                     Render = new RenderBoolean()
                 },
                 new ColumnProperty(nameof(CurrencyModel.Id))
                 {
                     Title = _localizationService.GetResource("Admin.Configuration.Currencies.Fields.MarkAsPrimaryExchangeRateCurrency"),
                     Width = "200",
+                    ClassName =  StyleColumn.CenterAll,
                     Render = new RenderButtonCustom(StyleButton.Success, "markAsPrimaryExchangeRateCurrency", _localizationService.GetResource("Admin.Configuration.Currencies.Fields.MarkAsPrimaryExchangeRateCurrency"))
                 },
                 new ColumnProperty(nameof(CurrencyModel.IsPrimaryStoreCurrency))
                 {
                     Title = _localizationService.GetResource("Admin.Configuration.Currencies.Fields.IsPrimaryStoreCurrency"),
                     Width = "200",
+                    ClassName =  StyleColumn.CenterAll,
                     Render = new RenderBoolean()
                 },
                 new ColumnProperty(nameof(CurrencyModel.Id))
                 {
                     Title = _localizationService.GetResource("Admin.Configuration.Currencies.Fields.MarkAsPrimaryStoreCurrency"),
                     Width = "200",
+                    ClassName =  StyleColumn.CenterAll,
                     Render = new RenderButtonCustom(StyleButton.Olive, "markAsPrimaryStoreCurrency", _localizationService.GetResource("Admin.Configuration.Currencies.Fields.MarkAsPrimaryStoreCurrency"))
                 },
                 new ColumnProperty(nameof(CurrencyModel.Published))
                 {
                     Title = _localizationService.GetResource("Admin.Configuration.Currencies.Fields.Published"),
                     Width = "50",
+                    ClassName =  StyleColumn.CenterAll,
                     Render = new RenderBoolean()
                 },
                 new ColumnProperty(nameof(CurrencyModel.DisplayOrder))
@@ -182,17 +187,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     Title = _localizationService.GetResource("Admin.Common.Edit"),
                     Width = "100",
+                    ClassName =  StyleColumn.CenterAll,
                     Render = new RenderButtonEdit(new DataUrl("Edit"))
-                }
-            };
-
-            //prepare column definitions
-            model.ColumnDefinitions = new List<ColumnDefinition>
-            {
-                new ColumnDefinition()
-                {
-                    Targets = "[-1,3,4,5,6,7]",
-                    ClassName =  StyleColumn.CenterAll
                 }
             };
 

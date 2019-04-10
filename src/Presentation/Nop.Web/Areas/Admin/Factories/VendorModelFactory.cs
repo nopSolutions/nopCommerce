@@ -288,24 +288,16 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     Title = _localizationService.GetResource("Admin.Vendors.Fields.Active"),
                     Width = "50",
+                    ClassName =  StyleColumn.CenterAll,
                     Render = new RenderBoolean()
                 },
                 new ColumnProperty(nameof(VendorModel.Id))
                 {
                     Title = _localizationService.GetResource("Admin.Common.Edit"),
                     Width = "50",
+                    ClassName =  StyleColumn.CenterAll,
                     Render = new RenderButtonEdit(new DataUrl("Edit"))
                 }                
-            };
-
-            //prepare column definitions
-            model.ColumnDefinitions = new List<ColumnDefinition>
-            {
-                new ColumnDefinition()
-                {
-                    Targets = "[-1, -2]",
-                    ClassName =  StyleColumn.CenterAll
-                }
             };
 
             return model;

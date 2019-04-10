@@ -95,6 +95,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     IsMasterCheckBox = true,
                     Render = new RenderCheckBox("checkbox_countries"),
+                    ClassName =  StyleColumn.CenterAll,
                     Width = "50",
                 },
                 new ColumnProperty(nameof(CountryModel.Name))
@@ -106,12 +107,14 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     Title = _localizationService.GetResource("Admin.Configuration.Countries.Fields.AllowsBilling"),
                     Width = "100",
+                    ClassName =  StyleColumn.CenterAll,
                     Render = new RenderBoolean()
                 },
                 new ColumnProperty(nameof(CountryModel.AllowsShipping))
                 {
                     Title = _localizationService.GetResource("Admin.Configuration.Countries.Fields.AllowsShipping"),
                     Width = "100",
+                    ClassName =  StyleColumn.CenterAll,
                     Render = new RenderBoolean()
                 },
                 new ColumnProperty(nameof(CountryModel.TwoLetterIsoCode))
@@ -133,6 +136,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     Title = _localizationService.GetResource("Admin.Configuration.Countries.Fields.SubjectToVat"),
                     Width = "100",
+                    ClassName =  StyleColumn.CenterAll,
                     Render = new RenderBoolean()
                 },
                 new ColumnProperty(nameof(CountryModel.NumberOfStates))
@@ -149,23 +153,15 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     Title = _localizationService.GetResource("Admin.Configuration.Countries.Fields.Published"),
                     Width = "100",
+                    ClassName =  StyleColumn.CenterAll,
                     Render = new RenderBoolean()
                 },
                 new ColumnProperty(nameof(CountryModel.Id))
                 {
                     Title = _localizationService.GetResource("Admin.Common.Edit"),
                     Width = "50",
+                    ClassName =  StyleColumn.CenterAll,
                     Render = new RenderButtonEdit(new DataUrl("Edit"))
-                }
-            };
-
-            //prepare column definitions
-            model.ColumnDefinitions = new List<ColumnDefinition>
-            {
-                new ColumnDefinition()
-                {
-                    Targets = "[-1,2,3,7,10]",
-                    ClassName =  StyleColumn.CenterAll
                 }
             };
 

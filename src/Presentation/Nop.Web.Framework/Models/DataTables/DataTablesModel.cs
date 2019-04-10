@@ -32,7 +32,6 @@ namespace Nop.Web.Framework.Models.DataTables
 
             Filters = new List<FilterParameter>();
             ColumnCollection = new List<ColumnProperty>();
-            ColumnDefinitions = new List<ColumnDefinition>();
         }
 
         #endregion
@@ -140,11 +139,6 @@ namespace Nop.Web.Framework.Models.DataTables
         /// Gets or set column collection 
         /// </summary>
         public IList<ColumnProperty> ColumnCollection { get; set; }
-
-        /// <summary>
-        /// Gets or sets column defininition
-        /// </summary>
-        public IList<ColumnDefinition> ColumnDefinitions { get; set; }
         
         #endregion
     }

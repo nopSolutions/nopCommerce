@@ -643,11 +643,15 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare model columns
             model.ColumnCollection = new List<ColumnProperty>
             {
-                new ColumnProperty(nameof(ProductModel.ProductTypeId)),
+                new ColumnProperty(nameof(ProductModel.ProductTypeId))
+                {
+                    Visible = false
+                },
                 new ColumnProperty(nameof(ProductModel.Id))
                 {
                     IsMasterCheckBox = true,
                     Render = new RenderCheckBox("checkbox_products"),
+                    ClassName =  StyleColumn.CenterAll,
                     Width = "50",
                 },
                 new ColumnProperty(nameof(ProductModel.PictureThumbnailUrl))
@@ -692,28 +696,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     Title = _localizationService.GetResource("Admin.Common.Edit"),
                     Width = "100",
-                    Render = new RenderButtonEdit(new DataUrl("Edit"))
-                }
-            };
-
-            //prepare column definitions
-            model.ColumnDefinitions = new List<ColumnDefinition>
-            {
-                new ColumnDefinition()
-                {
-                    Targets = "0",
-                    Visible = false
-                },
-                new ColumnDefinition()
-                {
-                    Targets = "1",
                     ClassName =  StyleColumn.CenterAll,
-                    Width = "50"
-                },
-                new ColumnDefinition()
-                {
-                    Targets = "-1",
-                    ClassName =  StyleColumn.CenterAll
+                    Render = new RenderButtonEdit(new DataUrl("Edit"))
                 }
             };
 

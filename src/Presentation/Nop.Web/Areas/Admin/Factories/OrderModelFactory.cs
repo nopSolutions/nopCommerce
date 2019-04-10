@@ -831,12 +831,19 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare model columns
             model.ColumnCollection = new List<ColumnProperty>
             {
-                new ColumnProperty(nameof(OrderModel.CustomerId)),
-                new ColumnProperty(nameof(OrderModel.OrderStatusId)),
+                new ColumnProperty(nameof(OrderModel.CustomerId))
+                {
+                    Visible = false
+                },
+                new ColumnProperty(nameof(OrderModel.OrderStatusId))
+                {
+                    Visible = false
+                },
                 new ColumnProperty(nameof(OrderModel.Id))
                 {
                     IsMasterCheckBox = true,
                     Render = new RenderCheckBox("checkbox_orders"),
+                    ClassName =  StyleColumn.CenterAll,
                     Width = "50",
                 },
                 new ColumnProperty(nameof(OrderModel.CustomOrderNumber))
@@ -905,29 +912,9 @@ namespace Nop.Web.Areas.Admin.Factories
             {
                 Title = _localizationService.GetResource("Admin.Common.View"),
                 Width = "50",
+                ClassName = StyleColumn.CenterAll,
                 Render = new RenderButtonEdit(new DataUrl("Edit"))
             });
-
-            //prepare column definitions
-            model.ColumnDefinitions = new List<ColumnDefinition>
-            {
-                new ColumnDefinition()
-                {
-                    Targets = "[0,1]",
-                    Visible = false
-                },
-                new ColumnDefinition()
-                {
-                    Targets = "2",
-                    ClassName =  StyleColumn.CenterAll,
-                    Width = "50"
-                },
-                new ColumnDefinition()
-                {
-                    Targets = "-1",
-                    ClassName =  StyleColumn.CenterAll
-                }
-            };
 
             return model;
         }
@@ -970,12 +957,14 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     Render = new RenderChildCaret(),
                     Width = "5",
+                    Searchable = false,
                     ClassName =  StyleColumn.ChildControl,
                 },
                 new ColumnProperty(nameof(ShipmentModel.Id))
                 {
                     IsMasterCheckBox = true,
                     Render = new RenderCheckBox("checkbox_shipments"),
+                    Searchable = false,
                     Width = "10",
                 },
             };
@@ -1021,28 +1010,9 @@ namespace Nop.Web.Areas.Admin.Factories
             {
                 Title = _localizationService.GetResource("Admin.Common.View"),
                 Width = "50",
+                ClassName = StyleColumn.CenterAll,
                 Render = new RenderButtonEdit(new DataUrl("~/Admin/Order/ShipmentDetails/"))
             });
-
-            //prepare column definitions
-            model.ColumnDefinitions = new List<ColumnDefinition>
-            {
-                new ColumnDefinition()
-                {
-                    Targets = "[0]",                    
-                    Searchable = false
-                },
-                new ColumnDefinition()
-                {
-                    Targets = "[1]",
-                    Searchable = false
-                },
-                new ColumnDefinition()
-                {
-                    Targets = "-1",
-                    ClassName =  StyleColumn.CenterAll
-                }
-            };
 
             var searchChildModel = new ShipmentItemSearchModel();
 

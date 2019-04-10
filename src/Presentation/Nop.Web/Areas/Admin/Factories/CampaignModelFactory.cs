@@ -100,17 +100,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     Title = _localizationService.GetResource("Admin.Common.Edit"),
                     Width = "100",
+                    ClassName =  StyleColumn.CenterAll,
                     Render = new RenderButtonEdit(new DataUrl("Edit"))
-                }
-            };
-
-            //prepare column definitions
-            model.ColumnDefinitions = new List<ColumnDefinition>
-            {
-                new ColumnDefinition()
-                {
-                    Targets = "-1",
-                    ClassName =  StyleColumn.CenterAll
                 }
             };
 

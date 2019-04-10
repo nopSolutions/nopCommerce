@@ -92,8 +92,14 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare model columns
             model.ColumnCollection = new List<ColumnProperty>
             {
-                new ColumnProperty(nameof(NewsItemModel.ApprovedComments)),
-                new ColumnProperty(nameof(NewsItemModel.NotApprovedComments)),
+                new ColumnProperty(nameof(NewsItemModel.ApprovedComments))
+                {
+                    Visible = false
+                },
+                new ColumnProperty(nameof(NewsItemModel.NotApprovedComments))
+                {
+                    Visible = false
+                },
                 new ColumnProperty(nameof(NewsItemModel.Title))
                 {
                     Title = _localizationService.GetResource("Admin.ContentManagement.News.NewsItems.Fields.Title")
@@ -107,6 +113,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     Title = _localizationService.GetResource("Admin.ContentManagement.News.NewsItems.Fields.Comments"),
                     Width = "200",
+                    ClassName =  StyleColumn.CenterAll,
                     Render = new RenderCustom("renderColumnComments")
                 },
                 new ColumnProperty(nameof(NewsItemModel.StartDateUtc))
@@ -125,6 +132,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     Title = _localizationService.GetResource("Admin.ContentManagement.News.NewsItems.Fields.Published"),
                     Width = "100",
+                    ClassName =  StyleColumn.CenterAll,
                     Render = new RenderBoolean()
                 },
                 new ColumnProperty(nameof(NewsItemModel.CreatedOn))
@@ -137,22 +145,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     Title = _localizationService.GetResource("Admin.Common.Edit"),
                     Width = "100",
+                     ClassName =  StyleColumn.CenterAll,
                     Render = new RenderButtonEdit(new DataUrl("NewsItemEdit"))
-                }
-            };
-
-            //prepare column definitions
-            model.ColumnDefinitions = new List<ColumnDefinition>
-            {
-                new ColumnDefinition()
-                {
-                    Targets = "[0,1]",
-                    Visible = false
-                },
-                new ColumnDefinition()
-                {
-                    Targets = "[-1,4,7]",
-                    ClassName =  StyleColumn.CenterAll
                 }
             };
 

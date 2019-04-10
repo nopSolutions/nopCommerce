@@ -14,6 +14,8 @@
         public ColumnProperty(string data)
         {
             Data = data;
+            //set default values
+            Visible = true;
         }
 
         #endregion
@@ -55,6 +57,16 @@
         /// Class to assign to each cell in the column.
         /// </summary>
         public StyleColumn? ClassName { get; set; }
+
+        /// <summary>
+        /// Enable or disable the display of this column.
+        /// </summary>
+        public bool Visible { get; set; }
+
+        /// <summary>
+        /// Enable or disable filtering on the data in this column.
+        /// </summary>
+        public bool Searchable { get; set; }
 
         #endregion
     }

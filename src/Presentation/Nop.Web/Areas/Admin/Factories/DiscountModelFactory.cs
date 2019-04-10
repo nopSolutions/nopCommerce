@@ -204,11 +204,22 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare model columns
             model.ColumnCollection = new List<ColumnProperty>
             {
-                new ColumnProperty(nameof(DiscountModel.UsePercentage)),
-                new ColumnProperty(nameof(DiscountModel.DiscountPercentage)),
-                new ColumnProperty(nameof(DiscountModel.DiscountAmount)),
-                new ColumnProperty(nameof(DiscountModel.PrimaryStoreCurrencyCode)),
-
+                new ColumnProperty(nameof(DiscountModel.UsePercentage))
+                {
+                    Visible = false
+                },
+                new ColumnProperty(nameof(DiscountModel.DiscountPercentage))
+                {
+                    Visible = false
+                },
+                new ColumnProperty(nameof(DiscountModel.DiscountAmount))
+                {
+                    Visible = false
+                },
+                new ColumnProperty(nameof(DiscountModel.PrimaryStoreCurrencyCode))
+                {
+                    Visible = false
+                },
                 new ColumnProperty(nameof(DiscountModel.Name))
                 {
                     Title = _localizationService.GetResource("Admin.Promotions.Discounts.Fields.Name"),
@@ -246,22 +257,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     Title = _localizationService.GetResource("Admin.Common.Edit"),
                     Width = "100",
+                    ClassName =  StyleColumn.CenterAll,
                     Render = new RenderButtonEdit(new DataUrl("Edit"))
-                }
-            };
-
-            //prepare column definitions
-            model.ColumnDefinitions = new List<ColumnDefinition>
-            {
-                new ColumnDefinition()
-                {
-                    Targets = "[0,1,2,3]",
-                    Visible = false
-                },
-                new ColumnDefinition()
-                {
-                    Targets = "-1",
-                    ClassName =  StyleColumn.CenterAll
                 }
             };
 

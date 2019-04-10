@@ -102,6 +102,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     Title = _localizationService.GetResource("Admin.Configuration.Languages.Fields.FlagImage"),
                     Width = "100",
+                    ClassName =  StyleColumn.CenterAll,
                     Render = new RenderPicture(urlHelper.Content("~/images/flags/"))
                 },
                 new ColumnProperty(nameof(LanguageModel.LanguageCulture))
@@ -118,28 +119,15 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     Title = _localizationService.GetResource("Admin.Configuration.Languages.Fields.Published"),
                     Width = "150",
+                    ClassName =  StyleColumn.CenterAll,
                     Render = new RenderBoolean()
                 },
                 new ColumnProperty(nameof(LanguageModel.Id))
                 {
                     Title = _localizationService.GetResource("Admin.Common.Edit"),
                     Width = "100",
+                    ClassName =  StyleColumn.CenterAll,
                     Render = new RenderButtonEdit(new DataUrl("Edit"))
-                }
-            };
-
-            //prepare column definitions
-            model.ColumnDefinitions = new List<ColumnDefinition>
-            {
-                new ColumnDefinition()
-                {
-                    Targets = "1",
-                    ClassName =  StyleColumn.CenterBody
-                },
-                new ColumnDefinition()
-                {
-                    Targets = "[4,5]",
-                    ClassName =  StyleColumn.CenterAll
                 }
             };
 

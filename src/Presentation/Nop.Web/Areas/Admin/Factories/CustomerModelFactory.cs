@@ -569,6 +569,7 @@ namespace Nop.Web.Areas.Admin.Factories
             {
                 IsMasterCheckBox = true,
                 Render = new RenderCheckBox("checkbox_customers"),
+                ClassName = StyleColumn.CenterAll,
                 Width = "50",
             });
             columnsProperty.Add(new ColumnProperty(nameof(CustomerModel.Email))
@@ -631,6 +632,7 @@ namespace Nop.Web.Areas.Admin.Factories
             {
                 Title = _localizationService.GetResource("Admin.Customers.Customers.Fields.Active"),
                 Width = "100",
+                ClassName = StyleColumn.CenterAll,
                 Render = new RenderBoolean()
             });
 
@@ -650,26 +652,11 @@ namespace Nop.Web.Areas.Admin.Factories
             {
                 Title = _localizationService.GetResource("Admin.Common.Edit"),
                 Width = "100",
+                ClassName = StyleColumn.CenterAll,
                 Render = new RenderButtonEdit(new DataUrl("Edit"))
             });
             
             model.ColumnCollection = columnsProperty;
-
-            //prepare column definitions
-            model.ColumnDefinitions = new List<ColumnDefinition>
-            {
-                new ColumnDefinition()
-                {
-                    Targets = "0",
-                    ClassName =  StyleColumn.CenterAll,
-                    Width = "50"
-                },
-                new ColumnDefinition()
-                {
-                    Targets = "-1",
-                    ClassName =  StyleColumn.CenterAll
-                }
-            };
 
             return model;
         }
@@ -725,16 +712,6 @@ namespace Nop.Web.Areas.Admin.Factories
                 }
             };
 
-            //prepare column definitions
-            model.ColumnDefinitions = new List<ColumnDefinition>
-            {
-                new ColumnDefinition()
-                {
-                    Targets = "-1",
-                    ClassName =  StyleColumn.CenterAll
-                }
-            };
-
             return model;
         }
 
@@ -783,10 +760,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     Render = new RenderDate()
                 }                
             };
-
-            //prepare column definitions
-            model.ColumnDefinitions = null;
-
+            
             return model;
         }
 

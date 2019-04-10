@@ -86,17 +86,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     IsMasterCheckBox = true,
                     Title = _localizationService.GetResource("Admin.Configuration.ActivityLog.ActivityLogType.Fields.Enabled"),
                     Width =  "100",
+                    ClassName =  StyleColumn.CenterAll,
                     Render = new RenderCheckBox("checkbox_activity_types")
-                }
-            };
-
-            //prepare column definitions
-            model.ColumnDefinitions = new List<ColumnDefinition>
-            {
-                new ColumnDefinition()
-                {
-                    Targets = "-1",
-                    ClassName =  StyleColumn.CenterAll
                 }
             };
 
@@ -141,8 +132,14 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare model columns
             model.ColumnCollection = new List<ColumnProperty>
             {
-                new ColumnProperty(nameof(ActivityLogModel.Id)),
-                new ColumnProperty(nameof(ActivityLogModel.CustomerId)),
+                new ColumnProperty(nameof(ActivityLogModel.Id))
+                {
+                    Visible = false
+                },
+                new ColumnProperty(nameof(ActivityLogModel.CustomerId))
+                {
+                    Visible = false
+                },
                 new ColumnProperty(nameof(ActivityLogModel.ActivityLogTypeName))
                 {
                     Title = _localizationService.GetResource("Admin.Configuration.ActivityLog.ActivityLog.Fields.ActivityLogType"),
@@ -172,23 +169,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 new ColumnProperty(nameof(ActivityLogModel.Id))
                 {
                     Title = _localizationService.GetResource("Admin.Common.Delete"),
-                    Render = new RenderButton(_localizationService.GetResource("Admin.Common.Delete")) { Style = StyleButton.Danger }
-                }
-            };
-
-            //prepare column definitions
-            model.ColumnDefinitions = new List<ColumnDefinition>
-            {
-                new ColumnDefinition()
-                {
-                    Targets = "[0, 1]",
-                    Visible = false
-                },
-                new ColumnDefinition()
-                {
-                    Targets = "-1",
-                    ClassName =  StyleColumn.CenterAll,
-                    Width = "100"
+                    Width = "100",
+                    Render = new RenderButton(_localizationService.GetResource("Admin.Common.Delete")) { Style = StyleButton.Danger },
+                    ClassName =  StyleColumn.CenterAll
                 }
             };
 

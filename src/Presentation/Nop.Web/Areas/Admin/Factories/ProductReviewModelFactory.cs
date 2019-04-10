@@ -96,11 +96,14 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     IsMasterCheckBox = true,
                     Render = new RenderCheckBox("checkbox_product_reviews"),
+                    Visible = searchModel.IsLoggedInAsVendor ? false : true,
+                    ClassName =  StyleColumn.CenterAll,
                     Width = "50",
                 },
                 new ColumnProperty(nameof(ProductReviewModel.StoreName))
                 {
                     Title = _localizationService.GetResource("Admin.Catalog.ProductReviews.Fields.Store"),
+                    Visible = _storeService.GetAllStores().Count > 1 ? true : false,
                     Width = "150"
                 },
                 new ColumnProperty(nameof(ProductReviewModel.ProductName))
@@ -139,6 +142,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     Title = _localizationService.GetResource("Admin.Catalog.ProductReviews.Fields.IsApproved"),
                     Width = "100",
+                    ClassName =  StyleColumn.CenterAll,
                     Render = new RenderBoolean()
                 },
                 new ColumnProperty(nameof(ProductReviewModel.CreatedOn))
@@ -151,34 +155,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     Title = _localizationService.GetResource("Admin.Common.Edit"),
                     Width = "100",
+                    ClassName =  StyleColumn.CenterAll,
                     Render = new RenderButtonEdit(new DataUrl("Edit"))
-                }
-            };
-
-            //prepare column definitions
-            model.ColumnDefinitions = new List<ColumnDefinition>
-            {
-                new ColumnDefinition()
-                {
-                    Targets = "0",
-                    Visible = searchModel.IsLoggedInAsVendor ? false : true,
-                    ClassName =  StyleColumn.CenterAll
-                },
-                new ColumnDefinition()
-                {
-                    Targets = "1",
-                    Visible = _storeService.GetAllStores().Count > 1 ? true : false,
-                    Width = "50"
-                },
-                new ColumnDefinition()
-                {
-                    Targets = "[8]",
-                    ClassName =  StyleColumn.CenterBody
-                },
-                new ColumnDefinition()
-                {
-                    Targets = "[-1]",
-                    ClassName =  StyleColumn.CenterAll
                 }
             };
 

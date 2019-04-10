@@ -121,12 +121,14 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     Title = _localizationService.GetResource("Admin.ContentManagement.Polls.Fields.Published"),
                     Width = "100",
+                    ClassName =  StyleColumn.CenterAll,
                     Render = new RenderBoolean()
                 },
                 new ColumnProperty(nameof(PollModel.ShowOnHomepage))
                 {
                     Title = _localizationService.GetResource("Admin.ContentManagement.Polls.Fields.ShowOnHomepage"),
                     Width = "100",
+                    ClassName =  StyleColumn.CenterAll,
                     Render = new RenderBoolean()
                 },
                 new ColumnProperty(nameof(PollModel.StartDateUtc))
@@ -145,17 +147,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     Title = _localizationService.GetResource("Admin.Common.Edit"),
                     Width = "100",
+                    ClassName =  StyleColumn.CenterAll,
                     Render = new RenderButtonEdit(new DataUrl("Edit"))
-                }
-            };
-
-            //prepare column definitions
-            model.ColumnDefinitions = new List<ColumnDefinition>
-            {
-                new ColumnDefinition()
-                {
-                    Targets = "[-1,3,4]",
-                    ClassName =  StyleColumn.CenterAll
                 }
             };
 

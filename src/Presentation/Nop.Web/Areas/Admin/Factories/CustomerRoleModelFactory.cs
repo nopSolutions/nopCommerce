@@ -84,24 +84,28 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     Title = _localizationService.GetResource("Admin.Customers.CustomerRoles.Fields.FreeShipping"),
                     Width = "100",
+                    ClassName =  StyleColumn.CenterAll,
                     Render = new RenderBoolean()
                 },
                 new ColumnProperty(nameof(CustomerRoleModel.TaxExempt))
                 {
                     Title = _localizationService.GetResource("Admin.Customers.CustomerRoles.Fields.TaxExempt"),
                     Width = "100",
+                    ClassName =  StyleColumn.CenterAll,
                     Render = new RenderBoolean()
                 },
                 new ColumnProperty(nameof(CustomerRoleModel.Active))
                 {
                     Title = _localizationService.GetResource("Admin.Customers.CustomerRoles.Fields.Active"),
                     Width = "100",
+                    ClassName =  StyleColumn.CenterAll,
                     Render = new RenderBoolean()
                 },
                 new ColumnProperty(nameof(CustomerRoleModel.IsSystemRole))
                 {
                     Title = _localizationService.GetResource("Admin.Customers.CustomerRoles.Fields.IsSystemRole"),
                     Width = "100",
+                    ClassName =  StyleColumn.CenterAll,
                     Render = new RenderBoolean()
                 },
                 new ColumnProperty(nameof(CustomerRoleModel.PurchasedWithProductName))
@@ -113,18 +117,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     Title = _localizationService.GetResource("Admin.Common.Edit"),
                     Width = "100",
-                    Render = new RenderButtonEdit(new DataUrl("Edit"))
-                }
-
-            };
-
-            //prepare column definitions
-            model.ColumnDefinitions = new List<ColumnDefinition>
-            {
-                new ColumnDefinition()
-                {
-                    Targets = "-1",
-                    ClassName =  StyleColumn.CenterAll
+                    ClassName =  StyleColumn.CenterAll,
+                    Render = new RenderButtonEdit(new DataUrl("Edit"))                    
                 }
             };
 

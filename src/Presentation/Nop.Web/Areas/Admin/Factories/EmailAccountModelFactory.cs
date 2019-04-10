@@ -84,12 +84,14 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     Title = _localizationService.GetResource("Admin.Configuration.EmailAccounts.Fields.IsDefaultEmailAccount"),
                     Width = "200",
+                    ClassName =  StyleColumn.CenterAll,
                     Render = new RenderBoolean()
                 },
                 new ColumnProperty(nameof(EmailAccountModel.Id))
                 {
                     Title = _localizationService.GetResource("Admin.Configuration.EmailAccounts.Fields.MarkAsDefaultEmail"),
-                    Width = "200",                    
+                    Width = "200",
+                    ClassName =  StyleColumn.CenterAll,
                     Render = new RenderButtonCustom(urlHelper.Content("~/Admin/EmailAccount/MarkAsDefaultEmail/"), StyleButton.Success, _localizationService.GetResource("Admin.Configuration.EmailAccounts.Fields.MarkAsDefaultEmail"))
 
                 },
@@ -97,17 +99,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     Title = _localizationService.GetResource("Admin.Common.Edit"),
                     Width = "100",
+                    ClassName =  StyleColumn.CenterAll,
                     Render = new RenderButtonEdit(new DataUrl("Edit"))
-                }
-            };
-
-            //prepare column definitions
-            model.ColumnDefinitions = new List<ColumnDefinition>
-            {
-                new ColumnDefinition()
-                {
-                    Targets = "[-1,2,3]",
-                    ClassName =  StyleColumn.CenterAll
                 }
             };
 

@@ -106,42 +106,49 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     Title = _localizationService.GetResource("Admin.ContentManagement.Topics.Fields.Published"),
                     Width = "150",
+                    ClassName =  StyleColumn.CenterAll,
                     Render = new RenderBoolean()
                 },
                 new ColumnProperty(nameof(TopicModel.IsPasswordProtected))
                 {
                     Title = _localizationService.GetResource("Admin.ContentManagement.Topics.Fields.IsPasswordProtected"),
                     Width = "150",
+                    ClassName =  StyleColumn.CenterAll,
                     Render = new RenderBoolean()
                 },
                 new ColumnProperty(nameof(TopicModel.IncludeInSitemap))
                 {
                     Title = _localizationService.GetResource("Admin.ContentManagement.Topics.Fields.IncludeInSitemap"),
                     Width = "150",
+                    ClassName =  StyleColumn.CenterAll,
                     Render = new RenderBoolean()
                 },
                 new ColumnProperty(nameof(TopicModel.IncludeInTopMenu))
                 {
                     Title = _localizationService.GetResource("Admin.ContentManagement.Topics.Fields.IncludeInTopMenu"),
                     Width = "150",
+                    ClassName =  StyleColumn.CenterAll,
                     Render = new RenderBoolean()
                 },
                 new ColumnProperty(nameof(TopicModel.IncludeInFooterColumn1))
                 {
                     Title = _localizationService.GetResource("Admin.ContentManagement.Topics.Fields.IncludeInFooterColumn1"),
                     Width = "150",
+                    ClassName =  StyleColumn.CenterAll,
                     Render = new RenderBoolean()
                 },
                 new ColumnProperty(nameof(TopicModel.IncludeInFooterColumn2))
                 {
                     Title = _localizationService.GetResource("Admin.ContentManagement.Topics.Fields.IncludeInFooterColumn2"),
                     Width = "150",
+                    ClassName =  StyleColumn.CenterAll,
                     Render = new RenderBoolean()
                 },
                 new ColumnProperty(nameof(TopicModel.IncludeInFooterColumn3))
                 {
                     Title = _localizationService.GetResource("Admin.ContentManagement.Topics.Fields.IncludeInFooterColumn3"),
                     Width = "150",
+                    ClassName =  StyleColumn.CenterAll,
                     Render = new RenderBoolean()
                 },
                 new ColumnProperty(nameof(TopicModel.DisplayOrder))
@@ -153,17 +160,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     Title = _localizationService.GetResource("Admin.Common.Edit"),
                     Width = "100",
+                    ClassName =  StyleColumn.CenterAll,
                     Render = new RenderButtonEdit(new DataUrl("Edit"))
-                }
-            };
-
-            //prepare column definitions
-            model.ColumnDefinitions = new List<ColumnDefinition>
-            {
-                new ColumnDefinition()
-                {
-                    Targets = "[-1,1,2,3,4,5,6,7]",
-                    ClassName =  StyleColumn.CenterAll
                 }
             };
 
