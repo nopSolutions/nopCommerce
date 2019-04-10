@@ -92,10 +92,10 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
-        /// Prepare manufacturer datatables model
+        /// Prepare datatables model
         /// </summary>
-        /// <param name="searchModel">Manufacturer search model</param>
-        /// <returns>Manufacturer datatables model</returns>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
         protected virtual DataTablesModel PrepareManufacturerGridModel(ManufacturerSearchModel searchModel)
         {
             //prepare common properties

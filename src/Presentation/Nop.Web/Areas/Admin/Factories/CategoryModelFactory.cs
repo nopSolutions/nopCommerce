@@ -91,10 +91,10 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
-        /// Prepare category datatables model
+        /// Prepare datatables model
         /// </summary>
-        /// <param name="searchModel">Category search model</param>
-        /// <returns>Category datatables model</returns>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
         protected virtual DataTablesModel PrepareCategoryGridModel(CategorySearchModel searchModel)
         {
             //prepare common properties

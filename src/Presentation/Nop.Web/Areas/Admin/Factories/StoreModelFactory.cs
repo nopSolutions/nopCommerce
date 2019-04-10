@@ -44,10 +44,10 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Utilities
 
         /// <summary>
-        /// Prepare store datatables model
+        /// Prepare datatables model
         /// </summary>
-        /// <param name="searchModel">Store search model</param>
-        /// <returns>Store datatables model</returns>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
         protected virtual DataTablesModel PrepareStoreGridModel(StoreSearchModel searchModel)
         {
             //prepare common properties

@@ -128,10 +128,10 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
-        /// Prepare warehouse datatables model
+        /// Prepare datatables model
         /// </summary>
-        /// <param name="searchModel">Warehouse search model</param>
-        /// <returns>Warehouse datatables model</returns>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
         protected virtual DataTablesModel PrepareWarehouseGridModel(WarehouseSearchModel searchModel)
         {
             //prepare common properties
@@ -167,10 +167,10 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
-        /// Prepare delivery date datatables model
+        /// Prepare datatables model
         /// </summary>
-        /// <param name="searchModel">Delivery date search model</param>
-        /// <returns>Delivery date datatables model</returns>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
         protected virtual DataTablesModel PrepareDeliveryDateGridModel(DeliveryDateSearchModel searchModel)
         {
             //prepare common properties
@@ -210,10 +210,10 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
-        /// Prepare category datatables model
+        /// Prepare datatables model
         /// </summary>
-        /// <param name="searchModel">Category search model</param>
-        /// <returns>Category datatables model</returns>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
         protected virtual DataTablesModel PrepareProductAvailabilityRangeGridModel(ProductAvailabilityRangeSearchModel searchModel)
         {
             //prepare common properties

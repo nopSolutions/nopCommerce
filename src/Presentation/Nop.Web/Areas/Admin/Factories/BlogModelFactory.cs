@@ -67,10 +67,10 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Utilities
 
         /// <summary>
-        /// Prepare blog post datatables model
+        /// Prepare datatables model
         /// </summary>
-        /// <param name="searchModel">Blog post search model</param>
-        /// <returns>Blog post datatables model</returns>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
         protected virtual DataTablesModel PrepareBlogPostGridModel(BlogPostSearchModel searchModel)
         {
             //prepare common properties

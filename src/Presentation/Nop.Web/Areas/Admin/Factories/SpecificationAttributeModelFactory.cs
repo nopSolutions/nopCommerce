@@ -87,10 +87,10 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
-        /// Prepare specification attribute datatables model
+        /// Prepare datatables model
         /// </summary>
-        /// <param name="searchModel">Specification attribute search model</param>
-        /// <returns>Specification attribute datatables model</returns>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
         protected virtual DataTablesModel PrepareSpecificationAttributeGridModel(SpecificationAttributeSearchModel searchModel)
         {
             //prepare common properties

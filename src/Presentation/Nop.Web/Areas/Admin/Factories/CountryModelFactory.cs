@@ -69,10 +69,10 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
-        /// Prepare country datatables model
+        /// Prepare datatables model
         /// </summary>
-        /// <param name="searchModel">Country search model</param>
-        /// <returns>Country datatables model</returns>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
         protected virtual DataTablesModel PrepareCountryGridModel(CountrySearchModel searchModel)
         {
             //prepare common properties

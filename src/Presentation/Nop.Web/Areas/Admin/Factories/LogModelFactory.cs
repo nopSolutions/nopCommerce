@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Domain.Logging;
 using Nop.Core.Html;
@@ -7,6 +8,8 @@ using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Logging;
+using Nop.Web.Framework.Models.DataTables;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -39,6 +42,73 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #endregion
 
+        #region Utilities
+
+        /// <summary>
+        /// Prepare datatables model
+        /// </summary>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
+        protected virtual DataTablesModel PrepareCategoryGridModel(LogSearchModel searchModel)
+        {
+            //prepare common properties
+            var model = new DataTablesModel
+            {
+                Name = "log-grid",
+                UrlRead = new DataUrl("LogList", "Log", null),
+                SearchButtonId = "search-log",
+                Length = searchModel.PageSize,
+                LengthMenu = searchModel.AvailablePageSizes
+            };
+
+            //prepare filters to search
+            model.Filters = new List<FilterParameter>()
+            {
+                new FilterParameter(nameof(searchModel.CreatedOnFrom)),
+                new FilterParameter(nameof(searchModel.CreatedOnTo)),
+                new FilterParameter(nameof(searchModel.Message)),
+                new FilterParameter(nameof(searchModel.LogLevelId))
+            };
+
+            //prepare model columns
+            model.ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(LogModel.Id))
+                {
+                    IsMasterCheckBox = true,
+                    Render = new RenderCheckBox("checkbox_log"),
+                    ClassName =  StyleColumn.CenterAll,
+                    Width = "50",
+                },
+                new ColumnProperty(nameof(LogModel.LogLevel))
+                {
+                    Title = _localizationService.GetResource("Admin.System.Log.Fields.LogLevel"),
+                    Width = "100"
+                },
+                new ColumnProperty(nameof(LogModel.ShortMessage))
+                {
+                    Title = _localizationService.GetResource("Admin.System.Log.Fields.ShortMessage")
+                },
+                new ColumnProperty(nameof(LogModel.CreatedOn))
+                {
+                    Title = _localizationService.GetResource("Admin.System.Log.Fields.CreatedOn"),
+                    Width = "200",
+                    Render = new RenderDate()
+                },
+                new ColumnProperty(nameof(LogModel.Id))
+                {
+                    Title = _localizationService.GetResource("Admin.Common.View"),
+                    Width = "100",
+                    ClassName =  StyleColumn.CenterAll,
+                    Render = new RenderButtonEdit(new DataUrl("View"))
+                }
+            };
+
+            return model;
+        }
+
+        #endregion
+
         #region Methods
 
         /// <summary>
@@ -56,6 +126,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
+            searchModel.Grid = PrepareCategoryGridModel(searchModel);
 
             return searchModel;
         }
@@ -85,10 +156,10 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new LogListModel
+            var model = new LogListModel().PrepareToGrid(searchModel, logItems, () =>
             {
                 //fill in model values from the entity
-                Data = logItems.Select(logItem =>
+                return logItems.Select(logItem =>
                 {
                     //fill in model values from the entity
                     var logModel = logItem.ToModel<LogModel>();
@@ -103,9 +174,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     logModel.CustomerEmail = logItem.Customer?.Email ?? string.Empty;
 
                     return logModel;
-                }),
-                Total = logItems.TotalCount
-            };
+                });
+            });
 
             return model;
         }

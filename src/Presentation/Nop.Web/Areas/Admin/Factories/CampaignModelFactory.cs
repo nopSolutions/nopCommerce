@@ -55,10 +55,10 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Utilities
 
         /// <summary>
-        /// Prepare campaign datatables model
+        /// Prepare datatables model
         /// </summary>
-        /// <param name="searchModel">Campaign search model</param>
-        /// <returns>Campaign datatables model</returns>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
         protected virtual DataTablesModel PrepareCampaignGridModel(CampaignSearchModel searchModel)
         {
             //prepare common properties

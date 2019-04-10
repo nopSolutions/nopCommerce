@@ -59,10 +59,10 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Utilities
 
         /// <summary>
-        /// Prepare message template datatables model
+        /// Prepare datatables model
         /// </summary>
-        /// <param name="searchModel">Message template search model</param>
-        /// <returns>Message template datatables model</returns>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
         protected virtual DataTablesModel PrepareMessageTemplateGridModel(MessageTemplateSearchModel searchModel)
         {
             //prepare common properties

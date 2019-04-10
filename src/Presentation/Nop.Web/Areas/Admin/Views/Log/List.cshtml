@@ -97,103 +97,10 @@
 
                 <div class="panel panel-default">
                     <div class="panel-body">
-                        <div id="log-grid"></div>
+                        @await Html.PartialAsync("Table", Model.Grid)
 
                         <script>
                             $(document).ready(function() {
-                                $("#log-grid").kendoGrid({
-                                    dataSource: {
-                                        type: "json",
-                                        transport: {
-                                            read: {
-                                                url: "@Html.Raw(Url.Action("LogList", "Log"))",
-                                                type: "POST",
-                                                dataType: "json",
-                                                data: function() {
-                                                    var data = {
-                                                        CreatedOnFrom: $('#@Html.IdFor(model => model.CreatedOnFrom)').val(),
-                                                        CreatedOnTo: $('#@Html.IdFor(model => model.CreatedOnTo)').val(),
-                                                        Message: $('#@Html.IdFor(model => model.Message)').val(),
-                                                        LogLevelId: $('#@Html.IdFor(model => model.LogLevelId)').val()
-                                                    };
-                                                    addAntiForgeryToken(data);
-                                                    return data;
-                                                }
-                                            }
-                                        },
-                                        schema: {
-                                            data: "Data",
-                                            total: "Total",
-                                            errors: "Errors"
-                                        },
-                                        error: function(e) {
-                                            display_kendoui_grid_error(e);
-                                            // Cancel the changes
-                                            this.cancelChanges();
-                                        },
-                                        pageSize: @(Model.PageSize),
-                                        serverPaging: true,
-                                        serverFiltering: true,
-                                        serverSorting: true
-                                    },
-                                    pageable: {
-                                        refresh: true,
-                                        pageSizes: [@(Model.AvailablePageSizes)],
-                                        @await Html.PartialAsync("_GridPagerMessages")
-                                    },
-                                    scrollable: false,
-                                    dataBound: onDataBound,
-                                    columns: [
-                                    {
-                                        field: "Id",
-                                        headerTemplate: "<input id='mastercheckbox' type='checkbox'/>",
-                                        headerAttributes: { style: "text-align:center" },
-                                        attributes: { style: "text-align:center" },
-                                        template: "<input type='checkbox' value='#=Id#' class='checkboxGroups'/>",
-                                        width: 50
-                                    }, {
-                                        field: "LogLevel",
-                                        title: "@T("Admin.System.Log.Fields.LogLevel")",
-                                        width: 100
-                                    }, {
-                                        field: "ShortMessage",
-                                        title: "@T("Admin.System.Log.Fields.ShortMessage")",
-                                        encoded: false
-                                    }, {
-                                        field: "CreatedOn",
-                                        title: "@T("Admin.System.Log.Fields.CreatedOn")",
-                                        width: 200,
-                                        type: "date",
-                                        format: "{0:G}"
-                                    }, {
-                                        field: "Id",
-                                        title: "@T("Admin.Common.View")",
-                                        width: 50,
-                                        headerAttributes: { style: "text-align:center" },
-                                        attributes: { style: "text-align:center" },
-                                        template: '<a class="btn btn-default" href="View/#=Id#"><i class="fa fa-eye"></i>@T("Admin.Common.View")</a>'
-                                    }
-                                    ]
-                                });
-                            });
-                        </script>
-
-                        <script>
-                            var selectedIds = [];
-
-                            $(document).ready(function() {
-                                //search button
-                                $('#search-log').click(function() {
-                                    //search
-                                    var grid = $('#log-grid').data('kendoGrid');
-                                    grid.dataSource.page(1); //new search. Set page size to 1
-                                    //grid.dataSource.read(); we already loaded the grid above using "page" function
-                                    //clear selected checkboxes
-                                    $('.checkboxGroups').attr('checked', false).change();
-                                    selectedIds = [];
-                                    return false;
-                                });
-
                                 //"delete selected" button
                                 $("#delete-selected-action-confirmation-submit-button").bind("click", function () {
                                     var postData = {
@@ -207,9 +114,7 @@
                                         data: postData,
                                         complete: function (data) {
                                             //reload grid
-                                            var grid = $('#log-grid').data('kendoGrid');
-                                            grid.dataSource.page(1); //new search. Set page size to 1
-                                            //grid.dataSource.read(); we already loaded the grid above using "page" function
+                                            $('#@Model.Grid.Name').DataTable().ajax.reload();
                                             //clear selected checkboxes
                                             $('.checkboxGroups').attr('checked', false).change();
                                             selectedIds = [];
@@ -223,46 +128,7 @@
                                     $('#delete-selected-action-confirmation').modal('toggle');
                                     return false;
                                 });
-
-                                $('#mastercheckbox').click(function() {
-                                    $('.checkboxGroups').attr('checked', $(this).is(':checked')).change();
-                                });
-
-                                //wire up checkboxes.
-                                $('#log-grid').on('change', 'input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]', function(e) {
-                                    var $check = $(this);
-                                    var checked = jQuery.inArray($check.val(), selectedIds);
-                                    if ($check.is(":checked") == true) {
-                                        if (checked == -1) {
-                                            //add id to selectedIds.
-                                            selectedIds.push($check.val());
-                                        }
-                                    } else if (checked > -1) {
-                                        //remove id from selectedIds.
-                                        selectedIds = $.grep(selectedIds, function (item, index) {
-                                            return item != $check.val();
-                                        });
-                                    }
-                                    updateMasterCheckbox();
-                                });
                             });
-
-                            function onDataBound(e) {
-                                $('#log-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]').each(function() {
-                                    var currentId = $(this).val();
-                                    var checked = jQuery.inArray(currentId, selectedIds);
-                                    //set checked based on if current checkbox's value is in selectedIds.
-                                    $(this).attr('checked', checked > -1);
-                                });
-
-                                updateMasterCheckbox();
-                            }
-
-                            function updateMasterCheckbox() {
-                                var numChkBoxes = $('#log-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]').length;
-                                var numChkBoxesChecked = $('#log-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]:checked').length;
-                                $('#mastercheckbox').attr('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
-                            }
                         </script>
                     </div>
                 </div>

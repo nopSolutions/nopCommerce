@@ -148,10 +148,10 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
-        /// Prepare affiliate datatables model
+        /// Prepare datatables model
         /// </summary>
-        /// <param name="searchModel">Affiliate search model</param>
-        /// <returns>Affiliate datatables model</returns>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
         protected virtual DataTablesModel PrepareAffiliateGridModel(AffiliateSearchModel searchModel)
         {
             //prepare common properties

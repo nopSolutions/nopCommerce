@@ -62,10 +62,10 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Utilities
 
         /// <summary>
-        /// Prepare product review datatables model
+        /// Prepare datatables model
         /// </summary>
-        /// <param name="searchModel">Product review search model</param>
-        /// <returns>Product review datatables model</returns>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
         protected virtual DataTablesModel PrepareProductReviewGridModel(ProductReviewSearchModel searchModel)
         {
             //prepare common properties

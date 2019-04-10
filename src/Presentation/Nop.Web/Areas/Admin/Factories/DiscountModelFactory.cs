@@ -175,10 +175,10 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
-        /// Prepare discount datatables model
+        /// Prepare datatables model
         /// </summary>
-        /// <param name="searchModel">Discount search model</param>
-        /// <returns>Discount datatables model</returns>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
         protected virtual DataTablesModel PrepareDiscountGridModel(DiscountSearchModel searchModel)
         {
             //prepare common properties

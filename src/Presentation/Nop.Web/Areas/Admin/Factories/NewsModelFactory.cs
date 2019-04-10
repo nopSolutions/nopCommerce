@@ -67,10 +67,10 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Utilities
 
         /// <summary>
-        /// Prepare news item datatables model
+        /// Prepare datatables model
         /// </summary>
-        /// <param name="searchModel">News item search model</param>
-        /// <returns>News item datatables model</returns>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
         protected virtual DataTablesModel PrepareNewsItemGridModel(NewsItemSearchModel searchModel)
         {
             //prepare common properties

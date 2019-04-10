@@ -792,10 +792,10 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
-        /// Prepare oreder datatables model
+        /// Prepare datatables model
         /// </summary>
-        /// <param name="searchModel">Order search model</param>
-        /// <returns>Order datatables model</returns>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
         protected virtual DataTablesModel PrepareOrderGridModel(OrderSearchModel searchModel)
         {
             //prepare common properties
@@ -920,10 +920,10 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
-        /// Prepare shipment datatables model
+        /// Prepare datatables model
         /// </summary>
-        /// <param name="searchModel">Shipment search model</param>
-        /// <returns>Shipment  datatables model</returns>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
         protected virtual DataTablesModel PrepareShipmentGridModel(ShipmentSearchModel searchModel)
         {
             //prepare common properties

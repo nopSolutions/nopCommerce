@@ -130,10 +130,10 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
-        /// Prepare checkout attribute datatables model
+        /// Prepare datatables model
         /// </summary>
-        /// <param name="searchModel">Checkout attribute search model</param>
-        /// <returns>Checkout attribute datatables model</returns>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
         protected virtual DataTablesModel PrepareCheckoutAttributeGridModel(CheckoutAttributeSearchModel searchModel)
         {
             //prepare common properties

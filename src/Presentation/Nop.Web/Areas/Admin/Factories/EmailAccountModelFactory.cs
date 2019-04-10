@@ -48,10 +48,10 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Utilities
 
         /// <summary>
-        /// Prepare email account datatables model
+        /// Prepare datatables model
         /// </summary>
-        /// <param name="searchModel">Email account search model</param>
-        /// <returns>Email account datatables model</returns>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
         protected virtual DataTablesModel PrepareEmailAccountGridModel(EmailAccountSearchModel searchModel)
         {
             var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);

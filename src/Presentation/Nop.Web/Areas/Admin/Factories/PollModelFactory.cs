@@ -78,10 +78,10 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
-        /// Prepare poll datatables model
+        /// Prepare datatables model
         /// </summary>
-        /// <param name="searchModel">Poll search model</param>
-        /// <returns>Poll datatables model</returns>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
         protected virtual DataTablesModel PreparePollGridModel(PollSearchModel searchModel)
         {
             //prepare common properties

@@ -249,10 +249,10 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
-        /// Prepare vendor datatables model
+        /// Prepare datatables model
         /// </summary>
-        /// <param name="searchModel">Vendor search model</param>
-        /// <returns>Vendor datatables model</returns>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
         protected virtual DataTablesModel PrepareVendorGridModel(VendorSearchModel searchModel)
         {
             //prepare common properties

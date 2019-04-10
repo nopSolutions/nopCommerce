@@ -531,10 +531,10 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
-        /// Prepare customer datatables model
+        /// Prepare datatables model
         /// </summary>
-        /// <param name="searchModel">Customer search model</param>
-        /// <returns>Customer datatables model</returns>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
         protected virtual DataTablesModel PrepareCustomerGridModel(CustomerSearchModel searchModel)
         {
             //prepare common properties
@@ -662,10 +662,10 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
-        /// Prepare online customers datatables model
+        /// Prepare datatables model
         /// </summary>
-        /// <param name="searchModel">Online customers search model</param>
-        /// <returns>Online customers datatables model</returns>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
         protected virtual DataTablesModel PrepareOnlineCustomerGridModel(OnlineCustomerSearchModel searchModel)
         {
             //prepare common properties
@@ -716,10 +716,10 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
-        /// Prepare Gdpr log datatables model
+        /// Prepare datatables model
         /// </summary>
-        /// <param name="searchModel">Gdpr log search model</param>
-        /// <returns>Gdpr log datatables model</returns>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
         protected virtual DataTablesModel PrepareGdprLogGridModel(GdprLogSearchModel searchModel)
         {
             //prepare common properties

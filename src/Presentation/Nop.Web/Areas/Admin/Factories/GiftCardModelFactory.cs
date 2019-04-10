@@ -79,8 +79,8 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare datatables model
         /// </summary>
-        /// <param name="searchModel">Gift card search model</param>
-        /// <returns>Gift card datatables model</returns>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
         protected virtual DataTablesModel PrepareGiftCardGridModel(GiftCardSearchModel searchModel)
         {
             //prepare common properties

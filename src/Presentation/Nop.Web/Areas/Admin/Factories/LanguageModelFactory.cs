@@ -74,10 +74,10 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
-        /// Prepare language datatables model
+        /// Prepare datatables model
         /// </summary>
-        /// <param name="searchModel">Language search model</param>
-        /// <returns>Language datatables model</returns>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
         protected virtual DataTablesModel PrepareLanguageGridModel(LanguageSearchModel searchModel)
         {
             //prepare common properties

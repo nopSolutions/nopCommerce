@@ -54,10 +54,10 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Utilities
 
         /// <summary>
-        /// Prepare customer roles datatables model
+        /// Prepare datatables model
         /// </summary>
-        /// <param name="searchModel">Customer roles search model</param>
-        /// <returns>Customer roles datatables model</returns>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
         protected virtual DataTablesModel PrepareCustomerRoleGridModel(CustomerRoleSearchModel searchModel)
         {
             //prepare common properties

@@ -57,9 +57,9 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
-        /// Prepare activity log type datatables models
+        /// Prepare datatables model
         /// </summary>
-        /// <param name="searchModel">Activity log types search model</param>
+        /// <param name="searchModel">Search model</param>
         /// <returns>Datatables model</returns>
         protected virtual DataTablesModel PrepareActivityLogTypeGridModel(ActivityLogTypeSearchModel searchModel)
         {
@@ -103,9 +103,9 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
-        /// Prepare activity log datatables models
+        /// Prepare datatables model
         /// </summary>
-        /// <param name="searchModel">Activity log search model</param>
+        /// <param name="searchModel">Search model</param>
         /// <returns>Datatables model</returns>
         protected virtual DataTablesModel PrepareActivityLogGridModel(ActivityLogSearchModel searchModel)
         {

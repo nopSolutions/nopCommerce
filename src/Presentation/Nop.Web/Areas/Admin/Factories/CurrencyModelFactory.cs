@@ -107,10 +107,10 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
-        /// Prepare Currency datatables model
+        /// Prepare datatables model
         /// </summary>
-        /// <param name="searchModel">Currency search model</param>
-        /// <returns>Currency datatables model</returns>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
         protected virtual DataTablesModel PrepareCurrencyGridModel(CurrencySearchModel searchModel)
         {
             //prepare common properties
