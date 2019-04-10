@@ -26,10 +26,25 @@
 
 <table class="table table-bordered table-hover dataTable" width="100%" id="@Model.Name"></table>
 
-<script>
-    //This variable will be used on views. It can not be renamed
-    var selectedIds = [];
+@{ 
+    //check using MasterCheckBox
+    var isUsedMasterCheckBox = Model.ColumnCollection.Any(x => x.IsMasterCheckBox == true);
+}
 
+<script>
+    @if (isUsedMasterCheckBox)
+    {
+        //selectedIds - This variable will be used on views. It can not be renamed
+        <text>
+            var selectedIds = [];
+
+            function updateMasterCheckbox() {
+                var numChkBoxes = $('#@Model.Name input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]').length;
+                var numChkBoxesChecked = $('#@Model.Name input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]:checked').length;
+                $('#mastercheckbox').attr('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
+            }
+        </text>
+    }
     $(document).ready(function () {
         var table = $('#@Model.Name').DataTable({
              @await Html.PartialAsync("_Table.Definition", Model)
@@ -46,32 +61,30 @@
                 });
             </text>
         }
-
-        $('#mastercheckbox').click(function () {
-            $('.checkboxGroups').attr('checked', $(this).is(':checked')).change();
-        });
-
-        $('#@Model.Name').on('change', 'input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]', function (e) {
-            var $check = $(this);
-            var checked = jQuery.inArray($check.val(), selectedIds);
-            if ($check.is(':checked') == true) {
-                if (checked == -1) {
-                    selectedIds.push($check.val());
-                }
-            } else if (checked > -1) {
-                selectedIds = $.grep(selectedIds, function (item, index) {
-                    return item != $check.val();
+        @if (isUsedMasterCheckBox)
+        {
+            <text>
+                $('#mastercheckbox').click(function () {
+                    $('.checkboxGroups').attr('checked', $(this).is(':checked')).change();
                 });
-            }
-            updateMasterCheckbox();
-        });
-    });
 
-    function updateMasterCheckbox() {
-        var numChkBoxes = $('#@Model.Name input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]').length;
-        var numChkBoxesChecked = $('#@Model.Name input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]:checked').length;
-        $('#mastercheckbox').attr('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
-    }
+                $('#@Model.Name').on('change', 'input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]', function (e) {
+                    var $check = $(this);
+                    var checked = jQuery.inArray($check.val(), selectedIds);
+                    if ($check.is(':checked') == true) {
+                        if (checked == -1) {
+                            selectedIds.push($check.val());
+                        }
+                    } else if (checked > -1) {
+                        selectedIds = $.grep(selectedIds, function (item, index) {
+                            return item != $check.val();
+                        });
+                    }
+                    updateMasterCheckbox();
+                });
+            </text>
+        }
+    });
 </script>
 @if (Model.UrlAction != null)
 {
@@ -146,4 +159,3 @@
         </script>
     </text>
 }
-
