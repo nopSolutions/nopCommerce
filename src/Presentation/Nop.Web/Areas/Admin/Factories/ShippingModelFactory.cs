@@ -105,6 +105,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
+            searchModel.Grid = PrepareDeliveryDateGridModel(searchModel);
 
             return searchModel;
         }
@@ -121,6 +122,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
+            searchModel.Grid = PrepareProductAvailabilityRangeGridModel(searchModel);
 
             return searchModel;
         }
@@ -157,6 +159,111 @@ namespace Nop.Web.Areas.Admin.Factories
                     Title = _localizationService.GetResource("Admin.Common.Edit"),
                     Width = "100",
                     Render = new RenderButtonEdit(new DataUrl("EditWarehouse"))
+                }
+            };
+
+            //prepare column definitions
+            model.ColumnDefinitions = new List<ColumnDefinition>
+            {
+                new ColumnDefinition()
+                {
+                    Targets = "-1",
+                    ClassName =  StyleColumn.CenterAll
+                }
+            };
+
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare delivery date datatables model
+        /// </summary>
+        /// <param name="searchModel">Delivery date search model</param>
+        /// <returns>Delivery date datatables model</returns>
+        protected virtual DataTablesModel PrepareDeliveryDateGridModel(DeliveryDateSearchModel searchModel)
+        {
+            //prepare common properties
+            var model = new DataTablesModel
+            {
+                Name = "deliverydate-grid",
+                UrlRead = new DataUrl("DeliveryDates", "Shipping", null),
+                Length = searchModel.PageSize,
+                LengthMenu = searchModel.AvailablePageSizes
+            };
+
+            //prepare filters to search
+            model.Filters = null;
+
+            //prepare model columns
+            model.ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(DeliveryDateModel.Name))
+                {
+                    Title = _localizationService.GetResource("Admin.Configuration.Shipping.DeliveryDates.Fields.Name")
+                },
+                new ColumnProperty(nameof(DeliveryDateModel.DisplayOrder))
+                {
+                    Title = _localizationService.GetResource("Admin.Configuration.Shipping.DeliveryDates.Fields.DisplayOrder"),
+                    Width = "150"
+                },
+                new ColumnProperty(nameof(DeliveryDateModel.Id))
+                {
+                    Title = _localizationService.GetResource("Admin.Common.Edit"),
+                    Width = "100",
+                    Render = new RenderButtonEdit(new DataUrl("EditDeliveryDate"))
+                }
+            };
+
+            //prepare column definitions
+            model.ColumnDefinitions = new List<ColumnDefinition>
+            {
+                new ColumnDefinition()
+                {
+                    Targets = "-1",
+                    ClassName =  StyleColumn.CenterAll
+                }
+            };
+
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare category datatables model
+        /// </summary>
+        /// <param name="searchModel">Category search model</param>
+        /// <returns>Category datatables model</returns>
+        protected virtual DataTablesModel PrepareProductAvailabilityRangeGridModel(ProductAvailabilityRangeSearchModel searchModel)
+        {
+            //prepare common properties
+            var model = new DataTablesModel
+            {
+                Name = "productavailabilityrange-grid",
+                UrlRead = new DataUrl("ProductAvailabilityRanges", "Shipping", null),
+                SearchButtonId = "search-categories",
+                Length = searchModel.PageSize,
+                LengthMenu = searchModel.AvailablePageSizes
+            };
+
+            //prepare filters to search
+            model.Filters = null;
+
+            //prepare model columns
+            model.ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(ProductAvailabilityRangeModel.Name))
+                {
+                    Title = _localizationService.GetResource("Admin.Configuration.Shipping.ProductAvailabilityRanges.Fields.Name")
+                },
+                new ColumnProperty(nameof(ProductAvailabilityRangeModel.DisplayOrder))
+                {
+                    Title = _localizationService.GetResource("Admin.Configuration.Shipping.ProductAvailabilityRanges.Fields.DisplayOrder"),
+                    Width = "150"
+                },
+                new ColumnProperty(nameof(ProductAvailabilityRangeModel.Id))
+                {
+                    Title = _localizationService.GetResource("Admin.Common.Edit"),
+                    Width = "100",
+                    Render = new RenderButtonEdit(new DataUrl("EditProductAvailabilityRange"))
                 }
             };
 
@@ -380,12 +487,11 @@ namespace Nop.Web.Areas.Admin.Factories
             var deliveryDates = _dateRangeService.GetAllDeliveryDates().ToPagedList(searchModel);
 
             //prepare grid model
-            var model = new DeliveryDateListModel
+            var model = new DeliveryDateListModel().PrepareToGrid(searchModel, deliveryDates, () =>
             {
                 //fill in model values from the entity
-                Data = deliveryDates.Select(date => date.ToModel<DeliveryDateModel>()),
-                Total = deliveryDates.TotalCount
-            };
+                return deliveryDates.Select(date => date.ToModel<DeliveryDateModel>());
+            });
 
             return model;
         }
@@ -434,12 +540,11 @@ namespace Nop.Web.Areas.Admin.Factories
             var productAvailabilityRanges = _dateRangeService.GetAllProductAvailabilityRanges().ToPagedList(searchModel);
 
             //prepare grid model
-            var model = new ProductAvailabilityRangeListModel
+            var model = new ProductAvailabilityRangeListModel().PrepareToGrid(searchModel, productAvailabilityRanges, () =>
             {
                 //fill in model values from the entity
-                Data = productAvailabilityRanges.Select(range => range.ToModel<ProductAvailabilityRangeModel>()),
-                Total = productAvailabilityRanges.TotalCount
-            };
+                return productAvailabilityRanges.Select(range => range.ToModel<ProductAvailabilityRangeModel>());
+            });
 
             return model;
         }
