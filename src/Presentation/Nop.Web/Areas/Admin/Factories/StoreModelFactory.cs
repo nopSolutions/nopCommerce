@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Domain.Stores;
 using Nop.Services.Localization;
@@ -6,6 +7,7 @@ using Nop.Services.Stores;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Stores;
 using Nop.Web.Framework.Factories;
+using Nop.Web.Framework.Models.DataTables;
 using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
@@ -39,6 +41,65 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #endregion
 
+        #region Utilities
+
+        /// <summary>
+        /// Prepare store datatables model
+        /// </summary>
+        /// <param name="searchModel">Store search model</param>
+        /// <returns>Store datatables model</returns>
+        protected virtual DataTablesModel PrepareStoreGridModel(StoreSearchModel searchModel)
+        {
+            //prepare common properties
+            var model = new DataTablesModel
+            {
+                Name = "stores-grid",
+                UrlRead = new DataUrl("List", "Store", null),
+                Length = searchModel.PageSize,
+                LengthMenu = searchModel.AvailablePageSizes
+            };
+
+            //prepare filters to search
+            model.Filters = null;
+
+            //prepare model columns
+            model.ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(StoreModel.Name))
+                {
+                    Title = _localizationService.GetResource("Admin.Configuration.Stores.Fields.Name")
+                },
+                new ColumnProperty(nameof(StoreModel.Url))
+                {
+                    Title = _localizationService.GetResource("Admin.Configuration.Stores.Fields.Url")
+                },
+                new ColumnProperty(nameof(StoreModel.DisplayOrder))
+                {
+                    Title = _localizationService.GetResource("Admin.Configuration.Stores.Fields.DisplayOrder")
+                },
+                new ColumnProperty(nameof(StoreModel.Id))
+                {
+                    Title = _localizationService.GetResource("Admin.Common.Edit"),
+                    Width = "100",
+                    Render = new RenderButtonEdit(new DataUrl("Edit"))
+                }
+            };
+
+            //prepare column definitions
+            model.ColumnDefinitions = new List<ColumnDefinition>
+            {
+                new ColumnDefinition()
+                {
+                    Targets = "-1",
+                    ClassName =  StyleColumn.CenterAll
+                }
+            };
+
+            return model;
+        }
+
+        #endregion
+
         #region Methods
 
         /// <summary>
@@ -53,6 +114,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
+            searchModel.Grid = PrepareStoreGridModel(searchModel);
 
             return searchModel;
         }
@@ -71,12 +133,11 @@ namespace Nop.Web.Areas.Admin.Factories
             var stores = _storeService.GetAllStores(loadCacheableCopy: false).ToPagedList(searchModel);
 
             //prepare list model
-            var model = new StoreListModel
+            var model = new StoreListModel().PrepareToGrid(searchModel, stores, () =>
             {
                 //fill in model values from the entity
-                Data = stores.Select(store => store.ToModel<StoreModel>()),
-                Total = stores.TotalCount
-            };
+                return stores.Select(store => store.ToModel<StoreModel>());
+            });
 
             return model;
         }
