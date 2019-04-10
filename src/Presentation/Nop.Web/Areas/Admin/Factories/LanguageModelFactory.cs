@@ -96,8 +96,7 @@ namespace Nop.Web.Areas.Admin.Factories
             {
                 new ColumnProperty(nameof(LanguageModel.Name))
                 {
-                    Title = _localizationService.GetResource("Admin.Configuration.Languages.Fields.Name"),
-                    Width = "auto"
+                    Title = _localizationService.GetResource("Admin.Configuration.Languages.Fields.Name")
                 },
                 new ColumnProperty(nameof(LanguageModel.FlagImageFileName))
                 {
