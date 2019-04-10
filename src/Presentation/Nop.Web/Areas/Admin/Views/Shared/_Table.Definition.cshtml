@@ -198,6 +198,13 @@ columns: [
                         }
                     </text>
                     break;
+                case RenderButtonView buttonView:
+                    <text>
+                        render: function (data, type, row, meta) {
+                            return '<a class="@GetEnumValue(typeof(StyleButton), buttonView.Style)" href="@GetUrl(buttonView.Url)' + data + '"><i class="fa fa-eye"></i>@T("Admin.Common.View")</a>'
+                        }
+                    </text>
+                    break;
                 case RenderButtonCustom buttonCustom:
                     @if (!string.IsNullOrEmpty(buttonCustom.Url))
                     {
