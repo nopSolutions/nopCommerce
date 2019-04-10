@@ -87,91 +87,11 @@
 
                 <div class="panel panel-default">
                     <div class="panel-body">
-                        <div id="plugins-grid"></div>
-
+                        @await Html.PartialAsync("Table", Model.Grid)
                         <script>
-                $(document).ready(function() {
-                    $("#plugins-grid").kendoGrid({
-                        dataSource: {
-                            type: "json",
-                            transport: {
-                                read: {
-                                    url: "@Html.Raw(Url.Action("OfficialFeedSelect", "Plugin"))",
-                                    type: "POST",
-                                    dataType: "json",
-                                    data: function() {
-                                        var data = {
-                                            SearchName: $('#@Html.IdFor(model => model.SearchName)').val(),
-                                            SearchVersionId: $('#SearchVersionId').val(),
-                                            SearchCategoryId: $('#SearchCategoryId').val(),
-                                            SearchPriceId: $('#SearchPriceId').val()
-                                        };
-                                        addAntiForgeryToken(data);
-                                        return data;
-                                    }
-                                }
-                            },
-                            schema: {
-                                data: "Data",
-                                total: "Total",
-                                errors: "Errors"
-                            },
-                            error: function(e) {
-                                display_kendoui_grid_error(e);
-                                // Cancel the changes
-                                this.cancelChanges();
-                            },
-                            pageSize: @(Model.PageSize),
-                            serverPaging: true,
-                            serverFiltering: true,
-                            serverSorting: true
-                        },
-                        pageable: {
-                            refresh: true,
-                            pageSizes: [@(Model.AvailablePageSizes)],
-                            @await Html.PartialAsync("_GridPagerMessages")
-                        },
-                        editable: {
-                            confirmation: "@T("Admin.Common.DeleteConfirmation")",
-                            mode: "inline"
-                        },
-                        scrollable: false,
-                        columns: [
-                            {
-                                field: "PictureUrl",
-                                title: "@T("Admin.Configuration.Plugins.OfficialFeed.Picture")",
-                                width: 150,
-                                template: '<img src="#=PictureUrl#" width="125" />',
-                                headerAttributes: { style: "text-align:center" },
-                                attributes: { style: "text-align:center" }
-                            }, {
-                                field: "Name",
-                                title: "@T("Admin.Configuration.Plugins.OfficialFeed.Name")",
-                                width: 500
-                            }, {
-                                field: "Price",
-                                title: "@T("Admin.Configuration.Plugins.OfficialFeed.Price")",
-                                width: 70
-                            }, {
-                                field: "Url",
-                                width: 150,
-                                title: "@T("Admin.Configuration.Plugins.OfficialFeed.Download")",
-                                template: '<a class="btn btn-default" href="#=Url#?utm_source=admin-panel&utm_medium=official-plugins&utm_campaign=admin-panel" target="_blank"><i class="fa fa-download"></i>@T("Admin.Configuration.Plugins.OfficialFeed.Download")</a>',
-                                headerAttributes: { style: "text-align:center" },
-                                attributes: { style: "text-align:center" }
-                            },
-                            {
-                                field: "CategoryName",
-                                title: "@T("Admin.Configuration.Plugins.OfficialFeed.Category")",
-                                width: 200
-                            }, {
-                                field: "SupportedVersions",
-                                title: "@T("Admin.Configuration.Plugins.OfficialFeed.SupportedVersions")",
-                                width: 200
+                            function renderColumnUrl(data, type, row, meta) {
+                                return '<a class="btn btn-default" href="' + data + '?utm_source=admin-panel&utm_medium=official-plugins&utm_campaign=admin-panel" target="_blank"><i class="fa fa-download"></i>@T("Admin.Configuration.Plugins.OfficialFeed.Download")</a>';
                             }
-                        ]
-                    });
-                });
                         </script>
                     </div>
 
@@ -181,24 +101,8 @@
                             $(document).ready(function () {
                                 $('#btnRefresh').click(function () {
                                     //refresh grid
-                                    var grid = $("#plugins-grid").data('kendoGrid');
-                                    grid.dataSource.page(1); //new search. Set page size to 1
-                                    //grid.dataSource.read(); we already loaded the grid above using "page" function
-
+                                    $('#@Model.Grid.Name').DataTable().ajax.reload();
                                     //return false to don't reload a page
-                                    return false;
-                                });
-                            });
-                        </script>
-                        <script>
-                            $(document).ready(function () {
-                                //search button
-                                $('#search-plugins').click(function () {
-                                    //search
-                                    var grid = $('#plugins-grid').data('kendoGrid');
-                                    grid.dataSource.page(1); //new search. Set page size to 1
-                                    //grid.dataSource.read(); we already loaded the grid above using "page" function
-
                                     return false;
                                 });
                             });
