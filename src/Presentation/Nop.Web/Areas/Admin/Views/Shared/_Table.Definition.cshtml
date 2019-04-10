@@ -1,7 +1,7 @@
 ﻿@model DataTablesModel
-
 @using System.Net;
 @using System.Runtime.Serialization;
+@using System.Text.Encodings.Web
 @using Nop.Web.Framework.Models.DataTables;
 
 @{
@@ -150,7 +150,7 @@ columns: [
             @if (!string.IsNullOrEmpty(column.Title) && !column.IsMasterCheckBox)
             {
                 <text>
-                    title: '@Html.Raw(column.Title)',
+                    title: '@JavaScriptEncoder.Default.Encode(column.Title)',
                 </text>
             }
             else
