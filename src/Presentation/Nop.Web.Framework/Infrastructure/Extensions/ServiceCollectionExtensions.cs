@@ -1,7 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO.Compression;
 using System.Linq;
+using System.Net;
+using EasyCaching.Core;
+using EasyCaching.InMemory;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -14,12 +20,15 @@ using Nop.Core.Caching;
 using Nop.Core.Configuration;
 using Nop.Core.Data;
 using Nop.Core.Domain;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Security;
 using Nop.Core.Http;
 using Nop.Core.Infrastructure;
+using Nop.Core.Redis;
 using Nop.Data;
 using Nop.Services.Authentication;
 using Nop.Services.Authentication.External;
+using Nop.Services.Common;
 using Nop.Services.Logging;
 using Nop.Services.Plugins;
 using Nop.Services.Security;
@@ -27,8 +36,13 @@ using Nop.Services.Tasks;
 using Nop.Web.Framework.FluentValidation;
 using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Mvc.Routing;
+using Nop.Web.Framework.Security.Captcha;
 using Nop.Web.Framework.Themes;
 using StackExchange.Profiling.Storage;
+using WebMarkupMin.AspNet.Brotli;
+using WebMarkupMin.AspNet.Common.Compressors;
+using WebMarkupMin.AspNetCore2;
+using WebMarkupMin.NUglify;
 
 namespace Nop.Web.Framework.Infrastructure.Extensions
 {
@@ -42,26 +56,39 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         /// </summary>
         /// <param name="services">Collection of service descriptors</param>
         /// <param name="configuration">Configuration of the application</param>
+        /// <param name="hostingEnvironment">Hosting environment</param>
         /// <returns>Configured service provider</returns>
-        public static IServiceProvider ConfigureApplicationServices(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceProvider ConfigureApplicationServices(this IServiceCollection services,
+            IConfiguration configuration, IHostingEnvironment hostingEnvironment)
         {
+            //most of API providers require TLS 1.2 nowadays
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
             //add NopConfig configuration parameters
-            services.ConfigureStartupConfig<NopConfig>(configuration.GetSection("Nop"));
+            var nopConfig = services.ConfigureStartupConfig<NopConfig>(configuration.GetSection("Nop"));
+
             //add hosting configuration parameters
             services.ConfigureStartupConfig<HostingConfig>(configuration.GetSection("Hosting"));
+
             //add accessor to HttpContext
             services.AddHttpContextAccessor();
 
-            //create, initialize and configure the engine
-            var engine = EngineContext.Create();
-            engine.Initialize(services);
-            var serviceProvider = engine.ConfigureServices(services, configuration);
+            //create default file provider
+            CommonHelper.DefaultFileProvider = new NopFileProvider(hostingEnvironment);
 
+            //initialize plugins
+            var mvcCoreBuilder = services.AddMvcCore();
+            mvcCoreBuilder.PartManager.InitializePlugins(nopConfig);
+
+            //create engine and configure service provider
+            var engine = EngineContext.Create();
+            var serviceProvider = engine.ConfigureServices(services, configuration, nopConfig);
+
+            //further actions are performed only when the database is installed
             if (!DataSettingsManager.DatabaseIsInstalled)
                 return serviceProvider;
 
-            //implement schedule tasks
-            //database is already installed, so start scheduled tasks
+            //initialize and start schedule tasks
             TaskManager.Instance.Initialize();
             TaskManager.Instance.Start();
 
@@ -168,13 +195,13 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         {
             //check whether to persist data protection in Redis
             var nopConfig = services.BuildServiceProvider().GetRequiredService<NopConfig>();
-            if (nopConfig.RedisCachingEnabled && nopConfig.PersistDataProtectionKeysToRedis)
+            if (nopConfig.RedisEnabled && nopConfig.UseRedisToStoreDataProtectionKeys)
             {
                 //store keys in Redis
                 services.AddDataProtection().PersistKeysToRedis(() =>
                 {
                     var redisConnectionWrapper = EngineContext.Current.Resolve<IRedisConnectionWrapper>();
-                    return redisConnectionWrapper.GetDatabase();
+                    return redisConnectionWrapper.GetDatabase(RedisDatabaseNumber.DataProtectionKeys);
                 }, NopCachingDefaults.RedisDataProtectionKey);
             }
             else
@@ -289,6 +316,9 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 configuration.ImplicitlyValidateChildProperties = true;
             });
 
+            //register controllers as services, it'll allow to override them
+            mvcBuilder.AddControllersAsServices();
+
             return mvcBuilder;
         }
 
@@ -338,6 +368,83 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                     !EngineContext.Current.Resolve<StoreInformationSettings>().DisplayMiniProfilerForAdminOnly ||
                     EngineContext.Current.Resolve<IPermissionService>().Authorize(StandardPermissionProvider.AccessAdminPanel);
             }).AddEntityFramework();
+        }
+
+        /// <summary>
+        /// Add and configure WebMarkupMin service
+        /// </summary>
+        /// <param name="services">Collection of service descriptors</param>
+        public static void AddNopWebMarkupMin(this IServiceCollection services)
+        {
+            //check whether database is installed
+            if (!DataSettingsManager.DatabaseIsInstalled)
+                return;
+
+            services
+                .AddWebMarkupMin(options =>
+                {
+                    options.AllowMinificationInDevelopmentEnvironment = true;
+                    options.AllowCompressionInDevelopmentEnvironment = true;
+                    options.DisableMinification = !EngineContext.Current.Resolve<CommonSettings>().EnableHtmlMinification;
+                    options.DisableCompression = options.DisableMinification;
+                    options.DisablePoweredByHttpHeaders = true;
+                })
+                .AddHtmlMinification(options =>
+                {
+                    var settings = options.MinificationSettings;
+                    settings.RemoveHttpProtocolFromAttributes = true;
+                    settings.RemoveHttpsProtocolFromAttributes = true;
+
+                    options.CssMinifierFactory = new NUglifyCssMinifierFactory();
+                    options.JsMinifierFactory = new NUglifyJsMinifierFactory();
+                })
+                .AddXmlMinification(options =>
+                {
+                    var settings = options.MinificationSettings;
+                    settings.RenderEmptyTagsWithSpace = true;
+                    settings.CollapseTagsWithoutContent = true;
+                })
+                .AddHttpCompression(options =>
+                {
+                    options.CompressorFactories = new List<ICompressorFactory>
+                    {
+                        new BrotliCompressorFactory(new BrotliCompressionSettings { Level = 1 }),
+                        new DeflateCompressorFactory(new DeflateCompressionSettings { Level = CompressionLevel.Fastest }),
+                        new GZipCompressorFactory(new GZipCompressionSettings { Level = CompressionLevel.Fastest })
+                    };
+                });
+        }
+
+        /// <summary>
+        /// Add and configure EasyCaching service
+        /// </summary>
+        /// <param name="services">Collection of service descriptors</param>
+        public static void AddEasyCaching(this IServiceCollection services)
+        {
+            services.AddEasyCaching(option =>
+            {
+                //use memory cache
+                option.UseInMemory("nopCommerce_memory_cache");
+            });
+        }
+
+        /// <summary>
+        /// Add and configure default HTTP clients
+        /// </summary>
+        /// <param name="services">Collection of service descriptors</param>
+        public static void AddNopHttpClients(this IServiceCollection services)
+        {
+            //default client
+            services.AddHttpClient(NopHttpDefaults.DefaultHttpClient).WithProxy();
+
+            //client to request current store
+            services.AddHttpClient<StoreHttpClient>();
+
+            //client to request nopCommerce official site
+            services.AddHttpClient<NopHttpClient>().WithProxy();
+
+            //client to request reCAPTCHA service
+            services.AddHttpClient<CaptchaHttpClient>().WithProxy();
         }
     }
 }

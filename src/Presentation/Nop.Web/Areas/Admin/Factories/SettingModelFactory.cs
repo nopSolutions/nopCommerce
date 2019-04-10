@@ -34,8 +34,8 @@ using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Areas.Admin.Models.Settings;
 using Nop.Web.Areas.Admin.Models.Stores;
-using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -296,7 +296,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //load settings for a chosen store scope
             var storeId = _storeContext.ActiveStoreScopeConfiguration;
             var storeInformationSettings = _settingService.LoadSetting<StoreInformationSettings>(storeId);
-            var commonSettings = _settingService.LoadSetting<CommonSettings>(storeId);
+            var commonSettings = _settingService.LoadSetting<CommonSettings>(storeId);            
 
             //fill in model values from the entity
             var model = new StoreInformationSettingsModel
@@ -309,17 +309,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 FacebookLink = storeInformationSettings.FacebookLink,
                 TwitterLink = storeInformationSettings.TwitterLink,
                 YoutubeLink = storeInformationSettings.YoutubeLink,
-                GooglePlusLink = storeInformationSettings.GooglePlusLink,
                 SubjectFieldOnContactUsForm = commonSettings.SubjectFieldOnContactUsForm,
                 UseSystemEmailForContactUsForm = commonSettings.UseSystemEmailForContactUsForm,
-                PopupForTermsOfServiceLinks = commonSettings.PopupForTermsOfServiceLinks,
-                UseResponseCompression = commonSettings.UseResponseCompression,
-                SitemapEnabled = commonSettings.SitemapEnabled,
-                SitemapPageSize = commonSettings.SitemapPageSize,
-                SitemapIncludeCategories = commonSettings.SitemapIncludeCategories,
-                SitemapIncludeManufacturers = commonSettings.SitemapIncludeManufacturers,
-                SitemapIncludeProducts = commonSettings.SitemapIncludeProducts,
-                SitemapIncludeProductTags = commonSettings.SitemapIncludeProductTags
+                PopupForTermsOfServiceLinks = commonSettings.PopupForTermsOfServiceLinks                                
             };
 
             //prepare available themes
@@ -337,17 +329,81 @@ namespace Nop.Web.Areas.Admin.Factories
             model.FacebookLink_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.FacebookLink, storeId);
             model.TwitterLink_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.TwitterLink, storeId);
             model.YoutubeLink_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.YoutubeLink, storeId);
-            model.GooglePlusLink_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.GooglePlusLink, storeId);
             model.SubjectFieldOnContactUsForm_OverrideForStore = _settingService.SettingExists(commonSettings, x => x.SubjectFieldOnContactUsForm, storeId);
             model.UseSystemEmailForContactUsForm_OverrideForStore = _settingService.SettingExists(commonSettings, x => x.UseSystemEmailForContactUsForm, storeId);
             model.PopupForTermsOfServiceLinks_OverrideForStore = _settingService.SettingExists(commonSettings, x => x.PopupForTermsOfServiceLinks, storeId);
-            model.UseResponseCompression_OverrideForStore = _settingService.SettingExists(commonSettings, x => x.UseResponseCompression, storeId);
-            model.SitemapEnabled_OverrideForStore = _settingService.SettingExists(commonSettings, x => x.SitemapEnabled, storeId);
-            model.SitemapPageSize_OverrideForStore = _settingService.SettingExists(commonSettings, x => x.SitemapPageSize, storeId);
-            model.SitemapIncludeCategories_OverrideForStore = _settingService.SettingExists(commonSettings, x => x.SitemapIncludeCategories, storeId);
-            model.SitemapIncludeManufacturers_OverrideForStore = _settingService.SettingExists(commonSettings, x => x.SitemapIncludeManufacturers, storeId);
-            model.SitemapIncludeProducts_OverrideForStore = _settingService.SettingExists(commonSettings, x => x.SitemapIncludeProducts, storeId);
-            model.SitemapIncludeProductTags_OverrideForStore = _settingService.SettingExists(commonSettings, x => x.SitemapIncludeProductTags, storeId);
+
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare Sitemap settings model
+        /// </summary>
+        /// <returns>Sitemap settings model</returns>
+        protected virtual SitemapSettingsModel PrepareSitemapSettingsModel()
+        {
+            //load settings for a chosen store scope
+            var storeId = _storeContext.ActiveStoreScopeConfiguration;
+            var sitemapSettings = _settingService.LoadSetting<SitemapSettings>(storeId);
+
+            //fill in model values from the entity
+            var model = new SitemapSettingsModel
+            {
+                SitemapEnabled = sitemapSettings.SitemapEnabled,
+                SitemapPageSize = sitemapSettings.SitemapPageSize,
+                SitemapIncludeCategories = sitemapSettings.SitemapIncludeCategories,
+                SitemapIncludeManufacturers = sitemapSettings.SitemapIncludeManufacturers,
+                SitemapIncludeProducts = sitemapSettings.SitemapIncludeProducts,
+                SitemapIncludeProductTags = sitemapSettings.SitemapIncludeProductTags,
+                SitemapIncludeBlogPosts = sitemapSettings.SitemapIncludeBlogPosts,
+                SitemapIncludeNews = sitemapSettings.SitemapIncludeNews,
+                SitemapIncludeTopics = sitemapSettings.SitemapIncludeTopics
+            };
+
+            if (storeId <= 0)
+                return model;
+
+            //fill in overridden values
+            model.SitemapEnabled_OverrideForStore = _settingService.SettingExists(sitemapSettings, x => x.SitemapEnabled, storeId);
+            model.SitemapPageSize_OverrideForStore = _settingService.SettingExists(sitemapSettings, x => x.SitemapPageSize, storeId);
+            model.SitemapIncludeCategories_OverrideForStore = _settingService.SettingExists(sitemapSettings, x => x.SitemapIncludeCategories, storeId);
+            model.SitemapIncludeManufacturers_OverrideForStore = _settingService.SettingExists(sitemapSettings, x => x.SitemapIncludeManufacturers, storeId);
+            model.SitemapIncludeProducts_OverrideForStore = _settingService.SettingExists(sitemapSettings, x => x.SitemapIncludeProducts, storeId);
+            model.SitemapIncludeProductTags_OverrideForStore = _settingService.SettingExists(sitemapSettings, x => x.SitemapIncludeProductTags, storeId);
+            model.SitemapIncludeBlogPosts_OverrideForStore = _settingService.SettingExists(sitemapSettings, x => x.SitemapIncludeBlogPosts, storeId);
+            model.SitemapIncludeNews_OverrideForStore = _settingService.SettingExists(sitemapSettings, x => x.SitemapIncludeNews, storeId);
+            model.SitemapIncludeTopics_OverrideForStore = _settingService.SettingExists(sitemapSettings, x => x.SitemapIncludeTopics, storeId);
+
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare minification settings model
+        /// </summary>
+        /// <returns>Minification settings model</returns>
+        protected virtual MinificationSettingsModel PrepareMinificationSettingsModel()
+        {
+            //load settings for a chosen store scope
+            var storeId = _storeContext.ActiveStoreScopeConfiguration;
+            var minificationSettings = _settingService.LoadSetting<CommonSettings>(storeId);
+
+            //fill in model values from the entity
+            var model = new MinificationSettingsModel
+            {
+                EnableHtmlMinification = minificationSettings.EnableHtmlMinification,
+                EnableJsBundling = minificationSettings.EnableJsBundling,
+                EnableCssBundling = minificationSettings.EnableCssBundling,
+                UseResponseCompression = minificationSettings.UseResponseCompression
+            };
+
+            if (storeId <= 0)
+                return model;
+
+            //fill in overridden values
+            model.EnableHtmlMinification_OverrideForStore = _settingService.SettingExists(minificationSettings, x => x.EnableHtmlMinification, storeId);
+            model.EnableJsBundling_OverrideForStore = _settingService.SettingExists(minificationSettings, x => x.EnableJsBundling, storeId);
+            model.EnableCssBundling_OverrideForStore = _settingService.SettingExists(minificationSettings, x => x.EnableCssBundling, storeId);
+            model.UseResponseCompression_OverrideForStore = _settingService.SettingExists(minificationSettings, x => x.UseResponseCompression, storeId);
 
             return model;
         }
@@ -376,8 +432,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 CanonicalUrlsEnabled = seoSettings.CanonicalUrlsEnabled,
                 WwwRequirement = (int)seoSettings.WwwRequirement,
                 WwwRequirementValues = seoSettings.WwwRequirement.ToSelectList(),
-                EnableJsBundling = seoSettings.EnableJsBundling,
-                EnableCssBundling = seoSettings.EnableCssBundling,
+                
                 TwitterMetaTags = seoSettings.TwitterMetaTags,
                 OpenGraphMetaTags = seoSettings.OpenGraphMetaTags,
                 CustomHeadTags = seoSettings.CustomHeadTags
@@ -395,9 +450,7 @@ namespace Nop.Web.Areas.Admin.Factories
             model.GenerateProductMetaDescription_OverrideForStore = _settingService.SettingExists(seoSettings, x => x.GenerateProductMetaDescription, storeId);
             model.ConvertNonWesternChars_OverrideForStore = _settingService.SettingExists(seoSettings, x => x.ConvertNonWesternChars, storeId);
             model.CanonicalUrlsEnabled_OverrideForStore = _settingService.SettingExists(seoSettings, x => x.CanonicalUrlsEnabled, storeId);
-            model.WwwRequirement_OverrideForStore = _settingService.SettingExists(seoSettings, x => x.WwwRequirement, storeId);
-            model.EnableJsBundling_OverrideForStore = _settingService.SettingExists(seoSettings, x => x.EnableJsBundling, storeId);
-            model.EnableCssBundling_OverrideForStore = _settingService.SettingExists(seoSettings, x => x.EnableCssBundling, storeId);
+            model.WwwRequirement_OverrideForStore = _settingService.SettingExists(seoSettings, x => x.WwwRequirement, storeId);           
             model.TwitterMetaTags_OverrideForStore = _settingService.SettingExists(seoSettings, x => x.TwitterMetaTags, storeId);
             model.OpenGraphMetaTags_OverrideForStore = _settingService.SettingExists(seoSettings, x => x.OpenGraphMetaTags, storeId);
             model.CustomHeadTags_OverrideForStore = _settingService.SettingExists(seoSettings, x => x.CustomHeadTags, storeId);
@@ -567,7 +620,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //fill in model values from the entity
             var model = new DisplayDefaultMenuItemSettingsModel
             {
-                DisplayHomePageMenuItem = displayDefaultMenuItemSettings.DisplayHomePageMenuItem,
+                DisplayHomepageMenuItem = displayDefaultMenuItemSettings.DisplayHomepageMenuItem,
                 DisplayNewProductsMenuItem = displayDefaultMenuItemSettings.DisplayNewProductsMenuItem,
                 DisplayProductSearchMenuItem = displayDefaultMenuItemSettings.DisplayProductSearchMenuItem,
                 DisplayCustomerInfoMenuItem = displayDefaultMenuItemSettings.DisplayCustomerInfoMenuItem,
@@ -580,7 +633,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 return model;
 
             //fill in overridden values
-            model.DisplayHomePageMenuItem_OverrideForStore = _settingService.SettingExists(displayDefaultMenuItemSettings, x => x.DisplayHomePageMenuItem, storeId);
+            model.DisplayHomepageMenuItem_OverrideForStore = _settingService.SettingExists(displayDefaultMenuItemSettings, x => x.DisplayHomepageMenuItem, storeId);
             model.DisplayNewProductsMenuItem_OverrideForStore = _settingService.SettingExists(displayDefaultMenuItemSettings, x => x.DisplayNewProductsMenuItem, storeId);
             model.DisplayProductSearchMenuItem_OverrideForStore = _settingService.SettingExists(displayDefaultMenuItemSettings, x => x.DisplayProductSearchMenuItem, storeId);
             model.DisplayCustomerInfoMenuItem_OverrideForStore = _settingService.SettingExists(displayDefaultMenuItemSettings, x => x.DisplayCustomerInfoMenuItem, storeId);
@@ -1027,12 +1080,12 @@ namespace Nop.Web.Areas.Admin.Factories
             var catalogSettings = _settingService.LoadSetting<CatalogSettings>(storeId);
 
             //get sort options
-            var sortOptions = Enum.GetValues(typeof(ProductSortingEnum)).OfType<ProductSortingEnum>().ToList();
+            var sortOptions = Enum.GetValues(typeof(ProductSortingEnum)).OfType<ProductSortingEnum>().ToList().ToPagedList(searchModel);
 
             //prepare list model
             var model = new SortOptionListModel
             {
-                Data = sortOptions.PaginationByRequestModel(searchModel).Select(option =>
+                Data = sortOptions.Select(option =>
                 {
                     //fill in model values from the entity
                     var sortOptionModel = new SortOptionModel
@@ -1048,7 +1101,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     return sortOptionModel;
                 }).OrderBy(option => option.DisplayOrder).ToList(),
-                Total = sortOptions.Count
+                Total = sortOptions.TotalCount
             };
 
             return model;
@@ -1286,6 +1339,7 @@ namespace Nop.Web.Areas.Admin.Factories
             model.GdprEnabled_OverrideForStore = _settingService.SettingExists(gdprSettings, x => x.GdprEnabled, storeId);
             model.LogPrivacyPolicyConsent_OverrideForStore = _settingService.SettingExists(gdprSettings, x => x.LogPrivacyPolicyConsent, storeId);
             model.LogNewsletterConsent_OverrideForStore = _settingService.SettingExists(gdprSettings, x => x.LogNewsletterConsent, storeId);
+            model.LogUserProfileChanges_OverrideForStore = _settingService.SettingExists(gdprSettings, x => x.LogUserProfileChanges, storeId);
 
             return model;
         }
@@ -1301,12 +1355,12 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get sort options
-            var consentList = _gdprService.GetAllConsents();
+            var consentList = _gdprService.GetAllConsents().ToPagedList(searchModel);
 
             //prepare list model
             var model = new GdprConsentListModel
             {
-                Data = consentList.PaginationByRequestModel(searchModel).Select(consent =>
+                Data = consentList.Select(consent =>
                 {
                     var gdprConsentModel = consent.ToModel<GdprConsentModel>();
                     var gdprConsent = _gdprService.GetConsentById(gdprConsentModel.Id);
@@ -1315,7 +1369,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     return gdprConsentModel;
                 }),
-                Total = consentList.Count
+                Total = consentList.TotalCount
             };
 
             return model;
@@ -1369,6 +1423,12 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare store information settings model
             model.StoreInformationSettings = PrepareStoreInformationSettingsModel();
+
+            //prepare Sitemap settings model
+            model.SitemapSettings = PrepareSitemapSettingsModel();
+
+            //prepare Minification settings model
+            model.MinificationSettings = PrepareMinificationSettingsModel();
 
             //prepare SEO settings model
             model.SeoSettings = PrepareSeoSettingsModel();
@@ -1452,10 +1512,12 @@ namespace Nop.Web.Areas.Admin.Factories
             if (!string.IsNullOrEmpty(searchModel.SearchSettingValue))
                 settings = settings.Where(setting => setting.Value.ToLowerInvariant().Contains(searchModel.SearchSettingValue.ToLowerInvariant()));
 
+            var pagedSettings = settings.ToList().ToPagedList(searchModel);
+
             //prepare list model
             var model = new SettingListModel
             {
-                Data = settings.PaginationByRequestModel(searchModel).Select(setting =>
+                Data = pagedSettings.Select(setting =>
                 {
                     //fill in model values from the entity
                     var settingModel = setting.ToModel<SettingModel>();
@@ -1468,7 +1530,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     return settingModel;
                 }),
 
-                Total = settings.Count()
+                Total = pagedSettings.TotalCount
             };
 
             return model;

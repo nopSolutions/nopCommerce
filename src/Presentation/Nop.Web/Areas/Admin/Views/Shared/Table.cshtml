@@ -1,0 +1,149 @@
+﻿@model DataTablesModel
+
+@using System.Net;
+@using System.Runtime.Serialization;
+@using Nop.Web.Framework.Models.DataTables;
+
+
+@functions
+{
+    string GetUrl(DataUrl dataUrl)
+    {
+        return !string.IsNullOrEmpty(dataUrl?.ActionName) && !string.IsNullOrEmpty(dataUrl.ControllerName)
+            ? Url.Action(dataUrl.ActionName, dataUrl.ControllerName, dataUrl.RouteValues)
+            : !string.IsNullOrEmpty(dataUrl.Url)
+            ? $"{(dataUrl.Url.StartsWith("~/", StringComparison.Ordinal) ? Url.Content(dataUrl.Url) : dataUrl.Url).TrimEnd('/')}/"
+            : string.Empty;
+    }
+
+    string GetEnumValue(Type type, object value)
+    {
+        return type.GetMember(value.ToString())?[0]
+            ?.GetCustomAttributes(false).OfType<EnumMemberAttribute>().FirstOrDefault()
+            ?.Value;
+    }
+}
+
+<table class="table table-bordered table-hover dataTable" width="100%" id="@Model.Name"></table>
+
+<script>
+    //This variable will be used on views. It can not be renamed
+    var selectedIds = [];
+
+    $(document).ready(function () {
+        var table = $('#@Model.Name').DataTable({
+             @await Html.PartialAsync("_Table.Definition", Model)
+        });
+
+        @if (!string.IsNullOrEmpty(Model.SearchButtonId))
+        {
+            <text>
+                $('#@Model.SearchButtonId').click(function() {
+                    $('#@Model.Name').DataTable().ajax.reload();
+                    $('.checkboxGroups').attr('checked', false).change();
+                    selectedIds = [];
+                    return false;
+                });
+            </text>
+        }
+
+        $('#mastercheckbox').click(function () {
+            $('.checkboxGroups').attr('checked', $(this).is(':checked')).change();
+        });
+
+        $('#@Model.Name').on('change', 'input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]', function (e) {
+            var $check = $(this);
+            var checked = jQuery.inArray($check.val(), selectedIds);
+            if ($check.is(':checked') == true) {
+                if (checked == -1) {
+                    selectedIds.push($check.val());
+                }
+            } else if (checked > -1) {
+                selectedIds = $.grep(selectedIds, function (item, index) {
+                    return item != $check.val();
+                });
+            }
+            updateMasterCheckbox();
+        });
+    });
+
+    function updateMasterCheckbox() {
+        var numChkBoxes = $('#@Model.Name input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]').length;
+        var numChkBoxesChecked = $('#@Model.Name input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]:checked').length;
+        $('#mastercheckbox').attr('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
+    }
+</script>
+@if (Model.UrlAction != null)
+{
+    <text>
+        <script>
+            function ActionData(RowID) {
+                if (confirm('@T("Admin.Common.DeleteConfirmation")')) {
+                    Action(RowID);
+                }
+                else {
+                    return false;
+                }
+            }
+
+            function Action(RowID) {
+                var postData = {
+                    id: RowID
+                };
+                addAntiForgeryToken(postData);
+
+                $.ajax({
+                    url: '@Html.Raw(GetUrl(Model.UrlAction))',
+                    type: '@WebRequestMethods.Http.Post',
+                    dataType: 'json',
+                    data: postData,
+                    success: function () {
+                        $('#@Model.Name').DataTable().draw(false);
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        alert(thrownError);
+                    }
+                });
+            }
+        </script>
+    </text>
+}
+
+@if (Model.ChildTable != null)
+{
+    <text>
+        <script>
+            function getchild(d) {
+                return '<table id="child' + d.Id + '" class="table table-bordered table-hover dataTable" width="100%" style="padding-left:2%;"></table>';
+            }
+            $(document).ready(function () {
+                // Add event listener for opening and closing childs
+                $('#@Model.Name tbody').on('click', 'td.child-control', function () {
+                    var tr = $(this).closest('tr');
+                    var tdi = tr.find('i.fa');
+                    var row = $('#@Model.Name').DataTable().row(tr);
+
+                    if (row.child.isShown()) {
+                        // This row is already open - close it
+                        row.child.hide();
+                        tr.removeClass('shown');
+                        tdi.first().removeClass('fa-caret-down');
+                        tdi.first().addClass('fa-caret-right');
+                    }
+                    else {
+                        // Open this row
+                        row.child(getchild(row.data())).show();
+                        var classid = '#child' + row.data().Id;
+                        $(classid).DataTable({
+                        @await Html.PartialAsync("_Table.Definition", Model.ChildTable)
+                        }).draw;
+                        tr.addClass('shown');
+                        tdi.first().removeClass('fa-caret-right');
+                        tdi.first().addClass(' fa-caret-down');
+                    }
+                });
+            });
+        </script>
+    </text>
+}
+

@@ -24,12 +24,12 @@ namespace Nop.Services.Tests.Helpers
         private DateTimeSettings _dateTimeSettings;
         private IDateTimeHelper _dateTimeHelper;
         private Store _store;
-
+        
         /// <summary>
         /// (GMT+02:00) Minsk
         /// </summary>
         private string _gmtPlus2MinskTimeZoneId;
-
+       
         /// <summary>
         /// (GMT+03:00) Moscow, St. Petersburg, Volgograd
         /// </summary>
@@ -58,20 +58,25 @@ namespace Nop.Services.Tests.Helpers
                 DefaultStoreTimeZoneId = string.Empty
             };
 
-            _dateTimeHelper = new DateTimeHelper(_dateTimeSettings, _genericAttributeService.Object, 
+            _dateTimeHelper = new DateTimeHelper(_dateTimeSettings, _genericAttributeService.Object,
                 _settingService.Object, _workContext.Object);
 
-            var isUnix = Environment.OSVersion.Platform == PlatformID.Unix;
+            _gmtPlus2MinskTimeZoneId = "E. Europe Standard Time";  //(GMT+02:00) Minsk
+            _gmtPlus3MoscowTimeZoneId = "Russian Standard Time"; //(GMT+03:00) Moscow, St. Petersburg, Volgograd
+            _gmtPlus7KrasnoyarskTimeZoneId = "North Asia Standard Time"; //(GMT+07:00) Krasnoyarsk;
 
-            _gmtPlus2MinskTimeZoneId = isUnix ? "Europe/Minsk" : "E. Europe Standard Time";  
-            _gmtPlus3MoscowTimeZoneId = isUnix ? "Europe/Moscow" : "Russian Standard Time"; 
-            _gmtPlus7KrasnoyarskTimeZoneId  = isUnix ? "Asia/Krasnoyarsk" : "North Asia Standard Time"; 
+            if (Environment.OSVersion.Platform != PlatformID.Unix) 
+                return;
+
+            _gmtPlus2MinskTimeZoneId = "Europe/Minsk";  //(GMT+02:00) Minsk;
+            _gmtPlus3MoscowTimeZoneId = "Europe/Moscow"; //(GMT+03:00) Moscow, St. Petersburg, Volgograd
+            _gmtPlus7KrasnoyarskTimeZoneId = "Asia/Krasnoyarsk"; //(GMT+07:00) Krasnoyarsk;
         }
 
         [Test]
         public void Can_find_systemTimeZone_by_id()
         {
-            var timeZones = _dateTimeHelper.FindTimeZoneById(_gmtPlus2MinskTimeZoneId);
+            var timeZones = _dateTimeHelper.FindTimeZoneById(_gmtPlus2MinskTimeZoneId);  //(GMT+02:00) Minsk
             timeZones.ShouldNotBeNull();
             timeZones.Id.ShouldEqual(_gmtPlus2MinskTimeZoneId);
         }
@@ -88,15 +93,15 @@ namespace Nop.Services.Tests.Helpers
         public void Can_get_customer_timeZone_with_customTimeZones_enabled()
         {
             _dateTimeSettings.AllowCustomersToSetTimeZone = true;
-            _dateTimeSettings.DefaultStoreTimeZoneId = _gmtPlus2MinskTimeZoneId;
+            _dateTimeSettings.DefaultStoreTimeZoneId = _gmtPlus2MinskTimeZoneId; //(GMT+02:00) Minsk;
 
             var customer = new Customer
             {
                 Id = 10
             };
 
-            _genericAttributeService.Setup(x => x.GetAttribute<string>(customer, NopCustomerDefaults.TimeZoneIdAttribute, 0))
-                .Returns(_gmtPlus3MoscowTimeZoneId);
+            _genericAttributeService.Setup(x => x.GetAttribute<string>(customer, NopCustomerDefaults.TimeZoneIdAttribute, 0, null))
+                .Returns(_gmtPlus3MoscowTimeZoneId);  //(GMT+03:00) Moscow, St. Petersburg, Volgograd
 
             var timeZone = _dateTimeHelper.GetCustomerTimeZone(customer);
             timeZone.ShouldNotBeNull();
@@ -107,7 +112,7 @@ namespace Nop.Services.Tests.Helpers
         public void Can_get_customer_timeZone_with_customTimeZones_disabled()
         {
             _dateTimeSettings.AllowCustomersToSetTimeZone = false;
-            _dateTimeSettings.DefaultStoreTimeZoneId = _gmtPlus2MinskTimeZoneId;
+            _dateTimeSettings.DefaultStoreTimeZoneId = _gmtPlus2MinskTimeZoneId; //(GMT+02:00) Minsk;
 
             var customer = new Customer
             {
@@ -123,22 +128,22 @@ namespace Nop.Services.Tests.Helpers
                                         EntityId = customer.Id,
                                         Key = NopCustomerDefaults.TimeZoneIdAttribute,
                                         KeyGroup = "Customer",
-                                        Value = _gmtPlus3MoscowTimeZoneId
+                                        Value = _gmtPlus3MoscowTimeZoneId //(GMT+03:00) Moscow, St. Petersburg, Volgograd
                                     }
                             });
 
             var timeZone = _dateTimeHelper.GetCustomerTimeZone(customer);
             timeZone.ShouldNotBeNull();
-            timeZone.Id.ShouldEqual(_gmtPlus2MinskTimeZoneId);
+            timeZone.Id.ShouldEqual(_gmtPlus2MinskTimeZoneId);  //(GMT+02:00) Minsk
         }
 
         [Test]
         public void Can_convert_dateTime_to_userTime()
         {
-            var sourceDateTime = TimeZoneInfo.FindSystemTimeZoneById(_gmtPlus2MinskTimeZoneId);
+            var sourceDateTime = TimeZoneInfo.FindSystemTimeZoneById(_gmtPlus2MinskTimeZoneId); //(GMT+02:00) Minsk;
             sourceDateTime.ShouldNotBeNull();
 
-            var destinationDateTime = TimeZoneInfo.FindSystemTimeZoneById(_gmtPlus7KrasnoyarskTimeZoneId);
+            var destinationDateTime = TimeZoneInfo.FindSystemTimeZoneById(_gmtPlus7KrasnoyarskTimeZoneId); //(GMT+07:00) Krasnoyarsk;
             destinationDateTime.ShouldNotBeNull();
 
             //summer time
@@ -153,7 +158,7 @@ namespace Nop.Services.Tests.Helpers
         [Test]
         public void Can_convert_dateTime_to_utc_dateTime()
         {
-            var sourceDateTime = TimeZoneInfo.FindSystemTimeZoneById(_gmtPlus2MinskTimeZoneId);
+            var sourceDateTime = TimeZoneInfo.FindSystemTimeZoneById(_gmtPlus2MinskTimeZoneId); //(GMT+02:00) Minsk;
             sourceDateTime.ShouldNotBeNull();
 
             //summer time

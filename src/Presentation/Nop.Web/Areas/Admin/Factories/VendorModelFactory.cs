@@ -13,8 +13,9 @@ using Nop.Services.Vendors;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Areas.Admin.Models.Vendors;
-using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;
+using Nop.Web.Framework.Models.DataTables;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -147,39 +148,39 @@ namespace Nop.Web.Areas.Admin.Factories
                         case AttributeControlType.DropdownList:
                         case AttributeControlType.RadioList:
                         case AttributeControlType.Checkboxes:
+                        {
+                            if (!string.IsNullOrEmpty(selectedVendorAttributes))
                             {
-                                if (!string.IsNullOrEmpty(selectedVendorAttributes))
-                                {
-                                    //clear default selection
-                                    foreach (var item in attributeModel.Values)
-                                        item.IsPreSelected = false;
+                                //clear default selection
+                                foreach (var item in attributeModel.Values)
+                                    item.IsPreSelected = false;
 
-                                    //select new values
-                                    var selectedValues = _vendorAttributeParser.ParseVendorAttributeValues(selectedVendorAttributes);
-                                    foreach (var attributeValue in selectedValues)
-                                        foreach (var item in attributeModel.Values)
-                                            if (attributeValue.Id == item.Id)
-                                                item.IsPreSelected = true;
-                                }
+                                //select new values
+                                var selectedValues = _vendorAttributeParser.ParseVendorAttributeValues(selectedVendorAttributes);
+                                foreach (var attributeValue in selectedValues)
+                                    foreach (var item in attributeModel.Values)
+                                        if (attributeValue.Id == item.Id)
+                                            item.IsPreSelected = true;
                             }
-                            break;
+                        }
+                        break;
                         case AttributeControlType.ReadonlyCheckboxes:
-                            {
-                                //do nothing
-                                //values are already pre-set
-                            }
-                            break;
+                        {
+                            //do nothing
+                            //values are already pre-set
+                        }
+                        break;
                         case AttributeControlType.TextBox:
                         case AttributeControlType.MultilineTextbox:
+                        {
+                            if (!string.IsNullOrEmpty(selectedVendorAttributes))
                             {
-                                if (!string.IsNullOrEmpty(selectedVendorAttributes))
-                                {
-                                    var enteredText = _vendorAttributeParser.ParseValues(selectedVendorAttributes, attribute.Id);
-                                    if (enteredText.Any())
-                                        attributeModel.DefaultValue = enteredText[0];
-                                }
+                                var enteredText = _vendorAttributeParser.ParseValues(selectedVendorAttributes, attribute.Id);
+                                if (enteredText.Any())
+                                    attributeModel.DefaultValue = enteredText[0];
                             }
-                            break;
+                        }
+                        break;
                         case AttributeControlType.Datepicker:
                         case AttributeControlType.ColorSquares:
                         case AttributeControlType.ImageSquares:
@@ -247,6 +248,69 @@ namespace Nop.Web.Areas.Admin.Factories
             return searchModel;
         }
 
+        /// <summary>
+        /// Prepare vendor datatables model
+        /// </summary>
+        /// <param name="searchModel">Vendor search model</param>
+        /// <returns>Vendor datatables model</returns>
+        protected virtual DataTablesModel PrepareVendorGridModel(VendorSearchModel searchModel)
+        {
+            //prepare common properties
+            var model = new DataTablesModel
+            {
+                Name = "vendors-grid",
+                UrlRead = new DataUrl("List", "Vendor", null),
+                SearchButtonId = "search-vendors",
+                Length = searchModel.PageSize,
+                LengthMenu = searchModel.AvailablePageSizes
+            };
+
+            //prepare filters to search
+            model.Filters = new List<FilterParameter>()
+            {
+                new FilterParameter(nameof(searchModel.SearchName))                
+            };
+
+            //prepare model columns
+            model.ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(VendorModel.Name))
+                {
+                    Title = _localizationService.GetResource("Admin.Vendors.Fields.Name"),
+                    Width = "300"
+                },
+                new ColumnProperty(nameof(VendorModel.Email))
+                {
+                    Title = _localizationService.GetResource("Admin.Vendors.Fields.Email"),
+                    Width = "300"
+                },
+                new ColumnProperty(nameof(VendorModel.Active))
+                {
+                    Title = _localizationService.GetResource("Admin.Vendors.Fields.Active"),
+                    Width = "50",
+                    Render = new RenderBoolean()
+                },
+                new ColumnProperty(nameof(VendorModel.Id))
+                {
+                    Title = _localizationService.GetResource("Admin.Common.Edit"),
+                    Width = "50",
+                    Render = new RenderButtonEdit(new DataUrl("Edit"))
+                }                
+            };
+
+            //prepare column definitions
+            model.ColumnDefinitions = new List<ColumnDefinition>
+            {
+                new ColumnDefinition()
+                {
+                    Targets = "[-1, -2]",
+                    ClassName =  StyleColumn.CenterAll
+                }
+            };
+
+            return model;
+        }
+
         #endregion
 
         #region Methods
@@ -263,6 +327,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
+            searchModel.Grid = PrepareVendorGridModel(searchModel);
 
             return searchModel;
         }
@@ -283,18 +348,17 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new VendorListModel
+            var model = new VendorListModel().PrepareToGrid(searchModel, vendors, () =>
             {
                 //fill in model values from the entity
-                Data = vendors.Select(vendor =>
+                return vendors.Select(vendor =>
                 {
                     var vendorModel = vendor.ToModel<VendorModel>();
                     vendorModel.SeName = _urlRecordService.GetSeName(vendor, 0, true, false);
 
                     return vendorModel;
-                }),
-                Total = vendors.TotalCount
-            };
+                });
+            });
 
             return model;
         }
@@ -377,16 +441,16 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(vendor));
 
             //get vendor notes
-            var vendorNotes = vendor.VendorNotes.OrderByDescending(note => note.CreatedOnUtc).ToList();
+            var vendorNotes = vendor.VendorNotes.OrderByDescending(note => note.CreatedOnUtc).ToList().ToPagedList(searchModel);
 
             //prepare list model
             var model = new VendorNoteListModel
             {
-                Data = vendorNotes.PaginationByRequestModel(searchModel).Select(note =>
+                Data = vendorNotes.Select(note =>
                 {
                     //fill in model values from the entity        
                     var vendorNoteModel = note.ToModel<VendorNoteModel>();
-                    
+
                     //convert dates to the user time
                     vendorNoteModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(note.CreatedOnUtc, DateTimeKind.Utc);
 
@@ -395,7 +459,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     return vendorNoteModel;
                 }),
-                Total = vendorNotes.Count
+                Total = vendorNotes.TotalCount
             };
 
             return model;

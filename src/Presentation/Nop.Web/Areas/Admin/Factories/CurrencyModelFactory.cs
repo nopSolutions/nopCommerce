@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Core;
 using Nop.Core.Domain.Directory;
 using Nop.Services.Directory;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Directory;
-using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;
+using Nop.Web.Framework.Models.DataTables;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -24,10 +24,10 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly CurrencySettings _currencySettings;
         private readonly ICurrencyService _currencyService;
         private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly IExchangeRatePluginManager _exchangeRatePluginManager;
         private readonly ILocalizationService _localizationService;
         private readonly ILocalizedModelFactory _localizedModelFactory;
         private readonly IStoreMappingSupportedModelFactory _storeMappingSupportedModelFactory;
-        private readonly IWorkContext _workContext;
 
         #endregion
 
@@ -36,18 +36,18 @@ namespace Nop.Web.Areas.Admin.Factories
         public CurrencyModelFactory(CurrencySettings currencySettings,
             ICurrencyService currencyService,
             IDateTimeHelper dateTimeHelper,
+            IExchangeRatePluginManager exchangeRatePluginManager,
             ILocalizationService localizationService,
             ILocalizedModelFactory localizedModelFactory,
-            IStoreMappingSupportedModelFactory storeMappingSupportedModelFactory,
-            IWorkContext workContext)
+            IStoreMappingSupportedModelFactory storeMappingSupportedModelFactory)
         {
             _currencySettings = currencySettings;
             _currencyService = currencyService;
             _dateTimeHelper = dateTimeHelper;
+            _exchangeRatePluginManager = exchangeRatePluginManager;
             _localizationService = localizationService;
             _localizedModelFactory = localizedModelFactory;
             _storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
-            _workContext = workContext;
         }
 
         #endregion
@@ -67,13 +67,13 @@ namespace Nop.Web.Areas.Admin.Factories
             model.AutoUpdateEnabled = _currencySettings.AutoUpdateEnabled;
 
             //prepare available exchange rate providers
-            var availableExchangeRateProviders = _currencyService.LoadAllExchangeRateProviders(_workContext.CurrentCustomer);
+            var availableExchangeRateProviders = _exchangeRatePluginManager.LoadAllPlugins();
+
             model.ExchangeRateProviders = availableExchangeRateProviders.Select(provider => new SelectListItem
             {
                 Text = provider.PluginDescriptor.FriendlyName,
                 Value = provider.PluginDescriptor.SystemName,
-                Selected = provider.PluginDescriptor.SystemName
-                    .Equals(_currencySettings.ActiveExchangeRateProviderSystemName, StringComparison.InvariantCultureIgnoreCase)
+                Selected = _exchangeRatePluginManager.IsPluginActive(provider)
             }).ToList();
 
             //prepare exchange rates
@@ -90,12 +90,8 @@ namespace Nop.Web.Areas.Admin.Factories
             if (models == null)
                 throw new ArgumentNullException(nameof(models));
 
-            //get primary exchange currency
-            var primaryExchangeCurrency = _currencyService.GetCurrencyById(_currencySettings.PrimaryExchangeRateCurrencyId, false)
-                ?? throw new NopException("Primary exchange rate currency is not set");
-
             //get exchange rates
-            var exchangeRates = _currencyService.GetCurrencyLiveRates(primaryExchangeCurrency.CurrencyCode);
+            var exchangeRates = _currencyService.GetCurrencyLiveRates();
 
             //filter by existing currencies
             var currencies = _currencyService.GetAllCurrencies(true, loadCacheableCopy: false);
@@ -108,6 +104,99 @@ namespace Nop.Web.Areas.Admin.Factories
             {
                 models.Add(new CurrencyExchangeRateModel { CurrencyCode = rate.CurrencyCode, Rate = rate.Rate });
             }
+        }
+
+        /// <summary>
+        /// Prepare Currency datatables model
+        /// </summary>
+        /// <param name="searchModel">Currency search model</param>
+        /// <returns>Currency datatables model</returns>
+        protected virtual DataTablesModel PrepareCurrencyGridModel(CurrencySearchModel searchModel)
+        {
+            //prepare common properties
+            var model = new DataTablesModel
+            {
+                Name = "currencies-grid",
+                UrlRead = new DataUrl("ListGrid", "Currency", null),
+                Length = searchModel.PageSize,
+                LengthMenu = searchModel.AvailablePageSizes
+            };
+
+            //prepare filters to search
+            model.Filters = null;
+
+            //prepare model columns
+            model.ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(CurrencyModel.Name))
+                {
+                    Title = _localizationService.GetResource("Admin.Configuration.Currencies.Fields.Name"),
+                    Width = "200"
+                },
+                new ColumnProperty(nameof(CurrencyModel.CurrencyCode))
+                {
+                    Title = _localizationService.GetResource("Admin.Configuration.Currencies.Fields.CurrencyCode"),
+                    Width = "150"
+                },
+                new ColumnProperty(nameof(CurrencyModel.Rate))
+                {
+                    Title = _localizationService.GetResource("Admin.Configuration.Currencies.Fields.Rate"),
+                    Width = "100"
+                },
+                new ColumnProperty(nameof(CurrencyModel.IsPrimaryExchangeRateCurrency))
+                {
+                    Title = _localizationService.GetResource("Admin.Configuration.Currencies.Fields.IsPrimaryExchangeRateCurrency"),
+                    Width = "250",
+                    Render = new RenderBoolean()
+                },
+                new ColumnProperty(nameof(CurrencyModel.Id))
+                {
+                    Title = _localizationService.GetResource("Admin.Configuration.Currencies.Fields.MarkAsPrimaryExchangeRateCurrency"),
+                    Width = "200",
+                    Render = new RenderButtonCustom(StyleButton.Success, "markAsPrimaryExchangeRateCurrency", _localizationService.GetResource("Admin.Configuration.Currencies.Fields.MarkAsPrimaryExchangeRateCurrency"))
+                },
+                new ColumnProperty(nameof(CurrencyModel.IsPrimaryStoreCurrency))
+                {
+                    Title = _localizationService.GetResource("Admin.Configuration.Currencies.Fields.IsPrimaryStoreCurrency"),
+                    Width = "200",
+                    Render = new RenderBoolean()
+                },
+                new ColumnProperty(nameof(CurrencyModel.Id))
+                {
+                    Title = _localizationService.GetResource("Admin.Configuration.Currencies.Fields.MarkAsPrimaryStoreCurrency"),
+                    Width = "200",
+                    Render = new RenderButtonCustom(StyleButton.Olive, "markAsPrimaryStoreCurrency", _localizationService.GetResource("Admin.Configuration.Currencies.Fields.MarkAsPrimaryStoreCurrency"))
+                },
+                new ColumnProperty(nameof(CurrencyModel.Published))
+                {
+                    Title = _localizationService.GetResource("Admin.Configuration.Currencies.Fields.Published"),
+                    Width = "50",
+                    Render = new RenderBoolean()
+                },
+                new ColumnProperty(nameof(CurrencyModel.DisplayOrder))
+                {
+                    Title = _localizationService.GetResource("Admin.Configuration.Currencies.Fields.DisplayOrder"),
+                    Width = "100"
+                },
+                new ColumnProperty(nameof(CurrencyModel.Id))
+                {
+                    Title = _localizationService.GetResource("Admin.Common.Edit"),
+                    Width = "100",
+                    Render = new RenderButtonEdit(new DataUrl("Edit"))
+                }
+            };
+
+            //prepare column definitions
+            model.ColumnDefinitions = new List<ColumnDefinition>
+            {
+                new ColumnDefinition()
+                {
+                    Targets = "[-1,3,4,5,6,7]",
+                    ClassName =  StyleColumn.CenterAll
+                }
+            };
+
+            return model;
         }
 
         #endregion
@@ -129,8 +218,8 @@ namespace Nop.Web.Areas.Admin.Factories
             PrepareExchangeRateProviderModel(searchModel.ExchangeRateProviderModel, prepareExchangeRates);
 
             //prepare page parameters
-            searchModel.SetGridPageSize();
-            searchModel.PageSize = 1000;
+            searchModel.SetGridPageSize(1000);
+            searchModel.Grid = PrepareCurrencyGridModel(searchModel);
 
             return searchModel;
         }
@@ -146,12 +235,12 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get currencies
-            var currencies = _currencyService.GetAllCurrencies(showHidden: true, loadCacheableCopy: false);
+            var currencies = _currencyService.GetAllCurrencies(showHidden: true, loadCacheableCopy: false).ToPagedList(searchModel);
 
             //prepare list model
-            var model = new CurrencyListModel
+            var model = new CurrencyListModel().PrepareToGrid(searchModel, currencies, () =>
             {
-                Data = currencies.PaginationByRequestModel(searchModel).Select(currency =>
+                return currencies.Select(currency =>
                 {
                     //fill in model values from the entity
                     var currencyModel = currency.ToModel<CurrencyModel>();
@@ -161,9 +250,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     currencyModel.IsPrimaryStoreCurrency = currency.Id == _currencySettings.PrimaryStoreCurrencyId;
 
                     return currencyModel;
-                }),
-                Total = currencies.Count
-            };
+                });
+            });
 
             return model;
         }

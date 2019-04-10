@@ -1,0 +1,111 @@
+@model CatalogSettingsModel
+
+<div class="panel-body">
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ProductReviewsMustBeApproved_OverrideForStore" asp-input="ProductReviewsMustBeApproved" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ProductReviewsMustBeApproved" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ProductReviewsMustBeApproved" />
+            <span asp-validation-for="ProductReviewsMustBeApproved"></span>
+        </div>
+    </div>
+    <div class="form-group advanced-setting">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="AllowAnonymousUsersToReviewProduct_OverrideForStore" asp-input="AllowAnonymousUsersToReviewProduct" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="AllowAnonymousUsersToReviewProduct" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="AllowAnonymousUsersToReviewProduct" />
+            <span asp-validation-for="AllowAnonymousUsersToReviewProduct"></span>
+        </div>
+    </div>
+    <div class="form-group advanced-setting">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ProductReviewPossibleOnlyAfterPurchasing_OverrideForStore" asp-input="ProductReviewPossibleOnlyAfterPurchasing" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ProductReviewPossibleOnlyAfterPurchasing" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ProductReviewPossibleOnlyAfterPurchasing" />
+            <span asp-validation-for="ProductReviewPossibleOnlyAfterPurchasing"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="NotifyStoreOwnerAboutNewProductReviews_OverrideForStore" asp-input="NotifyStoreOwnerAboutNewProductReviews" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="NotifyStoreOwnerAboutNewProductReviews" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="NotifyStoreOwnerAboutNewProductReviews" />
+            <span asp-validation-for="NotifyStoreOwnerAboutNewProductReviews"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="NotifyCustomerAboutProductReviewReply_OverrideForStore" asp-input="NotifyCustomerAboutProductReviewReply" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="NotifyCustomerAboutProductReviewReply" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="NotifyCustomerAboutProductReviewReply" />
+            <span asp-validation-for="NotifyCustomerAboutProductReviewReply"></span>
+        </div>
+    </div>
+    <div class="form-group advanced-setting">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ShowProductReviewsPerStore_OverrideForStore" asp-input="ShowProductReviewsPerStore" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ShowProductReviewsPerStore" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ShowProductReviewsPerStore" />
+            <span asp-validation-for="ShowProductReviewsPerStore"></span>
+        </div>
+    </div>
+    <div class="form-group advanced-setting">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ShowProductReviewsOnAccountPage_OverrideForStore" asp-input="ShowProductReviewsTabOnAccountPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ShowProductReviewsTabOnAccountPage" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ShowProductReviewsTabOnAccountPage" />
+            <span asp-validation-for="ShowProductReviewsTabOnAccountPage"></span>
+        </div>
+    </div>
+    <nop-nested-setting asp-for="ShowProductReviewsTabOnAccountPage">
+        <div class="form-group advanced-setting" id="pnlProductReviewsPageSizeOnAccountPage">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="ProductReviewsPageSizeOnAccountPage_OverrideForStore" asp-input="ProductReviewsPageSizeOnAccountPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="ProductReviewsPageSizeOnAccountPage" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="ProductReviewsPageSizeOnAccountPage" />
+                <span asp-validation-for="ProductReviewsPageSizeOnAccountPage"></span>
+            </div>
+        </div>
+    </nop-nested-setting>
+    <div class="form-group advanced-setting">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ProductReviewsSortByCreatedDateAscending_OverrideForStore" asp-input="ProductReviewsSortByCreatedDateAscending" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ProductReviewsSortByCreatedDateAscending" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ProductReviewsSortByCreatedDateAscending" />
+            <span asp-validation-for="ProductReviewsSortByCreatedDateAscending"></span>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $("#@Html.IdFor(model => model.ShowProductReviewsTabOnAccountPage)").click(toggleProductReviewsPageSizeOnAccountPage);
+
+        toggleProductReviewsPageSizeOnAccountPage();
+    });
+
+    function toggleProductReviewsPageSizeOnAccountPage() {
+        if ($('#@Html.IdFor(model => model.ShowProductReviewsTabOnAccountPage)').is(':checked')) {
+            $('#pnlProductReviewsPageSizeOnAccountPage').show();
+        } else {
+            $('#pnlProductReviewsPageSizeOnAccountPage').hide();
+        }
+    }
+</script>

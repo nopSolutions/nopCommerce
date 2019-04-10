@@ -61,7 +61,7 @@ namespace Nop.Web.Controllers
         {
             if (!_forumSettings.AllowPrivateMessages)
             {
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
             }
 
             if (_workContext.CurrentCustomer.IsGuest())
@@ -161,7 +161,7 @@ namespace Nop.Web.Controllers
         public virtual IActionResult SendPM(int toCustomerId, int? replyToMessageId)
         {
             if (!_forumSettings.AllowPrivateMessages)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             if (_workContext.CurrentCustomer.IsGuest())
                 return Challenge();
@@ -187,7 +187,7 @@ namespace Nop.Web.Controllers
         {
             if (!_forumSettings.AllowPrivateMessages)
             {
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
             }
 
             if (_workContext.CurrentCustomer.IsGuest())
@@ -276,7 +276,7 @@ namespace Nop.Web.Controllers
         {
             if (!_forumSettings.AllowPrivateMessages)
             {
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
             }
 
             if (_workContext.CurrentCustomer.IsGuest())
@@ -311,7 +311,7 @@ namespace Nop.Web.Controllers
         {
             if (!_forumSettings.AllowPrivateMessages)
             {
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
             }
 
             if (_workContext.CurrentCustomer.IsGuest())

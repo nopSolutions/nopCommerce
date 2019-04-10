@@ -70,10 +70,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
         #endregion
 
         #region Properties
-
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.ID")]
-        public override int Id { get; set; }
-
+        
         //picture thumbnail
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.PictureThumbnailUrl")]
         public string PictureThumbnailUrl { get; set; }
@@ -112,8 +109,8 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.AdminComment")]
         public string AdminComment { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.ShowOnHomePage")]
-        public bool ShowOnHomePage { get; set; }
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.ShowOnHomepage")]
+        public bool ShowOnHomepage { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.MetaKeywords")]
         public string MetaKeywords { get; set; }
@@ -386,12 +383,6 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.Published")]
         public bool Published { get; set; }
-
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.CreatedOn")]
-        public DateTime? CreatedOn { get; set; }
-
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.UpdatedOn")]
-        public DateTime? UpdatedOn { get; set; }
 
         public string PrimaryStoreCurrencyCode { get; set; }
 

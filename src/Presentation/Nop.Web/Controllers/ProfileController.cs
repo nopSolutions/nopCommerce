@@ -32,7 +32,7 @@ namespace Nop.Web.Controllers
         {
             if (!_customerSettings.AllowViewingProfiles)
             {
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
             }
 
             var customerId = 0;
@@ -44,7 +44,7 @@ namespace Nop.Web.Controllers
             var customer = _customerService.GetCustomerById(customerId);
             if (customer == null || customer.IsGuest())
             {
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
             }
 
             //display "edit" (manage) link

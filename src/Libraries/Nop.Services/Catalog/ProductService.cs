@@ -57,7 +57,6 @@ namespace Nop.Services.Catalog
         private readonly IStoreService _storeService;
         private readonly IWorkContext _workContext;
         private readonly LocalizationSettings _localizationSettings;
-        private readonly string _entityName;
 
         #endregion
 
@@ -116,7 +115,6 @@ namespace Nop.Services.Catalog
             _storeService = storeService;
             _workContext = workContext;
             _localizationSettings = localizationSettings;
-            _entityName = typeof(Product).Name;
         }
 
         #endregion
@@ -325,13 +323,13 @@ namespace Nop.Services.Catalog
         /// Gets all products displayed on the home page
         /// </summary>
         /// <returns>Products</returns>
-        public virtual IList<Product> GetAllProductsDisplayedOnHomePage()
+        public virtual IList<Product> GetAllProductsDisplayedOnHomepage()
         {
             var query = from p in _productRepository.Table
                         orderby p.DisplayOrder, p.Id
                         where p.Published &&
                         !p.Deleted &&
-                        p.ShowOnHomePage
+                        p.ShowOnHomepage
                         select p;
             var products = query.ToList();
             return products;
@@ -390,7 +388,7 @@ namespace Nop.Services.Catalog
             _productRepository.Insert(product);
 
             //clear cache
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductsPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductsPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(product);
@@ -409,7 +407,7 @@ namespace Nop.Services.Catalog
             _productRepository.Update(product);
 
             //cache
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductsPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductsPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(product);
@@ -428,7 +426,7 @@ namespace Nop.Services.Catalog
             _productRepository.Update(products);
 
             //cache
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductsPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductsPrefixCacheKey);
 
             //event notification
             foreach (var product in products)
@@ -467,7 +465,7 @@ namespace Nop.Services.Catalog
 
                 query = from p in query
                         join acl in _aclRepository.Table
-                        on new { c1 = p.Id, c2 = _entityName } equals new { c1 = acl.EntityId, c2 = acl.EntityName } into p_acl
+                        on new { c1 = p.Id, c2 = nameof(Product) } equals new { c1 = acl.EntityId, c2 = acl.EntityName } into p_acl
                         from acl in p_acl.DefaultIfEmpty()
                         where !p.SubjectToAcl || allowedCustomerRolesIds.Contains(acl.CustomerRoleId)
                         select p;
@@ -477,7 +475,7 @@ namespace Nop.Services.Catalog
             {
                 query = from p in query
                         join sm in _storeMappingRepository.Table
-                        on new { c1 = p.Id, c2 = _entityName } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into p_sm
+                        on new { c1 = p.Id, c2 = nameof(Product) } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into p_sm
                         from sm in p_sm.DefaultIfEmpty()
                         where !p.LimitedToStores || storeId == sm.StoreId
                         select p;
@@ -1904,7 +1902,7 @@ namespace Nop.Services.Catalog
 
             _tierPriceRepository.Delete(tierPrice);
 
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductsPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductsPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(tierPrice);
@@ -1934,7 +1932,7 @@ namespace Nop.Services.Catalog
 
             _tierPriceRepository.Insert(tierPrice);
 
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductsPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductsPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(tierPrice);
@@ -1951,7 +1949,7 @@ namespace Nop.Services.Catalog
 
             _tierPriceRepository.Update(tierPrice);
 
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductsPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductsPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(tierPrice);
@@ -2187,7 +2185,7 @@ namespace Nop.Services.Catalog
 
             _productReviewRepository.Delete(productReview);
 
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductsPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductsPrefixCacheKey);
             //event notification
             _eventPublisher.EntityDeleted(productReview);
         }
@@ -2203,7 +2201,7 @@ namespace Nop.Services.Catalog
 
             _productReviewRepository.Delete(productReviews);
 
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductsPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductsPrefixCacheKey);
             //event notification
             foreach (var productReview in productReviews)
             {
@@ -2226,7 +2224,7 @@ namespace Nop.Services.Catalog
 
             _productWarehouseInventoryRepository.Delete(pwi);
 
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductsPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductsPrefixCacheKey);
         }
 
         #endregion

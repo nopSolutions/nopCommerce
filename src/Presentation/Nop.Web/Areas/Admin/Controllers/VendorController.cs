@@ -245,13 +245,13 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         [FormValueRequired("save", "save-continue")]
-        public virtual IActionResult Create(VendorModel model, bool continueEditing)
+        public virtual IActionResult Create(VendorModel model, bool continueEditing, IFormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageVendors))
                 return AccessDeniedView();
 
             //parse vendor attributes
-            var vendorAttributesXml = ParseVendorAttributes(model.Form);
+            var vendorAttributesXml = ParseVendorAttributes(form);
             _vendorAttributeParser.GetAttributeWarnings(vendorAttributesXml).ToList()
                 .ForEach(warning => ModelState.AddModelError(string.Empty, warning));
 
@@ -294,10 +294,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 if (!continueEditing)
                     return RedirectToAction("List");
-
-                //selected tab
-                SaveSelectedTabName();
-
+                
                 return RedirectToAction("Edit", new { id = vendor.Id });
             }
 
@@ -325,7 +322,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public virtual IActionResult Edit(VendorModel model, bool continueEditing)
+        public virtual IActionResult Edit(VendorModel model, bool continueEditing, IFormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageVendors))
                 return AccessDeniedView();
@@ -336,7 +333,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             //parse vendor attributes
-            var vendorAttributesXml = ParseVendorAttributes(model.Form);
+            var vendorAttributesXml = ParseVendorAttributes(form);
             _vendorAttributeParser.GetAttributeWarnings(vendorAttributesXml).ToList()
                 .ForEach(warning => ModelState.AddModelError(string.Empty, warning));
 
@@ -404,10 +401,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 if (!continueEditing)
                     return RedirectToAction("List");
-
-                //selected tab
-                SaveSelectedTabName();
-
+                
                 return RedirectToAction("Edit", new { id = vendor.Id });
             }
 

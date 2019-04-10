@@ -1,12 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Messages;
 using Nop.Services.Helpers;
+using Nop.Services.Localization;
 using Nop.Services.Messages;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Messages;
 using Nop.Web.Framework.Extensions;
+using Nop.Web.Framework.Models.DataTables;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -22,6 +26,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IBaseAdminModelFactory _baseAdminModelFactory;
         private readonly ICampaignService _campaignService;
         private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly ILocalizationService _localizationService;
         private readonly IMessageTokenProvider _messageTokenProvider;
 
         #endregion
@@ -33,6 +38,7 @@ namespace Nop.Web.Areas.Admin.Factories
             IBaseAdminModelFactory baseAdminModelFactory,
             ICampaignService campaignService,
             IDateTimeHelper dateTimeHelper,
+            ILocalizationService localizationService,
             IMessageTokenProvider messageTokenProvider)
         {
             _catalogSettings = catalogSettings;
@@ -40,7 +46,75 @@ namespace Nop.Web.Areas.Admin.Factories
             _baseAdminModelFactory = baseAdminModelFactory;
             _campaignService = campaignService;
             _dateTimeHelper = dateTimeHelper;
+            _localizationService = localizationService;
             _messageTokenProvider = messageTokenProvider;
+        }
+
+        #endregion
+
+        #region Utilites
+
+        /// <summary>
+        /// Prepare campaign datatables model
+        /// </summary>
+        /// <param name="searchModel">Campaign search model</param>
+        /// <returns>Campaign datatables model</returns>
+        protected virtual DataTablesModel PrepareCampaignGridModel(CampaignSearchModel searchModel)
+        {
+            //prepare common properties
+            var model = new DataTablesModel
+            {
+                Name = "campaigns-grid",
+                UrlRead = new DataUrl("List", "Campaign", null),
+                SearchButtonId = "search-campaigns",
+                Length = searchModel.PageSize,
+                LengthMenu = searchModel.AvailablePageSizes
+            };
+
+            //prepare filters to search
+            model.Filters = new List<FilterParameter>()
+            {
+                new FilterParameter(nameof(searchModel.StoreId))
+            };
+
+            //prepare model columns
+            model.ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(CampaignModel.Name))
+                {
+                    Title = _localizationService.GetResource("Admin.Promotions.Campaigns.Fields.Name")
+                },
+                new ColumnProperty(nameof(CampaignModel.CreatedOn))
+                {
+                    Title = _localizationService.GetResource("Admin.Promotions.Campaigns.Fields.CreatedOn"),
+                    Width = "200",
+                    Render = new RenderDate()
+                },
+                new ColumnProperty(nameof(CampaignModel.DontSendBeforeDate))
+                {
+                    Title = _localizationService.GetResource("Admin.Promotions.Campaigns.Fields.DontSendBeforeDate"),
+                    Width = "200",
+                    Render = new RenderDate()
+                },
+                new ColumnProperty(nameof(CampaignModel.Id))
+                {
+                    Title = _localizationService.GetResource("Admin.Common.Edit"),
+                    Width = "100",
+                    Render = new RenderButtonEdit(new DataUrl("Edit"))
+                }
+            };
+
+            //prepare column definitions
+            model.ColumnDefinitions = new List<ColumnDefinition>
+            {
+                new ColumnDefinition()
+                {
+                    Targets = "-1",
+                    ClassName =  StyleColumn.CenterAll
+                }
+            };
+
+            return model;
         }
 
         #endregion
@@ -64,6 +138,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
+            searchModel.Grid = PrepareCampaignGridModel(searchModel);
 
             return searchModel;
         }
@@ -77,14 +152,14 @@ namespace Nop.Web.Areas.Admin.Factories
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
-            
+
             //get campaigns
-            var campaigns = _campaignService.GetAllCampaigns(searchModel.StoreId);
+            var campaigns = _campaignService.GetAllCampaigns(searchModel.StoreId).ToPagedList(searchModel);
 
             //prepare grid model
-            var model = new CampaignListModel
+            var model = new CampaignListModel().PrepareToGrid(searchModel, campaigns, () =>
             {
-                Data = campaigns.PaginationByRequestModel(searchModel).Select(campaign =>
+                return campaigns.Select(campaign =>
                 {
                     //fill in model values from the entity
                     var campaignModel = campaign.ToModel<CampaignModel>();
@@ -98,9 +173,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     }
 
                     return campaignModel;
-                }),
-                Total = campaigns.Count
-            };
+                });
+            });
 
             return model;
         }

@@ -58,7 +58,7 @@ namespace Nop.Services.Security
             _aclRecordRepository.Delete(aclRecord);
 
             //cache
-            _cacheManager.RemoveByPattern(NopSecurityDefaults.AclRecordPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopSecurityDefaults.AclRecordPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(aclRecord);
@@ -111,7 +111,7 @@ namespace Nop.Services.Security
             _aclRecordRepository.Insert(aclRecord);
 
             //cache
-            _cacheManager.RemoveByPattern(NopSecurityDefaults.AclRecordPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopSecurityDefaults.AclRecordPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(aclRecord);
@@ -156,7 +156,7 @@ namespace Nop.Services.Security
             _aclRecordRepository.Update(aclRecord);
 
             //cache
-            _cacheManager.RemoveByPattern(NopSecurityDefaults.AclRecordPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopSecurityDefaults.AclRecordPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(aclRecord);

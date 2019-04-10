@@ -1,8 +1,8 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
+using System.Net.Http;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core;
@@ -14,6 +14,7 @@ using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
+using Nop.Core.Http;
 using Nop.Core.Infrastructure;
 using Nop.Services.Catalog;
 using Nop.Services.Directory;
@@ -56,6 +57,7 @@ namespace Nop.Services.ExportImport
         private readonly IDataProvider _dataProvider;
         private readonly IDateRangeService _dateRangeService;
         private readonly IEncryptionService _encryptionService;
+        private readonly IHttpClientFactory _httpClientFactory;
         private readonly ILocalizationService _localizationService;
         private readonly ILogger _logger;
         private readonly IManufacturerService _manufacturerService;
@@ -92,6 +94,7 @@ namespace Nop.Services.ExportImport
             IDataProvider dataProvider,
             IDateRangeService dateRangeService,
             IEncryptionService encryptionService,
+            IHttpClientFactory httpClientFactory,
             ILocalizationService localizationService,
             ILogger logger,
             IManufacturerService manufacturerService,
@@ -124,6 +127,7 @@ namespace Nop.Services.ExportImport
             _dataProvider = dataProvider;
             _dateRangeService = dateRangeService;
             _encryptionService = encryptionService;
+            _httpClientFactory = httpClientFactory;
             _fileProvider = fileProvider;
             _localizationService = localizationService;
             _logger = logger;
@@ -238,7 +242,7 @@ namespace Nop.Services.ExportImport
         protected virtual string GetMimeTypeFromFilePath(string filePath)
         {
             new FileExtensionContentTypeProvider().TryGetContentType(filePath, out var mimeType);
-            
+
             //set to jpeg in case mime type cannot be found
             return mimeType ?? MimeTypes.ImageJpeg;
         }
@@ -275,7 +279,8 @@ namespace Nop.Services.ExportImport
                 }
             }
 
-            if (pictureAlreadyExists) return null;
+            if (pictureAlreadyExists)
+                return null;
 
             var newPicture = _pictureService.InsertPicture(newPictureBinary, mimeType, _pictureService.GetPictureSeName(name));
             return newPicture;
@@ -484,8 +489,8 @@ namespace Nop.Services.ExportImport
                     case "PriceRanges":
                         category.PriceRanges = property.StringValue;
                         break;
-                    case "ShowOnHomePage":
-                        category.ShowOnHomePage = property.BooleanValue;
+                    case "ShowOnHomepage":
+                        category.ShowOnHomepage = property.BooleanValue;
                         break;
                     case "IncludeInTopMenu":
                         category.IncludeInTopMenu = property.BooleanValue;
@@ -695,7 +700,7 @@ namespace Nop.Services.ExportImport
                 _productAttributeService.UpdateProductAttributeValue(pav);
             }
         }
-        
+
         private void ImportSpecificationAttribute(PropertyManager<ExportSpecificationAttribute> specificationAttributeManager, Product lastLoadedProduct)
         {
             if (!_catalogSettings.ExportImportProductSpecificationAttributes || lastLoadedProduct == null || specificationAttributeManager.IsCaption)
@@ -780,21 +785,8 @@ namespace Nop.Services.ExportImport
             var filePath = _fileProvider.Combine(tempDirectory, fileName);
             try
             {
-                WebRequest.Create(urlString);
-            }
-            catch
-            {
-                return string.Empty;
-            }
-
-            try
-            {
-                byte[] fileData;
-                using (var client = new WebClient())
-                {
-                    fileData = client.DownloadData(urlString);
-                }
-
+                var client = _httpClientFactory.CreateClient(NopHttpDefaults.DefaultHttpClient);
+                var fileData = client.GetByteArrayAsync(urlString).Result;
                 using (var fs = new FileStream(filePath, FileMode.OpenOrCreate))
                 {
                     fs.Write(fileData, 0, fileData.Length);
@@ -1217,7 +1209,7 @@ namespace Nop.Services.ExportImport
                 try
                 {
                     var allCategoryList = _categoryService.GetAllCategories(showHidden: true, loadCacheableCopy: false);
-                    
+
                     allCategories = allCategoryList
                         .ToDictionary(c => new CategoryKey(c, _categoryService, allCategoryList, _storeMappingService), c => c);
                 }
@@ -1321,10 +1313,10 @@ namespace Nop.Services.ExportImport
                             case "ProductTemplate":
                                 product.ProductTemplateId = property.IntValue;
                                 break;
-                            case "ShowOnHomePage":
+                            case "ShowOnHomepage":
                                 //vendor can't change this field
                                 if (_workContext.CurrentVendor == null)
-                                    product.ShowOnHomePage = property.BooleanValue;
+                                    product.ShowOnHomepage = property.BooleanValue;
                                 break;
                             case "MetaKeywords":
                                 product.MetaKeywords = property.StringValue;
@@ -1649,8 +1641,8 @@ namespace Nop.Services.ExportImport
                                 {
                                     rez = id;
                                 }
-                                
-                                if(!rez.HasValue)
+
+                                if (!rez.HasValue)
                                 {
                                     //database doesn't contain the imported category
                                     throw new ArgumentException(string.Format(_localizationService.GetResource("Admin.Catalog.Products.Import.DatabaseNotContainCategory"), categoryKey.Key));
@@ -2210,7 +2202,7 @@ namespace Nop.Services.ExportImport
 
             public override int GetHashCode()
             {
-                if (!StoresIds.Any()) 
+                if (!StoresIds.Any())
                     return Key.GetHashCode();
 
                 var storesIds = StoresIds.Select(id => id.ToString())

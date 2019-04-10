@@ -1,0 +1,84 @@
+@model CatalogSettingsModel
+
+<div class="panel-body">
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ExportImportProductAttributes_OverrideForStore" asp-input="ExportImportProductAttributes" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ExportImportProductAttributes" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ExportImportProductAttributes" />
+            <span asp-validation-for="ExportImportProductAttributes"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ExportImportProductSpecificationAttributes_OverrideForStore" asp-input="ExportImportProductSpecificationAttributes" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ExportImportProductSpecificationAttributes" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ExportImportProductSpecificationAttributes" />
+            <span asp-validation-for="ExportImportProductSpecificationAttributes"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ExportImportProductCategoryBreadcrumb_OverrideForStore" asp-input="ExportImportProductCategoryBreadcrumb" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ExportImportProductCategoryBreadcrumb" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ExportImportProductCategoryBreadcrumb" />
+            <span asp-validation-for="ExportImportProductCategoryBreadcrumb"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ExportImportCategoriesUsingCategoryName_OverrideForStore" asp-input="ExportImportCategoriesUsingCategoryName" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ExportImportCategoriesUsingCategoryName" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ExportImportCategoriesUsingCategoryName" />
+            <span asp-validation-for="ExportImportCategoriesUsingCategoryName"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ExportImportAllowDownloadImages_OverrideForStore" asp-input="ExportImportAllowDownloadImages" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ExportImportAllowDownloadImages" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ExportImportAllowDownloadImages" />
+            <span asp-validation-for="ExportImportAllowDownloadImages"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ExportImportSplitProductsFile_OverrideForStore" asp-input="ExportImportSplitProductsFile" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ExportImportSplitProductsFile" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ExportImportSplitProductsFile" />
+            <span asp-validation-for="ExportImportSplitProductsFile"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ExportImportRelatedEntitiesByName_OverrideForStore" asp-input="ExportImportRelatedEntitiesByName" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ExportImportRelatedEntitiesByName" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ExportImportRelatedEntitiesByName" />
+            <span asp-validation-for="ExportImportRelatedEntitiesByName"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ExportImportProductUseLimitedToStores_OverrideForStore" asp-input="ExportImportProductUseLimitedToStores" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ExportImportProductUseLimitedToStores" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ExportImportProductUseLimitedToStores" />
+            <span asp-validation-for="ExportImportProductUseLimitedToStores"></span>
+        </div>
+    </div>
+</div>

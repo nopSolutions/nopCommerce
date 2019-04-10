@@ -242,7 +242,7 @@ namespace Nop.Web.Factories
                 AllowPostVoting = _forumSettings.AllowPostVoting
             };
 
-            var topics = _forumService.GetActiveTopics(0, 0, _forumSettings.HomePageActiveDiscussionsTopicCount);
+            var topics = _forumService.GetActiveTopics(0, 0, _forumSettings.HomepageActiveDiscussionsTopicCount);
             foreach (var topic in topics)
             {
                 var topicModel = PrepareForumTopicRowModel(topic);

@@ -531,7 +531,11 @@ namespace Nop.Web.Factories
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            var productTagsCacheKey = string.Format(NopModelCacheDefaults.ProductTagByProductModelKey, product.Id, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
+            var productTagsCacheKey = string.Format(NopModelCacheDefaults.ProductTagByProductModelKey, 
+                product.Id, 
+                _workContext.WorkingLanguage.Id,
+                string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
+                _storeContext.CurrentStore.Id);
             var model = _cacheManager.Get(productTagsCacheKey, () =>
                 _productTagService.GetAllProductTagsByProductId(product.Id)
                 //filter by store
@@ -722,30 +726,9 @@ namespace Nop.Web.Factories
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            //performance optimization
-            //We cache a value indicating whether a product has attributes
-            IList<ProductAttributeMapping> productAttributeMapping = null;
-            var cacheKey = string.Format(NopModelCacheDefaults.ProductHasProductAttributesKey, product.Id);
-            var hasProductAttributesCache = _cacheManager.Get(cacheKey, () =>
-            {
-                //no value in the cache yet
-                //let's load attributes and cache the result (true/false)
-                productAttributeMapping = _productAttributeService.GetProductAttributeMappingsByProductId(product.Id);
-                return productAttributeMapping.Any();
-            });
-            if (hasProductAttributesCache && productAttributeMapping == null)
-            {
-                //cache indicates that the product has attributes
-                //let's load them
-                productAttributeMapping = _productAttributeService.GetProductAttributeMappingsByProductId(product.Id);
-            }
-            if (productAttributeMapping == null)
-            {
-                productAttributeMapping = new List<ProductAttributeMapping>();
-            }
-
             var model = new List<ProductDetailsModel.ProductAttributeModel>();
 
+            var productAttributeMapping = _productAttributeService.GetProductAttributeMappingsByProductId(product.Id);
             foreach (var attribute in productAttributeMapping)
             {
                 var attributeModel = new ProductDetailsModel.ProductAttributeModel
@@ -1620,10 +1603,10 @@ namespace Nop.Web.Factories
                             m.ValueRaw = WebUtility.HtmlEncode(_localizationService.GetLocalized(psa.SpecificationAttributeOption, x => x.Name));
                             break;
                         case SpecificationAttributeType.CustomText:
-                            m.ValueRaw = WebUtility.HtmlEncode(psa.CustomValue);
+                            m.ValueRaw = WebUtility.HtmlEncode(_localizationService.GetLocalized(psa, x => x.CustomValue));
                             break;
                         case SpecificationAttributeType.CustomHtmlText:
-                            m.ValueRaw = psa.CustomValue;
+                            m.ValueRaw = _localizationService.GetLocalized(psa, x => x.CustomValue);
                             break;
                         case SpecificationAttributeType.Hyperlink:
                             m.ValueRaw = $"<a href='{psa.CustomValue}' target='_blank'>{psa.CustomValue}</a>";

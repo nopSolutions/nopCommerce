@@ -1,0 +1,14 @@
+@model GeneralCommonSettingsModel
+
+<div class="panel-body">
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="AdminAreaSettings.UseRichEditorInMessageTemplates_OverrideForStore" asp-input="AdminAreaSettings.UseRichEditorInMessageTemplates" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="AdminAreaSettings.UseRichEditorInMessageTemplates" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="AdminAreaSettings.UseRichEditorInMessageTemplates" />
+            <span asp-validation-for="AdminAreaSettings.UseRichEditorInMessageTemplates"></span>
+        </div>
+    </div>
+</div>

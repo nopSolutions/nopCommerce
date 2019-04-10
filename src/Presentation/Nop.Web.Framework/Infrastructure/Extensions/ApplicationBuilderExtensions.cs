@@ -14,12 +14,14 @@ using Nop.Core.Configuration;
 using Nop.Core.Data;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Security;
-using Nop.Core.Http;
 using Nop.Core.Infrastructure;
 using Nop.Services.Authentication;
+using Nop.Services.Common;
+using Nop.Services.Installation;
 using Nop.Services.Logging;
 using Nop.Web.Framework.Globalization;
 using Nop.Web.Framework.Mvc.Routing;
+using WebMarkupMin.AspNetCore2;
 
 namespace Nop.Web.Framework.Infrastructure.Extensions
 {
@@ -54,7 +56,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             else
             {
                 //or use special exception handler
-                application.UseExceptionHandler("/errorpage.htm");
+                application.UseExceptionHandler("/Error/Error");
             }
 
             //log errors
@@ -304,6 +306,19 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 //register all routes
                 EngineContext.Current.Resolve<IRoutePublisher>().RegisterRoutes(routeBuilder);
             });
+        }
+
+        /// <summary>
+        /// Configure WebMarkupMin
+        /// </summary>
+        /// <param name="application">Builder for configuring an application's request pipeline</param>
+        public static void UseNopWebMarkupMin(this IApplicationBuilder application)
+        {
+            //check whether database is installed
+            if (!DataSettingsManager.DatabaseIsInstalled)
+                return;
+
+            application.UseWebMarkupMin();
         }
     }
 }

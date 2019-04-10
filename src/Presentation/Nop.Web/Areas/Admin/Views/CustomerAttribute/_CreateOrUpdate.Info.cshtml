@@ -24,70 +24,65 @@
         }
     }
 </script>
-<div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerAttributeDetailsInfoTop, additionalData = Model })
-    <div class="panel panel-default">
-        <div class="panel-body">
-            @(Html.LocalizedEditor<CustomerAttributeModel, CustomerAttributeLocalizedModel>("customerattribute-localized",
-            @<div>
-                <div class="form-group">
-                    <div class="col-md-3">
-                        <nop-label asp-for="@Model.Locales[item].Name"/>
-                    </div>
-                    <div class="col-md-9">
-                        <nop-editor asp-for="@Model.Locales[item].Name"/>
-                        <span asp-validation-for="@Model.Locales[item].Name"></span>
-                    </div>
-                </div>
-                 <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
+
+<div class="panel-body">
+    @(Html.LocalizedEditor<CustomerAttributeModel, CustomerAttributeLocalizedModel>("customerattribute-localized",
+    @<div>
+        <div class="form-group">
+            <div class="col-md-3">
+                <nop-label asp-for="@Model.Locales[item].Name"/>
             </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="@Model.Locales[item].Name"/>
+                <span asp-validation-for="@Model.Locales[item].Name"></span>
+            </div>
+        </div>
+         <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
+    </div>
 ,
-            @<div>
-                <div class="form-group">
-                    <div class="col-md-3">
-                        <nop-label asp-for="Name" />
-                    </div>
-                    <div class="col-md-9">
-                        <nop-editor asp-for="Name" asp-required="true" />
-                        <span asp-validation-for="Name"></span>
-                    </div>
-                </div>
+    @<div>
+        <div class="form-group">
+            <div class="col-md-3">
+                <nop-label asp-for="Name" />
             </div>
-        ))
-            <div class="form-group">
-                <div class="col-md-3">
-                    <nop-label asp-for="IsRequired" />
-                </div>
-                <div class="col-md-9">
-                    <nop-editor asp-for="IsRequired" />
-                    <span asp-validation-for="IsRequired"></span>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-md-3">
-                    <nop-label asp-for="AttributeControlTypeId" />
-                </div>
-                <div class="col-md-9">
-                    @{
-                        var attributeControlTypes = ((AttributeControlType)Model.AttributeControlTypeId)
-                            .ToSelectList(valuesToExclude:
-                            //these attributes don't support some control types
-                            new[] { (int)AttributeControlType.FileUpload, (int)AttributeControlType.Datepicker, (int)AttributeControlType.ColorSquares, (int)AttributeControlType.ImageSquares });
-                    }
-                    <nop-select asp-for="AttributeControlTypeId" asp-items="@attributeControlTypes" />
-                    <span asp-validation-for="AttributeControlTypeId"></span>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-md-3">
-                    <nop-label asp-for="DisplayOrder" />
-                </div>
-                <div class="col-md-9">
-                    <nop-editor asp-for="DisplayOrder" />
-                    <span asp-validation-for="DisplayOrder"></span>
-                </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="Name" asp-required="true" />
+                <span asp-validation-for="Name"></span>
             </div>
         </div>
     </div>
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerAttributeDetailsInfoBottom, additionalData = Model })
+))
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-label asp-for="IsRequired" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="IsRequired" />
+            <span asp-validation-for="IsRequired"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-label asp-for="AttributeControlTypeId" />
+        </div>
+        <div class="col-md-9">
+            @{
+                var attributeControlTypes = ((AttributeControlType)Model.AttributeControlTypeId)
+                    .ToSelectList(valuesToExclude:
+                    //these attributes don't support some control types
+                    new[] { (int)AttributeControlType.FileUpload, (int)AttributeControlType.Datepicker, (int)AttributeControlType.ColorSquares, (int)AttributeControlType.ImageSquares });
+            }
+            <nop-select asp-for="AttributeControlTypeId" asp-items="@attributeControlTypes" />
+            <span asp-validation-for="AttributeControlTypeId"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-label asp-for="DisplayOrder" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="DisplayOrder" />
+            <span asp-validation-for="DisplayOrder"></span>
+        </div>
+    </div>
 </div>

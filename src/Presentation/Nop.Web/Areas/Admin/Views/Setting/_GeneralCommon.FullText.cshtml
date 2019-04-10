@@ -1,0 +1,55 @@
+@model GeneralCommonSettingsModel
+
+<div class="panel-body">
+    <p>
+        @if (Model.FullTextSettings.Supported)
+        {
+            @T("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.Supported")
+        }
+        else
+        {
+            @T("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.NotSupported")
+        }
+    </p>
+    @if (Model.FullTextSettings.Supported)
+    {
+        <div class="form-group">
+            <div class="col-md-3">
+                <div class="label-wrapper">
+                    <label class="control-label">
+                        @if (Model.FullTextSettings.Enabled)
+                        {
+                            @T("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.CurrenlyEnabled")
+                        }
+                        else
+                        {
+                            @T("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.CurrenlyDisabled")
+                        }
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <button type="submit" name="togglefulltext" class="btn btn-primary">
+                    @(Model.FullTextSettings.Enabled ? T("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.Disable").Text : T("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.Enable").Text)
+                </button>
+            </div>
+        </div>
+        if (Model.FullTextSettings.Enabled)
+        {
+            <div class="form-group">
+                <div class="col-md-9 col-md-offset-3">
+                    @T("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.NoiseWords")
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-label asp-for="FullTextSettings.SearchMode"/>
+                </div>
+                <div class="col-md-9">
+                    <nop-select asp-for="FullTextSettings.SearchMode" asp-items="Model.FullTextSettings.SearchModeValues"/>
+                    <span asp-validation-for="FullTextSettings.SearchMode"></span>
+                </div>
+            </div>
+        }
+    }
+</div>

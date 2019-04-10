@@ -1,11 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Routing;
+using Nop.Core;
 using Nop.Core.Domain.Localization;
 using Nop.Services.Localization;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Localization;
-using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;
+using Nop.Web.Framework.Models.DataTables;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -16,24 +21,30 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
+        private readonly IActionContextAccessor _actionContextAccessor;
         private readonly IBaseAdminModelFactory _baseAdminModelFactory;
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
         private readonly IStoreMappingSupportedModelFactory _storeMappingSupportedModelFactory;
+        private readonly IUrlHelperFactory _urlHelperFactory;
 
         #endregion
 
         #region Ctor
 
-        public LanguageModelFactory(IBaseAdminModelFactory baseAdminModelFactory,
+        public LanguageModelFactory(IActionContextAccessor actionContextAccessor,
+            IBaseAdminModelFactory baseAdminModelFactory,
             ILanguageService languageService,
             ILocalizationService localizationService,
-            IStoreMappingSupportedModelFactory storeMappingSupportedModelFactory)
+            IStoreMappingSupportedModelFactory storeMappingSupportedModelFactory,
+            IUrlHelperFactory urlHelperFactory)
         {
+            _actionContextAccessor = actionContextAccessor;
             _baseAdminModelFactory = baseAdminModelFactory;
             _languageService = languageService;
             _localizationService = localizationService;
             _storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
+            _urlHelperFactory = urlHelperFactory;
         }
 
         #endregion
@@ -62,6 +73,80 @@ namespace Nop.Web.Areas.Admin.Factories
             return searchModel;
         }
 
+        /// <summary>
+        /// Prepare language datatables model
+        /// </summary>
+        /// <param name="searchModel">Language search model</param>
+        /// <returns>Language datatables model</returns>
+        protected virtual DataTablesModel PrepareLanguageGridModel(LanguageSearchModel searchModel)
+        {
+            //prepare common properties
+            var model = new DataTablesModel
+            {
+                Name = "languages-grid",
+                UrlRead = new DataUrl("List", "Language", null),
+                Length = searchModel.PageSize,
+                LengthMenu = searchModel.AvailablePageSizes
+            };
+
+            
+            var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
+            //prepare model columns
+            model.ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(LanguageModel.Name))
+                {
+                    Title = _localizationService.GetResource("Admin.Configuration.Languages.Fields.Name"),
+                    Width = "auto"
+                },
+                new ColumnProperty(nameof(LanguageModel.FlagImageFileName))
+                {
+                    Title = _localizationService.GetResource("Admin.Configuration.Languages.Fields.FlagImage"),
+                    Width = "100",
+                    Render = new RenderPicture(urlHelper.Content("~/images/flags/"))
+                },
+                new ColumnProperty(nameof(LanguageModel.LanguageCulture))
+                {
+                    Title = _localizationService.GetResource("Admin.Configuration.Languages.Fields.LanguageCulture"),
+                    Width = "200"
+                },
+                new ColumnProperty(nameof(LanguageModel.DisplayOrder))
+                {
+                    Title = _localizationService.GetResource("Admin.Configuration.Languages.Fields.DisplayOrder"),
+                    Width = "150"
+                },
+                new ColumnProperty(nameof(LanguageModel.Published))
+                {
+                    Title = _localizationService.GetResource("Admin.Configuration.Languages.Fields.Published"),
+                    Width = "150",
+                    Render = new RenderBoolean()
+                },
+                new ColumnProperty(nameof(LanguageModel.Id))
+                {
+                    Title = _localizationService.GetResource("Admin.Common.Edit"),
+                    Width = "100",
+                    Render = new RenderButtonEdit(new DataUrl("Edit"))
+                }
+            };
+
+            //prepare column definitions
+            model.ColumnDefinitions = new List<ColumnDefinition>
+            {
+                new ColumnDefinition()
+                {
+                    Targets = "1",
+                    ClassName =  StyleColumn.CenterBody
+                },
+                new ColumnDefinition()
+                {
+                    Targets = "[4,5]",
+                    ClassName =  StyleColumn.CenterAll
+                }
+            };
+
+            return model;
+        }
+
         #endregion
 
         #region Methods
@@ -78,6 +163,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
+            searchModel.Grid = PrepareLanguageGridModel(searchModel);
 
             return searchModel;
         }
@@ -93,15 +179,16 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get languages
-            var languages = _languageService.GetAllLanguages(showHidden: true, loadCacheableCopy: false);
+            var languages = _languageService.GetAllLanguages(showHidden: true, loadCacheableCopy: false).ToPagedList(searchModel);
 
             //prepare list model
-            var model = new LanguageListModel
+            var model = new LanguageListModel().PrepareToGrid(searchModel, languages, () =>
             {
-                //fill in model values from the entity
-                Data = languages.PaginationByRequestModel(searchModel).Select(language => language.ToModel<LanguageModel>()),
-                Total = languages.Count
-            };
+                return languages.Select(language =>
+                {
+                    return language.ToModel<LanguageModel>();
+                });
+            });
 
             return model;
         }
@@ -166,18 +253,21 @@ namespace Nop.Web.Areas.Admin.Factories
             if (!string.IsNullOrEmpty(searchModel.SearchResourceValue))
                 localeResources = localeResources.Where(l => l.Value.Value.ToLowerInvariant().Contains(searchModel.SearchResourceValue.ToLowerInvariant()));
 
+            var pagedLocaleResources = new PagedList<KeyValuePair<string, KeyValuePair<int, string>>>(localeResources,
+                searchModel.Page - 1, searchModel.PageSize);
+
             //prepare list model
             var model = new LocaleResourceListModel
             {
                 //fill in model values from the entity
-                Data = localeResources.PaginationByRequestModel(searchModel).Select(localeResource => new LocaleResourceModel
+                Data = pagedLocaleResources.Select(localeResource => new LocaleResourceModel
                 {
                     LanguageId = language.Id,
                     Id = localeResource.Value.Key,
                     ResourceName = localeResource.Key,
                     ResourceValue = localeResource.Value.Value
                 }),
-                Total = localeResources.Count()
+                Total = pagedLocaleResources.TotalCount
             };
 
             return model;

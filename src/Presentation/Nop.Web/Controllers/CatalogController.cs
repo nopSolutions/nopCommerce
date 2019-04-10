@@ -109,7 +109,8 @@ namespace Nop.Web.Controllers
                 !_storeMappingService.Authorize(category);
             //Check whether the current user has a "Manage categories" permission (usually a store owner)
             //We should allows him (her) to use "Preview" functionality
-            if (notAvailable && !_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
+            var hasAdminAccess = _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && _permissionService.Authorize(StandardPermissionProvider.ManageCategories);
+            if (notAvailable && !hasAdminAccess)
                 return InvokeHttp404();
 
             //'Continue shopping' URL
@@ -170,7 +171,8 @@ namespace Nop.Web.Controllers
                 !_storeMappingService.Authorize(manufacturer);
             //Check whether the current user has a "Manage categories" permission (usually a store owner)
             //We should allows him (her) to use "Preview" functionality
-            if (notAvailable && !_permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
+            var hasAdminAccess = _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && _permissionService.Authorize(StandardPermissionProvider.ManageManufacturers);
+            if (notAvailable && !hasAdminAccess)
                 return InvokeHttp404();
 
             //'Continue shopping' URL
@@ -234,7 +236,7 @@ namespace Nop.Web.Controllers
         {
             //we don't allow viewing of vendors if "vendors" block is hidden
             if (_vendorSettings.VendorsBlockItemsToDisplay == 0)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             var model = _catalogModelFactory.PrepareVendorAllModels();
             return View(model);

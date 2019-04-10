@@ -1,6 +1,7 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using Nop.Core;
@@ -43,6 +44,7 @@ namespace Nop.Services.Media
         public AzurePictureService(IDataProvider dataProvider,
             IDbContext dbContext,
             IEventPublisher eventPublisher,
+            IHttpContextAccessor httpContextAccessor,
             INopFileProvider fileProvider,
             IProductAttributeParser productAttributeParser,
             IRepository<Picture> pictureRepository,
@@ -57,6 +59,7 @@ namespace Nop.Services.Media
             : base(dataProvider,
                   dbContext,
                   eventPublisher,
+                  httpContextAccessor,
                   fileProvider,
                   productAttributeParser,
                   pictureRepository,
@@ -208,7 +211,7 @@ namespace Nop.Services.Media
             }
             while (continuationToken != null);
 
-            _cacheManager.RemoveByPattern(NopMediaDefaults.ThumbsPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopMediaDefaults.ThumbsPrefixCacheKey);
         }
 
         /// <summary>
@@ -258,7 +261,7 @@ namespace Nop.Services.Media
 
             await blockBlob.UploadFromByteArrayAsync(binary, 0, binary.Length);
 
-            _cacheManager.RemoveByPattern(NopMediaDefaults.ThumbsPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopMediaDefaults.ThumbsPrefixCacheKey);
         }
 
         #endregion

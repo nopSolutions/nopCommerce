@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 using Microsoft.AspNetCore.Mvc;
-using Nop.Web.Framework.Mvc.Rss;
+using Nop.Core.Rss;
 
 namespace Nop.Web.Framework.Mvc
 {

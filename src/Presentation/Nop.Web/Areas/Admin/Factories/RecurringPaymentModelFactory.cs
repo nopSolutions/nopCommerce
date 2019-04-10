@@ -10,7 +10,7 @@ using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Orders;
-using Nop.Web.Framework.Extensions;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -114,7 +114,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = recurringPayments.Select(recurringPayment =>
                 {
                     //fill in model values from the entity
-                    var recurringPaymentModel = recurringPayment.ToModel<RecurringPaymentModel>();                    
+                    var recurringPaymentModel = recurringPayment.ToModel<RecurringPaymentModel>();
 
                     //convert dates to the user time
                     if (recurringPayment.NextPaymentDate.HasValue)
@@ -195,12 +195,14 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(recurringPayment));
 
             //get recurring payments history
-            var recurringPayments = recurringPayment.RecurringPaymentHistory.OrderBy(historyEntry => historyEntry.CreatedOnUtc).ToList();
+            var recurringPayments = recurringPayment.RecurringPaymentHistory
+                .OrderBy(historyEntry => historyEntry.CreatedOnUtc).ToList()
+                .ToPagedList(searchModel);
 
             //prepare list model
             var model = new RecurringPaymentHistoryListModel
             {
-                Data = recurringPayments.PaginationByRequestModel(searchModel).Select(historyEntry =>
+                Data = recurringPayments.Select(historyEntry =>
                 {
                     //fill in model values from the entity
                     var historyModel = historyEntry.ToModel<RecurringPaymentHistoryModel>();
@@ -220,7 +222,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     return historyModel;
                 }),
-                Total = recurringPayments.Count
+                Total = recurringPayments.TotalCount
             };
 
             return model;

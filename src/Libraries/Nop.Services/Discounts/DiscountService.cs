@@ -8,12 +8,12 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Infrastructure;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Orders;
-using Nop.Services.Plugins;
 
 namespace Nop.Services.Discounts
 {
@@ -26,9 +26,9 @@ namespace Nop.Services.Discounts
 
         private readonly ICategoryService _categoryService;
         private readonly ICustomerService _customerService;
+        private readonly IDiscountPluginManager _discountPluginManager;
         private readonly IEventPublisher _eventPublisher;
         private readonly ILocalizationService _localizationService;
-        private readonly IPluginService _pluginService;
         private readonly IRepository<Category> _categoryRepository;
         private readonly IRepository<Discount> _discountRepository;
         private readonly IRepository<DiscountRequirement> _discountRequirementRepository;
@@ -44,9 +44,9 @@ namespace Nop.Services.Discounts
 
         public DiscountService(ICategoryService categoryService,
             ICustomerService customerService,
+            IDiscountPluginManager discountPluginManager,
             IEventPublisher eventPublisher,
             ILocalizationService localizationService,
-            IPluginService pluginService,
             IRepository<Category> categoryRepository,
             IRepository<Discount> discountRepository,
             IRepository<DiscountRequirement> discountRequirementRepository,
@@ -58,9 +58,9 @@ namespace Nop.Services.Discounts
         {
             _categoryService = categoryService;
             _customerService = customerService;
+            _discountPluginManager = discountPluginManager;
             _eventPublisher = eventPublisher;
             _localizationService = localizationService;
-            _pluginService = pluginService;
             _categoryRepository = categoryRepository;
             _discountRepository = discountRepository;
             _discountRequirementRepository = discountRequirementRepository;
@@ -144,8 +144,8 @@ namespace Nop.Services.Discounts
                 else
                 {
                     //or try to get validation result for the requirement
-                    var requirementRulePlugin = LoadDiscountRequirementRuleBySystemName(requirement.SystemName,
-                        customer, _storeContext.CurrentStore.Id);
+                    var requirementRulePlugin = _discountPluginManager
+                        .LoadPluginBySystemName(requirement.SystemName, customer, _storeContext.CurrentStore.Id);
                     if (requirementRulePlugin == null)
                         continue;
 
@@ -639,31 +639,6 @@ namespace Nop.Services.Discounts
             _eventPublisher.EntityDeleted(discountRequirement);
         }
 
-        /// <summary>
-        /// Load discount requirement rule by system name
-        /// </summary>
-        /// <param name="systemName">System name</param>
-        /// <param name="customer">Load records allowed only to a specified customer; pass null to ignore ACL permissions</param>
-        /// <param name="storeId">Load records allowed only on the specified store; pass 0 to ignore store mappings</param>
-        /// <returns>Found discount requirement rule</returns>
-        public virtual IDiscountRequirementRule LoadDiscountRequirementRuleBySystemName(string systemName,
-            Customer customer = null, int storeId = 0)
-        {
-            var descriptor = _pluginService.GetPluginDescriptorBySystemName<IDiscountRequirementRule>(systemName,
-                customer: customer, storeId: storeId);
-            return descriptor?.Instance<IDiscountRequirementRule>();
-        }
-
-        /// <summary>
-        /// Load all discount requirement rules
-        /// </summary>
-        /// <param name="customer">Load records allowed only to a specified customer; pass null to ignore ACL permissions</param>
-        /// <returns>Discount requirement rules</returns>
-        public virtual IList<IDiscountRequirementRule> LoadAllDiscountRequirementRules(Customer customer = null)
-        {
-            return _pluginService.GetPlugins<IDiscountRequirementRule>(customer: customer).ToList();
-        }
-
         #endregion
 
         #region Validation
@@ -751,10 +726,9 @@ namespace Nop.Services.Discounts
             if (discount.DiscountType == DiscountType.AssignedToOrderSubTotal ||
                 discount.DiscountType == DiscountType.AssignedToOrderTotal)
             {
-                var cart = customer.ShoppingCartItems
-                    .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                    .LimitPerStore(_storeContext.CurrentStore.Id)
-                    .ToList();
+                var shoppingCartService = EngineContext.Current.Resolve<IShoppingCartService>();
+                var cart = shoppingCartService.GetShoppingCart(customer,
+                    ShoppingCartType.ShoppingCart, storeId: _storeContext.CurrentStore.Id);
 
                 var hasGiftCards = cart.Any(x => x.Product.IsGiftCard);
                 if (hasGiftCards)

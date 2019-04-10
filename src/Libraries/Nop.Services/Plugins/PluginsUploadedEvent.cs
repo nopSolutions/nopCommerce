@@ -1,5 +1,4 @@
-using System.Collections.Generic;
-using Nop.Core.Plugins;
+﻿using System.Collections.Generic;
 
 namespace Nop.Services.Plugins
 {

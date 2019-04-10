@@ -1,22 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Extensions.Caching.Memory;
 using Moq;
 using Nop.Core;
-using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
-using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Orders;
 using Nop.Data;
 using Nop.Services.Catalog;
-using Nop.Services.Configuration;
 using Nop.Services.Directory;
 using Nop.Services.Events;
 using Nop.Services.Localization;
-using Nop.Services.Logging;
 using Nop.Services.Media;
 using Nop.Services.Tax;
 using Nop.Tests;
@@ -205,7 +200,7 @@ namespace Nop.Services.Tests.Catalog
             _eventPublisher = new Mock<IEventPublisher>();
             _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
 
-            var cacheManager = new TestMemoryCacheManager(new Mock<IMemoryCache>().Object);
+            var cacheManager = new TestCacheManager();
 
             _productAttributeService = new ProductAttributeService(cacheManager,
                 _eventPublisher.Object,
@@ -213,7 +208,8 @@ namespace Nop.Services.Tests.Catalog
                 _productAttributeRepo.Object,
                 _productAttributeCombinationRepo.Object,
                 _productAttributeMappingRepo.Object,
-                _productAttributeValueRepo.Object);
+                _productAttributeValueRepo.Object,
+                new TestCacheManager());
 
             _context = new Mock<IDbContext>();
 

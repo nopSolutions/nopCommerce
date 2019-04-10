@@ -583,7 +583,7 @@ namespace Nop.Web.Factories
                 NewProductsEnabled = _catalogSettings.NewProductsEnabled,
                 BlogEnabled = _blogSettings.Enabled,
                 ForumEnabled = _forumSettings.ForumsEnabled,
-                DisplayHomePageMenuItem = _displayDefaultMenuItemSettings.DisplayHomePageMenuItem,
+                DisplayHomepageMenuItem = _displayDefaultMenuItemSettings.DisplayHomepageMenuItem,
                 DisplayNewProductsMenuItem = _displayDefaultMenuItemSettings.DisplayNewProductsMenuItem,
                 DisplayProductSearchMenuItem = _displayDefaultMenuItemSettings.DisplayProductSearchMenuItem,
                 DisplayCustomerInfoMenuItem = _displayDefaultMenuItemSettings.DisplayCustomerInfoMenuItem,
@@ -611,7 +611,7 @@ namespace Nop.Web.Factories
                 _webHelper.IsCurrentConnectionSecured());
 
             var model = _cacheManager.Get(categoriesCacheKey, () =>
-                _categoryService.GetAllCategoriesDisplayedOnHomePage()
+                _categoryService.GetAllCategoriesDisplayedOnHomepage()
                 .Select(category =>
                 {
                     var catModel = new CategoryModel

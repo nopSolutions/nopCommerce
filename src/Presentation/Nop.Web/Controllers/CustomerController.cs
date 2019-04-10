@@ -74,11 +74,13 @@ namespace Nop.Web.Controllers
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IGiftCardService _giftCardService;
         private readonly ILocalizationService _localizationService;
+        private readonly ILogger _logger;
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
         private readonly IOrderService _orderService;
         private readonly IPictureService _pictureService;
         private readonly IPriceFormatter _priceFormatter;
         private readonly IShoppingCartService _shoppingCartService;
+        private readonly IStateProvinceService _stateProvinceService;
         private readonly IStoreContext _storeContext;
         private readonly ITaxService _taxService;
         private readonly IWebHelper _webHelper;
@@ -119,11 +121,13 @@ namespace Nop.Web.Controllers
             IGenericAttributeService genericAttributeService,
             IGiftCardService giftCardService,
             ILocalizationService localizationService,
+            ILogger logger,
             INewsLetterSubscriptionService newsLetterSubscriptionService,
             IOrderService orderService,
             IPictureService pictureService,
             IPriceFormatter priceFormatter,
             IShoppingCartService shoppingCartService,
+            IStateProvinceService stateProvinceService,
             IStoreContext storeContext,
             ITaxService taxService,
             IWebHelper webHelper,
@@ -160,11 +164,13 @@ namespace Nop.Web.Controllers
             _genericAttributeService = genericAttributeService;
             _giftCardService = giftCardService;
             _localizationService = localizationService;
+            _logger = logger;
             _newsLetterSubscriptionService = newsLetterSubscriptionService;
             _orderService = orderService;
             _pictureService = pictureService;
             _priceFormatter = priceFormatter;
             _shoppingCartService = shoppingCartService;
+            _stateProvinceService = stateProvinceService;
             _storeContext = storeContext;
             _taxService = taxService;
             _webHelper = webHelper;
@@ -259,6 +265,100 @@ namespace Nop.Web.Controllers
             return attributesXml;
         }
 
+        protected virtual void LogGdpr(Customer customer, CustomerInfoModel oldCustomerInfoModel, 
+            CustomerInfoModel newCustomerInfoModel, IFormCollection form)
+        {
+            try
+            {
+                //consents
+                var consents = _gdprService.GetAllConsents().Where(consent => consent.DisplayOnCustomerInfoPage).ToList();
+                foreach (var consent in consents)
+                {
+                    var previousConsentValue = _gdprService.IsConsentAccepted(consent.Id, _workContext.CurrentCustomer.Id);
+                    var controlId = $"consent{consent.Id}";
+                    var cbConsent = form[controlId];
+                    if (!StringValues.IsNullOrEmpty(cbConsent) && cbConsent.ToString().Equals("on"))
+                    {
+                        //agree
+                        if (!previousConsentValue.HasValue || !previousConsentValue.Value)
+                        {
+                            _gdprService.InsertLog(customer, consent.Id, GdprRequestType.ConsentAgree, consent.Message);
+                        }
+                    }
+                    else
+                    {
+                        //disagree
+                        if (!previousConsentValue.HasValue || previousConsentValue.Value)
+                        {
+                            _gdprService.InsertLog(customer, consent.Id, GdprRequestType.ConsentDisagree, consent.Message);
+                        }
+                    }
+                }
+
+                //newsletter subscriptions
+                if (_gdprSettings.LogNewsletterConsent)
+                {
+                    if (oldCustomerInfoModel.Newsletter && !newCustomerInfoModel.Newsletter)
+                        _gdprService.InsertLog(customer, 0, GdprRequestType.ConsentDisagree, _localizationService.GetResource("Gdpr.Consent.Newsletter"));
+                    if (!oldCustomerInfoModel.Newsletter && newCustomerInfoModel.Newsletter)
+                        _gdprService.InsertLog(customer, 0, GdprRequestType.ConsentAgree, _localizationService.GetResource("Gdpr.Consent.Newsletter"));
+                }
+
+                //user profile changes
+                if (!_gdprSettings.LogUserProfileChanges)
+                    return;
+
+                if (oldCustomerInfoModel.Gender != newCustomerInfoModel.Gender)
+                    _gdprService.InsertLog(customer, 0, GdprRequestType.ProfileChanged, $"{_localizationService.GetResource("Account.Fields.Gender")} = {newCustomerInfoModel.Gender}");
+
+                if (oldCustomerInfoModel.FirstName != newCustomerInfoModel.FirstName)
+                    _gdprService.InsertLog(customer, 0, GdprRequestType.ProfileChanged, $"{_localizationService.GetResource("Account.Fields.FirstName")} = {newCustomerInfoModel.FirstName}");
+
+                if (oldCustomerInfoModel.LastName != newCustomerInfoModel.LastName)
+                    _gdprService.InsertLog(customer, 0, GdprRequestType.ProfileChanged, $"{_localizationService.GetResource("Account.Fields.LastName")} = {newCustomerInfoModel.LastName}");
+
+                if (oldCustomerInfoModel.ParseDateOfBirth() != newCustomerInfoModel.ParseDateOfBirth())
+                    _gdprService.InsertLog(customer, 0, GdprRequestType.ProfileChanged, $"{_localizationService.GetResource("Account.Fields.DateOfBirth")} = {newCustomerInfoModel.ParseDateOfBirth().ToString()}");
+
+                if (oldCustomerInfoModel.Email != newCustomerInfoModel.Email)
+                    _gdprService.InsertLog(customer, 0, GdprRequestType.ProfileChanged, $"{_localizationService.GetResource("Account.Fields.Email")} = {newCustomerInfoModel.Email}");
+
+                if (oldCustomerInfoModel.Company != newCustomerInfoModel.Company)
+                    _gdprService.InsertLog(customer, 0, GdprRequestType.ProfileChanged, $"{_localizationService.GetResource("Account.Fields.Company")} = {newCustomerInfoModel.Company}");
+
+                if (oldCustomerInfoModel.StreetAddress != newCustomerInfoModel.StreetAddress)
+                    _gdprService.InsertLog(customer, 0, GdprRequestType.ProfileChanged, $"{_localizationService.GetResource("Account.Fields.StreetAddress")} = {newCustomerInfoModel.StreetAddress}");
+
+                if (oldCustomerInfoModel.StreetAddress2 != newCustomerInfoModel.StreetAddress2)
+                    _gdprService.InsertLog(customer, 0, GdprRequestType.ProfileChanged, $"{_localizationService.GetResource("Account.Fields.StreetAddress2")} = {newCustomerInfoModel.StreetAddress2}");
+
+                if (oldCustomerInfoModel.ZipPostalCode != newCustomerInfoModel.ZipPostalCode)
+                    _gdprService.InsertLog(customer, 0, GdprRequestType.ProfileChanged, $"{_localizationService.GetResource("Account.Fields.ZipPostalCode")} = {newCustomerInfoModel.ZipPostalCode}");
+
+                if (oldCustomerInfoModel.City != newCustomerInfoModel.City)
+                    _gdprService.InsertLog(customer, 0, GdprRequestType.ProfileChanged, $"{_localizationService.GetResource("Account.Fields.City")} = {newCustomerInfoModel.City}");
+
+                if (oldCustomerInfoModel.County != newCustomerInfoModel.County)
+                    _gdprService.InsertLog(customer, 0, GdprRequestType.ProfileChanged, $"{_localizationService.GetResource("Account.Fields.County")} = {newCustomerInfoModel.County}");
+
+                if (oldCustomerInfoModel.CountryId != newCustomerInfoModel.CountryId)
+                {
+                    var countryName = _countryService.GetCountryById(newCustomerInfoModel.CountryId)?.Name;
+                    _gdprService.InsertLog(customer, 0, GdprRequestType.ProfileChanged, $"{_localizationService.GetResource("Account.Fields.Country")} = {countryName}");
+                }
+
+                if (oldCustomerInfoModel.StateProvinceId != newCustomerInfoModel.StateProvinceId)
+                {
+                    var stateProvinceName = _stateProvinceService.GetStateProvinceById(newCustomerInfoModel.StateProvinceId)?.Name;
+                    _gdprService.InsertLog(customer, 0, GdprRequestType.ProfileChanged, $"{_localizationService.GetResource("Account.Fields.StateProvince")} = {stateProvinceName}");
+                }
+            }
+            catch (Exception exception)
+            {
+                _logger.Error(exception.Message, exception, customer);
+            }
+        }
+
         #endregion
 
         #region Methods
@@ -288,7 +388,7 @@ namespace Nop.Web.Controllers
             //validate CAPTCHA
             if (_captchaSettings.Enabled && _captchaSettings.ShowOnLoginPage && !captchaValid)
             {
-                ModelState.AddModelError("", _captchaSettings.GetWrongCaptchaMessage(_localizationService));
+                ModelState.AddModelError("", _localizationService.GetResource("Common.WrongCaptchaMessage"));
             }
 
             if (ModelState.IsValid)
@@ -320,7 +420,7 @@ namespace Nop.Web.Controllers
                                 _localizationService.GetResource("ActivityLog.PublicStore.Login"), customer);
 
                             if (string.IsNullOrEmpty(returnUrl) || !Url.IsLocalUrl(returnUrl))
-                                return RedirectToRoute("HomePage");
+                                return RedirectToRoute("Homepage");
 
                             return Redirect(returnUrl);
                         }
@@ -400,7 +500,7 @@ namespace Nop.Web.Controllers
                 TempData[$"{NopCookieDefaults.Prefix}{NopCookieDefaults.IgnoreEuCookieLawWarning}"] = true; 
             }
 
-            return RedirectToRoute("HomePage");
+            return RedirectToRoute("Homepage");
         }
 
         #endregion
@@ -427,7 +527,7 @@ namespace Nop.Web.Controllers
             // validate CAPTCHA
             if (_captchaSettings.Enabled && _captchaSettings.ShowOnForgotPasswordPage && !captchaValid)
             {
-                ModelState.AddModelError("", _captchaSettings.GetWrongCaptchaMessage(_localizationService));
+                ModelState.AddModelError("", _localizationService.GetResource("Common.WrongCaptchaMessage"));
             }
 
             if (ModelState.IsValid)
@@ -468,7 +568,7 @@ namespace Nop.Web.Controllers
         {
             var customer = _customerService.GetCustomerByEmail(email);
             if (customer == null)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             if (string.IsNullOrEmpty(_genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.PasswordRecoveryTokenAttribute)))
             {
@@ -507,7 +607,7 @@ namespace Nop.Web.Controllers
         {
             var customer = _customerService.GetCustomerByEmail(email);
             if (customer == null)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             //validate token
             if (!_customerService.IsPasswordRecoveryTokenValid(customer, token))
@@ -573,7 +673,7 @@ namespace Nop.Web.Controllers
         [PublicAntiForgery]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
-        public virtual IActionResult Register(RegisterModel model, string returnUrl, bool captchaValid)
+        public virtual IActionResult Register(RegisterModel model, string returnUrl, bool captchaValid, IFormCollection form)
         {
             //check whether registration is allowed
             if (_customerSettings.UserRegistrationType == UserRegistrationType.Disabled)
@@ -594,7 +694,7 @@ namespace Nop.Web.Controllers
             customer.RegisteredInStoreId = _storeContext.CurrentStore.Id;
 
             //custom customer attributes
-            var customerAttributesXml = ParseCustomCustomerAttributes(model.Form);
+            var customerAttributesXml = ParseCustomCustomerAttributes(form);
             var customerAttributeWarnings = _customerAttributeParser.GetAttributeWarnings(customerAttributesXml);
             foreach (var error in customerAttributeWarnings)
             {
@@ -604,7 +704,7 @@ namespace Nop.Web.Controllers
             //validate CAPTCHA
             if (_captchaSettings.Enabled && _captchaSettings.ShowOnRegistrationPage && !captchaValid)
             {
-                ModelState.AddModelError("", _captchaSettings.GetWrongCaptchaMessage(_localizationService));
+                ModelState.AddModelError("", _localizationService.GetResource("Common.WrongCaptchaMessage"));
             }
 
             if (ModelState.IsValid)
@@ -737,7 +837,7 @@ namespace Nop.Web.Controllers
                         foreach (var consent in consents)
                         {
                             var controlId = $"consent{consent.Id}";
-                            var cbConsent = model.Form[controlId];
+                            var cbConsent = form[controlId];
                             if (!StringValues.IsNullOrEmpty(cbConsent) && cbConsent.ToString().Equals("on"))
                             {
                                 //agree
@@ -831,7 +931,7 @@ namespace Nop.Web.Controllers
                             }
                         default:
                             {
-                                return RedirectToRoute("HomePage");
+                                return RedirectToRoute("Homepage");
                             }
                     }
                 }
@@ -860,7 +960,7 @@ namespace Nop.Web.Controllers
         public virtual IActionResult RegisterResult(string returnUrl)
         {
             if (string.IsNullOrEmpty(returnUrl) || !Url.IsLocalUrl(returnUrl))
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             return Redirect(returnUrl);
         }
@@ -907,7 +1007,7 @@ namespace Nop.Web.Controllers
         {
             var customer = _customerService.GetCustomerByEmail(email);
             if (customer == null)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             var cToken = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.AccountActivationTokenAttribute);
             if (string.IsNullOrEmpty(cToken))
@@ -918,7 +1018,7 @@ namespace Nop.Web.Controllers
                     });
 
             if (!cToken.Equals(token, StringComparison.InvariantCultureIgnoreCase))
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             //activate user account
             customer.Active = true;
@@ -952,15 +1052,21 @@ namespace Nop.Web.Controllers
 
         [HttpPost]
         [PublicAntiForgery]
-        public virtual IActionResult Info(CustomerInfoModel model)
+        public virtual IActionResult Info(CustomerInfoModel model, IFormCollection form)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return Challenge();
 
+            var oldCustomerModel = new CustomerInfoModel();
+
             var customer = _workContext.CurrentCustomer;
 
+            //get customer info model before changes for gdpr log
+            if (_gdprSettings.GdprEnabled & _gdprSettings.LogUserProfileChanges)
+                oldCustomerModel = _customerModelFactory.PrepareCustomerInfoModel(oldCustomerModel, customer, false);
+
             //custom customer attributes
-            var customerAttributesXml = ParseCustomCustomerAttributes(model.Form);
+            var customerAttributesXml = ParseCustomCustomerAttributes(form);
             var customerAttributeWarnings = _customerAttributeParser.GetAttributeWarnings(customerAttributesXml);
             foreach (var error in customerAttributeWarnings)
             {
@@ -1069,22 +1175,10 @@ namespace Nop.Web.Controllers
                                 var wasActive = newsletter.Active;
                                 newsletter.Active = true;
                                 _newsLetterSubscriptionService.UpdateNewsLetterSubscription(newsletter);
-
-                                //GDPR
-                                if (!wasActive && _gdprSettings.GdprEnabled && _gdprSettings.LogNewsletterConsent)
-                                {
-                                    _gdprService.InsertLog(customer, 0, GdprRequestType.ConsentAgree, _localizationService.GetResource("Gdpr.Consent.Newsletter"));
-                                }
                             }
                             else
                             {
                                 _newsLetterSubscriptionService.DeleteNewsLetterSubscription(newsletter);
-
-                                //GDPR
-                                if (_gdprSettings.GdprEnabled && _gdprSettings.LogNewsletterConsent)
-                                {
-                                    _gdprService.InsertLog(customer, 0, GdprRequestType.ConsentDisagree, _localizationService.GetResource("Gdpr.Consent.Newsletter"));
-                                }
                             }
                         }
                         else
@@ -1099,12 +1193,6 @@ namespace Nop.Web.Controllers
                                     StoreId = _storeContext.CurrentStore.Id,
                                     CreatedOnUtc = DateTime.UtcNow
                                 });
-
-                                //GDPR
-                                if (_gdprSettings.GdprEnabled && _gdprSettings.LogNewsletterConsent)
-                                {
-                                    _gdprService.InsertLog(customer, 0, GdprRequestType.ConsentAgree, _localizationService.GetResource("Gdpr.Consent.Newsletter"));
-                                }
                             }
                         }
                     }
@@ -1118,31 +1206,7 @@ namespace Nop.Web.Controllers
 
                     //GDPR
                     if (_gdprSettings.GdprEnabled)
-                    {
-                        var consents = _gdprService.GetAllConsents().Where(consent => consent.DisplayOnCustomerInfoPage).ToList();
-                        foreach (var consent in consents)
-                        {
-                            var previousConsentValue = _gdprService.IsConsentAccepted(consent.Id, _workContext.CurrentCustomer.Id);
-                            var controlId = $"consent{consent.Id}";
-                            var cbConsent = model.Form[controlId];
-                            if (!StringValues.IsNullOrEmpty(cbConsent) && cbConsent.ToString().Equals("on"))
-                            {
-                                //agree
-                                if (!previousConsentValue.HasValue || !previousConsentValue.Value)
-                                {
-                                    _gdprService.InsertLog(customer, consent.Id, GdprRequestType.ConsentAgree, consent.Message);
-                                }
-                            }
-                            else
-                            {
-                                //disagree
-                                if (!previousConsentValue.HasValue || previousConsentValue.Value)
-                                {
-                                    _gdprService.InsertLog(customer, consent.Id, GdprRequestType.ConsentDisagree, consent.Message);
-                                }
-                            }
-                        }
-                    }
+                        LogGdpr(customer, oldCustomerModel, model, form);
 
                     return RedirectToRoute("CustomerInfo");
                 }
@@ -1190,7 +1254,7 @@ namespace Nop.Web.Controllers
         {
             var customer = _customerService.GetCustomerByEmail(email);
             if (customer == null)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             var cToken = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.EmailRevalidationTokenAttribute);
             if (string.IsNullOrEmpty(cToken))
@@ -1200,13 +1264,13 @@ namespace Nop.Web.Controllers
                 });
 
             if (!cToken.Equals(token, StringComparison.InvariantCultureIgnoreCase))
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             if (string.IsNullOrEmpty(customer.EmailToRevalidate))
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             if (_customerSettings.UserRegistrationType != UserRegistrationType.EmailValidation)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             //change email
             try
@@ -1296,7 +1360,7 @@ namespace Nop.Web.Controllers
 
         [HttpPost]
         [PublicAntiForgery]
-        public virtual IActionResult AddressAdd(CustomerAddressEditModel model)
+        public virtual IActionResult AddressAdd(CustomerAddressEditModel model, IFormCollection form)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return Challenge();
@@ -1304,7 +1368,7 @@ namespace Nop.Web.Controllers
             var customer = _workContext.CurrentCustomer;
 
             //custom address attributes
-            var customAttributes = _addressAttributeParser.ParseCustomAddressAttributes(model.Form);
+            var customAttributes = _addressAttributeParser.ParseCustomAddressAttributes(form);
             var customAttributeWarnings = _addressAttributeParser.GetAttributeWarnings(customAttributes);
             foreach (var error in customAttributeWarnings)
             {
@@ -1364,7 +1428,7 @@ namespace Nop.Web.Controllers
 
         [HttpPost]
         [PublicAntiForgery]
-        public virtual IActionResult AddressEdit(CustomerAddressEditModel model, int addressId)
+        public virtual IActionResult AddressEdit(CustomerAddressEditModel model, int addressId, IFormCollection form)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return Challenge();
@@ -1377,7 +1441,7 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("CustomerAddresses");
 
             //custom address attributes
-            var customAttributes = _addressAttributeParser.ParseCustomAddressAttributes(model.Form);
+            var customAttributes = _addressAttributeParser.ParseCustomAddressAttributes(form);
             var customAttributeWarnings = _addressAttributeParser.GetAttributeWarnings(customAttributes);
             foreach (var error in customAttributeWarnings)
             {
@@ -1424,11 +1488,11 @@ namespace Nop.Web.Controllers
         {
             var orderItem = _orderService.GetOrderItemByGuid(orderItemId);
             if (orderItem == null)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             var product = orderItem.Product;
             if (product == null || !product.HasUserAgreement)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             var model = _customerModelFactory.PrepareUserAgreementModel(orderItem, product);
             return View(model);
@@ -1658,7 +1722,7 @@ namespace Nop.Web.Controllers
             //validate CAPTCHA
             if (_captchaSettings.Enabled && !captchaValid)
             {
-                ModelState.AddModelError("", _captchaSettings.GetWrongCaptchaMessage(_localizationService));
+                ModelState.AddModelError("", _localizationService.GetResource("Common.WrongCaptchaMessage"));
             }
 
             if (ModelState.IsValid)

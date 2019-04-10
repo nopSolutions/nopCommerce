@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Nop.Core.Plugins;
+using Nop.Services.Plugins;
 
 namespace Nop.Services.Cms
 {

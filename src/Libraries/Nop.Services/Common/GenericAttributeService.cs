@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
@@ -50,7 +50,7 @@ namespace Nop.Services.Common
             _genericAttributeRepository.Delete(attribute);
 
             //cache
-            _cacheManager.RemoveByPattern(NopCommonDefaults.GenericAttributePatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCommonDefaults.GenericAttributePrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(attribute);
@@ -68,7 +68,7 @@ namespace Nop.Services.Common
             _genericAttributeRepository.Delete(attributes);
 
             //cache
-            _cacheManager.RemoveByPattern(NopCommonDefaults.GenericAttributePatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCommonDefaults.GenericAttributePrefixCacheKey);
 
             //event notification
             foreach (var attribute in attributes)
@@ -102,7 +102,7 @@ namespace Nop.Services.Common
             _genericAttributeRepository.Insert(attribute);
 
             //cache
-            _cacheManager.RemoveByPattern(NopCommonDefaults.GenericAttributePatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCommonDefaults.GenericAttributePrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(attribute);
@@ -120,7 +120,7 @@ namespace Nop.Services.Common
             _genericAttributeRepository.Update(attribute);
 
             //cache
-            _cacheManager.RemoveByPattern(NopCommonDefaults.GenericAttributePatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCommonDefaults.GenericAttributePrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(attribute);
@@ -212,8 +212,9 @@ namespace Nop.Services.Common
         /// <param name="entity">Entity</param>
         /// <param name="key">Key</param>
         /// <param name="storeId">Load a value specific for a certain store; pass 0 to load a value shared for all stores</param>
+        /// <param name="defaultValue">Default value</param>
         /// <returns>Attribute</returns>
-        public virtual TPropType GetAttribute<TPropType>(BaseEntity entity, string key, int storeId = 0)
+        public virtual TPropType GetAttribute<TPropType>(BaseEntity entity, string key, int storeId = 0, TPropType defaultValue = default(TPropType))
         {
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
@@ -224,17 +225,17 @@ namespace Nop.Services.Common
 
             //little hack here (only for unit testing). we should write expect-return rules in unit tests for such cases
             if (props == null)
-                return default(TPropType);
+                return defaultValue;
 
             props = props.Where(x => x.StoreId == storeId).ToList();
             if (!props.Any())
-                return default(TPropType);
+                return defaultValue;
 
             var prop = props.FirstOrDefault(ga =>
                 ga.Key.Equals(key, StringComparison.InvariantCultureIgnoreCase)); //should be culture invariant
 
             if (prop == null || string.IsNullOrEmpty(prop.Value))
-                return default(TPropType);
+                return defaultValue;
 
             return CommonHelper.To<TPropType>(prop.Value);
         }

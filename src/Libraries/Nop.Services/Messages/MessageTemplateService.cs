@@ -28,7 +28,6 @@ namespace Nop.Services.Messages
         private readonly IRepository<MessageTemplate> _messageTemplateRepository;
         private readonly IRepository<StoreMapping> _storeMappingRepository;
         private readonly IStoreMappingService _storeMappingService;
-        private readonly string _entityName;
 
         #endregion
 
@@ -53,7 +52,6 @@ namespace Nop.Services.Messages
             _messageTemplateRepository = messageTemplateRepository;
             _storeMappingRepository = storeMappingRepository;
             _storeMappingService = storeMappingService;
-            _entityName = typeof(MessageTemplate).Name;
         }
 
         #endregion
@@ -71,7 +69,7 @@ namespace Nop.Services.Messages
 
             _messageTemplateRepository.Delete(messageTemplate);
 
-            _cacheManager.RemoveByPattern(NopMessageDefaults.MessageTemplatesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopMessageDefaults.MessageTemplatesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(messageTemplate);
@@ -88,7 +86,7 @@ namespace Nop.Services.Messages
 
             _messageTemplateRepository.Insert(messageTemplate);
 
-            _cacheManager.RemoveByPattern(NopMessageDefaults.MessageTemplatesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopMessageDefaults.MessageTemplatesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(messageTemplate);
@@ -105,7 +103,7 @@ namespace Nop.Services.Messages
 
             _messageTemplateRepository.Update(messageTemplate);
 
-            _cacheManager.RemoveByPattern(NopMessageDefaults.MessageTemplatesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopMessageDefaults.MessageTemplatesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(messageTemplate);
@@ -170,7 +168,7 @@ namespace Nop.Services.Messages
                 //store mapping
                 query = from t in query
                     join sm in _storeMappingRepository.Table
-                        on new { c1 = t.Id, c2 = _entityName } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into tSm
+                        on new { c1 = t.Id, c2 = nameof(MessageTemplate) } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into tSm
                     from sm in tSm.DefaultIfEmpty()
                     where !t.LimitedToStores || storeId == sm.StoreId
                     select t;

@@ -84,8 +84,8 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
         [NopResourceDisplayName("Admin.Catalog.Categories.Fields.PriceRanges")]
         public string PriceRanges { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Categories.Fields.ShowOnHomePage")]
-        public bool ShowOnHomePage { get; set; }
+        [NopResourceDisplayName("Admin.Catalog.Categories.Fields.ShowOnHomepage")]
+        public bool ShowOnHomepage { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Categories.Fields.IncludeInTopMenu")]
         public bool IncludeInTopMenu { get; set; }
