@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Domain.Directory;
@@ -10,6 +11,7 @@ using Nop.Services.Localization;
 using Nop.Services.Orders;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Orders;
+using Nop.Web.Framework.Models.DataTables;
 using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
@@ -74,6 +76,83 @@ namespace Nop.Web.Areas.Admin.Factories
             return searchModel;
         }
 
+        /// <summary>
+        /// Prepare datatables model
+        /// </summary>
+        /// <param name="searchModel">Gift card search model</param>
+        /// <returns>Gift card datatables model</returns>
+        protected virtual DataTablesModel PrepareGiftCardGridModel(GiftCardSearchModel searchModel)
+        {
+            //prepare common properties
+            var model = new DataTablesModel
+            {
+                Name = "giftcards-grid",
+                UrlRead = new DataUrl("GiftCardList", "GiftCard", null),
+                SearchButtonId = "search-giftcards",
+                Length = searchModel.PageSize,
+                LengthMenu = searchModel.AvailablePageSizes
+            };
+
+            //prepare filters to search
+            model.Filters = new List<FilterParameter>()
+            {
+                new FilterParameter(nameof(searchModel.ActivatedId)),
+                new FilterParameter(nameof(searchModel.CouponCode)),
+                new FilterParameter(nameof(searchModel.RecipientName))
+            };
+
+            //prepare model columns
+            model.ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(GiftCardModel.AmountStr))
+                {
+                    Title = _localizationService.GetResource("Admin.GiftCards.Fields.Amount")
+                },
+                new ColumnProperty(nameof(GiftCardModel.RemainingAmountStr))
+                {
+                    Title = _localizationService.GetResource("Admin.GiftCards.Fields.RemainingAmount"),
+                },
+                new ColumnProperty(nameof(GiftCardModel.GiftCardCouponCode))
+                {
+                    Title = _localizationService.GetResource("Admin.GiftCards.Fields.GiftCardCouponCode")
+                },
+                new ColumnProperty(nameof(GiftCardModel.RecipientName))
+                {
+                    Title = _localizationService.GetResource("Admin.GiftCards.Fields.RecipientName")
+                },
+                new ColumnProperty(nameof(GiftCardModel.IsGiftCardActivated))
+                {
+                    Title = _localizationService.GetResource("Admin.GiftCards.Fields.IsGiftCardActivated"),
+                    Width = "200",
+                    Render = new RenderBoolean()
+                },
+                new ColumnProperty(nameof(GiftCardModel.CreatedOn))
+                {
+                    Title = _localizationService.GetResource("Admin.GiftCards.Fields.CreatedOn"),
+                    Width = "200",
+                    Render = new RenderDate()
+                },
+                new ColumnProperty(nameof(GiftCardModel.Id))
+                {
+                    Title = _localizationService.GetResource("Admin.Common.Edit"),
+                    Width = "100",
+                    Render = new RenderButtonEdit(new DataUrl("Edit"))
+                }
+            };
+
+            //prepare column definitions
+            model.ColumnDefinitions = new List<ColumnDefinition>
+            {
+                new ColumnDefinition()
+                {
+                    Targets = "[4,6]",
+                    ClassName =  StyleColumn.CenterAll
+                }
+            };
+
+            return model;
+        }
+
         #endregion
 
         #region Methods
@@ -107,6 +186,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
+            searchModel.Grid = PrepareGiftCardGridModel(searchModel);
 
             return searchModel;
         }
@@ -131,9 +211,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new GiftCardListModel
+            var model = new GiftCardListModel().PrepareToGrid(searchModel, giftCards, () =>
             {
-                Data = giftCards.Select(giftCard =>
+                return giftCards.Select(giftCard =>
                 {
                     //fill in model values from the entity
                     var giftCardModel = giftCard.ToModel<GiftCardModel>();
@@ -146,9 +226,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     giftCardModel.AmountStr = _priceFormatter.FormatPrice(giftCard.Amount, true, false);
 
                     return giftCardModel;
-                }),
-                Total = giftCards.TotalCount
-            };
+                });
+            });
 
             return model;
         }
