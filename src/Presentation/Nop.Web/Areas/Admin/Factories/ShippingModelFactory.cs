@@ -14,6 +14,7 @@ using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Areas.Admin.Models.Directory;
 using Nop.Web.Areas.Admin.Models.Shipping;
 using Nop.Web.Framework.Factories;
+using Nop.Web.Framework.Models.DataTables;
 using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
@@ -122,6 +123,54 @@ namespace Nop.Web.Areas.Admin.Factories
             searchModel.SetGridPageSize();
 
             return searchModel;
+        }
+
+        /// <summary>
+        /// Prepare warehouse datatables model
+        /// </summary>
+        /// <param name="searchModel">Warehouse search model</param>
+        /// <returns>Warehouse datatables model</returns>
+        protected virtual DataTablesModel PrepareWarehouseGridModel(WarehouseSearchModel searchModel)
+        {
+            //prepare common properties
+            var model = new DataTablesModel
+            {
+                Name = "warehouse-grid",
+                UrlRead = new DataUrl("Warehouses", "Shipping", null),
+                Length = searchModel.PageSize,
+                LengthMenu = searchModel.AvailablePageSizes
+            };
+
+            //prepare filters to search
+            model.Filters = null;
+
+            //prepare model columns
+            model.ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(WarehouseModel.Name))
+                {
+                    Title = _localizationService.GetResource("Admin.Configuration.Shipping.Warehouses.Fields.Name")
+                },
+                
+                new ColumnProperty(nameof(WarehouseModel.Id))
+                {
+                    Title = _localizationService.GetResource("Admin.Common.Edit"),
+                    Width = "100",
+                    Render = new RenderButtonEdit(new DataUrl("EditWarehouse"))
+                }
+            };
+
+            //prepare column definitions
+            model.ColumnDefinitions = new List<ColumnDefinition>
+            {
+                new ColumnDefinition()
+                {
+                    Targets = "-1",
+                    ClassName =  StyleColumn.CenterAll
+                }
+            };
+
+            return model;
         }
 
         #endregion
@@ -438,6 +487,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
+            searchModel.Grid = PrepareWarehouseGridModel(searchModel);
 
             return searchModel;
         }
@@ -456,12 +506,11 @@ namespace Nop.Web.Areas.Admin.Factories
             var warehouses = _shippingService.GetAllWarehouses().ToPagedList(searchModel);
 
             //prepare list model
-            var model = new WarehouseListModel
+            var model = new WarehouseListModel().PrepareToGrid(searchModel, warehouses, () =>
             {
                 //fill in model values from the entity
-                Data = warehouses.Select(warehouse => warehouse.ToModel<WarehouseModel>()),
-                Total = warehouses.TotalCount
-            };
+                return warehouses.Select(warehouse => warehouse.ToModel<WarehouseModel>());
+            });
 
             return model;
         }
