@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO.Compression;
 using System.Linq;
 using System.Net;
+using EasyCaching.Core;
+using EasyCaching.InMemory;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
@@ -22,9 +24,11 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Security;
 using Nop.Core.Http;
 using Nop.Core.Infrastructure;
+using Nop.Core.Redis;
 using Nop.Data;
 using Nop.Services.Authentication;
 using Nop.Services.Authentication.External;
+using Nop.Services.Common;
 using Nop.Services.Logging;
 using Nop.Services.Plugins;
 using Nop.Services.Security;
@@ -32,6 +36,7 @@ using Nop.Services.Tasks;
 using Nop.Web.Framework.FluentValidation;
 using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Mvc.Routing;
+using Nop.Web.Framework.Security.Captcha;
 using Nop.Web.Framework.Themes;
 using StackExchange.Profiling.Storage;
 using WebMarkupMin.AspNet.Brotli;
@@ -190,13 +195,13 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         {
             //check whether to persist data protection in Redis
             var nopConfig = services.BuildServiceProvider().GetRequiredService<NopConfig>();
-            if (nopConfig.RedisCachingEnabled && nopConfig.PersistDataProtectionKeysToRedis)
+            if (nopConfig.RedisEnabled && nopConfig.UseRedisToStoreDataProtectionKeys)
             {
                 //store keys in Redis
                 services.AddDataProtection().PersistKeysToRedis(() =>
                 {
                     var redisConnectionWrapper = EngineContext.Current.Resolve<IRedisConnectionWrapper>();
-                    return redisConnectionWrapper.GetDatabase();
+                    return redisConnectionWrapper.GetDatabase(RedisDatabaseNumber.DataProtectionKeys);
                 }, NopCachingDefaults.RedisDataProtectionKey);
             }
             else
@@ -311,6 +316,9 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 configuration.ImplicitlyValidateChildProperties = true;
             });
 
+            //register controllers as services, it'll allow to override them
+            mvcBuilder.AddControllersAsServices();
+
             return mvcBuilder;
         }
 
@@ -377,7 +385,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 {
                     options.AllowMinificationInDevelopmentEnvironment = true;
                     options.AllowCompressionInDevelopmentEnvironment = true;
-                    options.DisableMinification = !EngineContext.Current.Resolve<CommonSettings>().MinificationEnabled;
+                    options.DisableMinification = !EngineContext.Current.Resolve<CommonSettings>().EnableHtmlMinification;
                     options.DisableCompression = options.DisableMinification;
                     options.DisablePoweredByHttpHeaders = true;
                 })
@@ -405,6 +413,38 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                         new GZipCompressorFactory(new GZipCompressionSettings { Level = CompressionLevel.Fastest })
                     };
                 });
+        }
+
+        /// <summary>
+        /// Add and configure EasyCaching service
+        /// </summary>
+        /// <param name="services">Collection of service descriptors</param>
+        public static void AddEasyCaching(this IServiceCollection services)
+        {
+            services.AddEasyCaching(option =>
+            {
+                //use memory cache
+                option.UseInMemory("nopCommerce_memory_cache");
+            });
+        }
+
+        /// <summary>
+        /// Add and configure default HTTP clients
+        /// </summary>
+        /// <param name="services">Collection of service descriptors</param>
+        public static void AddNopHttpClients(this IServiceCollection services)
+        {
+            //default client
+            services.AddHttpClient(NopHttpDefaults.DefaultHttpClient).WithProxy();
+
+            //client to request current store
+            services.AddHttpClient<StoreHttpClient>();
+
+            //client to request nopCommerce official site
+            services.AddHttpClient<NopHttpClient>().WithProxy();
+
+            //client to request reCAPTCHA service
+            services.AddHttpClient<CaptchaHttpClient>().WithProxy();
         }
     }
 }

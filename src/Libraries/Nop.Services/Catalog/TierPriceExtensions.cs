@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Domain.Catalog;
@@ -37,10 +37,14 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException(nameof(source));
 
             if (customer == null)
-                return source.Where(tierPrice => tierPrice.CustomerRole == null);
-
-            return source.Where(tierPrice => tierPrice.CustomerRole == null ||
-                customer.CustomerRoles.Where(role => role.Active).Select(role => role.Id).Contains(tierPrice.CustomerRole.Id));
+                throw new ArgumentNullException(nameof(customer));
+            
+            return source.Where(tierPrice => 
+               //tier prices without custoemr role specified
+               !tierPrice.CustomerRoleId.HasValue || 
+               tierPrice.CustomerRoleId.Value == 0 ||
+               //validate customer role if specified
+               customer.GetCustomerRoleIds().Contains(tierPrice.CustomerRoleId.Value));
         }
 
         /// <summary>

@@ -13,8 +13,9 @@ using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Areas.Admin.Models.Directory;
 using Nop.Web.Areas.Admin.Models.Shipping;
-using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;
+using Nop.Web.Framework.Models.DataTables;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -104,6 +105,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
+            searchModel.Grid = PrepareDeliveryDateGridModel(searchModel);
 
             return searchModel;
         }
@@ -120,8 +122,135 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
+            searchModel.Grid = PrepareProductAvailabilityRangeGridModel(searchModel);
 
             return searchModel;
+        }
+
+        /// <summary>
+        /// Prepare datatables model
+        /// </summary>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
+        protected virtual DataTablesModel PrepareWarehouseGridModel(WarehouseSearchModel searchModel)
+        {
+            //prepare common properties
+            var model = new DataTablesModel
+            {
+                Name = "warehouse-grid",
+                UrlRead = new DataUrl("Warehouses", "Shipping", null),
+                Length = searchModel.PageSize,
+                LengthMenu = searchModel.AvailablePageSizes
+            };
+
+            //prepare filters to search
+            model.Filters = null;
+
+            //prepare model columns
+            model.ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(WarehouseModel.Name))
+                {
+                    Title = _localizationService.GetResource("Admin.Configuration.Shipping.Warehouses.Fields.Name")
+                },
+                
+                new ColumnProperty(nameof(WarehouseModel.Id))
+                {
+                    Title = _localizationService.GetResource("Admin.Common.Edit"),
+                    Width = "100",
+                    ClassName =  StyleColumn.CenterAll,
+                    Render = new RenderButtonEdit(new DataUrl("EditWarehouse"))
+                }
+            };
+
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare datatables model
+        /// </summary>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
+        protected virtual DataTablesModel PrepareDeliveryDateGridModel(DeliveryDateSearchModel searchModel)
+        {
+            //prepare common properties
+            var model = new DataTablesModel
+            {
+                Name = "deliverydate-grid",
+                UrlRead = new DataUrl("DeliveryDates", "Shipping", null),
+                Length = searchModel.PageSize,
+                LengthMenu = searchModel.AvailablePageSizes
+            };
+
+            //prepare filters to search
+            model.Filters = null;
+
+            //prepare model columns
+            model.ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(DeliveryDateModel.Name))
+                {
+                    Title = _localizationService.GetResource("Admin.Configuration.Shipping.DeliveryDates.Fields.Name")
+                },
+                new ColumnProperty(nameof(DeliveryDateModel.DisplayOrder))
+                {
+                    Title = _localizationService.GetResource("Admin.Configuration.Shipping.DeliveryDates.Fields.DisplayOrder"),
+                    Width = "150"
+                },
+                new ColumnProperty(nameof(DeliveryDateModel.Id))
+                {
+                    Title = _localizationService.GetResource("Admin.Common.Edit"),
+                    Width = "100",
+                    ClassName =  StyleColumn.CenterAll,
+                    Render = new RenderButtonEdit(new DataUrl("EditDeliveryDate"))
+                }
+            };
+
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare datatables model
+        /// </summary>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
+        protected virtual DataTablesModel PrepareProductAvailabilityRangeGridModel(ProductAvailabilityRangeSearchModel searchModel)
+        {
+            //prepare common properties
+            var model = new DataTablesModel
+            {
+                Name = "productavailabilityrange-grid",
+                UrlRead = new DataUrl("ProductAvailabilityRanges", "Shipping", null),
+                SearchButtonId = "search-categories",
+                Length = searchModel.PageSize,
+                LengthMenu = searchModel.AvailablePageSizes
+            };
+
+            //prepare filters to search
+            model.Filters = null;
+
+            //prepare model columns
+            model.ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(ProductAvailabilityRangeModel.Name))
+                {
+                    Title = _localizationService.GetResource("Admin.Configuration.Shipping.ProductAvailabilityRanges.Fields.Name")
+                },
+                new ColumnProperty(nameof(ProductAvailabilityRangeModel.DisplayOrder))
+                {
+                    Title = _localizationService.GetResource("Admin.Configuration.Shipping.ProductAvailabilityRanges.Fields.DisplayOrder"),
+                    Width = "150"
+                },
+                new ColumnProperty(nameof(ProductAvailabilityRangeModel.Id))
+                {
+                    Title = _localizationService.GetResource("Admin.Common.Edit"),
+                    Width = "100",
+                    ClassName =  StyleColumn.CenterAll,
+                    Render = new RenderButtonEdit(new DataUrl("EditProductAvailabilityRange"))
+                }
+            };
+
+            return model;
         }
 
         #endregion
@@ -155,12 +284,12 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get shipping providers
-            var shippingProviders = _shippingPluginManager.LoadAllPlugins();
+            var shippingProviders = _shippingPluginManager.LoadAllPlugins().ToPagedList(searchModel);
 
             //prepare grid model
             var model = new ShippingProviderListModel
             {
-                Data = shippingProviders.PaginationByRequestModel(searchModel).Select(provider =>
+                Data = shippingProviders.Select(provider =>
                 {
                     //fill in model values from the entity
                     var shippingProviderModel = provider.ToPluginModel<ShippingProviderModel>();
@@ -172,7 +301,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     return shippingProviderModel;
                 }),
-                Total = shippingProviders.Count
+                Total = shippingProviders.TotalCount
             };
 
             return model;
@@ -205,12 +334,12 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get pickup point providers
-            var pickupPointProviders = _pickupPluginManager.LoadAllPlugins();
+            var pickupPointProviders = _pickupPluginManager.LoadAllPlugins().ToPagedList(searchModel);
 
             //prepare grid model
             var model = new PickupPointProviderListModel
             {
-                Data = pickupPointProviders.PaginationByRequestModel(searchModel).Select(provider =>
+                Data = pickupPointProviders.Select(provider =>
                 {
                     //fill in model values from the entity
                     var pickupPointProviderModel = provider.ToPluginModel<PickupPointProviderModel>();
@@ -222,7 +351,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     return pickupPointProviderModel;
                 }),
-                Total = pickupPointProviders.Count
+                Total = pickupPointProviders.TotalCount
             };
 
             return model;
@@ -255,14 +384,14 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get shipping methods
-            var shippingMethods = _shippingService.GetAllShippingMethods();
+            var shippingMethods = _shippingService.GetAllShippingMethods().ToPagedList(searchModel);
 
             //prepare grid model
             var model = new ShippingMethodListModel
             {
                 //fill in model values from the entity
-                Data = shippingMethods.PaginationByRequestModel(searchModel).Select(method => method.ToModel<ShippingMethodModel>()),
-                Total = shippingMethods.Count
+                Data = shippingMethods.Select(method => method.ToModel<ShippingMethodModel>()),
+                Total = shippingMethods.TotalCount
             };
 
             return model;
@@ -328,15 +457,14 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get delivery dates
-            var deliveryDates = _dateRangeService.GetAllDeliveryDates();
+            var deliveryDates = _dateRangeService.GetAllDeliveryDates().ToPagedList(searchModel);
 
             //prepare grid model
-            var model = new DeliveryDateListModel
+            var model = new DeliveryDateListModel().PrepareToGrid(searchModel, deliveryDates, () =>
             {
                 //fill in model values from the entity
-                Data = deliveryDates.PaginationByRequestModel(searchModel).Select(date => date.ToModel<DeliveryDateModel>()),
-                Total = deliveryDates.Count
-            };
+                return deliveryDates.Select(date => date.ToModel<DeliveryDateModel>());
+            });
 
             return model;
         }
@@ -382,16 +510,14 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get product availability ranges
-            var productAvailabilityRanges = _dateRangeService.GetAllProductAvailabilityRanges();
+            var productAvailabilityRanges = _dateRangeService.GetAllProductAvailabilityRanges().ToPagedList(searchModel);
 
             //prepare grid model
-            var model = new ProductAvailabilityRangeListModel
+            var model = new ProductAvailabilityRangeListModel().PrepareToGrid(searchModel, productAvailabilityRanges, () =>
             {
                 //fill in model values from the entity
-                Data = productAvailabilityRanges.PaginationByRequestModel(searchModel)
-                    .Select(range => range.ToModel<ProductAvailabilityRangeModel>()),
-                Total = productAvailabilityRanges.Count
-            };
+                return productAvailabilityRanges.Select(range => range.ToModel<ProductAvailabilityRangeModel>());
+            });
 
             return model;
         }
@@ -439,6 +565,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
+            searchModel.Grid = PrepareWarehouseGridModel(searchModel);
 
             return searchModel;
         }
@@ -454,15 +581,14 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get warehouses
-            var warehouses = _shippingService.GetAllWarehouses();
+            var warehouses = _shippingService.GetAllWarehouses().ToPagedList(searchModel);
 
             //prepare list model
-            var model = new WarehouseListModel
+            var model = new WarehouseListModel().PrepareToGrid(searchModel, warehouses, () =>
             {
                 //fill in model values from the entity
-                Data = warehouses.PaginationByRequestModel(searchModel).Select(warehouse => warehouse.ToModel<WarehouseModel>()),
-                Total = warehouses.Count
-            };
+                return warehouses.Select(warehouse => warehouse.ToModel<WarehouseModel>());
+            });
 
             return model;
         }

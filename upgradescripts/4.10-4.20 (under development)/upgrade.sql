@@ -229,6 +229,57 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Import.StoresDontExist">
     <Value>Stores with the following names and/or IDs don''t exist: {0}</Value>
+  </LocaleResource> 
+  <LocaleResource Name="Admin.DT.Aria.SortAscending">
+    <Value>: activate to sort column ascending</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.DT.Aria.SortDescending">
+    <Value>: activate to sort column descending</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.DT.EmptyTable">
+    <Value>No data available in table</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.DT.Info">
+    <Value>Showing _START_ to _END_ of _TOTAL_ entries</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.DT.InfoEmpty">
+    <Value>Showing 0 to 0 of 0 entries</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.DT.InfoFiltered">
+    <Value>(filtered from _MAX_ total entries)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.DT.Thousands">
+    <Value>,</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.DT.lengthMenu">
+    <Value>Show _MENU_ entries</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.DT.LoadingRecords">
+    <Value>Loading...</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.DT.Paginate.First">
+    <Value>First</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.DT.Paginate.Last">
+    <Value>Last</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.DT.Paginate.Next">
+    <Value>Next</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.DT.Paginate.Previous">
+    <Value>Previous</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.DT.Processing">
+    <Value>Processing...</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.DT.Search">
+    <Value>Search:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.DT.ZeroRecords">
+    <Value>No matching records found</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.DT.LoaderIcon">
+    <Value><![CDATA[<i class=''fa fa-refresh fa-spin''></i>]]></Value>
   </LocaleResource>
   <LocaleResource Name="Plugins.Payments.Square.Fields.Location.Select">
     <Value>Select location</Value>
@@ -384,19 +435,19 @@ set @resources='
     <Value>Search by a specific store.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Fields.PageSizeOptions">
-    <Value>Page Size options</Value>
+    <Value>Page size options</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.PageSizeOptions">
-    <Value>Page Size options</Value>
+    <Value>Page size options</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductsByTagPageSizeOptions">
-    <Value>''Products by tag'' Page Size options</Value>
+    <Value>''Products by tag'' page size options</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.SearchPagePageSizeOptions">
     <Value>Search page. Page size options</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Vendors.Fields.PageSizeOptions">
-    <Value>Page Size options</Value>
+    <Value>Page size options</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.IncludeInSitemap">
     <Value>Include in sitemap</Value>
@@ -538,6 +589,48 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Enums.Nop.Services.Plugins.LoadPluginsMode.NotInstalledOnly">
     <Value>Not installed</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EnableHtmlMinification">
+    <Value>Html minification</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EnableHtmlMinification.Hint">
+    <Value>Allows you to minify HTML pages as well as compress them, thereby increasing the download speed. Please note that after applying this setting, you need to restart the application.</Value>
+  </LocaleResource>
+    <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.BlockTitle.Minification">
+    <Value>Minification</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Warnings.ProxyConnection.Failed">
+    <Value>Proxy connection failed</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Warnings.ProxyConnection.OK">
+    <Value>Proxy connection is OK</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.List.SearchIncludeSubCategories">
+    <Value>Search subcategories</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.List.SearchIncludeSubCategories.Hint">
+    <Value>Check to search in subcategories.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.PageSizeOptions.ShouldHaveUniqueItems">
+    <Value>Page size options should not have duplicate items.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.PageSizeOptions.ShouldHaveUniqueItems">
+    <Value>Page size options should have unique items.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.PageSizeOptions.ShouldHaveUniqueItems">
+    <Value>Page size options should have unique items.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Manage">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Restrictions.Manage">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Forums.Manage">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Display">
+    <Value>Display</Value>
   </LocaleResource>
 </Language>'
 
@@ -1548,7 +1641,16 @@ GO
 IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'commonsettings.minificationenabled')
 BEGIN
     INSERT [Setting] ([Name], [Value], [StoreId])
-    VALUES (N'commonsettings.minificationenabled', N'true', 0)
+    VALUES (N'commonsettings.minificationenabled', N'True', 0)
+END
+GO
+
+--update setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'commonsettings.enablehtmlminification')
+BEGIN
+	UPDATE [Setting]
+	SET [Name] = 'commonsettings.enablehtmlminification'
+	WHERE [Name] = 'commonsettings.minificationenabled'
 END
 GO
 
@@ -1641,4 +1743,86 @@ EXEC sp_RENAME 'Poll.ShowOnHomePage' , 'ShowOnHomepage', 'COLUMN'
 GO
 
 EXEC sp_RENAME 'Product.ShowOnHomePage' , 'ShowOnHomepage', 'COLUMN'
+GO
+
+--update setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'commonsettings.enablejsbundling')
+BEGIN
+	UPDATE [Setting]
+	SET [Name] = 'commonsettings.enablejsbundling'
+	WHERE [Name] = 'seosettings.enablejsbundling'
+END
+GO
+
+--update setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'commonsettings.enablecssbundling')
+BEGIN
+	UPDATE [Setting]
+	SET [Name] = 'commonsettings.enablecssbundling'
+	WHERE [Name] = 'seosettings.enablecssbundling'
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'paymentsettings.regenerateorderguidinterval')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'paymentsettings.regenerateorderguidinterval', N'180', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'proxysettings.enabled')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'proxysettings.enabled', N'False', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'proxysettings.address')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'proxysettings.address', N'', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'proxysettings.port')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'proxysettings.port', N'', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'proxysettings.username')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'proxysettings.username', N'', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'proxysettings.password')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'proxysettings.password', N'', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'proxysettings.bypassonlocal')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'proxysettings.bypassonlocal', N'True', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'proxysettings.preauthenticate')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'proxysettings.preauthenticate', N'True', 0)
+END
 GO

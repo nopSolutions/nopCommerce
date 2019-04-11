@@ -3,7 +3,7 @@ using System.Linq;
 using Nop.Services.Tax;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Tax;
-using Nop.Web.Framework.Extensions;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -76,12 +76,12 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get tax providers
-            var taxProviders = _taxPluginManager.LoadAllPlugins();
+            var taxProviders = _taxPluginManager.LoadAllPlugins().ToPagedList(searchModel);
 
             //prepare grid model
             var model = new TaxProviderListModel
             {
-                Data = taxProviders.PaginationByRequestModel(searchModel).Select(provider =>
+                Data = taxProviders.Select(provider =>
                 {
                     //fill in model values from the entity
                     var taxProviderModel = provider.ToPluginModel<TaxProviderModel>();
@@ -92,7 +92,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     return taxProviderModel;
                 }),
-                Total = taxProviders.Count
+                Total = taxProviders.TotalCount
             };
 
             return model;
@@ -125,14 +125,14 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get tax categories
-            var taxCategories = _taxCategoryService.GetAllTaxCategories();
+            var taxCategories = _taxCategoryService.GetAllTaxCategories().ToPagedList(searchModel);
 
             //prepare grid model
             var model = new TaxCategoryListModel
             {
                 //fill in model values from the entity
-                Data = taxCategories.PaginationByRequestModel(searchModel).Select(taxCategory => taxCategory.ToModel<TaxCategoryModel>()),
-                Total = taxCategories.Count
+                Data = taxCategories.Select(taxCategory => taxCategory.ToModel<TaxCategoryModel>()),
+                Total = taxCategories.TotalCount
             };
 
             return model;

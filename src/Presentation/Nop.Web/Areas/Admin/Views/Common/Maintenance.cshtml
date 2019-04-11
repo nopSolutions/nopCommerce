@@ -13,16 +13,16 @@
     var hideDeleteGuestsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideDeleteGuestsBlockAttributeName);
 
     const string hideDeleteFilesBlockAttributeName = "MaintenancePage.HideDeleteFilesBlock";
-    var hideDeleteFilesBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideDeleteFilesBlockAttributeName, defaultValue: true);
+    var hideDeleteFilesBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideDeleteFilesBlockAttributeName);
 
     const string hideDeleteCartsBlockAttributeName = "MaintenancePage.HideDeleteCartsBlock";
-    var hideDeleteCartsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideDeleteCartsBlockAttributeName, defaultValue: true);
+    var hideDeleteCartsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideDeleteCartsBlockAttributeName);
 
     const string hideReindexBlockAttributeName = "MaintenancePage.HideReindexBlock";
-    var hideReindexBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideReindexBlockAttributeName, defaultValue: true);
+    var hideReindexBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideReindexBlockAttributeName);
 
     const string hideBackupsBlockAttributeName = "MaintenancePage.HideBackupsBlock";
-    var hideBackupsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideBackupsBlockAttributeName, defaultValue: true);
+    var hideBackupsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideBackupsBlockAttributeName);
 }
 
 <div class="content-header clearfix">

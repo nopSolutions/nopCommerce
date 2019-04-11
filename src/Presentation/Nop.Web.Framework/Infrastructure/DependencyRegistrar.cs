@@ -13,6 +13,7 @@ using Nop.Core.Configuration;
 using Nop.Core.Data;
 using Nop.Core.Infrastructure;
 using Nop.Core.Infrastructure.DependencyManagement;
+using Nop.Core.Redis;
 using Nop.Data;
 using Nop.Services.Affiliates;
 using Nop.Services.Authentication;
@@ -91,18 +92,23 @@ namespace Nop.Web.Framework.Infrastructure
 
             //plugins
             builder.RegisterType<PluginService>().As<IPluginService>().InstancePerLifetimeScope();
-            builder.RegisterType<OfficialFeedManager>().As<IOfficialFeedManager>().InstancePerLifetimeScope();
+            builder.RegisterType<OfficialFeedManager>().AsSelf().InstancePerLifetimeScope();
 
             //cache manager
             builder.RegisterType<PerRequestCacheManager>().As<ICacheManager>().InstancePerLifetimeScope();
 
-            //static cache manager
-            if (config.RedisCachingEnabled)
+            //redis connection wrapper
+            if (config.RedisEnabled)
             {
                 builder.RegisterType<RedisConnectionWrapper>()
                     .As<ILocker>()
                     .As<IRedisConnectionWrapper>()
                     .SingleInstance();
+            }
+
+            //static cache manager
+            if (config.RedisEnabled && config.UseRedisForCaching)
+            {
                 builder.RegisterType<RedisCacheManager>().As<IStaticCacheManager>().InstancePerLifetimeScope();
             }
             else

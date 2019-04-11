@@ -93,8 +93,8 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip
 
             var storeId = calculateTaxRequest.CurrentStoreId;
             var taxCategoryId = calculateTaxRequest.TaxCategoryId;
-            var countryId = calculateTaxRequest.Address.Country?.Id ?? 0;
-            var stateProvinceId = calculateTaxRequest.Address.StateProvince?.Id ?? 0;
+            var countryId = calculateTaxRequest.Address.CountryId;
+            var stateProvinceId = calculateTaxRequest.Address.StateProvinceId;
             var zip = calculateTaxRequest.Address.ZipPostalCode?.Trim() ?? string.Empty;
 
             var existingRates = allTaxRates.Where(taxRate => taxRate.CountryId == countryId && taxRate.TaxCategoryId == taxCategoryId);

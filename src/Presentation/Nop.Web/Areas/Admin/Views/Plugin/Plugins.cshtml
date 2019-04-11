@@ -94,29 +94,22 @@
                             <div class="icon-search"><i class="fa fa-search" aria-hidden="true"></i></div>
                             <div class="icon-collapse"><i class="fa fa-angle-down" aria-hidden="true"></i></div>
                         </div>
+
                         <div class="search-body @(hideSearchBlock ? "closed" : "")">
+                            <p>
+                                <h4>@T("Admin.Configuration.Plugins.Description")</h4>
+                                <ol>
+                                    <li>@T("Admin.Configuration.Plugins.Description.Step1")</li>
+                                    <li>@T("Admin.Configuration.Plugins.Description.Step2")</li>
+                                    <li>@T("Admin.Configuration.Plugins.Description.Step3")</li>
+                                    <li>@T("Admin.Configuration.Plugins.Description.Step4")</li>
+                                </ol>
+                            </p>
+                            <p>
+                                @T("Admin.Configuration.Plugins.Description.DownloadMorePlugins")
+                            </p>
                             <div class="row">
-                                <div class="col-md-6">
-                                    <p>
-                                        <h4>@T("Admin.Configuration.Plugins.Description")</h4>
-                                        <ol>
-                                            <li>@T("Admin.Configuration.Plugins.Description.Step1")</li>
-                                            <li>@T("Admin.Configuration.Plugins.Description.Step2")</li>
-                                            <li>@T("Admin.Configuration.Plugins.Description.Step3")</li>
-                                            <li>@T("Admin.Configuration.Plugins.Description.Step4")</li>
-                                        </ol>
-                                    </p>
-                                    <p>
-                                        @T("Admin.Configuration.Plugins.Description.DownloadMorePlugins")
-                                    </p>
-                                    <div class="form-group">
-                                        <div class="col-md-4">
-                                            <nop-label asp-for="SearchLoadModeId" />
-                                        </div>
-                                        <div class="col-md-8">
-                                            <nop-select asp-for="SearchLoadModeId" asp-items="Model.AvailableLoadModes" />
-                                        </div>
-                                    </div>
+                                <div class="col-md-5">
                                     <div class="form-group">
                                         <div class="col-md-4">
                                             <nop-label asp-for="SearchGroup" />
@@ -125,14 +118,24 @@
                                             <nop-select asp-for="SearchGroup" asp-items="Model.AvailableGroups" />
                                         </div>
                                     </div>
+                                </div>
+                                <div class="col-md-7">
                                     <div class="form-group">
-                                        <div class="col-md-8 col-md-offset-4">
-                                            <button type="button" id="search-plugins-local" class="btn btn-primary btn-search">
-                                                <i class="fa fa-search"></i>
-                                                @T("Admin.Common.Search")
-                                            </button>
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="SearchLoadModeId" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-select asp-for="SearchLoadModeId" asp-items="Model.AvailableLoadModes" />
                                         </div>
                                     </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-7 col-md-offset-5">
+                                    <button type="button" id="search-plugins-local" class="btn btn-primary btn-search">
+                                        <i class="fa fa-search"></i>
+                                        @T("Admin.Common.Search")
+                                    </button>
                                 </div>
                             </div>
                         </div>

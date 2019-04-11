@@ -12,19 +12,19 @@
     var hideCheckoutBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideCheckoutBlockAttributeName);
 
     const string hideOrderTotalsBlockAttributeName = "OrderSettingsPage.HideOrderTotalsBlock";
-    var hideOrderTotalsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideOrderTotalsBlockAttributeName);
+    var hideOrderTotalsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideOrderTotalsBlockAttributeName, defaultValue: true);
 
     const string hideCommonBlockAttributeName = "OrderSettingsPage.HideCommonBlock";
-    var hideCommonBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideCommonBlockAttributeName);
+    var hideCommonBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideCommonBlockAttributeName, defaultValue: true);
 
     const string hidePdfInvoiceBlockAttributeName = "OrderSettingsPage.HidePdfInvoiceBlock";
-    var hidePdfInvoiceBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hidePdfInvoiceBlockAttributeName);
+    var hidePdfInvoiceBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hidePdfInvoiceBlockAttributeName, defaultValue: true);
 
     const string hideGiftCardsBlockAttributeName = "OrderSettingsPage.HideGiftCardsBlock";
-    var hideGiftCardsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideGiftCardsBlockAttributeName);
+    var hideGiftCardsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideGiftCardsBlockAttributeName, defaultValue: true);
 
     const string hideReturnRequestBlockAttributeName = "OrderSettingsPage.HideReturnRequestBlock";
-    var hideReturnRequestBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideReturnRequestBlockAttributeName);
+    var hideReturnRequestBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideReturnRequestBlockAttributeName, defaultValue: true);
 }
 
 <form asp-controller="Setting" asp-action="Order" method="post">
@@ -53,7 +53,7 @@
                 <nop-panel asp-name="ordersettings-common" asp-icon="fa fa-info" asp-title="@T("Admin.Configuration.Settings.Order.BlockTitle.Common")" asp-hide-block-attribute-name="@hideCommonBlockAttributeName" asp-hide="@hideCommonBlock" asp-advanced="true">@await Html.PartialAsync("_Order.Common", Model)</nop-panel>
                 <nop-panel asp-name="ordersettings-pdf-invoice" asp-icon="fa fa-file-pdf-o" asp-title="@T("Admin.Configuration.Settings.Order.BlockTitle.PdfInvoice")" asp-hide-block-attribute-name="@hidePdfInvoiceBlockAttributeName" asp-hide="@hidePdfInvoiceBlock" asp-advanced="true">@await Html.PartialAsync("_Order.PdfInvoice", Model)</nop-panel>
                 <nop-panel asp-name="ordersettings-gift-cards" asp-icon="fa fa-gift" asp-title="@T("Admin.Configuration.Settings.Order.BlockTitle.GiftCards")" asp-hide-block-attribute-name="@hideGiftCardsBlockAttributeName" asp-hide="@hideGiftCardsBlock" asp-advanced="true">@await Html.PartialAsync("_Order.GiftCards", Model)</nop-panel>
-                <nop-panel asp-name="ordersettings-return-request" asp-icon="fa fa-backward" asp-title="@T("Admin.Configuration.Settings.Order.ReturnRequestSettings")" asp-hide-block-attribute-name="@hideReturnRequestBlockAttributeName" asp-hide="@hideReturnRequestBlock" asp-advanced="true">@await Html.PartialAsync("_Order.ReturnRequestSettings", Model)</nop-panel>
+                <nop-panel asp-name="ordersettings-return-request" asp-icon="fa fa-backward" asp-title="@T("Admin.Configuration.Settings.Order.ReturnRequestSettings")" asp-hide-block-attribute-name="@hideReturnRequestBlockAttributeName" asp-hide="@hideReturnRequestBlock" asp-advanced="false">@await Html.PartialAsync("_Order.ReturnRequestSettings", Model)</nop-panel>
             
                 @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.OrderSettingsDetailsBlock, additionalData = Model })
             </nop-panels>

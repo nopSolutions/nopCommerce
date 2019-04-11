@@ -1203,7 +1203,7 @@ namespace Nop.Services.Seo
             _urlRecordRepository.Delete(urlRecord);
 
             //cache
-            _cacheManager.RemoveByPattern(NopSeoDefaults.UrlRecordPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopSeoDefaults.UrlRecordPrefixCacheKey);
         }
 
         /// <summary>
@@ -1218,7 +1218,7 @@ namespace Nop.Services.Seo
             _urlRecordRepository.Delete(urlRecords);
 
             //cache
-            _cacheManager.RemoveByPattern(NopSeoDefaults.UrlRecordPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopSeoDefaults.UrlRecordPrefixCacheKey);
         }
 
         /// <summary>
@@ -1258,7 +1258,7 @@ namespace Nop.Services.Seo
             _urlRecordRepository.Insert(urlRecord);
 
             //cache
-            _cacheManager.RemoveByPattern(NopSeoDefaults.UrlRecordPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopSeoDefaults.UrlRecordPrefixCacheKey);
         }
 
         /// <summary>
@@ -1273,7 +1273,7 @@ namespace Nop.Services.Seo
             _urlRecordRepository.Update(urlRecord);
 
             //cache
-            _cacheManager.RemoveByPattern(NopSeoDefaults.UrlRecordPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopSeoDefaults.UrlRecordPrefixCacheKey);
         }
 
         /// <summary>

@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Linq;
+using System.Net.Http;
 using Nop.Core;
 using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Events;
+using Nop.Core.Http;
 using Nop.Plugin.Widgets.GoogleAnalytics.Api;
 using Nop.Services.Catalog;
 using Nop.Services.Cms;
@@ -18,6 +20,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
     public class EventConsumer : IConsumer<OrderCancelledEvent>, IConsumer<OrderPaidEvent>, IConsumer<EntityDeletedEvent<Order>>
     {
         private readonly ICategoryService _categoryService;
+        private readonly IHttpClientFactory _httpClientFactory;
         private readonly ILogger _logger;
         private readonly IProductService _productService;
         private readonly ISettingService _settingService;
@@ -27,6 +30,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
         private readonly IWidgetPluginManager _widgetPluginManager;
 
         public EventConsumer(ICategoryService categoryService,
+            IHttpClientFactory httpClientFactory,
             ILogger logger,
             IProductService productService,
             ISettingService settingService,
@@ -36,6 +40,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
             IWidgetPluginManager widgetPluginManager)
         {
             _categoryService = categoryService;
+            _httpClientFactory = httpClientFactory;
             _logger = logger;
             _productService = productService;
             _settingService = settingService;
@@ -118,7 +123,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
                     trans.Items.Add(product);
                 }
 
-                request.SendRequest(trans);
+                request.SendRequest(trans, _httpClientFactory.CreateClient(NopHttpDefaults.DefaultHttpClient));
             }
             catch (Exception ex)
             {

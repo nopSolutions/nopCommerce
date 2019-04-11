@@ -373,9 +373,9 @@ namespace Nop.Services.Catalog
             _categoryRepository.Insert(category);
 
             //cache
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.CategoriesPatternCacheKey);
-            _staticCacheManager.RemoveByPattern(NopCatalogDefaults.CategoriesPatternCacheKey);
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductCategoriesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.CategoriesPrefixCacheKey);
+            _staticCacheManager.RemoveByPrefix(NopCatalogDefaults.CategoriesPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductCategoriesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(category);
@@ -409,9 +409,9 @@ namespace Nop.Services.Catalog
             _categoryRepository.Update(category);
 
             //cache
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.CategoriesPatternCacheKey);
-            _staticCacheManager.RemoveByPattern(NopCatalogDefaults.CategoriesPatternCacheKey);
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductCategoriesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.CategoriesPrefixCacheKey);
+            _staticCacheManager.RemoveByPrefix(NopCatalogDefaults.CategoriesPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductCategoriesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(category);
@@ -429,7 +429,7 @@ namespace Nop.Services.Catalog
             _productCategoryRepository.Delete(productCategory);
 
             //cache
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductCategoriesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductCategoriesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(productCategory);
@@ -577,7 +577,7 @@ namespace Nop.Services.Catalog
             _productCategoryRepository.Insert(productCategory);
 
             //cache
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductCategoriesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductCategoriesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(productCategory);
@@ -595,7 +595,7 @@ namespace Nop.Services.Catalog
             _productCategoryRepository.Update(productCategory);
 
             //cache
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductCategoriesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductCategoriesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(productCategory);

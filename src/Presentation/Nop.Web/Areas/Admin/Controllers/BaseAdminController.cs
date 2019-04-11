@@ -5,6 +5,7 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Infrastructure;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Framework.Security;
 
@@ -28,7 +29,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         {
             //use IsoDateFormat on writing JSON text to fix issue with dates in KendoUI grid
             var useIsoDateFormat = EngineContext.Current.Resolve<AdminAreaSettings>()?.UseIsoDateFormatInJsonResult ?? false;
-            var serializerSettings = EngineContext.Current.Resolve<IOptions<MvcJsonOptions>>()?.Value?.SerializerSettings 
+            var serializerSettings = EngineContext.Current.Resolve<IOptions<MvcJsonOptions>>()?.Value?.SerializerSettings
                 ?? new JsonSerializerSettings();
 
             if (!useIsoDateFormat)
@@ -38,6 +39,27 @@ namespace Nop.Web.Areas.Admin.Controllers
             serializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Unspecified;
 
             return base.Json(data, serializerSettings);
+        }
+
+        /// <summary>
+        /// Creates an object that serializes the specified object to JSON.
+        /// </summary>
+        /// <typeparam name="T">Model type</typeparam>
+        /// <param name="model">The model to serialize.</param>
+        /// <returns>The created object that serializes the specified data to JSON format for the response.</returns>
+        public JsonResult Json<T>(BasePagedListModel<T> model) where T : BaseNopModel
+        {
+            return Json(new
+            {
+                draw = model.Draw,
+                recordsTotal = model.RecordsTotal,
+                recordsFiltered = model.RecordsFiltered,
+                data = model.Data,
+
+                //TODO: remove after moving to DataTables grids
+                Total = model.Total,
+                Data = model.Data
+            });
         }
     }
 }

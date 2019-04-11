@@ -3,7 +3,7 @@ using System.Linq;
 using Nop.Services.Authentication.External;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.ExternalAuthentication;
-using Nop.Web.Framework.Extensions;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -58,12 +58,12 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get external authentication methods
-            var externalAuthenticationMethods = _authenticationPluginManager.LoadAllPlugins();
+            var externalAuthenticationMethods = _authenticationPluginManager.LoadAllPlugins().ToPagedList(searchModel);
 
             //prepare grid model
             var model = new ExternalAuthenticationMethodListModel
             {
-                Data = externalAuthenticationMethods.PaginationByRequestModel(searchModel).Select(method =>
+                Data = externalAuthenticationMethods.Select(method =>
                 {
                     //fill in model values from the entity
                     var externalAuthenticationMethodModel = method.ToPluginModel<ExternalAuthenticationMethodModel>();
@@ -74,7 +74,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     return externalAuthenticationMethodModel;
                 }),
-                Total = externalAuthenticationMethods.Count
+                Total = externalAuthenticationMethods.TotalCount
             };
 
             return model;

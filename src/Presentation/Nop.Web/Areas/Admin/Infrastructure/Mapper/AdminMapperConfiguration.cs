@@ -109,7 +109,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 //exclude Form and CustomProperties from mapping BaseNopModel
                 if (typeof(BaseNopModel).IsAssignableFrom(mapConfiguration.DestinationType))
                 {
-                    map.ForMember(nameof(BaseNopModel.Form), options => options.Ignore());
+                    //map.ForMember(nameof(BaseNopModel.Form), options => options.Ignore());
                     map.ForMember(nameof(BaseNopModel.CustomProperties), options => options.Ignore());
                 }
 
@@ -382,9 +382,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
             CreateMap<ManufacturerTemplateModel, ManufacturerTemplate>();
 
             //Review type
-            CreateMap<ReviewType, ReviewTypeModel>()
-                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore())
-                .ForMember(dest => dest.Form, mo => mo.Ignore());
+            CreateMap<ReviewType, ReviewTypeModel>();
             CreateMap<ReviewTypeModel, ReviewType>();
 
             //product review
@@ -1381,8 +1379,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
         /// </summary>
         protected virtual void CreatePollsMaps()
         {
-            CreateMap<PollAnswer, PollAnswerModel>()
-               .ForMember(model => model.CustomProperties, options => options.Ignore());
+            CreateMap<PollAnswer, PollAnswerModel>();
             CreateMap<PollAnswerModel, PollAnswer>()
                 .ForMember(entity => entity.Poll, options => options.Ignore())
                 .ForMember(entity => entity.PollVotingRecords, options => options.Ignore());

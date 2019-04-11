@@ -978,7 +978,7 @@ namespace Nop.Services.Customers
 
             _customerRoleRepository.Delete(customerRole);
 
-            _cacheManager.RemoveByPattern(NopCustomerServiceDefaults.CustomerRolesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCustomerServiceDefaults.CustomerRolesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(customerRole);
@@ -1049,7 +1049,7 @@ namespace Nop.Services.Customers
 
             _customerRoleRepository.Insert(customerRole);
 
-            _cacheManager.RemoveByPattern(NopCustomerServiceDefaults.CustomerRolesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCustomerServiceDefaults.CustomerRolesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(customerRole);
@@ -1066,7 +1066,7 @@ namespace Nop.Services.Customers
 
             _customerRoleRepository.Update(customerRole);
 
-            _cacheManager.RemoveByPattern(NopCustomerServiceDefaults.CustomerRolesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCustomerServiceDefaults.CustomerRolesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(customerRole);

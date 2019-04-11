@@ -1,10 +1,11 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Nop.Core.Configuration;
+using Nop.Core.Redis;
 using StackExchange.Redis;
 
 namespace Nop.Core.Caching
@@ -19,7 +20,6 @@ namespace Nop.Core.Caching
 
         private readonly ICacheManager _perRequestCacheManager;
         private readonly IRedisConnectionWrapper _connectionWrapper;
-
         private readonly IDatabase _db;
 
         #endregion
@@ -30,7 +30,7 @@ namespace Nop.Core.Caching
             IRedisConnectionWrapper connectionWrapper,
             NopConfig config)
         {
-            if (string.IsNullOrEmpty(config.RedisCachingConnectionString))
+            if (string.IsNullOrEmpty(config.RedisConnectionString))
                 throw new Exception("Redis connection string is empty");
 
             _perRequestCacheManager = perRequestCacheManager;
@@ -38,7 +38,7 @@ namespace Nop.Core.Caching
             // ConnectionMultiplexer.Connect should only be called once and shared between callers
             _connectionWrapper = connectionWrapper;
 
-            _db = _connectionWrapper.GetDatabase();
+            _db = _connectionWrapper.GetDatabase(RedisDatabaseNumber.Cache);
         }
 
         #endregion
@@ -46,22 +46,19 @@ namespace Nop.Core.Caching
         #region Utilities
 
         /// <summary>
-        /// Gets the list of cache keys
+        /// Gets the list of cache keys prefix
         /// </summary>
         /// <param name="endPoint">Network address</param>
-        /// <param name="pattern">String key pattern</param>
+        /// <param name="prefix">String key pattern</param>
         /// <returns>List of cache keys</returns>
-        protected virtual IEnumerable<RedisKey> GetKeys(EndPoint endPoint, string pattern = null)
+        protected virtual IEnumerable<RedisKey> GetKeys(EndPoint endPoint, string prefix = null)
         {
             var server = _connectionWrapper.GetServer(endPoint);
 
             //we can use the code below (commented), but it requires administration permission - ",allowAdmin=true"
             //server.FlushDatabase();
 
-            var keys = server.Keys(_db.Database, string.IsNullOrEmpty(pattern) ? null : $"*{pattern}*");
-
-            //we should always persist the data protection key list
-            keys = keys.Where(key => !key.ToString().Equals(NopCachingDefaults.RedisDataProtectionKey, StringComparison.OrdinalIgnoreCase));
+            var keys = server.Keys(_db.Database, string.IsNullOrEmpty(prefix) ? null : $"{prefix}*");
 
             return keys;
         }
@@ -258,26 +255,23 @@ namespace Nop.Core.Caching
         /// <param name="key">Key of cached item</param>
         public virtual void Remove(string key)
         {
-            //we should always persist the data protection key list
-            if (key.Equals(NopCachingDefaults.RedisDataProtectionKey, StringComparison.OrdinalIgnoreCase))
-                return;
-
             //remove item from caches
             _db.KeyDelete(key);
             _perRequestCacheManager.Remove(key);
         }
 
+
         /// <summary>
-        /// Removes items by key pattern
+        /// Removes items by key prefix
         /// </summary>
-        /// <param name="pattern">String key pattern</param>
-        public virtual void RemoveByPattern(string pattern)
+        /// <param name="prefix">String key prefix</param>
+        public virtual void RemoveByPrefix(string prefix)
         {
-            _perRequestCacheManager.RemoveByPattern(pattern);
+            _perRequestCacheManager.RemoveByPrefix(prefix);
 
             foreach (var endPoint in _connectionWrapper.GetEndPoints())
             {
-                var keys = GetKeys(endPoint, pattern);
+                var keys = GetKeys(endPoint, prefix);
 
                 _db.KeyDelete(keys.ToArray());
             }

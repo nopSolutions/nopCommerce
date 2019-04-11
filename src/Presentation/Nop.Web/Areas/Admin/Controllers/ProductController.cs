@@ -27,7 +27,6 @@ using Nop.Services.Orders;
 using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Shipping;
-using Nop.Services.Stores;
 using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Catalog;
@@ -596,10 +595,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
         }
 
-        protected virtual void SaveConditionAttributes(ProductAttributeMapping productAttributeMapping, ProductAttributeConditionModel model)
+        protected virtual void SaveConditionAttributes(ProductAttributeMapping productAttributeMapping, 
+            ProductAttributeConditionModel model, IFormCollection form)
         {
             string attributesXml = null;
-            var form = model.Form;
             if (model.EnableCondition)
             {
                 var attribute = _productAttributeService.GetProductAttributeMappingById(model.SelectedProductAttributeId);
@@ -1746,6 +1745,40 @@ namespace Nop.Web.Areas.Admin.Controllers
             psa.CustomValue = model.ValueRaw;
             _specificationAttributeService.InsertProductSpecificationAttribute(psa);
 
+            switch (psa.AttributeType)
+            {
+                case SpecificationAttributeType.CustomText:
+                {
+                    foreach (var localized in model.Locales)
+                    {
+                        _localizedEntityService.SaveLocalizedValue(psa,
+                            x => x.CustomValue,
+                            localized.Value,
+                            localized.LanguageId);
+                    }
+
+                    break;
+                }
+                case SpecificationAttributeType.CustomHtmlText:
+                {
+                    foreach (var localized in model.Locales)
+                    {
+                        _localizedEntityService.SaveLocalizedValue(psa,
+                            x => x.CustomValue,
+                            localized.ValueRaw,
+                            localized.LanguageId);
+                    }
+
+                    break;
+                }
+                case SpecificationAttributeType.Option:
+                    break;
+                case SpecificationAttributeType.Hyperlink:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
             if (continueEditing)
                 return RedirectToAction("ProductSpecAttributeAddOrEdit",
                     new { productId = psa.ProductId, specificationId = psa.Id });
@@ -1801,6 +1834,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //we allow filtering and change option only for "Option" attribute type
+            //save localized values for CustomHtmlText and CustomText
             switch (model.AttributeTypeId)
             {
                 case (int)SpecificationAttributeType.Option:
@@ -1809,6 +1843,23 @@ namespace Nop.Web.Areas.Admin.Controllers
                     break;
                 case (int)SpecificationAttributeType.CustomHtmlText:
                     psa.CustomValue = model.ValueRaw;
+                    foreach (var localized in model.Locales)
+                    {
+                        _localizedEntityService.SaveLocalizedValue(psa,
+                            x => x.CustomValue,
+                            localized.ValueRaw,
+                            localized.LanguageId);
+                    }
+                    break;
+                case (int)SpecificationAttributeType.CustomText:
+                    psa.CustomValue = model.Value;
+                    foreach (var localized in model.Locales)
+                    {
+                        _localizedEntityService.SaveLocalizedValue(psa,
+                            x => x.CustomValue,
+                            localized.ValueRaw,
+                            localized.LanguageId);
+                    }
                     break;
                 default:
                     psa.CustomValue = model.Value;
@@ -2668,7 +2719,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public virtual IActionResult ProductAttributeMappingEdit(ProductAttributeMappingModel model, bool continueEditing)
+        public virtual IActionResult ProductAttributeMappingEdit(ProductAttributeMappingModel model, bool continueEditing, IFormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -2706,7 +2757,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             UpdateLocales(productAttributeMapping, model);
 
-            SaveConditionAttributes(productAttributeMapping, model.ConditionModel);
+            SaveConditionAttributes(productAttributeMapping, model.ConditionModel, form);
 
             _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.Attributes.Updated"));
 
@@ -3125,7 +3176,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult ProductAttributeCombinationCreatePopup(int productId, ProductAttributeCombinationModel model)
+        public virtual IActionResult ProductAttributeCombinationCreatePopup(int productId, ProductAttributeCombinationModel model, IFormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -3141,7 +3192,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //attributes
             var warnings = new List<string>();
-            var attributesXml = GetAttributesXmlForProductAttributeCombination(model.Form, warnings, product.Id);
+            var attributesXml = GetAttributesXmlForProductAttributeCombination(form, warnings, product.Id);
 
             warnings.AddRange(_shoppingCartService.GetShoppingCartItemAttributeWarnings(_workContext.CurrentCustomer,
                 ShoppingCartType.ShoppingCart, product, 1, attributesXml, true));
@@ -3263,7 +3314,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult ProductAttributeCombinationEditPopup(ProductAttributeCombinationModel model)
+        public virtual IActionResult ProductAttributeCombinationEditPopup(ProductAttributeCombinationModel model, IFormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -3284,14 +3335,14 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //attributes
             var warnings = new List<string>();
-            var attributesXml = GetAttributesXmlForProductAttributeCombination(model.Form, warnings, product.Id);
+            var attributesXml = GetAttributesXmlForProductAttributeCombination(form, warnings, product.Id);
 
             warnings.AddRange(_shoppingCartService.GetShoppingCartItemAttributeWarnings(_workContext.CurrentCustomer,
                 ShoppingCartType.ShoppingCart, product, 1, attributesXml, true));
 
             //check whether the same attribute combination already exists
             var existingCombination = _productAttributeParser.FindProductAttributeCombination(product, attributesXml);
-            if (existingCombination != null)
+            if (existingCombination != null && existingCombination != combination)
                 warnings.Add(_localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.AlreadyExists"));
 
             if (!warnings.Any() && ModelState.IsValid)

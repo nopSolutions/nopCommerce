@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Extensions.Caching.Memory;
 using Moq;
 using Nop.Core;
 using Nop.Core.Data;
@@ -110,7 +109,7 @@ namespace Nop.Services.Tests.Orders
 
             _storeContext.Setup(x => x.CurrentStore).Returns(_store);
 
-            var cacheManager = new TestMemoryCacheManager(new Mock<IMemoryCache>().Object);
+            var cacheManager = new TestCacheManager();
 
             _shoppingCartSettings = new ShoppingCartSettings();
             _catalogSettings = new CatalogSettings();
@@ -186,6 +185,7 @@ namespace Nop.Services.Tests.Orders
                 _geoLookupService.Object,
                 _logger,
                 _stateProvinceService.Object,
+                new TestCacheManager(),
                 _storeContext.Object,
                 _taxPluginManager,
                 _webHelper.Object,

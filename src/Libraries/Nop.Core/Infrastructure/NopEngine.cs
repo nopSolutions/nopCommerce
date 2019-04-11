@@ -79,6 +79,9 @@ namespace Nop.Core.Infrastructure
             //register type finder
             containerBuilder.RegisterInstance(typeFinder).As<ITypeFinder>().SingleInstance();
 
+            //populate Autofac container builder with the set of registered service descriptors
+            containerBuilder.Populate(services);
+
             //find dependency registrars provided by other assemblies
             var dependencyRegistrars = typeFinder.FindClassesOfType<IDependencyRegistrar>();
 
@@ -90,9 +93,6 @@ namespace Nop.Core.Infrastructure
             //register all provided dependencies
             foreach (var dependencyRegistrar in instances)
                 dependencyRegistrar.Register(containerBuilder, typeFinder, nopConfig);
-
-            //populate Autofac container builder with the set of registered service descriptors
-            containerBuilder.Populate(services);
 
             //create service provider
             _serviceProvider = new AutofacServiceProvider(containerBuilder.Build());

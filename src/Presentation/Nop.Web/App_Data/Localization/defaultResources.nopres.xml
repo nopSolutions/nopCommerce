@@ -2155,13 +2155,13 @@
     <Value>Page size should have a positive value.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Fields.PageSizeOptions">
-    <Value>Page Size options</Value>
+    <Value>Page size options</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Fields.PageSizeOptions.Hint">
     <Value>Comma separated list of page size options (e.g. 10, 5, 15, 20). First option is the default page size if none are selected.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Fields.PageSizeOptions.ShouldHaveUniqueItems">
-    <Value>Page Size options should not have duplicate items.</Value>
+    <Value>Page size options should not have duplicate items.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Fields.Parent">
     <Value>Parent category</Value>
@@ -2225,9 +2225,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.List.SearchStore.Hint">
     <Value>Search by a specific store.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Categories.Manage">
-    <Value>Manage Categories</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Mappings">
     <Value>Mappings</Value>
@@ -2365,13 +2362,13 @@
     <Value>Page size should have a positive value.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.PageSizeOptions">
-    <Value>Page Size options</Value>
+    <Value>Page size options</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.PageSizeOptions.Hint">
     <Value>Comma separated list of page size options (e.g. 10, 5, 15, 20). First option is the default page size if none are selected.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.PageSizeOptions.ShouldHaveUniqueItems">
-    <Value>Page Size options should have unique items.</Value>
+    <Value>Page size options should have unique items.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.Picture">
     <Value>Picture</Value>
@@ -3349,10 +3346,10 @@
     <Value>Search by a specific category.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.List.SearchIncludeSubCategories">
-    <Value>Search sub categories</Value>
+    <Value>Search subcategories</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.List.SearchIncludeSubCategories.Hint">
-    <Value>Check to search in sub categories.</Value>
+    <Value>Check to search in subcategories.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.List.SearchManufacturer">
     <Value>Manufacturer</Value>
@@ -5575,7 +5572,7 @@
     <Value>Set the page size for products on 'Products by tag' page.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductsByTagPageSizeOptions">
-    <Value>'Products by tag' Page Size options</Value>
+    <Value>'Products by tag' page size options</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductsByTagPageSizeOptions.Hint">
     <Value>Comma separated list of page size options (e.g. 10, 5, 15, 20). First option is the default page size if none are selected.</Value>
@@ -6558,6 +6555,9 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.BlockTitle.Localization">
     <Value>Localization</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.BlockTitle.Minification">
+    <Value>Minification</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.BlockTitle.Pdf">
     <Value>Pdf</Value>
   </LocaleResource>
@@ -6851,6 +6851,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EnableJsBundling.Hint">
     <Value>Enable to combine (bundle) multiple JavaScript files into a single file. Currently it doesn't support web farms. And please note it could take up to two minutes for changes to existing files to be applied (when enabled).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EnableHtmlMinification">
+    <Value>Html minification</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EnableHtmlMinification.Hint">
+    <Value>Allows you to minify HTML pages as well as compress them, thereby increasing the download speed. Please note that after applying this setting, you need to restart the application.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EnableXSRFProtectionForAdminArea">
     <Value>Enable XSRF protection for admin area</Value>
@@ -8751,9 +8757,6 @@
   <LocaleResource Name="Admin.Configuration.Shipping.Restrictions.Description">
     <Value>Please mark the checkbox(es) for the country or countries in which you want the shipping method(s) not available</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Shipping.Restrictions.Manage">
-    <Value>Shipping method restrictions</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Shipping.Restrictions.Updated">
     <Value>The settings have been updated successfully.</Value>
   </LocaleResource>
@@ -9242,9 +9245,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Forums.ForumGroup.Updated">
     <Value>The forum group has been updated successfully.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Forums.Manage">
-    <Value>Manage Forums</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates">
     <Value>Message templates</Value>
@@ -9839,6 +9839,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Topics.Deleted">
     <Value>The topic has been deleted successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Display">
+    <Value>Display</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Topics.EditTopicDetails">
     <Value>Edit topic details</Value>
@@ -10986,6 +10989,57 @@
   <LocaleResource Name="Admin.Download.UseDownloadURL">
     <Value>Use download URL</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.DT.Aria.SortAscending">
+    <Value>: activate to sort column ascending</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.DT.Aria.SortDescending">
+    <Value>: activate to sort column descending</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.DT.EmptyTable">
+    <Value>No data available in table</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.DT.Info">
+    <Value>Showing _START_ to _END_ of _TOTAL_ entries</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.DT.InfoEmpty">
+    <Value>Showing 0 to 0 of 0 entries</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.DT.InfoFiltered">
+    <Value>(filtered from _MAX_ total entries)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.DT.Thousands">
+    <Value>,</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.DT.lengthMenu">
+    <Value>Show _MENU_ entries</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.DT.LoaderIcon">
+    <Value><![CDATA[<i class='fa fa-refresh fa-spin'></i>]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.DT.LoadingRecords">
+    <Value>Loading...</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.DT.Paginate.First">
+    <Value>First</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.DT.Paginate.Last">
+    <Value>Last</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.DT.Paginate.Next">
+    <Value>Next</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.DT.Paginate.Previous">
+    <Value>Previous</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.DT.Processing">
+    <Value>Processing...</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.DT.Search">
+    <Value>Search:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.DT.ZeroRecords">
+    <Value>No matching records found</Value>
+  </LocaleResource>  
   <LocaleResource Name="Admin.GiftCards">
     <Value>Gift cards</Value>
   </LocaleResource>
@@ -14133,6 +14187,12 @@
   <LocaleResource Name="Admin.System.Warnings.PrimaryCurrency.Set">
     <Value>Primary store currency is set</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.Warnings.ProxyConnection.Failed">
+    <Value>Proxy connection failed</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Warnings.ProxyConnection.OK">
+    <Value>Proxy connection is OK</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.System.Warnings.URL.Match">
     <Value>Specified store URL matches this store URL</Value>
   </LocaleResource>
@@ -14248,13 +14308,13 @@
     <Value>Page size should have a positive value.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Vendors.Fields.PageSizeOptions">
-    <Value>Page Size options</Value>
+    <Value>Page size options</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Vendors.Fields.PageSizeOptions.Hint">
     <Value>Comma separated list of page size options (e.g. 10, 5, 15, 20). First option is the default page size if none are selected.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Vendors.Fields.PageSizeOptions.ShouldHaveUniqueItems">
-    <Value>Page Size options should have unique items.</Value>
+    <Value>Page size options should have unique items.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Vendors.Fields.Picture">
     <Value>Picture</Value>

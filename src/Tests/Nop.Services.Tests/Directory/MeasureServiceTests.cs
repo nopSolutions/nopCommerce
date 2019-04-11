@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Extensions.Caching.Memory;
 using Moq;
-using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Directory;
 using Nop.Services.Directory;
@@ -107,7 +105,7 @@ namespace Nop.Services.Tests.Directory
             _measureWeightRepository.Setup(x => x.GetById(measureWeight3.Id)).Returns(measureWeight3);
             _measureWeightRepository.Setup(x => x.GetById(measureWeight4.Id)).Returns(measureWeight4);
 
-            var cacheManager = new TestMemoryCacheManager(new Mock<IMemoryCache>().Object);
+            var cacheManager = new TestCacheManager();
 
             _measureSettings = new MeasureSettings
             {

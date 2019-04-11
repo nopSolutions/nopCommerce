@@ -37,11 +37,11 @@
         /// <summary>
         /// Gets a key pattern to clear cached vendor attributes
         /// </summary>
-        public static string VendorAttributesPatternCacheKey => "Nop.vendorattribute.";
+        public static string VendorAttributesPrefixCacheKey => "Nop.vendorattribute.";
 
         /// <summary>
         /// Gets a key pattern to clear cached vendor attribute values
         /// </summary>
-        public static string VendorAttributeValuesPatternCacheKey => "Nop.vendorattributevalue.";
+        public static string VendorAttributeValuesPrefixCacheKey => "Nop.vendorattributevalue.";
     }
 }

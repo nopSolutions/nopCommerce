@@ -36,15 +36,7 @@
 
                         <div class="search-body @(hideSearchBlock ? "closed" : "")">
                             <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <div class="col-md-4">
-                                            <nop-label asp-for="SearchRequestTypeId" />
-                                        </div>
-                                        <div class="col-md-8">
-                                            <nop-select asp-for="SearchRequestTypeId" asp-items="Model.AvailableRequestTypes" />
-                                        </div>
-                                    </div>
+                                <div class="col-md-5">
                                     <div class="form-group">
                                         <div class="col-md-4">
                                             <nop-label asp-for="SearchEmail" />
@@ -53,14 +45,24 @@
                                             <nop-editor asp-for="SearchEmail" />
                                         </div>
                                     </div>
+                                </div>
+                                <div class="col-md-7">
                                     <div class="form-group">
-                                        <div class="col-md-8 col-md-offset-4">
-                                            <button type="button" id="search-log" class="btn btn-primary btn-search">
-                                                <i class="fa fa-search"></i>
-                                                @T("Admin.Common.Search")
-                                            </button>
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="SearchRequestTypeId" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-select asp-for="SearchRequestTypeId" asp-items="Model.AvailableRequestTypes" />
                                         </div>
                                     </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-7 col-md-offset-5">
+                                    <button type="button" id="search-log" class="btn btn-primary btn-search">
+                                        <i class="fa fa-search"></i>
+                                        @T("Admin.Common.Search")
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -69,85 +71,7 @@
 
                 <div class="panel panel-default">
                     <div class="panel-body">
-                        <div id="log-grid"></div>
-
-                        <script>
-                            $(document).ready(function () {
-                                $("#log-grid").kendoGrid({
-                                    dataSource: {
-                                        type: "json",
-                                        transport: {
-                                            read: {
-                                                url: "@Html.Raw(Url.Action("GdprLogList", "Customer"))",
-                                                type: "POST",
-                                                dataType: "json",
-                                                data: function() {
-                                                    var data = {
-                                                        SearchRequestTypeId: $('#SearchRequestTypeId').val(),
-                                                        SearchEmail: $('#SearchEmail').val()
-                                                    };
-                                                    addAntiForgeryToken(data);
-                                                    return data;
-                                                }
-                                            }
-                                        },
-                                        schema: {
-                                            data: "Data",
-                                            total: "Total",
-                                            errors: "Errors"
-                                        },
-                                        error: function (e) {
-                                            display_kendoui_grid_error(e);
-                                            // Cancel the changes
-                                            this.cancelChanges();
-                                        },
-                                        pageSize: @(Model.PageSize),
-                                        serverPaging: true,
-                                        serverFiltering: true,
-                                        serverSorting: true
-                                    },
-                                    pageable: {
-                                        refresh: true,
-                                        pageSizes: [@(Model.AvailablePageSizes)],
-                                        @await Html.PartialAsync("_GridPagerMessages")
-                                    },
-                                    editable: {
-                                        confirmation: "@T("Admin.Common.DeleteConfirmation")",
-                                        mode: "inline"
-                                    },
-                                    scrollable: false,
-                                    columns: [
-                                        {
-                                            field: "CustomerInfo",
-                                            title: "@T("Admin.Customers.GdprLog.Fields.CustomerInfo")"
-                                        }, {
-                                            field: "RequestType",
-                                            title: "@T("Admin.Customers.GdprLog.Fields.RequestType")"
-                                        }, {
-                                            field: "RequestDetails",
-                                            title: "@T("Admin.Customers.GdprLog.Fields.RequestDetails")"
-                                        }, {
-                                            field: "CreatedOn",
-                                            title: "@T("Admin.Customers.GdprLog.Fields.CreatedOn")",
-                                            type: "date",
-                                            format: "{0:G}"
-                                        }
-                                    ]
-                                });
-                            });
-                        </script>
-
-                        <script>
-                            $(document).ready(function () {
-                                //search button
-                                $('#search-log').click(function () {
-                                    //search
-                                    var grid = $('#log-grid').data('kendoGrid');
-                                    grid.dataSource.read();
-                                    return false;
-                                });
-                            });
-                        </script>
+                        @await Html.PartialAsync("Table", Model.Grid)  
                     </div>
                 </div>
             </div>

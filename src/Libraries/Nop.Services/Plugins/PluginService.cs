@@ -21,7 +21,7 @@ namespace Nop.Services.Plugins
         private readonly ILogger _logger;
         private readonly INopFileProvider _fileProvider;
         private readonly IWebHelper _webHelper;
-        private readonly PluginsInfo _pluginsInfo;
+        private readonly IPluginsInfo _pluginsInfo;
 
         #endregion
 
@@ -36,7 +36,7 @@ namespace Nop.Services.Plugins
             _logger = logger;
             _fileProvider = fileProvider;
             _webHelper = webHelper;
-            _pluginsInfo = Singleton<PluginsInfo>.Instance;
+            _pluginsInfo = Singleton<IPluginsInfo>.Instance;
         }
 
         #endregion
@@ -245,11 +245,11 @@ namespace Nop.Services.Plugins
         public virtual void PreparePluginToInstall(string systemName, Customer customer = null)
         {
             //add plugin name to the appropriate list (if not yet contained) and save changes
-            if (!_pluginsInfo.PluginNamesToInstall.Any(item => item.SystemName == systemName))
-            {
-                _pluginsInfo.PluginNamesToInstall.Add((systemName, customer?.CustomerGuid));
-                _pluginsInfo.Save(_fileProvider);
-            }
+            if (_pluginsInfo.PluginNamesToInstall.Any(item => item.SystemName == systemName)) 
+                return;
+
+            _pluginsInfo.PluginNamesToInstall.Add((systemName, customer?.CustomerGuid));
+            _pluginsInfo.Save();
         }
 
         /// <summary>
@@ -259,11 +259,11 @@ namespace Nop.Services.Plugins
         public virtual void PreparePluginToUninstall(string systemName)
         {
             //add plugin name to the appropriate list (if not yet contained) and save changes
-            if (!_pluginsInfo.PluginNamesToUninstall.Contains(systemName))
-            {
-                _pluginsInfo.PluginNamesToUninstall.Add(systemName);
-                _pluginsInfo.Save(_fileProvider);
-            }
+            if (_pluginsInfo.PluginNamesToUninstall.Contains(systemName))
+                return;
+
+            _pluginsInfo.PluginNamesToUninstall.Add(systemName);
+            _pluginsInfo.Save();
         }
 
         /// <summary>
@@ -273,11 +273,11 @@ namespace Nop.Services.Plugins
         public virtual void PreparePluginToDelete(string systemName)
         {
             //add plugin name to the appropriate list (if not yet contained) and save changes
-            if (!_pluginsInfo.PluginNamesToDelete.Contains(systemName))
-            {
-                _pluginsInfo.PluginNamesToDelete.Add(systemName);
-                _pluginsInfo.Save(_fileProvider);
-            }
+            if (_pluginsInfo.PluginNamesToDelete.Contains(systemName)) 
+                return;
+
+            _pluginsInfo.PluginNamesToDelete.Add(systemName);
+            _pluginsInfo.Save();
         }
 
         /// <summary>
@@ -289,7 +289,7 @@ namespace Nop.Services.Plugins
             _pluginsInfo.PluginNamesToDelete.Clear();
             _pluginsInfo.PluginNamesToInstall.Clear();
             _pluginsInfo.PluginNamesToUninstall.Clear();
-            _pluginsInfo.Save(_fileProvider);
+            _pluginsInfo.Save();
 
             //display all plugins on the plugin list page
             _pluginsInfo.PluginDescriptors.ToList().ForEach(pluginDescriptor => pluginDescriptor.ShowInPluginsList = true);
@@ -309,7 +309,7 @@ namespace Nop.Services.Plugins
         public virtual void InstallPlugins()
         {
             //get all uninstalled plugins
-            var pluginDescriptors = _pluginsInfo.PluginDescriptors.Where(descriptor => !descriptor.Installed);
+            var pluginDescriptors = _pluginsInfo.PluginDescriptors.Where(descriptor => !descriptor.Installed).ToList();
 
             //filter plugins need to install
             pluginDescriptors = pluginDescriptors.Where(descriptor => _pluginsInfo.PluginNamesToInstall
@@ -353,7 +353,7 @@ namespace Nop.Services.Plugins
             }
 
             //save changes
-            _pluginsInfo.Save(_fileProvider);
+            _pluginsInfo.Save();
         }
 
         /// <summary>
@@ -362,7 +362,7 @@ namespace Nop.Services.Plugins
         public virtual void UninstallPlugins()
         {
             //get all installed plugins
-            var pluginDescriptors = _pluginsInfo.PluginDescriptors.Where(descriptor => descriptor.Installed);
+            var pluginDescriptors = _pluginsInfo.PluginDescriptors.Where(descriptor => descriptor.Installed).ToList();
 
             //filter plugins need to uninstall
             pluginDescriptors = pluginDescriptors
@@ -403,7 +403,7 @@ namespace Nop.Services.Plugins
             }
 
             //save changes
-            _pluginsInfo.Save(_fileProvider);
+            _pluginsInfo.Save();
         }
 
         /// <summary>
@@ -412,7 +412,7 @@ namespace Nop.Services.Plugins
         public virtual void DeletePlugins()
         {
             //get all uninstalled plugins (delete plugin only previously uninstalled)
-            var pluginDescriptors = _pluginsInfo.PluginDescriptors.Where(descriptor => !descriptor.Installed);
+            var pluginDescriptors = _pluginsInfo.PluginDescriptors.Where(descriptor => !descriptor.Installed).ToList();
 
             //filter plugins need to delete
             pluginDescriptors = pluginDescriptors
@@ -450,7 +450,7 @@ namespace Nop.Services.Plugins
             }
 
             //save changes
-            _pluginsInfo.Save(_fileProvider);
+            _pluginsInfo.Save();
         }
 
         /// <summary>

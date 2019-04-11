@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Domain.Blogs;
@@ -14,6 +15,8 @@ using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Blogs;
 using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;
+using Nop.Web.Framework.Models.DataTables;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -61,6 +64,90 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #endregion
 
+        #region Utilities
+
+        /// <summary>
+        /// Prepare datatables model
+        /// </summary>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
+        protected virtual DataTablesModel PrepareBlogPostGridModel(BlogPostSearchModel searchModel)
+        {
+            //prepare common properties
+            var model = new DataTablesModel
+            {
+                Name = "blogpost-grid",
+                UrlRead = new DataUrl("List", "Blog", null),
+                SearchButtonId = "search-blogpost",
+                Length = searchModel.PageSize,
+                LengthMenu = searchModel.AvailablePageSizes
+            };
+
+            //prepare filters to search
+            model.Filters = new List<FilterParameter>()
+            {
+                new FilterParameter(nameof(searchModel.SearchStoreId))
+            };
+
+            //prepare model columns
+            model.ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(BlogPostModel.ApprovedComments))
+                {
+                    Visible = false
+                },
+                new ColumnProperty(nameof(BlogPostModel.NotApprovedComments))
+                {
+                    Visible = false
+                },
+                new ColumnProperty(nameof(BlogPostModel.Title))
+                {
+                    Title = _localizationService.GetResource("Admin.ContentManagement.Blog.BlogPosts.Fields.Title")
+                },
+                new ColumnProperty(nameof(BlogPostModel.LanguageName))
+                {
+                    Title = _localizationService.GetResource("Admin.ContentManagement.Blog.BlogPosts.Fields.Language"),
+                    Width = "200"
+                },
+                new ColumnProperty(nameof(BlogPostModel.Id))
+                {
+                    Title = _localizationService.GetResource("Admin.ContentManagement.Blog.BlogPosts.Fields.Comments"),
+                    Width = "200",
+                    ClassName =  StyleColumn.CenterAll,
+                    Render = new RenderCustom("renderColumnComments")
+                },
+                new ColumnProperty(nameof(BlogPostModel.StartDateUtc))
+                {
+                    Title = _localizationService.GetResource("Admin.ContentManagement.Blog.BlogPosts.Fields.StartDate"),
+                    Width = "200",
+                    Render = new RenderDate()
+                },
+                new ColumnProperty(nameof(BlogPostModel.EndDateUtc))
+                {
+                    Title = _localizationService.GetResource("Admin.ContentManagement.Blog.BlogPosts.Fields.EndDate"),
+                    Width = "200",
+                    Render = new RenderDate()
+                },
+                new ColumnProperty(nameof(BlogPostModel.CreatedOn))
+                {
+                    Title = _localizationService.GetResource("Admin.ContentManagement.Blog.BlogPosts.Fields.CreatedOn"),
+                    Width = "200",
+                    Render = new RenderDate()
+                },
+                new ColumnProperty(nameof(BlogPostModel.Id))
+                {
+                    Title = _localizationService.GetResource("Admin.Common.Edit"),
+                    Width = "100",
+                     ClassName =  StyleColumn.CenterAll,
+                    Render = new RenderButtonEdit(new DataUrl("BlogPostEdit"))
+                }
+            };
+
+            return model;
+        }
+
+        #endregion
+
         #region Methods
 
         /// <summary>
@@ -98,6 +185,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
+            searchModel.Grid = PrepareBlogPostGridModel(searchModel);
 
             return searchModel;
         }
@@ -111,15 +199,15 @@ namespace Nop.Web.Areas.Admin.Factories
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
-            
+
             //get blog posts
             var blogPosts = _blogService.GetAllBlogPosts(searchModel.SearchStoreId, showHidden: true,
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new BlogPostListModel
+            var model = new BlogPostListModel().PrepareToGrid(searchModel, blogPosts, () =>
             {
-                Data = blogPosts.Select(blogPost =>
+                return blogPosts.Select(blogPost =>
                 {
                     //fill in model values from the entity
                     var blogPostModel = blogPost.ToModel<BlogPostModel>();
@@ -141,9 +229,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     blogPostModel.SeName = _urlRecordService.GetSeName(blogPost, blogPost.LanguageId, true, false);
 
                     return blogPostModel;
-                }),
-                Total = blogPosts.TotalCount
-            };
+                });
+            });
 
             return model;
         }
@@ -228,7 +315,7 @@ namespace Nop.Web.Areas.Admin.Factories
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
-            
+
             //get parameters to filter comments
             var createdOnFromValue = searchModel.CreatedOnFrom == null ? null
                 : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.CreatedOnFrom.Value, _dateTimeHelper.CurrentTimeZone);
@@ -241,7 +328,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 approved: isApprovedOnly,
                 fromUtc: createdOnFromValue,
                 toUtc: createdOnToValue,
-                commentText: searchModel.SearchText);
+                commentText: searchModel.SearchText).ToPagedList(searchModel);
 
             //prepare store names (to avoid loading for each comment)
             var storeNames = _storeService.GetAllStores().ToDictionary(store => store.Id, store => store.Name);
@@ -249,7 +336,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare list model
             var model = new BlogCommentListModel
             {
-                Data = comments.PaginationByRequestModel(searchModel).Select(blogComment =>
+                Data = comments.Select(blogComment =>
                 {
                     //fill in model values from the entity
                     var commentModel = blogComment.ToModel<BlogCommentModel>();
@@ -263,7 +350,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     return commentModel;
                 }),
-                Total = comments.Count
+                Total = comments.TotalCount
             };
 
             return model;

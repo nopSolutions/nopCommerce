@@ -1,77 +1,101 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Xml;
 using Nop.Core;
+using Nop.Services.Common;
+using Nop.Services.Logging;
 
 namespace Nop.Services.Plugins.Marketplace
 {
     /// <summary>
-    /// Official feed manager (official plugins from www.nopCommerce.com site)
+    /// Represents the official feed manager (plugins from nopcommerce marketplace)
     /// </summary>
-    public partial class OfficialFeedManager : IOfficialFeedManager
+    public partial class OfficialFeedManager
     {
-        private static string MakeUrl(string query, params object[] args)
-        {
-            var url = "https://www.nopcommerce.com/extensionsxml.aspx?" + query;
+        #region Fields
 
-            return string.Format(url, args);
+        private readonly ILogger _logger;
+        private readonly NopHttpClient _nopHttpClient;
+
+        #endregion
+
+        #region Ctor
+
+        public OfficialFeedManager(ILogger logger,
+            NopHttpClient nopHttpClient)
+        {
+            _logger = logger;
+            _nopHttpClient = nopHttpClient;
         }
 
-        private static XmlDocument GetDocument(string feedQuery, params object[] args)
-        {
-            var request = WebRequest.Create(MakeUrl(feedQuery, args));
-            request.Timeout = 5000;
-            using (var response = request.GetResponse())
-            {
-                using (var dataStream = response.GetResponseStream())
-                using (var reader = new StreamReader(dataStream))
-                {
-                    var responseFromServer = reader.ReadToEnd();
+        #endregion
 
-                    var xmlDoc = new XmlDocument();
-                    xmlDoc.LoadXml(responseFromServer);
-                    return xmlDoc;
-                }
-            }
-        }
+        #region Utilities
 
         /// <summary>
         /// Get element value
         /// </summary>
         /// <param name="node">XML node</param>
-        /// <param name="elName">Element name</param>
+        /// <param name="elementName">Element name</param>
         /// <returns>Value (text)</returns>
-        private static string ElText(XmlNode node, string elName)
+        protected virtual string GetElementValue(XmlNode node, string elementName)
         {
-            return node?.SelectSingleNode(elName)?.InnerText;
+            return node?.SelectSingleNode(elementName)?.InnerText;
         }
 
+        #endregion
+
+        #region Methods
+
         /// <summary>
-        /// Get categories
+        /// Get available categories of marketplace extensions
         /// </summary>
         /// <returns>Result</returns>
         public virtual IList<OfficialFeedCategory> GetCategories()
         {
-            return GetDocument("getCategories=1").SelectNodes(@"//categories/category").Cast<XmlNode>().Select(node => new OfficialFeedCategory
+            //load XML
+            var xml = new XmlDocument();
+            try
             {
-                Id = int.Parse(ElText(node, @"id")),
-                ParentCategoryId = int.Parse(ElText(node, @"parentCategoryId")),
-                Name = ElText(node, @"name")
+                xml.LoadXml(_nopHttpClient.GetExtensionsCategoriesAsync().Result);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error("No access to the list of plugins. Website www.nopcommerce.com is not available.", ex);
+            }
+
+            //get list of categories from the XML
+            return xml.SelectNodes(@"//categories/category").Cast<XmlNode>().Select(node => new OfficialFeedCategory
+            {
+                Id = int.Parse(GetElementValue(node, @"id")),
+                ParentCategoryId = int.Parse(GetElementValue(node, @"parentCategoryId")),
+                Name = GetElementValue(node, @"name")
             }).ToList();
         }
 
         /// <summary>
-        /// Get versions
+        /// Get available versions of marketplace extensions
         /// </summary>
         /// <returns>Result</returns>
         public virtual IList<OfficialFeedVersion> GetVersions()
         {
-            return GetDocument("getVersions=1").SelectNodes(@"//versions/version").Cast<XmlNode>().Select(node => new OfficialFeedVersion
+            //load XML
+            var xml = new XmlDocument();
+            try
             {
-                Id = int.Parse(ElText(node, @"id")),
-                Name = ElText(node, @"name")
+                xml.LoadXml(_nopHttpClient.GetExtensionsVersionsAsync().Result);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error("No access to the list of plugins. Website www.nopcommerce.com is not available.", ex);
+            }
+
+            //get list of versions from the XML
+            return xml.SelectNodes(@"//versions/version").Cast<XmlNode>().Select(node => new OfficialFeedVersion
+            {
+                Id = int.Parse(GetElementValue(node, @"id")),
+                Name = GetElementValue(node, @"name")
             }).ToList();
         }
 
@@ -86,27 +110,36 @@ namespace Nop.Services.Plugins.Marketplace
         /// <param name="pageSize">Page size</param>
         /// <returns>Plugins</returns>
         public virtual IPagedList<OfficialFeedPlugin> GetAllPlugins(int categoryId = 0,
-            int versionId = 0, int price = 0,
-            string searchTerm = "",
+            int versionId = 0, int price = 0, string searchTerm = "",
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            //pageSize parameter is currently ignored by official site (set to 15)
-            var xmlDoc = GetDocument("category={0}&version={1}&price={2}&pageIndex={3}&pageSize={4}&searchTerm={5}",
-                categoryId, versionId, price, pageIndex, pageSize, WebUtility.UrlEncode(searchTerm));
-            
-            var list = xmlDoc.SelectNodes(@"//extensions/extension").Cast<XmlNode>().Select(node => new OfficialFeedPlugin
-                {
-                    Name = ElText(node, @"name"),
-                    Url = ElText(node, @"url"),
-                    PictureUrl = ElText(node, @"picture"),
-                    Category = ElText(node, @"category"),
-                    SupportedVersions = ElText(node, @"versions"),
-                    Price = ElText(node, @"price")
-                }).ToList();
+            //load XML
+            var xml = new XmlDocument();
+            try
+            {
+                xml.LoadXml(_nopHttpClient.GetExtensionsAsync(categoryId, versionId, price, searchTerm, pageIndex, pageSize).Result);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error("No access to the list of plugins. Website www.nopcommerce.com is not available.", ex);
+            }
 
-            var totalRecords = int.Parse(ElText(xmlDoc.SelectNodes(@"//totalRecords")[0], @"value"));
+            //get list of extensions from the XML
+            var list = xml.SelectNodes(@"//extensions/extension").Cast<XmlNode>().Select(node => new OfficialFeedPlugin
+            {
+                Name = GetElementValue(node, @"name"),
+                Url = GetElementValue(node, @"url"),
+                PictureUrl = GetElementValue(node, @"picture"),
+                Category = GetElementValue(node, @"category"),
+                SupportedVersions = GetElementValue(node, @"versions"),
+                Price = GetElementValue(node, @"price")
+            }).ToList();
 
-            return new PagedList<OfficialFeedPlugin>(list, pageIndex, pageSize, totalRecords);            
+            int.TryParse(GetElementValue(xml.SelectNodes(@"//totalRecords")?[0], @"value"), out var totalRecords);
+
+            return new PagedList<OfficialFeedPlugin>(list, pageIndex, pageSize, totalRecords);
         }
+
+        #endregion
     }
 }
