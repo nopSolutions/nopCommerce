@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Domain.Messages;
 using Nop.Services.Helpers;
@@ -6,6 +7,8 @@ using Nop.Services.Localization;
 using Nop.Services.Messages;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Messages;
+using Nop.Web.Framework.Models.DataTables;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -35,6 +38,104 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #endregion
 
+        #region Utilities
+
+
+        /// <summary>
+        /// Prepare datatables model
+        /// </summary>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
+        protected virtual DataTablesModel PrepareQueuedEmailGridModel(QueuedEmailSearchModel searchModel)
+        {
+            //prepare common properties
+            var model = new DataTablesModel
+            {
+                Name = "queuedEmails-grid",
+                UrlRead = new DataUrl("QueuedEmailList", "QueuedEmail", null),
+                SearchButtonId = "search-queuedemails",
+                Length = searchModel.PageSize,
+                LengthMenu = searchModel.AvailablePageSizes
+            };
+
+            //prepare filters to search
+            model.Filters = new List<FilterParameter>()
+            {
+                new FilterParameter(nameof(searchModel.SearchStartDate)),
+                new FilterParameter(nameof(searchModel.SearchEndDate)),
+                new FilterParameter(nameof(searchModel.SearchFromEmail)),
+                new FilterParameter(nameof(searchModel.SearchToEmail)),
+                new FilterParameter(nameof(searchModel.SearchLoadNotSent), typeof(bool)),
+                new FilterParameter(nameof(searchModel.SearchMaxSentTries))
+            };
+
+            //prepare model columns
+            model.ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(QueuedEmailModel.Id))
+                {
+                    IsMasterCheckBox = true,
+                    Render = new RenderCheckBox("checkbox_queuedemails"),
+                    ClassName =  StyleColumn.CenterAll,
+                    Width = "50",
+                },
+                new ColumnProperty(nameof(QueuedEmailModel.Id))
+                {
+                    Title = _localizationService.GetResource("Admin.System.QueuedEmails.Fields.Id"),
+                    Width = "100",
+                },
+                new ColumnProperty(nameof(QueuedEmailModel.Subject))
+                {
+                    Title = _localizationService.GetResource("Admin.System.QueuedEmails.Fields.Subject"),
+                    Width = "300",
+                },
+                new ColumnProperty(nameof(QueuedEmailModel.From))
+                {
+                    Title = _localizationService.GetResource("Admin.System.QueuedEmails.Fields.From"),
+                    Width = "100",
+                },
+                new ColumnProperty(nameof(QueuedEmailModel.To))
+                {
+                    Title = _localizationService.GetResource("Admin.System.QueuedEmails.Fields.To"),
+                    Width = "100",
+                },
+                new ColumnProperty(nameof(QueuedEmailModel.CreatedOn))
+                {
+                    Title = _localizationService.GetResource("Admin.System.QueuedEmails.Fields.CreatedOn"),
+                    Width = "200",
+                    Render = new RenderDate()
+                },
+                new ColumnProperty(nameof(QueuedEmailModel.DontSendBeforeDate))
+                {
+                    Title = _localizationService.GetResource("Admin.System.QueuedEmails.Fields.DontSendBeforeDate"),
+                    Width = "200",
+                    Render = new RenderDate()
+                },
+                new ColumnProperty(nameof(QueuedEmailModel.SentOn))
+                {
+                    Title = _localizationService.GetResource("Admin.System.QueuedEmails.Fields.SentOn"),
+                     Width = "100",
+                    Render = new RenderDate()
+                },
+                new ColumnProperty(nameof(QueuedEmailModel.PriorityName))
+                {
+                    Title = _localizationService.GetResource("Admin.System.QueuedEmails.Fields.Priority"),
+                    Width = "150",
+                },
+                new ColumnProperty(nameof(QueuedEmailModel.Id))
+                {
+                    Title = _localizationService.GetResource("Admin.Common.Edit"),
+                    Width = "50",
+                    ClassName =  StyleColumn.CenterAll,
+                    Render = new RenderButtonEdit(new DataUrl("Edit"))
+                }
+            };
+
+            return model;
+        }
+
+        #endregion
+
         #region Methods
 
         /// <summary>
@@ -52,6 +153,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
+            searchModel.Grid = PrepareQueuedEmailGridModel(searchModel);
 
             return searchModel;
         }
@@ -84,9 +186,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new QueuedEmailListModel
+            var model = new QueuedEmailListModel().PrepareToGrid(searchModel, queuedEmails, () =>
             {
-                Data = queuedEmails.Select(queuedEmail =>
+                return queuedEmails.Select(queuedEmail =>
                 {
                     //fill in model values from the entity
                     var queuedEmailModel = queuedEmail.ToModel<QueuedEmailModel>();
@@ -110,9 +212,8 @@ namespace Nop.Web.Areas.Admin.Factories
                         queuedEmailModel.SentOn = _dateTimeHelper.ConvertToUserTime(queuedEmail.SentOnUtc.Value, DateTimeKind.Utc);
 
                     return queuedEmailModel;
-                }),
-                Total = queuedEmails.TotalCount
-            };
+                });
+            });
 
             return model;
         }

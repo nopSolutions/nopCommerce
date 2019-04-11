@@ -95,6 +95,7 @@
                 data: postData,
                 complete: function (data) {
                     $('#@Model.Grid.Name').DataTable().ajax.reload();
+                    selectedIds = [];
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
                     $('#deleteSelectedSeNamesFailed-info').html(thrownError);
