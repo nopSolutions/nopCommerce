@@ -35,6 +35,7 @@ using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Areas.Admin.Models.Settings;
 using Nop.Web.Areas.Admin.Models.Stores;
 using Nop.Web.Framework.Factories;
+using Nop.Web.Framework.Models.DataTables;
 using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
@@ -207,6 +208,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
+            searchModel.Grid = PrepareGdprConsentGridModel(searchModel);
 
             return searchModel;
         }
@@ -693,6 +695,63 @@ namespace Nop.Web.Areas.Admin.Factories
             model.DisplayShoppingCartFooterItem_OverrideForStore = _settingService.SettingExists(displayDefaultFooterItemSettings, x => x.DisplayShoppingCartFooterItem, storeId);
             model.DisplayWishlistFooterItem_OverrideForStore = _settingService.SettingExists(displayDefaultFooterItemSettings, x => x.DisplayWishlistFooterItem, storeId);
             model.DisplayApplyVendorAccountFooterItem_OverrideForStore = _settingService.SettingExists(displayDefaultFooterItemSettings, x => x.DisplayApplyVendorAccountFooterItem, storeId);
+
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare datatables model
+        /// </summary>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
+        protected virtual DataTablesModel PrepareGdprConsentGridModel(GdprConsentSearchModel searchModel)
+        {
+            //prepare common properties
+            var model = new DataTablesModel
+            {
+                Name = "consent-grid",
+                UrlRead = new DataUrl("GdprConsentList", "Setting", null),
+                Length = searchModel.PageSize,
+                LengthMenu = searchModel.AvailablePageSizes
+            };
+
+            //prepare model columns
+            model.ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(GdprConsentModel.Message))
+                {
+                    Title = _localizationService.GetResource("Admin.Configuration.Settings.Gdpr.Consent.Message")
+                },
+                new ColumnProperty(nameof(GdprConsentModel.IsRequired))
+                {
+                    Title = _localizationService.GetResource("Admin.Configuration.Settings.Gdpr.Consent.IsRequired"),
+                    ClassName =  StyleColumn.CenterAll,
+                    Render = new RenderBoolean()
+                },
+                new ColumnProperty(nameof(GdprConsentModel.DisplayDuringRegistration))
+                {
+                    Title = _localizationService.GetResource("Admin.Configuration.Settings.Gdpr.Consent.DisplayDuringRegistration"),
+                    ClassName =  StyleColumn.CenterAll,
+                    Render = new RenderBoolean()
+                },
+                new ColumnProperty(nameof(GdprConsentModel.DisplayOnCustomerInfoPage))
+                {
+                    Title = _localizationService.GetResource("Admin.Configuration.Settings.Gdpr.Consent.DisplayOnCustomerInfoPage"),
+                    ClassName =  StyleColumn.CenterAll,
+                    Render = new RenderBoolean()
+                },
+                new ColumnProperty(nameof(GdprConsentModel.DisplayOrder))
+                {
+                    Title = _localizationService.GetResource("Admin.Configuration.Settings.Gdpr.Consent.DisplayOrder"),
+                },
+                new ColumnProperty(nameof(GdprConsentModel.Id))
+                {
+                    Title = _localizationService.GetResource("Admin.Common.Edit"),
+                    Width = "100",
+                    ClassName =  StyleColumn.CenterAll,
+                    Render = new RenderButtonEdit(new DataUrl("~/Admin/Setting/EditGdprConsent/"))
+                }
+            };
 
             return model;
         }
@@ -1357,9 +1416,9 @@ namespace Nop.Web.Areas.Admin.Factories
             var consentList = _gdprService.GetAllConsents().ToPagedList(searchModel);
 
             //prepare list model
-            var model = new GdprConsentListModel
+            var model = new GdprConsentListModel().PrepareToGrid(searchModel, consentList, () =>
             {
-                Data = consentList.Select(consent =>
+                return consentList.Select(consent =>
                 {
                     var gdprConsentModel = consent.ToModel<GdprConsentModel>();
                     var gdprConsent = _gdprService.GetConsentById(gdprConsentModel.Id);
@@ -1367,9 +1426,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     gdprConsentModel.RequiredMessage = _localizationService.GetLocalized(gdprConsent, entity => entity.RequiredMessage);
 
                     return gdprConsentModel;
-                }),
-                Total = consentList.TotalCount
-            };
+                });
+            });
 
             return model;
         }
