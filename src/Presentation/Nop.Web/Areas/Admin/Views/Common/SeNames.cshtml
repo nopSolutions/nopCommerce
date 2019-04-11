@@ -63,118 +63,25 @@
 
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <div id="sename-grid"></div>
-
-                    <script>
-                        $(document).ready(function () {
-                            $("#sename-grid").kendoGrid({
-                                dataSource: {
-                                    type: "json",
-                                    transport: {
-                                        read: {
-                                            url: "@Html.Raw(Url.Action("SeNames", "Common"))",
-                                            type: "POST",
-                                            dataType: "json",
-                                            data: function() {
-                                                var data = {
-                                                    SeName: $('#@Html.IdFor(model => model.SeName)').val()
-                                                };
-                                                addAntiForgeryToken(data);
-                                                return data;
-                                            }
-                                        }
-                                    },
-                                    schema: {
-                                        data: "Data",
-                                        total: "Total",
-                                        errors: "Errors"
-                                    },
-                                    error: function(e) {
-                                        display_kendoui_grid_error(e);
-                                        // Cancel the changes
-                                        this.cancelChanges();
-                                    },
-                                    pageSize: @(Model.PageSize),
-                                    serverPaging: true,
-                                    serverFiltering: true,
-                                    serverSorting: true
-                                },
-                                pageable: {
-                                    refresh: true,
-                                    pageSizes: [@(Model.AvailablePageSizes)],
-                                    @await Html.PartialAsync("_GridPagerMessages")
-                                },
-                                scrollable: false,
-                                dataBound: onDataBound,
-                                columns: [{
-                                    field: "Id",
-                                    headerTemplate: "<input id='mastercheckbox' type='checkbox'/>",
-                                    headerAttributes: { style: "text-align:center" },
-                                    attributes: { style: "text-align:center" },
-                                    template: "<input type='checkbox' value='#=Id#' class='checkboxGroups'/>",
-                                    width: 50
-                                }, {
-                                    field: "Id",
-                                    title: "@T("Admin.System.SeNames.Id")",
-                                    width: 50
-                                }, {
-                                    field: "Name",
-                                    title: "@T("Admin.System.SeNames.Name")",
-                                    width: 300
-                                }, {
-                                    field: "EntityId",
-                                    title: "@T("Admin.System.SeNames.EntityId")",
-                                    width: 50
-                                }, {
-                                    field: "EntityName",
-                                    title: "@T("Admin.System.SeNames.EntityName")",
-                                    width: 100
-                                }, {
-                                    field: "IsActive",
-                                    title: "@T("Admin.System.SeNames.IsActive")",
-                                    width: 50,
-                                    headerAttributes: { style: "text-align:center" },
-                                    attributes: { style: "text-align:center" },
-                                    template: '# if(IsActive) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
-                                }, {
-                                    field: "Language",
-                                    title: "@T("Admin.System.SeNames.Language")",
-                                    width: 100
-                                }, {
-                                    field: "DetailsUrl",
-                                    title: "@T("Admin.System.SeNames.Details")",
-                                    headerAttributes: { style: "text-align:center" },
-                                    attributes: { style: "text-align:center" },
-                                    width: 100,
-                                    template: '# if(DetailsUrl && DetailsUrl.length > 0) {# <a class="btn btn-default" href="#=DetailsUrl#"><i class="fa fa-pencil"></i>@T("Admin.System.SeNames.Details")</a> #} #'
-                                }]
-                            });
-                        });
-                    </script>
+                    @await Html.PartialAsync("Table", Model.Grid)
                 </div>
             </div>
             @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.SenamesBottom })
         </div>
     </div>
 </div>
-<nop-alert asp-alert-id="deleteSelectedSeNamesFailed" />
-
 <script>
-    var selectedIds = [];
-
+    function renderColumnDetailsUrl(data, type, row, meta) {
+        if (row.DetailsUrl && row.DetailsUrl.length > 0) {
+            return '<a class="btn btn-default" href="' + row.DetailsUrl + '"><i class="fa fa-pencil"></i>@T("Admin.System.SeNames.Details")</a>';
+        }
+        else {
+            return '';
+        }
+    }
+</script>
+<script>
     $(document).ready(function() {
-        //search button
-        $('#search-senames').click(function() {
-            //search
-            var grid = $('#sename-grid').data('kendoGrid');
-            grid.dataSource.page(1); //new search. Set page size to 1
-            //grid.dataSource.read(); we already loaded the grid above using "page" function
-            //clear selected checkboxes
-            $('.checkboxGroups').attr('checked', false).change();
-            selectedIds = [];
-            return false;
-        });
-
         //"delete selected" button
         $("#delete-selected-action-confirmation-submit-button").bind("click", function () {
             var postData = {
@@ -187,13 +94,7 @@
                 url: "@(Url.Action("DeleteSelectedSeNames", "Common"))",
                 data: postData,
                 complete: function (data) {
-                    //reload grid
-                    var grid = $('#sename-grid').data('kendoGrid');
-                    grid.dataSource.page(1); //new search. Set page size to 1
-                    //grid.dataSource.read(); we already loaded the grid above using "page" function
-                    //clear selected checkboxes
-                    $('.checkboxGroups').attr('checked', false).change();
-                    selectedIds = [];
+                    $('#@Model.Grid.Name').DataTable().ajax.reload();
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
                     $('#deleteSelectedSeNamesFailed-info').html(thrownError);
@@ -204,44 +105,6 @@
             $('#delete-selected-action-confirmation').modal('toggle');
             return false;
         });
-
-        $('#mastercheckbox').click(function() {
-            $('.checkboxGroups').attr('checked', $(this).is(':checked')).change();
-        });
-
-        //wire up checkboxes.
-        $('#sename-grid').on('change', 'input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]', function(e) {
-            var $check = $(this);
-            var checked = jQuery.inArray($check.val(), selectedIds);
-            if ($check.is(":checked") == true) {
-                if (checked == -1) {
-                    //add id to selectedIds.
-                    selectedIds.push($check.val());
-                }
-            } else if (checked > -1) {
-                //remove id from selectedIds.
-                selectedIds = $.grep(selectedIds, function (item, index) {
-                    return item != $check.val();
-                });
-            }
-            updateMasterCheckbox();
-        });
     });
-
-    function onDataBound(e) {
-        $('#sename-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]').each(function() {
-            var currentId = $(this).val();
-            var checked = jQuery.inArray(currentId, selectedIds);
-            //set checked based on if current checkbox's value is in selectedIds.
-            $(this).attr('checked', checked > -1);
-        });
-
-        updateMasterCheckbox();
-    }
-
-    function updateMasterCheckbox() {
-        var numChkBoxes = $('#sename-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]').length;
-        var numChkBoxesChecked = $('#sename-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]:checked').length;
-        $('#mastercheckbox').attr('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
-    }
 </script>
+<nop-alert asp-alert-id="deleteSelectedSeNamesFailed" />
