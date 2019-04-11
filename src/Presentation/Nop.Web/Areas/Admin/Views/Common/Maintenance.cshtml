@@ -1,6 +1,5 @@
 ﻿@model MaintenanceModel
 
-@using System.Text.Encodings.Web
 @{
     //page title
     ViewBag.Title = T("Admin.System.Maintenance").Text;
@@ -50,116 +49,10 @@
                         <nop-panel class="col-md-6 col-xs-12 margin-t-5" asp-name="maintenance-delete-carts" asp-icon="fa fa-trash-o" asp-title="@T("Admin.System.Maintenance.DeleteAbandonedCarts")" asp-hide-block-attribute-name="@hideDeleteCartsBlockAttributeName" asp-hide="@hideDeleteCartsBlock" asp-advanced="false">@await Html.PartialAsync("_Maintenance.DeleteAbandonedCarts", Model)</nop-panel>
                         <nop-panel class="col-md-6 col-xs-12 margin-t-5" asp-name="maintenance-reindex" asp-icon="fa fa-database" asp-title="@T("Admin.System.Maintenance.ReIndexTables")" asp-hide-block-attribute-name="@hideReindexBlockAttributeName" asp-hide="@hideReindexBlock" asp-advanced="false">@await Html.PartialAsync("_Maintenance.ReindexDatabaseTables", Model)</nop-panel>
                     </nop-panels>
-                </div>
-                
+                </div>                
                 <nop-panel asp-name="maintenance-backups" asp-icon="fa fa-hdd-o" asp-title="@T("Admin.System.Maintenance.BackupDatabase.DatabaseBackups")" asp-hide-block-attribute-name="@hideBackupsBlockAttributeName" asp-hide="@hideBackupsBlock" asp-advanced="false">@await Html.PartialAsync("_Maintenance.DBBackups", Model)</nop-panel>
-                
                 @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.MaintenanceDetailsBlock, additionalData = Model })
             </nop-panels>
-
-            <div id="backup-data" style="display: none"></div>
-
-            <script>
-                    $(document).ready(function() {
-                        $("button[name='re-index']").on("click", function () {
-                            $("html, body").animate({ scrollTop: 0 }, 400);
-                            showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Admin.System.Maintenance.ReIndexTables.Progress").Text))');
-                        });
-                    });
-            </script>
-
-            <script>
-                    function submitBackupAction(fileName, action) {
-                        $("#backup-data").children().remove();
-                        $("#backup-data").append('<input type="hidden" name="backupFileName" value="' + fileName + '"/>');
-                        $("#backup-data").append('<input type="hidden" name="action" value="' + action + '"/>');
-                        showProgress();
-                    };
-
-                    function showProgress() {
-                        $("html, body").animate({ scrollTop: 0 }, 400);
-                        showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Admin.System.Maintenance.BackupDatabase.Progress").Text))');
-                    };
-
-                    $(document).ready(function () {
-                        $("#backup-database").on("click", function () {
-                            showProgress();
-                        });
-                    });
-            </script>
-
-            <script>
-                    $(document).ready(function () {
-                        $("#backup-list").kendoGrid({
-                            dataSource: {
-                                type: "json",
-                                transport: {
-                                    read: {
-                                        url: "@Html.Raw(Url.Action("BackupFiles", "Common"))",
-                                        type: "POST",
-                                        dataType: "json",
-                                        data: addAntiForgeryToken
-                                    }
-                                },
-                                schema: {
-                                    data: "Data",
-                                    total: "Total",
-                                    errors: "Errors"
-                                },
-                                error: function (e) {
-                                    display_kendoui_grid_error(e);
-                                    // Cancel the changes
-                                    this.cancelChanges();
-                                },
-                                pageSize: @(Model.BackupFileSearchModel.PageSize),
-                                serverPaging: true,
-                                serverFiltering: true,
-                                serverSorting: true
-                            },
-                            pageable: {
-                                refresh: true,
-                                pageSizes: [@(Model.BackupFileSearchModel.AvailablePageSizes)],
-                                @await Html.PartialAsync("_GridPagerMessages")
-                            },
-                            editable: {
-                                confirmation: "@T("Admin.Common.DeleteConfirmation")",
-                                mode: "inline"
-                            },
-                            scrollable: false,
-                            columns: [
-                                {
-                                    field: "Name",
-                                    title: "@T("Admin.System.Maintenance.BackupDatabase.FileName")"
-                                }, {
-                                    field: "Length",
-                                    title: "@T("Admin.System.Maintenance.BackupDatabase.FileSize")"
-                                }, {
-                                    field: "Link",
-                                    headerAttributes: { style: "text-align:center" },
-                                    attributes: { style: "text-align:center" },
-                                    width: 150,
-                                    title: "@T("Admin.System.Maintenance.BackupDatabase.Download")",
-                                    template: '<a class="btn btn-default" href="#=Link#"><i class="fa fa-download"></i>@T("Admin.System.Maintenance.BackupDatabase.Download")</a>'
-                                }, {
-                                    field: "Name",
-                                    title: "@T("Admin.System.Maintenance.BackupDatabase.Restore")",
-                                    headerAttributes: { style: "text-align:center" },
-                                    attributes: { style: "text-align:center" },
-                                    width: 150,
-                                    template: '<button type="submit" class="btn btn-default" onclick="submitBackupAction(\'#=Name#\',\'restore-backup\')"><i class="fa fa-database"></i>@T("Admin.System.Maintenance.BackupDatabase.Restore")</button>'
-                                },
-                                {
-                                    field: "Name",
-                                    headerAttributes: { style: "text-align:center" },
-                                    attributes: { style: "text-align:center" },
-                                    width: 150,
-                                    title: "@T("Admin.System.Maintenance.BackupDatabase.Delete")",
-                                    template: '<button type="submit" class="btn btn-default" onclick="submitBackupAction(\'#=Name#\',\'delete-backup\')"><i class="fa fa-trash"></i>@T("Admin.System.Maintenance.BackupDatabase.Delete")</button>'
-                                }
-                            ]
-                        });
-                    });
-            </script>
         </div>
     </div>
 </form>

@@ -1,13 +1,107 @@
 ﻿@model MaintenanceModel
+@using System.Text.Encodings.Web
 
 <div class="panel-body">
     <p>
         @T("Admin.System.Maintenance.BackupDatabase.Description")
     </p>
     <div id="backup-list"></div>
+    <script>
+        $(document).ready(function () {
+            $("#backup-list").kendoGrid({
+                dataSource: {
+                    type: "json",
+                    transport: {
+                        read: {
+                            url: "@Html.Raw(Url.Action("BackupFiles", "Common"))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        }
+                    },
+                    schema: {
+                        data: "Data",
+                        total: "Total",
+                        errors: "Errors"
+                    },
+                    error: function (e) {
+                        display_kendoui_grid_error(e);
+                        // Cancel the changes
+                        this.cancelChanges();
+                    },
+                    pageSize: @(Model.BackupFileSearchModel.PageSize),
+                    serverPaging: true,
+                    serverFiltering: true,
+                    serverSorting: true
+                },
+                pageable: {
+                    refresh: true,
+                    pageSizes: [@(Model.BackupFileSearchModel.AvailablePageSizes)],
+                    @await Html.PartialAsync("_GridPagerMessages")
+                },
+                editable: {
+                    confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                    mode: "inline"
+                },
+                scrollable: false,
+                columns: [
+                    {
+                        field: "Name",
+                        title: "@T("Admin.System.Maintenance.BackupDatabase.FileName")"
+                    }, {
+                        field: "Length",
+                        title: "@T("Admin.System.Maintenance.BackupDatabase.FileSize")"
+                    }, {
+                        field: "Link",
+                        headerAttributes: { style: "text-align:center" },
+                        attributes: { style: "text-align:center" },
+                        width: 150,
+                        title: "@T("Admin.System.Maintenance.BackupDatabase.Download")",
+                        template: '<a class="btn btn-default" href="#=Link#"><i class="fa fa-download"></i>@T("Admin.System.Maintenance.BackupDatabase.Download")</a>'
+                    }, {
+                        field: "Name",
+                        title: "@T("Admin.System.Maintenance.BackupDatabase.Restore")",
+                        headerAttributes: { style: "text-align:center" },
+                        attributes: { style: "text-align:center" },
+                        width: 150,
+                        template: '<button type="submit" class="btn btn-default" onclick="submitBackupAction(\'#=Name#\',\'restore-backup\')"><i class="fa fa-database"></i>@T("Admin.System.Maintenance.BackupDatabase.Restore")</button>'
+                    },
+                    {
+                        field: "Name",
+                        headerAttributes: { style: "text-align:center" },
+                        attributes: { style: "text-align:center" },
+                        width: 150,
+                        title: "@T("Admin.System.Maintenance.BackupDatabase.Delete")",
+                        template: '<button type="submit" class="btn btn-default" onclick="submitBackupAction(\'#=Name#\',\'delete-backup\')"><i class="fa fa-trash"></i>@T("Admin.System.Maintenance.BackupDatabase.Delete")</button>'
+                    }
+                ]
+            });
+        });
+    </script>
 </div>
 <div class="panel-footer">
     <button type="submit" id="backup-database" name="backup-database" class="btn btn-primary">
         @T("Admin.System.Maintenance.BackupDatabase.BackupNow")
     </button>
+    <script>
+        function submitBackupAction(fileName, action) {
+            $("#backup-data").children().remove();
+            $("#backup-data").append('<input type="hidden" name="backupFileName" value="' + fileName + '"/>');
+            $("#backup-data").append('<input type="hidden" name="action" value="' + action + '"/>');
+            showProgress();
+        };
+
+        function showProgress() {
+            $("html, body").animate({ scrollTop: 0 }, 400);
+            showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Admin.System.Maintenance.BackupDatabase.Progress").Text))');
+        };
+
+        $(document).ready(function () {
+            $("#backup-database").on("click", function () {
+                showProgress();
+            });
+        });
+    </script>
 </div>
+
+<div id="backup-data" style="display: none"></div>
