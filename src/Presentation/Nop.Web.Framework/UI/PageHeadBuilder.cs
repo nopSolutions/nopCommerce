@@ -601,22 +601,25 @@ namespace Nop.Web.Framework.UI
                     //save
                     var configFilePath = _hostingEnvironment.ContentRootPath + "\\" + outputFileName + ".json";
                     bundle.FileName = configFilePath;
-                    lock (_lock)
+
+                    //performance optimization. do not bundle and minify for each HTTP request
+                    //we periodically re-check already bundles file
+                    //so if we have minification enabled, it could take up to several minutes to see changes in updated resource files (or just reset the cache or restart the site)
+                    var cacheKey = $"Nop.minification.shouldrebuild.css-{outputFileName}";
+                    var shouldRebuild = _cacheManager.Get(cacheKey, () => true, RECHECK_BUNDLED_FILES_PERIOD);
+
+                    if (shouldRebuild)
                     {
-                        //performance optimization. do not bundle and minify for each HTTP request
-                        //we periodically re-check already bundles file
-                        //so if we have minification enabled, it could take up to several minutes to see changes in updated resource files (or just reset the cache or restart the site)
-                        var cacheKey = $"Nop.minification.shouldrebuild.css-{outputFileName}";
-                        var shouldRebuild = _cacheManager.Get(cacheKey, () => true, RECHECK_BUNDLED_FILES_PERIOD);
-                        if (shouldRebuild)
+                        lock (_lock)
                         {
                             //store json file to see a generated config file (for debugging purposes)
                             //BundleHandler.AddBundle(configFilePath, bundle);
 
                             //process
-                            _processor.Process(configFilePath, new List<Bundle> { bundle });
-                            _cacheManager.Set(cacheKey, false, RECHECK_BUNDLED_FILES_PERIOD);
+                            _processor.Process(configFilePath, new List<Bundle> {bundle});
                         }
+
+                        _cacheManager.Set(cacheKey, false, RECHECK_BUNDLED_FILES_PERIOD);
                     }
 
                     //render
