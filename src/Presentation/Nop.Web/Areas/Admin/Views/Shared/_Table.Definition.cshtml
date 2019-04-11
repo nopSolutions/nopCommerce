@@ -129,7 +129,7 @@ columns: [
                 if (!string.IsNullOrEmpty(column.Title) && column.IsMasterCheckBox)
                 {
                     <text>
-                        title: '<div class="checkbox"><label><input id="mastercheckbox" type="checkbox"/>@column.Title</label></div>',
+                        title: '<div class="checkbox"><label><input id="mastercheckbox" type="checkbox" />@JavaScriptEncoder.Default.Encode(column.Title)</label></div>',
                     </text>
                 }
                 else
