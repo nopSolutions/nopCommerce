@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Domain.Customers;
 using Nop.Services.Customers;
@@ -6,6 +7,7 @@ using Nop.Services.Localization;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Customers;
 using Nop.Web.Framework.Factories;
+using Nop.Web.Framework.Models.DataTables;
 using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
@@ -61,6 +63,61 @@ namespace Nop.Web.Areas.Admin.Factories
             return searchModel;
         }
 
+
+        /// <summary>
+        /// Prepare datatables model
+        /// </summary>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
+        protected virtual DataTablesModel PrepareCustomerAttributeGridModel(CustomerAttributeSearchModel searchModel)
+        {
+            //prepare common properties
+            var model = new DataTablesModel
+            {
+                Name = "customerattributes-grid",
+                UrlRead = new DataUrl("List", "CustomerAttribute", null),
+                Length = searchModel.PageSize,
+                LengthMenu = searchModel.AvailablePageSizes
+            };
+
+            //prepare model columns
+            model.ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(CustomerAttributeModel.Name))
+                {
+                    Title = _localizationService.GetResource("Admin.Customers.CustomerAttributes.Fields.Name"),
+                    Width = "300"
+                },
+                new ColumnProperty(nameof(CustomerAttributeModel.AttributeControlTypeName))
+                {
+                    Title = _localizationService.GetResource("Admin.Customers.CustomerAttributes.Fields.AttributeControlType"),
+                    Width = "200"
+                },
+                new ColumnProperty(nameof(CustomerAttributeModel.IsRequired))
+                {
+                    Title = _localizationService.GetResource("Admin.Customers.CustomerAttributes.Fields.IsRequired"),
+                    Width = "200",
+                    ClassName =  StyleColumn.CenterAll,
+                    Render = new RenderBoolean()
+                },
+                new ColumnProperty(nameof(CustomerAttributeModel.DisplayOrder))
+                {
+                    Title = _localizationService.GetResource("Admin.Customers.CustomerAttributes.Fields.DisplayOrder"),
+                    Width = "100",
+                    ClassName =  StyleColumn.CenterAll
+                },
+                new ColumnProperty(nameof(CustomerAttributeModel.Id))
+                {
+                    Title = _localizationService.GetResource("Admin.Common.Edit"),
+                    Width = "100",
+                    ClassName =  StyleColumn.CenterAll,
+                    Render = new RenderButtonEdit(new DataUrl("~/Admin/CustomerAttribute/Edit/"))
+                }
+            };
+
+            return model;
+        }
+
         #endregion
 
         #region Methods
@@ -77,6 +134,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
+            searchModel.Grid = PrepareCustomerAttributeGridModel(searchModel);
 
             return searchModel;
         }
@@ -95,9 +153,9 @@ namespace Nop.Web.Areas.Admin.Factories
             var customerAttributes = _customerAttributeService.GetAllCustomerAttributes().ToPagedList(searchModel);
 
             //prepare list model
-            var model = new CustomerAttributeListModel
+            var model = new CustomerAttributeListModel().PrepareToGrid(searchModel, customerAttributes, () =>
             {
-                Data = customerAttributes.Select(attribute =>
+                return customerAttributes.Select(attribute =>
                 {
                     //fill in model values from the entity
                     var attributeModel = attribute.ToModel<CustomerAttributeModel>();
@@ -106,9 +164,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     attributeModel.AttributeControlTypeName = _localizationService.GetLocalizedEnum(attribute.AttributeControlType);
 
                     return attributeModel;
-                }),
-                Total = customerAttributes.TotalCount
-            };
+                });
+            });
 
             return model;
         }
