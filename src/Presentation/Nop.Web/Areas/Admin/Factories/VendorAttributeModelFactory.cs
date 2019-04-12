@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Domain.Vendors;
 using Nop.Services.Localization;
@@ -6,6 +7,7 @@ using Nop.Services.Vendors;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Vendors;
 using Nop.Web.Framework.Factories;
+using Nop.Web.Framework.Models.DataTables;
 using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
@@ -61,6 +63,62 @@ namespace Nop.Web.Areas.Admin.Factories
             return searchModel;
         }
 
+        /// <summary>
+        /// Prepare datatables model
+        /// </summary>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
+        protected virtual DataTablesModel PrepareVendorAttributeGridModel(VendorAttributeSearchModel searchModel)
+        {
+            //prepare common properties
+            var model = new DataTablesModel
+            {
+                Name = "vendorattributes-grid",
+                UrlRead = new DataUrl("List", "VendorAttribute", null),
+                Length = searchModel.PageSize,
+                LengthMenu = searchModel.AvailablePageSizes
+            };
+
+            //prepare filters to search
+            model.Filters = null;
+
+            //prepare model columns
+            model.ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(VendorAttributeModel.Name))
+                {
+                    Title = _localizationService.GetResource("Admin.Vendors.VendorAttributes.Fields.Name"),
+                    Width = "300"
+                },
+                new ColumnProperty(nameof(VendorAttributeModel.AttributeControlTypeName))
+                {
+                    Title = _localizationService.GetResource("Admin.Vendors.VendorAttributes.Fields.AttributeControlType"),
+                    Width = "200"
+                },
+                new ColumnProperty(nameof(VendorAttributeModel.IsRequired))
+                {
+                    Title = _localizationService.GetResource("Admin.Vendors.VendorAttributes.Fields.IsRequired"),
+                    Width = "100",
+                    ClassName =  StyleColumn.CenterAll,
+                    Render = new RenderBoolean()
+                },
+                new ColumnProperty(nameof(VendorAttributeModel.DisplayOrder))
+                {
+                    Title = _localizationService.GetResource("Admin.Vendors.VendorAttributes.Fields.DisplayOrder"),
+                    Width = "100"
+                },
+                new ColumnProperty(nameof(VendorAttributeModel.Id))
+                {
+                    Title = _localizationService.GetResource("Admin.Common.Edit"),
+                    Width = "100",
+                    ClassName =  StyleColumn.CenterAll,
+                    Render = new RenderButtonEdit(new DataUrl("~/Admin/VendorAttribute/Edit/"))
+                }
+            };
+
+            return model;
+        }
+
         #endregion
 
         #region Methods
@@ -77,6 +135,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
+            searchModel.Grid = PrepareVendorAttributeGridModel(searchModel);
 
             return searchModel;
         }
@@ -95,9 +154,9 @@ namespace Nop.Web.Areas.Admin.Factories
             var vendorAttributes = _vendorAttributeService.GetAllVendorAttributes().ToPagedList(searchModel);
 
             //prepare list model
-            var model = new VendorAttributeListModel
+            var model = new VendorAttributeListModel().PrepareToGrid(searchModel, vendorAttributes, () =>
             {
-                Data = vendorAttributes.Select(attribute =>
+                return vendorAttributes.Select(attribute =>
                 {
                     //fill in model values from the entity
                     var attributeModel = attribute.ToModel<VendorAttributeModel>();
@@ -106,9 +165,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     attributeModel.AttributeControlTypeName = _localizationService.GetLocalizedEnum(attribute.AttributeControlType);
 
                     return attributeModel;
-                }),
-                Total = vendorAttributes.TotalCount
-            };
+                });
+            });
 
             return model;
         }
