@@ -503,6 +503,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
+            searchModel.Grid = PrepareCustomerActivityLogGridModel(searchModel);
 
             return searchModel;
         }
@@ -761,6 +762,58 @@ namespace Nop.Web.Areas.Admin.Factories
                 }                
             };
             
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare datatables model
+        /// </summary>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
+        protected virtual DataTablesModel PrepareCustomerActivityLogGridModel(
+            CustomerActivityLogSearchModel searchModel)
+        {
+            //prepare common properties
+            var model = new DataTablesModel
+            {
+                Name = "activitylog-grid",
+                UrlRead = new DataUrl("ListActivityLog", "Customer", null),
+                Length = searchModel.PageSize,
+                LengthMenu = searchModel.AvailablePageSizes,
+
+                //prepare filters to search
+                Filters = new List<FilterParameter>
+                {
+                    new FilterParameter(nameof(searchModel.CustomerId), typeof(int), searchModel.CustomerId)
+                },
+
+                //prepare model columns
+                ColumnCollection = new List<ColumnProperty>
+                {
+                    new ColumnProperty(nameof(CustomerActivityLogModel.ActivityLogTypeName))
+                    {
+                        Title = _localizationService.GetResource(
+                            "Admin.Customers.Customers.ActivityLog.ActivityLogType"),
+                        Width = "300"
+                    },
+                    new ColumnProperty(nameof(CustomerActivityLogModel.IpAddress))
+                    {
+                        Title = _localizationService.GetResource("Admin.Customers.Customers.ActivityLog.IpAddress"),
+                        Width = "100"
+                    },
+                    new ColumnProperty(nameof(CustomerActivityLogModel.Comment))
+                    {
+                        Title = _localizationService.GetResource("Admin.Customers.Customers.ActivityLog.Comment")
+                    },
+                    new ColumnProperty(nameof(CustomerActivityLogModel.CreatedOn))
+                    {
+                        Title = _localizationService.GetResource("Admin.Customers.Customers.ActivityLog.CreatedOn"),
+                        Width = "200",
+                        Render = new RenderDate()
+                    }
+                }
+            };
+
             return model;
         }
 
@@ -1242,25 +1295,24 @@ namespace Nop.Web.Areas.Admin.Factories
             var activityLog = _customerActivityService.GetAllActivities(customerId: customer.Id,
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
-            //prepare list model
-            var model = new CustomerActivityLogListModel
+            var pageList = activityLog.Select(logItem =>
             {
-                Data = activityLog.Select(logItem =>
-                {
-                    //fill in model values from the entity
-                    var customerActivityLogModel = logItem.ToModel<CustomerActivityLogModel>();
+                //fill in model values from the entity
+                var customerActivityLogModel = logItem.ToModel<CustomerActivityLogModel>();
 
-                    //fill in additional values (not existing in the entity)
-                    customerActivityLogModel.ActivityLogTypeName = logItem.ActivityLogType.Name;
+                //fill in additional values (not existing in the entity)
+                customerActivityLogModel.ActivityLogTypeName = logItem.ActivityLogType.Name;
 
-                    //convert dates to the user time
-                    customerActivityLogModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(logItem.CreatedOnUtc, DateTimeKind.Utc);
+                //convert dates to the user time
+                customerActivityLogModel.CreatedOn =
+                    _dateTimeHelper.ConvertToUserTime(logItem.CreatedOnUtc, DateTimeKind.Utc);
 
-                    return customerActivityLogModel;
-                }),
-                Total = activityLog.TotalCount
-            };
+                return customerActivityLogModel;
+            }).ToList().ToPagedList(searchModel);
 
+            //prepare list model
+            var model = new CustomerActivityLogListModel().PrepareToGrid(searchModel, pageList, () => pageList);
+            
             return model;
         }
 
