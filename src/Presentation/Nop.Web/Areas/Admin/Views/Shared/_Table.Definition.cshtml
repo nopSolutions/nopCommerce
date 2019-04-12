@@ -83,18 +83,30 @@ else
                         {
                             @foreach (var filter in Model.Filters)
                             {
+                                @if (filter.Type == typeof(string))
+                                {
+                                    <text>
+                                        data.@filter.Name = $('#@filter.Name').val();
+                                    </text>
+                                    continue;
+                                }
                                 @if (filter.Type == typeof(bool))
                                 {
                                     <text>
                                         data.@filter.Name = $('#@filter.Name').is(':checked');
                                     </text>
+                                    continue;
                                 }
-                                else
+                                @if (filter.Type == typeof(int))
                                 {
-                                    <text>
-                                        data.@filter.Name = $('#@filter.Name').val();
-                                    </text>
-                                }     
+                                    if (int.TryParse(@filter.Value.ToString(), out int val))
+                                    {
+                                        <text>
+                                            data.@filter.Name = @val;
+                                        </text>
+                                    }
+                                    continue;
+                                }
                             }
                         }
                     }
