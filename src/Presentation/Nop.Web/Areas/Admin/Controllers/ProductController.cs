@@ -2459,7 +2459,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 //fill entity from model
                 var tierPrice = model.ToEntity<TierPrice>();
-
+                tierPrice.ProductId = product.Id;
                 tierPrice.CustomerRoleId = model.CustomerRoleId > 0 ? model.CustomerRoleId : (int?)null;
 
                 _productService.InsertTierPrice(tierPrice);
