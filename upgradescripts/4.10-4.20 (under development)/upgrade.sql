@@ -589,7 +589,7 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Reviews.Fields.Rating.NotGood">
     <Value>Not good</Value>
-  </LocaleResource>	
+  </LocaleResource>
 </Language>'
 
 CREATE TABLE #LocaleStringResourceTmp
