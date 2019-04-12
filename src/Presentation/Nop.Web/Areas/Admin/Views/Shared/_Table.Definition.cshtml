@@ -157,6 +157,12 @@ columns: [
                     className: '@GetEnumValue(typeof(StyleColumn), column.ClassName.Value)',
                 </text>
             }
+            @if (column.Encode && column.Render == null)
+            {
+                <text>
+                    render: $.fn.dataTable.render.text(),
+                </text>
+            }
             @switch (column.Render)
             {
                 case RenderLink link:

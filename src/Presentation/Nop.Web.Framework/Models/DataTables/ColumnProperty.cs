@@ -16,6 +16,7 @@
             Data = data;
             //set default values
             Visible = true;
+            Encode = true;
         }
 
         #endregion
@@ -67,6 +68,11 @@
         /// Enable or disable filtering on the data in this column.
         /// </summary>
         public bool Searchable { get; set; }
+
+        /// <summary>
+        /// Enable or disable encode on the data in this column.
+        /// </summary>
+        public bool Encode { get; set; }
 
         #endregion
     }
