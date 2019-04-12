@@ -2490,7 +2490,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return RedirectToAction("List", "Product");
 
             //try to get a product with the specified id
-            var product = _productService.GetProductById(tierPrice.ProductId.GetValueOrDefault())
+            var product = _productService.GetProductById(tierPrice.ProductId)
                 ?? throw new ArgumentException("No product found with the specified id");
 
             //a vendor should have access only to his products
@@ -2515,7 +2515,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return RedirectToAction("List", "Product");
 
             //try to get a product with the specified id
-            var product = _productService.GetProductById(tierPrice.ProductId.GetValueOrDefault())
+            var product = _productService.GetProductById(tierPrice.ProductId)
                 ?? throw new ArgumentException("No product found with the specified id");
 
             //a vendor should have access only to his products
@@ -2526,7 +2526,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 //fill entity from model
                 tierPrice = model.ToEntity(tierPrice);
-                tierPrice.ProductId = product.Id > 0 ? product.Id : (int?)null;
+                tierPrice.ProductId = product.Id;
                 tierPrice.CustomerRoleId = model.CustomerRoleId > 0 ? model.CustomerRoleId : (int?)null;
                 tierPrice.StartDateTimeUtc = model.StartDateTimeUtc;
                 tierPrice.EndDateTimeUtc = model.EndDateTimeUtc;
@@ -2555,7 +2555,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No tier price found with the specified id");
 
             //try to get a product with the specified id
-            var product = _productService.GetProductById(tierPrice.ProductId.GetValueOrDefault())
+            var product = _productService.GetProductById(tierPrice.ProductId)
                 ?? throw new ArgumentException("No product found with the specified id");
 
             //a vendor should have access only to his products
