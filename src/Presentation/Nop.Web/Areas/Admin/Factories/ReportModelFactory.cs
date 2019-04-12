@@ -328,7 +328,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Search model</param>
         /// <returns>Datatables model</returns>
-        protected virtual DataTablesModel PrepareBestCustomersReportReportGridModel(BestCustomersReportSearchModel searchModel)
+        protected virtual DataTablesModel PrepareBestCustomersReportByOrderTotalGridModel(BestCustomersReportSearchModel searchModel)
         {
             //prepare common properties
             var model = new DataTablesModel
@@ -344,6 +344,61 @@ namespace Nop.Web.Areas.Admin.Factories
             model.Filters = new List<FilterParameter>()
             {
                 new FilterParameter(nameof(searchModel.OrderBy), typeof(int), 1),
+                new FilterParameter(nameof(searchModel.StartDate)),
+                new FilterParameter(nameof(searchModel.EndDate)),
+                new FilterParameter(nameof(searchModel.OrderStatusId)),
+                new FilterParameter(nameof(searchModel.PaymentStatusId)),
+                new FilterParameter(nameof(searchModel.ShippingStatusId))
+            };
+
+            //prepare model columns
+            model.ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(BestCustomersReportModel.CustomerName))
+                {
+                    Title = _localizationService.GetResource("Admin.Reports.Customers.BestBy.Fields.Customer")
+                },
+                new ColumnProperty(nameof(BestCustomersReportModel.OrderTotal))
+                {
+                    Title = _localizationService.GetResource("Admin.Reports.Customers.BestBy.Fields.OrderTotal")
+                },
+                new ColumnProperty(nameof(BestCustomersReportModel.OrderCount))
+                {
+                    Title = _localizationService.GetResource("Admin.Reports.Customers.BestBy.Fields.OrderCount")
+                },
+                new ColumnProperty(nameof(BestCustomersReportModel.CustomerId))
+                {
+                    Title = _localizationService.GetResource("Admin.Common.View"),
+                    Width = "100",
+                    ClassName =  StyleColumn.CenterAll,
+                    Render = new RenderButtonView(new DataUrl("~/Admin/Customer/Edit/"))
+                }
+            };
+
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare datatables model
+        /// </summary>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
+        protected virtual DataTablesModel PrepareBestCustomersReportByNumberOfOrdersGridModel(BestCustomersReportSearchModel searchModel)
+        {
+            //prepare common properties
+            var model = new DataTablesModel
+            {
+                Name = "best-customers-numberoforders-grid",
+                UrlRead = new DataUrl("ReportBestCustomersByNumberOfOrdersList", "Report", null),
+                SearchButtonId = "search-best-customers-numberoforders-grid",
+                Length = searchModel.PageSize,
+                LengthMenu = searchModel.AvailablePageSizes
+            };
+
+            //prepare filters to search
+            model.Filters = new List<FilterParameter>()
+            {
+                new FilterParameter(nameof(searchModel.OrderBy), typeof(int), 2),
                 new FilterParameter(nameof(searchModel.StartDate)),
                 new FilterParameter(nameof(searchModel.EndDate)),
                 new FilterParameter(nameof(searchModel.OrderStatusId)),
@@ -761,7 +816,8 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
-            searchModel.Grid = PrepareBestCustomersReportReportGridModel(searchModel);
+            searchModel.Grid = PrepareBestCustomersReportByOrderTotalGridModel(searchModel);
+            searchModel.Grid = PrepareBestCustomersReportByNumberOfOrdersGridModel(searchModel);
 
             return searchModel;
         }
