@@ -136,6 +136,65 @@ namespace Nop.Web.Areas.Admin.Factories
             return model;
         }
 
+        /// <summary>
+        /// Prepare datatables model
+        /// </summary>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
+        protected virtual DataTablesModel PrepareBestsellerGridModel(BestsellerSearchModel searchModel)
+        {
+            //prepare common properties
+            var model = new DataTablesModel
+            {
+                Name = "salesreport-grid",
+                UrlRead = new DataUrl("BestsellersList", "Report", null),
+                SearchButtonId = "search-salesreport",
+                Length = searchModel.PageSize,
+                LengthMenu = searchModel.AvailablePageSizes
+            };
+
+            //prepare filters to search
+            model.Filters = new List<FilterParameter>()
+            {
+                new FilterParameter(nameof(searchModel.StartDate)),
+                new FilterParameter(nameof(searchModel.EndDate)),
+                new FilterParameter(nameof(searchModel.StoreId)),
+                new FilterParameter(nameof(searchModel.OrderStatusId)),
+                new FilterParameter(nameof(searchModel.PaymentStatusId)),
+                new FilterParameter(nameof(searchModel.CategoryId)),
+                new FilterParameter(nameof(searchModel.ManufacturerId)),
+                new FilterParameter(nameof(searchModel.BillingCountryId)),
+                new FilterParameter(nameof(searchModel.VendorId))
+            };
+
+            //prepare model columns
+            model.ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(BestsellerModel.ProductName))
+                {
+                    Title = _localizationService.GetResource("Admin.Reports.Sales.Bestsellers.Fields.Name")
+                },
+                new ColumnProperty(nameof(BestsellerModel.TotalQuantity))
+                {
+                    Title = _localizationService.GetResource("Admin.Reports.Sales.Bestsellers.Fields.TotalQuantity")
+                },
+                new ColumnProperty(nameof(BestsellerModel.TotalAmount))
+                {
+                    Title = _localizationService.GetResource("Admin.Reports.Sales.Bestsellers.Fields.TotalAmount")
+                },
+
+                new ColumnProperty(nameof(BestsellerModel.ProductId))
+                {
+                    Title = _localizationService.GetResource("Admin.Common.Edit"),
+                    Width = "100",
+                    ClassName =  StyleColumn.CenterAll,
+                    Render = new RenderButtonView(new DataUrl("~/Admin/Product/Edit/"))
+                }
+            };
+
+            return model;
+        }
+
         #endregion
 
         #region Methods
@@ -268,6 +327,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
+            searchModel.Grid = PrepareBestsellerGridModel(searchModel);
 
             return searchModel;
         }
@@ -307,9 +367,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new BestsellerListModel
+            var model = new BestsellerListModel().PrepareToGrid(searchModel, bestsellers, () =>
             {
-                Data = bestsellers.Select(bestseller =>
+                return bestsellers.Select(bestseller =>
                 {
                     //fill in model values from the entity
                     var bestsellerModel = new BestsellerModel
@@ -323,9 +383,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     bestsellerModel.TotalAmount = _priceFormatter.FormatPrice(bestseller.TotalAmount, true, false);
 
                     return bestsellerModel;
-                }),
-                Total = bestsellers.TotalCount
-            };
+                });
+            });
 
             return model;
         }
