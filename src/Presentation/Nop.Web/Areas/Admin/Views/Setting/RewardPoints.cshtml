@@ -15,7 +15,7 @@
     var hideCommonBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideCommonBlockAttributeName);
 
     const string hideEarningRewardPointsBlockAttributeName = "RewardPointsSettingsPage.HideEarningRewardPointsBlock";
-    var hideEarningRewardPointsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideEarningRewardPointsBlockAttributeName, defaultValue: true);
+    var hideEarningRewardPointsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideEarningRewardPointsBlockAttributeName);
 }
 
 <form asp-controller="Setting" asp-action="RewardPoints" method="post">

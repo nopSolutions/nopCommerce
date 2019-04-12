@@ -12,7 +12,7 @@
     var hideCommonBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideCommonBlockAttributeName);
 
     const string hideCommentsBlockAttributeName = "BlogSettingsPage.HideCommentsBlock";
-    var hideCommentsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideCommentsBlockAttributeName, defaultValue: true);
+    var hideCommentsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideCommentsBlockAttributeName);
 }
 
 

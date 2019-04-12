@@ -12,7 +12,7 @@
     var hideCommonBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideCommonBlockAttributeName);
 
     const string hideConsentsBlockAttributeName = "GdprSettingsPage.HideConsentsBlock";
-    var hideConsentsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideConsentsBlockAttributeName, defaultValue: true);
+    var hideConsentsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideConsentsBlockAttributeName);
 }
 
 
