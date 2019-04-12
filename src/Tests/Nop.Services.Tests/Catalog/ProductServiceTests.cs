@@ -16,7 +16,7 @@ namespace Nop.Services.Tests.Catalog
         [SetUp]
         public new void SetUp()
         {
-            _productService = new ProductService(new CatalogSettings(), new CommonSettings(), null, new NopNullCache(),
+            _productService = new ProductService(new CatalogSettings(), new CommonSettings(), null, new TestCacheManager(),
                 null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
                 null, null, null, new LocalizationSettings());
         }

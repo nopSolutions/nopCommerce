@@ -12,19 +12,19 @@
     var hideCommonBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideCommonBlockAttributeName);
 
     const string hideDefaultTaxAddressBlockAttributeName = "TaxSettingsPage.HideDefaultTaxAddressBlock";
-    var hideDefaultTaxAddressBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideDefaultTaxAddressBlockAttributeName, defaultValue: true);
+    var hideDefaultTaxAddressBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideDefaultTaxAddressBlockAttributeName);
 
     const string hideTaxDisplayingBlockAttributeName = "TaxSettingsPage.HideTaxDisplayingBlock";
-    var hideTaxDisplayingBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideTaxDisplayingBlockAttributeName, defaultValue: true);
+    var hideTaxDisplayingBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideTaxDisplayingBlockAttributeName);
 
     const string hideShippingBlockAttributeName = "TaxSettingsPage.HideShippingBlock";
-    var hideShippingBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideShippingBlockAttributeName, defaultValue: true);
+    var hideShippingBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideShippingBlockAttributeName);
 
     const string hidePaymentBlockAttributeName = "TaxSettingsPage.HidePaymentBlock";
-    var hidePaymentBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hidePaymentBlockAttributeName, defaultValue: true);
+    var hidePaymentBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hidePaymentBlockAttributeName);
 
     const string hideVATBlockAttributeName = "TaxSettingsPage.HideVATBlock";
-    var hideVATBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideVATBlockAttributeName, defaultValue: true);
+    var hideVATBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideVATBlockAttributeName);
 }
 
     <form asp-controller="Setting" asp-action="Tax" method="post">

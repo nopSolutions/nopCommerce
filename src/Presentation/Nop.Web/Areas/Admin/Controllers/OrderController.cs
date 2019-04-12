@@ -1424,8 +1424,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             //prepare model
             model = _orderModelFactory.PrepareOrderModel(model, order);
 
-            //selected tab
-            SaveSelectedTabName(persistForTheNextRequest: false);
+            //selected panel
+            SaveSelectedPanelName("order-billing-shipping", persistForTheNextRequest: false);
 
             return View(model);
         }
@@ -1531,8 +1531,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             foreach (var warning in updateOrderParameters.Warnings)
                 _notificationService.WarningNotification(warning);
 
-            //selected tab
-            SaveSelectedTabName(persistForTheNextRequest: false);
+            //selected panel
+            SaveSelectedPanelName("order-products", persistForTheNextRequest: false);
 
             return View(model);
         }
@@ -1572,8 +1572,8 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Orders.OrderItem.DeleteAssociatedGiftCardRecordError"));
 
-                //selected tab
-                SaveSelectedTabName(persistForTheNextRequest: false);
+                //selected panel
+                SaveSelectedPanelName("order-products", persistForTheNextRequest: false);
 
                 return View(model);
             }
@@ -1610,8 +1610,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 foreach (var warning in updateOrderParameters.Warnings)
                     _notificationService.WarningNotification(warning);
 
-                //selected tab
-                SaveSelectedTabName(persistForTheNextRequest: false);
+                //selected panel
+                SaveSelectedPanelName("order-products", persistForTheNextRequest: false);
 
                 return View(model);
             }
@@ -1649,8 +1649,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             //prepare model
             var model = _orderModelFactory.PrepareOrderModel(null, order);
 
-            //selected tab
-            SaveSelectedTabName(persistForTheNextRequest: false);
+            //selected panel
+            SaveSelectedPanelName("order-products", persistForTheNextRequest: false);
 
             return View(model);
         }
@@ -1687,9 +1687,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             //prepare model
             var model = _orderModelFactory.PrepareOrderModel(null, order);
 
-            //selected tab
-            SaveSelectedTabName(persistForTheNextRequest: false);
-
+            //selected panel
+            SaveSelectedPanelName("order-products", persistForTheNextRequest: false);
             return View(model);
         }
 
@@ -1983,6 +1982,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 foreach (var warning in updateOrderParameters.Warnings)
                     _notificationService.WarningNotification(warning);
 
+                //selected panel
+                SaveSelectedPanelName("order-products");
                 return RedirectToAction("Edit", "Order", new { id = order.Id });
             }
 
@@ -2024,7 +2025,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult AddressEdit(OrderAddressModel model)
+        public virtual IActionResult AddressEdit(OrderAddressModel model, IFormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -2043,7 +2044,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No address found with the specified id");
 
             //custom address attributes
-            var customAttributes = _addressAttributeParser.ParseCustomAddressAttributes(model.Form);
+            var customAttributes = _addressAttributeParser.ParseCustomAddressAttributes(form);
             var customAttributeWarnings = _addressAttributeParser.GetAttributeWarnings(customAttributes);
             foreach (var error in customAttributeWarnings)
             {
@@ -2146,6 +2147,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return Content(string.Empty);
 
             //prepare model
+            searchModel.SetGridPageSize();
             var model = _orderModelFactory.PrepareShipmentItemListModel(searchModel, shipment);
 
             return Json(model);

@@ -25,10 +25,10 @@ using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Topics;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Infrastructure.Mapper;
-using Nop.Core.Plugins;
 using Nop.Services.Authentication.External;
 using Nop.Services.Cms;
 using Nop.Services.Payments;
+using Nop.Services.Plugins;
 using Nop.Services.Shipping;
 using Nop.Services.Shipping.Pickup;
 using Nop.Services.Tax;
@@ -109,7 +109,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 //exclude Form and CustomProperties from mapping BaseNopModel
                 if (typeof(BaseNopModel).IsAssignableFrom(mapConfiguration.DestinationType))
                 {
-                    map.ForMember(nameof(BaseNopModel.Form), options => options.Ignore());
+                    //map.ForMember(nameof(BaseNopModel.Form), options => options.Ignore());
                     map.ForMember(nameof(BaseNopModel.CustomProperties), options => options.Ignore());
                 }
 
@@ -382,9 +382,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
             CreateMap<ManufacturerTemplateModel, ManufacturerTemplate>();
 
             //Review type
-            CreateMap<ReviewType, ReviewTypeModel>()
-                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore())
-                .ForMember(dest => dest.Form, mo => mo.Ignore());
+            CreateMap<ReviewType, ReviewTypeModel>();
             CreateMap<ReviewTypeModel, ReviewType>();
 
             //product review
@@ -600,13 +598,13 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.AttributeCombination, options => options.Ignore());
 
             CreateMap<TierPrice, TierPriceModel>()
-                .ForMember(model => model.CustomerRoleId, options => options.Ignore())
                 .ForMember(model => model.Store, options => options.Ignore())
                 .ForMember(model => model.AvailableCustomerRoles, options => options.Ignore())
                 .ForMember(model => model.AvailableStores, options => options.Ignore())
                 .ForMember(model => model.CustomerRole, options => options.Ignore());
             CreateMap<TierPriceModel, TierPrice>()
                 .ForMember(entity => entity.CustomerRoleId, options => options.Ignore())
+                .ForMember(entity => entity.ProductId, options => options.Ignore())
                 .ForMember(entity => entity.Product, options => options.Ignore());
         }
 
@@ -972,7 +970,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
             CreateMap<ForumSettingsModel, ForumSettings>()
                 .ForMember(settings => settings.ForumSearchTermMinimumLength, options => options.Ignore())
                 .ForMember(settings => settings.ForumSubscriptionsPageSize, options => options.Ignore())
-                .ForMember(settings => settings.HomePageActiveDiscussionsTopicCount, options => options.Ignore())
+                .ForMember(settings => settings.HomepageActiveDiscussionsTopicCount, options => options.Ignore())
                 .ForMember(settings => settings.LatestCustomerPostsPageSize, options => options.Ignore())
                 .ForMember(settings => settings.PMSubjectMaxLength, options => options.Ignore())
                 .ForMember(settings => settings.PMTextMaxLength, options => options.Ignore())
@@ -1381,8 +1379,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
         /// </summary>
         protected virtual void CreatePollsMaps()
         {
-            CreateMap<PollAnswer, PollAnswerModel>()
-               .ForMember(model => model.CustomProperties, options => options.Ignore());
+            CreateMap<PollAnswer, PollAnswerModel>();
             CreateMap<PollAnswerModel, PollAnswer>()
                 .ForMember(entity => entity.Poll, options => options.Ignore())
                 .ForMember(entity => entity.PollVotingRecords, options => options.Ignore());

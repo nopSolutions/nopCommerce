@@ -112,10 +112,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 if (!continueEditing)
                     return RedirectToAction("List");
-
-                //selected tab
-                SaveSelectedTabName();
-
+                
                 return RedirectToAction("Edit", new { id = payment.Id });
             }
 
@@ -183,8 +180,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //prepare model
                 var model = _recurringPaymentModelFactory.PrepareRecurringPaymentModel(null, payment);
 
-                //selected tab
-                SaveSelectedTabName(persistForTheNextRequest: false);
+                //selected panel
+                SaveSelectedPanelName("recurringpayment-history", persistForTheNextRequest: false);
 
                 return View(model);
             }
@@ -195,8 +192,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //prepare model
                 var model = _recurringPaymentModelFactory.PrepareRecurringPaymentModel(null, payment);
 
-                //selected tab
-                SaveSelectedTabName(persistForTheNextRequest: false);
+                //selected panel
+                SaveSelectedPanelName("recurringpayment-history", persistForTheNextRequest: false);
 
                 return View(model);
             }
@@ -228,8 +225,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //prepare model
                 var model = _recurringPaymentModelFactory.PrepareRecurringPaymentModel(null, payment);
 
-                //selected tab
-                SaveSelectedTabName(persistForTheNextRequest: false);
+                //selected panel
+                SaveSelectedPanelName("recurringpayment-history", persistForTheNextRequest: false);
 
                 return View(model);
             }
@@ -240,8 +237,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //prepare model
                 var model = _recurringPaymentModelFactory.PrepareRecurringPaymentModel(null, payment);
 
-                //selected tab
-                SaveSelectedTabName(persistForTheNextRequest: false);
+                //selected panel
+                SaveSelectedPanelName("recurringpayment-history", persistForTheNextRequest: false);
 
                 return View(model);
             }

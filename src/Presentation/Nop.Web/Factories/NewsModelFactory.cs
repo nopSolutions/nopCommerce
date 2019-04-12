@@ -157,13 +157,13 @@ namespace Nop.Web.Factories
         /// Prepare the home page news items model
         /// </summary>
         /// <returns>Home page news items model</returns>
-        public virtual HomePageNewsItemsModel PrepareHomePageNewsItemsModel()
+        public virtual HomepageNewsItemsModel PrepareHomepageNewsItemsModel()
         {
             var cacheKey = string.Format(NopModelCacheDefaults.HomepageNewsModelKey, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
             var cachedModel = _cacheManager.Get(cacheKey, () =>
             {
                 var newsItems = _newsService.GetAllNews(_workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id, 0, _newsSettings.MainPageNewsCount);
-                return new HomePageNewsItemsModel
+                return new HomepageNewsItemsModel
                 {
                     WorkingLanguageId = _workContext.WorkingLanguage.Id,
                     NewsItems = newsItems
@@ -180,7 +180,7 @@ namespace Nop.Web.Factories
             //"Comments" property of "NewsItemModel" object depends on the current customer.
             //Furthermore, we just don't need it for home page news. So let's reset it.
             //But first we need to clone the cached model (the updated one should not be cached)
-            var model = (HomePageNewsItemsModel)cachedModel.Clone();
+            var model = (HomepageNewsItemsModel)cachedModel.Clone();
             foreach (var newsItemModel in model.NewsItems)
                 newsItemModel.Comments.Clear();
             return model;

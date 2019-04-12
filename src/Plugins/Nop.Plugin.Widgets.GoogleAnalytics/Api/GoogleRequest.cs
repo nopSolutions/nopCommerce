@@ -2,6 +2,7 @@
 
 using System;
 using System.Net.Http;
+using System.Threading.Tasks;
 using Nop.Core;
 
 namespace Nop.Plugin.Widgets.GoogleAnalytics.Api
@@ -25,27 +26,27 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Api
         private int? _domainHash;
 
         #endregion
-        
+
         #region Utilities
 
-        private async void FireRequest(string url)
+        /// <summary>
+        /// Request Google services
+        /// </summary>
+        /// <param name="url">URL to request</param>
+        /// <param name="httpClient">HTTP client</param>
+        /// <returns>The asynchronous task whose result determines that request is completed</returns>
+        private async Task RequestAsync(string url, HttpClient httpClient)
         {
-            if (_requestCount < 500)
+            //limit request number
+            if (_requestCount >= 500)
+                return;
+
+            _requestCount++;
+            try
             {
-                _requestCount++;
-
-                var httpClient = new HttpClient();
-                try
-                {
-                    // we don't need the response so this is the end of the request
-                    var response = (await httpClient.GetAsync(url)).EnsureSuccessStatusCode();
-                }
-                catch (Exception)
-                {
-                    //eat the error 
-                }
-
+                (await httpClient.GetAsync(url)).EnsureSuccessStatusCode();
             }
+            catch { }
         }
 
         private string CreateParameterString()
@@ -86,7 +87,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Api
                         for (h = HostName.Length - 1; h >= 0; h--)
                         {
                             chrCharacter = char.Parse(HostName.Substring(h, 1));
-                            intCharacter = (int)chrCharacter;
+                            intCharacter = chrCharacter;
                             a = (a << 6 & 268435455) + intCharacter + (intCharacter << 14);
                             c = a & 266338304;
                             a = c != 0 ? a ^ c >> 21 : a;
@@ -143,15 +144,16 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Api
         /// Send the request to the Google servers
         /// </summary>
         /// <param name="transaction">A corresponding transaction</param>
-        public void SendRequest(Transaction transaction)
+        /// <param name="httpClient">HTTP client</param>
+        public void SendRequest(Transaction transaction, HttpClient httpClient)
         {
             var requestUrl = BASE_URL + CreateParameterString() + "&" + transaction.CreateParameterString();
-            FireRequest(requestUrl);
+            RequestAsync(requestUrl, httpClient).Wait();
 
-                foreach (var transItem in transaction.Items)
-                {
-                    FireRequest(BASE_URL + CreateParameterString() + "&" + transItem.CreateParameterString());
-                }
+            foreach (var transItem in transaction.Items)
+            {
+                RequestAsync(BASE_URL + CreateParameterString() + "&" + transItem.CreateParameterString(), httpClient).Wait();
+            }
         }
 
         #endregion

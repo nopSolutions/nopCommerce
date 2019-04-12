@@ -1,13 +1,13 @@
-using System;
+﻿using System;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Nop.Core;
-using Nop.Core.Plugins;
 using Nop.Services.Configuration;
 using Nop.Services.Discounts;
 using Nop.Services.Localization;
+using Nop.Services.Plugins;
 
 namespace Nop.Plugin.DiscountRules.CustomerRoles
 {

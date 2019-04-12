@@ -14,9 +14,10 @@ using Nop.Core.Configuration;
 using Nop.Core.Data;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Security;
-using Nop.Core.Http;
 using Nop.Core.Infrastructure;
 using Nop.Services.Authentication;
+using Nop.Services.Common;
+using Nop.Services.Installation;
 using Nop.Services.Logging;
 using Nop.Web.Framework.Globalization;
 using Nop.Web.Framework.Mvc.Routing;
@@ -55,7 +56,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             else
             {
                 //or use special exception handler
-                application.UseExceptionHandler("/errorpage.htm");
+                application.UseExceptionHandler("/Error/Error");
             }
 
             //log errors

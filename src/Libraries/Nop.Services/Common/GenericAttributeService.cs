@@ -50,7 +50,7 @@ namespace Nop.Services.Common
             _genericAttributeRepository.Delete(attribute);
 
             //cache
-            _cacheManager.RemoveByPattern(NopCommonDefaults.GenericAttributePatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCommonDefaults.GenericAttributePrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(attribute);
@@ -68,7 +68,7 @@ namespace Nop.Services.Common
             _genericAttributeRepository.Delete(attributes);
 
             //cache
-            _cacheManager.RemoveByPattern(NopCommonDefaults.GenericAttributePatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCommonDefaults.GenericAttributePrefixCacheKey);
 
             //event notification
             foreach (var attribute in attributes)
@@ -102,7 +102,7 @@ namespace Nop.Services.Common
             _genericAttributeRepository.Insert(attribute);
 
             //cache
-            _cacheManager.RemoveByPattern(NopCommonDefaults.GenericAttributePatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCommonDefaults.GenericAttributePrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(attribute);
@@ -120,7 +120,7 @@ namespace Nop.Services.Common
             _genericAttributeRepository.Update(attribute);
 
             //cache
-            _cacheManager.RemoveByPattern(NopCommonDefaults.GenericAttributePatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCommonDefaults.GenericAttributePrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(attribute);

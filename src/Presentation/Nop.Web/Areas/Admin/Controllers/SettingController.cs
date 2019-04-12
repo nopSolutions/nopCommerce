@@ -129,9 +129,9 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #endregion
 
-        #region Utilites
+        #region Utilities
 
-        protected virtual void UpdateGDPRConsentLocales(GdprConsent gdprConsent, GdprConsentModel model)
+        protected virtual void UpdateGdprConsentLocales(GdprConsent gdprConsent, GdprConsentModel model)
         {
             foreach (var localized in model.Locales)
             {
@@ -812,10 +812,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     foreach (var error in modelState.Errors)
                         _notificationService.ErrorNotification(error.ErrorMessage);
             }
-
-            //selected tab
-            SaveSelectedTabName();
-
+            
             return RedirectToAction("Order");
         }
 
@@ -1005,10 +1002,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             _customerActivityService.InsertActivity("EditSettings", _localizationService.GetResource("ActivityLog.EditSettings"));
 
             _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
-
-            //selected tab
-            SaveSelectedTabName();
-
+            
             return RedirectToAction("CustomerUser");
         }
 
@@ -1087,7 +1081,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _gdprService.InsertConsent(gdprConsent);
 
                 //locales                
-                UpdateGDPRConsentLocales(gdprConsent, model);
+                UpdateGdprConsentLocales(gdprConsent, model);
 
                 _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Settings.Gdpr.Consent.Added"));
 
@@ -1131,11 +1125,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 gdprConsent = model.ToEntity(gdprConsent);
                 _gdprService.UpdateConsent(gdprConsent);
 
-                //selected tab
-                SaveSelectedTabName();
-
                 //locales                
-                UpdateGDPRConsentLocales(gdprConsent, model);
+                UpdateGdprConsentLocales(gdprConsent, model);
 
                 _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Settings.Gdpr.Consent.Updated"));
 
@@ -1177,7 +1168,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             var model = _settingModelFactory.PrepareGeneralCommonSettingsModel();
 
             //notify admin that CSS bundling is not allowed in virtual directories
-            if (model.SeoSettings.EnableCssBundling && HttpContext.Request.PathBase.HasValue)
+            if (model.MinificationSettings.EnableCssBundling && HttpContext.Request.PathBase.HasValue)
                 _notificationService.WarningNotification(_localizationService.GetResource("Admin.Configuration.Settings.GeneralCommon.EnableCssBundling.Warning"));
 
             return View(model);
@@ -1223,8 +1214,12 @@ namespace Nop.Web.Areas.Admin.Controllers
             sitemapSettings.SitemapIncludeNews = model.SitemapSettings.SitemapIncludeNews;
             sitemapSettings.SitemapIncludeTopics = model.SitemapSettings.SitemapIncludeTopics;
 
+            //minification
+            commonSettings.EnableHtmlMinification = model.MinificationSettings.EnableHtmlMinification;
+            commonSettings.EnableJsBundling = model.MinificationSettings.EnableJsBundling;
+            commonSettings.EnableCssBundling = model.MinificationSettings.EnableCssBundling;
             //use response compression
-            commonSettings.UseResponseCompression = model.StoreInformationSettings.UseResponseCompression;
+            commonSettings.UseResponseCompression = model.MinificationSettings.UseResponseCompression;
 
             //we do not clear cache after each setting update.
             //this behavior can increase performance because cached settings will not be cleared 
@@ -1249,7 +1244,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             _settingService.SaveSettingOverridablePerStore(sitemapSettings, x => x.SitemapIncludeBlogPosts, model.SitemapSettings.SitemapIncludeBlogPosts_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(sitemapSettings, x => x.SitemapIncludeNews, model.SitemapSettings.SitemapIncludeNews_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(sitemapSettings, x => x.SitemapIncludeTopics, model.SitemapSettings.SitemapIncludeTopics_OverrideForStore, storeScope, false);
-            _settingService.SaveSettingOverridablePerStore(commonSettings, x => x.UseResponseCompression, model.StoreInformationSettings.UseResponseCompression_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(commonSettings, x => x.EnableHtmlMinification, model.MinificationSettings.EnableHtmlMinification_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(commonSettings, x => x.EnableJsBundling, model.MinificationSettings.EnableJsBundling_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(commonSettings, x => x.EnableCssBundling, model.MinificationSettings.EnableCssBundling_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(commonSettings, x => x.UseResponseCompression, model.MinificationSettings.UseResponseCompression_OverrideForStore, storeScope, false);
 
             //now clear settings cache
             _settingService.ClearCache();
@@ -1265,8 +1263,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             seoSettings.ConvertNonWesternChars = model.SeoSettings.ConvertNonWesternChars;
             seoSettings.CanonicalUrlsEnabled = model.SeoSettings.CanonicalUrlsEnabled;
             seoSettings.WwwRequirement = (WwwRequirement)model.SeoSettings.WwwRequirement;
-            seoSettings.EnableJsBundling = model.SeoSettings.EnableJsBundling;
-            seoSettings.EnableCssBundling = model.SeoSettings.EnableCssBundling;
             seoSettings.TwitterMetaTags = model.SeoSettings.TwitterMetaTags;
             seoSettings.OpenGraphMetaTags = model.SeoSettings.OpenGraphMetaTags;
             seoSettings.CustomHeadTags = model.SeoSettings.CustomHeadTags;
@@ -1282,9 +1278,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             _settingService.SaveSettingOverridablePerStore(seoSettings, x => x.GenerateProductMetaDescription, model.SeoSettings.GenerateProductMetaDescription_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(seoSettings, x => x.ConvertNonWesternChars, model.SeoSettings.ConvertNonWesternChars_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(seoSettings, x => x.CanonicalUrlsEnabled, model.SeoSettings.CanonicalUrlsEnabled_OverrideForStore, storeScope, false);
-            _settingService.SaveSettingOverridablePerStore(seoSettings, x => x.WwwRequirement, model.SeoSettings.WwwRequirement_OverrideForStore, storeScope, false);
-            _settingService.SaveSettingOverridablePerStore(seoSettings, x => x.EnableJsBundling, model.SeoSettings.EnableJsBundling_OverrideForStore, storeScope, false);
-            _settingService.SaveSettingOverridablePerStore(seoSettings, x => x.EnableCssBundling, model.SeoSettings.EnableCssBundling_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(seoSettings, x => x.WwwRequirement, model.SeoSettings.WwwRequirement_OverrideForStore, storeScope, false);            
             _settingService.SaveSettingOverridablePerStore(seoSettings, x => x.TwitterMetaTags, model.SeoSettings.TwitterMetaTags_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(seoSettings, x => x.OpenGraphMetaTags, model.SeoSettings.OpenGraphMetaTags_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(seoSettings, x => x.CustomHeadTags, model.SeoSettings.CustomHeadTags_OverrideForStore, storeScope, false);
@@ -1398,7 +1392,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //we do not clear cache after each setting update.
             //this behavior can increase performance because cached settings will not be cleared 
             //and loaded from database after each update
-            displayDefaultMenuItemSettings.DisplayHomePageMenuItem = model.DisplayDefaultMenuItemSettings.DisplayHomePageMenuItem;
+            displayDefaultMenuItemSettings.DisplayHomepageMenuItem = model.DisplayDefaultMenuItemSettings.DisplayHomepageMenuItem;
             displayDefaultMenuItemSettings.DisplayNewProductsMenuItem = model.DisplayDefaultMenuItemSettings.DisplayNewProductsMenuItem;
             displayDefaultMenuItemSettings.DisplayProductSearchMenuItem = model.DisplayDefaultMenuItemSettings.DisplayProductSearchMenuItem;
             displayDefaultMenuItemSettings.DisplayCustomerInfoMenuItem = model.DisplayDefaultMenuItemSettings.DisplayCustomerInfoMenuItem;
@@ -1406,7 +1400,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             displayDefaultMenuItemSettings.DisplayForumsMenuItem = model.DisplayDefaultMenuItemSettings.DisplayForumsMenuItem;
             displayDefaultMenuItemSettings.DisplayContactUsMenuItem = model.DisplayDefaultMenuItemSettings.DisplayContactUsMenuItem;
 
-            _settingService.SaveSettingOverridablePerStore(displayDefaultMenuItemSettings, x => x.DisplayHomePageMenuItem, model.DisplayDefaultMenuItemSettings.DisplayHomePageMenuItem_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(displayDefaultMenuItemSettings, x => x.DisplayHomepageMenuItem, model.DisplayDefaultMenuItemSettings.DisplayHomepageMenuItem_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(displayDefaultMenuItemSettings, x => x.DisplayNewProductsMenuItem, model.DisplayDefaultMenuItemSettings.DisplayNewProductsMenuItem_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(displayDefaultMenuItemSettings, x => x.DisplayProductSearchMenuItem, model.DisplayDefaultMenuItemSettings.DisplayProductSearchMenuItem_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(displayDefaultMenuItemSettings, x => x.DisplayCustomerInfoMenuItem, model.DisplayDefaultMenuItemSettings.DisplayCustomerInfoMenuItem_OverrideForStore, storeScope, false);
@@ -1756,7 +1750,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public IActionResult RedisCacheHighTrafficWarning(bool loadAllLocaleRecordsOnStartup)
         {
             //LoadAllLocaleRecordsOnStartup is set and Redis cache is used, so display warning
-            if (_config.RedisCachingEnabled && loadAllLocaleRecordsOnStartup)
+            if (_config.RedisEnabled &&_config.UseRedisForCaching && loadAllLocaleRecordsOnStartup)
                 return Json(new
                 {
                     Result = _localizationService.GetResource(

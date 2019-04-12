@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Messages;
@@ -9,6 +10,8 @@ using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Messages;
 using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;
+using Nop.Web.Framework.Models.DataTables;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -53,6 +56,68 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #endregion
 
+        #region Utilities
+
+        /// <summary>
+        /// Prepare datatables model
+        /// </summary>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
+        protected virtual DataTablesModel PrepareMessageTemplateGridModel(MessageTemplateSearchModel searchModel)
+        {
+            //prepare common properties
+            var model = new DataTablesModel
+            {
+                Name = "templates-grid",
+                UrlRead = new DataUrl("List", "MessageTemplate", null),
+                SearchButtonId = "search-templates",
+                Length = searchModel.PageSize,
+                LengthMenu = searchModel.AvailablePageSizes
+            };
+
+            //prepare filters to search
+            model.Filters = new List<FilterParameter>()
+            {
+                new FilterParameter(nameof(searchModel.SearchStoreId))
+            };
+
+            //prepare model columns
+            model.ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(MessageTemplateModel.Name))
+                {
+                    Title = _localizationService.GetResource("Admin.ContentManagement.MessageTemplates.Fields.Name")
+                },
+                new ColumnProperty(nameof(MessageTemplateModel.Subject))
+                {
+                    Title = _localizationService.GetResource("Admin.ContentManagement.MessageTemplates.Fields.Subject")
+                },
+                new ColumnProperty(nameof(MessageTemplateModel.IsActive))
+                {
+                    Title = _localizationService.GetResource("Admin.ContentManagement.MessageTemplates.Fields.IsActive"),
+                    Width = "100",
+                    ClassName =  StyleColumn.CenterAll,
+                    Render = new RenderBoolean()
+                },
+                new ColumnProperty(nameof(MessageTemplateModel.ListOfStores))
+                {
+                    Title = _localizationService.GetResource("Admin.ContentManagement.MessageTemplates.Fields.LimitedToStores"),
+                    Width = "300"
+                },
+                new ColumnProperty(nameof(MessageTemplateModel.Id))
+                {
+                    Title = _localizationService.GetResource("Admin.Common.Edit"),
+                    Width = "100",
+                    ClassName =  StyleColumn.CenterAll,
+                    Render = new RenderButtonEdit(new DataUrl("Edit"))
+                }
+            };
+
+            return model;
+        }
+
+        #endregion
+
         #region Methods
 
         /// <summary>
@@ -72,6 +137,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
+            searchModel.Grid = PrepareMessageTemplateGridModel(searchModel);
 
             return searchModel;
         }
@@ -87,15 +153,16 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get message templates
-            var messageTemplates = _messageTemplateService.GetAllMessageTemplates(storeId: searchModel.SearchStoreId);
+            var messageTemplates = _messageTemplateService
+                .GetAllMessageTemplates(storeId: searchModel.SearchStoreId).ToPagedList(searchModel);
 
             //prepare store names (to avoid loading for each message template)
             var stores = _storeService.GetAllStores().Select(store => new { store.Id, store.Name }).ToList();
 
             //prepare list model
-            var model = new MessageTemplateListModel
+            var model = new MessageTemplateListModel().PrepareToGrid(searchModel, messageTemplates, () =>
             {
-                Data = messageTemplates.PaginationByRequestModel(searchModel).Select(messageTemplate =>
+                return messageTemplates.Select(messageTemplate =>
                 {
                     //fill in model values from the entity
                     var messageTemplateModel = messageTemplate.ToModel<MessageTemplateModel>();
@@ -112,9 +179,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     messageTemplateModel.ListOfStores = string.Join(", ", storeNames);
 
                     return messageTemplateModel;
-                }),
-                Total = messageTemplates.Count
-            };
+                });
+            });
 
             return model;
         }

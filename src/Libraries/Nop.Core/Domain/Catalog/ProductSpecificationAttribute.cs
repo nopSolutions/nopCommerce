@@ -1,9 +1,11 @@
+using Nop.Core.Domain.Localization;
+
 namespace Nop.Core.Domain.Catalog
 {
     /// <summary>
     /// Represents a product specification attribute
     /// </summary>
-    public partial class ProductSpecificationAttribute : BaseEntity
+    public partial class ProductSpecificationAttribute : BaseEntity, ILocalizedEntity
     {
         /// <summary>
         /// Gets or sets the product identifier

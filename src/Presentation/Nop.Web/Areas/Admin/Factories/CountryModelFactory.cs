@@ -1,12 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Domain.Directory;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Directory;
-using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;
+using Nop.Web.Framework.Models.DataTables;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -66,6 +68,106 @@ namespace Nop.Web.Areas.Admin.Factories
             return searchModel;
         }
 
+        /// <summary>
+        /// Prepare datatables model
+        /// </summary>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
+        protected virtual DataTablesModel PrepareCountryGridModel(CountrySearchModel searchModel)
+        {
+            //prepare common properties
+            var model = new DataTablesModel
+            {
+                Name = "countries-grid",
+                UrlRead = new DataUrl("CountryList", "Country", null),
+                SearchButtonId = "search-categories",
+                Length = searchModel.PageSize,
+                LengthMenu = searchModel.AvailablePageSizes
+            };
+
+            //prepare filters to search
+            model.Filters = null;
+
+            //prepare model columns
+            model.ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(CountryModel.Id))
+                {
+                    IsMasterCheckBox = true,
+                    Render = new RenderCheckBox("checkbox_countries"),
+                    ClassName =  StyleColumn.CenterAll,
+                    Width = "50",
+                },
+                new ColumnProperty(nameof(CountryModel.Name))
+                {
+                    Title = _localizationService.GetResource("Admin.Configuration.Countries.Fields.Name"),
+                    Width = "200"
+                },
+                new ColumnProperty(nameof(CountryModel.AllowsBilling))
+                {
+                    Title = _localizationService.GetResource("Admin.Configuration.Countries.Fields.AllowsBilling"),
+                    Width = "100",
+                    ClassName =  StyleColumn.CenterAll,
+                    Render = new RenderBoolean()
+                },
+                new ColumnProperty(nameof(CountryModel.AllowsShipping))
+                {
+                    Title = _localizationService.GetResource("Admin.Configuration.Countries.Fields.AllowsShipping"),
+                    Width = "100",
+                    ClassName =  StyleColumn.CenterAll,
+                    Render = new RenderBoolean()
+                },
+                new ColumnProperty(nameof(CountryModel.TwoLetterIsoCode))
+                {
+                    Title = _localizationService.GetResource("Admin.Configuration.Countries.Fields.TwoLetterIsoCode"),
+                    Width = "150"
+                },
+                new ColumnProperty(nameof(CountryModel.ThreeLetterIsoCode))
+                {
+                    Title = _localizationService.GetResource("Admin.Configuration.Countries.Fields.ThreeLetterIsoCode"),
+                    Width = "150"
+                },
+                new ColumnProperty(nameof(CountryModel.NumericIsoCode))
+                {
+                    Title = _localizationService.GetResource("Admin.Configuration.Countries.Fields.NumericIsoCode"),
+                    Width = "150"
+                },
+                new ColumnProperty(nameof(CountryModel.SubjectToVat))
+                {
+                    Title = _localizationService.GetResource("Admin.Configuration.Countries.Fields.SubjectToVat"),
+                    Width = "100",
+                    ClassName =  StyleColumn.CenterAll,
+                    Render = new RenderBoolean()
+                },
+                new ColumnProperty(nameof(CountryModel.NumberOfStates))
+                {
+                    Title = _localizationService.GetResource("Admin.Configuration.Countries.Fields.NumberOfStates"),
+                    Width = "150"
+                },
+                new ColumnProperty(nameof(CountryModel.DisplayOrder))
+                {
+                    Title = _localizationService.GetResource("Admin.Configuration.Countries.Fields.DisplayOrder"),
+                    Width = "100"
+                },
+                new ColumnProperty(nameof(CountryModel.Published))
+                {
+                    Title = _localizationService.GetResource("Admin.Configuration.Countries.Fields.Published"),
+                    Width = "100",
+                    ClassName =  StyleColumn.CenterAll,
+                    Render = new RenderBoolean()
+                },
+                new ColumnProperty(nameof(CountryModel.Id))
+                {
+                    Title = _localizationService.GetResource("Admin.Common.Edit"),
+                    Width = "50",
+                    ClassName =  StyleColumn.CenterAll,
+                    Render = new RenderButtonEdit(new DataUrl("Edit"))
+                }
+            };
+
+            return model;
+        }
+
         #endregion
 
         #region Methods
@@ -82,6 +184,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
+            searchModel.Grid = PrepareCountryGridModel(searchModel);
 
             return searchModel;
         }
@@ -97,21 +200,20 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get countries
-            var countries = _countryService.GetAllCountries(showHidden: true);
+            var countries = _countryService.GetAllCountries(showHidden: true).ToPagedList(searchModel);
 
             //prepare list model
-            var model = new CountryListModel
+            var model = new CountryListModel().PrepareToGrid(searchModel, countries, () =>
             {
                 //fill in model values from the entity
-                Data = countries.PaginationByRequestModel(searchModel).Select(country =>
+                return countries.Select(country =>
                 {
                     var countryModel = country.ToModel<CountryModel>();
                     countryModel.NumberOfStates = country.StateProvinces?.Count ?? 0;
 
                     return countryModel;
-                }),
-                Total = countries.Count
-            };
+                });
+            });
 
             return model;
         }
@@ -179,14 +281,14 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(country));
 
             //get comments
-            var states = _stateProvinceService.GetStateProvincesByCountryId(country.Id, showHidden: true);
+            var states = _stateProvinceService.GetStateProvincesByCountryId(country.Id, showHidden: true).ToPagedList(searchModel);
 
             //prepare list model
             var model = new StateProvinceListModel
             {
                 //fill in model values from the entity
-                Data = states.PaginationByRequestModel(searchModel).Select(state => state.ToModel<StateProvinceModel>()),
-                Total = states.Count
+                Data = states.Select(state => state.ToModel<StateProvinceModel>()),
+                Total = states.TotalCount
             };
 
             return model;

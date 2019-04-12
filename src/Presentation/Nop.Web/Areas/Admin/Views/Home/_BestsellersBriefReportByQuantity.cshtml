@@ -5,7 +5,7 @@
 @inject IWorkContext workContext
 @{
     const string panelId = "bestsellers-report-quantity-box";
-    const string hidePanelAttributeName = "HideBestsellersBriefReportByQuantityPanel";
+    const string hidePanelAttributeName = "Reports.HideBestsellersBriefReportByQuantityPanel";
     var hidePanel = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hidePanelAttributeName);
 }
 

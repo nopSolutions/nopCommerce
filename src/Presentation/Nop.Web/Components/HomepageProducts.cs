@@ -28,7 +28,7 @@ namespace Nop.Web.Components
 
         public IViewComponentResult Invoke(int? productThumbPictureSize)
         {
-            var products = _productService.GetAllProductsDisplayedOnHomePage();
+            var products = _productService.GetAllProductsDisplayedOnHomepage();
             //ACL and store mapping
             products = products.Where(p => _aclService.Authorize(p) && _storeMappingService.Authorize(p)).ToList();
             //availability dates

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using Nop.Core.Domain.Common;
@@ -16,6 +17,7 @@ using Nop.Services.Plugins;
 using Nop.Services.Security;
 using Nop.Services.Shipping;
 using Nop.Services.Shipping.Date;
+using Nop.Services.Shipping.Pickup;
 using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Shipping;
@@ -37,8 +39,10 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly ILocalizedEntityService _localizedEntityService;
         private readonly INotificationService _notificationService;
         private readonly IPermissionService _permissionService;
+        private readonly IPickupPluginManager _pickupPluginManager;
         private readonly ISettingService _settingService;
         private readonly IShippingModelFactory _shippingModelFactory;
+        private readonly IShippingPluginManager _shippingPluginManager;
         private readonly IShippingService _shippingService;
         private readonly ShippingSettings _shippingSettings;
 
@@ -55,8 +59,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             ILocalizedEntityService localizedEntityService,
             INotificationService notificationService,
             IPermissionService permissionService,
+            IPickupPluginManager pickupPluginManager,
             ISettingService settingService,
             IShippingModelFactory shippingModelFactory,
+            IShippingPluginManager shippingPluginManager,
             IShippingService shippingService,
             ShippingSettings shippingSettings)
         {
@@ -69,8 +75,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             _localizedEntityService = localizedEntityService;
             _notificationService = notificationService;
             _permissionService = permissionService;
+            _pickupPluginManager = pickupPluginManager;
             _settingService = settingService;
             _shippingModelFactory = shippingModelFactory;
+            _shippingPluginManager = shippingPluginManager;
             _shippingService = shippingService;
             _shippingSettings = shippingSettings;
         }
@@ -137,8 +145,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
-            var srcm = _shippingService.LoadShippingRateComputationMethodBySystemName(model.SystemName);
-            if (_shippingService.IsShippingRateComputationMethodActive(srcm))
+            var srcm = _shippingPluginManager.LoadPluginBySystemName(model.SystemName);
+            if (_shippingPluginManager.IsPluginActive(srcm))
             {
                 if (!model.IsActive)
                 {
@@ -204,8 +212,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
-            var pickupPointProvider = _shippingService.LoadPickupPointProviderBySystemName(model.SystemName);
-            if (_shippingService.IsPickupPointProviderActive(pickupPointProvider))
+            var pickupPointProvider = _pickupPluginManager.LoadPluginBySystemName(model.SystemName);
+            if (_pickupPluginManager.IsPluginActive(pickupPointProvider))
             {
                 if (!model.IsActive)
                 {
@@ -792,7 +800,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         //we use 2048 value because in some cases default value (1024) is too small for this action
         [RequestFormLimits(ValueCountLimit = 2048)]
         [HttpPost, ActionName("Restrictions")]
-        public virtual IActionResult RestrictionSave(ShippingMethodRestrictionModel model)
+        public virtual IActionResult RestrictionSave(ShippingMethodRestrictionModel model, IFormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
@@ -803,8 +811,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             foreach (var shippingMethod in shippingMethods)
             {
                 var formKey = "restrict_" + shippingMethod.Id;
-                var countryIdsToRestrict = !StringValues.IsNullOrEmpty(model.Form[formKey])
-                    ? model.Form[formKey].ToString().Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                var countryIdsToRestrict = !StringValues.IsNullOrEmpty(form[formKey])
+                    ? form[formKey].ToString().Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                     .Select(int.Parse)
                     .ToList()
                     : new List<int>();

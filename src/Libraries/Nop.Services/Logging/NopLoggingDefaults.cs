@@ -13,6 +13,6 @@
         /// <summary>
         /// Gets a key pattern to clear cache
         /// </summary>
-        public static string ActivityTypePatternCacheKey => "Nop.activitytype.";
+        public static string ActivityTypePrefixCacheKey => "Nop.activitytype.";
     }
 }

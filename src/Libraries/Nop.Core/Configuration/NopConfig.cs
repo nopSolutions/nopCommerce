@@ -29,19 +29,26 @@
         /// </summary>
         public bool AzureBlobStorageAppendContainerName { get; set; }
 
-
         /// <summary>
-        /// Gets or sets a value indicating whether we should use Redis server for caching (instead of default in-memory caching)
+        /// Gets or sets a value indicating whether we should use Redis server
         /// </summary>
-        public bool RedisCachingEnabled { get; set; }
+        public bool RedisEnabled { get; set; }
         /// <summary>
-        /// Gets or sets Redis connection string. Used when Redis caching is enabled
+        /// Gets or sets Redis connection string. Used when Redis is enabled
         /// </summary>
-        public string RedisCachingConnectionString { get; set; }
+        public string RedisConnectionString { get; set; }
         /// <summary>
         /// Gets or sets a value indicating whether the data protection system should be configured to persist keys in the Redis database
         /// </summary>
-        public bool PersistDataProtectionKeysToRedis { get; set; }
+        public bool UseRedisToStoreDataProtectionKeys { get; set; }
+        /// <summary>
+        /// Gets or sets a value indicating whether we should use Redis server for caching (instead of default in-memory caching)
+        /// </summary>
+        public bool UseRedisForCaching { get; set; }
+        /// <summary>
+        /// Gets or sets a value indicating whether we should use Redis server for store the plugins info (instead of default plugin.json file)
+        /// </summary>
+        public bool UseRedisToStorePluginsInfo { get; set; }
 
         /// <summary>
         /// Gets or sets path to database with user agent strings

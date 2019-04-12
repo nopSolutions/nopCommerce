@@ -35,7 +35,7 @@ namespace Nop.Core.Domain.Polls
         /// <summary>
         /// Gets or sets a value indicating whether the entity should be shown on home page
         /// </summary>
-        public bool ShowOnHomePage { get; set; }
+        public bool ShowOnHomepage { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the anonymous votes are allowed

@@ -20,7 +20,7 @@ namespace Nop.Plugin.Payments.Square.Services
         #region Fields
 
         private readonly ILocalizationService _localizationService;
-        private readonly IPaymentService _paymentService;
+        private readonly IPaymentPluginManager _paymentPluginManager;
         private readonly IScheduleTaskService _scheduleTaskService;
 
         #endregion
@@ -28,11 +28,11 @@ namespace Nop.Plugin.Payments.Square.Services
         #region Ctor
 
         public EventConsumer(ILocalizationService localizationService,
-            IPaymentService paymentService,
+            IPaymentPluginManager paymentPluginManager,
             IScheduleTaskService scheduleTaskService)
         {
             _localizationService = localizationService;
-            _paymentService = paymentService;
+            _paymentPluginManager = paymentPluginManager;
             _scheduleTaskService = scheduleTaskService;
         }
 
@@ -50,15 +50,12 @@ namespace Nop.Plugin.Payments.Square.Services
                 return;
 
             //check whether the plugin is active
-            var squarePaymentMethod = _paymentService.LoadPaymentMethodBySystemName(SquarePaymentDefaults.SystemName);
-            if (!_paymentService.IsPaymentMethodActive(squarePaymentMethod))
+            if (!_paymentPluginManager.IsPluginActive(SquarePaymentDefaults.SystemName))
                 return;
 
             //add js script to one page checkout
             if (eventMessage.GetRouteNames().Any(r => r.Equals("CheckoutOnePage")))
-            {
                 eventMessage.Helper.AddScriptParts(ResourceLocation.Footer, SquarePaymentDefaults.PaymentFormScriptPath, excludeFromBundle: true);
-            }
         }
 
         /// <summary>

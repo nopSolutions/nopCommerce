@@ -182,7 +182,7 @@ namespace Nop.Web.Controllers
         public virtual IActionResult ApplyVendor()
         {
             if (!_vendorSettings.AllowCustomersToApplyForVendorAccount)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return Challenge();
@@ -195,10 +195,10 @@ namespace Nop.Web.Controllers
         [HttpPost, ActionName("ApplyVendor")]
         [PublicAntiForgery]
         [ValidateCaptcha]
-        public virtual IActionResult ApplyVendorSubmit(ApplyVendorModel model, bool captchaValid, IFormFile uploadedFile)
+        public virtual IActionResult ApplyVendorSubmit(ApplyVendorModel model, bool captchaValid, IFormFile uploadedFile, IFormCollection form)
         {
             if (!_vendorSettings.AllowCustomersToApplyForVendorAccount)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return Challenge();
@@ -206,7 +206,7 @@ namespace Nop.Web.Controllers
             //validate CAPTCHA
             if (_captchaSettings.Enabled && _captchaSettings.ShowOnApplyVendorPage && !captchaValid)
             {
-                ModelState.AddModelError("", _captchaSettings.GetWrongCaptchaMessage(_localizationService));
+                ModelState.AddModelError("", _localizationService.GetResource("Common.WrongCaptchaMessage"));
             }
 
             var pictureId = 0;
@@ -229,7 +229,7 @@ namespace Nop.Web.Controllers
             }
 
             //vendor attributes
-            var vendorAttributesXml = ParseVendorAttributes(model.Form);
+            var vendorAttributesXml = ParseVendorAttributes(form);
             _vendorAttributeParser.GetAttributeWarnings(vendorAttributesXml).ToList()
                 .ForEach(warning => ModelState.AddModelError(string.Empty, warning));
 
@@ -296,7 +296,7 @@ namespace Nop.Web.Controllers
         [HttpPost, ActionName("Info")]
         [PublicAntiForgery]
         [FormValueRequired("save-info-button")]
-        public virtual IActionResult Info(VendorInfoModel model, IFormFile uploadedFile)
+        public virtual IActionResult Info(VendorInfoModel model, IFormFile uploadedFile, IFormCollection form)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return Challenge();
@@ -324,7 +324,7 @@ namespace Nop.Web.Controllers
             var prevPicture = _pictureService.GetPictureById(vendor.PictureId);
 
             //vendor attributes
-            var vendorAttributesXml = ParseVendorAttributes(model.Form);
+            var vendorAttributesXml = ParseVendorAttributes(form);
             _vendorAttributeParser.GetAttributeWarnings(vendorAttributesXml).ToList()
                 .ForEach(warning => ModelState.AddModelError(string.Empty, warning));
 

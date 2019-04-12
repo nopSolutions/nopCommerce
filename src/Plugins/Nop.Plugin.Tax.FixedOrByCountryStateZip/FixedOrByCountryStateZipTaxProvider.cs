@@ -2,12 +2,12 @@
 using System.Linq;
 using Nop.Core;
 using Nop.Core.Caching;
-using Nop.Core.Plugins;
 using Nop.Plugin.Tax.FixedOrByCountryStateZip.Data;
 using Nop.Plugin.Tax.FixedOrByCountryStateZip.Infrastructure.Cache;
 using Nop.Plugin.Tax.FixedOrByCountryStateZip.Services;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
+using Nop.Services.Plugins;
 using Nop.Services.Tax;
 
 namespace Nop.Plugin.Tax.FixedOrByCountryStateZip
@@ -93,8 +93,8 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip
 
             var storeId = calculateTaxRequest.CurrentStoreId;
             var taxCategoryId = calculateTaxRequest.TaxCategoryId;
-            var countryId = calculateTaxRequest.Address.Country?.Id ?? 0;
-            var stateProvinceId = calculateTaxRequest.Address.StateProvince?.Id ?? 0;
+            var countryId = calculateTaxRequest.Address.CountryId;
+            var stateProvinceId = calculateTaxRequest.Address.StateProvinceId;
             var zip = calculateTaxRequest.Address.ZipPostalCode?.Trim() ?? string.Empty;
 
             var existingRates = allTaxRates.Where(taxRate => taxRate.CountryId == countryId && taxRate.TaxCategoryId == taxCategoryId);

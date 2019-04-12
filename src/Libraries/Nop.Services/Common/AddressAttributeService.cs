@@ -50,8 +50,8 @@ namespace Nop.Services.Common
 
             _addressAttributeRepository.Delete(addressAttribute);
 
-            _cacheManager.RemoveByPattern(NopCommonDefaults.AddressAttributesPatternCacheKey);
-            _cacheManager.RemoveByPattern(NopCommonDefaults.AddressAttributeValuesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCommonDefaults.AddressAttributesPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopCommonDefaults.AddressAttributeValuesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(addressAttribute);
@@ -97,8 +97,8 @@ namespace Nop.Services.Common
 
             _addressAttributeRepository.Insert(addressAttribute);
 
-            _cacheManager.RemoveByPattern(NopCommonDefaults.AddressAttributesPatternCacheKey);
-            _cacheManager.RemoveByPattern(NopCommonDefaults.AddressAttributeValuesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCommonDefaults.AddressAttributesPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopCommonDefaults.AddressAttributeValuesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(addressAttribute);
@@ -115,8 +115,8 @@ namespace Nop.Services.Common
 
             _addressAttributeRepository.Update(addressAttribute);
 
-            _cacheManager.RemoveByPattern(NopCommonDefaults.AddressAttributesPatternCacheKey);
-            _cacheManager.RemoveByPattern(NopCommonDefaults.AddressAttributeValuesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCommonDefaults.AddressAttributesPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopCommonDefaults.AddressAttributeValuesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(addressAttribute);
@@ -133,8 +133,8 @@ namespace Nop.Services.Common
 
             _addressAttributeValueRepository.Delete(addressAttributeValue);
 
-            _cacheManager.RemoveByPattern(NopCommonDefaults.AddressAttributesPatternCacheKey);
-            _cacheManager.RemoveByPattern(NopCommonDefaults.AddressAttributeValuesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCommonDefaults.AddressAttributesPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopCommonDefaults.AddressAttributeValuesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(addressAttributeValue);
@@ -184,8 +184,8 @@ namespace Nop.Services.Common
 
             _addressAttributeValueRepository.Insert(addressAttributeValue);
 
-            _cacheManager.RemoveByPattern(NopCommonDefaults.AddressAttributesPatternCacheKey);
-            _cacheManager.RemoveByPattern(NopCommonDefaults.AddressAttributeValuesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCommonDefaults.AddressAttributesPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopCommonDefaults.AddressAttributeValuesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(addressAttributeValue);
@@ -202,8 +202,8 @@ namespace Nop.Services.Common
 
             _addressAttributeValueRepository.Update(addressAttributeValue);
 
-            _cacheManager.RemoveByPattern(NopCommonDefaults.AddressAttributesPatternCacheKey);
-            _cacheManager.RemoveByPattern(NopCommonDefaults.AddressAttributeValuesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCommonDefaults.AddressAttributesPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopCommonDefaults.AddressAttributeValuesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(addressAttributeValue);

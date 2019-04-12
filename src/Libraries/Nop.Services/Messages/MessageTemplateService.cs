@@ -69,7 +69,7 @@ namespace Nop.Services.Messages
 
             _messageTemplateRepository.Delete(messageTemplate);
 
-            _cacheManager.RemoveByPattern(NopMessageDefaults.MessageTemplatesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopMessageDefaults.MessageTemplatesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(messageTemplate);
@@ -86,7 +86,7 @@ namespace Nop.Services.Messages
 
             _messageTemplateRepository.Insert(messageTemplate);
 
-            _cacheManager.RemoveByPattern(NopMessageDefaults.MessageTemplatesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopMessageDefaults.MessageTemplatesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(messageTemplate);
@@ -103,7 +103,7 @@ namespace Nop.Services.Messages
 
             _messageTemplateRepository.Update(messageTemplate);
 
-            _cacheManager.RemoveByPattern(NopMessageDefaults.MessageTemplatesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopMessageDefaults.MessageTemplatesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(messageTemplate);

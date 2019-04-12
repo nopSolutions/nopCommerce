@@ -74,8 +74,10 @@ namespace Nop.Web.Framework.TagHelpers.Admin
             output.TagName = "div";
             output.TagMode = TagMode.StartTagAndEndTag;
             output.Attributes.Add("class", "nested-setting");
+
             if (context.AllAttributes.ContainsName("id"))
                 nestedSettingId = context.AllAttributes["id"].Value.ToString();
+            output.Attributes.Add("id", nestedSettingId);
 
             //use javascript
             var script = new TagBuilder("script");

@@ -42,119 +42,9 @@
         <div class="panel-group">
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <div id="countries-grid"></div>
-
+                    @await Html.PartialAsync("Table", Model.Grid)
+                    
                     <script>
-                        $(document).ready(function () {
-                            $("#countries-grid").kendoGrid({
-                                dataSource: {
-                                    type: "json",
-                                    transport: {
-                                        read: {
-                                            url: "@Html.Raw(Url.Action("CountryList", "Country"))",
-                                            type: "POST",
-                                            dataType: "json",
-                                            data: addAntiForgeryToken
-                                        }
-                                    },
-                                    schema: {
-                                        data: "Data",
-                                        total: "Total",
-                                        errors: "Errors"
-                                    },
-                                    error: function (e) {
-                                        display_kendoui_grid_error(e);
-                                        // Cancel the changes
-                                        this.cancelChanges();
-                                    },
-                                    pageSize: @(Model.PageSize),
-                                    serverPaging: true,
-                                    serverFiltering: true,
-                                    serverSorting: true
-                                },
-                                pageable: {
-                                    refresh: true,
-                                    pageSizes: [@(Model.AvailablePageSizes)],
-                                    @await Html.PartialAsync("_GridPagerMessages")
-                                },
-                                scrollable: false,
-                                dataBound: onDataBound,
-                                columns: [
-                                    {
-                                        field: "Id",
-                                        headerTemplate: "<input id='mastercheckbox' type='checkbox'/>",
-                                        headerAttributes: { style: "text-align:center" },
-                                        attributes: { style: "text-align:center" },
-                                        template: "<input type='checkbox' value='#=Id#' class='checkboxGroups'/>",
-                                        width: 50
-                                    }, {
-                                        field: "Name",
-                                        title: "@T("Admin.Configuration.Countries.Fields.Name")",
-                                        width: 200
-                                    }, {
-                                        field: "AllowsBilling",
-                                        title: "@T("Admin.Configuration.Countries.Fields.AllowsBilling")",
-                                        width: 100,
-                                        headerAttributes: { style: "text-align:center" },
-                                        attributes: { style: "text-align:center" },
-                                        template: '# if(AllowsBilling) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
-                                    }, {
-                                        field: "AllowsShipping",
-                                        title: "@T("Admin.Configuration.Countries.Fields.AllowsShipping")",
-                                        width: 150,
-                                        headerAttributes: { style: "text-align:center" },
-                                        attributes: { style: "text-align:center" },
-                                        template: '# if(AllowsShipping) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
-                                    }, {
-                                        field: "TwoLetterIsoCode",
-                                        title: "@T("Admin.Configuration.Countries.Fields.TwoLetterIsoCode")",
-                                        width: 150
-                                    }, {
-                                        field: "ThreeLetterIsoCode",
-                                        title: "@T("Admin.Configuration.Countries.Fields.ThreeLetterIsoCode")",
-                                        width: 150
-                                    }, {
-                                        field: "NumericIsoCode",
-                                        title: "@T("Admin.Configuration.Countries.Fields.NumericIsoCode")",
-                                        width: 150
-                                    }, {
-                                        field: "SubjectToVat",
-                                        title: "@T("Admin.Configuration.Countries.Fields.SubjectToVat")",
-                                        width: 100,
-                                        headerAttributes: { style: "text-align:center" },
-                                        attributes: { style: "text-align:center" },
-                                        template: '# if(SubjectToVat) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
-                                    }, {
-                                        field: "NumberOfStates",
-                                        title: "@T("Admin.Configuration.Countries.Fields.NumberOfStates")",
-                                        width: 150
-                                    }, {
-                                        field: "DisplayOrder",
-                                        title: "@T("Admin.Configuration.Countries.Fields.DisplayOrder")",
-                                        width: 100
-                                    }, {
-                                        field: "Published",
-                                        title: "@T("Admin.Configuration.Countries.Fields.Published")",
-                                        width: 100,
-                                        headerAttributes: { style: "text-align:center" },
-                                        attributes: { style: "text-align:center" },
-                                        template: '# if(Published) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
-                                    }, {
-                                        field: "Id",
-                                        title: "@T("Admin.Common.Edit")",
-                                        width: 50,
-                                        headerAttributes: { style: "text-align:center" },
-                                        attributes: { style: "text-align:center" },
-                                        template: '<a class="btn btn-default" href="Edit/#=Id#"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>'
-                                    }
-                                ]
-                            });
-                        });
-                    </script>
-
-                    <script>
-                        var selectedIds = [];
-
                         $(document).ready(function () {
                             //"publish selected" button
                             $('#publish-selected').click(function (e) {
@@ -172,8 +62,7 @@
                                     data: postData,
                                     complete: function (data) {
                                         //reload grid
-                                        var grid = $('#countries-grid').data('kendoGrid');
-                                        grid.dataSource.read();
+                                        $('#@Model.Grid.Name').DataTable().ajax.reload();
                                     },
                                     error: function (xhr, ajaxOptions, thrownError) {
                                         $('#publishSelectedFailed-info').html(thrownError);
@@ -200,8 +89,7 @@
                                     data: postData,
                                     complete: function (data) {
                                         //reload grid
-                                        var grid = $('#countries-grid').data('kendoGrid');
-                                        grid.dataSource.read();
+                                        $('#@Model.Grid.Name').DataTable().ajax.reload();
                                     },
                                     error: function (xhr, ajaxOptions, thrownError) {
                                         $('#unpublishSelectedFailed-info').html(thrownError);
@@ -210,48 +98,8 @@
                                     traditional: true
                                 });
                                 return false;
-                            });
-
-                            $('#mastercheckbox').click(function () {
-                                $('.checkboxGroups').attr('checked', $(this).is(':checked')).change();
-                            });
-
-                            //wire up checkboxes.
-                            $('#countries-grid').on('change', 'input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]', function (e) {
-                                var $check = $(this);
-                                var checked = jQuery.inArray($check.val(), selectedIds);
-                                if ($check.is(":checked") == true) {
-                                    if (checked == -1) {
-                                        //add id to selectedIds.
-                                        selectedIds.push($check.val());
-                                    }
-                                } else if (checked > -1) {
-                                    //remove id from selectedIds.
-                                    selectedIds = $.grep(selectedIds, function (item, index) {
-                                        return item != $check.val();
-                                    });
-                                }
-                                updateMasterCheckbox();
-                            });
-                        });
-
-                        function onDataBound(e) {
-
-                            $('#countries-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]').each(function () {
-                                var currentId = $(this).val();
-                                var checked = jQuery.inArray(currentId, selectedIds);
-                                //set checked based on if current checkbox's value is in selectedIds.
-                                $(this).attr('checked', checked > -1);
-                            });
-
-                            updateMasterCheckbox();
-                        }
-
-                        function updateMasterCheckbox() {
-                            var numChkBoxes = $('#countries-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]').length;
-                            var numChkBoxesChecked = $('#countries-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]:checked').length;
-                            $('#mastercheckbox').attr('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
-                        }
+                            });                          
+                        });                       
                     </script>
                 </div>
             </div>
