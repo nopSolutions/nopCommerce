@@ -449,15 +449,6 @@ set @resources='
   <LocaleResource Name="Enums.Nop.Core.Domain.Gdpr.GdprRequestType.ProfileChanged">
     <Value>User changed profile</Value>
   </LocaleResource>
-  <LocaleResource Name="Reviews.Fields.Rating.Good">
-    <Value>Good</Value>
-  </LocaleResource>
-  <LocaleResource Name="Reviews.Fields.Rating.NotBadNotExcellent">
-    <Value>Not bad but also not excellent</Value>
-  </LocaleResource>
-  <LocaleResource Name="Reviews.Fields.Rating.NotGood">
-    <Value>Not good</Value>
-  </LocaleResource>
   <LocaleResource Name="ScheduleTasks.Error">
     <Value>The "{0}" scheduled task failed with the "{1}" error (Task type: "{2}". Store name: "{3}". Task run address: "{4}").</Value>
   </LocaleResource>    
@@ -589,6 +580,15 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Topics.Display">
     <Value>Display</Value>
+  </LocaleResource>
+  <LocaleResource Name="Reviews.Fields.Rating.Good">
+    <Value>Good</Value>
+  </LocaleResource>
+  <LocaleResource Name="Reviews.Fields.Rating.NotBadNotExcellent">
+    <Value>Not bad but also not excellent</Value>
+  </LocaleResource>
+  <LocaleResource Name="Reviews.Fields.Rating.NotGood">
+    <Value>Not good</Value>
   </LocaleResource>	
 </Language>'
 
