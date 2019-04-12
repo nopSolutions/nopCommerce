@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Domain.Catalog;
 using Nop.Services.Catalog;
@@ -6,6 +7,7 @@ using Nop.Services.Localization;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Framework.Factories;
+using Nop.Web.Framework.Models.DataTables;
 using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
@@ -36,6 +38,66 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #endregion
 
+        #region Utilities
+
+        /// <summary>
+        /// Prepare datatables model
+        /// </summary>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
+        protected virtual DataTablesModel PrepareReviewTypeGridModel(ReviewTypeSearchModel searchModel)
+        {
+            //prepare common properties
+            var model = new DataTablesModel
+            {
+                Name = "reviewtypes-grid",
+                UrlRead = new DataUrl("List", "ReviewType", null),
+                Length = searchModel.PageSize,
+                LengthMenu = searchModel.AvailablePageSizes
+            };
+
+            //prepare filters to search
+            model.Filters = null;
+
+            //prepare model columns
+            model.ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(ReviewTypeModel.Name))
+                {
+                    Title = _localizationService.GetResource("Admin.Settings.ReviewType.Fields.Name"),
+                    Width = "300"
+                },
+                new ColumnProperty(nameof(ReviewTypeModel.IsRequired))
+                {
+                    Title = _localizationService.GetResource("Admin.Settings.ReviewType.Fields.IsRequired"),
+                    Width = "100",
+                    Render = new RenderBoolean()
+                },
+                new ColumnProperty(nameof(ReviewTypeModel.VisibleToAllCustomers))
+                {
+                    Title = _localizationService.GetResource("Admin.Settings.ReviewType.Fields.VisibleToAllCustomers"),
+                    Width = "100",
+                    Render = new RenderBoolean()
+                },
+                new ColumnProperty(nameof(ReviewTypeModel.DisplayOrder))
+                {
+                    Title = _localizationService.GetResource("Admin.Settings.ReviewType.Fields.DisplayOrder"),
+                    Width = "100"
+                },
+                new ColumnProperty(nameof(ReviewTypeModel.Id))
+                {
+                    Title = _localizationService.GetResource("Admin.Common.Edit"),
+                    Width = "100",
+                    ClassName =  StyleColumn.CenterAll,
+                    Render = new RenderButtonEdit(new DataUrl("~/Admin/ReviewType/Edit/"))
+                }
+            };
+
+            return model;
+        }
+
+        #endregion
+
         #region Methods
 
         /// <summary>
@@ -50,6 +112,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
+            searchModel.Grid = PrepareReviewTypeGridModel(searchModel);
 
             return searchModel;
         }
@@ -68,12 +131,11 @@ namespace Nop.Web.Areas.Admin.Factories
             var reviewTypes = _reviewTypeService.GetAllReviewTypes().ToPagedList(searchModel);
 
             //prepare list model
-            var model = new ReviewTypeListModel
+            var model = new ReviewTypeListModel().PrepareToGrid(searchModel, reviewTypes, () =>
             {
                 //fill in model values from the entity
-                Data = reviewTypes.Select(reviewType => reviewType.ToModel<ReviewTypeModel>()),
-                Total = reviewTypes.TotalCount
-            };
+                return reviewTypes.Select(reviewType => reviewType.ToModel<ReviewTypeModel>());
+            });
 
             return model;
         }
