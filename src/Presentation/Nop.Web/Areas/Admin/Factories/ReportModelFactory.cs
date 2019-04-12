@@ -126,10 +126,10 @@ namespace Nop.Web.Areas.Admin.Factories
                 },
                 new ColumnProperty(nameof(LowStockProductModel.Id))
                 {
-                    Title = _localizationService.GetResource("Admin.Common.Edit"),
+                    Title = _localizationService.GetResource("Admin.Common.View"),
                     Width = "100",
                     ClassName =  StyleColumn.CenterAll,
-                    Render = new RenderButtonEdit(new DataUrl("~/Admin/Product/Edit/"))
+                    Render = new RenderButtonView(new DataUrl("~/Admin/Product/Edit/"))
                 }
             };
 
@@ -184,7 +184,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 },
                 new ColumnProperty(nameof(BestsellerModel.ProductId))
                 {
-                    Title = _localizationService.GetResource("Admin.Common.Edit"),
+                    Title = _localizationService.GetResource("Admin.Common.View"),
                     Width = "100",
                     ClassName =  StyleColumn.CenterAll,
                     Render = new RenderButtonView(new DataUrl("~/Admin/Product/Edit/"))
@@ -317,6 +317,61 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     Title = _localizationService.GetResource("Admin.Reports.Customers.RegisteredCustomers.Fields.Customers"),
                     Width = "150"
+                }
+            };
+
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare datatables model
+        /// </summary>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
+        protected virtual DataTablesModel PrepareBestCustomersReportReportGridModel(BestCustomersReportSearchModel searchModel)
+        {
+            //prepare common properties
+            var model = new DataTablesModel
+            {
+                Name = "customers-ordertotal-grid",
+                UrlRead = new DataUrl("ReportBestCustomersByOrderTotalList", "Report", null),
+                SearchButtonId = "search-best-customers-ordertotal",
+                Length = searchModel.PageSize,
+                LengthMenu = searchModel.AvailablePageSizes
+            };
+
+            //prepare filters to search
+            model.Filters = new List<FilterParameter>()
+            {
+                new FilterParameter(nameof(searchModel.OrderBy), typeof(int), 1),
+                new FilterParameter(nameof(searchModel.StartDate)),
+                new FilterParameter(nameof(searchModel.EndDate)),
+                new FilterParameter(nameof(searchModel.OrderStatusId)),
+                new FilterParameter(nameof(searchModel.PaymentStatusId)),
+                new FilterParameter(nameof(searchModel.ShippingStatusId))
+            };
+
+            //prepare model columns
+            model.ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(BestCustomersReportModel.CustomerName))
+                {
+                    Title = _localizationService.GetResource("Admin.Reports.Customers.BestBy.Fields.Customer")
+                },
+                new ColumnProperty(nameof(BestCustomersReportModel.OrderTotal))
+                {
+                    Title = _localizationService.GetResource("Admin.Reports.Customers.BestBy.Fields.OrderTotal")
+                },
+                new ColumnProperty(nameof(BestCustomersReportModel.OrderCount))
+                {
+                    Title = _localizationService.GetResource("Admin.Reports.Customers.BestBy.Fields.OrderCount")
+                },
+                new ColumnProperty(nameof(BestCustomersReportModel.CustomerId))
+                {
+                    Title = _localizationService.GetResource("Admin.Common.View"),
+                    Width = "100",
+                    ClassName =  StyleColumn.CenterAll,
+                    Render = new RenderButtonView(new DataUrl("~/Admin/Customer/Edit/"))
                 }
             };
 
@@ -706,6 +761,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
+            searchModel.Grid = PrepareBestCustomersReportReportGridModel(searchModel);
 
             return searchModel;
         }
@@ -756,34 +812,33 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new BestCustomersReportListModel
+            var model = new BestCustomersReportListModel().PrepareToGrid(searchModel, reportItems, () =>
             {
-                Data = reportItems.Select(item =>
-                {
+                return reportItems.Select(item =>
+               {
                     //fill in model values from the entity
                     var bestCustomersReportModel = new BestCustomersReportModel
-                    {
-                        CustomerId = item.CustomerId,
-                        OrderTotal = _priceFormatter.FormatPrice(item.OrderTotal, true, false),
-                        OrderCount = item.OrderCount
-                    };
+                   {
+                       CustomerId = item.CustomerId,
+                       OrderTotal = _priceFormatter.FormatPrice(item.OrderTotal, true, false),
+                       OrderCount = item.OrderCount
+                   };
 
                     //fill in additional values (not existing in the entity)
                     var customer = _customerService.GetCustomerById(item.CustomerId);
-                    if (customer != null)
-                    {
-                        bestCustomersReportModel.CustomerName = customer.IsRegistered() ? customer.Email :
-                            _localizationService.GetResource("Admin.Customers.Guest");
-                    }
+                   if (customer != null)
+                   {
+                       bestCustomersReportModel.CustomerName = customer.IsRegistered() ? customer.Email :
+                           _localizationService.GetResource("Admin.Customers.Guest");
+                   }
 
-                    return bestCustomersReportModel;
-                }),
-                Total = reportItems.TotalCount
-            };
+                   return bestCustomersReportModel;
+               });
+            });
 
             return model;
         }
-
+                
         /// <summary>
         /// Prepare paged registered customers report list model
         /// </summary>

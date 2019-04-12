@@ -30,6 +30,19 @@ namespace Nop.Web.Framework.Models.DataTables
             Type = type;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the FilterParameter class
+        /// </summary>
+        /// <param name="name">Filter parameter name</param>
+        /// <param name="type">Filter parameter type</param>
+        /// <param name="value">Filter parameter value</param>
+        public FilterParameter(string name, Type type, object value)
+        {
+            Name = name;
+            Type = type;
+            Value = value;
+        }
+
         #endregion
 
         #region Properties
@@ -43,6 +56,11 @@ namespace Nop.Web.Framework.Models.DataTables
         /// Filter field type
         /// </summary>
         public Type Type { get; set; }
+
+        /// <summary>
+        /// Filter field value
+        /// </summary>
+        public object Value { get; set; }
 
         #endregion
     }
