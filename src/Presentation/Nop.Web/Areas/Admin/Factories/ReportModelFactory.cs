@@ -287,6 +287,42 @@ namespace Nop.Web.Areas.Admin.Factories
             return model;
         }
 
+        /// <summary>
+        /// Prepare datatables model
+        /// </summary>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
+        protected virtual DataTablesModel PrepareRegisteredCustomersReportGridModel(RegisteredCustomersReportSearchModel searchModel)
+        {
+            //prepare common properties
+            var model = new DataTablesModel
+            {
+                Name = "registered-customers-grid",
+                UrlRead = new DataUrl("ReportRegisteredCustomersList", "Report", null),
+                Length = searchModel.PageSize,
+                LengthMenu = searchModel.AvailablePageSizes
+            };
+
+            //prepare filters to search
+            model.Filters = null;
+
+            //prepare model columns
+            model.ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(RegisteredCustomersReportModel.Period))
+                {
+                    Title = _localizationService.GetResource("Admin.Reports.Customers.RegisteredCustomers.Fields.Period")
+                },
+                new ColumnProperty(nameof(RegisteredCustomersReportModel.Customers))
+                {
+                    Title = _localizationService.GetResource("Admin.Reports.Customers.RegisteredCustomers.Fields.Customers"),
+                    Width = "150"
+                }
+            };
+
+            return model;
+        }
+
         #endregion
 
         #region Methods
@@ -686,6 +722,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
+            searchModel.Grid = PrepareRegisteredCustomersReportGridModel(searchModel);
 
             return searchModel;
         }
@@ -785,11 +822,10 @@ namespace Nop.Web.Areas.Admin.Factories
             var pagedList = reportItems.ToPagedList(searchModel);
 
             //prepare list model
-            var model = new RegisteredCustomersReportListModel
+            var model = new RegisteredCustomersReportListModel().PrepareToGrid(searchModel, pagedList, () =>
             {
-                Data = pagedList,
-                Total = pagedList.TotalCount
-            };
+                return pagedList;
+            });
 
             return model;
         }
