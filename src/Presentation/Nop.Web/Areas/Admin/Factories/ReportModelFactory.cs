@@ -14,6 +14,7 @@ using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Orders;
 using Nop.Web.Areas.Admin.Models.Reports;
+using Nop.Web.Framework.Models.DataTables;
 using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
@@ -68,6 +69,75 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #endregion
 
+        #region Utilities
+
+        /// <summary>
+        /// Prepare datatables model
+        /// </summary>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
+        protected virtual DataTablesModel PrepareLowStockProductGridModel(LowStockProductSearchModel searchModel)
+        {
+            //prepare common properties
+            var model = new DataTablesModel
+            {
+                Name = "products-grid",
+                UrlRead = new DataUrl("LowStockList", "Report", null),
+                SearchButtonId = "search-products",
+                Length = searchModel.PageSize,
+                LengthMenu = searchModel.AvailablePageSizes
+            };
+
+            //prepare filters to search
+            model.Filters = new List<FilterParameter>()
+            {
+                new FilterParameter(nameof(searchModel.SearchPublishedId))
+            };
+
+            //prepare model columns
+            model.ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(LowStockProductModel.Attributes))
+                {
+                    Visible = false
+                },
+                new ColumnProperty(nameof(LowStockProductModel.Name))
+                {
+                    Title = _localizationService.GetResource("Admin.Catalog.Products.Fields.Name"),
+                    Width = "300",
+                    Render = new RenderCustom("renderColumnName")
+                },
+                new ColumnProperty(nameof(LowStockProductModel.ManageInventoryMethod))
+                {
+                    Title = _localizationService.GetResource("Admin.Catalog.Products.Fields.ManageInventoryMethod"),
+                    Width = "150"
+                },
+                new ColumnProperty(nameof(LowStockProductModel.StockQuantity))
+                {
+                    Title = _localizationService.GetResource("Admin.Catalog.Products.Fields.StockQuantity"),
+                    Width = "100"
+                },
+                new ColumnProperty(nameof(LowStockProductModel.Published))
+                {
+                    Title = _localizationService.GetResource("Admin.Catalog.Products.Fields.Published"),
+                    Width = "100",
+                    ClassName =  StyleColumn.CenterAll,
+                    Render = new RenderBoolean()
+                },
+                new ColumnProperty(nameof(LowStockProductModel.Id))
+                {
+                    Title = _localizationService.GetResource("Admin.Common.Edit"),
+                    Width = "100",
+                    ClassName =  StyleColumn.CenterAll,
+                    Render = new RenderButtonEdit(new DataUrl("~/Admin/Product/Edit/"))
+                }
+            };
+
+            return model;
+        }
+
+        #endregion
+
         #region Methods
 
         #region LowStock
@@ -101,6 +171,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
+            searchModel.Grid = PrepareLowStockProductGridModel(searchModel);
 
             return searchModel;
         }
@@ -148,11 +219,10 @@ namespace Nop.Web.Areas.Admin.Factories
             var pagesList = lowStockProductModels.ToPagedList(searchModel);
 
             //prepare list model
-            var model = new LowStockProductListModel
+            var model = new LowStockProductListModel().PrepareToGrid(searchModel, pagesList, () =>
             {
-                Data = pagesList,
-                Total = pagesList.TotalCount
-            };
+                return pagesList;
+            });
 
             return model;
         }

@@ -1,5 +1,7 @@
 ﻿@model LowStockProductSearchModel
 
+@using System.Text.Encodings.Web
+
 @{
     //page title
     ViewBag.Title = T("Admin.Reports.LowStock").Text;
@@ -60,99 +62,22 @@
 
                 <div class="panel panel-default">
                     <div class="panel-body">
-                        <div id="products-grid"></div>
-
+                        @await Html.PartialAsync("Table", Model.Grid)
                         <script>
-                            $(document).ready(function() {
-                                $("#products-grid").kendoGrid({
-                                    dataSource: {
-                                        type: "json",
-                                        transport: {
-                                            read: {
-                                                url: "@Html.Raw(Url.Action("LowStockList", "Report"))",
-                                                type: "POST",
-                                                dataType: "json",
-                                                data: function() {
-                                                    var data = {
-                                                        SearchPublishedId: $('#SearchPublishedId').val()
-                                                    };
-                                                    addAntiForgeryToken(data);
-                                                    return data;
-                                                }
-                                            }
-                                        },
-                                        schema: {
-                                            data: "Data",
-                                            total: "Total",
-                                            errors: "Errors"
-                                        },
-                                        error: function(e) {
-                                            display_kendoui_grid_error(e);
-                                            // Cancel the changes
-                                            this.cancelChanges();
-                                        },
-                                        pageSize: @(Model.PageSize),
-                                        serverPaging: true,
-                                        serverFiltering: true,
-                                        serverSorting: true
-                                    },
-                                    pageable: {
-                                        refresh: true,
-                                        pageSizes: [@(Model.AvailablePageSizes)],
-                                        @await Html.PartialAsync("_GridPagerMessages")
-                                    },
-                                    editable: {
-                                        confirmation: "@T("Admin.Common.DeleteConfirmation")",
-                                        mode: "inline"
-                                    },
-                                    scrollable: false,
-                                    columns: [
-                                        {
-                                            field: "Name",
-                                            title: "@T("Admin.Catalog.Products.Fields.Name")",
-                                            width: 300,
-                                            //if not a grouped product, then display
-                                            template: "#:Name# # if(Attributes !== null) {# <div><i> #=Attributes# </i></div> #} #"
-                                        }, {
-                                            field: "ManageInventoryMethod",
-                                            title: "@T("Admin.Catalog.Products.Fields.ManageInventoryMethod")",
-                                            width: 150
-                                        }, {
-                                            field: "StockQuantity",
-                                            title: "@T("Admin.Catalog.Products.Fields.StockQuantity")",
-                                            width: 100
-                                        }, {
-                                            field: "Published",
-                                            title: "@T("Admin.Catalog.Products.Fields.Published")",
-                                            width: 100,
-                                            headerAttributes: { style: "text-align:center" },
-                                            attributes: { style: "text-align:center" },
-                                            template: '# if(Published) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
-                                        }, {
-                                            field: "Id",
-                                            title: "@T("Admin.Common.Edit")",
-                                            width: 100,
-                                            headerAttributes: { style: "text-align:center" },
-                                            attributes: { style: "text-align:center" },
-                                            template: '<a class="btn btn-default" href="@Url.Content("~/Admin/Product/Edit/")#=Id#"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>'                                }
-                                    ]
-                                });
-                            });
+                            function renderColumnName(data, type, row, meta) {
+                                var textRenderer = $.fn.dataTable.render.text().display;
+                                var res = data;
+                                if (row.Attributes !== null) {
+                                    return textRenderer(res) + '<div><i>' + textRenderer(row.Attributes) + '</i></div>';
+                                }
+                                else {
+                                    return textRenderer(res);
+                                }
+                            }
                         </script>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-    <script>
-        $(document).ready(function() {
-            $('#search-products').click(function() {
-                var grid = $('#products-grid').data('kendoGrid');
-                grid.dataSource.page(1); //new search. Set page size to 1
-                //grid.dataSource.read(); we already loaded the grid above using "page" function
-                return false;
-            });
-        });
-    </script>
 </form>
