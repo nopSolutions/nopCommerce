@@ -449,6 +449,15 @@ set @resources='
   <LocaleResource Name="Enums.Nop.Core.Domain.Gdpr.GdprRequestType.ProfileChanged">
     <Value>User changed profile</Value>
   </LocaleResource>
+  <LocaleResource Name="Reviews.Fields.Rating.Good">
+    <Value>Good</Value>
+  </LocaleResource>
+  <LocaleResource Name="Reviews.Fields.Rating.NotBadNotExcellent">
+    <Value>Not bad but also not excellent</Value>
+  </LocaleResource>
+  <LocaleResource Name="Reviews.Fields.Rating.NotGood">
+    <Value>Not good</Value>
+  </LocaleResource>
 </Language>'
 
 CREATE TABLE #LocaleStringResourceTmp

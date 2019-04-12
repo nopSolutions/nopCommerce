@@ -17231,19 +17231,19 @@
   </LocaleResource>
   <LocaleResource Name="Reviews.Fields.Rating.Bad">
     <Value>Bad</Value>
-  </LocaleResource>    
-  <LocaleResource Name="Reviews.Fields.Rating.NotGood">
-    <Value>Not good</Value>
-  </LocaleResource>
-  <LocaleResource Name="Reviews.Fields.Rating.NotBadNotExcellent">
-    <Value>Not bad but also not excellent</Value>
-  </LocaleResource>    
-  <LocaleResource Name="Reviews.Fields.Rating.Good">
-    <Value>Good</Value>
   </LocaleResource>
   <LocaleResource Name="Reviews.Fields.Rating.Excellent">
     <Value>Excellent</Value>
   </LocaleResource>
+  <LocaleResource Name="Reviews.Fields.Rating.Good">
+    <Value>Good</Value>
+  </LocaleResource>
+  <LocaleResource Name="Reviews.Fields.Rating.NotBadNotExcellent">
+    <Value>Not bad but also not excellent</Value>
+  </LocaleResource>
+  <LocaleResource Name="Reviews.Fields.Rating.NotGood">
+    <Value>Not good</Value>
+  </LocaleResource>  
   <LocaleResource Name="Reviews.Fields.ReviewText">
     <Value>Review text</Value>
   </LocaleResource>
