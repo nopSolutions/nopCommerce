@@ -182,8 +182,54 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     Title = _localizationService.GetResource("Admin.Reports.Sales.Bestsellers.Fields.TotalAmount")
                 },
-
                 new ColumnProperty(nameof(BestsellerModel.ProductId))
+                {
+                    Title = _localizationService.GetResource("Admin.Common.Edit"),
+                    Width = "100",
+                    ClassName =  StyleColumn.CenterAll,
+                    Render = new RenderButtonView(new DataUrl("~/Admin/Product/Edit/"))
+                }
+            };
+
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare datatables model
+        /// </summary>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
+        protected virtual DataTablesModel PrepareNeverSoldReportGridModel(NeverSoldReportSearchModel searchModel)
+        {
+            //prepare common properties
+            var model = new DataTablesModel
+            {
+                Name = "neversoldreport-grid",
+                UrlRead = new DataUrl("NeverSoldList", "Report", null),
+                SearchButtonId = "search-neversoldreport",
+                Length = searchModel.PageSize,
+                LengthMenu = searchModel.AvailablePageSizes
+            };
+
+            //prepare filters to search
+            model.Filters = new List<FilterParameter>()
+            {
+                new FilterParameter(nameof(searchModel.StartDate)),
+                new FilterParameter(nameof(searchModel.EndDate)),
+                new FilterParameter(nameof(searchModel.SearchCategoryId)),
+                new FilterParameter(nameof(searchModel.SearchManufacturerId)),
+                new FilterParameter(nameof(searchModel.SearchStoreId)),
+                new FilterParameter(nameof(searchModel.SearchVendorId))
+            };
+
+            //prepare model columns
+            model.ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(NeverSoldReportModel.ProductName))
+                {
+                    Title = _localizationService.GetResource("Admin.Reports.Sales.NeverSold.Fields.Name")
+                },
+                new ColumnProperty(nameof(NeverSoldReportModel.ProductId))
                 {
                     Title = _localizationService.GetResource("Admin.Common.Edit"),
                     Width = "100",
@@ -419,6 +465,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
+            searchModel.Grid = PrepareNeverSoldReportGridModel(searchModel);
 
             return searchModel;
         }
@@ -452,16 +499,15 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new NeverSoldReportListModel
+            var model = new NeverSoldReportListModel().PrepareToGrid(searchModel, items, () =>
             {
                 //fill in model values from the entity
-                Data = items.Select(item => new NeverSoldReportModel
+                return items.Select(item => new NeverSoldReportModel
                 {
                     ProductId = item.Id,
                     ProductName = item.Name
-                }),
-                Total = items.TotalCount
-            };
+                });
+            });
 
             return model;
         }
