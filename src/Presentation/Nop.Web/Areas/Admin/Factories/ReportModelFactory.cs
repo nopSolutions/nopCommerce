@@ -241,6 +241,52 @@ namespace Nop.Web.Areas.Admin.Factories
             return model;
         }
 
+        /// <summary>
+        /// Prepare datatables model
+        /// </summary>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
+        protected virtual DataTablesModel PrepareCountryReportGridModel(CountryReportSearchModel searchModel)
+        {
+            //prepare common properties
+            var model = new DataTablesModel
+            {
+                Name = "countryreport-grid",
+                UrlRead = new DataUrl("CountrySalesList", "Report", null),
+                SearchButtonId = "search-countryreport",
+                Length = searchModel.PageSize,
+                LengthMenu = searchModel.AvailablePageSizes
+            };
+
+            //prepare filters to search
+            model.Filters = new List<FilterParameter>()
+            {
+                new FilterParameter(nameof(searchModel.StartDate)),
+                new FilterParameter(nameof(searchModel.EndDate)),
+                new FilterParameter(nameof(searchModel.OrderStatusId)),
+                new FilterParameter(nameof(searchModel.PaymentStatusId))
+            };
+
+            //prepare model columns
+            model.ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(CountryReportModel.CountryName))
+                {
+                    Title = _localizationService.GetResource("Admin.Reports.Sales.Country.Fields.CountryName")
+                },
+                new ColumnProperty(nameof(CountryReportModel.TotalOrders))
+                {
+                    Title = _localizationService.GetResource("Admin.Reports.Sales.Country.Fields.TotalOrders")
+                },
+                new ColumnProperty(nameof(CountryReportModel.SumOrders))
+                {
+                    Title = _localizationService.GetResource("Admin.Reports.Sales.Country.Fields.SumOrders")
+                }
+            };
+
+            return model;
+        }
+
         #endregion
 
         #region Methods
@@ -534,6 +580,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
+            searchModel.Grid = PrepareCountryReportGridModel(searchModel);
 
             return searchModel;
         }
@@ -563,9 +610,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 endTimeUtc: endDateValue).ToPagedList(searchModel);
 
             //prepare list model
-            var model = new CountryReportListModel
+            var model = new CountryReportListModel().PrepareToGrid(searchModel, items, () =>
             {
-                Data = items.Select(item =>
+                return items.Select(item =>
                 {
                     //fill in model values from the entity
                     var countryReportModel = new CountryReportModel
@@ -578,9 +625,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     countryReportModel.CountryName = _countryService.GetCountryById(item.CountryId ?? 0)?.Name;
 
                     return countryReportModel;
-                }),
-                Total = items.TotalCount
-            };
+                });
+            });
 
             return model;
         }

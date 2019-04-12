@@ -87,74 +87,7 @@
 
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <div id="countryreport-grid"></div>
-
-                    <script>
-                        $(document).ready(function () {
-                            $("#countryreport-grid").kendoGrid({
-                                dataSource: {
-                                    type: "json",
-                                    transport: {
-                                        read: {
-                                            url: "@Html.Raw(Url.Action("CountrySalesList", "Report"))",
-                                            type: "POST",
-                                            dataType: "json",
-                                            data: function() {
-                                                var data = {
-                                                    StartDate: $('#@Html.IdFor(model => model.StartDate)').val(),
-                                                    EndDate: $('#@Html.IdFor(model => model.EndDate)').val(),
-                                                    OrderStatusId: $('#OrderStatusId').val(),
-                                                    PaymentStatusId: $('#PaymentStatusId').val()
-                                                };
-                                                addAntiForgeryToken(data);
-                                                return data;
-                                            }
-                                        }
-                                    },
-                                    schema: {
-                                        data: "Data",
-                                        total: "Total",
-                                        errors: "Errors"
-                                    },
-                                    error: function (e) {
-                                        display_kendoui_grid_error(e);
-                                        // Cancel the changes
-                                        this.cancelChanges();
-                                    },
-                                    pageSize: @(Model.PageSize),
-                                    serverPaging: true,
-                                    serverFiltering: true,
-                                    serverSorting: true
-                                },
-                                pageable: {
-                                    refresh: true,
-                                    pageSizes: [@(Model.AvailablePageSizes)],
-                                    @await Html.PartialAsync("_GridPagerMessages")
-                                },
-                                scrollable: false,
-                                columns: [{
-                                    field: "CountryName",
-                                    title: "@T("Admin.Reports.Sales.Country.Fields.CountryName")"
-                                }, {
-                                    field: "TotalOrders",
-                                    title: "@T("Admin.Reports.Sales.Country.Fields.TotalOrders")"
-                                }, {
-                                    field: "SumOrders",
-                                    title: "@T("Admin.Reports.Sales.Country.Fields.SumOrders")"
-                                }]
-                            });
-                        });
-                    </script>
-
-                    <script>
-                        $(document).ready(function () {
-                            $('#search-countryreport').click(function () {
-                                var grid = $('#countryreport-grid').data('kendoGrid');
-                                grid.dataSource.read();
-                                return false;
-                            });
-                        });
-                    </script>
+                    @await Html.PartialAsync("Table", Model.Grid)
                 </div>
             </div>
         </div>
