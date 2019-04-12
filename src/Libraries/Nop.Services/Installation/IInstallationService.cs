@@ -1,4 +1,4 @@
-namespace Nop.Services.Installation
+﻿namespace Nop.Services.Installation
 {
     /// <summary>
     /// Installation service
@@ -6,11 +6,16 @@ namespace Nop.Services.Installation
     public partial interface IInstallationService
     {
         /// <summary>
-        /// Install data
+        /// Install required data
         /// </summary>
         /// <param name="defaultUserEmail">Default user email</param>
         /// <param name="defaultUserPassword">Default user password</param>
-        /// <param name="installSampleData">A value indicating whether to install sample data</param>
-        void InstallData(string defaultUserEmail, string defaultUserPassword, bool installSampleData = true);
+        void InstallRequiredData(string defaultUserEmail, string defaultUserPassword);
+        
+        /// <summary>
+        /// Install sample data
+        /// </summary>
+        /// <param name="defaultUserEmail">Default user email</param>
+        void InstallSampleData(string defaultUserEmail);
     }
 }

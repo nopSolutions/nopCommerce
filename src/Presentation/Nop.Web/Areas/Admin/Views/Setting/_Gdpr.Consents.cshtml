@@ -1,0 +1,10 @@
+@model GdprSettingsModel
+
+<div class="panel-body">
+    @await Html.PartialAsync("Table", Model.GdprConsentSearchModel.Grid)
+</div>
+<div class="panel-footer">
+    <button type="submit" id="btnAddNewConsent" name="btnAddNewConsent" onclick="javascript:setLocation('@(Url.Action("CreateGdprConsent", "Setting"))'); return false;" class="btn btn-primary">
+        @T("Admin.Configuration.Settings.Gdpr.Consent.AddNew")
+    </button>
+</div>

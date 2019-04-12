@@ -16,7 +16,7 @@ namespace Nop.Web.Components
 
         public IViewComponentResult Invoke()
         {
-            var model = _pollModelFactory.PrepareHomePagePollModels();
+            var model = _pollModelFactory.PrepareHomepagePollModels();
             if (!model.Any())
                 return Content("");
 

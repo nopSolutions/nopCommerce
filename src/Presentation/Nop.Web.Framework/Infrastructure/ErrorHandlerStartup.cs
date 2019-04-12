@@ -39,10 +39,6 @@ namespace Nop.Web.Framework.Infrastructure
         /// <summary>
         /// Gets order of this startup configuration implementation
         /// </summary>
-        public int Order
-        {
-            //error handlers should be loaded first
-            get { return 0; }
-        }
+        public int Order => 0; //error handlers should be loaded first
     }
 }

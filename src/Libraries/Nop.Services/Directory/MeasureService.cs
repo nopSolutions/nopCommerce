@@ -56,7 +56,7 @@ namespace Nop.Services.Directory
 
             _measureDimensionRepository.Delete(measureDimension);
 
-            _cacheManager.RemoveByPattern(NopDirectoryDefaults.MeasureDimensionsPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopDirectoryDefaults.MeasureDimensionsPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(measureDimension);
@@ -120,7 +120,7 @@ namespace Nop.Services.Directory
 
             _measureDimensionRepository.Insert(measure);
 
-            _cacheManager.RemoveByPattern(NopDirectoryDefaults.MeasureDimensionsPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopDirectoryDefaults.MeasureDimensionsPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(measure);
@@ -137,7 +137,7 @@ namespace Nop.Services.Directory
 
             _measureDimensionRepository.Update(measure);
 
-            _cacheManager.RemoveByPattern(NopDirectoryDefaults.MeasureDimensionsPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopDirectoryDefaults.MeasureDimensionsPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(measure);
@@ -238,7 +238,7 @@ namespace Nop.Services.Directory
 
             _measureWeightRepository.Delete(measureWeight);
 
-            _cacheManager.RemoveByPattern(NopDirectoryDefaults.MeasureWeightsPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopDirectoryDefaults.MeasureWeightsPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(measureWeight);
@@ -302,7 +302,7 @@ namespace Nop.Services.Directory
 
             _measureWeightRepository.Insert(measure);
 
-            _cacheManager.RemoveByPattern(NopDirectoryDefaults.MeasureWeightsPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopDirectoryDefaults.MeasureWeightsPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(measure);
@@ -319,7 +319,7 @@ namespace Nop.Services.Directory
 
             _measureWeightRepository.Update(measure);
 
-            _cacheManager.RemoveByPattern(NopDirectoryDefaults.MeasureWeightsPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopDirectoryDefaults.MeasureWeightsPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(measure);

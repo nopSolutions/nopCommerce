@@ -56,6 +56,58 @@
             <div class="panel panel-default">
                 <div class="panel panel-body">
                     <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="Name" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="Name" asp-required="true" />
+                            <span asp-validation-for="Name"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="Subject" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="Subject" asp-required="true" />
+                            <span asp-validation-for="Subject"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="Body" />
+                        </div>
+                        <div class="col-md-9">
+                            @if (adminAreaSettings.UseRichEditorInMessageTemplates)
+                            {
+                                //we use rich editor with BODY tag supported
+                                //it could be a better practice to implement one more editor (similar to RichEditor.cshtml)
+                                //with "enableFullPage" property set to "true". but we do not want to duplicate source code
+                                //that's why we use this workaround
+                                //we store a value into "ViewData" and then use it in the RichEditor.cshtml file
+                                ViewData["nop.RichEditor.EnableFullPage"] = true;
+                                <div class="input-group input-group-required">
+                                    <nop-editor asp-for="Body" asp-template="RichEditor" />
+                                    <div class="input-group-btn">
+                                        <nop-required />
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <nop-textarea asp-for="Body" asp-required="true"></nop-textarea>
+                                <text>
+                                    <script>
+                                        $(document).ready(function () {
+                                            $('#@Html.IdFor(model => model.Body)').height($('#@Html.IdFor(model => model.Body)')[0].scrollHeight);
+                                        });
+                                    </script>
+                                </text>
+                            }
+                            <span asp-validation-for="Body"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <script>
                             function toggleLoadedAllowedTokens() {
                                 $('#pnlAllowedTokens').toggle();
@@ -79,58 +131,6 @@
                     </div>
                     <div class="form-group">
                         <div class="col-md-3">
-                            <nop-label asp-for="Name" />
-                        </div>
-                        <div class="col-md-9">
-                            <nop-editor asp-for="Name" asp-required="true"/>
-                            <span asp-validation-for="Name"></span>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-md-3">
-                            <nop-label asp-for="Subject" />
-                        </div>
-                        <div class="col-md-9">
-                            <nop-editor asp-for="Subject" asp-required="true"/>
-                            <span asp-validation-for="Subject"></span>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-md-3">
-                            <nop-label asp-for="Body" />
-                        </div>
-                        <div class="col-md-9">
-                            @if (adminAreaSettings.UseRichEditorInMessageTemplates)
-                            {
-                                //we use rich editor with BODY tag supported
-                                //it could be a better practice to implement one more editor (similar to RichEditor.cshtml)
-                                //with "enableFullPage" property set to "true". but we do not want to duplicate source code
-                                //that's why we use this workaround
-                                //we store a value into "ViewData" and then use it in the RichEditor.cshtml file
-                                ViewData["nop.RichEditor.EnableFullPage"] = true;
-                                <div class="input-group input-group-required">
-                                    <nop-editor asp-for="Body" asp-template="RichEditor" />
-                                    <div class="input-group-btn">
-                                        <nop-required/>
-                                    </div>
-                                </div>
-                            }
-                            else
-                            {
-                                <nop-textarea asp-for="Body" asp-required="true"></nop-textarea>
-                                <text>
-                                    <script>
-                                        $(document).ready(function () {
-                                            $('#@Html.IdFor(model => model.Body)').height($('#@Html.IdFor(model => model.Body)')[0].scrollHeight);
-                                        });
-                                    </script>
-                                </text>
-                            }
-                            <span asp-validation-for="Body"></span>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-md-3">
                             <nop-label asp-for="DontSendBeforeDate" />
                         </div>
                         <div class="col-md-9">
@@ -143,7 +143,7 @@
                             <nop-label asp-for="StoreId" />
                         </div>
                         <div class="col-md-9">
-                            <nop-select asp-for="StoreId" asp-items="Model.AvailableStores"/>
+                            <nop-select asp-for="StoreId" asp-items="Model.AvailableStores" />
                             <span asp-validation-for="StoreId"></span>
                         </div>
                     </div>
@@ -152,7 +152,7 @@
                             <nop-label asp-for="CustomerRoleId" />
                         </div>
                         <div class="col-md-9">
-                            <nop-select asp-for="CustomerRoleId" asp-items="Model.AvailableCustomerRoles"/>
+                            <nop-select asp-for="CustomerRoleId" asp-items="Model.AvailableCustomerRoles" />
                             <span asp-validation-for="CustomerRoleId"></span>
                         </div>
                     </div>

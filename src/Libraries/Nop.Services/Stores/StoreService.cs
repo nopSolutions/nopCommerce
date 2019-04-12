@@ -54,7 +54,7 @@ namespace Nop.Services.Stores
 
             _storeRepository.Delete(store);
 
-            _cacheManager.RemoveByPattern(NopStoreDefaults.StoresPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopStoreDefaults.StoresPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(store);
@@ -132,7 +132,7 @@ namespace Nop.Services.Stores
 
             _storeRepository.Insert(store);
 
-            _cacheManager.RemoveByPattern(NopStoreDefaults.StoresPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopStoreDefaults.StoresPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(store);
@@ -152,7 +152,7 @@ namespace Nop.Services.Stores
 
             _storeRepository.Update(store);
 
-            _cacheManager.RemoveByPattern(NopStoreDefaults.StoresPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopStoreDefaults.StoresPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(store);

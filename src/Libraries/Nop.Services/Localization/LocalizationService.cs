@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
@@ -13,12 +13,12 @@ using Nop.Core.Configuration;
 using Nop.Core.Data;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Security;
-using Nop.Core.Plugins;
 using Nop.Data;
 using Nop.Data.Extensions;
 using Nop.Services.Configuration;
 using Nop.Services.Events;
 using Nop.Services.Logging;
+using Nop.Services.Plugins;
 
 namespace Nop.Services.Localization
 {
@@ -87,7 +87,7 @@ namespace Nop.Services.Localization
             _lsrRepository.Insert(resources);
 
             //cache
-            _cacheManager.RemoveByPattern(NopLocalizationDefaults.LocaleStringResourcesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopLocalizationDefaults.LocaleStringResourcesPrefixCacheKey);
 
             //event notification
             foreach (var resource in resources)
@@ -109,7 +109,7 @@ namespace Nop.Services.Localization
             _lsrRepository.Update(resources);
 
             //cache
-            _cacheManager.RemoveByPattern(NopLocalizationDefaults.LocaleStringResourcesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopLocalizationDefaults.LocaleStringResourcesPrefixCacheKey);
 
             //event notification
             foreach (var resource in resources)
@@ -148,7 +148,7 @@ namespace Nop.Services.Localization
             _lsrRepository.Delete(localeStringResource);
 
             //cache
-            _cacheManager.RemoveByPattern(NopLocalizationDefaults.LocaleStringResourcesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopLocalizationDefaults.LocaleStringResourcesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(localeStringResource);
@@ -228,7 +228,7 @@ namespace Nop.Services.Localization
             _lsrRepository.Insert(localeStringResource);
 
             //cache
-            _cacheManager.RemoveByPattern(NopLocalizationDefaults.LocaleStringResourcesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopLocalizationDefaults.LocaleStringResourcesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(localeStringResource);
@@ -246,7 +246,7 @@ namespace Nop.Services.Localization
             _lsrRepository.Update(localeStringResource);
 
             //cache
-            _cacheManager.RemoveByPattern(NopLocalizationDefaults.LocaleStringResourcesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopLocalizationDefaults.LocaleStringResourcesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(localeStringResource);
@@ -457,7 +457,7 @@ namespace Nop.Services.Localization
                 false, 600, pLanguageId, pXmlPackage, pUpdateExistingResources);
 
             //clear cache
-            _cacheManager.RemoveByPattern(NopLocalizationDefaults.LocaleStringResourcesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopLocalizationDefaults.LocaleStringResourcesPrefixCacheKey);
         }
 
         /// <summary>

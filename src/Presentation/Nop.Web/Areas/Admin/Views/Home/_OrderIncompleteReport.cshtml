@@ -3,7 +3,7 @@
 @inject IWorkContext workContext
 @{
     const string panelId = "order-incomplete-report-box";
-    const string hidePanelAttributeName = "HideOrderIncompleteReportPanel";
+    const string hidePanelAttributeName = "Reports.HideOrderIncompleteReportPanel";
     var hidePanel = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hidePanelAttributeName);
 }
 

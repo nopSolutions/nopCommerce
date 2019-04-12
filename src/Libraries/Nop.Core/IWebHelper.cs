@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 
 namespace Nop.Core
 {
@@ -114,5 +114,12 @@ namespace Nop.Core
         /// <param name="request">HTTP request</param>
         /// <returns>Raw URL</returns>
         string GetRawUrl(HttpRequest request);
+
+        /// <summary>
+        /// Gets whether the request is made with AJAX 
+        /// </summary>
+        /// <param name="request">HTTP request</param>
+        /// <returns>Result</returns>
+        bool IsAjaxRequest(HttpRequest request);
     }
 }

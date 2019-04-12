@@ -1,4 +1,4 @@
-﻿using Nop.Core.Plugins;
+﻿using Nop.Services.Plugins;
 
 namespace Nop.Web.Framework.Menu
 {

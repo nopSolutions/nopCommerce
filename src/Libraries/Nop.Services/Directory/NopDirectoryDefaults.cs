@@ -11,6 +11,30 @@
         /// Gets a key for caching
         /// </summary>
         /// <remarks>
+        /// {0} : country ID
+        /// </remarks>
+        public static string CountriesByIdCacheKey => "Nop.country.id-{0}";
+
+        /// <summary>
+        /// Gets a key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : Two letter ISO code
+        /// </remarks>
+        public static string CountriesByTwoLetterCodeCacheKey => "Nop.country.twoletter-{0}";
+
+        /// <summary>
+        /// Gets a key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : Two letter ISO code
+        /// </remarks>
+        public static string CountriesByThreeLetterCodeCacheKey => "Nop.country.threeletter-{0}";
+
+        /// <summary>
+        /// Gets a key for caching
+        /// </summary>
+        /// <remarks>
         /// {0} : language ID
         /// {1} : show hidden records?
         /// </remarks>
@@ -19,7 +43,7 @@
         /// <summary>
         /// Gets a key pattern to clear cache
         /// </summary>
-        public static string CountriesPatternCacheKey => "Nop.country.";
+        public static string CountriesPrefixCacheKey => "Nop.country.";
 
         #endregion
 
@@ -44,7 +68,7 @@
         /// <summary>
         /// Gets a key pattern to clear cache
         /// </summary>
-        public static string CurrenciesPatternCacheKey => "Nop.currency.";
+        public static string CurrenciesPrefixCacheKey => "Nop.currency.";
 
         #endregion
 
@@ -79,12 +103,12 @@
         /// <summary>
         /// Gets a key pattern to clear cache
         /// </summary>
-        public static string MeasureDimensionsPatternCacheKey => "Nop.measuredimension.";
+        public static string MeasureDimensionsPrefixCacheKey => "Nop.measuredimension.";
 
         /// <summary>
         /// Gets a key pattern to clear cache
         /// </summary>
-        public static string MeasureWeightsPatternCacheKey => "Nop.measureweight.";
+        public static string MeasureWeightsPrefixCacheKey => "Nop.measureweight.";
 
         #endregion
 
@@ -101,9 +125,19 @@
         public static string StateProvincesAllCacheKey => "Nop.stateprovince.all-{0}-{1}-{2}";
 
         /// <summary>
+        /// Gets a key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : abbreviation
+        /// {1} : country ID
+        /// </remarks>
+        public static string StateProvincesByAbbreviationCacheKey => "Nop.stateprovince.abbreviationcountryid-{0}";
+
+
+        /// <summary>
         /// Gets a key pattern to clear cache
         /// </summary>
-        public static string StateProvincesPatternCacheKey => "Nop.stateprovince.";
+        public static string StateProvincesPrefixCacheKey => "Nop.stateprovince.";
 
         #endregion
     }

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Moq;
 using Nop.Core;
 using Nop.Core.Infrastructure;
-using Nop.Core.Plugins;
+using Nop.Services.Plugins;
 using Nop.Services.Tests.Directory;
 using Nop.Services.Tests.Discounts;
 using Nop.Services.Tests.Payments;
@@ -30,7 +30,7 @@ namespace Nop.Services.Tests
             hostingEnvironment.Setup(x => x.WebRootPath).Returns(System.IO.Directory.GetCurrentDirectory());
             CommonHelper.DefaultFileProvider = new NopFileProvider(hostingEnvironment.Object);
 
-            Singleton<PluginsInfo>.Instance = new PluginsInfo
+            Singleton<IPluginsInfo>.Instance = new PluginsInfo(CommonHelper.DefaultFileProvider)
             {
                 PluginDescriptors = new List<PluginDescriptor>
                 {

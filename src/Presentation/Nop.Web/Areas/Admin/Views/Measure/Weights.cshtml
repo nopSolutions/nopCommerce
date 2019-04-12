@@ -1,80 +1,82 @@
 ﻿@model MeasureSearchModel
 
-<div id="measureweight-grid"></div>
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div id="measureweight-grid"></div>
 
-<script>
-    $(document).ready(function() {
-        $("#measureweight-grid").kendoGrid({
-            dataSource: {
-                type: "json",
-                transport: {
-                    read: {
-                        url: "@Html.Raw(Url.Action("Weights", "Measure"))",
-                        type: "POST",
-                        dataType: "json",
-                        data: addAntiForgeryToken
-                    },
-                    create: {
-                        url: "@Html.Raw(Url.Action("WeightAdd", "Measure"))",
-                        type: "POST",
-                        dataType: "json",
-                        data: addAntiForgeryToken
-                    },
-                    update: {
-                        url: "@Html.Raw(Url.Action("WeightUpdate", "Measure"))",
-                        type: "POST",
-                        dataType: "json",
-                        data: addAntiForgeryToken
-                    },
-                    destroy: {
-                        url: "@Html.Raw(Url.Action("WeightDelete", "Measure"))",
-                        type: "POST",
-                        dataType: "json",
-                        data: addAntiForgeryToken
-                    }
-                },
-                schema: {
-                    data: "Data",
-                    total: "Total",
-                    errors: "Errors",
-                    model: {
-                        id: "Id",
-                        fields: {
-                            Name: { editable: true, type: "string" },
-                            SystemKeyword: { editable: true, type: "string" },
-                            Ratio: { editable: true, type: "number" },
-                            DisplayOrder: { editable: true, type: "number" },
-                            IsPrimaryWeight: { editable: false, type: "boolean" },
-                            Id: { editable: false, type: "number" }
+        <script>
+        $(document).ready(function () {
+            $("#measureweight-grid").kendoGrid({
+                dataSource: {
+                    type: "json",
+                    transport: {
+                        read: {
+                            url: "@Html.Raw(Url.Action("Weights", "Measure"))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        },
+                        create: {
+                            url: "@Html.Raw(Url.Action("WeightAdd", "Measure"))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        },
+                        update: {
+                            url: "@Html.Raw(Url.Action("WeightUpdate", "Measure"))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        },
+                        destroy: {
+                            url: "@Html.Raw(Url.Action("WeightDelete", "Measure"))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
                         }
-                    }
-                },
-                requestEnd: function(e) {
-                    if (e.type == "create" || e.type == "update") {
-                        this.read();
-                    }
-                },
-                error: function(e) {
-                    display_kendoui_grid_error(e);
-                    // Cancel the changes
-                    this.cancelChanges();
-                },
-                pageSize: @(Model.MeasureWeightSearchModel.PageSize),
-                serverPaging: true,
+                    },
+                    schema: {
+                        data: "Data",
+                        total: "Total",
+                        errors: "Errors",
+                        model: {
+                            id: "Id",
+                            fields: {
+                                Name: { editable: true, type: "string" },
+                                SystemKeyword: { editable: true, type: "string" },
+                                Ratio: { editable: true, type: "number" },
+                                DisplayOrder: { editable: true, type: "number" },
+                                IsPrimaryWeight: { editable: false, type: "boolean" },
+                                Id: { editable: false, type: "number" }
+                            }
+                        }
+                    },
+                    requestEnd: function (e) {
+                        if (e.type == "create" || e.type == "update") {
+                            this.read();
+                        }
+                    },
+                    error: function (e) {
+                        display_kendoui_grid_error(e);
+                        // Cancel the changes
+                        this.cancelChanges();
+                    },
+                    pageSize: @(Model.MeasureWeightSearchModel.PageSize),
+            serverPaging: true,
                 serverFiltering: true,
-                serverSorting: true
-            },
+                    serverSorting: true
+        },
             pageable: {
                 refresh: true,
                 pageSizes: [@(Model.MeasureWeightSearchModel.AvailablePageSizes)],
-                @await Html.PartialAsync("_GridPagerMessages")
-            },
-            toolbar: [{ name: "create", text: "@T("Admin.Common.AddNewRecord")" }],
+        @await Html.PartialAsync("_GridPagerMessages")
+                },
+        toolbar: [{ name: "create", text: "@T("Admin.Common.AddNewRecord")" }],
             editable: {
-                confirmation: "@T("Admin.Common.DeleteConfirmation")",
+            confirmation: "@T("Admin.Common.DeleteConfirmation")",
                 mode: "inline"
-            },
-            scrollable: false,
+        },
+        scrollable: false,
             columns: [
                 {
                     field: "Name",
@@ -88,7 +90,7 @@
                     field: "Ratio",
                     title: "@T("Admin.Configuration.Shipping.Measures.Weights.Fields.Ratio")",
                     width: 200,
-                    editor: function(container, options) {
+                    editor: function (container, options) {
                         $('<input name="' + options.field + '"/>')
                             .appendTo(container)
                             .kendoNumericTextBox({
@@ -122,48 +124,50 @@
                                 edit: "@T("Admin.Common.Edit")",
                                 update: "@T("Admin.Common.Update")",
                                 cancel: "@T("Admin.Common.Cancel")"
-                            }
+                                }
                         }, {
                             name: "destroy",
                             text: "@T("Admin.Common.Delete")"
-                        }
+                            }
                     ],
                     width: 200
                 }
             ]
-        });
-    });
-</script>
-<button type="submit" class="btn btn-default" id="btnMarkAsPrimaryWeight" style="display:none" />
-<script>
-    var selectedId;
-
-    function markAsPrimaryWeight(id) {
-        selectedId = id;
-        $("#btnMarkAsPrimaryWeight").click();
-    };
-
-    $(document).ready(function () {
-        $("#btnMarkAsPrimaryWeight-action-confirmation-submit-button").bind("click", function () {
-            var postData = {
-                id: selectedId
-            };
-            addAntiForgeryToken(postData);
-            $.ajax({
-                cache: false,
-                type: "POST",
-                url: "@(Url.Action("MarkAsPrimaryWeight", "Measure"))",
-                data: postData,
-                success: function (data) {
-                    var grid = $("#measureweight-grid").data('kendoGrid');
-                    grid.dataSource.read();
-                },
-                error: function (xhr, ajaxOptions, thrownError) {
-                    $("#markAsPrimaryWeightAlert").click();
-                }
             });
-            $('#btnMarkAsPrimaryWeight-action-confirmation').modal('toggle');
         });
-    });   
-</script>
-<nop-alert asp-alert-id="markAsPrimaryWeightAlert" asp-alert-message="@T("Admin.Configuration.Shipping.Measures.Weights.MarkAsPrimaryWeight.Alert.FailedToUpdate")" />
+        </script>
+        <button type="submit" class="btn btn-default" id="btnMarkAsPrimaryWeight" style="display:none" />
+        <script>
+        var selectedId;
+
+        function markAsPrimaryWeight(id) {
+            selectedId = id;
+            $("#btnMarkAsPrimaryWeight").click();
+        };
+
+        $(document).ready(function () {
+            $("#btnMarkAsPrimaryWeight-action-confirmation-submit-button").bind("click", function () {
+                var postData = {
+                    id: selectedId
+                };
+                addAntiForgeryToken(postData);
+                $.ajax({
+                    cache: false,
+                    type: "POST",
+                    url: "@(Url.Action("MarkAsPrimaryWeight", "Measure"))",
+                    data: postData,
+                    success: function (data) {
+                        var grid = $("#measureweight-grid").data('kendoGrid');
+                        grid.dataSource.read();
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        $("#markAsPrimaryWeightAlert").click();
+                    }
+                });
+                $('#btnMarkAsPrimaryWeight-action-confirmation').modal('toggle');
+            });
+        });
+        </script>
+    </div>
+</div>
+<nop-alert asp-alert-id="markAsPrimaryWeightAlert" asp-alert-message="@T(" Admin.Configuration.Shipping.Measures.Weights.MarkAsPrimaryWeight.Alert.FailedToUpdate")" />

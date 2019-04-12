@@ -132,10 +132,10 @@ namespace Nop.Core.Caching
         }
 
         /// <summary>
-        /// Removes items by key pattern
+        /// Removes items by key prefix
         /// </summary>
-        /// <param name="pattern">String key pattern</param>
-        public virtual void RemoveByPattern(string pattern)
+        /// <param name="prefix">String key prefix</param>
+        public virtual void RemoveByPrefix(string prefix)
         {
             using (new ReaderWriteLockDisposable(_locker, ReaderWriteLockType.UpgradeableRead))
             {
@@ -144,7 +144,7 @@ namespace Nop.Core.Caching
                     return;
 
                 //get cache keys that matches pattern
-                var regex = new Regex(pattern,
+                var regex = new Regex(prefix,
                     RegexOptions.Singleline | RegexOptions.Compiled | RegexOptions.IgnoreCase);
                 var matchesKeys = items.Keys.Select(p => p.ToString()).Where(key => regex.IsMatch(key)).ToList();
 

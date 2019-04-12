@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Xml.Serialization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Nop.Web.Framework.Models
@@ -39,16 +38,19 @@ namespace Nop.Web.Framework.Models
         /// </summary>
         /// <remarks>Developers can override this method in custom partial classes in order to add some custom initialization code to constructors</remarks>
         protected virtual void PostInitialize()
-        {            
+        {
         }
 
         #endregion
 
         #region Properties
 
-        //MVC is suppressing further validation if the IFormCollection is passed to a controller method. That's why we add it to the model
-        [XmlIgnore]
-        public IFormCollection Form { get; set; }
+        //There is a bug with a complex model binding in ASP.NET Core, it'll be fixed for further .NET Core  3.0 release (https://github.com/aspnet/AspNetCore/pull/6793). 
+        //At now we just add a workaround and remove Form from base model 
+        //TODO: uncomment after updating to NET Core 3.0
+        ////MVC is suppressing further validation if the IFormCollection is passed to a controller method. That's why we add it to the model
+        //[XmlIgnore]
+        //public IFormCollection Form { get; set; }
 
         /// <summary>
         /// Gets or sets property to store any custom values for models 

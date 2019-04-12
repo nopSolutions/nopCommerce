@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Primitives;
 using Microsoft.Net.Http.Headers;
 using Nop.Core.Configuration;
@@ -24,6 +25,7 @@ namespace Nop.Core
         #region Fields 
 
         private readonly HostingConfig _hostingConfig;
+        private readonly IApplicationLifetime _applicationLifetime;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly INopFileProvider _fileProvider;
 
@@ -32,12 +34,14 @@ namespace Nop.Core
         #region Ctor
 
         public WebHelper(HostingConfig hostingConfig,
+            IApplicationLifetime applicationLifetime,
             IHttpContextAccessor httpContextAccessor,
             INopFileProvider fileProvider)
         {
             _hostingConfig = hostingConfig;
             _httpContextAccessor = httpContextAccessor;
             _fileProvider = fileProvider;
+            _applicationLifetime = applicationLifetime;
         }
 
         #endregion
@@ -386,8 +390,6 @@ namespace Nop.Core
         public virtual void RestartAppDomain(bool makeRedirect = false)
         {
             //the site will be restarted during the next request automatically
-            //_applicationLifetime.StopApplication();
-
             //"touch" web.config to force restart
             var success = TryWriteWebConfig();
             if (!success)
@@ -397,6 +399,9 @@ namespace Nop.Core
                     "- run the application in a full trust environment, or" + Environment.NewLine +
                     "- give the application write access to the 'web.config' file.");
             }
+
+            if (Environment.OSVersion.Platform == PlatformID.Unix)
+                _applicationLifetime.StopApplication();
         }
 
         /// <summary>
@@ -472,6 +477,22 @@ namespace Nop.Core
                 rawUrl = $"{request.PathBase}{request.Path}{request.QueryString}";
 
             return rawUrl;
+        }
+        
+        /// <summary>
+        /// Gets whether the request is made with AJAX 
+        /// </summary>
+        /// <param name="request">HTTP request</param>
+        /// <returns>Result</returns>
+        public virtual bool IsAjaxRequest(HttpRequest request)
+        {
+            if (request == null)
+                throw new ArgumentNullException(nameof(request));
+
+            if (request.Headers == null)
+                return false;
+
+            return request.Headers["X-Requested-With"] == "XMLHttpRequest";
         }
 
         #endregion

@@ -112,8 +112,8 @@ namespace Nop.Services.Catalog
             _productTagRepository.Delete(productTag);
 
             //cache
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductTagPatternCacheKey);
-            _staticCacheManager.RemoveByPattern(NopCatalogDefaults.ProductTagPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductTagPrefixCacheKey);
+            _staticCacheManager.RemoveByPrefix(NopCatalogDefaults.ProductTagPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(productTag);
@@ -191,8 +191,8 @@ namespace Nop.Services.Catalog
             _productTagRepository.Insert(productTag);
 
             //cache
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductTagPatternCacheKey);
-            _staticCacheManager.RemoveByPattern(NopCatalogDefaults.ProductTagPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductTagPrefixCacheKey);
+            _staticCacheManager.RemoveByPrefix(NopCatalogDefaults.ProductTagPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(productTag);
@@ -213,8 +213,8 @@ namespace Nop.Services.Catalog
             _urlRecordService.SaveSlug(productTag, seName, 0);
 
             //cache
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductTagPatternCacheKey);
-            _staticCacheManager.RemoveByPattern(NopCatalogDefaults.ProductTagPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductTagPrefixCacheKey);
+            _staticCacheManager.RemoveByPrefix(NopCatalogDefaults.ProductTagPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(productTag);
@@ -305,7 +305,7 @@ namespace Nop.Services.Catalog
             }
 
             //cache
-            _staticCacheManager.RemoveByPattern(NopCatalogDefaults.ProductTagPatternCacheKey);
+            _staticCacheManager.RemoveByPrefix(NopCatalogDefaults.ProductTagPrefixCacheKey);
         }
 
         #endregion

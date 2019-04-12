@@ -187,7 +187,7 @@ namespace Nop.Services.Seo
             var sitemapUrls = new List<SitemapUrl>
             {
                 //home page
-                GetLocalizedSitemapUrl("HomePage"),
+                GetLocalizedSitemapUrl("Homepage"),
 
                 //search products
                 GetLocalizedSitemapUrl("ProductSearch"),

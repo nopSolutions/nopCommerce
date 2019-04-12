@@ -26,6 +26,6 @@
         /// <summary>
         /// Gets a pattern to clear cache
         /// </summary>
-        public static string TopicsPatternCacheKey => "Nop.topics.";
+        public static string TopicsPrefixCacheKey => "Nop.topics.";
     }
 }

@@ -40,7 +40,7 @@ namespace Nop.Services.Catalog
             AllowCustomersToSelectPageSize = c.AllowCustomersToSelectPageSize;
             PageSizeOptions = c.PageSizeOptions;
             PriceRanges = c.PriceRanges;
-            ShowOnHomePage = c.ShowOnHomePage;
+            ShowOnHomepage = c.ShowOnHomepage;
             IncludeInTopMenu = c.IncludeInTopMenu;
             SubjectToAcl = c.SubjectToAcl;
             LimitedToStores = c.LimitedToStores;

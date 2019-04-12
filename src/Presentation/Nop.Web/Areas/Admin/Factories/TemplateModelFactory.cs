@@ -4,7 +4,7 @@ using Nop.Services.Catalog;
 using Nop.Services.Topics;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Templates;
-using Nop.Web.Framework.Extensions;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -85,14 +85,14 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get category templates
-            var categoryTemplates = _categoryTemplateService.GetAllCategoryTemplates();
+            var categoryTemplates = _categoryTemplateService.GetAllCategoryTemplates().ToPagedList(searchModel);
 
             //prepare grid model
             var model = new CategoryTemplateListModel
             {
                 //fill in model values from the entity
-                Data = categoryTemplates.PaginationByRequestModel(searchModel).Select(template => template.ToModel<CategoryTemplateModel>()),
-                Total = categoryTemplates.Count
+                Data = categoryTemplates.Select(template => template.ToModel<CategoryTemplateModel>()),
+                Total = categoryTemplates.TotalCount
             };
 
             return model;
@@ -125,15 +125,14 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get manufacturer templates
-            var manufacturerTemplates = _manufacturerTemplateService.GetAllManufacturerTemplates();
+            var manufacturerTemplates = _manufacturerTemplateService.GetAllManufacturerTemplates().ToPagedList(searchModel);
 
             //prepare grid model
             var model = new ManufacturerTemplateListModel
             {
                 //fill in model values from the entity
-                Data = manufacturerTemplates.PaginationByRequestModel(searchModel)
-                    .Select(template => template.ToModel<ManufacturerTemplateModel>()),
-                Total = manufacturerTemplates.Count
+                Data = manufacturerTemplates.Select(template => template.ToModel<ManufacturerTemplateModel>()),
+                Total = manufacturerTemplates.TotalCount
             };
 
             return model;
@@ -166,14 +165,14 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get product templates
-            var productTemplates = _productTemplateService.GetAllProductTemplates();
+            var productTemplates = _productTemplateService.GetAllProductTemplates().ToPagedList(searchModel);
 
             //prepare grid model
             var model = new ProductTemplateListModel
             {
                 //fill in model values from the entity
-                Data = productTemplates.PaginationByRequestModel(searchModel).Select(template => template.ToModel<ProductTemplateModel>()),
-                Total = productTemplates.Count
+                Data = productTemplates.Select(template => template.ToModel<ProductTemplateModel>()),
+                Total = productTemplates.TotalCount
             };
 
             return model;
@@ -206,14 +205,14 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get topic templates
-            var topicTemplates = _topicTemplateService.GetAllTopicTemplates();
+            var topicTemplates = _topicTemplateService.GetAllTopicTemplates().ToPagedList(searchModel);
 
             //prepare grid model
             var model = new TopicTemplateListModel
             {
                 //fill in model values from the entity
-                Data = topicTemplates.PaginationByRequestModel(searchModel).Select(template => template.ToModel<TopicTemplateModel>()),
-                Total = topicTemplates.Count
+                Data = topicTemplates.Select(template => template.ToModel<TopicTemplateModel>()),
+                Total = topicTemplates.TotalCount
             };
 
             return model;

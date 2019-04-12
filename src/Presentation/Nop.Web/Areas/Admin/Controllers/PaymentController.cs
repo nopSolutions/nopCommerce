@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using Nop.Core.Domain.Payments;
@@ -28,7 +29,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly INotificationService _notificationService;
         private readonly IPaymentModelFactory _paymentModelFactory;
-        private readonly IPaymentService _paymentService;
+        private readonly IPaymentPluginManager _paymentPluginManager;
         private readonly IPermissionService _permissionService;
         private readonly ISettingService _settingService;
         private readonly PaymentSettings _paymentSettings;
@@ -42,7 +43,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             ILocalizationService localizationService,
             INotificationService notificationService,
             IPaymentModelFactory paymentModelFactory,
-            IPaymentService paymentService,
+            IPaymentPluginManager paymentPluginManager,
             IPermissionService permissionService,
             ISettingService settingService,
             PaymentSettings paymentSettings)
@@ -52,7 +53,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             _localizationService = localizationService;
             _notificationService = notificationService;
             _paymentModelFactory = paymentModelFactory;
-            _paymentService = paymentService;
+            _paymentPluginManager = paymentPluginManager;
             _permissionService = permissionService;
             _settingService = settingService;
             _paymentSettings = paymentSettings;
@@ -61,7 +62,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         #endregion
 
         #region Methods  
-        
+
         public virtual IActionResult PaymentMethods()
         {
             return RedirectToAction("Methods");
@@ -96,8 +97,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePaymentMethods))
                 return AccessDeniedView();
 
-            var pm = _paymentService.LoadPaymentMethodBySystemName(model.SystemName);
-            if (_paymentService.IsPaymentMethodActive(pm))
+            var pm = _paymentPluginManager.LoadPluginBySystemName(model.SystemName);
+            if (_paymentPluginManager.IsPluginActive(pm))
             {
                 if (!model.IsActive)
                 {
@@ -145,19 +146,19 @@ namespace Nop.Web.Areas.Admin.Controllers
         //we use 2048 value because in some cases default value (1024) is too small for this action
         [RequestFormLimits(ValueCountLimit = 2048)]
         [HttpPost, ActionName("MethodRestrictions")]
-        public virtual IActionResult MethodRestrictionsSave(PaymentMethodsModel model)
+        public virtual IActionResult MethodRestrictionsSave(PaymentMethodsModel model, IFormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePaymentMethods))
                 return AccessDeniedView();
 
-            var paymentMethods = _paymentService.LoadAllPaymentMethods();
+            var paymentMethods = _paymentPluginManager.LoadAllPlugins();
             var countries = _countryService.GetAllCountries(showHidden: true);
 
             foreach (var pm in paymentMethods)
             {
                 var formKey = "restrict_" + pm.PluginDescriptor.SystemName;
-                var countryIdsToRestrict = (!StringValues.IsNullOrEmpty(model.Form[formKey])
-                        ? model.Form[formKey].ToString().Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList()
+                var countryIdsToRestrict = (!StringValues.IsNullOrEmpty(form[formKey])
+                        ? form[formKey].ToString().Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList()
                         : new List<string>())
                     .Select(x => Convert.ToInt32(x)).ToList();
 
@@ -170,14 +171,11 @@ namespace Nop.Web.Areas.Admin.Controllers
                     }
                 }
 
-                _paymentService.SaveRestictedCountryIds(pm, newCountryIds);
+                _paymentPluginManager.SaveRestrictedCountries(pm, newCountryIds);
             }
 
             _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Payment.MethodRestrictions.Updated"));
-
-            //selected tab
-            SaveSelectedTabName();
-
+            
             return RedirectToAction("MethodRestrictions");
         }
 

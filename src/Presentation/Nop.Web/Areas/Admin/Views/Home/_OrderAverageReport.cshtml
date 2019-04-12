@@ -3,7 +3,7 @@
 @inject IWorkContext workContext
 @{
     const string panelId = "order-average-report-box";
-    const string hidePanelAttributeName = "HideOrderAverageReportPanel";
+    const string hidePanelAttributeName = "Reports.HideOrderAverageReportPanel";
     var hidePanel = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hidePanelAttributeName);
 }
 

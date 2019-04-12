@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Linq;
-using Nop.Core.Domain.Tax;
 using Nop.Services.Tax;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Tax;
-using Nop.Web.Framework.Extensions;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -16,20 +15,17 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Fields
 
         private readonly ITaxCategoryService _taxCategoryService;
-        private readonly ITaxService _taxService;
-        private readonly TaxSettings _taxSettings;
+        private readonly ITaxPluginManager _taxPluginManager;
 
         #endregion
 
         #region Ctor
 
         public TaxModelFactory(ITaxCategoryService taxCategoryService,
-            ITaxService taxService,
-            TaxSettings taxSettings)
+            ITaxPluginManager taxPluginManager)
         {
             _taxCategoryService = taxCategoryService;
-            _taxService = taxService;
-            _taxSettings = taxSettings;
+            _taxPluginManager = taxPluginManager;
         }
 
         #endregion
@@ -80,24 +76,23 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get tax providers
-            var taxProviders = _taxService.LoadAllTaxProviders();
+            var taxProviders = _taxPluginManager.LoadAllPlugins().ToPagedList(searchModel);
 
             //prepare grid model
             var model = new TaxProviderListModel
             {
-                Data = taxProviders.PaginationByRequestModel(searchModel).Select(provider =>
+                Data = taxProviders.Select(provider =>
                 {
                     //fill in model values from the entity
                     var taxProviderModel = provider.ToPluginModel<TaxProviderModel>();
 
                     //fill in additional values (not existing in the entity)
                     taxProviderModel.ConfigurationUrl = provider.GetConfigurationPageUrl();
-                    taxProviderModel.IsPrimaryTaxProvider = taxProviderModel.SystemName
-                        .Equals(_taxSettings.ActiveTaxProviderSystemName, StringComparison.InvariantCultureIgnoreCase);
+                    taxProviderModel.IsPrimaryTaxProvider = _taxPluginManager.IsPluginActive(provider);
 
                     return taxProviderModel;
                 }),
-                Total = taxProviders.Count
+                Total = taxProviders.TotalCount
             };
 
             return model;
@@ -130,14 +125,14 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get tax categories
-            var taxCategories = _taxCategoryService.GetAllTaxCategories();
+            var taxCategories = _taxCategoryService.GetAllTaxCategories().ToPagedList(searchModel);
 
             //prepare grid model
             var model = new TaxCategoryListModel
             {
                 //fill in model values from the entity
-                Data = taxCategories.PaginationByRequestModel(searchModel).Select(taxCategory => taxCategory.ToModel<TaxCategoryModel>()),
-                Total = taxCategories.Count
+                Data = taxCategories.Select(taxCategory => taxCategory.ToModel<TaxCategoryModel>()),
+                Total = taxCategories.TotalCount
             };
 
             return model;

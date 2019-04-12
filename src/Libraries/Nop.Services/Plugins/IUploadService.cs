@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
-using Nop.Core.Plugins;
 
 namespace Nop.Services.Plugins
 {

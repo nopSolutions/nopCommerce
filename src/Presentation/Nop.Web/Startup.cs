@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Web.Framework.Infrastructure.Extensions;
@@ -11,21 +12,19 @@ namespace Nop.Web
     /// </summary>
     public class Startup
     {
-        #region Properties
+        #region Fields
 
-        /// <summary>
-        /// Get Configuration of the application
-        /// </summary>
-        public IConfiguration Configuration { get; }
+        private readonly IConfiguration _configuration;
+        private readonly IHostingEnvironment _hostingEnvironment;
 
         #endregion
 
         #region Ctor
 
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IHostingEnvironment hostingEnvironment)
         {
-            //set configuration
-            Configuration = configuration;
+            _configuration = configuration;
+            _hostingEnvironment = hostingEnvironment;
         }
 
         #endregion
@@ -36,7 +35,7 @@ namespace Nop.Web
         /// <param name="services">Collection of service descriptors</param>
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            return services.ConfigureApplicationServices(Configuration);
+            return services.ConfigureApplicationServices(_configuration, _hostingEnvironment);
         }
 
         /// <summary>

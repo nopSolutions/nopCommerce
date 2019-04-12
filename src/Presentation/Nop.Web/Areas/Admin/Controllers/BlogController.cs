@@ -161,10 +161,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 if (!continueEditing)
                     return RedirectToAction("BlogPosts");
-
-                //selected tab
-                SaveSelectedTabName();
-
+                
                 return RedirectToAction("BlogPostEdit", new { id = blogPost.Id });
             }
 
@@ -222,10 +219,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 if (!continueEditing)
                     return RedirectToAction("BlogPosts");
-
-                //selected tab
-                SaveSelectedTabName();
-
+                
                 return RedirectToAction("BlogPostEdit", new { id = blogPost.Id });
             }
 
