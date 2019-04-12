@@ -2527,8 +2527,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //fill entity from model
                 tierPrice = model.ToEntity(tierPrice);
                 tierPrice.CustomerRoleId = model.CustomerRoleId > 0 ? model.CustomerRoleId : (int?)null;
-                tierPrice.StartDateTimeUtc = model.StartDateTimeUtc;
-                tierPrice.EndDateTimeUtc = model.EndDateTimeUtc;
                 _productService.UpdateTierPrice(tierPrice);
 
                 ViewBag.RefreshPage = true;
