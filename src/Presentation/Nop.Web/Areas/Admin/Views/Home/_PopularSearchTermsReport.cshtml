@@ -5,7 +5,7 @@
 @inject IWorkContext workContext
 @{
     const string panelId = "popular-search-terms-box";
-    const string hidePanelAttributeName = "HidePopularSearchTermsReport";
+    const string hidePanelAttributeName = "Reports.HidePopularSearchTermsReport";
     var hidePanel = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hidePanelAttributeName);
 }
 

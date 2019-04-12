@@ -5,7 +5,7 @@
 @inject IStoreService storeService
 @{
     const string panelId = "latest-orders-box";
-    const string hidePanelAttributeName = "HideLatestOrdersPanel";
+    const string hidePanelAttributeName = "Reports.HideLatestOrdersPanel";
     var hidePanel = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hidePanelAttributeName);
     var gridPageSize = 5;
     var stores = storeService.GetAllStores();
