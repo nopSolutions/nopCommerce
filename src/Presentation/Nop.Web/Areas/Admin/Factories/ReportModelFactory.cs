@@ -343,7 +343,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare filters to search
             model.Filters = new List<FilterParameter>()
             {
-                new FilterParameter(nameof(searchModel.OrderBy), typeof(int), 1),
+                new FilterParameter(nameof(searchModel.OrderBy), 1),
                 new FilterParameter(nameof(searchModel.StartDate)),
                 new FilterParameter(nameof(searchModel.EndDate)),
                 new FilterParameter(nameof(searchModel.OrderStatusId)),
@@ -398,7 +398,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare filters to search
             model.Filters = new List<FilterParameter>()
             {
-                new FilterParameter(nameof(searchModel.OrderBy), typeof(int), 2),
+                new FilterParameter(nameof(searchModel.OrderBy), 2),
                 new FilterParameter(nameof(searchModel.StartDate)),
                 new FilterParameter(nameof(searchModel.EndDate)),
                 new FilterParameter(nameof(searchModel.OrderStatusId)),
