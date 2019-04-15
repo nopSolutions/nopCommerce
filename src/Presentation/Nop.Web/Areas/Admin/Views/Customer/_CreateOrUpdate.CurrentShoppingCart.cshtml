@@ -1,11 +1,5 @@
 ﻿@model CustomerModel
 
-@using Nop.Services.Stores
-@inject IStoreService storeService
-@{
-    var stores = storeService.GetAllStores();
-}
-
 <div class="panel-body">
     <div class="form-group">
         <div class="col-md-3">
@@ -18,87 +12,26 @@
 </div>
 
 <div class="panel-body">
-    <div id="currentshoppingcart-grid"></div>
-    <script>
-        $(document).ready(function () {
-            $("#currentshoppingcart-grid").kendoGrid({
-                dataSource: {
-                    type: "json",
-                    transport: {
-                        read: {
-                            url: "@Html.Raw(Url.Action("GetCartList", "Customer"))",
-                            type: "POST",
-                            dataType: "json",
-                            data: function () {
-                                var data = {
-                                    CustomerId: '@(Model.Id)',
-                                    ShoppingCartTypeId: $('#@Html.IdFor(model => model.CustomerShoppingCartSearchModel.ShoppingCartTypeId)').val()
-                                };
-                                addAntiForgeryToken(data);
-                                return data;
-                            }
-                        }
-                    },
-                    schema: {
-                        data: "Data",
-                        total: "Total",
-                        errors: "Errors"
-                    },
-                    error: function(e) {
-                        display_kendoui_grid_error(e);
-                        // Cancel the changes
-                        this.cancelChanges();
-                    },
-                    pageSize: @(Model.CustomerShoppingCartSearchModel.PageSize),
-                    serverPaging: true,
-                    serverFiltering: true,
-                    serverSorting: true
-                },
-                pageable: {
-                    refresh: true,
-                    pageSizes: [@(Model.CustomerShoppingCartSearchModel.AvailablePageSizes)],
-                    @await Html.PartialAsync("_GridPagerMessages")
-                },
-                editable: {
-                    confirmation: "@T("Admin.Common.DeleteConfirmation")",
-                    mode: "inline"
-                },
-                scrollable: false,
-                columns: [{
-                    field: "ProductName",
-                    title: "@T("Admin.CurrentCarts.Product")",
-                    width:500,
-                    template: '<a href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#">#:ProductName#</a>' +
-                        '# if(AttributeInfo && AttributeInfo.length > 0) {# <div>#=AttributeInfo#</div> #} #'
-                }, {
-                    field: "Quantity",
-                    title: "@T("Admin.CurrentCarts.Quantity")",
-                    width:200
-                },{
-                    field: "UnitPrice",
-                    title: "@T("Admin.CurrentCarts.UnitPrice")",
-                    width:200
-                },{
-                    field: "Total",
-                    title: "@T("Admin.CurrentCarts.Total")",
-                    width:200
-                },{
-                    field: "Store",
-                    hidden: @(stores.Count > 1 ? "false" : "true"),
-                    title: "@T("Admin.CurrentCarts.Store")",
-                    width:200
-                },{
-                    field: "UpdatedOn",
-                    title: "@T("Admin.CurrentCarts.UpdatedOn")",
-                    width: 200,
-                    type: "date",
-                    format: "{0:G}"
-                }]
-            });
+    @await Html.PartialAsync("Table", Model.CustomerShoppingCartSearchModel.Grid)
 
+    <script>
+        $(document).ready(function() {
             $('#@Html.IdFor(model => model.CustomerShoppingCartSearchModel.ShoppingCartTypeId)').change(function() {
-                $("#currentshoppingcart-grid").data('kendoGrid').dataSource.read();
+                $('#@Model.CustomerShoppingCartSearchModel.Grid.Name').DataTable().ajax.reload();
             });
         });
     </script>
+    
+    <script>
+        function renderProductName(data, type, row, meta) {
+            var link = '@Url.Content("~/Admin/Product/Edit/")' + row.ProductId;
+            var div = "";
+        
+            if (row.AttributeInfo && row.AttributeInfo.length > 0)
+                div = "<div>" + row.AttributeInfo + "</div>";
+
+            return '<a href="' + link + '">' + data + '</a>'+div;
+        }
+    </script>
+
 </div>
