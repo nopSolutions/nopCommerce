@@ -835,16 +835,13 @@ namespace Nop.Web.Areas.Admin.Factories
                 LengthMenu = searchModel.AvailablePageSizes
             };
 
-            //prepare filters to search
-            model.Filters = null;
-            var stores = _storeService.GetAllStores();
             //prepare model columns
             model.ColumnCollection = new List<ColumnProperty>()
             {
                 new ColumnProperty(nameof(CustomerRewardPointsModel.StoreName))
                 {
                     Title = _localizationService.GetResource("Admin.Customers.Customers.RewardPoints.Fields.Store"),
-                    Visible = stores.Count > 1
+                    Visible = _storeService.GetAllStores().Count > 1
                 },
                 new ColumnProperty(nameof(CustomerRewardPointsModel.Points))
                 {
