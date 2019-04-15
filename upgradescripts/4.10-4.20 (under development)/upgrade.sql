@@ -632,6 +632,24 @@ set @resources='
   <LocaleResource Name="Admin.ContentManagement.Topics.Display">
     <Value>Display</Value>
   </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.UPS.Fields.Url">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.UPS.Fields.Url.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.UPS.Fields.UseSandbox">
+    <Value>Use sandbox</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.UPS.Fields.UseSandbox.Hint">
+    <Value>Check to use sandbox (testing environment).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.UPS.Fields.SaturdayDeliveryEnabled">
+    <Value>Saturday Delivery enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.UPS.Fields.SaturdayDeliveryEnabled.Hint">
+    <Value>Check to get rates for Saturday Delivery options.</Value>
+  </LocaleResource>
 </Language>'
 
 CREATE TABLE #LocaleStringResourceTmp
@@ -1825,4 +1843,29 @@ BEGIN
     INSERT [Setting] ([Name], [Value], [StoreId])
     VALUES (N'proxysettings.preauthenticate', N'True', 0)
 END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'upssettings.usesandbox')
+BEGIN
+    IF EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'upssettings.url' AND [Value] LIKE '%wwwcie.ups.com%')
+        INSERT [Setting] ([Name], [Value], [StoreId]) VALUES (N'upssettings.usesandbox', N'True', 0)
+    ELSE
+        INSERT [Setting] ([Name], [Value], [StoreId]) VALUES (N'upssettings.usesandbox', N'False', 0)    
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'upssettings.saturdaydeliveryenabled')
+BEGIN
+    IF EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'upssettings.carrierservicesoffered' AND [Value] LIKE '%[sa]%')
+        INSERT [Setting] ([Name], [Value], [StoreId]) VALUES (N'upssettings.saturdaydeliveryenabled', N'True', 0)
+    ELSE
+        INSERT [Setting] ([Name], [Value], [StoreId]) VALUES (N'upssettings.saturdaydeliveryenabled', N'False', 0)
+END
+GO
+
+--delete setting
+DELETE FROM [Setting]
+WHERE [Name] = N'upssettings.url'
 GO

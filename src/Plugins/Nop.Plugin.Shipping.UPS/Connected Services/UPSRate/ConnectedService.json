@@ -1,9 +1,9 @@
 ﻿{
   "ProviderId": "Microsoft.VisualStudio.ConnectedService.Wcf",
-  "Version": "15.0.20119.1312",
+  "Version": "15.0.20628.921",
   "ExtendedData": {
-    "Uri": "\\src\\Plugins\\Nop.Plugin.Shipping.UPS\\Web References\\track\\Track.wsdl",
-    "Namespace": "UpsTracking",
+    "Uri": "\\src\\Plugins\\Nop.Plugin.Shipping.UPS\\Connected Services\\UPSRate\\RateWS.wsdl",
+    "Namespace": "UPSRate",
     "SelectedAccessLevelForGeneratedClass": "Public",
     "GenerateMessageContract": false,
     "ReuseTypesinReferencedAssemblies": true,
@@ -18,7 +18,7 @@
     },
     "CheckedReferencedAssemblies": [],
     "InstanceId": null,
-    "Name": "UpsTracking",
+    "Name": "UPSRate",
     "Metadata": {}
   }
 }
