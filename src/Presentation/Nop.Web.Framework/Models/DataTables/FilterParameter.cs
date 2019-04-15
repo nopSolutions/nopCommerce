@@ -3,7 +3,7 @@
 namespace Nop.Web.Framework.Models.DataTables
 {
     /// <summary>
-    /// Represent DataTables fiter parameter
+    /// Represent DataTables filter parameter
     /// </summary>
     public partial class FilterParameter
     {
@@ -34,12 +34,11 @@ namespace Nop.Web.Framework.Models.DataTables
         /// Initializes a new instance of the FilterParameter class
         /// </summary>
         /// <param name="name">Filter parameter name</param>
-        /// <param name="type">Filter parameter type</param>
         /// <param name="value">Filter parameter value</param>
-        public FilterParameter(string name, Type type, object value)
+        public FilterParameter(string name, object value)
         {
             Name = name;
-            Type = type;
+            Type = value.GetType();
             Value = value;
         }
 
@@ -50,12 +49,12 @@ namespace Nop.Web.Framework.Models.DataTables
         /// <summary>
         /// Filter field name
         /// </summary>
-        public string Name { get; set; }
+        public string Name { get; }
 
         /// <summary>
         /// Filter field type
         /// </summary>
-        public Type Type { get; set; }
+        public Type Type { get; }
 
         /// <summary>
         /// Filter field value

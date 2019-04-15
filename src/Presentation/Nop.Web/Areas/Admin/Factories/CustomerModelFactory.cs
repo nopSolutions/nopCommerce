@@ -784,7 +784,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 //prepare filters to search
                 Filters = new List<FilterParameter>
                 {
-                    new FilterParameter(nameof(searchModel.CustomerId), typeof(int), searchModel.CustomerId)
+                    new FilterParameter(nameof(searchModel.CustomerId), searchModel.CustomerId)
                 },
 
                 //prepare model columns
