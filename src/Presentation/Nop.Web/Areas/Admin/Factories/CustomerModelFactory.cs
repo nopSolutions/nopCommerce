@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Routing;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -410,6 +411,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
+            searchModel.Grid = PrepareRewardPointGridModel(searchModel);
 
             return searchModel;
         }
@@ -454,6 +456,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
+            searchModel.Grid = PrepareOrderGridModel(searchModel);
 
             return searchModel;
         }
@@ -885,6 +888,125 @@ namespace Nop.Web.Areas.Admin.Factories
             return model;
         }
 
+        /// <summary>
+        /// Prepare datatables model
+        /// </summary>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
+        protected virtual DataTablesModel PrepareOrderGridModel(CustomerOrderSearchModel searchModel)
+        {
+            //prepare common properties
+            var model = new DataTablesModel
+            {
+                Name = "order-grid",
+                UrlRead = new DataUrl("OrderList", "Customer", new RouteValueDictionary { [nameof(CustomerOrderSearchModel.CustomerId)] = searchModel.CustomerId }),
+                Length = searchModel.PageSize,
+                LengthMenu = searchModel.AvailablePageSizes,
+            };
+
+            //prepare model columns
+            model.ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(CustomerOrderModel.CustomOrderNumber))
+                {
+                    Title = _localizationService.GetResource("Admin.Customers.Customers.Orders.CustomOrderNumber"),
+                    Width = "200"
+                },
+                new ColumnProperty(nameof(CustomerOrderModel.OrderTotal))
+                {
+                    Title = _localizationService.GetResource("Admin.Customers.Customers.Orders.OrderTotal"),
+                    Width = "200"
+                },
+                new ColumnProperty(nameof(CustomerOrderModel.OrderStatus))
+                {
+                    Title = _localizationService.GetResource("Admin.Customers.Customers.Orders.OrderStatus"),
+                    Width = "200",
+                    Render = new RenderCustom("renderColumnOrderStatus")
+                },
+                new ColumnProperty(nameof(CustomerOrderModel.PaymentStatus))
+                {
+                    Title = _localizationService.GetResource("Admin.Orders.Fields.PaymentStatus"),
+                    Width = "200"
+                },
+                new ColumnProperty(nameof(CustomerOrderModel.ShippingStatus))
+                {
+                    Title = _localizationService.GetResource("Admin.Orders.Fields.ShippingStatus"),
+                    Width = "200"
+                },
+                new ColumnProperty(nameof(CustomerOrderModel.StoreName))
+                {
+                    Title = _localizationService.GetResource("Admin.Orders.Fields.Store"),
+                    Width = "200",
+                    Visible = _storeService.GetAllStores().Count > 1
+                },
+                new ColumnProperty(nameof(CustomerOrderModel.CreatedOn))
+                {
+                    Title = _localizationService.GetResource("Admin.System.Log.Fields.CreatedOn"),
+                    Width = "200",
+                    Render = new RenderDate()
+                },
+                new ColumnProperty(nameof(CustomerOrderModel.Id))
+                {
+                    Title = _localizationService.GetResource("Admin.Common.View"),
+                    Width = "100",
+                    ClassName = StyleColumn.CenterAll,
+                    Render = new RenderButtonEdit(new DataUrl("~/Admin/Order/Edit/"))
+                }
+            };
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare datatables model
+        /// </summary>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
+        protected virtual DataTablesModel PrepareRewardPointGridModel(CustomerRewardPointsSearchModel searchModel)
+        {
+            //prepare common properties
+            var model = new DataTablesModel
+            {
+                Name = "customer-rewardpoints-grid",
+                UrlRead = new DataUrl("RewardPointsHistorySelect", "Customer", new RouteValueDictionary { [nameof(CustomerRewardPointsSearchModel.CustomerId)] = searchModel.CustomerId }),
+                Length = searchModel.PageSize,
+                LengthMenu = searchModel.AvailablePageSizes
+            };
+
+            //prepare model columns
+            model.ColumnCollection = new List<ColumnProperty>()
+            {
+                new ColumnProperty(nameof(CustomerRewardPointsModel.StoreName))
+                {
+                    Title = _localizationService.GetResource("Admin.Customers.Customers.RewardPoints.Fields.Store"),
+                    Visible = _storeService.GetAllStores().Count > 1
+                },
+                new ColumnProperty(nameof(CustomerRewardPointsModel.Points))
+                {
+                    Title = _localizationService.GetResource("Admin.Customers.Customers.RewardPoints.Fields.Points")
+                },
+                new ColumnProperty(nameof(CustomerRewardPointsModel.PointsBalance))
+                {
+                    Title = _localizationService.GetResource("Admin.Customers.Customers.RewardPoints.Fields.PointsBalance")
+                },
+                new ColumnProperty(nameof(CustomerRewardPointsModel.Message))
+                {
+                    Title = _localizationService.GetResource("Admin.Customers.Customers.RewardPoints.Fields.Message")
+                },
+                new ColumnProperty(nameof(CustomerRewardPointsModel.CreatedOn))
+                {
+                    Title = _localizationService.GetResource("Admin.Customers.Customers.RewardPoints.Fields.CreatedDate"),
+                    Render = new RenderDate()
+                },
+                new ColumnProperty(nameof(CustomerRewardPointsModel.EndDate))
+                {
+                    Title = _localizationService.GetResource("Admin.Customers.Customers.RewardPoints.Fields.EndDate"),
+                    Render = new RenderDate()
+                }
+            };
+
+            return model;
+        }
+
         #endregion
 
         #region Methods
@@ -1158,9 +1280,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new CustomerRewardPointsListModel
+            var model = new CustomerRewardPointsListModel().PrepareToGrid(searchModel, rewardPoints, () =>
             {
-                Data = rewardPoints.Select(historyEntry =>
+                return rewardPoints.Select(historyEntry =>
                 {
                     //fill in model values from the entity        
                     var rewardPointsHistoryModel = historyEntry.ToModel<CustomerRewardPointsModel>();
@@ -1177,9 +1299,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     rewardPointsHistoryModel.StoreName = _storeService.GetStoreById(historyEntry.StoreId)?.Name ?? "Unknown";
 
                     return rewardPointsHistoryModel;
-                }),
-                Total = rewardPoints.TotalCount
-            };
+                });
+            });
 
             return model;
         }
@@ -1275,9 +1396,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new CustomerOrderListModel
+            var model = new CustomerOrderListModel().PrepareToGrid(searchModel, orders, () =>
             {
-                Data = orders.Select(order =>
+                return orders.Select(order =>
                 {
                     //fill in model values from the entity
                     var orderModel = order.ToModel<CustomerOrderModel>();
@@ -1293,9 +1414,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     orderModel.OrderTotal = _priceFormatter.FormatPrice(order.OrderTotal, true, false);
 
                     return orderModel;
-                }),
-                Total = orders.TotalCount
-            };
+                });
+            });
 
             return model;
         }

@@ -2,89 +2,9 @@
 
 @using Nop.Core.Domain.Customers
 @using Nop.Services
-@using Nop.Services.Stores
-@inject IStoreService storeService
-@{
-    var stores = storeService.GetAllStores();
-}
-
 <div class="panel-body">
     <div class="sub-panel">
-        <div id="customer-rewardpoints-grid"></div>
-
-        <script>
-        $(document).ready(function() {
-            $("#customer-rewardpoints-grid").kendoGrid({
-                dataSource: {
-                    type: "json",
-                    transport: {
-                        read: {
-                            url: "@Html.Raw(Url.Action("RewardPointsHistorySelect"))",
-                            type: "POST",
-                            dataType: "json",
-                            data: function() {
-                                var data = {
-                                    CustomerId: '@(Model.Id)'
-                                };
-                                addAntiForgeryToken(data);
-                                return data;
-                            }
-                        }
-                    },
-                    schema: {
-                        data: "Data",
-                        total: "Total",
-                        errors: "Errors"
-                    },
-                    error: function(e) {
-                        display_kendoui_grid_error(e);
-                        // Cancel the changes
-                        this.cancelChanges();
-                    },
-                    pageSize: @(Model.CustomerRewardPointsSearchModel.PageSize),
-                    serverPaging: true,
-                    serverFiltering: true,
-                    serverSorting: true
-                },
-                pageable: {
-                    refresh: true,
-                    pageSizes: [@(Model.CustomerRewardPointsSearchModel.AvailablePageSizes)],
-                    @await Html.PartialAsync("_GridPagerMessages")
-                },
-                editable: {
-                    confirmation: "@T("Admin.Common.DeleteConfirmation")",
-                    mode: "inline"
-                },
-                scrollable: false,
-                columns: [
-                {
-                    field: "StoreName",
-                    title: "@T("Admin.Customers.Customers.RewardPoints.Fields.Store")",
-                    hidden: @(stores.Count > 1 ? "false" : "true"),
-                }, {
-                    field: "Points",
-                    title: "@T("Admin.Customers.Customers.RewardPoints.Fields.Points")"
-                }, {
-                    field: "PointsBalance",
-                    title: "@T("Admin.Customers.Customers.RewardPoints.Fields.PointsBalance")"
-                }, {
-                    field: "Message",
-                    title: "@T("Admin.Customers.Customers.RewardPoints.Fields.Message")"
-                }, {
-                    field: "CreatedOn",
-                    title: "@T("Admin.Customers.Customers.RewardPoints.Fields.CreatedDate")",
-                    type: "date",
-                    format: "{0:G}"
-                }, {
-                    field: "EndDate",
-                    title: "@T("Admin.Customers.Customers.RewardPoints.Fields.EndDate")",
-                    type: "date",
-                    format: "{0:G}"
-                }
-                ]
-            });
-        });
-        </script>
+        @await Html.PartialAsync("Table", Model.CustomerRewardPointsSearchModel.Grid)
     </div>
     <div class="panel panel-default no-margin">
         <div class="panel-heading">
@@ -184,8 +104,8 @@
                     data: postData,
                     success: function (data) {
                         if (data.Result) {
-                            var grid = $("#customer-rewardpoints-grid").data('kendoGrid');
-                            grid.dataSource.read();
+                            //reload grid
+                            $('#@Model.CustomerRewardPointsSearchModel.Grid.Name').DataTable().ajax.reload();
 
                             $("#@Html.IdFor(model => model.AddRewardPoints.Points)").val(0);
                             $("#@Html.IdFor(model => model.AddRewardPoints.Message)").val(data.Message);
