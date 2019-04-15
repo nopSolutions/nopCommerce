@@ -205,6 +205,77 @@ namespace Nop.Web.Areas.Admin.Factories
             return model;
         }
 
+        /// <summary>
+        /// Prepare datatables model
+        /// </summary>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
+        protected virtual DataTablesModel PreparePluginGridModel(PluginSearchModel searchModel)
+        {
+            //prepare common properties
+            var model = new DataTablesModel
+            {
+                Name = "plugins-local-grid",
+                UrlRead = new DataUrl("ListSelect", "Plugin", null),
+                SearchButtonId = "search-plugins-local",
+                Length = searchModel.PageSize,
+                LengthMenu = searchModel.AvailablePageSizes
+            };
+
+            //prepare filters to search
+            model.Filters = new List<FilterParameter>()
+            {
+                new FilterParameter(nameof(searchModel.SearchLoadModeId)),
+                new FilterParameter(nameof(searchModel.SearchGroup))
+            };
+
+            //prepare model columns
+            model.ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(PluginModel.ConfigurationUrl)) { Visible = false },
+                new ColumnProperty(nameof(PluginModel.SystemName)) { Visible = false },
+                new ColumnProperty(nameof(PluginModel.Version)) { Visible = false },
+                new ColumnProperty(nameof(PluginModel.Author)) { Visible = false },
+                new ColumnProperty(nameof(PluginModel.DisplayOrder)) { Visible = false },
+                new ColumnProperty(nameof(PluginModel.Installed)) { Visible = false },
+                new ColumnProperty(nameof(PluginModel.IsEnabled)) { Visible = false },
+                new ColumnProperty(nameof(PluginModel.CanChangeEnabled)) { Visible = false },
+                new ColumnProperty(nameof(PluginModel.Group))
+                {
+                    Title = _localizationService.GetResource("Admin.Configuration.Plugins.Fields.Group"),
+                    Width = "150"
+                },
+                new ColumnProperty(nameof(PluginModel.LogoUrl))
+                {
+                    Title = _localizationService.GetResource("Admin.Configuration.Plugins.Fields.Logo"),
+                    Width = "200",
+                    ClassName = StyleColumn.CenterAll,
+                    Render = new RenderPicture()
+                },
+                new ColumnProperty(nameof(PluginModel.Description))
+                {
+                    Title = _localizationService.GetResource("Admin.Configuration.Plugins.Info"),
+                    Width = "400",
+                    ClassName =  StyleColumn.CenterAll,
+                    Render = new RenderCustom("renderColumnDescription")
+                },
+                new ColumnProperty(nameof(PluginModel.FriendlyName))
+                {
+                    Title = _localizationService.GetResource("Admin.Configuration.Plugins.AdditionalInfo"),
+                    Render = new RenderCustom("renderColumnFriendlyName")
+                },
+                new ColumnProperty(nameof(PluginModel.Installed))
+                {
+                    Title = _localizationService.GetResource("Admin.Configuration.Plugins.Fields.Installation"),
+                    Width = "100",
+                    ClassName =  StyleColumn.CenterAll,
+                    Render = new RenderCustom("renderColumnInstalled")
+                }
+            };
+
+            return model;
+        }
+
         #endregion
 
         #region Methods
@@ -227,6 +298,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
+            searchModel.Grid = PreparePluginGridModel(searchModel);
 
             searchModel.NeedToRestart = _pluginService.IsRestartRequired();
 
@@ -254,9 +326,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 .ToPagedList(searchModel);
 
             //prepare list model
-            var model = new PluginListModel
+            var model = new PluginListModel().PrepareToGrid(searchModel, plugins, () =>
             {
-                Data = plugins.Select(pluginDescriptor =>
+                return plugins.Select(pluginDescriptor =>
                 {
                     //fill in model values from the entity
                     var pluginModel = pluginDescriptor.ToPluginModel<PluginModel>();
@@ -267,9 +339,8 @@ namespace Nop.Web.Areas.Admin.Factories
                         PrepareInstalledPluginModel(pluginModel, pluginDescriptor.Instance<IPlugin>());
 
                     return pluginModel;
-                }),
-                Total = plugins.TotalCount
-            };
+                });
+            });
 
             return model;
         }

@@ -83,6 +83,23 @@
                         showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Admin.Configuration.Plugins.Upload.Progress").Text))');
                         return true;
                     });
+
+                    //delete a plugin
+                    $("#plugins-local-grid")
+                        .on("click", ".delete-plugin-link", function (e) {
+                            $(this)
+                                .attr("data-toggle", "modal")
+                                .attr("data-target", "#plugin-delete-confirmation");
+                            $("#plugin-delete-confirmation button[type=submit]").attr("name", $(this).attr("name"));
+                    });
+
+                    $("#plugin-delete-confirmation button[type=submit]").on("click",
+                        function() {
+                            $('#plugin-delete-confirmation').modal('toggle');
+                            $("html, body").animate({ scrollTop: 0 }, 400);
+                            showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Admin.Configuration.Plugins.Fields.Delete.Progress").Text))');
+                            return true;
+                        });
                 });
             </script>
 
@@ -144,98 +161,66 @@
 
                 <div class="panel panel-default">
                     <div class="panel-body">
-                        <div id="plugins-local-grid"></div>
+                        @await Html.PartialAsync("Table", Model.Grid)
 
                         <script>
-                            $(document).ready(function () {
-                                $("#plugins-local-grid").kendoGrid({
-                                    dataSource: {
-                                        type: "json",
-                                        transport: {
-                                            read: {
-                                                url: "@Html.Raw(Url.Action("ListSelect", "Plugin"))",
-                                                type: "POST",
-                                                dataType: "json",
-                                                data: function() {
-                                                    var data = {
-                                                        SearchLoadModeId: $('#SearchLoadModeId').val(),
-                                                        SearchGroup: $('#SearchGroup').val()
-                                                    };
-                                                    addAntiForgeryToken(data);
-                                                    return data;
-                                                }
-                                            }
-                                        },
-                                        schema: {
-                                            data: "Data",
-                                            total: "Total",
-                                            errors: "Errors"
-                                        },
-                                        error: function (e) {
-                                            display_kendoui_grid_error(e);
-                                            // Cancel the changes
-                                            this.cancelChanges();
-                                        },
-                                        pageSize: @(Model.PageSize),
-                                        serverPaging: true,
-                                        serverFiltering: true,
-                                        serverSorting: true
-                                    },
-                                    pageable: {
-                                        refresh: true,
-                                        pageSizes: [@(Model.AvailablePageSizes)],
-                                        @await Html.PartialAsync("_GridPagerMessages")
-                                    },
-                                    editable: {
-                                        confirmation: "@T("Admin.Common.DeleteConfirmation")",
-                                        mode: "inline"
-                                    },
-                                    scrollable: false,
-                                    dataBound: onDataBound,
-                                    columns: [
-                                        {
-                                            field: "Group",
-                                            title: "@T("Admin.Configuration.Plugins.Fields.Group")",
-                                            width: 150
-                                        }, {
-                                            field: "LogoUrl",
-                                            title: "@T("Admin.Configuration.Plugins.Fields.Logo")",
-                                            width: 200,
-                                            template: '<img src="#=LogoUrl#" />',
-                                            headerAttributes: { style: "text-align:center" },
-                                            attributes: { style: "text-align:center" }
-                                        }, {
-                                            field: "Description",
-                                            title: "@T("Admin.Configuration.Plugins.Info")",
-                                            template: '<b>#:FriendlyName#</b>' +
-                                                '# if(Description) {# <br />#:Description# #} #' +
-                                                //allow configuration only when a plugin has a configuration URL specified
-                                                '<br /> # if(ConfigurationUrl && ConfigurationUrl.length > 0) {# <a class="btn btn-default margin-r-5" href="#=ConfigurationUrl#"><i class="fa fa-cog"></i>@T("Admin.Configuration.Plugins.Fields.Configure")</a>#} #' +
-                                                '<a class="btn btn-default" href="javascript:OpenWindow(\'@Url.Content("~/Admin/Plugin/EditPopup")?systemName=#=SystemName#&btnId=btnRefreshList&formId=plugins-form-list\', 800, 500, true);"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>',
-                                            attributes: { style: "vertical-align:top;" },
-                                            width: 400
-                                        }, {
-                                            field: "FriendlyName",
-                                            title: "@T("Admin.Configuration.Plugins.AdditionalInfo")",
-                                            template: '<ul class="common-list">' +
-                                                '<li>@T("Admin.Configuration.Plugins.Fields.Version"): #:Version#</li>' +
-                                                '<li>@T("Admin.Configuration.Plugins.Fields.Author"): #:Author#</li>' +
-                                                '<li>@T("Admin.Configuration.Plugins.Fields.SystemName"): #:SystemName#</li>' +
-                                                '<li>@T("Admin.Configuration.Plugins.Fields.DisplayOrder"): #:DisplayOrder#</li>' +
-                                                '<li>@T("Admin.Configuration.Plugins.Fields.Installed"):  # if(Installed) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #</li>' +
-                                                '# if(CanChangeEnabled) {# <li>@T("Admin.Configuration.Plugins.Fields.IsEnabled"): # if(IsEnabled) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} # </li> #} #' +
-                                                '</ul>'
-                                        }, {
-                                            field: "Installed",
-                                            title: "@T("Admin.Configuration.Plugins.Fields.Installation")",
-                                            template: '# if(Installed) {# <button type="submit" name="uninstall-plugin-link-#=SystemName#" class="btn bg-red uninstall-plugin-link">@T("Admin.Configuration.Plugins.Fields.Uninstall")</button> #} else {#  <button type="submit" name="install-plugin-link-#=SystemName#" class="btn bg-green install-plugin-link">@T("Admin.Configuration.Plugins.Fields.Install")</button> <button type="button" name="delete-plugin-link-#=SystemName#" class="btn bg-red delete-plugin-link" >@T("Admin.Configuration.Plugins.Fields.Delete")</button> #} #',
-                                            headerAttributes: { style: "text-align:center" },
-                                            attributes: { style: "text-align:center" },
-                                            width: 150
-                                        }
-                                    ]
-                                });
-                            });
+                            var textRenderer = $.fn.dataTable.render.text().display;
+
+                            function renderColumnDescription(data, type, row, meta) {
+                                var res = '<b>' + textRenderer(row.FriendlyName) + '</b>';
+
+                                if (row.Description) {
+                                    res = res + '<br />' + textRenderer(row.Description);
+                                }
+                                res = res + '<br />';
+                                //allow configuration only when a plugin has a configuration URL specified
+                                if (row.ConfigurationUrl && row.ConfigurationUrl.length > 0) {
+                                    res = res + '<a class="btn btn-default margin-r-5" href="' + row.ConfigurationUrl + '"><i class="fa fa-cog"></i>@T("Admin.Configuration.Plugins.Fields.Configure")</a>';
+                                }
+                                if (row.Installed) {
+                                    res = res + '<a class="btn btn-default" href="javascript:OpenWindow(\'@Url.Content("~/Admin/Plugin/EditPopup")?systemName=' + row.SystemName + '&btnId=btnRefreshList&formId=plugins-form-local\', 800, 500, true);"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>';
+                                }
+
+                                return res;
+                            }
+
+                            function renderColumnFriendlyName(data, type, row, meta) {
+                                var isInstall = '<li>@T("Admin.Configuration.Plugins.Fields.Installed"): ';
+                                if (row.Installed) {
+                                    isInstall = isInstall + '<i class="fa fa-check true-icon"></i></li>';
+                                }
+                                else {
+                                    isInstall = isInstall + '<i class="fa fa-close false-icon"></i></li>';
+                                }
+
+                                var canChange = '';
+                                if (row.CanChangeEnabled) {
+                                    canChange = canChange + '<li>@T("Admin.Configuration.Plugins.Fields.IsEnabled"): ';
+                                    if (row.IsEnabled) {
+                                        canChange = canChange + '<i class="fa fa-check true-icon"></i>';
+                                    }
+                                    else {
+                                        canChange = canChange + '<i class="fa fa-close false-icon"></i>';
+                                    };   
+                                    canChange = canChange + '</li>';
+                                };
+
+                                return '<ul class="common-list">' +
+                                    '<li>@T("Admin.Configuration.Plugins.Fields.Version"): ' +  row.Version + '</li>' +
+                                    '<li>@T("Admin.Configuration.Plugins.Fields.Author"): ' + row.Author + '</li>' +
+                                    '<li>@T("Admin.Configuration.Plugins.Fields.SystemName"): ' + row.SystemName + '</li>' +
+                                    '<li>@T("Admin.Configuration.Plugins.Fields.DisplayOrder"): ' + row.DisplayOrder + '</li>' +
+                                    isInstall + 
+                                    canChange;
+                            }
+
+                            function renderColumnInstalled(data, type, row, meta) {
+                                if (row.Installed) {
+                                    return '<button type="submit" name="uninstall-plugin-link-' + row.SystemName + '" class="btn bg-red uninstall-plugin-link">@T("Admin.Configuration.Plugins.Fields.Uninstall")</button>'
+                                } else {
+                                    return '<button type="submit" name="install-plugin-link-' + row.SystemName + '" class="btn bg-green install-plugin-link">@T("Admin.Configuration.Plugins.Fields.Install")</button> <button type="button" name="delete-plugin-link-' + row.SystemName + '" class="btn bg-red delete-plugin-link" >@T("Admin.Configuration.Plugins.Fields.Delete")</button>'
+                                }
+                            }
                         </script>
                     </div>
 
@@ -257,24 +242,6 @@
                                 </div>
                             </div>
                         </div>
-                        <script>
-                            function onDataBound(e) {
-                                $('button[name^="delete-plugin-link-"]')
-                                    .attr("data-toggle", "modal")
-                                    .attr("data-target", "#plugin-delete-confirmation")
-                                    .on("click", function () {
-                                        $("#plugin-delete-confirmation button[type=submit]").attr("name", $(this).attr("name"));
-                                    });
-
-                                $("#plugin-delete-confirmation button[type=submit]").on("click",
-                                    function() {
-                                        $('#plugin-delete-confirmation').modal('toggle');
-                                        $("html, body").animate({ scrollTop: 0 }, 400);
-                                        showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Admin.Configuration.Plugins.Fields.Delete.Progress").Text))');
-                                        return true;
-                                    });
-                            }
-                        </script>
                     </div>
 
                     <div>
@@ -283,23 +250,9 @@
                             $(document).ready(function () {
                                 $('#btnRefreshList').click(function () {
                                     //refresh grid
-                                    var grid = $("#plugins-local-grid").data('kendoGrid');
-                                    grid.dataSource.read();
+                                     $('#@Model.Grid.Name').DataTable().ajax.reload();
 
                                     //return false to don't reload a page
-                                    return false;
-                                });
-                            });
-                        </script>
-
-                        <script>
-                            $(document).ready(function () {
-                                //search button
-                                $('#search-plugins-local').click(function () {
-                                    //search
-                                    var grid = $('#plugins-local-grid').data('kendoGrid');
-                                    grid.dataSource.read();
-
                                     return false;
                                 });
                             });
