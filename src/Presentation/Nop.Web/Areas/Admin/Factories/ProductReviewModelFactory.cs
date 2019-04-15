@@ -96,7 +96,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     IsMasterCheckBox = true,
                     Render = new RenderCheckBox("checkbox_product_reviews"),
-                    Visible = searchModel.IsLoggedInAsVendor ? false : true,
+                    Visible = !searchModel.IsLoggedInAsVendor,
                     ClassName =  StyleColumn.CenterAll,
                     Width = "50",
                 },
