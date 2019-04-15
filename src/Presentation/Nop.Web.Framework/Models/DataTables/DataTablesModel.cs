@@ -44,12 +44,12 @@ namespace Nop.Web.Framework.Models.DataTables
         public string Name { get; set; }
 
         /// <summary>
-        /// Gets or sets Url for data read (ajax)
+        /// Gets or sets URL for data read (ajax)
         /// </summary>
         public DataUrl UrlRead { get; set; }
 
         /// <summary>
-        /// Gets or Url for custom action
+        /// Gets or sets URL for custom action
         /// </summary>
         public DataUrl UrlAction { get; set; }
 
