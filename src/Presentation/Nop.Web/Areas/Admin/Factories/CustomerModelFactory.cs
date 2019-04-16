@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Text.Encodings.Web;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Routing;
+using Newtonsoft.Json;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -608,6 +610,32 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
+        /// Prepare customer back in stock subscriptions search model
+        /// </summary>
+        /// <param name="searchModel">Customer back in stock subscriptions search model</param>
+        /// <param name="customer">Customer</param>
+        /// <returns>Customer back in stock subscriptions search model</returns>
+        protected virtual CustomerAssociatedExternalAuthRecordsSearchModel PrepareCustomerAssociatedExternalAuthRecordsSearchModel(
+            CustomerAssociatedExternalAuthRecordsSearchModel searchModel, Customer customer)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            if (customer == null)
+                throw new ArgumentNullException(nameof(customer));
+
+            searchModel.CustomerId = customer.Id;
+
+            //prepare page parameters
+            searchModel.SetGridPageSize();
+            //prepare external authentication records
+            PrepareAssociatedExternalAuthModels(searchModel.AssociatedExternalAuthRecords, customer);
+            searchModel.Grid = PrepareCustomerAssociatedExternalAuthRecordsGridModel(searchModel);
+
+            return searchModel;
+        }
+
+        /// <summary>
         /// Prepare datatables model
         /// </summary>
         /// <param name="searchModel">Search model</param>
@@ -902,6 +930,53 @@ namespace Nop.Web.Areas.Admin.Factories
                         Render = new RenderDate()
                     }
                 }
+            };
+
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare datatables model
+        /// </summary>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
+        protected virtual DataTablesModel PrepareCustomerAssociatedExternalAuthRecordsGridModel(CustomerAssociatedExternalAuthRecordsSearchModel searchModel)
+        {
+            //prepare common properties
+            var model = new DataTablesModel
+            {
+                Name = "externalauthrecords-grid",
+                Paging = false,
+                ServerSide = false,
+                Length = searchModel.PageSize,
+                LengthMenu = searchModel.AvailablePageSizes,
+
+                //prepare model columns
+                ColumnCollection = new List<ColumnProperty>
+                {
+                    new ColumnProperty(nameof(CustomerAssociatedExternalAuthModel.AuthMethodName))
+                    {
+                        Title = _localizationService.GetResource("Admin.Customers.Customers.AssociatedExternalAuth.Fields.AuthMethodName"),
+                        Width = "100"
+                    },
+                    new ColumnProperty(nameof(CustomerAssociatedExternalAuthModel.Email))
+                    {
+                        Title = _localizationService.GetResource("Admin.Customers.Customers.AssociatedExternalAuth.Fields.Email"),
+                        Width = "100"
+                    },
+                    new ColumnProperty(nameof(CustomerAssociatedExternalAuthModel.ExternalIdentifier))
+                    {
+                        Title = _localizationService.GetResource("Admin.Customers.Customers.AssociatedExternalAuth.Fields.ExternalIdentifier"),
+                        Width = "300"
+                    }
+                },
+                //prepare grid data
+                Data = JsonConvert.SerializeObject(searchModel.AssociatedExternalAuthRecords.Select(externalAuthRecord => new
+                {
+                    AuthMethodName = JavaScriptEncoder.Default.Encode(externalAuthRecord.AuthMethodName),
+                    Email = JavaScriptEncoder.Default.Encode(externalAuthRecord.Email),
+                    ExternalIdentifier = JavaScriptEncoder.Default.Encode(externalAuthRecord.ExternalIdentifier)
+                }).ToList())
             };
 
             return model;
@@ -1304,9 +1379,6 @@ namespace Nop.Web.Areas.Admin.Factories
                 if (model.DisplayRewardPointsHistory)
                     PrepareAddRewardPointsToCustomerModel(model.AddRewardPoints);
 
-                //prepare external authentication records
-                PrepareAssociatedExternalAuthModels(model.AssociatedExternalAuthRecords, customer);
-
                 //prepare nested search models
                 PrepareRewardPointsSearchModel(model.CustomerRewardPointsSearchModel, customer);
                 PrepareCustomerAddressSearchModel(model.CustomerAddressSearchModel, customer);
@@ -1314,6 +1386,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 PrepareCustomerShoppingCartSearchModel(model.CustomerShoppingCartSearchModel, customer);
                 PrepareCustomerActivityLogSearchModel(model.CustomerActivityLogSearchModel, customer);
                 PrepareCustomerBackInStockSubscriptionSearchModel(model.CustomerBackInStockSubscriptionSearchModel, customer);
+                PrepareCustomerAssociatedExternalAuthRecordsSearchModel(model.CustomerAssociatedExternalAuthRecordsSearchModel, customer);
             }
             else
             {

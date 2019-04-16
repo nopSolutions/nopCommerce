@@ -1,5 +1,5 @@
-﻿@using System.Text.Encodings.Web
-@model CustomerModel
+﻿@model CustomerModel
+
 @if (Model.CountryEnabled && Model.StateProvinceEnabled)
 {
     <script>
@@ -74,82 +74,14 @@
                 <span asp-validation-for="Password"></span>
             </div>
         </div>
-        @if (Model.Id > 0 && Model.AssociatedExternalAuthRecords.Count > 0)
+        @if (Model.Id > 0 && Model.CustomerAssociatedExternalAuthRecordsSearchModel.AssociatedExternalAuthRecords.Count > 0)
         {
             <div class="form-group">
                 <div class="col-md-3">
-                    <nop-label asp-for="AssociatedExternalAuthRecords" />
+                    <nop-label asp-for="CustomerAssociatedExternalAuthRecordsSearchModel.AssociatedExternalAuthRecords" />
                 </div>
                 <div class="col-md-9">
-                    <div id="externalauthrecords-grid"></div>
-
-                    <script>
-
-                        //local datasource
-                        var externalauthrecords = [
-                        @for (var i = 0; i < Model.AssociatedExternalAuthRecords.Count; i++)
-                        {
-                            var aear = Model.AssociatedExternalAuthRecords[i];
-                            <text>
-                                {
-                                    AuthMethodName: "@(Html.Raw(JavaScriptEncoder.Default.Encode(aear.AuthMethodName)))",
-                                    Email: "@(Html.Raw(JavaScriptEncoder.Default.Encode(aear.Email)))",
-                                    ExternalIdentifier: "@(Html.Raw(JavaScriptEncoder.Default.Encode(aear.ExternalIdentifier)))"
-                                }
-                            </text>
-                            if (i != Model.AssociatedExternalAuthRecords.Count - 1)
-                            {
-                                <text>,</text>
-                            }
-                        }
-                        ];
-
-                        $(document).ready(function () {
-                            $("#externalauthrecords-grid").kendoGrid({
-                                dataSource: {
-                                    data: externalauthrecords,
-                                    schema: {
-                                        model: {
-                                            fields: {
-                                                AuthMethodName: { type: "string" },
-                                                Email: { type: "string" },
-                                                ExternalIdentifier: { type: "string" }
-                                            }
-                                        }
-                                    },
-                                    error: function (e) {
-                                        display_kendoui_grid_error(e);
-                                        // Cancel the changes
-                                        this.cancelChanges();
-                                    }
-                                },
-                                pageable: {
-                                    refresh: true,
-                                    numeric: false,
-                                    previousNext: false,
-                                    info: false,
-                                    @await Html.PartialAsync("_GridPagerMessages")
-                                },
-                                scrollable: false,
-                                columns: [
-                                    {
-                                        field: "AuthMethodName",
-                                        title: "@T("Admin.Customers.Customers.AssociatedExternalAuth.Fields.AuthMethodName")",
-                                        width: 100
-                                    }, {
-                                        field: "Email",
-                                        title: "@T("Admin.Customers.Customers.AssociatedExternalAuth.Fields.Email")",
-                                        width: 100
-                                    },{
-                                        field: "ExternalIdentifier",
-                                        title: "@T("Admin.Customers.Customers.AssociatedExternalAuth.Fields.ExternalIdentifier")",
-                                        width: 300
-                                    }
-                                ]
-                            });
-                        });
-
-                    </script>
+                    @await Html.PartialAsync("Table", Model.CustomerAssociatedExternalAuthRecordsSearchModel.Grid)
                 </div>
             </div>
         }
