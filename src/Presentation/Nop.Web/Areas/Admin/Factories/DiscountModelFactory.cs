@@ -366,6 +366,54 @@ namespace Nop.Web.Areas.Admin.Factories
             return model;
         }
 
+        /// <summary>
+        /// Prepare datatables model
+        /// </summary>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
+        protected virtual DataTablesModel PrepareAddManufacturerGridModel(AddManufacturerToDiscountSearchModel searchModel)
+        {
+            //prepare common properties
+            var model = new DataTablesModel
+            {
+                Name = "manufacturers-grid",
+                UrlRead = new DataUrl("ManufacturerAddPopupList", "Discount", null),
+                SearchButtonId = "search-manufacturers",
+                Length = searchModel.PageSize,
+                LengthMenu = searchModel.AvailablePageSizes
+            };
+
+            //prepare filters to search
+            model.Filters = new List<FilterParameter>
+            {
+                new FilterParameter(nameof(searchModel.SearchManufacturerName))
+            };
+
+            //prepare model columns
+            model.ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(ManufacturerModel.Id))
+                {
+                    IsMasterCheckBox = true,
+                    Render = new RenderCheckBox(nameof(AddManufacturerToDiscountModel.SelectedManufacturerIds)),
+                    ClassName =  StyleColumn.CenterAll,
+                    Width = "50",
+                },
+                new ColumnProperty(nameof(ManufacturerModel.Name))
+                {
+                    Title = _localizationService.GetResource("Admin.Catalog.Manufacturers.Fields.Name")
+                },
+                new ColumnProperty(nameof(ManufacturerModel.Published))
+                {
+                    Title = _localizationService.GetResource("Admin.Catalog.Manufacturers.Fields.Published"),
+                    Width = "100",
+                    Render = new RenderBoolean()
+                }
+            };
+
+            return model;
+        }
+        
         #endregion
 
         #region Methods
@@ -847,6 +895,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetPopupGridPageSize();
+            searchModel.Grid = PrepareAddManufacturerGridModel(searchModel);
 
             return searchModel;
         }
@@ -867,18 +916,16 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare grid model
-            var model = new AddManufacturerToDiscountListModel
+            var model = new AddManufacturerToDiscountListModel().PrepareToGrid(searchModel, manufacturers, () =>
             {
-                //fill in model values from the entity
-                Data = manufacturers.Select(manufacturer =>
+                return manufacturers.Select(manufacturer =>
                 {
                     var manufacturerModel = manufacturer.ToModel<ManufacturerModel>();
                     manufacturerModel.SeName = _urlRecordService.GetSeName(manufacturer, 0, true, false);
 
                     return manufacturerModel;
-                }),
-                Total = manufacturers.TotalCount
-            };
+                });
+            });
 
             return model;
         }
