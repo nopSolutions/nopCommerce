@@ -1556,14 +1556,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 _notificationService.WarningNotification(_localizationService.GetResource("Admin.Catalog.Products.AssociatedProducts.TryToAddSelfGroupedProduct"));
 
-                var _addAssociatedProductSearchModel = _productModelFactory.PrepareAddAssociatedProductSearchModel(new AddAssociatedProductSearchModel());
-
+                var addAssociatedProductSearchModel = _productModelFactory.PrepareAddAssociatedProductSearchModel(new AddAssociatedProductSearchModel());
                 //set current product id
-                _addAssociatedProductSearchModel.ProductId = model.ProductId;
+                addAssociatedProductSearchModel.ProductId = model.ProductId;
 
                 ViewBag.RefreshPage = true;
 
-                return View(_addAssociatedProductSearchModel);
+                return View(addAssociatedProductSearchModel);
             }
 
             ViewBag.RefreshPage = true;
