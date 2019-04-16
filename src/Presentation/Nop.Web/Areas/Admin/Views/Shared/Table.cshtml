@@ -86,7 +86,7 @@
         }
     });
 </script>
-@if (Model.UrlAction != null)
+@if ((Model.UrlAction != null) || (Model.ChildTable?.UrlAction != null))
 {
     <text>
         <script>
@@ -106,7 +106,7 @@
                 addAntiForgeryToken(postData);
 
                 $.ajax({
-                    url: '@Html.Raw(GetUrl(Model.UrlAction))',
+                    url: '@Html.Raw(GetUrl((Model.ChildTable?.UrlAction !=null) ? Model.ChildTable?.UrlAction : Model.UrlAction))',
                     type: '@WebRequestMethods.Http.Post',
                     dataType: 'json',
                     data: postData,
