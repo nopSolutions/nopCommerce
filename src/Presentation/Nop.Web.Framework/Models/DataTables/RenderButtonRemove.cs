@@ -3,7 +3,7 @@
     /// <summary>
     /// Represents button render for DataTables column
     /// </summary>
-    public partial class RenderButton : IRender
+    public partial class RenderButtonRemove : IRender
     {
         #region Ctor
 
@@ -11,7 +11,7 @@
         /// Initializes a new instance of the RenderButton class 
         /// </summary>
         /// <param name="title">Button title</param>
-        public RenderButton(string title)
+        public RenderButtonRemove(string title)
         {
             Title = title;
         }

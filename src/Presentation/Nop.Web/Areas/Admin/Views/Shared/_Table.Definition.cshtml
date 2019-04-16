@@ -210,10 +210,10 @@ columns: [
                         }
                     </text>
                     break;
-                case RenderButton button:
+                case RenderButtonRemove button:
                     <text>
                         render: function (data, type, row, meta) {
-                            return '<a href="#" class="@GetEnumValue(typeof(StyleButton), button.Style)" onclick=ActionData("' + data + '");>@button.Title</a>'
+                            return '<a href="#" class="@GetEnumValue(typeof(StyleButton), button.Style)" onclick=ActionData("' + data + '");><i class="fa fa-remove"></i>@button.Title</a>'
                         }
                     </text>
                     break;
