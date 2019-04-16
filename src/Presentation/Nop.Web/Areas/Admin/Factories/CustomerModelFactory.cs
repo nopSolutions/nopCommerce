@@ -862,7 +862,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Filters = new List<FilterParameter>
                 {
                     new FilterParameter(nameof(searchModel.CustomerId), searchModel.CustomerId),
-                    new FilterParameter(nameof(CustomerShoppingCartSearchModel.ShoppingCartTypeId), searchModel.ShoppingCartTypeId)
+                    new FilterParameter(nameof(CustomerShoppingCartSearchModel.ShoppingCartTypeId), nameof(CustomerShoppingCartSearchModel))
                 },
 
                 //prepare model columns

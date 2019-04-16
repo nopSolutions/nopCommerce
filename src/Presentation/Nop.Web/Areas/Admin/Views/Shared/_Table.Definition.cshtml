@@ -85,9 +85,18 @@ else
                             {
                                 @if (filter.Type == typeof(string))
                                 {
-                                    <text>
-                                        data.@filter.Name = $('#@filter.Name').val();
-                                    </text>
+                                    if (!string.IsNullOrEmpty(filter.ModelName))
+                                    {
+                                        <text>
+                                            data.@filter.Name = $('#@(filter.ModelName)_@filter.Name').val();
+                                        </text>
+                                    }
+                                    else
+                                    {
+                                        <text>
+                                            data.@filter.Name = $('#@filter.Name').val();
+                                        </text>
+                                    }
                                     continue;
                                 }
                                 @if (filter.Type == typeof(bool))
