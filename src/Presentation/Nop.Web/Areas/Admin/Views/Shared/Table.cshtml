@@ -12,7 +12,7 @@
         return !string.IsNullOrEmpty(dataUrl?.ActionName) && !string.IsNullOrEmpty(dataUrl.ControllerName)
             ? Url.Action(dataUrl.ActionName, dataUrl.ControllerName, dataUrl.RouteValues)
             : !string.IsNullOrEmpty(dataUrl.Url)
-            ? $"{(dataUrl.Url.StartsWith("~/", StringComparison.Ordinal) ? Url.Content(dataUrl.Url) : dataUrl.Url).TrimEnd('/')}/"
+            ? $"{(dataUrl.Url.StartsWith("~/", StringComparison.Ordinal) ? Url.Content(dataUrl.Url) : dataUrl.Url).TrimEnd('/')}" + (!dataUrl.TrimEnd ? "/" : "")
             : string.Empty;
     }
 
