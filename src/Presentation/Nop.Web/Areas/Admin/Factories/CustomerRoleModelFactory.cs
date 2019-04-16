@@ -130,7 +130,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Search model</param>
         /// <returns>Datatables model</returns>
-        protected virtual DataTablesModel PrepareProductGridModel(CustomerRoleProductSearchModel searchModel)
+        protected virtual DataTablesModel PrepareAddProductGridModel(CustomerRoleProductSearchModel searchModel)
         {
             //prepare common properties
             var model = new DataTablesModel
@@ -286,7 +286,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetPopupGridPageSize();
-            searchModel.Grid = PrepareProductGridModel(searchModel);
+            searchModel.Grid = PrepareAddProductGridModel(searchModel);
 
             return searchModel;
         }
