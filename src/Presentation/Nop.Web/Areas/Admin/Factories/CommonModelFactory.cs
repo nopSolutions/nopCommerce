@@ -532,6 +532,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
+            searchModel.Grid = PrepareBackupFileGridModel(searchModel);
 
             return searchModel;
         }
@@ -595,6 +596,59 @@ namespace Nop.Web.Areas.Admin.Factories
                     Text = $"{_localizationService.GetResource("Admin.System.Warnings.PluginNotEnabled")}: {string.Join(", ", notEnabled)}"
                 });
             }
+        }
+
+        /// <summary>
+        /// Prepare datatables model
+        /// </summary>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
+        protected virtual DataTablesModel PrepareBackupFileGridModel(BackupFileSearchModel searchModel)
+        {
+            //prepare common properties
+            var model = new DataTablesModel
+            {
+                Name = "backup-list",
+                UrlRead = new DataUrl("BackupFiles", "Common", null),
+                Length = searchModel.PageSize,
+                LengthMenu = searchModel.AvailablePageSizes
+            };
+            
+            //prepare model columns
+            model.ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(BackupFileModel.Name))
+                {
+                    Title = _localizationService.GetResource("Admin.System.Maintenance.BackupDatabase.FileName")
+                },
+                new ColumnProperty(nameof(BackupFileModel.Length))
+                {
+                    Title = _localizationService.GetResource("Admin.System.Maintenance.BackupDatabase.FileSize")
+                },
+                new ColumnProperty(nameof(BackupFileModel.Link))
+                {
+                    Title = _localizationService.GetResource("Admin.System.Maintenance.BackupDatabase.Download"),
+                    Render = new RenderCustom("renderDownload"),
+                    Width = "150",
+                    ClassName = StyleColumn.CenterAll
+                },
+                new ColumnProperty(nameof(BackupFileModel.Name))
+                {
+                    Title = _localizationService.GetResource("Admin.System.Maintenance.BackupDatabase.Restore"),
+                    Render = new RenderCustom("renderRestore"),
+                    Width = "150",
+                    ClassName = StyleColumn.CenterAll
+                },
+                new ColumnProperty(nameof(BackupFileModel.Name))
+                {
+                    Title = _localizationService.GetResource("Admin.System.Maintenance.BackupDatabase.Delete"),
+                    Render = new RenderCustom("renderDelete"),
+                    Width = "150",
+                    ClassName = StyleColumn.CenterAll
+                }
+            };
+
+            return model;
         }
 
         /// <summary>
@@ -857,24 +911,16 @@ namespace Nop.Web.Areas.Admin.Factories
             var backupFiles = _maintenanceService.GetAllBackupFiles().ToPagedList(searchModel);
 
             //prepare list model
-            var model = new BackupFileListModel
+            var model = new BackupFileListModel().PrepareToGrid(searchModel, backupFiles, ()=>
             {
-                Data = backupFiles.Select(file =>
+                return backupFiles.Select(file => new BackupFileModel
                 {
-                    //fill in model values from the entity
-                    var backupFileModel = new BackupFileModel
-                    {
-                        Name = _fileProvider.GetFileName(file)
-                    };
-
+                    Name = _fileProvider.GetFileName(file),
                     //fill in additional values (not existing in the entity)
-                    backupFileModel.Length = $"{_fileProvider.FileLength(file) / 1024f / 1024f:F2} Mb";
-                    backupFileModel.Link = $"{_webHelper.GetStoreLocation(false)}db_backups/{backupFileModel.Name}";
-
-                    return backupFileModel;
-                }),
-                Total = backupFiles.TotalCount
-            };
+                    Length = $"{_fileProvider.FileLength(file) / 1024f / 1024f:F2} Mb",
+                    Link = $"{_webHelper.GetStoreLocation(false)}db_backups/{_fileProvider.GetFileName(file)}"
+                });
+            });
 
             return model;
         }

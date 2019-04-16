@@ -218,6 +218,9 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _notificationService.ErrorNotification(exc);
             }
 
+            //prepare model
+            model = _commonModelFactory.PrepareMaintenanceModel(new MaintenanceModel());
+
             return View(model);
         }
 
@@ -275,6 +278,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 _notificationService.ErrorNotification(exc);
             }
+
+            //prepare model
+            model = _commonModelFactory.PrepareMaintenanceModel(model);
 
             return View(model);
         }
