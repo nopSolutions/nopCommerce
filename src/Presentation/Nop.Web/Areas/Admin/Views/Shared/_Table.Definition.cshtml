@@ -71,54 +71,53 @@ else
             type: '@WebRequestMethods.Http.Post',
             dataType: 'json',
             data: function(data) {
-                    @if (Model.IsChildTable)
+                @if (Model.Filters != null)
+                {
+                    @foreach (var filter in Model.Filters)
                     {
-                        <text>
-                            data.@Model.Filters.FirstOrDefault()?.Name = row.data().Id;
-                        </text>
-                    }
-                    else
-                    {
-                        @if (Model.Filters != null)
+                        @if (filter.Type == typeof(string))
                         {
-                            @foreach (var filter in Model.Filters)
+                            if (Model.IsChildTable && !string.IsNullOrEmpty(filter.ParentName))
                             {
-                                @if (filter.Type == typeof(string))
-                                {
-                                    if (!string.IsNullOrEmpty(filter.ModelName))
-                                    {
-                                        <text>
-                                            data.@filter.Name = $('#@(filter.ModelName)_@filter.Name').val();
-                                        </text>
-                                    }
-                                    else
-                                    {
-                                        <text>
-                                            data.@filter.Name = $('#@filter.Name').val();
-                                        </text>
-                                    }
-                                    continue;
-                                }
-                                @if (filter.Type == typeof(bool))
-                                {
-                                    <text>
-                                        data.@filter.Name = $('#@filter.Name').is(':checked');
-                                    </text>
-                                    continue;
-                                }
-                                @if (filter.Type == typeof(int))
-                                {
-                                    if (int.TryParse(@filter.Value.ToString(), out int val))
-                                    {
-                                        <text>
-                                            data.@filter.Name = @val;
-                                        </text>
-                                    }
-                                    continue;
-                                }
+                                <text>
+                                    data.@filter.Name = row.data().@filter.ParentName;
+                                </text>
+                                continue;
                             }
+
+                            if (!string.IsNullOrEmpty(filter.ModelName))
+                            {
+                                <text>
+                                    data.@filter.Name = $('#@(filter.ModelName)_@filter.Name').val();
+                                </text>
+                            }
+                            else
+                            {
+                                <text>
+                                    data.@filter.Name = $('#@filter.Name').val();
+                                </text>
+                            }
+                            continue;
+                        }
+                        @if (filter.Type == typeof(bool))
+                        {
+                            <text>
+                                data.@filter.Name = $('#@filter.Name').is(':checked');
+                            </text>
+                            continue;
+                        }
+                        @if (filter.Type == typeof(int))
+                        {
+                            if (int.TryParse(@filter.Value.ToString(), out int val))
+                            {
+                                <text>
+                                    data.@filter.Name = @val;
+                                </text>
+                            }
+                            continue;
                         }
                     }
+                }
                 addAntiForgeryToken(data);
                 return data;
             }

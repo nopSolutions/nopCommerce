@@ -136,188 +136,21 @@
 
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <div id="carts-grid"></div>
-
+                    @await Html.PartialAsync("Table", Model.Grid)
+                    
                     <script>
-                        $(document).ready(function() {
-                            $("#carts-grid").kendoGrid({
-                                dataSource: {
-                                    type: "json",
-                                    transport: {
-                                        read: {
-                                            url: "@Html.Raw(Url.Action("CurrentCarts", "ShoppingCart"))",
-                                            type: "POST",
-                                            dataType: "json",
-                                            data: function() {
-                                                var data = {
-                                                    ShoppingCartType: $('#@Html.IdFor(model => model.ShoppingCartType)').val(),
-                                                    StartDate: $('#@Html.IdFor(model => model.StartDate)').val(),
-                                                    EndDate: $('#@Html.IdFor(model => model.EndDate)').val(),
-                                                    StoreId: $('#@Html.IdFor(model => model.StoreId)').val(),
-                                                    BillingCountryId: $('#@Html.IdFor(model => model.BillingCountryId)').val(),
-                                                    ProductId: $('#@Html.IdFor(model => model.ProductId)').val()
-                                                };
-                                                addAntiForgeryToken(data);
-                                                return data;
-                                            }
-                                        }
-                                    },
-                                    schema: {
-                                        data: "Data",
-                                        total: "Total",
-                                        errors: "Errors"
-                                    },
-                                    error: function(e) {
-                                        display_kendoui_grid_error(e);
-                                        // Cancel the changes
-                                        this.cancelChanges();
-                                    },
-                                    pageSize: @(Model.PageSize),
-                                    serverPaging: true,
-                                    serverFiltering: true,
-                                    serverSorting: true
-                                },
-                                pageable: {
-                                    refresh: true,
-                                    pageSizes: [@(Model.AvailablePageSizes)],
-                                    @await Html.PartialAsync("_GridPagerMessages")
-                                },
-                                //details grid
-                                detailInit: detailInit,
-                                scrollable: false,
-                                columns: [
-                                    {
-                                        field: "CustomerId",
-                                        title: "@T("Admin.CurrentCarts.Customer")",
-                                        template:
-                                            '<a href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#">#:CustomerEmail#</a>'
-                                    }, {
-                                        field: "TotalItems",
-                                        title: "@T("Admin.CurrentCarts.TotalItems")",
-                                        width: 150
-                                    }
-                                ]
-                            });
-                        });
+                        function renderProductName(data, type, row, meta) {
+                            var link = '@Url.Content("~/Admin/Product/Edit/")' + row.ProductId;
+                            var div = "";
+        
+                            if (row.AttributeInfo && row.AttributeInfo.length > 0)
+                                div = "<div>" + row.AttributeInfo + "</div>";
 
-                        //details grid
-                        function detailInit(e) {
-                            $("<div/>").appendTo(e.detailCell).kendoGrid({
-                                dataSource: {
-                                    type: "json",
-                                    transport: {
-                                        read: {
-                                            url: "@Html.Raw(Url.Action("GetCartDetails", "ShoppingCart"))",
-                                            type: "POST",
-                                            dataType: "json",
-                                            data: function() {
-                                                var data = {
-                                                    CustomerId: e.data.CustomerId,
-                                                    ShoppingCartType: $('#@Html.IdFor(model => model.ShoppingCartType)').val(),
-                                                    StartDate: $('#@Html.IdFor(model => model.StartDate)').val(),
-                                                    EndDate: $('#@Html.IdFor(model => model.EndDate)').val(),
-                                                    StoreId: $('#@Html.IdFor(model => model.StoreId)').val(),
-                                                    BillingCountryId: $('#@Html.IdFor(model => model.BillingCountryId)').val(),
-                                                    ProductId: $('#@Html.IdFor(model => model.ProductId)').val()
-                                                };
-                                                addAntiForgeryToken(data);
-                                                return data;
-                                            }
-                                        },
-                                        destroy: {
-                                            url: "@Html.Raw(Url.Action("DeleteItem", "ShoppingCart"))",
-                                            type: "POST",
-                                            dataType: "json",
-                                            data: addAntiForgeryToken
-                                        }
-                                    },
-                                    requestEnd: function(e) {
-                                        if (e.type == "destroy") {
-                                            this.read();
-                                        }
-                                    },
-                                    schema: {
-                                        data: "Data",
-                                        total: "Total",
-                                        errors: "Errors",
-                                        model: {
-                                            id: "Id"
-                                        }
-                                    },
-                                    error: function(e) {
-                                        display_kendoui_grid_error(e);
-                                        // Cancel the changes
-                                        this.cancelChanges();
-                                    },
-                                    pageSize: @(Model.ShoppingCartItemSearchModel.PageSize),
-                                    serverPaging: true,
-                                    serverFiltering: true,
-                                    serverSorting: true
-                                },
-                                editable: {
-                                    confirmation: "@T("Admin.Common.DeleteConfirmation")",
-                                    mode: "inline"
-                                },
-                                scrollable: false,
-                                pageable: {
-                                    refresh: true,
-                                    pageSizes: [@(Model.ShoppingCartItemSearchModel.AvailablePageSizes)],
-                                    @await Html.PartialAsync("_GridPagerMessages")
-                                },
-                                columns: [
-                                    {
-                                        field: "ProductName",
-                                        title: "@T("Admin.CurrentCarts.Product")",
-                                        template:
-                                            '<a href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#">#:ProductName#</a>' +
-                                                '# if(AttributeInfo && AttributeInfo.length > 0) {# <div>#=AttributeInfo#</div> #} #',
-                                        width: 400
-                                    }, {
-                                        field: "Quantity",
-                                        title: "@T("Admin.CurrentCarts.Quantity")",
-                                        width: 150
-                                    }, {
-                                        field: "UnitPrice",
-                                        title: "@T("Admin.CurrentCarts.UnitPrice")",
-                                        width: 150
-                                    }, {
-                                        field: "Total",
-                                        title: "@T("Admin.CurrentCarts.Total")",
-                                        width: 150
-                                    }, {
-                                        field: "Store",
-                                        hidden: @(stores.Count > 1 ? "false" : "true"),
-                                        title: "@T("Admin.CurrentCarts.Store")",
-                                        width: 150
-                                    }, {
-                                        field: "UpdatedOn",
-                                        title: "@T("Admin.CurrentCarts.UpdatedOn")",
-                                        width: 150,
-                                        type: "date",
-                                        format: "{0:G}"
-                                    }, {
-                                        command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
-                                        title: "@T("Admin.Common.Delete")",
-                                        width: 100
-                                    }
-                                ]
-                            });
+                            return '<a href="' + link + '">' + data + '</a>'+div;
                         }
                     </script>
                 </div>
             </div>
         </div>
     </div>
-
-    <script>
-        $(document)
-            .ready(function() {
-                //search button
-                $('#search-shopping-carts').click(function() {
-                    //search
-                    $("#carts-grid").data('kendoGrid').dataSource.read();
-                    return false;
-                });
-            });
-    </script>
 </div>

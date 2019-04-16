@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Domain.Catalog;
@@ -15,6 +16,7 @@ using Nop.Services.Tax;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.ShoppingCart;
 using Nop.Web.Framework.Extensions;
+using Nop.Web.Framework.Models.DataTables;
 using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
@@ -90,6 +92,134 @@ namespace Nop.Web.Areas.Admin.Factories
             return searchModel;
         }
 
+        /// <summary>
+        /// Prepare datatables model
+        /// </summary>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
+        protected virtual DataTablesModel PrepareShoppingCartGridModel(ShoppingCartSearchModel searchModel)
+        {
+            //prepare common properties
+            var model = new DataTablesModel
+            {
+                Name = "carts-grid",
+                UrlRead = new DataUrl("CurrentCarts", "ShoppingCart", null),
+                SearchButtonId = "search-shopping-carts",
+                Length = searchModel.PageSize,
+                LengthMenu = searchModel.AvailablePageSizes
+            };
+
+            //prepare filters to search
+            model.Filters = new List<FilterParameter>()
+            {
+                new FilterParameter(nameof(searchModel.ShoppingCartType)),
+                new FilterParameter(nameof(searchModel.StartDate)),
+                new FilterParameter(nameof(searchModel.EndDate)),
+                new FilterParameter(nameof(searchModel.StoreId)),
+                new FilterParameter(nameof(searchModel.BillingCountryId)),
+                new FilterParameter(nameof(searchModel.ProductId))
+            };
+
+            //prepare model columns
+            model.ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(null)
+                {
+                    Render = new RenderChildCaret(),
+                    Width = "5",
+                    Searchable = false,
+                    ClassName =  StyleColumn.ChildControl
+                },
+                new ColumnProperty(nameof(ShoppingCartModel.CustomerEmail))
+                {
+                    Visible = false
+                },
+                new ColumnProperty(nameof(ShoppingCartModel.CustomerEmail))
+                {
+                    Title = _localizationService.GetResource("Admin.CurrentCarts.Customer"),
+                    Render = new RenderLink(new DataUrl("~/Admin/Customer/Edit/", nameof(ShoppingCartModel.CustomerId)))
+                },
+                new ColumnProperty(nameof(ShoppingCartModel.TotalItems))
+                {
+                    Title = _localizationService.GetResource("Admin.CurrentCarts.TotalItems"),
+                    Width = "150"
+                }
+            };
+
+            //prepare common properties for detail table
+            var detailModel = new DataTablesModel
+            {
+                Name = "carts-grid",
+                UrlRead = new DataUrl("GetCartDetails", "ShoppingCart", null),
+                UrlAction = new DataUrl("DeleteItem", "ShoppingCart", null),
+                IsChildTable = true,
+                Length = searchModel.PageSize,
+                LengthMenu = searchModel.AvailablePageSizes
+            };
+
+            //prepare filters to search
+            detailModel.Filters = new List<FilterParameter>()
+            {
+                new FilterParameter(nameof(ShoppingCartItemSearchModel.CustomerId), nameof(ShoppingCartItemSearchModel.CustomerId), true),
+                new FilterParameter(nameof(ShoppingCartItemSearchModel.ShoppingCartType)),
+                new FilterParameter(nameof(ShoppingCartItemSearchModel.StartDate)),
+                new FilterParameter(nameof(ShoppingCartItemSearchModel.EndDate)),
+                new FilterParameter(nameof(ShoppingCartItemSearchModel.StoreId)),
+                new FilterParameter(nameof(ShoppingCartItemSearchModel.BillingCountryId)),
+                new FilterParameter(nameof(ShoppingCartItemSearchModel.ProductId))
+            };
+
+            var stores = _storeService.GetAllStores();
+
+            detailModel.ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(ShoppingCartItemModel.ProductName))
+                {
+                    Title = _localizationService.GetResource("Admin.CurrentCarts.Product"),
+                    Width = "400",
+                    Render = new RenderCustom("renderProductName")
+                },
+                new ColumnProperty(nameof(ShoppingCartItemModel.Quantity))
+                {
+                    Title = _localizationService.GetResource("Admin.CurrentCarts.Quantity"),
+                    Width = "150"
+                },
+                new ColumnProperty(nameof(ShoppingCartItemModel.UnitPrice))
+                {
+                    Title = _localizationService.GetResource("Admin.CurrentCarts.UnitPrice"),
+                    Width = "150"
+                },
+                new ColumnProperty(nameof(ShoppingCartItemModel.Total))
+                {
+                    Title = _localizationService.GetResource("Admin.CurrentCarts.Total"),
+                    Width = "150"
+                },
+                new ColumnProperty(nameof(ShoppingCartItemModel.Store))
+                {
+                    Title = _localizationService.GetResource("Admin.CurrentCarts.Store"),
+                    Width = "150",
+                    Visible = stores.Count > 1
+                },
+                new ColumnProperty(nameof(ShoppingCartItemModel.UpdatedOn))
+                {
+                    Title = _localizationService.GetResource("Admin.CurrentCarts.UpdatedOn"),
+                    Width = "150",
+                    Render = new RenderDate()
+                },
+                new ColumnProperty(nameof(ShoppingCartItemModel.Id))
+                {
+                    Title = _localizationService.GetResource("Admin.Common.Delete"),
+                    Width = "100",
+                    Render = new RenderButton(_localizationService.GetResource("Admin.Common.Delete")) { Style = StyleButton.Danger },
+                    ClassName =  StyleColumn.CenterAll
+                }
+            };
+
+            model.ChildTable = detailModel;
+
+            return model;
+        }
+
         #endregion
 
         #region Methods
@@ -125,6 +255,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
+            searchModel.Grid = PrepareShoppingCartGridModel(searchModel);
 
             return searchModel;
         }
@@ -149,9 +280,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new ShoppingCartListModel
+            var model = new ShoppingCartListModel().PrepareToGrid(searchModel, customers, () =>
             {
-                Data = customers.Select(customer =>
+                return customers.Select(customer =>
                 {
                     //fill in model values from the entity
                     var shoppingCartModel = new ShoppingCartModel
@@ -166,9 +297,8 @@ namespace Nop.Web.Areas.Admin.Factories
                         searchModel.StoreId, searchModel.ProductId, searchModel.StartDate, searchModel.EndDate).Sum(item => item.Quantity);
 
                     return shoppingCartModel;
-                }),
-                Total = customers.TotalCount
-            };
+                });
+            });
 
             return model;
         }
@@ -192,9 +322,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 searchModel.StoreId, searchModel.ProductId, searchModel.StartDate, searchModel.EndDate).ToPagedList(searchModel);
 
             //prepare list model
-            var model = new ShoppingCartItemListModel
+            var model = new ShoppingCartItemListModel().PrepareToGrid(searchModel, items, () =>
             {
-                Data = items.Select(item =>
+                return items.Select(item =>
                 {
                     //fill in model values from the entity
                     var itemModel = item.ToModel<ShoppingCartItemModel>();
@@ -214,9 +344,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     itemModel.ProductName = item?.Product?.Name;
 
                     return itemModel;
-                }),
-                Total = items.TotalCount
-            };
+                });
+            });
 
             return model;
         }

@@ -1022,7 +1022,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare filters to search
             detailModel.Filters = new List<FilterParameter>()
             {
-                new FilterParameter(nameof(ShipmentItemSearchModel.ShipmentId))
+                new FilterParameter(nameof(ShipmentItemSearchModel.ShipmentId), nameof(OrderModel.Id), true)
             };
 
             detailModel.ColumnCollection = new List<ColumnProperty>

@@ -54,6 +54,19 @@ namespace Nop.Web.Framework.Models.DataTables
             Value = value;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the FilterParameter class for linking "parent-child" tables
+        /// </summary>
+        /// <param name="name">Filter parameter name</param>
+        /// <param name="parentName">Filter parameter parent name</param>
+        /// <param name="isParentChildParameter">Parameter indicator for linking "parent-child" tables</param>
+        public FilterParameter(string name, string parentName, bool isParentChildParameter = true)
+        {
+            Name = name;
+            ParentName = parentName;
+            Type = typeof(string);
+        }
+
         #endregion
 
         #region Properties
@@ -77,6 +90,11 @@ namespace Nop.Web.Framework.Models.DataTables
         /// Filter field value
         /// </summary>
         public object Value { get; set; }
+
+        /// <summary>
+        /// Filter field parent name
+        /// </summary>
+        public string ParentName { get; set; }
 
         #endregion
     }

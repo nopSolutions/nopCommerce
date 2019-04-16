@@ -123,7 +123,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare filters to search
             detailModel.Filters = new List<FilterParameter>()
             {
-                new FilterParameter(nameof(ForumModel.ForumGroupId))
+                new FilterParameter(nameof(ForumModel.ForumGroupId), nameof(ForumGroupModel.Id), true)
             };
 
             detailModel.ColumnCollection = new List<ColumnProperty>
