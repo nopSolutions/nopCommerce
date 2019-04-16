@@ -417,6 +417,76 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
+        /// Prepare datatables model
+        /// </summary>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
+        protected virtual DataTablesModel PrepareCustomerAddressGridModel(CustomerAddressSearchModel searchModel)
+        {
+            //prepare common properties
+            var model = new DataTablesModel
+            {
+                Name = "customer-addresses-grid",
+                UrlRead = new DataUrl("AddressesSelect", "Customer", null),
+                UrlAction = new DataUrl("AddressDelete", "Customer", new RouteValueDictionary { [nameof(CustomerAddressSearchModel.CustomerId)] = searchModel.CustomerId }),
+                Length = searchModel.PageSize,
+                LengthMenu = searchModel.AvailablePageSizes
+            };
+
+            //prepare filters to search
+            model.Filters = new List<FilterParameter>()
+            {
+                new FilterParameter(nameof(searchModel.CustomerId), searchModel.CustomerId)
+            };
+
+            //prepare model columns
+            model.ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(AddressModel.FirstName))
+                {
+                    Title = _localizationService.GetResource("Admin.Address.Fields.FirstName")
+                },
+                new ColumnProperty(nameof(AddressModel.LastName))
+                {
+                    Title = _localizationService.GetResource("Admin.Address.Fields.LastName")
+                },
+                new ColumnProperty(nameof(AddressModel.Email))
+                {
+                    Title = _localizationService.GetResource("Admin.Address.Fields.Email")
+                },
+                new ColumnProperty(nameof(AddressModel.PhoneNumber))
+                {
+                    Title = _localizationService.GetResource("Admin.Address.Fields.PhoneNumber")
+                },
+                new ColumnProperty(nameof(AddressModel.FaxNumber))
+                {
+                    Title = _localizationService.GetResource("Admin.Address.Fields.FaxNumber")
+                },
+                new ColumnProperty(nameof(AddressModel.AddressHtml))
+                {
+                    Title = _localizationService.GetResource("Admin.Address"),
+                    Encode = false
+                },
+                new ColumnProperty(nameof(AddressModel.Id))
+                {
+                    Title = _localizationService.GetResource("Admin.Common.Edit"),
+                    Width = "100",
+                    ClassName =  StyleColumn.CenterAll,
+                    Render = new RenderButtonEdit(new DataUrl("~/Admin/Customer/AddressEdit?customerId=" + searchModel.CustomerId + "&addressid=", true))
+                },
+                new ColumnProperty(nameof(AddressModel.Id))
+                {
+                    Title = _localizationService.GetResource("Admin.Common.Delete"),
+                    Width = "100",
+                    Render = new RenderButton(_localizationService.GetResource("Admin.Common.Delete")) { Style = StyleButton.Danger },
+                    ClassName =  StyleColumn.CenterAll
+                }
+            };
+
+            return model;
+        }
+
+        /// <summary>
         /// Prepare customer address search model
         /// </summary>
         /// <param name="searchModel">Customer address search model</param>
@@ -434,6 +504,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
+            searchModel.Grid = PrepareCustomerAddressGridModel(searchModel);
 
             return searchModel;
         }
@@ -1325,9 +1396,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 .ToPagedList(searchModel);
 
             //prepare list model
-            var model = new CustomerAddressListModel
+            var model = new CustomerAddressListModel().PrepareToGrid(searchModel, addresses, () =>
             {
-                Data = addresses.Select(address =>
+                return addresses.Select(address =>
                 {
                     //fill in model values from the entity        
                     var addressModel = address.ToModel<AddressModel>();
@@ -1338,9 +1409,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     PrepareModelAddressHtml(addressModel, address);
 
                     return addressModel;
-                }),
-                Total = addresses.TotalCount
-            };
+                });
+            });
 
             return model;
         }

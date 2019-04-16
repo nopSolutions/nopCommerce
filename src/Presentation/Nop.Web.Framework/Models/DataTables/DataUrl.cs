@@ -42,6 +42,17 @@ namespace Nop.Web.Framework.Models.DataTables
             DataId = dataId;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the DataUrl class 
+        /// </summary>
+        /// <param name="url">URL</param>
+        /// <param name="trimEnd">Parameter indicating that you need to delete all occurrences of the character "/" at the end of the line</param>
+        public DataUrl(string url, bool trimEnd)
+        {
+            Url = url;
+            TrimEnd = trimEnd;
+        }
+
         #endregion
 
         #region Properties
@@ -70,6 +81,11 @@ namespace Nop.Web.Framework.Models.DataTables
         /// Gets or sets data Id
         /// </summary>
         public string DataId { get; set; }
+
+        /// <summary>
+        /// Gets or sets parameter indicating that you need to delete all occurrences of the character "/" at the end of the line
+        /// </summary>
+        public bool TrimEnd { get; set; }
 
         #endregion
     }
