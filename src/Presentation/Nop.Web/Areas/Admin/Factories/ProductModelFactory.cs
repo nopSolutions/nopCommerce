@@ -810,6 +810,60 @@ namespace Nop.Web.Areas.Admin.Factories
             return model;
         }
 
+        /// <summary>
+        /// Prepare datatables model
+        /// </summary>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
+        protected virtual DataTablesModel PrepareAddAssociatedProductGridModel(AddAssociatedProductSearchModel searchModel)
+        {
+            //prepare common properties
+            var model = new DataTablesModel
+            {
+                Name = "products-grid",
+                UrlRead = new DataUrl("AssociatedProductAddPopupList", "Product", null),
+                SearchButtonId = "search-products",
+                Length = searchModel.PageSize,
+                LengthMenu = searchModel.AvailablePageSizes
+            };
+
+            //prepare filters to search
+            model.Filters = new List<FilterParameter>
+            {
+                new FilterParameter(nameof(searchModel.SearchProductName)),
+                new FilterParameter(nameof(searchModel.SearchCategoryId)),
+                new FilterParameter(nameof(searchModel.SearchManufacturerId)),
+                new FilterParameter(nameof(searchModel.SearchStoreId)),
+                new FilterParameter(nameof(searchModel.SearchVendorId)),
+                new FilterParameter(nameof(searchModel.SearchProductTypeId))
+            };
+
+            //prepare model columns
+            model.ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(ProductModel.Id))
+                {
+                    IsMasterCheckBox = true,
+                    Render = new RenderCheckBox(nameof(AddAssociatedProductModel.SelectedProductIds)),
+                    ClassName =  StyleColumn.CenterAll,
+                    Width = "50",
+                },
+                new ColumnProperty(nameof(ProductModel.Name))
+                {
+                    Title = _localizationService.GetResource("Admin.Catalog.Products.Fields.Name"),
+                    Render = new RenderCustom("renderColumnName")
+                },
+                new ColumnProperty(nameof(ProductModel.Published))
+                {
+                    Title = _localizationService.GetResource("Admin.Catalog.Products.Fields.Published"),
+                    Width = "100",
+                    Render = new RenderBoolean()
+                }
+            };
+
+            return model;
+        }
+
         #endregion
 
         #region Methods
@@ -1472,6 +1526,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetPopupGridPageSize();
+            searchModel.Grid = PrepareAddAssociatedProductGridModel(searchModel);
 
             return searchModel;
         }
@@ -1501,9 +1556,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare grid model
-            var model = new AddAssociatedProductListModel
+            var model = new AddAssociatedProductListModel().PrepareToGrid(searchModel, products, () =>
             {
-                Data = products.Select(product =>
+                return products.Select(product =>
                 {
                     //fill in model values from the entity
                     var productModel = product.ToModel<ProductModel>();
@@ -1518,9 +1573,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     productModel.AssociatedToProductName = parentGroupedProduct.Name;
 
                     return productModel;
-                }),
-                Total = products.TotalCount
-            };
+                });
+            });
 
             return model;
         }
