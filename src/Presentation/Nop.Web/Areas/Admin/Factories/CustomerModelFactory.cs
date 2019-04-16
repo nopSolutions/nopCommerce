@@ -941,13 +941,13 @@ namespace Nop.Web.Areas.Admin.Factories
                     },
                     new ColumnProperty(nameof(CustomerBackInStockSubscriptionModel.ProductName))
                     {
-                        Title = "Admin.Customers.Customers.BackInStockSubscriptions.Product",
+                        Title = _localizationService.GetResource("Admin.Customers.Customers.BackInStockSubscriptions.Product"),
                         Width = "300",
                         Render = new RenderLink(new DataUrl("~/Admin/Product/Edit/", nameof(CustomerBackInStockSubscriptionModel.ProductId)))
                     },
                     new ColumnProperty(nameof(CustomerBackInStockSubscriptionModel.CreatedOn))
                     {
-                        Title = "Admin.Customers.Customers.BackInStockSubscriptions.CreatedOn",
+                        Title = _localizationService.GetResource("Admin.Customers.Customers.BackInStockSubscriptions.CreatedOn"),
                         Width = "200",
                         Render = new RenderDate()
                     }
