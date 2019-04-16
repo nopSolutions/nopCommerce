@@ -318,6 +318,54 @@ namespace Nop.Web.Areas.Admin.Factories
             return model;
         }
 
+        /// <summary>
+        /// Prepare datatables model
+        /// </summary>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
+        protected virtual DataTablesModel PrepareAddCategoryGridModel(AddCategoryToDiscountSearchModel searchModel)
+        {
+            //prepare common properties
+            var model = new DataTablesModel
+            {
+                Name = "categories-grid",
+                UrlRead = new DataUrl("CategoryAddPopupList", "Discount", null),
+                SearchButtonId = "search-categories",
+                Length = searchModel.PageSize,
+                LengthMenu = searchModel.AvailablePageSizes
+            };
+
+            //prepare filters to search
+            model.Filters = new List<FilterParameter>
+            {
+                new FilterParameter(nameof(searchModel.SearchCategoryName))
+            };
+
+            //prepare model columns
+            model.ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(CategoryModel.Id))
+                {
+                    IsMasterCheckBox = true,
+                    Render = new RenderCheckBox(nameof(AddCategoryToDiscountModel.SelectedCategoryIds)),
+                    ClassName =  StyleColumn.CenterAll,
+                    Width = "50",
+                },
+                new ColumnProperty(nameof(CategoryModel.Breadcrumb))
+                {
+                    Title = _localizationService.GetResource("")
+                },
+                new ColumnProperty(nameof(CategoryModel.Published))
+                {
+                    Title = _localizationService.GetResource("Admin.Catalog.Categories.Fields.Published"),
+                    Width = "100",
+                    Render = new RenderBoolean()
+                }
+            };
+
+            return model;
+        }
+
         #endregion
 
         #region Methods
@@ -710,6 +758,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetPopupGridPageSize();
+            searchModel.Grid = PrepareAddCategoryGridModel(searchModel);
 
             return searchModel;
         }
@@ -730,9 +779,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare grid model
-            var model = new AddCategoryToDiscountListModel
+            var model = new AddCategoryToDiscountListModel().PrepareToGrid(searchModel, categories, () =>
             {
-                Data = categories.Select(category =>
+                return categories.Select(category =>
                 {
                     //fill in model values from the entity
                     var categoryModel = category.ToModel<CategoryModel>();
@@ -742,9 +791,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     categoryModel.SeName = _urlRecordService.GetSeName(category, 0, true, false);
 
                     return categoryModel;
-                }),
-                Total = categories.TotalCount
-            };
+                });
+            });
 
             return model;
         }
