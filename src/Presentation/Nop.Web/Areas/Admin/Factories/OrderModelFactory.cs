@@ -967,61 +967,52 @@ namespace Nop.Web.Areas.Admin.Factories
                     Searchable = false,
                     Width = "10",
                 },
+                new ColumnProperty(nameof(ShipmentModel.Id))
+                {
+                    Title = _localizationService.GetResource("Admin.Orders.Shipments.ID"),
+                    Width = "50"
+                },
+                new ColumnProperty(nameof(ShipmentModel.CustomOrderNumber))
+                {
+                    Title = _localizationService.GetResource("Admin.Orders.Shipments.CustomOrderNumber"),
+                    Width = "100"
+                },
+                new ColumnProperty(nameof(ShipmentModel.TrackingNumber))
+                {
+                    Title = _localizationService.GetResource("Admin.Orders.Shipments.TrackingNumber"),
+                    Width = "100"
+                },
+                new ColumnProperty(nameof(ShipmentModel.TotalWeight))
+                {
+                    Title = _localizationService.GetResource("Admin.Orders.Shipments.TotalWeight"),
+                    Width = "100"
+                },
+                new ColumnProperty(nameof(ShipmentModel.ShippedDate))
+                {
+                    Title = _localizationService.GetResource("Admin.Orders.Shipments.ShippedDate"),
+                    Width = "200",
+                    Render = new RenderDate()
+                },
+                new ColumnProperty(nameof(ShipmentModel.DeliveryDate))
+                {
+                    Title = _localizationService.GetResource("Admin.Orders.Shipments.DeliveryDate"),
+                    Width = "200",
+                    Render = new RenderDate()
+                },
+                new ColumnProperty(nameof(OrderModel.Id))
+                {
+                    Title = _localizationService.GetResource("Admin.Common.View"),
+                    Width = "50",
+                    ClassName = StyleColumn.CenterAll,
+                    Render = new RenderButtonView(new DataUrl("~/Admin/Order/ShipmentDetails/"))
+                }
             };
-
-            model.ColumnCollection.Add(new ColumnProperty(nameof(ShipmentModel.Id))
-            {
-                Title = _localizationService.GetResource("Admin.Orders.Shipments.ID"),
-                Width = "50"                
-            });
-
-            model.ColumnCollection.Add(new ColumnProperty(nameof(ShipmentModel.CustomOrderNumber))
-            {
-                Title = _localizationService.GetResource("Admin.Orders.Shipments.CustomOrderNumber"),
-                Width = "100"
-            });
-
-            model.ColumnCollection.Add(new ColumnProperty(nameof(ShipmentModel.TrackingNumber))
-            {
-                Title = _localizationService.GetResource("Admin.Orders.Shipments.TrackingNumber"),
-                Width = "100"
-            });
-
-            model.ColumnCollection.Add(new ColumnProperty(nameof(ShipmentModel.TotalWeight))
-            {
-                Title = _localizationService.GetResource("Admin.Orders.Shipments.TotalWeight"),
-                Width = "100"
-            });
-
-            model.ColumnCollection.Add(new ColumnProperty(nameof(ShipmentModel.ShippedDate))
-            {
-                Title = _localizationService.GetResource("Admin.Orders.Shipments.ShippedDate"),
-                Width = "200",
-                Render = new RenderDate()
-            });
-            model.ColumnCollection.Add(new ColumnProperty(nameof(ShipmentModel.DeliveryDate))
-            {
-                Title = _localizationService.GetResource("Admin.Orders.Shipments.DeliveryDate"),
-                Width = "200",
-                Render = new RenderDate()
-            });
-
-            model.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.Id))
-            {
-                Title = _localizationService.GetResource("Admin.Common.View"),
-                Width = "50",
-                ClassName = StyleColumn.CenterAll,
-                Render = new RenderButtonEdit(new DataUrl("~/Admin/Order/ShipmentDetails/"))
-            });
-
-            var searchChildModel = new ShipmentItemSearchModel();
 
             //prepare common properties for detail table
             var detailModel = new DataTablesModel
             {
                 Name = "shipments-grid",
                 UrlRead = new DataUrl("ShipmentsItemsByShipmentId", "Order", null),
-                
                 IsChildTable = true,
                 Paging = false,
                 Length = searchModel.PageSize,
@@ -1031,7 +1022,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare filters to search
             detailModel.Filters = new List<FilterParameter>()
             {
-                new FilterParameter(nameof(searchChildModel.ShipmentId))
+                new FilterParameter(nameof(ShipmentItemSearchModel.ShipmentId))
             };
 
             detailModel.ColumnCollection = new List<ColumnProperty>
