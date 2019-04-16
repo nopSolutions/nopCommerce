@@ -531,7 +531,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
-            //searchModel.Grid = PrepareCustomerActivityLogGridModel(searchModel)
+            searchModel.Grid = PrepareCustomerBackInStockSubscriptionGridModel(searchModel);
 
             return searchModel;
         }
@@ -827,6 +827,56 @@ namespace Nop.Web.Areas.Admin.Factories
                     new ColumnProperty(nameof(ShoppingCartItemModel.UpdatedOn))
                     {
                         Title = _localizationService.GetResource("Admin.CurrentCarts.UpdatedOn"),
+                        Width = "200",
+                        Render = new RenderDate()
+                    }
+                }
+            };
+
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare datatables model
+        /// </summary>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
+        protected virtual DataTablesModel PrepareCustomerBackInStockSubscriptionGridModel(CustomerBackInStockSubscriptionSearchModel searchModel)
+        {
+            var stores = _storeService.GetAllStores();
+
+            //prepare common properties
+            var model = new DataTablesModel
+            {
+                Name = "backinstock-subscriptions-grid",
+                UrlRead = new DataUrl("BackInStockSubscriptionList", "Customer", null),
+                Length = searchModel.PageSize,
+                LengthMenu = searchModel.AvailablePageSizes,
+
+                //prepare filters to search
+                Filters = new List<FilterParameter>
+                {
+                    new FilterParameter(nameof(searchModel.CustomerId), searchModel.CustomerId)
+                },
+
+                //prepare model columns
+                ColumnCollection = new List<ColumnProperty>
+                {
+                    new ColumnProperty(nameof(CustomerBackInStockSubscriptionModel.StoreName))
+                    {
+                        Title = _localizationService.GetResource("Admin.Customers.Customers.BackInStockSubscriptions.Store"),
+                        Width = "200",
+                        Visible = stores.Count > 1
+                    },
+                    new ColumnProperty(nameof(CustomerBackInStockSubscriptionModel.ProductName))
+                    {
+                        Title = "Admin.Customers.Customers.BackInStockSubscriptions.Product",
+                        Width = "300",
+                        Render = new RenderLink(new DataUrl("~/Admin/Product/Edit/", nameof(CustomerBackInStockSubscriptionModel.ProductId)))
+                    },
+                    new ColumnProperty(nameof(CustomerBackInStockSubscriptionModel.CreatedOn))
+                    {
+                        Title = "Admin.Customers.Customers.BackInStockSubscriptions.CreatedOn",
                         Width = "200",
                         Render = new RenderDate()
                     }
@@ -1527,25 +1577,23 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new CustomerBackInStockSubscriptionListModel
+            var pageList = subscriptions.Select(subscription =>
             {
-                Data = subscriptions.Select(subscription =>
-                {
+                //fill in model values from the entity
+                var subscriptionModel = subscription.ToModel<CustomerBackInStockSubscriptionModel>();
 
-                    //fill in model values from the entity
-                    var subscriptionModel = subscription.ToModel<CustomerBackInStockSubscriptionModel>();
+                //convert dates to the user time
+                subscriptionModel.CreatedOn =
+                    _dateTimeHelper.ConvertToUserTime(subscription.CreatedOnUtc, DateTimeKind.Utc);
 
-                    //convert dates to the user time
-                    subscriptionModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(subscription.CreatedOnUtc, DateTimeKind.Utc);
+                //fill in additional values (not existing in the entity)
+                subscriptionModel.StoreName = _storeService.GetStoreById(subscription.StoreId)?.Name ?? "Unknown";
+                subscriptionModel.ProductName = subscription.Product?.Name ?? "Unknown";
 
-                    //fill in additional values (not existing in the entity)
-                    subscriptionModel.StoreName = _storeService.GetStoreById(subscription.StoreId)?.Name ?? "Unknown";
-                    subscriptionModel.ProductName = subscription.Product?.Name ?? "Unknown";
+                return subscriptionModel;
+            }).ToList().ToPagedList(searchModel);
 
-                    return subscriptionModel;
-                }),
-                Total = subscriptions.TotalCount
-            };
+            var model = new CustomerBackInStockSubscriptionListModel().PrepareToGrid(searchModel, pageList, () => pageList);
 
             return model;
         }
