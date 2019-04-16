@@ -223,35 +223,35 @@ namespace Nop.Web.Areas.Admin.Factories
                 new ColumnProperty(nameof(DiscountModel.Name))
                 {
                     Title = _localizationService.GetResource("Admin.Promotions.Discounts.Fields.Name"),
-                     Width = "350"
+                    Width = "350"
                 },
                 new ColumnProperty(nameof(DiscountModel.DiscountTypeName))
                 {
                     Title = _localizationService.GetResource("Admin.Promotions.Discounts.Fields.DiscountType"),
-                     Width = "250"
+                    Width = "250"
                 },
                 new ColumnProperty(nameof(DiscountModel.DiscountAmount))
                 {
                     Title = _localizationService.GetResource("Admin.Promotions.Discounts.Fields.Discount"),
-                     Width = "200",
-                     Render = new RenderCustom("renderColumnDiscount")
+                    Width = "200",
+                    Render = new RenderCustom("renderColumnDiscount")
                 },
                 new ColumnProperty(nameof(DiscountModel.StartDateUtc))
                 {
                     Title = _localizationService.GetResource("Admin.Promotions.Discounts.Fields.StartDate"),
-                     Width = "200",
-                     Render = new RenderDate()
+                    Width = "200",
+                    Render = new RenderDate()
                 },
                 new ColumnProperty(nameof(DiscountModel.EndDateUtc))
                 {
                     Title = _localizationService.GetResource("Admin.Promotions.Discounts.Fields.EndDate"),
-                     Width = "200",
-                     Render = new RenderDate()
+                    Width = "200",
+                    Render = new RenderDate()
                 },
                 new ColumnProperty(nameof(DiscountModel.TimesUsed))
                 {
                     Title = _localizationService.GetResource("Admin.Promotions.Discounts.Fields.TimesUsed"),
-                     Width = "200"
+                    Width = "200"
                 },
                 new ColumnProperty(nameof(DiscountModel.Id))
                 {
