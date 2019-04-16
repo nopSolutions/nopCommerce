@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Domain.Customers;
@@ -8,8 +9,10 @@ using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Services.Orders;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
+using Nop.Web.Areas.Admin.Models.Discounts;
 using Nop.Web.Areas.Admin.Models.Orders;
 using Nop.Web.Framework.Factories;
+using Nop.Web.Framework.Models.DataTables;
 using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
@@ -48,6 +51,92 @@ namespace Nop.Web.Areas.Admin.Factories
             _localizedModelFactory = localizedModelFactory;
             _orderService = orderService;
             _returnRequestService = returnRequestService;
+        }
+
+        #endregion
+
+        #region Utilities
+
+        /// <summary>
+        /// Prepare datatables model
+        /// </summary>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
+        protected virtual DataTablesModel PrepareReturnRequestReasonGridModel(ReturnRequestReasonSearchModel searchModel)
+        {
+            //prepare common properties
+            var model = new DataTablesModel
+            {
+                Name = "returnrequestreasons-grid",
+                UrlRead = new DataUrl("ReturnRequestReasonList", "ReturnRequest", null),
+                Length = searchModel.PageSize,
+                LengthMenu = searchModel.AvailablePageSizes
+            };
+            
+            //prepare model columns
+            model.ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(ReturnRequestReason.Name))
+                {
+                    Title = _localizationService.GetResource("Admin.Configuration.Settings.Order.ReturnRequestReasons.Name"),
+                    Width = "300"
+                },
+                new ColumnProperty(nameof(ReturnRequestReason.DisplayOrder))
+                {
+                    Title = _localizationService.GetResource("Admin.Configuration.Settings.Order.ReturnRequestReasons.DisplayOrder"),
+                    Width = "100"
+                },
+                new ColumnProperty(nameof(ReturnRequestReason.Id))
+                {
+                    Title = _localizationService.GetResource("Admin.Common.Edit"),
+                    Width = "100",
+                    ClassName =  StyleColumn.CenterAll,
+                    Render = new RenderButtonEdit(new DataUrl("~/Admin/ReturnRequest/ReturnRequestReasonEdit/"))
+                }
+            };
+
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare datatables model
+        /// </summary>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
+        protected virtual DataTablesModel PrepareReturnRequestActionGridModel(ReturnRequestActionSearchModel searchModel)
+        {
+            //prepare common properties
+            var model = new DataTablesModel
+            {
+                Name = "returnrequestactions-grid",
+                UrlRead = new DataUrl("ReturnRequestActionList", "ReturnRequest", null),
+                Length = searchModel.PageSize,
+                LengthMenu = searchModel.AvailablePageSizes
+            };
+
+            //prepare model columns
+            model.ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(ReturnRequestAction.Name))
+                {
+                    Title = _localizationService.GetResource("Admin.Configuration.Settings.Order.ReturnRequestActions.Name"),
+                    Width = "300"
+                },
+                new ColumnProperty(nameof(ReturnRequestAction.DisplayOrder))
+                {
+                    Title = _localizationService.GetResource("Admin.Configuration.Settings.Order.ReturnRequestActions.DisplayOrder"),
+                    Width = "100"
+                },
+                new ColumnProperty(nameof(ReturnRequestAction.Id))
+                {
+                    Title = _localizationService.GetResource("Admin.Common.Edit"),
+                    Width = "100",
+                    ClassName =  StyleColumn.CenterAll,
+                    Render = new RenderButtonEdit(new DataUrl("~/Admin/ReturnRequest/ReturnRequestActionEdit/"))
+                }
+            };
+
+            return model;
         }
 
         #endregion
@@ -200,6 +289,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
+            searchModel.Grid = PrepareReturnRequestReasonGridModel(searchModel);
 
             return searchModel;
         }
@@ -218,12 +308,10 @@ namespace Nop.Web.Areas.Admin.Factories
             var reasons = _returnRequestService.GetAllReturnRequestReasons().ToPagedList(searchModel);
 
             //prepare list model
-            var model = new ReturnRequestReasonListModel
+            var model = new ReturnRequestReasonListModel().PrepareToGrid(searchModel, reasons, () =>
             {
-                //fill in model values from the entity
-                Data = reasons.Select(reason => reason.ToModel<ReturnRequestReasonModel>()),
-                Total = reasons.TotalCount
-            };
+                return reasons.Select(reason => reason.ToModel<ReturnRequestReasonModel>());
+            });
 
             return model;
         }
@@ -271,6 +359,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
+            searchModel.Grid = PrepareReturnRequestActionGridModel(searchModel);
 
             return searchModel;
         }
@@ -289,12 +378,10 @@ namespace Nop.Web.Areas.Admin.Factories
             var actions = _returnRequestService.GetAllReturnRequestActions().ToPagedList(searchModel);
 
             //prepare list model
-            var model = new ReturnRequestActionListModel
+            var model = new ReturnRequestActionListModel().PrepareToGrid(searchModel, actions, () =>
             {
-                //fill in model values from the entity
-                Data = actions.Select(action => action.ToModel<ReturnRequestActionModel>()),
-                Total = actions.TotalCount
-            };
+                return actions.Select(reason => reason.ToModel<ReturnRequestActionModel>());
+            });
 
             return model;
         }
