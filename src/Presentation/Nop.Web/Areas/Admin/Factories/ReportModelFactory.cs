@@ -344,11 +344,11 @@ namespace Nop.Web.Areas.Admin.Factories
             model.Filters = new List<FilterParameter>()
             {
                 new FilterParameter(nameof(searchModel.OrderBy), 1),
-                new FilterParameter(nameof(searchModel.StartDate)),
-                new FilterParameter(nameof(searchModel.EndDate)),
-                new FilterParameter(nameof(searchModel.OrderStatusId)),
-                new FilterParameter(nameof(searchModel.PaymentStatusId)),
-                new FilterParameter(nameof(searchModel.ShippingStatusId))
+                new FilterParameter(nameof(searchModel.StartDate), nameof(CustomerReportsSearchModel.BestCustomersByOrderTotal)),
+                new FilterParameter(nameof(searchModel.EndDate), nameof(CustomerReportsSearchModel.BestCustomersByOrderTotal)),
+                new FilterParameter(nameof(searchModel.OrderStatusId), nameof(CustomerReportsSearchModel.BestCustomersByOrderTotal)),
+                new FilterParameter(nameof(searchModel.PaymentStatusId), nameof(CustomerReportsSearchModel.BestCustomersByOrderTotal)),
+                new FilterParameter(nameof(searchModel.ShippingStatusId), nameof(CustomerReportsSearchModel.BestCustomersByOrderTotal))
             };
 
             //prepare model columns
@@ -399,11 +399,11 @@ namespace Nop.Web.Areas.Admin.Factories
             model.Filters = new List<FilterParameter>()
             {
                 new FilterParameter(nameof(searchModel.OrderBy), 2),
-                new FilterParameter(nameof(searchModel.StartDate)),
-                new FilterParameter(nameof(searchModel.EndDate)),
-                new FilterParameter(nameof(searchModel.OrderStatusId)),
-                new FilterParameter(nameof(searchModel.PaymentStatusId)),
-                new FilterParameter(nameof(searchModel.ShippingStatusId))
+                new FilterParameter(nameof(searchModel.StartDate), nameof(CustomerReportsSearchModel.BestCustomersByNumberOfOrders)),
+                new FilterParameter(nameof(searchModel.EndDate), nameof(CustomerReportsSearchModel.BestCustomersByNumberOfOrders)),
+                new FilterParameter(nameof(searchModel.OrderStatusId), nameof(CustomerReportsSearchModel.BestCustomersByNumberOfOrders)),
+                new FilterParameter(nameof(searchModel.PaymentStatusId), nameof(CustomerReportsSearchModel.BestCustomersByNumberOfOrders)),
+                new FilterParameter(nameof(searchModel.ShippingStatusId), nameof(CustomerReportsSearchModel.BestCustomersByNumberOfOrders))
             };
 
             //prepare model columns
@@ -792,7 +792,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //prepare nested search models
-            PrepareBestCustomersReportSearchModel(searchModel.BestCustomersByOrderTotal);
+            PrepareBestCustomersReportByOrderTotalSearchModel(searchModel.BestCustomersByOrderTotal);
             PrepareBestCustomersReportSearchModel(searchModel.BestCustomersByNumberOfOrders);
             PrepareRegisteredCustomersReportSearchModel(searchModel.RegisteredCustomers);
 
@@ -800,7 +800,7 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
-        /// Prepare best customers report search model
+        /// Prepare best customers by number of orders report search model
         /// </summary>
         /// <param name="searchModel">Best customers report search model</param>
         /// <returns>Best customers report search model</returns>
@@ -816,11 +816,33 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
-            searchModel.Grid = PrepareBestCustomersReportByOrderTotalGridModel(searchModel);
             searchModel.Grid = PrepareBestCustomersReportByNumberOfOrdersGridModel(searchModel);
 
             return searchModel;
         }
+
+        /// <summary>
+        /// Prepare best customers by order total report search model
+        /// </summary>
+        /// <param name="searchModel">Best customers report search model</param>
+        /// <returns>Best customers report search model</returns>
+        protected virtual BestCustomersReportSearchModel PrepareBestCustomersReportByOrderTotalSearchModel(BestCustomersReportSearchModel searchModel)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            //prepare available order, payment and shipping statuses
+            _baseAdminModelFactory.PrepareOrderStatuses(searchModel.AvailableOrderStatuses);
+            _baseAdminModelFactory.PreparePaymentStatuses(searchModel.AvailablePaymentStatuses);
+            _baseAdminModelFactory.PrepareShippingStatuses(searchModel.AvailableShippingStatuses);
+
+            //prepare page parameters
+            searchModel.SetGridPageSize();
+            searchModel.Grid = PrepareBestCustomersReportByOrderTotalGridModel(searchModel);
+
+            return searchModel;
+        }
+
 
         /// <summary>
         /// Prepare registered customers report search model
