@@ -194,13 +194,13 @@ columns: [
                         @if (!string.IsNullOrEmpty(link.Title))
                         {
                             <text>
-                                return '<a href="@GetUrl(link.Url)' + row.@link.Url.DataId + '">@link.Title</a>'
+                                return '<a href="@GetUrl(link.Url)' + row.@link.Url.DataId + '">@link.Title</a>';
                             </text>
                         }
                         else
                         {
                             <text>
-                                return '<a href="@GetUrl(link.Url)' + row.@link.Url.DataId + '">' + data + '</a>'
+                                return '<a href="@GetUrl(link.Url)' + row.@link.Url.DataId + '">' + data + '</a>';
                             </text>
                         }
                     }
@@ -230,7 +230,7 @@ columns: [
                 case RenderButtonView buttonView:
                     <text>
                     render: function (data, type, row, meta) {
-                        return '<a class="@GetEnumValue(typeof(StyleButton), buttonView.Style)" href="@GetUrl(buttonView.Url)' + data + '"><i class="fa fa-eye"></i>@T("Admin.Common.View")</a>'
+                        return '<a class="@GetEnumValue(typeof(StyleButton), buttonView.Style)" href="@GetUrl(buttonView.Url)' + data + '"><i class="fa fa-eye"></i>@T("Admin.Common.View")</a>';
                     }
                     </text>
                     break;
@@ -239,7 +239,7 @@ columns: [
                     {
                         <text>
                         render: function (data, type, row, meta) {
-                            return '<a class="@GetEnumValue(typeof(StyleButton), buttonCustom.Style)" href="@buttonCustom.Url' + data + '">@buttonCustom.Title</a>'
+                            return '<a class="@GetEnumValue(typeof(StyleButton), buttonCustom.Style)" href="@buttonCustom.Url' + data + '">@buttonCustom.Title</a>';
                         }
                         </text>
                     }
@@ -247,7 +247,7 @@ columns: [
                     {
                         <text>
                         render: function (data, type, row, meta) {
-                            return '<a class="@GetEnumValue(typeof(StyleButton), buttonCustom.Style)" onclick="@buttonCustom.OnClickFunctionName' + '(' + data + ')">@buttonCustom.Title</a>'
+                            return '<a class="@GetEnumValue(typeof(StyleButton), buttonCustom.Style)" onclick="@buttonCustom.OnClickFunctionName' + '(' + data + ')">@buttonCustom.Title</a>';
                         }
                         </text>
                     }
@@ -258,13 +258,13 @@ columns: [
                         @if (!string.IsNullOrEmpty(picture.Src))
                         {
                             <text>
-                            return '<img src="@(picture.SrcPrefix)@(picture.Src)"/>'
+                            return '<img src="@(picture.SrcPrefix)@(picture.Src)"/>';
                             </text>
                         }
                         else
                         {
                             <text>
-                            return '<img src="@(picture.SrcPrefix)' + data + '"/>'
+                            return '<img src="@(picture.SrcPrefix)' + data + '"/>';
                             </text>
                         }
                     }
@@ -291,14 +291,14 @@ columns: [
                 case RenderCustom custom:
                     <text>
                     render: function (data, type, row, meta) {
-                        return @(custom.FunctionName)(data, type, row, meta)
+                        return @(custom.FunctionName)(data, type, row, meta);
                     }
                     </text>
                     break;
                 case RenderChildCaret caret:
                     <text>
                     render: function (data, type, row, meta) {
-                        return '<i class="fa fa-caret-right" aria-hidden="true"></i>'
+                        return '<i class="fa fa-caret-right" aria-hidden="true"></i>';
                     }
                     </text>
                     break;
