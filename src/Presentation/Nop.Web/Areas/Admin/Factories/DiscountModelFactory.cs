@@ -243,6 +243,50 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
+        /// Prepare datatables model
+        /// </summary>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
+        protected virtual DataTablesModel PrepareDiscountManufacturerGridModel(DiscountManufacturerSearchModel searchModel)
+        {
+            //prepare common properties
+            var model = new DataTablesModel
+            {
+                Name = "manufacturers-grid",
+                UrlRead = new DataUrl("ManufacturerList", "Discount", new RouteValueDictionary { [nameof(searchModel.DiscountId)] = searchModel.DiscountId }),
+                UrlDelete = new DataUrl("ManufacturerDelete", "Discount", new RouteValueDictionary { [nameof(searchModel.DiscountId)] = searchModel.DiscountId }),
+                BindColumnNameActionDelete = nameof(DiscountManufacturerModel.ManufacturerId),
+                Length = searchModel.PageSize,
+                LengthMenu = searchModel.AvailablePageSizes
+            };
+
+            //prepare model columns
+            model.ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(DiscountManufacturerModel.ManufacturerName))
+                {
+                    Title = _localizationService.GetResource("Admin.Promotions.Discounts.AppliedToManufacturers.Manufacturer")
+                },
+                new ColumnProperty(nameof(DiscountManufacturerModel.ManufacturerId))
+                {
+                    Title = _localizationService.GetResource("Admin.Common.View"),
+                    Width = "150",
+                    ClassName =  StyleColumn.CenterAll,
+                    Render = new RenderButtonView(new DataUrl("~/Admin/Manufacturer/Edit/"))
+                },
+                new ColumnProperty(nameof(DiscountManufacturerModel.ManufacturerId))
+                {
+                    Title = _localizationService.GetResource("Admin.Common.Delete"),
+                    Width = "150",
+                    Render = new RenderButtonRemove(_localizationService.GetResource("Admin.Common.Delete")) { Style = StyleButton.Default },
+                    ClassName =  StyleColumn.CenterAll
+                }
+            };
+
+            return model;
+        }
+
+        /// <summary>
         /// Prepare discount manufacturer search model
         /// </summary>
         /// <param name="searchModel">Discount manufacturer search model</param>
@@ -261,6 +305,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
+            searchModel.Grid = PrepareDiscountManufacturerGridModel(searchModel);
 
             return searchModel;
         }
@@ -938,19 +983,18 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare grid model
-            var model = new DiscountManufacturerListModel
+            var model = new DiscountManufacturerListModel().PrepareToGrid(searchModel, discountManufacturers, () =>
             {
                 //fill in model values from the entity
-                Data = discountManufacturers.Select(manufacturer =>
+                return discountManufacturers.Select(manufacturer =>
                 {
                     var discountManufacturerModel = manufacturer.ToModel<DiscountManufacturerModel>();
                     discountManufacturerModel.ManufacturerId = manufacturer.Id;
                     discountManufacturerModel.ManufacturerName = manufacturer.Name;
 
                     return discountManufacturerModel;
-                }),
-                Total = discountManufacturers.TotalCount
-            };
+                });
+            });
 
             return model;
         }
