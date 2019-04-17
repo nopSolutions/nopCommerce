@@ -430,7 +430,7 @@ namespace Nop.Web.Areas.Admin.Factories
             {
                 Name = "customer-addresses-grid",
                 UrlRead = new DataUrl("AddressesSelect", "Customer", null),
-                UrlAction = new DataUrl("AddressDelete", "Customer", new RouteValueDictionary { [nameof(CustomerAddressSearchModel.CustomerId)] = searchModel.CustomerId }),
+                UrlDelete = new DataUrl("AddressDelete", "Customer", new RouteValueDictionary { [nameof(CustomerAddressSearchModel.CustomerId)] = searchModel.CustomerId }),
                 Length = searchModel.PageSize,
                 LengthMenu = searchModel.AvailablePageSizes
             };

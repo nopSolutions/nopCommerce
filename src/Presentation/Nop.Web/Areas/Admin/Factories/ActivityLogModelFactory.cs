@@ -114,7 +114,7 @@ namespace Nop.Web.Areas.Admin.Factories
             {
                 Name = "activityLog-grid",
                 UrlRead = new DataUrl("ListLogs", "ActivityLog", null),
-                UrlAction = new DataUrl("ActivityLogDelete", "ActivityLog", null),
+                UrlDelete = new DataUrl("ActivityLogDelete", "ActivityLog", null),
                 SearchButtonId = "search-log",
                 Length = searchModel.PageSize,
                 LengthMenu = searchModel.AvailablePageSizes
