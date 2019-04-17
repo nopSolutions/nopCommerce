@@ -29,6 +29,9 @@
 @{ 
     //check using MasterCheckBox
     var isUsedMasterCheckBox = Model.ColumnCollection.Any(x => x.IsMasterCheckBox == true);
+
+    //Model name for js function names
+    var model_name = Model.Name.Replace("-", "_");
 }
 
 <script>
@@ -90,16 +93,16 @@
 {
     <text>
     <script>
-        function DeleteData(DataId) {
+        function DeleteData_@(model_name)(DataId) {
             if (confirm('@T("Admin.Common.DeleteConfirmation")')) {
-                ActionDelete(DataId);
+                ActionDelete_@(model_name)(DataId);
             }
             else {
                 return false;
             }
         };
 
-        function ActionDelete(DataId) {
+        function ActionDelete_@(model_name)(DataId) {
             var postData = {
                 @if (!string.IsNullOrEmpty(Model.BindColumnNameActionDelete))
                 {
@@ -137,7 +140,7 @@
 {
     <text>
     <script>
-        function getchild(d) {
+        function getchild_@(model_name)(d) {
             return '<table id="child' + d.Id + '" class="table table-bordered table-hover dataTable" width="100%" style="padding-left:2%;"></table>';
         }
         $(document).ready(function () {
@@ -156,7 +159,7 @@
                 }
                 else {
                     // Open this row
-                    row.child(getchild(row.data())).show();
+                    row.child(getchild_@(model_name)(row.data())).show();
                     var classid = '#child' + row.data().Id;
                     $(classid).DataTable({
                     @await Html.PartialAsync("_Table.Definition", Model.ChildTable)

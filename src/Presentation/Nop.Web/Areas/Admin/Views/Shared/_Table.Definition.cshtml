@@ -7,6 +7,9 @@
 @{
     //the locale which MomentJS should use - the default is en (English).
     var locale = "en";
+
+    //Model name for js function names
+    var model_name = Model.Name.Replace("-", "_");
 }
 
 @functions
@@ -213,7 +216,7 @@ columns: [
                 case RenderButtonRemove button:
                     <text>
                     render: function (data, type, row, meta) {
-                        return '<a href="#" class="@GetEnumValue(typeof(StyleButton), button.Style)" onclick=DeleteData("' + data + '");><i class="fa fa-remove"></i>@button.Title</a>'
+                        return '<a href="#" class="@GetEnumValue(typeof(StyleButton), button.Style)" onclick=DeleteData_@(model_name)("' + data + '");><i class="fa fa-remove"></i>@button.Title</a>'
                     }
                     </text>
                     break;
