@@ -110,7 +110,7 @@ namespace Nop.Web.Areas.Admin.Factories
             };
 
             //prepare filters to search
-            model.Filters = new List<FilterParameter>()
+            model.Filters = new List<FilterParameter>
             {
                 new FilterParameter(nameof(searchModel.ShoppingCartType)),
                 new FilterParameter(nameof(searchModel.StartDate)),
@@ -158,7 +158,7 @@ namespace Nop.Web.Areas.Admin.Factories
             };
 
             //prepare filters to search
-            detailModel.Filters = new List<FilterParameter>()
+            detailModel.Filters = new List<FilterParameter>
             {
                 new FilterParameter(nameof(ShoppingCartItemSearchModel.CustomerId), nameof(ShoppingCartItemSearchModel.CustomerId), true),
                 new FilterParameter(nameof(ShoppingCartItemSearchModel.ShoppingCartType)),

@@ -127,7 +127,7 @@ namespace Nop.Web.Areas.Admin.Factories
             };
 
             //prepare filters to search
-            model.Filters = new List<FilterParameter>()
+            model.Filters = new List<FilterParameter>
             {
                 new FilterParameter(nameof(searchModel.DiscountId), searchModel.DiscountId)
             };
@@ -244,7 +244,7 @@ namespace Nop.Web.Areas.Admin.Factories
             };
 
             //prepare filters to search
-            model.Filters = new List<FilterParameter>()
+            model.Filters = new List<FilterParameter>
             {
                 new FilterParameter(nameof(searchModel.SearchDiscountTypeId)),
                 new FilterParameter(nameof(searchModel.SearchDiscountCouponCode)),

@@ -89,7 +89,7 @@ namespace Nop.Web.Areas.Admin.Factories
             };
 
             //prepare filters to search
-            model.Filters = new List<FilterParameter>()
+            model.Filters = new List<FilterParameter>
             {
                 new FilterParameter(nameof(searchModel.SearchPublishedId))
             };
@@ -154,7 +154,7 @@ namespace Nop.Web.Areas.Admin.Factories
             };
 
             //prepare filters to search
-            model.Filters = new List<FilterParameter>()
+            model.Filters = new List<FilterParameter>
             {
                 new FilterParameter(nameof(searchModel.StartDate)),
                 new FilterParameter(nameof(searchModel.EndDate)),
@@ -212,7 +212,7 @@ namespace Nop.Web.Areas.Admin.Factories
             };
 
             //prepare filters to search
-            model.Filters = new List<FilterParameter>()
+            model.Filters = new List<FilterParameter>
             {
                 new FilterParameter(nameof(searchModel.StartDate)),
                 new FilterParameter(nameof(searchModel.EndDate)),
@@ -259,7 +259,7 @@ namespace Nop.Web.Areas.Admin.Factories
             };
 
             //prepare filters to search
-            model.Filters = new List<FilterParameter>()
+            model.Filters = new List<FilterParameter>
             {
                 new FilterParameter(nameof(searchModel.StartDate)),
                 new FilterParameter(nameof(searchModel.EndDate)),
@@ -341,7 +341,7 @@ namespace Nop.Web.Areas.Admin.Factories
             };
 
             //prepare filters to search
-            model.Filters = new List<FilterParameter>()
+            model.Filters = new List<FilterParameter>
             {
                 new FilterParameter(nameof(searchModel.OrderBy), 1),
                 new FilterParameter(nameof(searchModel.StartDate), nameof(CustomerReportsSearchModel.BestCustomersByOrderTotal)),
@@ -396,7 +396,7 @@ namespace Nop.Web.Areas.Admin.Factories
             };
 
             //prepare filters to search
-            model.Filters = new List<FilterParameter>()
+            model.Filters = new List<FilterParameter>
             {
                 new FilterParameter(nameof(searchModel.OrderBy), 2),
                 new FilterParameter(nameof(searchModel.StartDate), nameof(CustomerReportsSearchModel.BestCustomersByNumberOfOrders)),

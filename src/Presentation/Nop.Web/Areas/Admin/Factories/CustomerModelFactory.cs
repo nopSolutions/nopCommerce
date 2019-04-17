@@ -436,7 +436,7 @@ namespace Nop.Web.Areas.Admin.Factories
             };
 
             //prepare filters to search
-            model.Filters = new List<FilterParameter>()
+            model.Filters = new List<FilterParameter>
             {
                 new FilterParameter(nameof(searchModel.CustomerId), searchModel.CustomerId)
             };
@@ -653,7 +653,7 @@ namespace Nop.Web.Areas.Admin.Factories
             };
 
             //prepare filters to search
-            model.Filters = new List<FilterParameter>()
+            model.Filters = new List<FilterParameter>
             {
                 new FilterParameter(nameof(searchModel.SelectedCustomerRoleIds)),
                 new FilterParameter(nameof(searchModel.SearchEmail)),
@@ -838,7 +838,7 @@ namespace Nop.Web.Areas.Admin.Factories
             };
 
             //prepare filters to search
-            model.Filters = new List<FilterParameter>()
+            model.Filters = new List<FilterParameter>
             {
                 new FilterParameter(nameof(searchModel.SearchRequestTypeId)),
                 new FilterParameter(nameof(searchModel.SearchEmail))                
