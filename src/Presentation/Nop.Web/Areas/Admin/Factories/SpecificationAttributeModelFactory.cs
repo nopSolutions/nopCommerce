@@ -212,9 +212,6 @@ namespace Nop.Web.Areas.Admin.Factories
                 LengthMenu = searchModel.AvailablePageSizes
             };
 
-            //prepare filters to search
-            model.Filters = null;
-
             //prepare model columns
             model.ColumnCollection = new List<ColumnProperty>
             {

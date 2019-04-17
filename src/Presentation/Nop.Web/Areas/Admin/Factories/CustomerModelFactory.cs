@@ -781,12 +781,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 Length = searchModel.PageSize,
                 LengthMenu = searchModel.AvailablePageSizes
             };
-
-            //prepare filters to search
-            model.Filters = null;
-
+            
             //prepare model columns
-            model.ColumnCollection = new List<ColumnProperty>()
+            model.ColumnCollection = new List<ColumnProperty>
             {
                 new ColumnProperty(nameof(OnlineCustomerModel.CustomerInfo))
                 {
@@ -1169,7 +1166,7 @@ namespace Nop.Web.Areas.Admin.Factories
             };
 
             //prepare model columns
-            model.ColumnCollection = new List<ColumnProperty>()
+            model.ColumnCollection = new List<ColumnProperty>
             {
                 new ColumnProperty(nameof(CustomerRewardPointsModel.StoreName))
                 {
