@@ -171,7 +171,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new DataTablesModel
             {
                 Name = "history-grid",
-                UrlRead = new DataUrl("HistoryList", "RecurringPayment", new RouteValueDictionary { [nameof(RecurringPaymentHistorySearchModel.RecurringPaymentId)] = searchModel.RecurringPaymentId }),
+                UrlRead = new DataUrl("HistoryList", "RecurringPayment", new RouteValueDictionary { [nameof(searchModel.RecurringPaymentId)] = searchModel.RecurringPaymentId }),
                 Length = searchModel.PageSize,
                 LengthMenu = searchModel.AvailablePageSizes
             };

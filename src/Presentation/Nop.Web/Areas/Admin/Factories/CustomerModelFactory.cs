@@ -430,7 +430,7 @@ namespace Nop.Web.Areas.Admin.Factories
             {
                 Name = "customer-addresses-grid",
                 UrlRead = new DataUrl("AddressesSelect", "Customer", null),
-                UrlDelete = new DataUrl("AddressDelete", "Customer", new RouteValueDictionary { [nameof(CustomerAddressSearchModel.CustomerId)] = searchModel.CustomerId }),
+                UrlDelete = new DataUrl("AddressDelete", "Customer", new RouteValueDictionary { [nameof(searchModel.CustomerId)] = searchModel.CustomerId }),
                 Length = searchModel.PageSize,
                 LengthMenu = searchModel.AvailablePageSizes
             };
@@ -1095,7 +1095,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new DataTablesModel
             {
                 Name = "order-grid",
-                UrlRead = new DataUrl("OrderList", "Customer", new RouteValueDictionary { [nameof(CustomerOrderSearchModel.CustomerId)] = searchModel.CustomerId }),
+                UrlRead = new DataUrl("OrderList", "Customer", new RouteValueDictionary { [nameof(searchModel.CustomerId)] = searchModel.CustomerId }),
                 Length = searchModel.PageSize,
                 LengthMenu = searchModel.AvailablePageSizes,
             };
@@ -1163,7 +1163,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new DataTablesModel
             {
                 Name = "customer-rewardpoints-grid",
-                UrlRead = new DataUrl("RewardPointsHistorySelect", "Customer", new RouteValueDictionary { [nameof(CustomerRewardPointsSearchModel.CustomerId)] = searchModel.CustomerId }),
+                UrlRead = new DataUrl("RewardPointsHistorySelect", "Customer", new RouteValueDictionary { [nameof(searchModel.CustomerId)] = searchModel.CustomerId }),
                 Length = searchModel.PageSize,
                 LengthMenu = searchModel.AvailablePageSizes
             };

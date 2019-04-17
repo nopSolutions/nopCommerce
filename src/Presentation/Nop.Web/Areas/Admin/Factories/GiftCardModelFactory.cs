@@ -159,7 +159,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new DataTablesModel
             {
                 Name = "usagehistory-grid",
-                UrlRead = new DataUrl("UsageHistoryList", "GiftCard", new RouteValueDictionary { [nameof(GiftCardUsageHistorySearchModel.GiftCardId)] = searchModel.GiftCardId }),
+                UrlRead = new DataUrl("UsageHistoryList", "GiftCard", new RouteValueDictionary { [nameof(searchModel.GiftCardId)] = searchModel.GiftCardId }),
                 Length = searchModel.PageSize,
                 LengthMenu = searchModel.AvailablePageSizes
             };
