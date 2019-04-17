@@ -119,17 +119,11 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new DataTablesModel
             {
                 Name = "products-grid",
-                UrlRead = new DataUrl("ProductList", "Discount", null),
+                UrlRead = new DataUrl("ProductList", "Discount", new RouteValueDictionary { [nameof(searchModel.DiscountId)] = searchModel.DiscountId }),
                 UrlDelete = new DataUrl("ProductDelete", "Discount", new RouteValueDictionary { [nameof(searchModel.DiscountId)] = searchModel.DiscountId }),
                 BindColumnNameActionDelete = nameof(DiscountProductModel.ProductId),
                 Length = searchModel.PageSize,
                 LengthMenu = searchModel.AvailablePageSizes
-            };
-
-            //prepare filters to search
-            model.Filters = new List<FilterParameter>
-            {
-                new FilterParameter(nameof(searchModel.DiscountId), searchModel.DiscountId)
             };
 
             //prepare model columns
@@ -142,14 +136,14 @@ namespace Nop.Web.Areas.Admin.Factories
                 new ColumnProperty(nameof(DiscountProductModel.ProductId))
                 {
                     Title = _localizationService.GetResource("Admin.Common.View"),
-                    Width = "100",
+                    Width = "150",
                     ClassName =  StyleColumn.CenterAll,
                     Render = new RenderButtonView(new DataUrl("~/Admin/Product/Edit/"))
                 },
                 new ColumnProperty(nameof(DiscountProductModel.ProductId))
                 {
                     Title = _localizationService.GetResource("Admin.Common.Delete"),
-                    Width = "100",
+                    Width = "150",
                     Render = new RenderButtonRemove(_localizationService.GetResource("Admin.Common.Delete")) { Style = StyleButton.Default },
                     ClassName =  StyleColumn.CenterAll
                 }
