@@ -182,6 +182,50 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
+        /// Prepare datatables model
+        /// </summary>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
+        protected virtual DataTablesModel PrepareDiscountCategoryGridModel(DiscountCategorySearchModel searchModel)
+        {
+            //prepare common properties
+            var model = new DataTablesModel
+            {
+                Name = "categories-grid",
+                UrlRead = new DataUrl("CategoryList", "Discount", new RouteValueDictionary { [nameof(searchModel.DiscountId)] = searchModel.DiscountId }),
+                UrlDelete = new DataUrl("CategoryDelete", "Discount", new RouteValueDictionary { [nameof(searchModel.DiscountId)] = searchModel.DiscountId }),
+                BindColumnNameActionDelete = nameof(DiscountCategoryModel.CategoryId),
+                Length = searchModel.PageSize,
+                LengthMenu = searchModel.AvailablePageSizes
+            };
+
+            //prepare model columns
+            model.ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(DiscountCategoryModel.CategoryName))
+                {
+                    Title = _localizationService.GetResource("Admin.Promotions.Discounts.AppliedToCategories.Category")
+                },
+                new ColumnProperty(nameof(DiscountCategoryModel.CategoryId))
+                {
+                    Title = _localizationService.GetResource("Admin.Common.View"),
+                    Width = "150",
+                    ClassName =  StyleColumn.CenterAll,
+                    Render = new RenderButtonView(new DataUrl("~/Admin/Category/Edit/"))
+                },
+                new ColumnProperty(nameof(DiscountCategoryModel.CategoryId))
+                {
+                    Title = _localizationService.GetResource("Admin.Common.Delete"),
+                    Width = "150",
+                    Render = new RenderButtonRemove(_localizationService.GetResource("Admin.Common.Delete")) { Style = StyleButton.Default },
+                    ClassName =  StyleColumn.CenterAll
+                }
+            };
+
+            return model;
+        }
+
+        /// <summary>
         /// Prepare discount category search model
         /// </summary>
         /// <param name="searchModel">Discount category search model</param>
@@ -199,6 +243,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
+            searchModel.Grid = PrepareDiscountCategoryGridModel(searchModel);
 
             return searchModel;
         }
@@ -810,10 +855,10 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare grid model
-            var model = new DiscountCategoryListModel
+            var model = new DiscountCategoryListModel().PrepareToGrid(searchModel, discountCategories, () =>
             {
                 //fill in model values from the entity
-                Data = discountCategories.Select(category =>
+                return discountCategories.Select(category =>
                 {
                     var discountCategoryModel = category.ToModel<DiscountCategoryModel>();
 
@@ -821,10 +866,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     discountCategoryModel.CategoryId = category.Id;
 
                     return discountCategoryModel;
-                }),
-
-                Total = discountCategories.TotalCount
-            };
+                });
+            });
 
             return model;
         }
