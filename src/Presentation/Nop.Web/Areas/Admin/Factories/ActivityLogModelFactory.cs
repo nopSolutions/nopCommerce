@@ -132,14 +132,6 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare model columns
             model.ColumnCollection = new List<ColumnProperty>
             {
-                new ColumnProperty(nameof(ActivityLogModel.Id))
-                {
-                    Visible = false
-                },
-                new ColumnProperty(nameof(ActivityLogModel.CustomerId))
-                {
-                    Visible = false
-                },
                 new ColumnProperty(nameof(ActivityLogModel.ActivityLogTypeName))
                 {
                     Title = _localizationService.GetResource("Admin.Configuration.ActivityLog.ActivityLog.Fields.ActivityLogType"),

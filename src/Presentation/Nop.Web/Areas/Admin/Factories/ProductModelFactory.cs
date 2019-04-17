@@ -733,10 +733,6 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare model columns
             model.ColumnCollection = new List<ColumnProperty>
             {
-                new ColumnProperty(nameof(ProductModel.ProductTypeId))
-                {
-                    Visible = false
-                },
                 new ColumnProperty(nameof(ProductModel.Id))
                 {
                     IsMasterCheckBox = true,

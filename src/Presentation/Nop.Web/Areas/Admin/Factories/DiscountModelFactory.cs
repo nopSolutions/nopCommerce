@@ -256,22 +256,6 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare model columns
             model.ColumnCollection = new List<ColumnProperty>
             {
-                new ColumnProperty(nameof(DiscountModel.UsePercentage))
-                {
-                    Visible = false
-                },
-                new ColumnProperty(nameof(DiscountModel.DiscountPercentage))
-                {
-                    Visible = false
-                },
-                new ColumnProperty(nameof(DiscountModel.DiscountAmount))
-                {
-                    Visible = false
-                },
-                new ColumnProperty(nameof(DiscountModel.PrimaryStoreCurrencyCode))
-                {
-                    Visible = false
-                },
                 new ColumnProperty(nameof(DiscountModel.Name))
                 {
                     Title = _localizationService.GetResource("Admin.Promotions.Discounts.Fields.Name"),

@@ -167,10 +167,6 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare model columns
             model.ColumnCollection = new List<ColumnProperty>
             {
-                new ColumnProperty(nameof(GiftCardUsageHistoryModel.CustomOrderNumber))
-                {
-                    Visible = false
-                },
                 new ColumnProperty(nameof(GiftCardUsageHistoryModel.CreatedOn))
                 {
                     Title = _localizationService.GetResource("Admin.GiftCards.History.CreatedOn"),

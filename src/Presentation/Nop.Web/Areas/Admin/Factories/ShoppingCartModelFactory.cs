@@ -132,10 +132,6 @@ namespace Nop.Web.Areas.Admin.Factories
                 },
                 new ColumnProperty(nameof(ShoppingCartModel.CustomerEmail))
                 {
-                    Visible = false
-                },
-                new ColumnProperty(nameof(ShoppingCartModel.CustomerEmail))
-                {
                     Title = _localizationService.GetResource("Admin.CurrentCarts.Customer"),
                     Render = new RenderLink(new DataUrl("~/Admin/Customer/Edit/", nameof(ShoppingCartModel.CustomerId)))
                 },

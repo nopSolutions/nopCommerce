@@ -97,10 +97,6 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare model columns
             model.ColumnCollection = new List<ColumnProperty>
             {
-                new ColumnProperty(nameof(LowStockProductModel.Attributes))
-                {
-                    Visible = false
-                },
                 new ColumnProperty(nameof(LowStockProductModel.Name))
                 {
                     Title = _localizationService.GetResource("Admin.Catalog.Products.Fields.Name"),

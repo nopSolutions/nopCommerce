@@ -92,14 +92,6 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare model columns
             model.ColumnCollection = new List<ColumnProperty>
             {
-                new ColumnProperty(nameof(NewsItemModel.ApprovedComments))
-                {
-                    Visible = false
-                },
-                new ColumnProperty(nameof(NewsItemModel.NotApprovedComments))
-                {
-                    Visible = false
-                },
                 new ColumnProperty(nameof(NewsItemModel.Title))
                 {
                     Title = _localizationService.GetResource("Admin.ContentManagement.News.NewsItems.Fields.Title")

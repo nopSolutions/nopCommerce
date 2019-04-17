@@ -57,10 +57,6 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare model columns
             model.ColumnCollection = new List<ColumnProperty>
             {
-                new ColumnProperty(nameof(TaxProviderModel.ConfigurationUrl))
-                {
-                    Visible = false
-                },
                 new ColumnProperty(nameof(TaxProviderModel.FriendlyName))
                 {
                     Title = _localizationService.GetResource("Admin.Configuration.Tax.Providers.Fields.FriendlyName"),

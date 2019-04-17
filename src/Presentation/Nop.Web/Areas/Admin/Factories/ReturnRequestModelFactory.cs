@@ -168,18 +168,6 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare model columns
             model.ColumnCollection = new List<ColumnProperty>
             {
-                new ColumnProperty(nameof(ReturnRequestModel.ProductId))
-                {
-                    Visible = false
-                },
-                new ColumnProperty(nameof(ReturnRequestModel.AttributeInfo))
-                {
-                    Visible = false
-                },
-                new ColumnProperty(nameof(ReturnRequestModel.CustomerInfo))
-                {
-                    Visible = false
-                },
                 new ColumnProperty(nameof(ReturnRequestModel.CustomNumber))
                 {
                     Title = _localizationService.GetResource("Admin.ReturnRequests.Fields.CustomNumber"),

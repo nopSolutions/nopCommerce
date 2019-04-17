@@ -92,14 +92,6 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare model columns
             model.ColumnCollection = new List<ColumnProperty>
             {
-                new ColumnProperty(nameof(BlogPostModel.ApprovedComments))
-                {
-                    Visible = false
-                },
-                new ColumnProperty(nameof(BlogPostModel.NotApprovedComments))
-                {
-                    Visible = false
-                },
                 new ColumnProperty(nameof(BlogPostModel.Title))
                 {
                     Title = _localizationService.GetResource("Admin.ContentManagement.Blog.BlogPosts.Fields.Title")

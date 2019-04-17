@@ -232,14 +232,6 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare model columns
             model.ColumnCollection = new List<ColumnProperty>
             {
-                new ColumnProperty(nameof(PluginModel.ConfigurationUrl)) { Visible = false },
-                new ColumnProperty(nameof(PluginModel.SystemName)) { Visible = false },
-                new ColumnProperty(nameof(PluginModel.Version)) { Visible = false },
-                new ColumnProperty(nameof(PluginModel.Author)) { Visible = false },
-                new ColumnProperty(nameof(PluginModel.DisplayOrder)) { Visible = false },
-                new ColumnProperty(nameof(PluginModel.Installed)) { Visible = false },
-                new ColumnProperty(nameof(PluginModel.IsEnabled)) { Visible = false },
-                new ColumnProperty(nameof(PluginModel.CanChangeEnabled)) { Visible = false },
                 new ColumnProperty(nameof(PluginModel.Group))
                 {
                     Title = _localizationService.GetResource("Admin.Configuration.Plugins.Fields.Group"),
