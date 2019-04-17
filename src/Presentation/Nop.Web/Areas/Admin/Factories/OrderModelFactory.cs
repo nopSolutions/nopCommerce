@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.AspNetCore.Routing;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -770,6 +771,69 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
+        /// Prepare datatables model
+        /// </summary>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
+        protected virtual DataTablesModel PrepareOrderNoteGridModel(OrderNoteSearchModel searchModel)
+        {
+            //prepare common properties
+            var model = new DataTablesModel
+            {
+                Name = "ordernotes-grid",
+                UrlRead = new DataUrl("OrderNotesSelect", "Order", null),
+                UrlDelete = new DataUrl("OrderNoteDelete", "Order", new RouteValueDictionary { [nameof(searchModel.OrderId)] = searchModel.OrderId }),
+                Length = searchModel.PageSize,
+                LengthMenu = searchModel.AvailablePageSizes
+            };
+
+            //prepare filters to search
+            model.Filters = new List<FilterParameter>
+            {
+                new FilterParameter(nameof(searchModel.OrderId), searchModel.OrderId)
+            };
+
+            //prepare model columns
+            model.ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(OrderNoteModel.CreatedOn))
+                {
+                    Title = _localizationService.GetResource("Admin.Orders.OrderNotes.Fields.CreatedOn"),
+                    Width = "200",
+                    Render = new RenderDate()
+                },
+                new ColumnProperty(nameof(OrderNoteModel.Note))
+                {
+                    Title = _localizationService.GetResource("Admin.Orders.OrderNotes.Fields.Note"),
+                    Encode = false
+                },
+                new ColumnProperty(nameof(OrderNoteModel.DownloadId))
+                {
+                    Title = _localizationService.GetResource("Admin.Orders.OrderNotes.Fields.Download"),
+                    Width = "200",
+                    ClassName =  StyleColumn.CenterAll,
+                    Render = new RenderCustom("renderColumnDownloadId")
+                },
+                new ColumnProperty(nameof(OrderNoteModel.DisplayToCustomer))
+                {
+                    Title = _localizationService.GetResource("Admin.Orders.OrderNotes.Fields.DisplayToCustomer"),
+                    Width = "150",
+                    ClassName =  StyleColumn.CenterAll,
+                    Render = new RenderBoolean()
+                },
+                new ColumnProperty(nameof(OrderNoteModel.Id))
+                {
+                    Title = _localizationService.GetResource("Admin.Common.Delete"),
+                    Width = "100",
+                    Render = new RenderButtonRemove(_localizationService.GetResource("Admin.Common.Delete")) { Style = StyleButton.Default },
+                    ClassName =  StyleColumn.CenterAll
+                }
+            };
+
+            return model;
+        }
+
+        /// <summary>
         /// Prepare order note search model
         /// </summary>
         /// <param name="searchModel">Order note search model</param>
@@ -787,6 +851,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
+            searchModel.Grid = PrepareOrderNoteGridModel(searchModel);
 
             return searchModel;
         }
@@ -1931,10 +1996,10 @@ namespace Nop.Web.Areas.Admin.Factories
             var orderNotes = order.OrderNotes.OrderByDescending(on => on.CreatedOnUtc).ToList().ToPagedList(searchModel);
 
             //prepare list model
-            var model = new OrderNoteListModel
+            var model = new OrderNoteListModel().PrepareToGrid(searchModel, orderNotes, () =>
             {
                 //fill in model values from the entity
-                Data = orderNotes.Select(orderNote =>
+                return orderNotes.Select(orderNote =>
                 {
                     //fill in model values from the entity
                     var orderNoteModel = orderNote.ToModel<OrderNoteModel>();
@@ -1947,9 +2012,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     orderNoteModel.DownloadGuid = _downloadService.GetDownloadById(orderNote.DownloadId)?.DownloadGuid ?? Guid.Empty;
 
                     return orderNoteModel;
-                }),
-                Total = orderNotes.TotalCount
-            };
+                });
+            });
 
             return model;
         }
