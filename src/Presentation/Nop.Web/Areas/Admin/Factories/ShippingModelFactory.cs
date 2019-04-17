@@ -253,6 +253,52 @@ namespace Nop.Web.Areas.Admin.Factories
             return model;
         }
 
+        /// <summary>
+        /// Prepare datatables model
+        /// </summary>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
+        protected virtual DataTablesModel PrepareShippingMethodGridModel(ShippingMethodSearchModel searchModel)
+        {
+            //prepare common properties
+            var model = new DataTablesModel
+            {
+                Name = "shippingmethod-grid",
+                UrlRead = new DataUrl("Methods", "Shipping", null),
+                Length = searchModel.PageSize,
+                LengthMenu = searchModel.AvailablePageSizes
+            };
+
+            //prepare model columns
+            model.ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(ShippingMethodModel.Name))
+                {
+                    Title = _localizationService.GetResource("Admin.Configuration.Shipping.Methods.Fields.Name"),
+                    Width = "200"
+                },
+                new ColumnProperty(nameof(ShippingMethodModel.Description))
+                {
+                    Title = _localizationService.GetResource("Admin.Configuration.Shipping.Methods.Fields.Description"),
+                    Width = "400"
+                },
+                new ColumnProperty(nameof(ShippingMethodModel.DisplayOrder))
+                {
+                    Title = _localizationService.GetResource("Admin.Configuration.Shipping.Methods.Fields.DisplayOrder"),
+                    Width = "100"
+                },
+                new ColumnProperty(nameof(ShippingMethodModel.Id))
+                {
+                    Title = _localizationService.GetResource("Admin.Common.Edit"),
+                    Width = "100",
+                    ClassName =  StyleColumn.CenterAll,
+                    Render = new RenderButtonEdit(new DataUrl("EditMethod"))
+                }
+            };
+
+            return model;
+        }
+        
         #endregion
 
         #region Methods
@@ -369,6 +415,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
+            searchModel.Grid = PrepareShippingMethodGridModel(searchModel);
 
             return searchModel;
         }
@@ -387,12 +434,10 @@ namespace Nop.Web.Areas.Admin.Factories
             var shippingMethods = _shippingService.GetAllShippingMethods().ToPagedList(searchModel);
 
             //prepare grid model
-            var model = new ShippingMethodListModel
+            var model = new ShippingMethodListModel().PrepareToGrid(searchModel, shippingMethods, () =>
             {
-                //fill in model values from the entity
-                Data = shippingMethods.Select(method => method.ToModel<ShippingMethodModel>()),
-                Total = shippingMethods.TotalCount
-            };
+                return shippingMethods.Select(method => method.ToModel<ShippingMethodModel>());
+            });
 
             return model;
         }
