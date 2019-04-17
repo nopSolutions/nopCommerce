@@ -174,7 +174,7 @@ namespace Nop.Web.Areas.Admin.Factories
                         Title = _localizationService.GetResource("Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.IsPreSelected"),
                         Width = "100",
                         ClassName = StyleColumn.CenterAll,
-                        Render = new RenderCustom("renderIsPreSelected")
+                        Render = new RenderBoolean()
                     },
                     new ColumnProperty(nameof(CheckoutAttributeValueModel.DisplayOrder))
                     {

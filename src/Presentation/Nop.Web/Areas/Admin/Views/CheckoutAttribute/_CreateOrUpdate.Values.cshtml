@@ -35,9 +35,6 @@ else
 }
 
 <script>
-    function renderIsPreSelected(data, type, row, meta) {
-        return row.IsPreSelected ? '<i class="fa fa-check true-icon"></i>' : '<i class="fa fa-close false-icon"></i>';
-    }
     function renderColumnEdit(data, type, row, meta) {
         return '<button onclick=\"javascript:OpenWindow(\'@Url.Content("~/Admin/CheckoutAttribute/ValueEditPopup/")' + data + '?btnId=btnRefresh&formId=checkoutattribute-form\', 800, 400, true); return false;\" class="btn btn-default"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</button>';
     }

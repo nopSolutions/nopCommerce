@@ -109,7 +109,7 @@ namespace Nop.Web.Areas.Admin.Factories
                         Title = _localizationService.GetResource("Admin.Configuration.Countries.States.Fields.Published"),
                         Width = "100",
                         ClassName = StyleColumn.CenterAll,
-                        Render = new RenderCustom("renderPublished")
+                        Render = new RenderBoolean()
                     },
                     new ColumnProperty(nameof(StateProvinceModel.DisplayOrder))
                     {
