@@ -125,8 +125,80 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
+            searchModel.Grid = PrepareCheckoutAttributeValueGridModel(searchModel);
 
             return searchModel;
+        }
+
+        /// <summary>
+        /// Prepare datatables model
+        /// </summary>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
+        protected virtual DataTablesModel PrepareCheckoutAttributeValueGridModel(CheckoutAttributeValueSearchModel searchModel)
+        {
+            //prepare common properties
+            var model = new DataTablesModel
+            {
+                Name = "checkoutattributevalues-grid",
+                UrlRead = new DataUrl("ValueList", "CheckoutAttribute", null),
+                UrlDelete = new DataUrl("ValueDelete", "CheckoutAttribute", null),
+                Length = searchModel.PageSize,
+                LengthMenu = searchModel.AvailablePageSizes,
+
+                //prepare filters to search
+                Filters = new List<FilterParameter>
+                {
+                    new FilterParameter(nameof(CheckoutAttributeValueSearchModel.CheckoutAttributeId), searchModel.CheckoutAttributeId)
+                },
+
+                //prepare model columns
+                ColumnCollection = new List<ColumnProperty>
+                {
+                    new ColumnProperty(nameof(CheckoutAttributeValueModel.Name))
+                    {
+                        Title = _localizationService.GetResource("Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.Name")
+                    },
+                    new ColumnProperty(nameof(CheckoutAttributeValueModel.PriceAdjustment))
+                    {
+                        Title = _localizationService.GetResource("Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.PriceAdjustment"),
+                        Width = "200"
+                    },
+                    new ColumnProperty(nameof(CheckoutAttributeValueModel.WeightAdjustment))
+                    {
+                        Title = _localizationService.GetResource("Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.WeightAdjustment"),
+                        Width = "200"
+                    },
+                    new ColumnProperty(nameof(CheckoutAttributeValueModel.IsPreSelected))
+                    {
+                        Title = _localizationService.GetResource("Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.IsPreSelected"),
+                        Width = "100",
+                        ClassName = StyleColumn.CenterAll,
+                        Render = new RenderCustom("renderIsPreSelected")
+                    },
+                    new ColumnProperty(nameof(CheckoutAttributeValueModel.DisplayOrder))
+                    {
+                        Title = _localizationService.GetResource("Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.DisplayOrder"),
+                        Width = "100"
+                    },
+                    new ColumnProperty(nameof(CheckoutAttributeValueModel.Id))
+                    {
+                        Title = _localizationService.GetResource("Admin.Common.Edit"),
+                        Width = "100",
+                        ClassName = StyleColumn.CenterAll,
+                        Render = new RenderCustom("renderColumnEdit")
+                    },
+                    new ColumnProperty(nameof(CheckoutAttributeValueModel.Id))
+                    {
+                        Title = _localizationService.GetResource("Admin.Common.Delete"),
+                        Width = "100",
+                        Render = new RenderButtonRemove(_localizationService.GetResource("Admin.Common.Delete")){ Style = StyleButton.Default },
+                        ClassName = StyleColumn.CenterAll
+                    }
+                }
+            };
+            
+            return model;
         }
 
         /// <summary>
@@ -307,21 +379,22 @@ namespace Nop.Web.Areas.Admin.Factories
                 .GetCheckoutAttributeValues(checkoutAttribute.Id).ToPagedList(searchModel);
 
             //prepare list model
-            var model = new CheckoutAttributeValueListModel
+            var model = new CheckoutAttributeValueListModel().PrepareToGrid(searchModel, checkoutAttributeValues, () =>
             {
-                Data = checkoutAttributeValues.Select(value =>
+                return checkoutAttributeValues.Select(value =>
                 {
                     //fill in model values from the entity
                     var checkoutAttributeValueModel = value.ToModel<CheckoutAttributeValueModel>();
 
                     //fill in additional values (not existing in the entity)
-                    checkoutAttributeValueModel.Name = value.CheckoutAttribute.AttributeControlType != AttributeControlType.ColorSquares
-                        ? value.Name : $"{value.Name} - {value.ColorSquaresRgb}";
+                    checkoutAttributeValueModel.Name =
+                        value.CheckoutAttribute.AttributeControlType != AttributeControlType.ColorSquares
+                            ? value.Name
+                            : $"{value.Name} - {value.ColorSquaresRgb}";
 
                     return checkoutAttributeValueModel;
-                }),
-                Total = checkoutAttributeValues.TotalCount
-            };
+                });
+            });
 
             return model;
         }
