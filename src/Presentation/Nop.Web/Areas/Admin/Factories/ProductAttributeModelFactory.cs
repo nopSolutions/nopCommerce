@@ -44,6 +44,78 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Utilities
 
         /// <summary>
+        /// Prepare datatables model
+        /// </summary>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
+        protected virtual DataTablesModel PreparePredefinedProductAttributeValueGridModel(PredefinedProductAttributeValueSearchModel searchModel)
+        {
+            //prepare common properties
+            var model = new DataTablesModel
+            {
+                Name = "productattributevalues-grid",
+                UrlRead = new DataUrl("PredefinedProductAttributeValueList", "ProductAttribute", null),
+                UrlDelete = new DataUrl("PredefinedProductAttributeValueDelete", "ProductAttribute", null),
+                Length = searchModel.PageSize,
+                LengthMenu = searchModel.AvailablePageSizes
+            };
+
+            //prepare filters to search
+            model.Filters = new List<FilterParameter>
+            {
+                new FilterParameter(nameof(searchModel.ProductAttributeId), searchModel.ProductAttributeId)
+            };
+
+            //prepare model columns
+            model.ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(PredefinedProductAttributeValueModel.Name))
+                {
+                    Title = _localizationService.GetResource("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.Name"),
+                    Width = "200"
+                },
+                new ColumnProperty(nameof(PredefinedProductAttributeValueModel.PriceAdjustmentStr))
+                {
+                    Title = _localizationService.GetResource("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.PriceAdjustment"),
+                    Width = "150"
+                },
+                new ColumnProperty(nameof(PredefinedProductAttributeValueModel.WeightAdjustmentStr))
+                {
+                    Title = _localizationService.GetResource("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.WeightAdjustment"),
+                    Width = "150"
+                },
+                new ColumnProperty(nameof(PredefinedProductAttributeValueModel.IsPreSelected))
+                {
+                    Title = _localizationService.GetResource("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.IsPreSelected"),
+                    Width = "100",
+                    ClassName = StyleColumn.CenterAll,
+                    Render = new RenderBoolean()
+                },
+                new ColumnProperty(nameof(PredefinedProductAttributeValueModel.DisplayOrder))
+                {
+                    Title = _localizationService.GetResource("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.DisplayOrder"),
+                    Width = "100"
+                },
+                new ColumnProperty(nameof(PredefinedProductAttributeValueModel.Id))
+                {
+                    Title = _localizationService.GetResource("Admin.Common.Edit"),
+                    Width = "100",
+                    ClassName =  StyleColumn.CenterAll,
+                    Render = new RenderCustom("renderColumnEdit")
+                },
+                new ColumnProperty(nameof(PredefinedProductAttributeValueModel.Id))
+                {
+                    Title = _localizationService.GetResource("Admin.Common.Delete"),
+                    Width = "100",
+                    Render = new RenderButtonRemove(_localizationService.GetResource("Admin.Common.Delete")) { Style = StyleButton.Default },
+                    ClassName =  StyleColumn.CenterAll
+                }
+            };
+
+            return model;
+        }
+
+        /// <summary>
         /// Prepare predefined product attribute value search model
         /// </summary>
         /// <param name="searchModel">Predefined product attribute value search model</param>
@@ -59,9 +131,11 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(productAttribute));
 
             searchModel.ProductAttributeId = productAttribute.Id;
+            searchModel.Grid = PreparePredefinedProductAttributeValueGridModel(searchModel);
 
             //prepare page parameters
             searchModel.SetGridPageSize();
+
 
             return searchModel;
         }
@@ -229,9 +303,9 @@ namespace Nop.Web.Areas.Admin.Factories
             var values = _productAttributeService.GetPredefinedProductAttributeValues(productAttribute.Id).ToPagedList(searchModel);
 
             //prepare list model
-            var model = new PredefinedProductAttributeValueListModel
+            var model = new PredefinedProductAttributeValueListModel().PrepareToGrid(searchModel, values, () =>
             {
-                Data = values.Select(value =>
+                return values.Select(value =>
                 {
                     //fill in model values from the entity
                     var predefinedProductAttributeValueModel = value.ToModel<PredefinedProductAttributeValueModel>();
@@ -242,9 +316,8 @@ namespace Nop.Web.Areas.Admin.Factories
                         .ToString("G29") + (value.PriceAdjustmentUsePercentage ? " %" : string.Empty);
 
                     return predefinedProductAttributeValueModel;
-                }),
-                Total = values.TotalCount
-            };
+                });
+            });
 
             return model;
         }
