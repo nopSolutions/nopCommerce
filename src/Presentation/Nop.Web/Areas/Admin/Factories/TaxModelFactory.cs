@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using Nop.Services.Localization;
 using Nop.Services.Tax;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Tax;
+using Nop.Web.Framework.Models.DataTables;
 using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
@@ -14,6 +17,7 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
+        private readonly ILocalizationService _localizationService;
         private readonly ITaxCategoryService _taxCategoryService;
         private readonly ITaxPluginManager _taxPluginManager;
 
@@ -21,12 +25,79 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #region Ctor
 
-        public TaxModelFactory(ITaxCategoryService taxCategoryService,
+        public TaxModelFactory(ILocalizationService localizationService, 
+            ITaxCategoryService taxCategoryService,
             ITaxPluginManager taxPluginManager)
         {
+            _localizationService = localizationService;
             _taxCategoryService = taxCategoryService;
             _taxPluginManager = taxPluginManager;
         }
+
+        #endregion
+
+        #region Utilities
+
+
+        /// <summary>
+        /// Prepare datatables model
+        /// </summary>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
+        protected virtual DataTablesModel PrepareTaxProviderGridModel(TaxProviderSearchModel searchModel)
+        {
+            //prepare common properties
+            var model = new DataTablesModel
+            {
+                Name = "tax-providers-grid",
+                UrlRead = new DataUrl("Providers", "Tax", null),
+                Length = searchModel.PageSize,
+                LengthMenu = searchModel.AvailablePageSizes
+            };
+
+            //prepare model columns
+            model.ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(TaxProviderModel.ConfigurationUrl))
+                {
+                    Visible = false
+                },
+                new ColumnProperty(nameof(TaxProviderModel.FriendlyName))
+                {
+                    Title = _localizationService.GetResource("Admin.Configuration.Tax.Providers.Fields.FriendlyName"),
+                    Width = "250"
+                },
+                new ColumnProperty(nameof(TaxProviderModel.SystemName))
+                {
+                    Title = _localizationService.GetResource("Admin.Configuration.Tax.Providers.Fields.SystemName"),
+                    Width = "250"
+                },
+                new ColumnProperty(nameof(TaxProviderModel.IsPrimaryTaxProvider))
+                {
+                    Title = _localizationService.GetResource("Admin.Configuration.Tax.Providers.Fields.IsPrimaryTaxProvider"),
+                    Width = "100",
+                    ClassName =  StyleColumn.CenterAll,
+                    Render = new RenderBoolean()
+                },
+                new ColumnProperty(nameof(TaxProviderModel.SystemName))
+                {
+                    Title = _localizationService.GetResource("Admin.Configuration.Tax.Providers.Fields.MarkAsPrimaryProvider"),
+                    Width = "200",
+                    ClassName =  StyleColumn.CenterAll,
+                    Render = new RenderCustom("renderColumnSystemName")
+                },
+                new ColumnProperty(nameof(TaxProviderModel.SystemName))
+                {
+                    Title = _localizationService.GetResource("Admin.Configuration.Tax.Providers.Configure"),
+                    Width = "150",
+                    ClassName =  StyleColumn.CenterAll,
+                    Render = new RenderCustom("renderColumnConfigure")
+                }
+            };
+
+            return model;
+        }
+
 
         #endregion
 
@@ -61,6 +132,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
+            searchModel.Grid = PrepareTaxProviderGridModel(searchModel);
 
             return searchModel;
         }
@@ -79,9 +151,9 @@ namespace Nop.Web.Areas.Admin.Factories
             var taxProviders = _taxPluginManager.LoadAllPlugins().ToPagedList(searchModel);
 
             //prepare grid model
-            var model = new TaxProviderListModel
+            var model = new TaxProviderListModel().PrepareToGrid(searchModel, taxProviders, () =>
             {
-                Data = taxProviders.Select(provider =>
+                return taxProviders.Select(provider =>
                 {
                     //fill in model values from the entity
                     var taxProviderModel = provider.ToPluginModel<TaxProviderModel>();
@@ -91,10 +163,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     taxProviderModel.IsPrimaryTaxProvider = _taxPluginManager.IsPluginActive(provider);
 
                     return taxProviderModel;
-                }),
-                Total = taxProviders.TotalCount
-            };
-
+                });
+            });
             return model;
         }
 
