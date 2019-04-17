@@ -1051,6 +1051,58 @@ namespace Nop.Web.Areas.Admin.Factories
             return model;
         }
 
+        /// <summary>
+        /// Prepare datatables model
+        /// </summary>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
+        protected virtual DataTablesModel PrepareAddProductToOrderGridModel(AddProductToOrderSearchModel searchModel)
+        {
+            //prepare common properties
+            var model = new DataTablesModel
+            {
+                Name = "products-grid",
+                UrlRead = new DataUrl("AddProductToOrder", "Order", null),
+                SearchButtonId = "search-products",
+                Length = searchModel.PageSize,
+                LengthMenu = searchModel.AvailablePageSizes
+            };
+
+            //prepare filters to search
+            model.Filters = new List<FilterParameter>
+            {
+                new FilterParameter(nameof(searchModel.OrderId), searchModel.OrderId),
+                new FilterParameter(nameof(searchModel.SearchProductName)),
+                new FilterParameter(nameof(searchModel.SearchCategoryId)),
+                new FilterParameter(nameof(searchModel.SearchManufacturerId)),
+                new FilterParameter(nameof(searchModel.SearchProductTypeId))
+            };
+
+            //prepare model columns
+            model.ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(ProductModel.Id))
+                {
+                    Title = _localizationService.GetResource("Admin.Common.Select"),
+                    Render = new RenderCustom("renderColumnSelectProduct"),
+                    ClassName =  StyleColumn.CenterAll,
+                    Width = "50",
+                },
+                new ColumnProperty(nameof(ProductModel.Name))
+                {
+                    Title = _localizationService.GetResource("Admin.Orders.Products.AddNew.Name"),
+                    Width = "400"
+                },
+                new ColumnProperty(nameof(ProductModel.Sku))
+                {
+                    Title = _localizationService.GetResource("Admin.Orders.Products.AddNew.SKU"),
+                    Width = "100"
+                }
+            };
+
+            return model;
+        }
+
         #endregion
 
         #region Methods
@@ -1403,6 +1455,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
+            searchModel.Grid = PrepareAddProductToOrderGridModel(searchModel);
 
             return searchModel;
         }
@@ -1427,18 +1480,17 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare grid model
-            var model = new AddProductToOrderListModel
+            var model = new AddProductToOrderListModel().PrepareToGrid(searchModel, products, () =>
             {
                 //fill in model values from the entity
-                Data = products.Select(product =>
+                return products.Select(product =>
                 {
                     var productModel = product.ToModel<ProductModel>();
                     productModel.SeName = _urlRecordService.GetSeName(product, 0, true, false);
 
                     return productModel;
-                }),
-                Total = products.TotalCount
-            };
+                });
+            });
 
             return model;
         }

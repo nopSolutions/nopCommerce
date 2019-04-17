@@ -88,91 +88,11 @@
 
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <div id="products-grid"></div>
-
+                    @await Html.PartialAsync("Table", Model.Grid)
                     <script>
-                        $(document).ready(function() {
-                            $("#products-grid").kendoGrid({
-                                dataSource: {
-                                    type: "json",
-                                    transport: {
-                                        read: {
-                                            url: "@Html.Raw(Url.Action("AddProductToOrder", "Order"))",
-                                            type: "POST",
-                                            dataType: "json",
-                                            data: function() {
-                                                var data = {
-                                                    OrderId : '@(Model.OrderId)',
-                                                    SearchProductName: $('#@Html.IdFor(model => model.SearchProductName)').val(),
-                                                    SearchCategoryId: $('#SearchCategoryId').val(),
-                                                    SearchManufacturerId: $('#SearchManufacturerId').val(),
-                                                    SearchProductTypeId: $('#SearchProductTypeId').val()
-                                                };
-                                                addAntiForgeryToken(data);
-                                                return data;
-                                            }
-                                        }
-                                    },
-                                    schema: {
-                                        data: "Data",
-                                        total: "Total",
-                                        errors: "Errors"
-                                    },
-                                    error: function(e) {
-                                        display_kendoui_grid_error(e);
-                                        // Cancel the changes
-                                        this.cancelChanges();
-                                    },
-                                    pageSize: @(Model.PageSize),
-                                    serverPaging: true,
-                                    serverFiltering: true,
-                                    serverSorting: true
-                                },
-                                pageable: {
-                                    refresh: true,
-                                    pageSizes: [@(Model.AvailablePageSizes)],
-                                    @await Html.PartialAsync("_GridPagerMessages")
-                                },
-                                editable: {
-                                    confirmation: "@T("Admin.Common.DeleteConfirmation")",
-                                    mode: "inline"
-                                },
-                                scrollable: false,
-                                //selectable
-                                selectable: true,
-                                columns: [
-                                {
-                                    field: "Name",
-                                    title: "@T("Admin.Common.Select")",
-                                    width: 50,
-                                    template: '<button type="button" onclick="addProductToOrder(#=Id#)" class="btn btn-default">@T("Admin.Common.Select")</button>'
-                                },{
-                                    field: "Id",
-                                    title: "ID",
-                                    width: 50
-                                }, {
-                                    field: "Name",
-                                    title: "@T("Admin.Orders.Products.AddNew.Name")",
-                                    width: 400
-                                }, {
-                                    field: "Sku",
-                                    title: "@T("Admin.Orders.Products.AddNew.SKU")",
-                                    width: 100
-                                }
-                                ]
-                            });
-                        });
-                    </script>
-                    <script>
-                        $(document).ready(function() {
-                            $('#search-products').click(function() {
-                                var grid = $('#products-grid').data('kendoGrid');
-                                grid.dataSource.page(1); //new search. Set page size to 1
-                                //grid.dataSource.read(); we already loaded the grid above using "page" function
-                                return false;
-                            });
-                        });
-
+                        function renderColumnSelectProduct(data, type, row, meta) {
+                            return '<button type="button" onclick="addProductToOrder(' + row.Id + ' )" class="btn btn-default">@T("Admin.Common.Select")</button>';
+                        }
                         function addProductToOrder(productId) {
                             //load "product details page" block
                             var productDetailsActionUrl = '@Html.Raw(Url.Action("AddProductToOrderDetails", "Order", new {orderId = Model.OrderId, productId = "productidplaceholder"}))';
