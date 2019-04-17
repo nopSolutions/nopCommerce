@@ -541,6 +541,95 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
+        /// Prepare datatables model
+        /// </summary>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
+        protected virtual DataTablesModel PrepareProductAttributeValueGridModel(ProductAttributeValueSearchModel searchModel)
+        {
+            //prepare common properties
+            var model = new DataTablesModel
+            {
+                Name = "productattributevalues-grid",
+                UrlRead = new DataUrl("ProductAttributeValueList", "Product", null),
+                UrlDelete = new DataUrl("ProductAttributeValueDelete", "Product", null),
+                Length = searchModel.PageSize,
+                LengthMenu = searchModel.AvailablePageSizes
+            };
+
+            //prepare filters to search
+            model.Filters = new List<FilterParameter>
+            {
+                new FilterParameter(nameof(searchModel.ProductAttributeMappingId), searchModel.ProductAttributeMappingId)
+            };
+
+            //prepare model columns
+            model.ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(ProductAttributeValueModel.AttributeValueTypeName))
+                {
+                    Title = _localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AttributeValueType"),
+                    Width = "200"
+                },
+                new ColumnProperty(nameof(ProductAttributeValueModel.Name))
+                {
+                    Title = _localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Name"),
+                    Width = "200"
+                },
+                new ColumnProperty(nameof(ProductAttributeValueModel.AssociatedProductName))
+                {
+                    Title = _localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AssociatedProduct"),
+                    Width = "200"
+                },
+                new ColumnProperty(nameof(ProductAttributeValueModel.PriceAdjustmentStr))
+                {
+                    Title = _localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.PriceAdjustment"),
+                    Width = "200"
+                },
+                new ColumnProperty(nameof(ProductAttributeValueModel.WeightAdjustmentStr))
+                {
+                    Title = _localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.WeightAdjustment"),
+                    Width = "200"
+                },
+                new ColumnProperty(nameof(ProductAttributeValueModel.IsPreSelected))
+                {
+                    Title = _localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.IsPreSelected"),
+                    Width = "150",
+                    ClassName = StyleColumn.CenterAll,
+                    Render = new RenderBoolean()
+                },
+                new ColumnProperty(nameof(ProductAttributeValueModel.PictureThumbnailUrl))
+                {
+                    Title = _localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Picture"),
+                    Width = "200",
+                    ClassName = StyleColumn.CenterAll,
+                    Render = new RenderPicture()
+                },
+                new ColumnProperty(nameof(ProductAttributeValueModel.DisplayOrder))
+                {
+                    Title = _localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.DisplayOrder"),
+                    Width = "150"
+                },
+                new ColumnProperty(nameof(ProductAttributeValueModel.Id))
+                {
+                    Title = _localizationService.GetResource("Admin.Common.Edit"),
+                    Width = "100",
+                    ClassName =  StyleColumn.CenterAll,
+                    Render = new RenderCustom("renderColumnEdit")
+                },
+                new ColumnProperty(nameof(ProductAttributeValueModel.Id))
+                {
+                    Title = _localizationService.GetResource("Admin.Common.Delete"),
+                    Width = "100",
+                    Render = new RenderButtonRemove(_localizationService.GetResource("Admin.Common.Delete")) { Style = StyleButton.Default },
+                    ClassName =  StyleColumn.CenterAll
+                }
+            };
+
+            return model;
+        }
+
+        /// <summary>
         /// Prepare product attribute value search model
         /// </summary>
         /// <param name="searchModel">Product attribute value search model</param>
@@ -559,6 +648,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
+            searchModel.Grid = PrepareProductAttributeValueGridModel(searchModel);
 
             return searchModel;
         }
@@ -2294,9 +2384,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 .GetProductAttributeValues(productAttributeMapping.Id).ToPagedList(searchModel);
 
             //prepare list model
-            var model = new ProductAttributeValueListModel
+            var model = new ProductAttributeValueListModel().PrepareToGrid(searchModel, productAttributeValues, () =>
             {
-                Data = productAttributeValues.Select(value =>
+                return productAttributeValues.Select(value =>
                 {
                     //fill in model values from the entity
                     var productAttributeValueModel = value.ToModel<ProductAttributeValueModel>();
@@ -2326,9 +2416,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     productAttributeValueModel.PictureThumbnailUrl = pictureThumbnailUrl;
 
                     return productAttributeValueModel;
-                }),
-                Total = productAttributeValues.TotalCount
-            };
+                });
+            });
 
             return model;
         }
