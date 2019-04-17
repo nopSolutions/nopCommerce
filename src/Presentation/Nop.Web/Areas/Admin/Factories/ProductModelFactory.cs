@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Routing;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
@@ -400,6 +401,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
+            searchModel.Grid = PrepareCrossSellProductGridModel(searchModel);
 
             return searchModel;
         }
@@ -784,6 +786,43 @@ namespace Nop.Web.Areas.Admin.Factories
                     Width = "100",
                     ClassName =  StyleColumn.CenterAll,
                     Render = new RenderButtonEdit(new DataUrl("Edit"))
+                }
+            };
+
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare datatables model
+        /// </summary>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
+        protected virtual DataTablesModel PrepareCrossSellProductGridModel(CrossSellProductSearchModel searchModel)
+        {
+            //prepare common properties
+            var model = new DataTablesModel
+            {
+                Name = "crosssellproducts-grid",
+                UrlRead = new DataUrl("CrossSellProductList", "Product", new RouteValueDictionary { [nameof(searchModel.ProductId)] = searchModel.ProductId }),
+                UrlDelete = new DataUrl("CrossSellProductDelete", "Product"),
+                Length = searchModel.PageSize,
+                LengthMenu = searchModel.AvailablePageSizes
+            };
+            
+            //prepare model columns
+            model.ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(CrossSellProductModel.Product2Name))
+                {
+                    Title = _localizationService.GetResource("Admin.Catalog.Products.CrossSells.Fields.Product"),
+                    Render = new RenderCustom("renderColumnCrossSellProductName")
+                },
+                new ColumnProperty(nameof(CrossSellProductModel.Id))
+                {
+                    Title = _localizationService.GetResource("Admin.Common.Delete"),
+                    Width = "100",
+                    Render = new RenderButtonRemove(_localizationService.GetResource("Admin.Common.Delete")){ Style = StyleButton.Default },
+                    ClassName = StyleColumn.CenterAll
                 }
             };
 
@@ -1504,9 +1543,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 .GetCrossSellProductsByProductId1(productId1: product.Id, showHidden: true).ToPagedList(searchModel);
 
             //prepare grid model
-            var model = new CrossSellProductListModel
+            var model = new CrossSellProductListModel().PrepareToGrid(searchModel, crossSellProducts, () =>
             {
-                Data = crossSellProducts.Select(crossSellProduct =>
+                return crossSellProducts.Select(crossSellProduct =>
                 {
                     //fill in model values from the entity
                     var crossSellProductModel = new CrossSellProductModel
@@ -1519,9 +1558,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     crossSellProductModel.Product2Name = _productService.GetProductById(crossSellProduct.ProductId2)?.Name;
 
                     return crossSellProductModel;
-                }),
-                Total = crossSellProducts.TotalCount
-            };
+                });
+            });
 
             return model;
         }
