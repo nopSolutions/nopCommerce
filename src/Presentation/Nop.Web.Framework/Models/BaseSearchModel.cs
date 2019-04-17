@@ -50,6 +50,24 @@ namespace Nop.Web.Framework.Models
         /// Gets or sets paging length. Number of records that the table can display in the current draw. 
         /// </summary>
         public int Length { get; set; }
+        
+        /// <summary>
+        /// Gets or sets skiping number of rows count. Paging first record indicator.
+        /// </summary>
+        public int Skip
+        {
+            get { return Start; }
+            set { Start = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets skiping number of rows count. Paging first record indicator.
+        /// </summary>
+        public int Take
+        {
+            get { return Length; }
+            set { Length = value; }
+        }
 
         /// <summary>
         /// Gets or sets grid model (DataTables)
