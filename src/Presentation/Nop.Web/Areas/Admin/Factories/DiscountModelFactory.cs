@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.WebUtilities;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
@@ -108,6 +109,56 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
+        /// Prepare datatables model
+        /// </summary>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
+        protected virtual DataTablesModel PrepareDiscountProductGridModel(DiscountProductSearchModel searchModel)
+        {
+            //prepare common properties
+            var model = new DataTablesModel
+            {
+                Name = "products-grid",
+                UrlRead = new DataUrl("ProductList", "Discount", null),
+                UrlDelete = new DataUrl("ProductDelete", "Discount", new RouteValueDictionary { [nameof(searchModel.DiscountId)] = searchModel.DiscountId }),
+                BindColumnNameActionDelete = nameof(DiscountProductModel.ProductId),
+                Length = searchModel.PageSize,
+                LengthMenu = searchModel.AvailablePageSizes
+            };
+
+            //prepare filters to search
+            model.Filters = new List<FilterParameter>()
+            {
+                new FilterParameter(nameof(searchModel.DiscountId), searchModel.DiscountId)
+            };
+
+            //prepare model columns
+            model.ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(DiscountProductModel.ProductName))
+                {
+                    Title = _localizationService.GetResource("Admin.Promotions.Discounts.AppliedToProducts.Product")
+                },
+                new ColumnProperty(nameof(DiscountProductModel.ProductId))
+                {
+                    Title = _localizationService.GetResource("Admin.Common.View"),
+                    Width = "100",
+                    ClassName =  StyleColumn.CenterAll,
+                    Render = new RenderButtonView(new DataUrl("~/Admin/Product/Edit/"))
+                },
+                new ColumnProperty(nameof(DiscountProductModel.ProductId))
+                {
+                    Title = _localizationService.GetResource("Admin.Common.Delete"),
+                    Width = "100",
+                    Render = new RenderButtonRemove(_localizationService.GetResource("Admin.Common.Delete")) { Style = StyleButton.Default },
+                    ClassName =  StyleColumn.CenterAll
+                }
+            };
+
+            return model;
+        }
+
+        /// <summary>
         /// Prepare discount product search model
         /// </summary>
         /// <param name="searchModel">Discount product search model</param>
@@ -125,6 +176,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
+            searchModel.Grid = PrepareDiscountProductGridModel(searchModel);
 
             return searchModel;
         }
@@ -671,19 +723,18 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare grid model
-            var model = new DiscountProductListModel
+            var model = new DiscountProductListModel().PrepareToGrid(searchModel, discountProducts, () =>
             {
                 //fill in model values from the entity
-                Data = discountProducts.Select(product =>
+                return discountProducts.Select(product =>
                 {
                     var discountProductModel = product.ToModel<DiscountProductModel>();
                     discountProductModel.ProductId = product.Id;
                     discountProductModel.ProductName = product.Name;
 
                     return discountProductModel;
-                }),
-                Total = discountProducts.TotalCount
-            };
+                });
+            });
 
             return model;
         }

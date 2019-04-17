@@ -51,7 +51,7 @@ namespace Nop.Web.Framework.Models.DataTables
         /// <summary>
         /// Gets or sets URL for custom action
         /// </summary>
-        public DataUrl UrlAction { get; set; }
+        public DataUrl UrlDelete { get; set; }
 
         /// <summary>
         /// Gets or sets search button Id
@@ -134,6 +134,11 @@ namespace Nop.Web.Framework.Models.DataTables
         /// Gets or sets child table
         /// </summary>
         public DataTablesModel ChildTable { get; set; }
+
+        // <summary>
+        /// Gets or sets bind column name for delete action. If this field is not specified, the default will be the alias "id" for the delete action
+        /// </summary>
+        public string BindColumnNameActionDelete { get; set; }
 
         /// <summary>
         /// Gets or set column collection 

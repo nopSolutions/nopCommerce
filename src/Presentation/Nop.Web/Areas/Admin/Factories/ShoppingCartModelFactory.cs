@@ -151,7 +151,7 @@ namespace Nop.Web.Areas.Admin.Factories
             {
                 Name = "carts-grid",
                 UrlRead = new DataUrl("GetCartDetails", "ShoppingCart", null),
-                UrlAction = new DataUrl("DeleteItem", "ShoppingCart", null),
+                UrlDelete = new DataUrl("DeleteItem", "ShoppingCart", null),
                 IsChildTable = true,
                 Length = searchModel.PageSize,
                 LengthMenu = searchModel.AvailablePageSizes
