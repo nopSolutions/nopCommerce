@@ -139,6 +139,99 @@ namespace Nop.Web.Areas.Admin.Factories
             return model;
         }
 
+        /// <summary>
+        /// Prepare datatables model
+        /// </summary>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
+        protected virtual DataTablesModel PrepareReturnRequestGridModel(ReturnRequestSearchModel searchModel)
+        {
+            //prepare common properties
+            var model = new DataTablesModel
+            {
+                Name = "returnrequests-grid",
+                UrlRead = new DataUrl("List", "ReturnRequest", null),
+                SearchButtonId = "search-returnrequests",
+                Length = searchModel.PageSize,
+                LengthMenu = searchModel.AvailablePageSizes
+            };
+
+            //prepare filters to search
+            model.Filters = new List<FilterParameter>
+            {
+                new FilterParameter(nameof(searchModel.StartDate)),
+                new FilterParameter(nameof(searchModel.EndDate)),
+                new FilterParameter(nameof(searchModel.CustomNumber)),
+                new FilterParameter(nameof(searchModel.ReturnRequestStatusId))
+            };
+
+            //prepare model columns
+            model.ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(ReturnRequestModel.ProductId))
+                {
+                    Visible = false
+                },
+                new ColumnProperty(nameof(ReturnRequestModel.AttributeInfo))
+                {
+                    Visible = false
+                },
+                new ColumnProperty(nameof(ReturnRequestModel.CustomerInfo))
+                {
+                    Visible = false
+                },
+                new ColumnProperty(nameof(ReturnRequestModel.CustomNumber))
+                {
+                    Title = _localizationService.GetResource("Admin.ReturnRequests.Fields.CustomNumber"),
+                    Width = "100"
+                },
+                new ColumnProperty(nameof(ReturnRequestModel.ProductName))
+                {
+                    Title = _localizationService.GetResource("Admin.ReturnRequests.Fields.Product"),
+                    Width = "350",
+                    Render = new RenderCustom("renderColumnProductName")
+                },
+                new ColumnProperty(nameof(ReturnRequestModel.Quantity))
+                {
+                    Title = _localizationService.GetResource("Admin.ReturnRequests.Fields.Quantity"),
+                    Width = "100"
+                },
+                new ColumnProperty(nameof(ReturnRequestModel.CustomerId))
+                {
+                    Title = _localizationService.GetResource("Admin.ReturnRequests.Fields.Customer"),
+                    Width = "350",
+                    Render = new RenderCustom("renderColumnCustomerInfo")
+                },
+                new ColumnProperty(nameof(ReturnRequestModel.CustomOrderNumber))
+                {
+                    Title = _localizationService.GetResource("Admin.ReturnRequests.Fields.CustomOrderNumber"),
+                    ClassName =  StyleColumn.CenterAll,
+                    Width = "200",
+                    Render = new RenderCustom("renderColumnOrderInfo")
+                },
+                new ColumnProperty(nameof(ReturnRequestModel.ReturnRequestStatusStr))
+                {
+                    Title = _localizationService.GetResource("Admin.ReturnRequests.Fields.Status"),
+                    Width = "200"
+                },
+                new ColumnProperty(nameof(ReturnRequestModel.CreatedOn))
+                {
+                    Title = _localizationService.GetResource("Admin.ReturnRequests.Fields.CreatedOn"),
+                    Width = "100",
+                    Render = new RenderDate()
+                },
+                new ColumnProperty(nameof(ReturnRequestModel.Id))
+                {
+                    Title = _localizationService.GetResource("Admin.Common.Edit"),
+                    Width = "100",
+                    ClassName =  StyleColumn.CenterAll,
+                    Render = new RenderButtonEdit(new DataUrl("Edit"))
+                }
+            };
+
+            return model;
+        }
+
         #endregion
 
         #region Methods
@@ -167,6 +260,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
+            searchModel.Grid = PrepareReturnRequestGridModel(searchModel);
 
             return searchModel;
         }
@@ -196,9 +290,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new ReturnRequestListModel
+            var model = new ReturnRequestListModel().PrepareToGrid(searchModel, returnRequests, () =>
             {
-                Data = returnRequests.Select(returnRequest =>
+                return returnRequests.Select(returnRequest =>
                 {
                     //fill in model values from the entity
                     var returnRequestModel = returnRequest.ToModel<ReturnRequestModel>();
@@ -221,9 +315,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     returnRequestModel.CustomOrderNumber = orderItem.Order.CustomOrderNumber;
 
                     return returnRequestModel;
-                }),
-                Total = returnRequests.TotalCount
-            };
+                });
+            });
 
             return model;
         }

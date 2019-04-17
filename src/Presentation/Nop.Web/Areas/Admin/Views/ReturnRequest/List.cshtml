@@ -90,120 +90,36 @@
                     <p>
                         @T("Admin.ReturnRequests.Description")
                     </p>
-                    <div id="returnrequests-grid"></div>
-
+                    @await Html.PartialAsync("Table", Model.Grid)
+                    
                     <script>
-                        $(document)
-                            .ready(function() {
-                                $("#returnrequests-grid")
-                                    .kendoGrid({
-                                        dataSource: {
-                                            type: "json",
-                                            transport: {
-                                                read: {
-                                                    url: "@Html.Raw(Url.Action("List", "ReturnRequest"))",
-                                                    type: "POST",
-                                                    dataType: "json",
-                                                    data: function() {
-                                                        var data = {
-                                                            StartDate: $('#@Html.IdFor(model => model.StartDate)').val(),
-                                                            EndDate: $('#@Html.IdFor(model => model.EndDate)').val(),
-                                                            CustomNumber: $('#@Html.IdFor(model => model.CustomNumber)').val(),
-                                                            ReturnRequestStatusId: $('#@Html.IdFor(model => model.ReturnRequestStatusId)').val()
-                                                        };
-                                                        addAntiForgeryToken(data);
-                                                        return data;
-                                                    }
-                                                }
-                                            },
-                                            schema: {
-                                                data: "Data",
-                                                total: "Total",
-                                                errors: "Errors"
-                                            },
-                                            error: function(e) {
-                                                display_kendoui_grid_error(e);
-                                                // Cancel the changes
-                                                this.cancelChanges();
-                                            },
-                                            pageSize: @(Model.PageSize),
-                                            serverPaging: true,
-                                            serverFiltering: true,
-                                            serverSorting: true
-                                        },
-                                        pageable: {
-                                            refresh: true,
-                                            pageSizes: [@(Model.AvailablePageSizes)],
-                                            @await Html.PartialAsync("_GridPagerMessages")
-                                        },
-                                        editable: {
-                                            confirmation: "@T("Admin.Common.DeleteConfirmation")",
-                                            mode: "inline"
-                                        },
-                                        scrollable: false,
-                                        columns: [
-                                            {
-                                                field: "CustomNumber",
-                                                title: "@T("Admin.ReturnRequests.Fields.CustomNumber")",
-                                                width: 100
-                                            }, {
-                                                field: "ProductName",
-                                                title: "@T("Admin.ReturnRequests.Fields.Product")",
-                                                width: 350,
-                                                template:
-                                                    '# if(ProductId > 0) {# <a href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#">#:ProductName#</a> ' +
-                                                        '# if(AttributeInfo && AttributeInfo.length > 0) {# <div>#=AttributeInfo#</div> #} # #} else {# order item is deleted #} #'
-                                            }, {
-                                                field: "Quantity",
-                                                title: "@T("Admin.ReturnRequests.Fields.Quantity")",
-                                                width: 100
-                                            }, {
-                                                field: "CustomerId",
-                                                title: "@T("Admin.ReturnRequests.Fields.Customer")",
-                                                width: 200,
-                                                template:
-                                                    '<a href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#">#:CustomerInfo#</a>'
-                                            }, {
-                                                field: "CustomOrderNumber",
-                                                title: "@T("Admin.ReturnRequests.Fields.CustomOrderNumber")",
-                                                width: 200,
-                                                headerAttributes: { style: "text-align:center" },
-                                                attributes: { style: "text-align:center" },
-                                                template: '# if(OrderId > 0) {# <a class="btn btn-default" href="@Url.Content("~/Admin/Order/Edit/")#=OrderId#"><i class="fa fa-eye"></i>#=CustomOrderNumber# - @T("Admin.Common.View")</a> #} else {# order item is deleted #} #'
-                                            }, {
-                                                field: "ReturnRequestStatusStr",
-                                                title: "@T("Admin.ReturnRequests.Fields.Status")",
-                                                width: 100
-                                            }, {
-                                                field: "CreatedOn",
-                                                title: "@T("Admin.ReturnRequests.Fields.CreatedOn")",
-                                                width: 100,
-                                                type: "date",
-                                                format: "{0:G}"
-                                            }, {
-                                                field: "Id",
-                                                title: "@T("Admin.Common.Edit")",
-                                                width: 100,
-                                                headerAttributes: { style: "text-align:center" },
-                                                attributes: { style: "text-align:center" },
-                                                template: '<a class="btn btn-default" href="Edit/#=Id#"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>'
-                                            }
-                                        ]
-                                    });
-                            });
-                    </script>
+                        function renderColumnProductName(data, type, row, meta) {
+                            if (row.ProductId > 0) {
+                                var textRenderer = $.fn.dataTable.render.text().display;
+                                var productInfo = '<a href="@Url.Content("~/Admin/Product/Edit/")' + row.ProductId + '">' + textRenderer(row.ProductName) + '</a>';
+                                var attributeInfo = '';
+                                if (row.AttributeInfo && row.AttributeInfo.length > 0) {
+                                    attributeInfo = '<div>' + row.AttributeInfo +'</div>';
+                                }
+                                return productInfo + attributeInfo;
+                            } else {
+                                return 'order item is deleted';
+                            }
+                        }
 
-                    <script>
-                        $(document)
-                            .ready(function() {
-                                $('#search-returnrequests')
-                                    .click(function() {
-                                        var grid = $('#returnrequests-grid').data('kendoGrid');
-                                        grid.dataSource.page(1); //new search. Set page size to 1
-                                        //grid.dataSource.read(); we already loaded the grid above using "page" function
-                                        return false;
-                                    });
-                            });
+                        function renderColumnCustomerInfo(data, type, row, meta) {
+                            var textRenderer = $.fn.dataTable.render.text().display;
+                            return '<a href="@Url.Content("~/Admin/Customer/Edit/")' + row.CustomerId + '">' + textRenderer(row.CustomerInfo) + '</a>';
+                        }
+
+                        function renderColumnOrderInfo(data, type, row, meta) {
+                            if (row.OrderId > 0) {
+                                var textRenderer = $.fn.dataTable.render.text().display;
+                                return '<a class="btn btn-default" href="@Url.Content("~/Admin/Order/Edit/")' + row.OrderId + '"><i class="fa fa-eye"></i>' + textRenderer(row.CustomOrderNumber) + ' - @T("Admin.Common.View")</a>';
+                            } else {
+                                return 'order item is deleted';
+                            }
+                        }
                     </script>
                 </div>
             </div>

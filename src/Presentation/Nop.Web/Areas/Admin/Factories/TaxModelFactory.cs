@@ -37,8 +37,7 @@ namespace Nop.Web.Areas.Admin.Factories
         #endregion
 
         #region Utilities
-
-
+        
         /// <summary>
         /// Prepare datatables model
         /// </summary>
@@ -97,8 +96,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             return model;
         }
-
-
+        
         #endregion
 
         #region Methods
