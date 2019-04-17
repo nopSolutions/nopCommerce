@@ -126,7 +126,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     new ColumnProperty(nameof(StateProvinceModel.Id))
                     {
                         Title = _localizationService.GetResource("Admin.Common.Delete"),
-                        Width = "300",
+                        Width = "100",
                         Render = new RenderButtonRemove(_localizationService.GetResource("Admin.Common.Delete")){ Style = StyleButton.Default },
                         ClassName = StyleColumn.CenterAll
                     }
