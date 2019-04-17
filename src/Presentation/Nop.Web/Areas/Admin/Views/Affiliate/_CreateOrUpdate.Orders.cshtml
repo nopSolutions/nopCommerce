@@ -60,106 +60,39 @@
 
     <div class="sub-panel">
         <div class="panel-body">
-            <div id="orders-grid"></div>
-
-            <script>
-                $(document).ready(function () {
-                    $("#orders-grid").kendoGrid({
-                        dataSource: {
-                            type: "json",
-                            transport: {
-                                read: {
-                                    url: "@Html.Raw(Url.Action("AffiliatedOrderListGrid", "Affiliate"))",
-                                    type: "POST",
-                                    dataType: "json",
-                                    data: function() {
-                                        var data = {
-                                            AffliateId: '@(Model.Id)',
-                                            StartDate: $('#@Html.IdFor(model => model.AffiliatedOrderSearchModel.StartDate)').val(),
-                                            EndDate: $('#@Html.IdFor(model => model.AffiliatedOrderSearchModel.EndDate)').val(),
-                                            OrderStatusId: $('#@Html.IdFor(model => model.AffiliatedOrderSearchModel.OrderStatusId)').val(),
-                                            PaymentStatusId: $('#@Html.IdFor(model => model.AffiliatedOrderSearchModel.PaymentStatusId)').val(),
-                                            ShippingStatusId: $('#@Html.IdFor(model => model.AffiliatedOrderSearchModel.ShippingStatusId)').val()
-                                        };
-                                        addAntiForgeryToken(data);
-                                        return data;
-                                    }
-                                }
-                            },
-                            schema: {
-                                data: "Data",
-                                total: "Total",
-                                errors: "Errors"
-                            },
-                            error: function(e) {
-                                display_kendoui_grid_error(e);
-                                // Cancel the changes
-                                this.cancelChanges();
-                            },
-                            pageSize: @(Model.AffiliatedOrderSearchModel.PageSize),
-                            serverPaging: true,
-                            serverFiltering: true,
-                            serverSorting: true
-                        },
-                        pageable: {
-                            refresh: true,
-                            pageSizes: [@(Model.AffiliatedOrderSearchModel.AvailablePageSizes)],
-                            @await Html.PartialAsync("_GridPagerMessages")
-                        },
-                        editable: {
-                            confirmation: "@T("Admin.Common.DeleteConfirmation")",
-                            mode: "inline"
-                        },
-                        scrollable: false,
-                        columns: [{
-                            field: "CustomOrderNumber",
-                            title: "@T("Admin.Affiliates.Orders.CustomOrderNumber")",
-                            width: 200
-                        }, {
-                            field: "OrderStatus",
-                            title: "@T("Admin.Affiliates.Orders.OrderStatus")",
-                            template: '<span class="grid-report-item ' +
-                                                    '# if(OrderStatusId == 10) {# yellow #} #' +
-                                                    '# if(OrderStatusId == 20) {# blue #} #' +
-                                                    '# if(OrderStatusId == 30) {# green #} #' +
-                                                    '# if(OrderStatusId == 40) {# red #} #' +
-                                                    '">#=OrderStatus#</span>'
-                        }, {
-                            field: "PaymentStatus",
-                            title: "@T("Admin.Affiliates.Orders.PaymentStatus")"
-                        },{
-                            field: "ShippingStatus",
-                            title: "@T("Admin.Affiliates.Orders.ShippingStatus")"
-                        },{
-                            field: "OrderTotal",
-                            title: "@T("Admin.Affiliates.Orders.OrderTotal")"
-                        },{
-                            field: "CreatedOn",
-                            title: "@T("Admin.Affiliates.Orders.CreatedOn")",
-                            type: "date",
-                            format: "{0:G}"
-                        },{
-                            field: "Id",
-                            title: "@T("Admin.Common.View")",
-                            width: 100,
-                            headerAttributes: { style: "text-align:center" },
-                            attributes: { style: "text-align:center" },
-                            template: '<a class="btn btn-default" href="@Url.Content("~/Admin/Order/Edit/")#=Id#"><i class="fa fa-eye"></i>@T("Admin.Common.View")</a>'
-                        }]
-                    });
-                });
-            </script>
-
+            @await Html.PartialAsync("Table", Model.AffiliatedOrderSearchModel.Grid)
+            
             <script>
                 var selectedIds = [];
                 var reportAggregates = "";
 
-                $(document).ready(function () {
+                function renderOrderStatus(data, type, row, meta) {
+
+                    var addClass = '';
+
+                    switch (row.OrderStatusId) {
+                    case 10:
+                        addClass = "yellow";
+                        break;
+                    case 20:
+                        addClass = 'blue';
+                        break;
+                    case 30:
+                            addClass = 'green';
+                        break;
+                    case 40:
+                            addClass = 'red';
+                        break;
+                    }
+
+                    return '<span class="grid-report-item ' + addClass + '">' + row.OrderStatus +'</span>';
+                }
+
+                $(document).ready(function() {
                     //search button
-                    $('#search-orders').click(function () {
+                    $('#search-orders').click(function() {
                         //search
-                        var grid = $('#orders-grid').data('kendoGrid');
-                        grid.dataSource.page(1); //new search. Set page size to 1
+                        $('#@Model.AffiliatedOrderSearchModel.Grid.Name').DataTable().ajax.reload();
                         //grid.dataSource.read(); we already loaded the grid above using "page" function
                         return false;
                     });
