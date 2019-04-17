@@ -41,6 +41,68 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Utilities
 
         /// <summary>
+        /// Prepare datatables model
+        /// </summary>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
+        protected virtual DataTablesModel PrepareCustomerAttributeValueGridModel(CustomerAttributeValueSearchModel searchModel)
+        {
+            //prepare common properties
+            var model = new DataTablesModel
+            {
+                Name = "customerattributevalues-grid",
+                UrlRead = new DataUrl("ValueList", "CustomerAttribute", null),
+                UrlDelete = new DataUrl("ValueDelete", "CustomerAttribute", null),
+                //BindColumnNameActionDelete = nameof(DiscountProductModel.ProductId),
+                Length = searchModel.PageSize,
+                LengthMenu = searchModel.AvailablePageSizes
+            };
+
+            //prepare filters to search
+            model.Filters = new List<FilterParameter>()
+            {
+                new FilterParameter(nameof(searchModel.CustomerAttributeId), searchModel.CustomerAttributeId)
+            };
+
+            //prepare model columns
+            model.ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(CustomerAttributeValueModel.Name))
+                {
+                    Title = _localizationService.GetResource("Admin.Customers.CustomerAttributes.Values.Fields.Name")
+                },
+                new ColumnProperty(nameof(CustomerAttributeValueModel.IsPreSelected))
+                {
+                    Title = _localizationService.GetResource("Admin.Customers.CustomerAttributes.Values.Fields.IsPreSelected"),
+                    Width = "100",
+                    ClassName = StyleColumn.CenterAll,
+                    Render = new RenderBoolean()
+                },
+                new ColumnProperty(nameof(CustomerAttributeValueModel.DisplayOrder))
+                {
+                    Title = _localizationService.GetResource("Admin.Customers.CustomerAttributes.Values.Fields.DisplayOrder"),
+                    Width = "100"
+                },
+                new ColumnProperty(nameof(CustomerAttributeValueModel.Id))
+                {
+                    Title = _localizationService.GetResource("Admin.Common.Edit"),
+                    Width = "100",
+                    ClassName =  StyleColumn.CenterAll,
+                    Render = new RenderCustom("renderColumnEdit")
+                },
+                new ColumnProperty(nameof(CustomerAttributeValueModel.Id))
+                {
+                    Title = _localizationService.GetResource("Admin.Common.Delete"),
+                    Width = "100",
+                    Render = new RenderButtonRemove(_localizationService.GetResource("Admin.Common.Delete")) { Style = StyleButton.Default },
+                    ClassName =  StyleColumn.CenterAll
+                }
+            };
+
+            return model;
+        }
+
+        /// <summary>
         /// Prepare customer attribute value search model
         /// </summary>
         /// <param name="searchModel">Customer attribute value search model</param>
@@ -59,6 +121,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
+            searchModel.Grid = PrepareCustomerAttributeValueGridModel(searchModel);
 
             return searchModel;
         }
@@ -224,12 +287,11 @@ namespace Nop.Web.Areas.Admin.Factories
                 .GetCustomerAttributeValues(customerAttribute.Id).ToPagedList(searchModel);
 
             //prepare list model
-            var model = new CustomerAttributeValueListModel
+            var model = new CustomerAttributeValueListModel().PrepareToGrid(searchModel, customerAttributeValues, () =>
             {
                 //fill in model values from the entity
-                Data = customerAttributeValues.Select(value => value.ToModel<CustomerAttributeValueModel>()),
-                Total = customerAttributeValues.TotalCount
-            };
+                return customerAttributeValues.Select(value => value.ToModel<CustomerAttributeValueModel>());
+            });
 
             return model;
         }
