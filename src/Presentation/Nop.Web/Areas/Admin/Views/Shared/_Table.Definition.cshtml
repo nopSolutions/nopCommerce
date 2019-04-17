@@ -76,9 +76,9 @@ else
         data: function(data) {
             @if (Model.Filters != null)
             {
-                @foreach (var filter in Model.Filters)
+                foreach (var filter in Model.Filters)
                 {
-                    @if (filter.Type == typeof(string))
+                    if (filter.Type == typeof(string))
                     {
                         if (Model.IsChildTable && !string.IsNullOrEmpty(filter.ParentName))
                         {
@@ -102,14 +102,14 @@ else
                         }
                         continue;
                     }
-                    @if (filter.Type == typeof(bool))
+                    if (filter.Type == typeof(bool))
                     {
                         <text>
                         data.@filter.Name = $('#@filter.Name').is(':checked');
                         </text>
                         continue;
                     }
-                    @if (filter.Type == typeof(int))
+                    if (filter.Type == typeof(int))
                     {
                         if (int.TryParse(@filter.Value.ToString(), out int val))
                         {
@@ -235,7 +235,7 @@ columns: [
                     </text>
                     break;
                 case RenderButtonCustom buttonCustom:
-                    @if (!string.IsNullOrEmpty(buttonCustom.Url))
+                    if (!string.IsNullOrEmpty(buttonCustom.Url))
                     {
                         <text>
                         render: function (data, type, row, meta) {
@@ -243,7 +243,7 @@ columns: [
                         }
                         </text>
                     }
-                    @if (!string.IsNullOrEmpty(buttonCustom.OnClickFunctionName))
+                    if (!string.IsNullOrEmpty(buttonCustom.OnClickFunctionName))
                     {
                         <text>
                         render: function (data, type, row, meta) {
