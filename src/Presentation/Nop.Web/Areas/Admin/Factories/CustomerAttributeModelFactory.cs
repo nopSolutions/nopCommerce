@@ -53,7 +53,6 @@ namespace Nop.Web.Areas.Admin.Factories
                 Name = "customerattributevalues-grid",
                 UrlRead = new DataUrl("ValueList", "CustomerAttribute", null),
                 UrlDelete = new DataUrl("ValueDelete", "CustomerAttribute", null),
-                //BindColumnNameActionDelete = nameof(DiscountProductModel.ProductId),
                 Length = searchModel.PageSize,
                 LengthMenu = searchModel.AvailablePageSizes
             };
