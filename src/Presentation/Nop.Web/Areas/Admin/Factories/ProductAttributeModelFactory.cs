@@ -131,13 +131,61 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(productAttribute));
 
             searchModel.ProductAttributeId = productAttribute.Id;
-            searchModel.Grid = PreparePredefinedProductAttributeValueGridModel(searchModel);
 
             //prepare page parameters
             searchModel.SetGridPageSize();
-
+            searchModel.Grid = PreparePredefinedProductAttributeValueGridModel(searchModel);
 
             return searchModel;
+        }
+
+        /// <summary>
+        /// Prepare datatables model
+        /// </summary>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
+        protected virtual DataTablesModel PrepareProductAttributeProductGridModel(ProductAttributeProductSearchModel searchModel)
+        {
+            //prepare common properties
+            var model = new DataTablesModel
+            {
+                Name = "used-by-products-grid",
+                UrlRead = new DataUrl("UsedByProducts", "ProductAttribute", null),
+                Length = searchModel.PageSize,
+                LengthMenu = searchModel.AvailablePageSizes
+            };
+
+            //prepare filters to search
+            model.Filters = new List<FilterParameter>
+            {
+                new FilterParameter(nameof(searchModel.ProductAttributeId), searchModel.ProductAttributeId)
+            };
+
+            //prepare model columns
+            model.ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(ProductAttributeProductModel.ProductName))
+                {
+                    Title = _localizationService.GetResource("Admin.Catalog.Attributes.ProductAttributes.UsedByProducts.Product"),
+                    Width = "400"
+                },
+                new ColumnProperty(nameof(ProductAttributeProductModel.Published))
+                {
+                    Title = _localizationService.GetResource("Admin.Catalog.Attributes.ProductAttributes.UsedByProducts.Published"),
+                    Width = "100",
+                    ClassName =  StyleColumn.CenterAll,
+                    Render = new RenderBoolean()
+                },
+                new ColumnProperty(nameof(ProductAttributeProductModel.Id))
+                {
+                    Title = _localizationService.GetResource("Admin.Common.View"),
+                    Width = "100",
+                    ClassName =  StyleColumn.CenterAll,
+                    Render = new RenderButtonView(new DataUrl("~/Admin/Product/Edit/"))
+                }
+            };
+
+            return model;
         }
 
         /// <summary>
@@ -159,6 +207,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
+            searchModel.Grid = PrepareProductAttributeProductGridModel(searchModel);
 
             return searchModel;
         }
@@ -382,17 +431,16 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new ProductAttributeProductListModel
+            var model = new ProductAttributeProductListModel().PrepareToGrid(searchModel, products, () =>
             {
                 //fill in model values from the entity
-                Data = products.Select(product =>
+                return products.Select(product =>
                 {
                     var productAttributeProductModel = product.ToModel<ProductAttributeProductModel>();
                     productAttributeProductModel.ProductName = product.Name;
                     return productAttributeProductModel;
-                }),
-                Total = products.TotalCount
-            };
+                });
+            });
 
             return model;
         }
