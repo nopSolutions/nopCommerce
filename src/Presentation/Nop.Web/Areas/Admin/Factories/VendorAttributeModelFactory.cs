@@ -41,6 +41,67 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Utilities
 
         /// <summary>
+        /// Prepare datatables model
+        /// </summary>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
+        protected virtual DataTablesModel PrepareVendorAttributeValueGridModel(VendorAttributeValueSearchModel searchModel)
+        {
+            //prepare common properties
+            var model = new DataTablesModel
+            {
+                Name = "vendorattributevalues-grid",
+                UrlRead = new DataUrl("ValueList", "VendorAttribute", null),
+                UrlDelete = new DataUrl("ValueDelete", "VendorAttribute", null),
+                Length = searchModel.PageSize,
+                LengthMenu = searchModel.AvailablePageSizes
+            };
+
+            //prepare filters to search
+            model.Filters = new List<FilterParameter>
+            {
+                new FilterParameter(nameof(searchModel.VendorAttributeId), searchModel.VendorAttributeId)
+            };
+
+            //prepare model columns
+            model.ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(VendorAttributeValueModel.Name))
+                {
+                    Title = _localizationService.GetResource("Admin.Vendors.VendorAttributes.Values.Fields.Name")
+                },
+                new ColumnProperty(nameof(VendorAttributeValueModel.IsPreSelected))
+                {
+                    Title = _localizationService.GetResource("Admin.Vendors.VendorAttributes.Values.Fields.IsPreSelected"),
+                    Width = "100",
+                    ClassName = StyleColumn.CenterAll,
+                    Render = new RenderBoolean()
+                },
+                new ColumnProperty(nameof(VendorAttributeValueModel.DisplayOrder))
+                {
+                    Title = _localizationService.GetResource("Admin.Vendors.VendorAttributes.Values.Fields.DisplayOrder"),
+                    Width = "100"
+                },
+                new ColumnProperty(nameof(VendorAttributeValueModel.Id))
+                {
+                    Title = _localizationService.GetResource("Admin.Common.Edit"),
+                    Width = "100",
+                    ClassName =  StyleColumn.CenterAll,
+                    Render = new RenderCustom("renderColumnEdit")
+                },
+                new ColumnProperty(nameof(VendorAttributeValueModel.Id))
+                {
+                    Title = _localizationService.GetResource("Admin.Common.Delete"),
+                    Width = "100",
+                    Render = new RenderButtonRemove(_localizationService.GetResource("Admin.Common.Delete")) { Style = StyleButton.Default },
+                    ClassName =  StyleColumn.CenterAll
+                }
+            };
+
+            return model;
+        }
+
+        /// <summary>
         /// Prepare vendor attribute value search model
         /// </summary>
         /// <param name="searchModel">Vendor attribute value search model</param>
@@ -59,6 +120,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
+            searchModel.Grid = PrepareVendorAttributeValueGridModel(searchModel);
 
             return searchModel;
         }
@@ -224,12 +286,11 @@ namespace Nop.Web.Areas.Admin.Factories
             var vendorAttributeValues = _vendorAttributeService.GetVendorAttributeValues(vendorAttribute.Id).ToPagedList(searchModel);
 
             //prepare list model
-            var model = new VendorAttributeValueListModel
+            var model = new VendorAttributeValueListModel().PrepareToGrid(searchModel, vendorAttributeValues, () =>
             {
                 //fill in model values from the entity
-                Data = vendorAttributeValues.Select(value => value.ToModel<VendorAttributeValueModel>()),
-                Total = vendorAttributeValues.TotalCount
-            };
+                return vendorAttributeValues.Select(value => value.ToModel<VendorAttributeValueModel>());
+            });
 
             return model;
         }

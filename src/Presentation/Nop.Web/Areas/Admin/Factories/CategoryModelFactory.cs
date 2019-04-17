@@ -108,7 +108,7 @@ namespace Nop.Web.Areas.Admin.Factories
             };
 
             //prepare filters to search
-            model.Filters = new List<FilterParameter>()
+            model.Filters = new List<FilterParameter>
             {
                 new FilterParameter(nameof(searchModel.SearchCategoryName)),
                 new FilterParameter(nameof(searchModel.SearchStoreId))

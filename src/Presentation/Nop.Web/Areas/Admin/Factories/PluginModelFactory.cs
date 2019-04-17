@@ -156,7 +156,7 @@ namespace Nop.Web.Areas.Admin.Factories
             };
 
             //prepare filters to search
-            model.Filters = new List<FilterParameter>()
+            model.Filters = new List<FilterParameter>
             {
                 new FilterParameter(nameof(searchModel.SearchName)),
                 new FilterParameter(nameof(searchModel.SearchVersionId)),
@@ -223,7 +223,7 @@ namespace Nop.Web.Areas.Admin.Factories
             };
 
             //prepare filters to search
-            model.Filters = new List<FilterParameter>()
+            model.Filters = new List<FilterParameter>
             {
                 new FilterParameter(nameof(searchModel.SearchLoadModeId)),
                 new FilterParameter(nameof(searchModel.SearchGroup))
