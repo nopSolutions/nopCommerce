@@ -1354,6 +1354,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(entity => entity.CreatedOnUtc, options => options.Ignore())
                 .ForMember(entity => entity.CyclePeriod, options => options.Ignore())
                 .ForMember(entity => entity.RecurringPaymentHistory, options => options.Ignore())
+                .ForMember(entity => entity.InitialOrderId, options => options.Ignore())
                 .ForMember(entity => entity.InitialOrder, options => options.Ignore());
 
             CreateMap<RecurringPaymentHistory, RecurringPaymentHistoryModel>()
