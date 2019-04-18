@@ -158,61 +158,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             return model;
         }
-
-        /// <summary>
-        /// Prepare datatables model
-        /// </summary>
-        /// <param name="searchModel">Search model</param>
-        /// <returns>Datatables model</returns>
-        protected virtual DataTablesModel PrepareCategoryGridModel(CategorySearchModel searchModel)
-        {
-            //prepare common properties
-            var model = new DataTablesModel
-            {
-                Name = "categories-grid",
-                UrlRead = new DataUrl("List", "Category", null),
-                SearchButtonId = "search-categories",
-                Length = searchModel.PageSize,
-                LengthMenu = searchModel.AvailablePageSizes
-            };
-
-            //prepare filters to search
-            model.Filters = new List<FilterParameter>
-            {
-                new FilterParameter(nameof(searchModel.SearchCategoryName)),
-                new FilterParameter(nameof(searchModel.SearchStoreId))
-            };
-
-            //prepare model columns
-            model.ColumnCollection = new List<ColumnProperty>
-            {
-                new ColumnProperty(nameof(CategoryModel.Breadcrumb))
-                {
-                    Title = _localizationService.GetResource("Admin.Catalog.Categories.Fields.Name")
-                },
-                new ColumnProperty(nameof(CategoryModel.Published))
-                {
-                    Title = _localizationService.GetResource("Admin.Catalog.Categories.Fields.Published"),
-                    Width = "100",
-                    Render = new RenderBoolean()
-                },
-                new ColumnProperty(nameof(CategoryModel.DisplayOrder))
-                {
-                    Title = _localizationService.GetResource("Admin.Catalog.Categories.Fields.DisplayOrder"),
-                    Width = "150"
-                },
-                new ColumnProperty(nameof(CategoryModel.Id))
-                {
-                    Title = _localizationService.GetResource("Admin.Common.Edit"),
-                    Width = "100",
-                    ClassName =  StyleColumn.ButtonStyle,
-                    Render = new RenderButtonEdit(new DataUrl("Edit"))
-                }
-            };
-
-            return model;
-        }
-
+        
         /// <summary>
         /// Prepare datatables model
         /// </summary>
@@ -287,7 +233,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
-            searchModel.Grid = PrepareCategoryGridModel(searchModel);
 
             return searchModel;
         }

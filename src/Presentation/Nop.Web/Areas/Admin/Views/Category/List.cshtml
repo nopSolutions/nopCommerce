@@ -11,7 +11,6 @@
     const string hideSearchBlockAttributeName = "CategoryPage.HideSearchBlock";
     var hideSearchBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSearchBlockAttributeName);
 }
-
 <nop-antiforgery-token />
 <div class="content-header clearfix">
     <h1 class="pull-left">
@@ -97,7 +96,44 @@
 
             <div class="panel panel-default">
                 <div class="panel-body">
-                    @await Html.PartialAsync("Table", Model.Grid)  
+                    @await Html.PartialAsync("Table", new DataTablesModel
+                    {
+                        Name = "categories-grid",
+                        UrlRead = new DataUrl("List", "Category", null),
+                        SearchButtonId = "search-categories",
+                        Length = Model.PageSize,
+                        LengthMenu = Model.AvailablePageSizes,
+                        Filters = new List<FilterParameter>
+                        {
+                            new FilterParameter(nameof(Model.SearchCategoryName)),
+                            new FilterParameter(nameof(Model.SearchStoreId))
+                        },
+                        ColumnCollection = new List<ColumnProperty>
+                        {
+                            new ColumnProperty(nameof(CategoryModel.Breadcrumb))
+                            {
+                                Title = T("Admin.Catalog.Categories.Fields.Name").Text
+                            },
+                            new ColumnProperty(nameof(CategoryModel.Published))
+                            {
+                                Title = T("Admin.Catalog.Categories.Fields.Published").Text,
+                                Width = "100",
+                                Render = new RenderBoolean()
+                            },
+                            new ColumnProperty(nameof(CategoryModel.DisplayOrder))
+                            {
+                                Title = T("Admin.Catalog.Categories.Fields.DisplayOrder").Text,
+                                Width = "150"
+                            },
+                            new ColumnProperty(nameof(CategoryModel.Id))
+                            {
+                                Title = T("Admin.Common.Edit").Text,
+                                Width = "100",
+                                ClassName =  StyleColumn.ButtonStyle,
+                                Render = new RenderButtonEdit(new DataUrl("Edit"))
+                            }
+                        }
+                    })
                 </div>
             </div>
         </div>
