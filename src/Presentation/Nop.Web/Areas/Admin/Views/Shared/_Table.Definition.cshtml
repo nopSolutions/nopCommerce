@@ -35,7 +35,7 @@
 {
     <text>
     headerCallback: function (tfoot, data, start, end, display) {
-        return @(Model.HeaderCallback)(tfoot, data, start, end, display)
+        return @(Model.HeaderCallback)(tfoot, data, start, end, display);
     },
     </text>
 }
@@ -43,7 +43,7 @@
 {
     <text>
     footerCallback: function (tfoot, data, start, end, display) {
-        return @(Model.FooterCallback)(tfoot, data, start, end, display)
+        return @(Model.FooterCallback)(tfoot, data, start, end, display);
     },
     </text>
 }
@@ -139,8 +139,7 @@ columns: [
     @foreach (var column in Model.ColumnCollection)
     {
         <text>
-        {
-            data: '@column.Data',
+        {            
             @if (!string.IsNullOrEmpty(column.Title) && !column.IsMasterCheckBox)
             {
                 <text>
@@ -203,35 +202,35 @@ columns: [
                                 return '<a href="@GetUrl(link.Url)' + row.@link.Url.DataId + '">' + data + '</a>';
                             </text>
                         }
-                    }
+                    },
                     </text>
                     break;
                 case RenderDate date:
                     <text>
                     render: function (data, type, row, meta) {
                         return (data) ? moment(data).locale('@locale').format('@date.Format') : null;
-                    }
+                    },
                     </text>
                     break;
                 case RenderButtonRemove button:
                     <text>
                     render: function (data, type, row, meta) {
-                        return '<a href="#" class="@GetEnumValue(typeof(StyleButton), button.Style)" onclick=DeleteData_@(model_name)("' + data + '");><i class="fa fa-remove"></i>@button.Title</a>'
-                    }
+                        return '<a href="#" class="@GetEnumValue(typeof(StyleButton), button.Style)" onclick="DeleteData_@(model_name)(\'' + data + '\')"><i class="fa fa-remove"></i>@button.Title</a>';
+                    },
                     </text>
                     break;
                 case RenderButtonEdit buttonEdit:
                     <text>
                     render: function (data, type, row, meta) {
-                        return '<a class="@GetEnumValue(typeof(StyleButton), buttonEdit.Style)" href="@GetUrl(buttonEdit.Url)' + data + '"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>'
-                    }
+                        return '<a class="@GetEnumValue(typeof(StyleButton), buttonEdit.Style)" href="@GetUrl(buttonEdit.Url)' + data + '"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>';
+                    },
                     </text>
                     break;
                 case RenderButtonView buttonView:
                     <text>
                     render: function (data, type, row, meta) {
                         return '<a class="@GetEnumValue(typeof(StyleButton), buttonView.Style)" href="@GetUrl(buttonView.Url)' + data + '"><i class="fa fa-eye"></i>@T("Admin.Common.View")</a>';
-                    }
+                    },
                     </text>
                     break;
                 case RenderButtonCustom buttonCustom:
@@ -240,7 +239,7 @@ columns: [
                         <text>
                         render: function (data, type, row, meta) {
                             return '<a class="@GetEnumValue(typeof(StyleButton), buttonCustom.Style)" href="@buttonCustom.Url' + data + '">@buttonCustom.Title</a>';
-                        }
+                        },
                         </text>
                     }
                     if (!string.IsNullOrEmpty(buttonCustom.OnClickFunctionName))
@@ -248,7 +247,7 @@ columns: [
                         <text>
                         render: function (data, type, row, meta) {
                             return '<a class="@GetEnumValue(typeof(StyleButton), buttonCustom.Style)" onclick="@buttonCustom.OnClickFunctionName' + '(' + data + ')">@buttonCustom.Title</a>';
-                        }
+                        },
                         </text>
                     }
                     break;
@@ -267,7 +266,7 @@ columns: [
                             return '<img src="@(picture.SrcPrefix)' + data + '"/>';
                             </text>
                         }
-                    }
+                    },
                     </text>
                     break;
                 case RenderCheckBox checkBox:
@@ -276,7 +275,7 @@ columns: [
                         return (data === 'true')
                             ? '<input name="@checkBox.Name" value="' + row.Id + '" type="checkbox" class="checkboxGroups" checked="checked" />'
                             : '<input name="@checkBox.Name" value="' + row.Id + '" type="checkbox" class="checkboxGroups" />';
-                    }
+                    },
                     </text>
                     break;
                 case RenderBoolean renderBoolean:
@@ -285,24 +284,25 @@ columns: [
                         return (data == true)
                             ? '<i class="fa fa-check true-icon"></i>'
                             : '<i class="fa fa-close false-icon"></i>';
-                    }
+                    },
                     </text>
                     break;
                 case RenderCustom custom:
                     <text>
                     render: function (data, type, row, meta) {
                         return @(custom.FunctionName)(data, type, row, meta);
-                    }
+                    },
                     </text>
                     break;
                 case RenderChildCaret caret:
                     <text>
                     render: function (data, type, row, meta) {
                         return '<i class="fa fa-caret-right" aria-hidden="true"></i>';
-                    }
+                    },
                     </text>
                     break;
             }
+            data: '@column.Data'
         },
         </text>
     }
