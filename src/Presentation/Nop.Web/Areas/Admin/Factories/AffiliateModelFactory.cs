@@ -121,79 +121,8 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
-            searchModel.Grid = PrepareAffiliatedOrderGridModel(searchModel);
 
             return searchModel;
-        }
-
-        /// <summary>
-        /// Prepare datatables model
-        /// </summary>
-        /// <param name="searchModel">Search model</param>
-        /// <returns>Datatables model</returns>
-        protected virtual DataTablesModel PrepareAffiliatedOrderGridModel(AffiliatedOrderSearchModel searchModel)
-        {
-            //prepare common properties
-            var model = new DataTablesModel
-            {
-                Name = "orders-grid",
-                UrlRead = new DataUrl("AffiliatedOrderListGrid", "Affiliate", null),
-                SearchButtonId = "search-orders",
-                Length = searchModel.PageSize,
-                LengthMenu = searchModel.AvailablePageSizes,
-
-                //prepare filters to search
-                Filters = new List<FilterParameter>
-                {
-                    new FilterParameter(nameof(searchModel.AffliateId), searchModel.AffliateId),
-                    new FilterParameter(nameof(searchModel.StartDate), nameof(AffiliatedOrderSearchModel)),
-                    new FilterParameter(nameof(searchModel.EndDate), nameof(AffiliatedOrderSearchModel)),
-                    new FilterParameter(nameof(searchModel.OrderStatusId), nameof(AffiliatedOrderSearchModel)),
-                    new FilterParameter(nameof(searchModel.PaymentStatusId), nameof(AffiliatedOrderSearchModel)),
-                    new FilterParameter(nameof(searchModel.ShippingStatusId), nameof(AffiliatedOrderSearchModel))
-                },
-
-                //prepare model columns
-                ColumnCollection = new List<ColumnProperty>
-                {
-                    new ColumnProperty(nameof(AffiliatedOrderModel.CustomOrderNumber))
-                    {
-                        Title = _localizationService.GetResource("Admin.Affiliates.Orders.CustomOrderNumber"),
-                        Width = "200"
-                    },
-                    new ColumnProperty(nameof(AffiliatedOrderModel.OrderStatus))
-                    {
-                        Title = _localizationService.GetResource("Admin.Affiliates.Orders.OrderStatus"),
-                        Render = new RenderCustom("renderOrderStatus")
-                    },
-                    new ColumnProperty(nameof(AffiliatedOrderModel.PaymentStatus))
-                    {
-                        Title = _localizationService.GetResource("Admin.Affiliates.Orders.PaymentStatus")
-                    },
-                    new ColumnProperty(nameof(AffiliatedOrderModel.ShippingStatus))
-                    {
-                        Title = _localizationService.GetResource("Admin.Affiliates.Orders.ShippingStatus")
-                    },
-                    new ColumnProperty(nameof(AffiliatedOrderModel.OrderTotal))
-                    {
-                        Title = _localizationService.GetResource("Admin.Affiliates.Orders.OrderTotal")
-                    },
-                    new ColumnProperty(nameof(AffiliatedOrderModel.CreatedOn))
-                    {
-                        Title = _localizationService.GetResource("Admin.Affiliates.Orders.CreatedOn"),
-                        Render = new RenderDate()
-                    },
-                    new ColumnProperty(nameof(AffiliatedOrderModel.Id))
-                    {
-                        Title = _localizationService.GetResource("Admin.Common.View"),
-                        Width = "150",
-                        ClassName = StyleColumn.ButtonStyle,
-                        Render = new RenderButtonView(new DataUrl("~/Admin/Order/Edit/", nameof(AffiliatedOrderModel.Id)))
-                    }
-                }
-            };
-
-            return model;
         }
 
         /// <summary>
