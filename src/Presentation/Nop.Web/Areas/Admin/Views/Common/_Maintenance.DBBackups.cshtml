@@ -5,7 +5,45 @@
     <p>
         @T("Admin.System.Maintenance.BackupDatabase.Description")
     </p>
-    @await Html.PartialAsync("Table", Model.BackupFileSearchModel.Grid)
+    @await Html.PartialAsync("Table", new DataTablesModel
+    {
+        Name = "backup-list",
+        UrlRead = new DataUrl("BackupFiles", "Common", null),
+        Length = Model.BackupFileSearchModel.PageSize,
+        LengthMenu = Model.BackupFileSearchModel.AvailablePageSizes,
+        ColumnCollection = new List<ColumnProperty>
+        {
+            new ColumnProperty(nameof(BackupFileModel.Name))
+            {
+                Title = T("Admin.System.Maintenance.BackupDatabase.FileName").Text
+            },
+            new ColumnProperty(nameof(BackupFileModel.Length))
+            {
+                Title = T("Admin.System.Maintenance.BackupDatabase.FileSize").Text
+            },
+            new ColumnProperty(nameof(BackupFileModel.Link))
+            {
+                Title = T("Admin.System.Maintenance.BackupDatabase.Download").Text,
+                Render = new RenderCustom("renderDownload"),
+                Width = "150",
+                ClassName = StyleColumn.ButtonStyle
+            },
+            new ColumnProperty(nameof(BackupFileModel.Name))
+            {
+                Title = T("Admin.System.Maintenance.BackupDatabase.Restore").Text,
+                Render = new RenderCustom("renderRestore"),
+                Width = "150",
+                ClassName = StyleColumn.ButtonStyle
+            },
+            new ColumnProperty(nameof(BackupFileModel.Name))
+            {
+                Title = T("Admin.System.Maintenance.BackupDatabase.Delete").Text,
+                Render = new RenderCustom("renderDelete"),
+                Width = "150",
+                ClassName = StyleColumn.ButtonStyle
+            }
+        }
+    })
 </div>
 <div class="panel-footer">
     <button type="submit" id="backup-database" name="backup-database" class="btn btn-primary">

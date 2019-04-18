@@ -36,7 +36,6 @@ using Nop.Services.Tax;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Areas.Admin.Models.Localization;
-using Nop.Web.Framework.Models.DataTables;
 using Nop.Web.Framework.Models.Extensions;
 using Nop.Web.Framework.Security;
 
@@ -532,7 +531,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
-            searchModel.Grid = PrepareBackupFileGridModel(searchModel);
 
             return searchModel;
         }
@@ -597,138 +595,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 });
             }
         }
-
-        /// <summary>
-        /// Prepare datatables model
-        /// </summary>
-        /// <param name="searchModel">Search model</param>
-        /// <returns>Datatables model</returns>
-        protected virtual DataTablesModel PrepareBackupFileGridModel(BackupFileSearchModel searchModel)
-        {
-            //prepare common properties
-            var model = new DataTablesModel
-            {
-                Name = "backup-list",
-                UrlRead = new DataUrl("BackupFiles", "Common", null),
-                Length = searchModel.PageSize,
-                LengthMenu = searchModel.AvailablePageSizes
-            };
-            
-            //prepare model columns
-            model.ColumnCollection = new List<ColumnProperty>
-            {
-                new ColumnProperty(nameof(BackupFileModel.Name))
-                {
-                    Title = _localizationService.GetResource("Admin.System.Maintenance.BackupDatabase.FileName")
-                },
-                new ColumnProperty(nameof(BackupFileModel.Length))
-                {
-                    Title = _localizationService.GetResource("Admin.System.Maintenance.BackupDatabase.FileSize")
-                },
-                new ColumnProperty(nameof(BackupFileModel.Link))
-                {
-                    Title = _localizationService.GetResource("Admin.System.Maintenance.BackupDatabase.Download"),
-                    Render = new RenderCustom("renderDownload"),
-                    Width = "150",
-                    ClassName = StyleColumn.ButtonStyle
-                },
-                new ColumnProperty(nameof(BackupFileModel.Name))
-                {
-                    Title = _localizationService.GetResource("Admin.System.Maintenance.BackupDatabase.Restore"),
-                    Render = new RenderCustom("renderRestore"),
-                    Width = "150",
-                    ClassName = StyleColumn.ButtonStyle
-                },
-                new ColumnProperty(nameof(BackupFileModel.Name))
-                {
-                    Title = _localizationService.GetResource("Admin.System.Maintenance.BackupDatabase.Delete"),
-                    Render = new RenderCustom("renderDelete"),
-                    Width = "150",
-                    ClassName = StyleColumn.ButtonStyle
-                }
-            };
-
-            return model;
-        }
-
-        /// <summary>
-        /// Prepare datatables model
-        /// </summary>
-        /// <param name="searchModel">Search model</param>
-        /// <returns>Datatables model</returns>
-        protected virtual DataTablesModel PrepareUrlRecordGridModel(UrlRecordSearchModel searchModel)
-        {
-            //prepare common properties
-            var model = new DataTablesModel
-            {
-                Name = "sename-grid",
-                UrlRead = new DataUrl("SeNames", "Common", null),
-                SearchButtonId = "search-senames",
-                Length = searchModel.PageSize,
-                LengthMenu = searchModel.AvailablePageSizes
-            };
-
-            //prepare filters to search
-            model.Filters = new List<FilterParameter>
-            {
-                new FilterParameter(nameof(searchModel.SeName))
-            };
-
-            //prepare model columns
-            model.ColumnCollection = new List<ColumnProperty>
-            {
-                new ColumnProperty(nameof(UrlRecordModel.Id))
-                {
-                    IsMasterCheckBox = true,
-                    Render = new RenderCheckBox("checkbox_senames"),
-                    ClassName =  StyleColumn.CenterAll,
-                    Width = "50",
-                },
-                new ColumnProperty(nameof(UrlRecordModel.Id))
-                {
-                    Title = _localizationService.GetResource("Admin.System.SeNames.Id"),
-                    ClassName =  StyleColumn.CenterAll,
-                    Width = "50",
-                },
-                new ColumnProperty(nameof(UrlRecordModel.Name))
-                {
-                    Title = _localizationService.GetResource("Admin.System.SeNames.Name"),
-                    Width = "300",
-                },
-                new ColumnProperty(nameof(UrlRecordModel.EntityId))
-                {
-                    Title = _localizationService.GetResource("Admin.System.SeNames.EntityId"),
-                    Width = "50",
-                },
-                new ColumnProperty(nameof(UrlRecordModel.EntityName))
-                {
-                    Title = _localizationService.GetResource("Admin.System.SeNames.EntityName"),
-                    Width = "100",
-                },
-                new ColumnProperty(nameof(UrlRecordModel.IsActive))
-                {
-                    Title = _localizationService.GetResource("Admin.System.SeNames.IsActive"),
-                    ClassName =  StyleColumn.CenterAll,
-                    Width = "50",
-                    Render = new RenderBoolean()
-                },
-                new ColumnProperty(nameof(UrlRecordModel.Language))
-                {
-                    Title = _localizationService.GetResource("Admin.System.SeNames.Language"),
-                    Width = "100",
-                },
-                new ColumnProperty(nameof(UrlRecordModel.DetailsUrl))
-                {
-                    Title = _localizationService.GetResource("Admin.System.SeNames.Details"),
-                    Width = "100",
-                    ClassName =  StyleColumn.ButtonStyle,
-                    Render = new RenderCustom("renderColumnDetailsUrl")
-                }
-            };
-
-            return model;
-        }
-
+        
         #endregion
 
         #region Methods
@@ -937,7 +804,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
-            searchModel.Grid = PrepareUrlRecordGridModel(searchModel);
 
             return searchModel;
         }
