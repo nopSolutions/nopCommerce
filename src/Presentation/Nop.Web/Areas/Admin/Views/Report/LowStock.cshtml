@@ -62,7 +62,52 @@
 
                 <div class="panel panel-default">
                     <div class="panel-body">
-                        @await Html.PartialAsync("Table", Model.Grid)
+                        @await Html.PartialAsync("Table", new DataTablesModel
+                        {
+                            Name = "products-grid",
+                            UrlRead = new DataUrl("LowStockList", "Report", null),
+                            SearchButtonId = "search-products",
+                            Length = Model.PageSize,
+                            LengthMenu = Model.AvailablePageSizes,
+                            Filters = new List<FilterParameter>
+                            {
+                                new FilterParameter(nameof(Model.SearchPublishedId))
+                            },
+                            ColumnCollection = new List<ColumnProperty>
+                            {
+                                new ColumnProperty(nameof(LowStockProductModel.Name))
+                                {
+                                    Title = T("Admin.Catalog.Products.Fields.Name"),
+                                    Width = "300",
+                                    Render = new RenderCustom("renderColumnName")
+                                },
+                                new ColumnProperty(nameof(LowStockProductModel.ManageInventoryMethod))
+                                {
+                                    Title = T("Admin.Catalog.Products.Fields.ManageInventoryMethod"),
+                                    Width = "150"
+                                },
+                                new ColumnProperty(nameof(LowStockProductModel.StockQuantity))
+                                {
+                                    Title = T("Admin.Catalog.Products.Fields.StockQuantity"),
+                                    Width = "100"
+                                },
+                                new ColumnProperty(nameof(LowStockProductModel.Published))
+                                {
+                                    Title = T("Admin.Catalog.Products.Fields.Published"),
+                                    Width = "100",
+                                    ClassName =  StyleColumn.CenterAll,
+                                    Render = new RenderBoolean()
+                                },
+                                new ColumnProperty(nameof(LowStockProductModel.Id))
+                                {
+                                    Title = T("Admin.Common.View"),
+                                    Width = "100",
+                                    ClassName =  StyleColumn.ButtonStyle,
+                                    Render = new RenderButtonView(new DataUrl("~/Admin/Product/Edit/"))
+                                }
+                            }
+                        })
+                        
                         <script>
                             function renderColumnName(data, type, row, meta) {
                                 var textRenderer = $.fn.dataTable.render.text().display;

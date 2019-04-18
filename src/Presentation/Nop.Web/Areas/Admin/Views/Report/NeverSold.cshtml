@@ -102,7 +102,37 @@
 
             <div class="panel panel-default">
                 <div class="panel-body">
-                    @await Html.PartialAsync("Table", Model.Grid)
+                    @await Html.PartialAsync("Table", new DataTablesModel
+                    {
+                        Name = "neversoldreport-grid",
+                        UrlRead = new DataUrl("NeverSoldList", "Report", null),
+                        SearchButtonId = "search-neversoldreport",
+                        Length = Model.PageSize,
+                        LengthMenu = Model.AvailablePageSizes,
+                        Filters = new List<FilterParameter>
+                        {
+                            new FilterParameter(nameof(Model.StartDate)),
+                            new FilterParameter(nameof(Model.EndDate)),
+                            new FilterParameter(nameof(Model.SearchCategoryId)),
+                            new FilterParameter(nameof(Model.SearchManufacturerId)),
+                            new FilterParameter(nameof(Model.SearchStoreId)),
+                            new FilterParameter(nameof(Model.SearchVendorId))
+                        },
+                        ColumnCollection = new List<ColumnProperty>
+                        {
+                            new ColumnProperty(nameof(NeverSoldReportModel.ProductName))
+                            {
+                                Title = T("Admin.Reports.Sales.NeverSold.Fields.Name")
+                            },
+                            new ColumnProperty(nameof(NeverSoldReportModel.ProductId))
+                            {
+                                Title = T("Admin.Common.Edit"),
+                                Width = "100",
+                                ClassName =  StyleColumn.ButtonStyle,
+                                Render = new RenderButtonView(new DataUrl("~/Admin/Product/Edit/"))
+                            }
+                        }
+                    })
                 </div>
             </div>
         </div>

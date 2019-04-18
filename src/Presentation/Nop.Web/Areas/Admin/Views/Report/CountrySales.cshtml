@@ -87,7 +87,36 @@
 
             <div class="panel panel-default">
                 <div class="panel-body">
-                    @await Html.PartialAsync("Table", Model.Grid)
+                    @await Html.PartialAsync("Table", new DataTablesModel
+                    {
+                        Name = "countryreport-grid",
+                        UrlRead = new DataUrl("CountrySalesList", "Report", null),
+                        SearchButtonId = "search-countryreport",
+                        Length = Model.PageSize,
+                        LengthMenu = Model.AvailablePageSizes,
+                        Filters = new List<FilterParameter>
+                        {
+                            new FilterParameter(nameof(Model.StartDate)),
+                            new FilterParameter(nameof(Model.EndDate)),
+                            new FilterParameter(nameof(Model.OrderStatusId)),
+                            new FilterParameter(nameof(Model.PaymentStatusId))
+                        },
+                        ColumnCollection = new List<ColumnProperty>
+                        {
+                            new ColumnProperty(nameof(CountryReportModel.CountryName))
+                            {
+                                Title = T("Admin.Reports.Sales.Country.Fields.CountryName")
+                            },
+                            new ColumnProperty(nameof(CountryReportModel.TotalOrders))
+                            {
+                                Title = T("Admin.Reports.Sales.Country.Fields.TotalOrders")
+                            },
+                            new ColumnProperty(nameof(CountryReportModel.SumOrders))
+                            {
+                                Title = T("Admin.Reports.Sales.Country.Fields.SumOrders")
+                            }
+                        }
+                    })
                 </div>
             </div>
         </div>

@@ -126,7 +126,48 @@
 
             <div class="panel panel-default">
                 <div class="panel-body">
-                    @await Html.PartialAsync("Table", Model.Grid)
+                    @await Html.PartialAsync("Table", new DataTablesModel
+                    {
+                        Name = "salesreport-grid",
+                        UrlRead = new DataUrl("BestsellersList", "Report", null),
+                        SearchButtonId = "search-salesreport",
+                        Length = Model.PageSize,
+                        LengthMenu = Model.AvailablePageSizes,
+                        Filters = new List<FilterParameter>
+                        {
+                            new FilterParameter(nameof(Model.StartDate)),
+                            new FilterParameter(nameof(Model.EndDate)),
+                            new FilterParameter(nameof(Model.StoreId)),
+                            new FilterParameter(nameof(Model.OrderStatusId)),
+                            new FilterParameter(nameof(Model.PaymentStatusId)),
+                            new FilterParameter(nameof(Model.CategoryId)),
+                            new FilterParameter(nameof(Model.ManufacturerId)),
+                            new FilterParameter(nameof(Model.BillingCountryId)),
+                            new FilterParameter(nameof(Model.VendorId))
+                        },
+                        ColumnCollection = new List<ColumnProperty>
+                        {
+                            new ColumnProperty(nameof(BestsellerModel.ProductName))
+                            {
+                                Title = T("Admin.Reports.Sales.Bestsellers.Fields.Name")
+                            },
+                            new ColumnProperty(nameof(BestsellerModel.TotalQuantity))
+                            {
+                                Title = T("Admin.Reports.Sales.Bestsellers.Fields.TotalQuantity")
+                            },
+                            new ColumnProperty(nameof(BestsellerModel.TotalAmount))
+                            {
+                                Title = T("Admin.Reports.Sales.Bestsellers.Fields.TotalAmount")
+                            },
+                            new ColumnProperty(nameof(BestsellerModel.ProductId))
+                            {
+                                Title = T("Admin.Common.View"),
+                                Width = "100",
+                                ClassName =  StyleColumn.ButtonStyle,
+                                Render = new RenderButtonView(new DataUrl("~/Admin/Product/Edit/"))
+                            }
+                        }
+                    })
                 </div>
             </div>
         </div>

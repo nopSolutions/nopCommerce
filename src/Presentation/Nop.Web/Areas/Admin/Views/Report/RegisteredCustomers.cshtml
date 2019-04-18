@@ -20,7 +20,25 @@
         <div class="panel-group">
             <div class="panel panel-default">
                 <div class="panel-body">
-                    @await Html.PartialAsync("Table", Model.RegisteredCustomers.Grid)
+                    @await Html.PartialAsync("Table", new DataTablesModel
+                    {
+                        Name = "registered-customers-grid",
+                        UrlRead = new DataUrl("ReportRegisteredCustomersList", "Report", null),
+                        Length = Model.RegisteredCustomers.PageSize,
+                        LengthMenu = Model.RegisteredCustomers.AvailablePageSizes,
+                        ColumnCollection = new List<ColumnProperty>
+                        {
+                            new ColumnProperty(nameof(RegisteredCustomersReportModel.Period))
+                            {
+                                Title = T("Admin.Reports.Customers.RegisteredCustomers.Fields.Period")
+                            },
+                            new ColumnProperty(nameof(RegisteredCustomersReportModel.Customers))
+                            {
+                                Title = T("Admin.Reports.Customers.RegisteredCustomers.Fields.Customers"),
+                                Width = "150"
+                            }
+                        }
+                    })
                 </div>
             </div>
         </div>

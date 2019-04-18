@@ -93,7 +93,45 @@
 
             <div class="panel panel-default">
                 <div class="panel-body">
-                    @await Html.PartialAsync("Table", Model.BestCustomersByOrderTotal.Grid)
+                    @await Html.PartialAsync("Table", new DataTablesModel
+                    {
+                        Name = "customers-ordertotal-grid",
+                        UrlRead = new DataUrl("ReportBestCustomersByOrderTotalList", "Report", null),
+                        SearchButtonId = "search-best-customers-ordertotal",
+                        Length = Model.BestCustomersByOrderTotal.PageSize,
+                        LengthMenu = Model.BestCustomersByOrderTotal.AvailablePageSizes,
+                        Filters = new List<FilterParameter>
+                        {
+                            new FilterParameter(nameof(Model.BestCustomersByOrderTotal.OrderBy), 1),
+                            new FilterParameter(nameof(Model.BestCustomersByOrderTotal.StartDate), nameof(CustomerReportsSearchModel.BestCustomersByOrderTotal)),
+                            new FilterParameter(nameof(Model.BestCustomersByOrderTotal.EndDate), nameof(CustomerReportsSearchModel.BestCustomersByOrderTotal)),
+                            new FilterParameter(nameof(Model.BestCustomersByOrderTotal.OrderStatusId), nameof(CustomerReportsSearchModel.BestCustomersByOrderTotal)),
+                            new FilterParameter(nameof(Model.BestCustomersByOrderTotal.PaymentStatusId), nameof(CustomerReportsSearchModel.BestCustomersByOrderTotal)),
+                            new FilterParameter(nameof(Model.BestCustomersByOrderTotal.ShippingStatusId), nameof(CustomerReportsSearchModel.BestCustomersByOrderTotal))
+                        },
+                        ColumnCollection = new List<ColumnProperty>
+                        {
+                            new ColumnProperty(nameof(BestCustomersReportModel.CustomerName))
+                            {
+                                Title = T("Admin.Reports.Customers.BestBy.Fields.Customer")
+                            },
+                            new ColumnProperty(nameof(BestCustomersReportModel.OrderTotal))
+                            {
+                                Title = T("Admin.Reports.Customers.BestBy.Fields.OrderTotal")
+                            },
+                            new ColumnProperty(nameof(BestCustomersReportModel.OrderCount))
+                            {
+                                Title = T("Admin.Reports.Customers.BestBy.Fields.OrderCount")
+                            },
+                            new ColumnProperty(nameof(BestCustomersReportModel.CustomerId))
+                            {
+                                Title = T("Admin.Common.View"),
+                                Width = "100",
+                                ClassName =  StyleColumn.ButtonStyle,
+                                Render = new RenderButtonView(new DataUrl("~/Admin/Customer/Edit/"))
+                            }
+                        }
+                    })
                 </div>
             </div>
         </div>

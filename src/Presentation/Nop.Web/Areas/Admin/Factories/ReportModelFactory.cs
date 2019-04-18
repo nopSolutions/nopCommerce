@@ -69,365 +69,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #endregion
 
-        #region Utilities
-
-        /// <summary>
-        /// Prepare datatables model
-        /// </summary>
-        /// <param name="searchModel">Search model</param>
-        /// <returns>Datatables model</returns>
-        protected virtual DataTablesModel PrepareLowStockProductGridModel(LowStockProductSearchModel searchModel)
-        {
-            //prepare common properties
-            var model = new DataTablesModel
-            {
-                Name = "products-grid",
-                UrlRead = new DataUrl("LowStockList", "Report", null),
-                SearchButtonId = "search-products",
-                Length = searchModel.PageSize,
-                LengthMenu = searchModel.AvailablePageSizes
-            };
-
-            //prepare filters to search
-            model.Filters = new List<FilterParameter>
-            {
-                new FilterParameter(nameof(searchModel.SearchPublishedId))
-            };
-
-            //prepare model columns
-            model.ColumnCollection = new List<ColumnProperty>
-            {
-                new ColumnProperty(nameof(LowStockProductModel.Name))
-                {
-                    Title = _localizationService.GetResource("Admin.Catalog.Products.Fields.Name"),
-                    Width = "300",
-                    Render = new RenderCustom("renderColumnName")
-                },
-                new ColumnProperty(nameof(LowStockProductModel.ManageInventoryMethod))
-                {
-                    Title = _localizationService.GetResource("Admin.Catalog.Products.Fields.ManageInventoryMethod"),
-                    Width = "150"
-                },
-                new ColumnProperty(nameof(LowStockProductModel.StockQuantity))
-                {
-                    Title = _localizationService.GetResource("Admin.Catalog.Products.Fields.StockQuantity"),
-                    Width = "100"
-                },
-                new ColumnProperty(nameof(LowStockProductModel.Published))
-                {
-                    Title = _localizationService.GetResource("Admin.Catalog.Products.Fields.Published"),
-                    Width = "100",
-                    ClassName =  StyleColumn.CenterAll,
-                    Render = new RenderBoolean()
-                },
-                new ColumnProperty(nameof(LowStockProductModel.Id))
-                {
-                    Title = _localizationService.GetResource("Admin.Common.View"),
-                    Width = "100",
-                    ClassName =  StyleColumn.ButtonStyle,
-                    Render = new RenderButtonView(new DataUrl("~/Admin/Product/Edit/"))
-                }
-            };
-
-            return model;
-        }
-
-        /// <summary>
-        /// Prepare datatables model
-        /// </summary>
-        /// <param name="searchModel">Search model</param>
-        /// <returns>Datatables model</returns>
-        protected virtual DataTablesModel PrepareBestsellerGridModel(BestsellerSearchModel searchModel)
-        {
-            //prepare common properties
-            var model = new DataTablesModel
-            {
-                Name = "salesreport-grid",
-                UrlRead = new DataUrl("BestsellersList", "Report", null),
-                SearchButtonId = "search-salesreport",
-                Length = searchModel.PageSize,
-                LengthMenu = searchModel.AvailablePageSizes
-            };
-
-            //prepare filters to search
-            model.Filters = new List<FilterParameter>
-            {
-                new FilterParameter(nameof(searchModel.StartDate)),
-                new FilterParameter(nameof(searchModel.EndDate)),
-                new FilterParameter(nameof(searchModel.StoreId)),
-                new FilterParameter(nameof(searchModel.OrderStatusId)),
-                new FilterParameter(nameof(searchModel.PaymentStatusId)),
-                new FilterParameter(nameof(searchModel.CategoryId)),
-                new FilterParameter(nameof(searchModel.ManufacturerId)),
-                new FilterParameter(nameof(searchModel.BillingCountryId)),
-                new FilterParameter(nameof(searchModel.VendorId))
-            };
-
-            //prepare model columns
-            model.ColumnCollection = new List<ColumnProperty>
-            {
-                new ColumnProperty(nameof(BestsellerModel.ProductName))
-                {
-                    Title = _localizationService.GetResource("Admin.Reports.Sales.Bestsellers.Fields.Name")
-                },
-                new ColumnProperty(nameof(BestsellerModel.TotalQuantity))
-                {
-                    Title = _localizationService.GetResource("Admin.Reports.Sales.Bestsellers.Fields.TotalQuantity")
-                },
-                new ColumnProperty(nameof(BestsellerModel.TotalAmount))
-                {
-                    Title = _localizationService.GetResource("Admin.Reports.Sales.Bestsellers.Fields.TotalAmount")
-                },
-                new ColumnProperty(nameof(BestsellerModel.ProductId))
-                {
-                    Title = _localizationService.GetResource("Admin.Common.View"),
-                    Width = "100",
-                    ClassName =  StyleColumn.ButtonStyle,
-                    Render = new RenderButtonView(new DataUrl("~/Admin/Product/Edit/"))
-                }
-            };
-
-            return model;
-        }
-
-        /// <summary>
-        /// Prepare datatables model
-        /// </summary>
-        /// <param name="searchModel">Search model</param>
-        /// <returns>Datatables model</returns>
-        protected virtual DataTablesModel PrepareNeverSoldReportGridModel(NeverSoldReportSearchModel searchModel)
-        {
-            //prepare common properties
-            var model = new DataTablesModel
-            {
-                Name = "neversoldreport-grid",
-                UrlRead = new DataUrl("NeverSoldList", "Report", null),
-                SearchButtonId = "search-neversoldreport",
-                Length = searchModel.PageSize,
-                LengthMenu = searchModel.AvailablePageSizes
-            };
-
-            //prepare filters to search
-            model.Filters = new List<FilterParameter>
-            {
-                new FilterParameter(nameof(searchModel.StartDate)),
-                new FilterParameter(nameof(searchModel.EndDate)),
-                new FilterParameter(nameof(searchModel.SearchCategoryId)),
-                new FilterParameter(nameof(searchModel.SearchManufacturerId)),
-                new FilterParameter(nameof(searchModel.SearchStoreId)),
-                new FilterParameter(nameof(searchModel.SearchVendorId))
-            };
-
-            //prepare model columns
-            model.ColumnCollection = new List<ColumnProperty>
-            {
-                new ColumnProperty(nameof(NeverSoldReportModel.ProductName))
-                {
-                    Title = _localizationService.GetResource("Admin.Reports.Sales.NeverSold.Fields.Name")
-                },
-                new ColumnProperty(nameof(NeverSoldReportModel.ProductId))
-                {
-                    Title = _localizationService.GetResource("Admin.Common.Edit"),
-                    Width = "100",
-                    ClassName =  StyleColumn.ButtonStyle,
-                    Render = new RenderButtonView(new DataUrl("~/Admin/Product/Edit/"))
-                }
-            };
-
-            return model;
-        }
-
-        /// <summary>
-        /// Prepare datatables model
-        /// </summary>
-        /// <param name="searchModel">Search model</param>
-        /// <returns>Datatables model</returns>
-        protected virtual DataTablesModel PrepareCountryReportGridModel(CountryReportSearchModel searchModel)
-        {
-            //prepare common properties
-            var model = new DataTablesModel
-            {
-                Name = "countryreport-grid",
-                UrlRead = new DataUrl("CountrySalesList", "Report", null),
-                SearchButtonId = "search-countryreport",
-                Length = searchModel.PageSize,
-                LengthMenu = searchModel.AvailablePageSizes
-            };
-
-            //prepare filters to search
-            model.Filters = new List<FilterParameter>
-            {
-                new FilterParameter(nameof(searchModel.StartDate)),
-                new FilterParameter(nameof(searchModel.EndDate)),
-                new FilterParameter(nameof(searchModel.OrderStatusId)),
-                new FilterParameter(nameof(searchModel.PaymentStatusId))
-            };
-
-            //prepare model columns
-            model.ColumnCollection = new List<ColumnProperty>
-            {
-                new ColumnProperty(nameof(CountryReportModel.CountryName))
-                {
-                    Title = _localizationService.GetResource("Admin.Reports.Sales.Country.Fields.CountryName")
-                },
-                new ColumnProperty(nameof(CountryReportModel.TotalOrders))
-                {
-                    Title = _localizationService.GetResource("Admin.Reports.Sales.Country.Fields.TotalOrders")
-                },
-                new ColumnProperty(nameof(CountryReportModel.SumOrders))
-                {
-                    Title = _localizationService.GetResource("Admin.Reports.Sales.Country.Fields.SumOrders")
-                }
-            };
-
-            return model;
-        }
-
-        /// <summary>
-        /// Prepare datatables model
-        /// </summary>
-        /// <param name="searchModel">Search model</param>
-        /// <returns>Datatables model</returns>
-        protected virtual DataTablesModel PrepareRegisteredCustomersReportGridModel(RegisteredCustomersReportSearchModel searchModel)
-        {
-            //prepare common properties
-            var model = new DataTablesModel
-            {
-                Name = "registered-customers-grid",
-                UrlRead = new DataUrl("ReportRegisteredCustomersList", "Report", null),
-                Length = searchModel.PageSize,
-                LengthMenu = searchModel.AvailablePageSizes
-            };
-
-            //prepare model columns
-            model.ColumnCollection = new List<ColumnProperty>
-            {
-                new ColumnProperty(nameof(RegisteredCustomersReportModel.Period))
-                {
-                    Title = _localizationService.GetResource("Admin.Reports.Customers.RegisteredCustomers.Fields.Period")
-                },
-                new ColumnProperty(nameof(RegisteredCustomersReportModel.Customers))
-                {
-                    Title = _localizationService.GetResource("Admin.Reports.Customers.RegisteredCustomers.Fields.Customers"),
-                    Width = "150"
-                }
-            };
-
-            return model;
-        }
-
-        /// <summary>
-        /// Prepare datatables model
-        /// </summary>
-        /// <param name="searchModel">Search model</param>
-        /// <returns>Datatables model</returns>
-        protected virtual DataTablesModel PrepareBestCustomersReportByOrderTotalGridModel(BestCustomersReportSearchModel searchModel)
-        {
-            //prepare common properties
-            var model = new DataTablesModel
-            {
-                Name = "customers-ordertotal-grid",
-                UrlRead = new DataUrl("ReportBestCustomersByOrderTotalList", "Report", null),
-                SearchButtonId = "search-best-customers-ordertotal",
-                Length = searchModel.PageSize,
-                LengthMenu = searchModel.AvailablePageSizes
-            };
-
-            //prepare filters to search
-            model.Filters = new List<FilterParameter>
-            {
-                new FilterParameter(nameof(searchModel.OrderBy), 1),
-                new FilterParameter(nameof(searchModel.StartDate), nameof(CustomerReportsSearchModel.BestCustomersByOrderTotal)),
-                new FilterParameter(nameof(searchModel.EndDate), nameof(CustomerReportsSearchModel.BestCustomersByOrderTotal)),
-                new FilterParameter(nameof(searchModel.OrderStatusId), nameof(CustomerReportsSearchModel.BestCustomersByOrderTotal)),
-                new FilterParameter(nameof(searchModel.PaymentStatusId), nameof(CustomerReportsSearchModel.BestCustomersByOrderTotal)),
-                new FilterParameter(nameof(searchModel.ShippingStatusId), nameof(CustomerReportsSearchModel.BestCustomersByOrderTotal))
-            };
-
-            //prepare model columns
-            model.ColumnCollection = new List<ColumnProperty>
-            {
-                new ColumnProperty(nameof(BestCustomersReportModel.CustomerName))
-                {
-                    Title = _localizationService.GetResource("Admin.Reports.Customers.BestBy.Fields.Customer")
-                },
-                new ColumnProperty(nameof(BestCustomersReportModel.OrderTotal))
-                {
-                    Title = _localizationService.GetResource("Admin.Reports.Customers.BestBy.Fields.OrderTotal")
-                },
-                new ColumnProperty(nameof(BestCustomersReportModel.OrderCount))
-                {
-                    Title = _localizationService.GetResource("Admin.Reports.Customers.BestBy.Fields.OrderCount")
-                },
-                new ColumnProperty(nameof(BestCustomersReportModel.CustomerId))
-                {
-                    Title = _localizationService.GetResource("Admin.Common.View"),
-                    Width = "100",
-                    ClassName =  StyleColumn.ButtonStyle,
-                    Render = new RenderButtonView(new DataUrl("~/Admin/Customer/Edit/"))
-                }
-            };
-
-            return model;
-        }
-
-        /// <summary>
-        /// Prepare datatables model
-        /// </summary>
-        /// <param name="searchModel">Search model</param>
-        /// <returns>Datatables model</returns>
-        protected virtual DataTablesModel PrepareBestCustomersReportByNumberOfOrdersGridModel(BestCustomersReportSearchModel searchModel)
-        {
-            //prepare common properties
-            var model = new DataTablesModel
-            {
-                Name = "best-customers-numberoforders-grid",
-                UrlRead = new DataUrl("ReportBestCustomersByNumberOfOrdersList", "Report", null),
-                SearchButtonId = "search-best-customers-numberoforders-grid",
-                Length = searchModel.PageSize,
-                LengthMenu = searchModel.AvailablePageSizes
-            };
-
-            //prepare filters to search
-            model.Filters = new List<FilterParameter>
-            {
-                new FilterParameter(nameof(searchModel.OrderBy), 2),
-                new FilterParameter(nameof(searchModel.StartDate), nameof(CustomerReportsSearchModel.BestCustomersByNumberOfOrders)),
-                new FilterParameter(nameof(searchModel.EndDate), nameof(CustomerReportsSearchModel.BestCustomersByNumberOfOrders)),
-                new FilterParameter(nameof(searchModel.OrderStatusId), nameof(CustomerReportsSearchModel.BestCustomersByNumberOfOrders)),
-                new FilterParameter(nameof(searchModel.PaymentStatusId), nameof(CustomerReportsSearchModel.BestCustomersByNumberOfOrders)),
-                new FilterParameter(nameof(searchModel.ShippingStatusId), nameof(CustomerReportsSearchModel.BestCustomersByNumberOfOrders))
-            };
-
-            //prepare model columns
-            model.ColumnCollection = new List<ColumnProperty>
-            {
-                new ColumnProperty(nameof(BestCustomersReportModel.CustomerName))
-                {
-                    Title = _localizationService.GetResource("Admin.Reports.Customers.BestBy.Fields.Customer")
-                },
-                new ColumnProperty(nameof(BestCustomersReportModel.OrderTotal))
-                {
-                    Title = _localizationService.GetResource("Admin.Reports.Customers.BestBy.Fields.OrderTotal")
-                },
-                new ColumnProperty(nameof(BestCustomersReportModel.OrderCount))
-                {
-                    Title = _localizationService.GetResource("Admin.Reports.Customers.BestBy.Fields.OrderCount")
-                },
-                new ColumnProperty(nameof(BestCustomersReportModel.CustomerId))
-                {
-                    Title = _localizationService.GetResource("Admin.Common.View"),
-                    Width = "100",
-                    ClassName =  StyleColumn.ButtonStyle,
-                    Render = new RenderButtonView(new DataUrl("~/Admin/Customer/Edit/"))
-                }
-            };
-
-            return model;
-        }
-
-        #endregion
-
         #region Methods
 
         #region LowStock
@@ -461,7 +102,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
-            searchModel.Grid = PrepareLowStockProductGridModel(searchModel);
 
             return searchModel;
         }
@@ -558,7 +198,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
-            searchModel.Grid = PrepareBestsellerGridModel(searchModel);
 
             return searchModel;
         }
@@ -650,7 +289,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
-            searchModel.Grid = PrepareNeverSoldReportGridModel(searchModel);
 
             return searchModel;
         }
@@ -719,7 +357,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
-            searchModel.Grid = PrepareCountryReportGridModel(searchModel);
 
             return searchModel;
         }
@@ -809,7 +446,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
-            searchModel.Grid = PrepareBestCustomersReportByNumberOfOrdersGridModel(searchModel);
 
             return searchModel;
         }
@@ -831,7 +467,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
-            searchModel.Grid = PrepareBestCustomersReportByOrderTotalGridModel(searchModel);
 
             return searchModel;
         }
@@ -849,7 +484,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
-            searchModel.Grid = PrepareRegisteredCustomersReportGridModel(searchModel);
 
             return searchModel;
         }
