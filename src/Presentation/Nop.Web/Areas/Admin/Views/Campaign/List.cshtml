@@ -80,23 +80,23 @@
                         {
                             new ColumnProperty(nameof(CampaignModel.Name))
                             {
-                                Title = T("Admin.Promotions.Campaigns.Fields.Name")
+                                Title = T("Admin.Promotions.Campaigns.Fields.Name").Text
                             },
                             new ColumnProperty(nameof(CampaignModel.CreatedOn))
                             {
-                                Title = T("Admin.Promotions.Campaigns.Fields.CreatedOn"),
+                                Title = T("Admin.Promotions.Campaigns.Fields.CreatedOn").Text,
                                 Width = "200",
                                 Render = new RenderDate()
                             },
                             new ColumnProperty(nameof(CampaignModel.DontSendBeforeDate))
                             {
-                                Title = T("Admin.Promotions.Campaigns.Fields.DontSendBeforeDate"),
+                                Title = T("Admin.Promotions.Campaigns.Fields.DontSendBeforeDate").Text,
                                 Width = "200",
                                 Render = new RenderDate()
                             },
                             new ColumnProperty(nameof(CampaignModel.Id))
                             {
-                                Title = T("Admin.Common.Edit"),
+                                Title = T("Admin.Common.Edit").Text,
                                 Width = "100",
                                 ClassName = StyleColumn.ButtonStyle,
                                 Render = new RenderButtonEdit(new DataUrl("Edit"))

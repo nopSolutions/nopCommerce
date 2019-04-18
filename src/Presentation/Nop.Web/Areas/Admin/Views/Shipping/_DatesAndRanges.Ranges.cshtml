@@ -15,16 +15,16 @@
         {
             new ColumnProperty(nameof(ProductAvailabilityRangeModel.Name))
             {
-                Title = T("Admin.Configuration.Shipping.ProductAvailabilityRanges.Fields.Name")
+                Title = T("Admin.Configuration.Shipping.ProductAvailabilityRanges.Fields.Name").Text
             },
             new ColumnProperty(nameof(ProductAvailabilityRangeModel.DisplayOrder))
             {
-                Title = T("Admin.Configuration.Shipping.ProductAvailabilityRanges.Fields.DisplayOrder"),
+                Title = T("Admin.Configuration.Shipping.ProductAvailabilityRanges.Fields.DisplayOrder").Text,
                 Width = "150"
             },
             new ColumnProperty(nameof(ProductAvailabilityRangeModel.Id))
             {
-                Title = T("Admin.Common.Edit"),
+                Title = T("Admin.Common.Edit").Text,
                 Width = "100",
                 ClassName =  StyleColumn.ButtonStyle,
                 Render = new RenderButtonEdit(new DataUrl("EditProductAvailabilityRange"))

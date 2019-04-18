@@ -163,12 +163,12 @@
                             },
                             new ColumnProperty(nameof(ShoppingCartModel.CustomerEmail))
                             {
-                                Title = T("Admin.CurrentCarts.Customer"),
+                                Title = T("Admin.CurrentCarts.Customer").Text,
                                 Render = new RenderLink(new DataUrl("~/Admin/Customer/Edit/", nameof(ShoppingCartModel.CustomerId)))
                             },
                             new ColumnProperty(nameof(ShoppingCartModel.TotalItems))
                             {
-                                Title = T("Admin.CurrentCarts.TotalItems"),
+                                Title = T("Admin.CurrentCarts.TotalItems").Text,
                                 Width = "150"
                             }
                         },
@@ -194,42 +194,42 @@
                             {
                                 new ColumnProperty(nameof(ShoppingCartItemModel.ProductName))
                                 {
-                                    Title = T("Admin.CurrentCarts.Product"),
+                                    Title = T("Admin.CurrentCarts.Product").Text,
                                     Width = "400",
                                     Render = new RenderCustom("renderProductName")
                                 },
                                 new ColumnProperty(nameof(ShoppingCartItemModel.Quantity))
                                 {
-                                    Title = T("Admin.CurrentCarts.Quantity"),
+                                    Title = T("Admin.CurrentCarts.Quantity").Text,
                                     Width = "150"
                                 },
                                 new ColumnProperty(nameof(ShoppingCartItemModel.UnitPrice))
                                 {
-                                    Title = T("Admin.CurrentCarts.UnitPrice"),
+                                    Title = T("Admin.CurrentCarts.UnitPrice").Text,
                                     Width = "150"
                                 },
                                 new ColumnProperty(nameof(ShoppingCartItemModel.Total))
                                 {
-                                    Title = T("Admin.CurrentCarts.Total"),
+                                    Title = T("Admin.CurrentCarts.Total").Text,
                                     Width = "150"
                                 },
                                 new ColumnProperty(nameof(ShoppingCartItemModel.Store))
                                 {
-                                    Title = T("Admin.CurrentCarts.Store"),
+                                    Title = T("Admin.CurrentCarts.Store").Text,
                                     Width = "150",
                                     Visible = storeService.GetAllStores().Count > 1
                                 },
                                 new ColumnProperty(nameof(ShoppingCartItemModel.UpdatedOn))
                                 {
-                                    Title = T("Admin.CurrentCarts.UpdatedOn"),
+                                    Title = T("Admin.CurrentCarts.UpdatedOn").Text,
                                     Width = "150",
                                     Render = new RenderDate()
                                 },
                                 new ColumnProperty(nameof(ShoppingCartItemModel.Id))
                                 {
-                                    Title = T("Admin.Common.Delete"),
+                                    Title = T("Admin.Common.Delete").Text,
                                     Width = "100",
-                                    Render = new RenderButtonRemove(T("Admin.Common.Delete")) { Style = StyleButton.Default },
+                                    Render = new RenderButtonRemove(T("Admin.Common.Delete").Text) { Style = StyleButton.Default },
                                     ClassName =  StyleColumn.ButtonStyle
                                 }
                             }

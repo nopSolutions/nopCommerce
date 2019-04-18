@@ -149,23 +149,23 @@
                         {
                             new ColumnProperty($"{nameof(AffiliateModel.Address)}.{nameof(AddressModel.FirstName)}")
                             {
-                                Title = T("Admin.Address.Fields.FirstName"),
+                                Title = T("Admin.Address.Fields.FirstName").Text,
                                 Width = "200"
                             },
                             new ColumnProperty($"{nameof(AffiliateModel.Address)}.{nameof(AddressModel.LastName)}")
                             {
-                                Title = T("Admin.Address.Fields.LastName"),
+                                Title = T("Admin.Address.Fields.LastName").Text,
                                 Width = "200"
                             },
                             new ColumnProperty(nameof(AffiliateModel.Active))
                             {
-                                Title = T("Admin.Affiliates.Fields.Active"),
+                                Title = T("Admin.Affiliates.Fields.Active").Text,
                                 Width = "100",
                                 Render = new RenderBoolean()
                             },
                             new ColumnProperty(nameof(AffiliateModel.Id))
                             {
-                                Title = T("Admin.Common.Edit"),
+                                Title = T("Admin.Common.Edit").Text,
                                 Width = "100",
                                 ClassName = StyleColumn.ButtonStyle,
                                 Render = new RenderButtonEdit(new DataUrl("Edit"))

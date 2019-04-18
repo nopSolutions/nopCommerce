@@ -81,41 +81,41 @@
                         {
                             new ColumnProperty(nameof(BlogPostModel.Title))
                             {
-                                Title = T("Admin.ContentManagement.Blog.BlogPosts.Fields.Title")
+                                Title = T("Admin.ContentManagement.Blog.BlogPosts.Fields.Title").Text
                             },
                             new ColumnProperty(nameof(BlogPostModel.LanguageName))
                             {
-                                Title = T("Admin.ContentManagement.Blog.BlogPosts.Fields.Language"),
+                                Title = T("Admin.ContentManagement.Blog.BlogPosts.Fields.Language").Text,
                                 Width = "200"
                             },
                             new ColumnProperty(nameof(BlogPostModel.Id))
                             {
-                                Title = T("Admin.ContentManagement.Blog.BlogPosts.Fields.Comments"),
+                                Title = T("Admin.ContentManagement.Blog.BlogPosts.Fields.Comments").Text,
                                 Width = "200",
                                 ClassName = StyleColumn.ButtonStyle,
                                 Render = new RenderCustom("renderColumnComments")
                             },
                             new ColumnProperty(nameof(BlogPostModel.StartDateUtc))
                             {
-                                Title = T("Admin.ContentManagement.Blog.BlogPosts.Fields.StartDate"),
+                                Title = T("Admin.ContentManagement.Blog.BlogPosts.Fields.StartDate").Text,
                                 Width = "200",
                                 Render = new RenderDate()
                             },
                             new ColumnProperty(nameof(BlogPostModel.EndDateUtc))
                             {
-                                Title = T("Admin.ContentManagement.Blog.BlogPosts.Fields.EndDate"),
+                                Title = T("Admin.ContentManagement.Blog.BlogPosts.Fields.EndDate").Text,
                                 Width = "200",
                                 Render = new RenderDate()
                             },
                             new ColumnProperty(nameof(BlogPostModel.CreatedOn))
                             {
-                                Title = T("Admin.ContentManagement.Blog.BlogPosts.Fields.CreatedOn"),
+                                Title = T("Admin.ContentManagement.Blog.BlogPosts.Fields.CreatedOn").Text,
                                 Width = "200",
                                 Render = new RenderDate()
                             },
                             new ColumnProperty(nameof(BlogPostModel.Id))
                             {
-                                Title = T("Admin.Common.Edit"),
+                                Title = T("Admin.Common.Edit").Text,
                                 Width = "100",
                                 ClassName = StyleColumn.ButtonStyle,
                                 Render = new RenderButtonEdit(new DataUrl("BlogPostEdit"))

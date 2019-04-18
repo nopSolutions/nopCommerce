@@ -108,47 +108,47 @@
                         {
                             new ColumnProperty(nameof(ReturnRequestModel.CustomNumber))
                             {
-                                Title = T("Admin.ReturnRequests.Fields.CustomNumber"),
+                                Title = T("Admin.ReturnRequests.Fields.CustomNumber").Text,
                                 Width = "100"
                             },
                             new ColumnProperty(nameof(ReturnRequestModel.ProductName))
                             {
-                                Title = T("Admin.ReturnRequests.Fields.Product"),
+                                Title = T("Admin.ReturnRequests.Fields.Product").Text,
                                 Width = "350",
                                 Render = new RenderCustom("renderColumnProductName")
                             },
                             new ColumnProperty(nameof(ReturnRequestModel.Quantity))
                             {
-                                Title = T("Admin.ReturnRequests.Fields.Quantity"),
+                                Title = T("Admin.ReturnRequests.Fields.Quantity").Text,
                                 Width = "100"
                             },
                             new ColumnProperty(nameof(ReturnRequestModel.CustomerId))
                             {
-                                Title = T("Admin.ReturnRequests.Fields.Customer"),
+                                Title = T("Admin.ReturnRequests.Fields.Customer").Text,
                                 Width = "350",
                                 Render = new RenderCustom("renderColumnCustomerInfo")
                             },
                             new ColumnProperty(nameof(ReturnRequestModel.CustomOrderNumber))
                             {
-                                Title = T("Admin.ReturnRequests.Fields.CustomOrderNumber"),
+                                Title = T("Admin.ReturnRequests.Fields.CustomOrderNumber").Text,
                                 ClassName =  StyleColumn.ButtonStyle,
                                 Width = "200",
                                 Render = new RenderCustom("renderColumnOrderInfo")
                             },
                             new ColumnProperty(nameof(ReturnRequestModel.ReturnRequestStatusStr))
                             {
-                                Title = T("Admin.ReturnRequests.Fields.Status"),
+                                Title = T("Admin.ReturnRequests.Fields.Status").Text,
                                 Width = "200"
                             },
                             new ColumnProperty(nameof(ReturnRequestModel.CreatedOn))
                             {
-                                Title = T("Admin.ReturnRequests.Fields.CreatedOn"),
+                                Title = T("Admin.ReturnRequests.Fields.CreatedOn").Text,
                                 Width = "100",
                                 Render = new RenderDate()
                             },
                             new ColumnProperty(nameof(ReturnRequestModel.Id))
                             {
-                                Title = T("Admin.Common.Edit"),
+                                Title = T("Admin.Common.Edit").Text,
                                 Width = "100",
                                 ClassName =  StyleColumn.ButtonStyle,
                                 Render = new RenderButtonEdit(new DataUrl("Edit"))

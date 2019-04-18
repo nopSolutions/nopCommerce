@@ -35,13 +35,13 @@
                     {
                         new ColumnProperty(nameof(ActivityLogTypeModel.Name))
                         {
-                            Title = T("Admin.Configuration.ActivityLog.ActivityLogType.Fields.Name"),
+                            Title = T("Admin.Configuration.ActivityLog.ActivityLogType.Fields.Name").Text,
                             AutoWidth = true
                         },
                         new ColumnProperty(nameof(ActivityLogTypeModel.Enabled))
                         {
                             IsMasterCheckBox = true,
-                            Title = T("Admin.Configuration.ActivityLog.ActivityLogType.Fields.Enabled"),
+                            Title = T("Admin.Configuration.ActivityLog.ActivityLogType.Fields.Enabled").Text,
                             Width = "100",
                             ClassName = StyleColumn.CenterAll,
                             Render = new RenderCheckBox("checkbox_activity_types")

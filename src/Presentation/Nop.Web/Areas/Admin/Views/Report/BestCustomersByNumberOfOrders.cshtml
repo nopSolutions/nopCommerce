@@ -113,19 +113,19 @@
                         {
                             new ColumnProperty(nameof(BestCustomersReportModel.CustomerName))
                             {
-                                Title = T("Admin.Reports.Customers.BestBy.Fields.Customer")
+                                Title = T("Admin.Reports.Customers.BestBy.Fields.Customer").Text
                             },
                             new ColumnProperty(nameof(BestCustomersReportModel.OrderTotal))
                             {
-                                Title = T("Admin.Reports.Customers.BestBy.Fields.OrderTotal")
+                                Title = T("Admin.Reports.Customers.BestBy.Fields.OrderTotal").Text
                             },
                             new ColumnProperty(nameof(BestCustomersReportModel.OrderCount))
                             {
-                                Title = T("Admin.Reports.Customers.BestBy.Fields.OrderCount")
+                                Title = T("Admin.Reports.Customers.BestBy.Fields.OrderCount").Text
                             },
                             new ColumnProperty(nameof(BestCustomersReportModel.CustomerId))
                             {
-                                Title = T("Admin.Common.View"),
+                                Title = T("Admin.Common.View").Text,
                                 Width = "100",
                                 ClassName =  StyleColumn.ButtonStyle,
                                 Render = new RenderButtonView(new DataUrl("~/Admin/Customer/Edit/"))

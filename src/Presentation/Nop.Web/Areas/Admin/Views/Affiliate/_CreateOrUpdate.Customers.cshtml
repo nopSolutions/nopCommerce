@@ -15,12 +15,12 @@
             },
             new ColumnProperty(nameof(AffiliatedCustomerModel.Name))
             {
-                Title = T("Admin.Affiliates.Customers.Name"),
+                Title = T("Admin.Affiliates.Customers.Name").Text,
                 Width = "200"
             },
             new ColumnProperty(nameof(AffiliatedCustomerModel.Id))
             {
-                Title = T("Admin.Common.View"),
+                Title = T("Admin.Common.View").Text,
                 Width = "150",
                 ClassName = StyleColumn.ButtonStyle,
                 Render = new RenderButtonView(new DataUrl("~/Admin/Customer/Edit/", nameof(AffiliatedCustomerModel.Id)))

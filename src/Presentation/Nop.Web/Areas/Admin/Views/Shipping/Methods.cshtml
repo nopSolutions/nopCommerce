@@ -47,22 +47,22 @@
                         {
                             new ColumnProperty(nameof(ShippingMethodModel.Name))
                             {
-                                Title = T("Admin.Configuration.Shipping.Methods.Fields.Name"),
+                                Title = T("Admin.Configuration.Shipping.Methods.Fields.Name").Text,
                                 Width = "200"
                             },
                             new ColumnProperty(nameof(ShippingMethodModel.Description))
                             {
-                                Title = T("Admin.Configuration.Shipping.Methods.Fields.Description"),
+                                Title = T("Admin.Configuration.Shipping.Methods.Fields.Description").Text,
                                 Width = "400"
                             },
                             new ColumnProperty(nameof(ShippingMethodModel.DisplayOrder))
                             {
-                                Title = T("Admin.Configuration.Shipping.Methods.Fields.DisplayOrder"),
+                                Title = T("Admin.Configuration.Shipping.Methods.Fields.DisplayOrder").Text,
                                 Width = "100"
                             },
                             new ColumnProperty(nameof(ShippingMethodModel.Id))
                             {
-                                Title = T("Admin.Common.Edit"),
+                                Title = T("Admin.Common.Edit").Text,
                                 Width = "100",
                                 ClassName =  StyleColumn.ButtonStyle,
                                 Render = new RenderButtonEdit(new DataUrl("EditMethod"))

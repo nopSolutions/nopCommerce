@@ -149,19 +149,19 @@
                         {
                             new ColumnProperty(nameof(BestsellerModel.ProductName))
                             {
-                                Title = T("Admin.Reports.Sales.Bestsellers.Fields.Name")
+                                Title = T("Admin.Reports.Sales.Bestsellers.Fields.Name").Text
                             },
                             new ColumnProperty(nameof(BestsellerModel.TotalQuantity))
                             {
-                                Title = T("Admin.Reports.Sales.Bestsellers.Fields.TotalQuantity")
+                                Title = T("Admin.Reports.Sales.Bestsellers.Fields.TotalQuantity").Text
                             },
                             new ColumnProperty(nameof(BestsellerModel.TotalAmount))
                             {
-                                Title = T("Admin.Reports.Sales.Bestsellers.Fields.TotalAmount")
+                                Title = T("Admin.Reports.Sales.Bestsellers.Fields.TotalAmount").Text
                             },
                             new ColumnProperty(nameof(BestsellerModel.ProductId))
                             {
-                                Title = T("Admin.Common.View"),
+                                Title = T("Admin.Common.View").Text,
                                 Width = "100",
                                 ClassName =  StyleColumn.ButtonStyle,
                                 Render = new RenderButtonView(new DataUrl("~/Admin/Product/Edit/"))

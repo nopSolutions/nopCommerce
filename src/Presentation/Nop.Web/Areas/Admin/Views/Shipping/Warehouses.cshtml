@@ -36,12 +36,12 @@
                         {
                             new ColumnProperty(nameof(WarehouseModel.Name))
                             {
-                                Title = T("Admin.Configuration.Shipping.Warehouses.Fields.Name")
+                                Title = T("Admin.Configuration.Shipping.Warehouses.Fields.Name").Text
                             },
 
                             new ColumnProperty(nameof(WarehouseModel.Id))
                             {
-                                Title = T("Admin.Common.Edit"),
+                                Title = T("Admin.Common.Edit").Text,
                                 Width = "100",
                                 ClassName =  StyleColumn.ButtonStyle,
                                 Render = new RenderButtonEdit(new DataUrl("EditWarehouse"))
