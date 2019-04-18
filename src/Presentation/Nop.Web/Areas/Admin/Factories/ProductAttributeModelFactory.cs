@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Domain.Catalog;
 using Nop.Services.Catalog;
@@ -7,7 +6,6 @@ using Nop.Services.Localization;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Framework.Factories;
-using Nop.Web.Framework.Models.DataTables;
 using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
@@ -42,79 +40,7 @@ namespace Nop.Web.Areas.Admin.Factories
         #endregion
 
         #region Utilities
-
-        /// <summary>
-        /// Prepare datatables model
-        /// </summary>
-        /// <param name="searchModel">Search model</param>
-        /// <returns>Datatables model</returns>
-        protected virtual DataTablesModel PreparePredefinedProductAttributeValueGridModel(PredefinedProductAttributeValueSearchModel searchModel)
-        {
-            //prepare common properties
-            var model = new DataTablesModel
-            {
-                Name = "productattributevalues-grid",
-                UrlRead = new DataUrl("PredefinedProductAttributeValueList", "ProductAttribute", null),
-                UrlDelete = new DataUrl("PredefinedProductAttributeValueDelete", "ProductAttribute", null),
-                Length = searchModel.PageSize,
-                LengthMenu = searchModel.AvailablePageSizes
-            };
-
-            //prepare filters to search
-            model.Filters = new List<FilterParameter>
-            {
-                new FilterParameter(nameof(searchModel.ProductAttributeId), searchModel.ProductAttributeId)
-            };
-
-            //prepare model columns
-            model.ColumnCollection = new List<ColumnProperty>
-            {
-                new ColumnProperty(nameof(PredefinedProductAttributeValueModel.Name))
-                {
-                    Title = _localizationService.GetResource("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.Name"),
-                    Width = "200"
-                },
-                new ColumnProperty(nameof(PredefinedProductAttributeValueModel.PriceAdjustmentStr))
-                {
-                    Title = _localizationService.GetResource("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.PriceAdjustment"),
-                    Width = "150"
-                },
-                new ColumnProperty(nameof(PredefinedProductAttributeValueModel.WeightAdjustmentStr))
-                {
-                    Title = _localizationService.GetResource("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.WeightAdjustment"),
-                    Width = "150"
-                },
-                new ColumnProperty(nameof(PredefinedProductAttributeValueModel.IsPreSelected))
-                {
-                    Title = _localizationService.GetResource("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.IsPreSelected"),
-                    Width = "100",
-                    ClassName = StyleColumn.CenterAll,
-                    Render = new RenderBoolean()
-                },
-                new ColumnProperty(nameof(PredefinedProductAttributeValueModel.DisplayOrder))
-                {
-                    Title = _localizationService.GetResource("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.DisplayOrder"),
-                    Width = "100"
-                },
-                new ColumnProperty(nameof(PredefinedProductAttributeValueModel.Id))
-                {
-                    Title = _localizationService.GetResource("Admin.Common.Edit"),
-                    Width = "100",
-                    ClassName =  StyleColumn.ButtonStyle,
-                    Render = new RenderCustom("renderColumnEdit")
-                },
-                new ColumnProperty(nameof(PredefinedProductAttributeValueModel.Id))
-                {
-                    Title = _localizationService.GetResource("Admin.Common.Delete"),
-                    Width = "100",
-                    Render = new RenderButtonRemove(_localizationService.GetResource("Admin.Common.Delete")) { Style = StyleButton.Default },
-                    ClassName =  StyleColumn.ButtonStyle
-                }
-            };
-
-            return model;
-        }
-
+        
         /// <summary>
         /// Prepare predefined product attribute value search model
         /// </summary>
@@ -134,58 +60,8 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
-            searchModel.Grid = PreparePredefinedProductAttributeValueGridModel(searchModel);
 
             return searchModel;
-        }
-
-        /// <summary>
-        /// Prepare datatables model
-        /// </summary>
-        /// <param name="searchModel">Search model</param>
-        /// <returns>Datatables model</returns>
-        protected virtual DataTablesModel PrepareProductAttributeProductGridModel(ProductAttributeProductSearchModel searchModel)
-        {
-            //prepare common properties
-            var model = new DataTablesModel
-            {
-                Name = "used-by-products-grid",
-                UrlRead = new DataUrl("UsedByProducts", "ProductAttribute", null),
-                Length = searchModel.PageSize,
-                LengthMenu = searchModel.AvailablePageSizes
-            };
-
-            //prepare filters to search
-            model.Filters = new List<FilterParameter>
-            {
-                new FilterParameter(nameof(searchModel.ProductAttributeId), searchModel.ProductAttributeId)
-            };
-
-            //prepare model columns
-            model.ColumnCollection = new List<ColumnProperty>
-            {
-                new ColumnProperty(nameof(ProductAttributeProductModel.ProductName))
-                {
-                    Title = _localizationService.GetResource("Admin.Catalog.Attributes.ProductAttributes.UsedByProducts.Product"),
-                    Width = "400"
-                },
-                new ColumnProperty(nameof(ProductAttributeProductModel.Published))
-                {
-                    Title = _localizationService.GetResource("Admin.Catalog.Attributes.ProductAttributes.UsedByProducts.Published"),
-                    Width = "100",
-                    ClassName =  StyleColumn.CenterAll,
-                    Render = new RenderBoolean()
-                },
-                new ColumnProperty(nameof(ProductAttributeProductModel.Id))
-                {
-                    Title = _localizationService.GetResource("Admin.Common.View"),
-                    Width = "100",
-                    ClassName =  StyleColumn.ButtonStyle,
-                    Render = new RenderButtonView(new DataUrl("~/Admin/Product/Edit/"))
-                }
-            };
-
-            return model;
         }
 
         /// <summary>
@@ -207,45 +83,8 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
-            searchModel.Grid = PrepareProductAttributeProductGridModel(searchModel);
 
             return searchModel;
-        }
-
-        /// <summary>
-        /// Prepare datatables model
-        /// </summary>
-        /// <param name="searchModel">Search model</param>
-        /// <returns>Datatables model</returns>
-        protected virtual DataTablesModel PrepareProductAttributesGridModel(ProductAttributeSearchModel searchModel)
-        {
-            //prepare common properties
-            var model = new DataTablesModel
-            {
-                Name = "products-grid",
-                UrlRead = new DataUrl("List", "ProductAttribute", null),
-                Length = searchModel.PageSize,
-                LengthMenu = searchModel.AvailablePageSizes
-            };
-
-            //prepare model columns
-            model.ColumnCollection = new List<ColumnProperty>
-            {
-                new ColumnProperty(nameof(ProductAttributeModel.Name))
-                {
-                    Title = _localizationService.GetResource("Admin.Catalog.Attributes.ProductAttributes.Fields.Name"),
-                    Width = "400"
-                },                
-                new ColumnProperty(nameof(ProductAttributeModel.Id))
-                {
-                    Title = _localizationService.GetResource("Admin.Common.Edit"),
-                    Width = "100",
-                    ClassName =  StyleColumn.ButtonStyle,
-                    Render = new RenderButtonEdit(new DataUrl("Edit"))
-                }
-            };
-
-            return model;
         }
 
         #endregion
@@ -264,7 +103,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
-            searchModel.Grid = PrepareProductAttributesGridModel(searchModel);
 
             return searchModel;
         }

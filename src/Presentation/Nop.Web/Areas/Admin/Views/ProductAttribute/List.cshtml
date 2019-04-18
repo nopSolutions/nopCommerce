@@ -28,7 +28,28 @@
                 <p>
                     @T("Admin.Catalog.Attributes.ProductAttributes.Description")
                 </p>
-                @await Html.PartialAsync("Table", Model.Grid)
+                @await Html.PartialAsync("Table", new DataTablesModel
+                {
+                    Name = "products-grid",
+                    UrlRead = new DataUrl("List", "ProductAttribute", null),
+                    Length = Model.PageSize,
+                    LengthMenu = Model.AvailablePageSizes,
+                    ColumnCollection = new List<ColumnProperty>
+                    {
+                        new ColumnProperty(nameof(ProductAttributeModel.Name))
+                        {
+                            Title = T("Admin.Catalog.Attributes.ProductAttributes.Fields.Name").Text,
+                            Width = "400"
+                        },
+                        new ColumnProperty(nameof(ProductAttributeModel.Id))
+                        {
+                            Title = T("Admin.Common.Edit").Text,
+                            Width = "100",
+                            ClassName =  StyleColumn.ButtonStyle,
+                            Render = new RenderButtonEdit(new DataUrl("Edit"))
+                        }
+                    }
+                })
             </div>
         </div>
     </div>
