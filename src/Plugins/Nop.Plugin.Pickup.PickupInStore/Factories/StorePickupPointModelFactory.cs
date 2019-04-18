@@ -84,14 +84,14 @@ namespace Nop.Plugin.Pickup.PickupInStore.Factories
                     new ColumnProperty(nameof(StorePickupPointModel.Id))
                     {
                         Title = _localizationService.GetResource("Admin.Common.Edit"),
-                        ClassName = StyleColumn.CenterAll,
+                        ClassName = StyleColumn.ButtonStyle,
                         Width = "100",
                         Render = new RenderCustom("renderColumnEdit")
                     },
                     new ColumnProperty(nameof(StorePickupPointModel.Id))
                     {
                         Title = _localizationService.GetResource("Admin.Common.Delete"),
-                        ClassName = StyleColumn.CenterAll,
+                        ClassName = StyleColumn.ButtonStyle,
                         Render = new RenderButtonRemove(_localizationService.GetResource("Admin.Common.Delete")) { Style = StyleButton.Default },
                         Width = "100"
                     }
