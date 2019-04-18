@@ -771,69 +771,6 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
-        /// Prepare datatables model
-        /// </summary>
-        /// <param name="searchModel">Search model</param>
-        /// <returns>Datatables model</returns>
-        protected virtual DataTablesModel PrepareOrderNoteGridModel(OrderNoteSearchModel searchModel)
-        {
-            //prepare common properties
-            var model = new DataTablesModel
-            {
-                Name = "ordernotes-grid",
-                UrlRead = new DataUrl("OrderNotesSelect", "Order", null),
-                UrlDelete = new DataUrl("OrderNoteDelete", "Order", new RouteValueDictionary { [nameof(searchModel.OrderId)] = searchModel.OrderId }),
-                Length = searchModel.PageSize,
-                LengthMenu = searchModel.AvailablePageSizes
-            };
-
-            //prepare filters to search
-            model.Filters = new List<FilterParameter>
-            {
-                new FilterParameter(nameof(searchModel.OrderId), searchModel.OrderId)
-            };
-
-            //prepare model columns
-            model.ColumnCollection = new List<ColumnProperty>
-            {
-                new ColumnProperty(nameof(OrderNoteModel.CreatedOn))
-                {
-                    Title = _localizationService.GetResource("Admin.Orders.OrderNotes.Fields.CreatedOn"),
-                    Width = "200",
-                    Render = new RenderDate()
-                },
-                new ColumnProperty(nameof(OrderNoteModel.Note))
-                {
-                    Title = _localizationService.GetResource("Admin.Orders.OrderNotes.Fields.Note"),
-                    Encode = false
-                },
-                new ColumnProperty(nameof(OrderNoteModel.DownloadId))
-                {
-                    Title = _localizationService.GetResource("Admin.Orders.OrderNotes.Fields.Download"),
-                    Width = "200",
-                    ClassName =  StyleColumn.ButtonStyle,
-                    Render = new RenderCustom("renderColumnDownloadId")
-                },
-                new ColumnProperty(nameof(OrderNoteModel.DisplayToCustomer))
-                {
-                    Title = _localizationService.GetResource("Admin.Orders.OrderNotes.Fields.DisplayToCustomer"),
-                    Width = "150",
-                    ClassName =  StyleColumn.CenterAll,
-                    Render = new RenderBoolean()
-                },
-                new ColumnProperty(nameof(OrderNoteModel.Id))
-                {
-                    Title = _localizationService.GetResource("Admin.Common.Delete"),
-                    Width = "100",
-                    Render = new RenderButtonRemove(_localizationService.GetResource("Admin.Common.Delete")) { Style = StyleButton.Default },
-                    ClassName =  StyleColumn.ButtonStyle
-                }
-            };
-
-            return model;
-        }
-
-        /// <summary>
         /// Prepare order note search model
         /// </summary>
         /// <param name="searchModel">Order note search model</param>
@@ -851,7 +788,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
-            searchModel.Grid = PrepareOrderNoteGridModel(searchModel);
 
             return searchModel;
         }
@@ -1112,58 +1048,6 @@ namespace Nop.Web.Areas.Admin.Factories
             };
 
             model.ChildTable = detailModel;
-
-            return model;
-        }
-
-        /// <summary>
-        /// Prepare datatables model
-        /// </summary>
-        /// <param name="searchModel">Search model</param>
-        /// <returns>Datatables model</returns>
-        protected virtual DataTablesModel PrepareAddProductToOrderGridModel(AddProductToOrderSearchModel searchModel)
-        {
-            //prepare common properties
-            var model = new DataTablesModel
-            {
-                Name = "products-grid",
-                UrlRead = new DataUrl("AddProductToOrder", "Order", null),
-                SearchButtonId = "search-products",
-                Length = searchModel.PageSize,
-                LengthMenu = searchModel.AvailablePageSizes
-            };
-
-            //prepare filters to search
-            model.Filters = new List<FilterParameter>
-            {
-                new FilterParameter(nameof(searchModel.OrderId), searchModel.OrderId),
-                new FilterParameter(nameof(searchModel.SearchProductName)),
-                new FilterParameter(nameof(searchModel.SearchCategoryId)),
-                new FilterParameter(nameof(searchModel.SearchManufacturerId)),
-                new FilterParameter(nameof(searchModel.SearchProductTypeId))
-            };
-
-            //prepare model columns
-            model.ColumnCollection = new List<ColumnProperty>
-            {
-                new ColumnProperty(nameof(ProductModel.Id))
-                {
-                    Title = _localizationService.GetResource("Admin.Common.Select"),
-                    Render = new RenderCustom("renderColumnSelectProduct"),
-                    ClassName =  StyleColumn.ButtonStyle,
-                    Width = "50",
-                },
-                new ColumnProperty(nameof(ProductModel.Name))
-                {
-                    Title = _localizationService.GetResource("Admin.Orders.Products.AddNew.Name"),
-                    Width = "400"
-                },
-                new ColumnProperty(nameof(ProductModel.Sku))
-                {
-                    Title = _localizationService.GetResource("Admin.Orders.Products.AddNew.SKU"),
-                    Width = "100"
-                }
-            };
 
             return model;
         }
@@ -1520,7 +1404,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
-            searchModel.Grid = PrepareAddProductToOrderGridModel(searchModel);
 
             return searchModel;
         }
