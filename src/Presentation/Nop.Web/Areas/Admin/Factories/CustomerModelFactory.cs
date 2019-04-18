@@ -763,57 +763,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
             return model;
         }
-
-        /// <summary>
-        /// Prepare datatables model
-        /// </summary>
-        /// <param name="searchModel">Search model</param>
-        /// <returns>Datatables model</returns>
-        protected virtual DataTablesModel PrepareOnlineCustomerGridModel(OnlineCustomerSearchModel searchModel)
-        {
-            //prepare common properties
-            var model = new DataTablesModel
-            {
-                Name = "onlinecustomers-grid",
-                UrlRead = new DataUrl("List", "OnlineCustomer", null),
-                Length = searchModel.PageSize,
-                LengthMenu = searchModel.AvailablePageSizes
-            };
-            
-            //prepare model columns
-            model.ColumnCollection = new List<ColumnProperty>
-            {
-                new ColumnProperty(nameof(OnlineCustomerModel.CustomerInfo))
-                {
-                    Title = _localizationService.GetResource("Admin.Customers.OnlineCustomers.Fields.CustomerInfo"),
-                    Width = "100",
-                    Render = new RenderLink(new DataUrl("~/Admin/Customer/Edit", nameof(CustomerModel.Id)))
-                },
-                new ColumnProperty(nameof(OnlineCustomerModel.LastIpAddress))
-                {
-                    Title = _localizationService.GetResource("Admin.Customers.OnlineCustomers.Fields.IPAddress"),
-                    Width = "100"                   
-                },
-                new ColumnProperty(nameof(OnlineCustomerModel.Location))
-                {
-                    Title = _localizationService.GetResource("Admin.Customers.OnlineCustomers.Fields.Location"),
-                    Width = "100"
-                },
-                new ColumnProperty(nameof(OnlineCustomerModel.LastActivityDate))
-                {
-                    Title = _localizationService.GetResource("Admin.Customers.OnlineCustomers.Fields.LastActivityDate"),
-                    Width = "200",
-                    Render = new RenderDate()
-                },
-                new ColumnProperty(nameof(OnlineCustomerModel.LastVisitedPage))
-                {
-                    Title = _localizationService.GetResource("Admin.Customers.OnlineCustomers.Fields.LastVisitedPage"),
-                    Width = "100"
-                }
-            };
-
-            return model;
-        }
         
         /// <summary>
         /// Prepare datatables model
@@ -1596,7 +1545,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
-            searchModel.Grid = PrepareOnlineCustomerGridModel(searchModel);
 
             return searchModel;
         }
