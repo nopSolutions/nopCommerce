@@ -803,26 +803,32 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new DataTablesModel
             {
                 Name = "crosssellproducts-grid",
-                UrlRead = new DataUrl("CrossSellProductList", "Product", new RouteValueDictionary { [nameof(searchModel.ProductId)] = searchModel.ProductId }),
-                UrlDelete = new DataUrl("CrossSellProductDelete", "Product"),
+                UrlRead = new DataUrl("CrossSellProductList", "Product", null),
+                UrlDelete = new DataUrl("CrossSellProductDelete", "Product", null),
                 Length = searchModel.PageSize,
-                LengthMenu = searchModel.AvailablePageSizes
-            };
-            
-            //prepare model columns
-            model.ColumnCollection = new List<ColumnProperty>
-            {
-                new ColumnProperty(nameof(CrossSellProductModel.Product2Name))
+                LengthMenu = searchModel.AvailablePageSizes,
+
+                //prepare filters to search
+                Filters = new List<FilterParameter>
                 {
-                    Title = _localizationService.GetResource("Admin.Catalog.Products.CrossSells.Fields.Product"),
-                    Render = new RenderCustom("renderColumnCrossSellProductName")
+                    new FilterParameter(nameof(searchModel.ProductId), searchModel.ProductId)
                 },
-                new ColumnProperty(nameof(CrossSellProductModel.Id))
+
+                //prepare model columns
+                ColumnCollection = new List<ColumnProperty>
                 {
-                    Title = _localizationService.GetResource("Admin.Common.Delete"),
-                    Width = "100",
-                    Render = new RenderButtonRemove(_localizationService.GetResource("Admin.Common.Delete")){ Style = StyleButton.Default },
-                    ClassName = StyleColumn.ButtonStyle
+                    new ColumnProperty(nameof(CrossSellProductModel.Product2Name))
+                    {
+                        Title = _localizationService.GetResource("Admin.Catalog.Products.CrossSells.Fields.Product"),
+                        Render = new RenderCustom("renderColumnCrossSellProductName")
+                    },
+                    new ColumnProperty(nameof(CrossSellProductModel.Id))
+                    {
+                        Title = _localizationService.GetResource("Admin.Common.Delete"),
+                        Width = "100",
+                        Render = new RenderButtonRemove(_localizationService.GetResource("Admin.Common.Delete")){ Style = StyleButton.Default },
+                        ClassName = StyleColumn.ButtonStyle
+                    }
                 }
             };
 
