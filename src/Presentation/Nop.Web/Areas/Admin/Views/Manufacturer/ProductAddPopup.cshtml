@@ -17,7 +17,6 @@
 }
 else
 {
-
     <form asp-controller="Manufacturer" asp-action="ProductAddPopup"
           asp-route-manufacturerId="@Context.Request.Query["manufacturerId"]"
           asp-route-btnId="@Context.Request.Query["btnId"]"
@@ -103,7 +102,43 @@ else
 
                     <div class="panel panel-default">
                         <div class="panel-body">
-                            @await Html.PartialAsync("Table", Model.Grid)
+                            @await Html.PartialAsync("Table", new DataTablesModel
+                            {
+                                Name = "products-grid",
+                                UrlRead = new DataUrl("ProductAddPopupList", "Manufacturer", null),
+                                SearchButtonId = "search-products",
+                                Length = Model.PageSize,
+                                LengthMenu = Model.AvailablePageSizes,
+                                Filters = new List<FilterParameter>
+                                {
+                                    new FilterParameter(nameof(Model.SearchProductName)),
+                                    new FilterParameter(nameof(Model.SearchCategoryId)),
+                                    new FilterParameter(nameof(Model.SearchManufacturerId)),
+                                    new FilterParameter(nameof(Model.SearchStoreId)),
+                                    new FilterParameter(nameof(Model.SearchVendorId)),
+                                    new FilterParameter(nameof(Model.SearchProductTypeId))
+                                },
+                                ColumnCollection = new List<ColumnProperty>
+                                {
+                                    new ColumnProperty(nameof(ProductModel.Id))
+                                    {
+                                        IsMasterCheckBox = true,
+                                        Render = new RenderCheckBox(nameof(AddProductToManufacturerModel.SelectedProductIds)),
+                                        ClassName =  StyleColumn.CenterAll,
+                                        Width = "50",
+                                    },
+                                    new ColumnProperty(nameof(ProductModel.Name))
+                                    {
+                                        Title = T("Admin.Catalog.Products.Fields.Name").Text
+                                    },
+                                    new ColumnProperty(nameof(ProductModel.Published))
+                                    {
+                                        Title = T("Admin.Catalog.Products.Fields.Published").Text,
+                                        Width = "100",
+                                        Render = new RenderBoolean()
+                                    }
+                                }
+                            })
                         </div>
                         <div class="panel-footer">
                             <button type="submit" name="save" class="btn bg-blue">

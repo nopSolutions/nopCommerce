@@ -100,7 +100,45 @@
 
             <div class="panel panel-default">
                 <div class="panel-body">
-                    @await Html.PartialAsync("Table", Model.Grid)  
+                    @await Html.PartialAsync("Table", new DataTablesModel
+                    {
+                        Name = "manufacturers-grid",
+                        UrlRead = new DataUrl("List", "Manufacturer", null),
+                        SearchButtonId = "search-manufacturers",
+                        Length = Model.PageSize,
+                        LengthMenu = Model.AvailablePageSizes,
+                        Filters = new List<FilterParameter>
+                        {
+                            new FilterParameter(nameof(Model.SearchManufacturerName)),
+                            new FilterParameter(nameof(Model.SearchStoreId))
+                        },
+                        ColumnCollection = new List<ColumnProperty>
+                        {
+                            new ColumnProperty(nameof(ManufacturerModel.Name))
+                            {
+                                Title = T("Admin.Catalog.Manufacturers.Fields.Name").Text
+                            },
+                            new ColumnProperty(nameof(ManufacturerModel.Published))
+                            {
+                                Title = T("Admin.Catalog.Manufacturers.Fields.Published").Text,
+                                Width = "100",
+                                ClassName =  StyleColumn.CenterAll,
+                                Render = new RenderBoolean()
+                            },
+                            new ColumnProperty(nameof(ManufacturerModel.DisplayOrder))
+                            {
+                                Title = T("Admin.Catalog.Manufacturers.Fields.DisplayOrder").Text,
+                                Width = "150"
+                            },
+                            new ColumnProperty(nameof(ManufacturerModel.Id))
+                            {
+                                Title = T("Admin.Common.Edit").Text,
+                                Width = "100",
+                                ClassName =  StyleColumn.ButtonStyle,
+                                Render = new RenderButtonEdit(new DataUrl("Edit"))
+                            }
+                        }
+                    })  
                 </div>
             </div>
         </div>
