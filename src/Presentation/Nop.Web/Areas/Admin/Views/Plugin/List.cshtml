@@ -161,8 +161,54 @@
 
                 <div class="panel panel-default">
                     <div class="panel-body">
-                        @await Html.PartialAsync("Table", Model.Grid)
-
+                        @await Html.PartialAsync("Table", new DataTablesModel
+                        {
+                            Name = "plugins-local-grid",
+                            UrlRead = new DataUrl("ListSelect", "Plugin", null),
+                            SearchButtonId = "search-plugins-local",
+                            Length = Model.PageSize,
+                            LengthMenu = Model.AvailablePageSizes,
+                            Filters = new List<FilterParameter>
+                            {
+                                new FilterParameter(nameof(Model.SearchLoadModeId)),
+                                new FilterParameter(nameof(Model.SearchGroup))
+                            },
+                            ColumnCollection = new List<ColumnProperty>
+                            {
+                                new ColumnProperty(nameof(PluginModel.Group))
+                                {
+                                    Title = T("Admin.Configuration.Plugins.Fields.Group").Text,
+                                    Width = "150"
+                                },
+                                new ColumnProperty(nameof(PluginModel.LogoUrl))
+                                {
+                                    Title = T("Admin.Configuration.Plugins.Fields.Logo").Text,
+                                    Width = "200",
+                                    ClassName = StyleColumn.CenterAll,
+                                    Render = new RenderPicture()
+                                },
+                                new ColumnProperty(nameof(PluginModel.Description))
+                                {
+                                    Title = T("Admin.Configuration.Plugins.Info").Text,
+                                    Width = "400",
+                                    ClassName =  StyleColumn.CenterAll,
+                                    Render = new RenderCustom("renderColumnDescription")
+                                },
+                                new ColumnProperty(nameof(PluginModel.FriendlyName))
+                                {
+                                    Title = T("Admin.Configuration.Plugins.AdditionalInfo").Text,
+                                    Render = new RenderCustom("renderColumnFriendlyName")
+                                },
+                                new ColumnProperty(nameof(PluginModel.Installed))
+                                {
+                                    Title = T("Admin.Configuration.Plugins.Fields.Installation").Text,
+                                    Width = "100",
+                                    ClassName =  StyleColumn.ButtonStyle,
+                                    Render = new RenderCustom("renderColumnInstalled")
+                                }
+                            }
+                        })
+                        
                         <script>
                             var textRenderer = $.fn.dataTable.render.text().display;
 
@@ -250,7 +296,7 @@
                             $(document).ready(function () {
                                 $('#btnRefreshList').click(function () {
                                     //refresh grid
-                                     $('#@Model.Grid.Name').DataTable().ajax.reload();
+                                    $('#plugins-local-grid').DataTable().ajax.reload();
 
                                     //return false to don't reload a page
                                     return false;

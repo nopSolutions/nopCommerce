@@ -16,9 +16,7 @@ using Nop.Services.Tax;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Plugins;
 using Nop.Web.Areas.Admin.Models.Plugins.Marketplace;
-using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;
-using Nop.Web.Framework.Models.DataTables;
 using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
@@ -138,136 +136,6 @@ namespace Nop.Web.Areas.Admin.Factories
             }
         }
 
-        /// <summary>
-        /// Prepare datatables model
-        /// </summary>
-        /// <param name="searchModel">Search model</param>
-        /// <returns>Datatables model</returns>
-        protected virtual DataTablesModel PrepareOfficialFeedPluginGridModel(OfficialFeedPluginSearchModel searchModel)
-        {
-            //prepare common properties
-            var model = new DataTablesModel
-            {
-                Name = "plugins-grid",
-                UrlRead = new DataUrl("OfficialFeedSelect", "Plugin", null),
-                SearchButtonId = "search-plugins",
-                Length = searchModel.PageSize,
-                LengthMenu = searchModel.AvailablePageSizes
-            };
-
-            //prepare filters to search
-            model.Filters = new List<FilterParameter>
-            {
-                new FilterParameter(nameof(searchModel.SearchName)),
-                new FilterParameter(nameof(searchModel.SearchVersionId)),
-                new FilterParameter(nameof(searchModel.SearchCategoryId)),
-                new FilterParameter(nameof(searchModel.SearchPriceId))
-            };
-
-            //prepare model columns
-            model.ColumnCollection = new List<ColumnProperty>
-            {
-                new ColumnProperty(nameof(OfficialFeedPluginModel.PictureUrl))
-                {
-                    Title = _localizationService.GetResource("Admin.Configuration.Plugins.OfficialFeed.Picture"),
-                    Width = "150",
-                    Render = new RenderPicture()
-                },
-                new ColumnProperty(nameof(OfficialFeedPluginModel.Name))
-                {
-                    Title = _localizationService.GetResource("Admin.Configuration.Plugins.OfficialFeed.Name"),
-                    Width = "500"
-                },
-                new ColumnProperty(nameof(OfficialFeedPluginModel.Price))
-                {
-                    Title = _localizationService.GetResource("Admin.Configuration.Plugins.OfficialFeed.Price"),
-                    Width = "70"
-                },
-                new ColumnProperty(nameof(OfficialFeedPluginModel.Url))
-                {
-                    Title = _localizationService.GetResource("Admin.Configuration.Plugins.OfficialFeed.Download"),
-                    Width = "150",
-                    ClassName =  StyleColumn.ButtonStyle,
-                    Render = new RenderCustom("renderColumnUrl")
-                },
-                new ColumnProperty(nameof(OfficialFeedPluginModel.CategoryName))
-                {
-                    Title = _localizationService.GetResource("Admin.Configuration.Plugins.OfficialFeed.Category"),
-                    Width = "200"
-                },
-                new ColumnProperty(nameof(OfficialFeedPluginModel.SupportedVersions))
-                {
-                    Title = _localizationService.GetResource("Admin.Configuration.Plugins.OfficialFeed.SupportedVersions"),
-                    Width = "200"
-                }
-            };
-
-            return model;
-        }
-
-        /// <summary>
-        /// Prepare datatables model
-        /// </summary>
-        /// <param name="searchModel">Search model</param>
-        /// <returns>Datatables model</returns>
-        protected virtual DataTablesModel PreparePluginGridModel(PluginSearchModel searchModel)
-        {
-            //prepare common properties
-            var model = new DataTablesModel
-            {
-                Name = "plugins-local-grid",
-                UrlRead = new DataUrl("ListSelect", "Plugin", null),
-                SearchButtonId = "search-plugins-local",
-                Length = searchModel.PageSize,
-                LengthMenu = searchModel.AvailablePageSizes
-            };
-
-            //prepare filters to search
-            model.Filters = new List<FilterParameter>
-            {
-                new FilterParameter(nameof(searchModel.SearchLoadModeId)),
-                new FilterParameter(nameof(searchModel.SearchGroup))
-            };
-
-            //prepare model columns
-            model.ColumnCollection = new List<ColumnProperty>
-            {
-                new ColumnProperty(nameof(PluginModel.Group))
-                {
-                    Title = _localizationService.GetResource("Admin.Configuration.Plugins.Fields.Group"),
-                    Width = "150"
-                },
-                new ColumnProperty(nameof(PluginModel.LogoUrl))
-                {
-                    Title = _localizationService.GetResource("Admin.Configuration.Plugins.Fields.Logo"),
-                    Width = "200",
-                    ClassName = StyleColumn.CenterAll,
-                    Render = new RenderPicture()
-                },
-                new ColumnProperty(nameof(PluginModel.Description))
-                {
-                    Title = _localizationService.GetResource("Admin.Configuration.Plugins.Info"),
-                    Width = "400",
-                    ClassName =  StyleColumn.CenterAll,
-                    Render = new RenderCustom("renderColumnDescription")
-                },
-                new ColumnProperty(nameof(PluginModel.FriendlyName))
-                {
-                    Title = _localizationService.GetResource("Admin.Configuration.Plugins.AdditionalInfo"),
-                    Render = new RenderCustom("renderColumnFriendlyName")
-                },
-                new ColumnProperty(nameof(PluginModel.Installed))
-                {
-                    Title = _localizationService.GetResource("Admin.Configuration.Plugins.Fields.Installation"),
-                    Width = "100",
-                    ClassName =  StyleColumn.ButtonStyle,
-                    Render = new RenderCustom("renderColumnInstalled")
-                }
-            };
-
-            return model;
-        }
-
         #endregion
 
         #region Methods
@@ -290,7 +158,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
-            searchModel.Grid = PreparePluginGridModel(searchModel);
 
             searchModel.NeedToRestart = _pluginService.IsRestartRequired();
 
@@ -446,7 +313,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize(15, "15");
-            searchModel.Grid = PrepareOfficialFeedPluginGridModel(searchModel);
 
             return searchModel;
         }
