@@ -556,7 +556,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
-            searchModel.Grid = PrepareCustomerShoppingCartGridModel(searchModel);
 
             return searchModel;
         }
@@ -760,72 +759,6 @@ namespace Nop.Web.Areas.Admin.Factories
             });
             
             model.ColumnCollection = columnsProperty;
-
-            return model;
-        }
-        
-        /// <summary>
-        /// Prepare datatables model
-        /// </summary>
-        /// <param name="searchModel">Search model</param>
-        /// <returns>Datatables model</returns>
-        protected virtual DataTablesModel PrepareCustomerShoppingCartGridModel(CustomerShoppingCartSearchModel searchModel)
-        {
-            var stores = _storeService.GetAllStores();
-
-            //prepare common properties
-            var model = new DataTablesModel
-            {
-                Name = "currentshoppingcart-grid",
-                UrlRead = new DataUrl("GetCartList", "Customer", null),
-                Length = searchModel.PageSize,
-                LengthMenu = searchModel.AvailablePageSizes,
-
-                //prepare filters to search
-                Filters = new List<FilterParameter>
-                {
-                    new FilterParameter(nameof(searchModel.CustomerId), searchModel.CustomerId),
-                    new FilterParameter(nameof(CustomerShoppingCartSearchModel.ShoppingCartTypeId), nameof(CustomerShoppingCartSearchModel))
-                },
-
-                //prepare model columns
-                ColumnCollection = new List<ColumnProperty>
-                {
-                    new ColumnProperty(nameof(ShoppingCartItemModel.ProductName))
-                    {
-                        Title = _localizationService.GetResource("Admin.CurrentCarts.Product"),
-                        Width = "500",
-                        Render = new RenderCustom("renderProductName")
-                    },
-                    new ColumnProperty(nameof(ShoppingCartItemModel.Quantity))
-                    {
-                        Title = _localizationService.GetResource("Admin.CurrentCarts.Quantity"),
-                        Width = "200"
-                    },
-                    new ColumnProperty(nameof(ShoppingCartItemModel.UnitPrice))
-                    {
-                        Title = _localizationService.GetResource("Admin.CurrentCarts.UnitPrice"),
-                        Width = "200"
-                    },
-                    new ColumnProperty(nameof(ShoppingCartItemModel.Total))
-                    {
-                        Title = _localizationService.GetResource("Admin.CurrentCarts.Total"),
-                        Width = "200"
-                    },
-                    new ColumnProperty(nameof(ShoppingCartItemModel.Store))
-                    {
-                        Title = _localizationService.GetResource("Admin.CurrentCarts.Store"),
-                        Width = "200",
-                        Visible = stores.Count > 1
-                    },
-                    new ColumnProperty(nameof(ShoppingCartItemModel.UpdatedOn))
-                    {
-                        Title = _localizationService.GetResource("Admin.CurrentCarts.UpdatedOn"),
-                        Width = "200",
-                        Render = new RenderDate()
-                    }
-                }
-            };
 
             return model;
         }
