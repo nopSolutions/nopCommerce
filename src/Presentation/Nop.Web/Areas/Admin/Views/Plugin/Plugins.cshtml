@@ -216,9 +216,9 @@
 
                             function renderColumnInstalled(data, type, row, meta) {
                                 if (row.Installed) {
-                                    return '<button type="submit" name="uninstall-plugin-link-' + row.SystemName + '" class="btn bg-red uninstall-plugin-link">@T("Admin.Configuration.Plugins.Fields.Uninstall")</button>'
+                                    return '<button type="submit" name="uninstall-plugin-link-' + row.SystemName + '" class="btn bg-red uninstall-plugin-link">@T("Admin.Configuration.Plugins.Fields.Uninstall")</button>';
                                 } else {
-                                    return '<button type="submit" name="install-plugin-link-' + row.SystemName + '" class="btn bg-green install-plugin-link">@T("Admin.Configuration.Plugins.Fields.Install")</button> <button type="button" name="delete-plugin-link-' + row.SystemName + '" class="btn bg-red delete-plugin-link" >@T("Admin.Configuration.Plugins.Fields.Delete")</button>'
+                                    return '<button type="submit" name="install-plugin-link-' + row.SystemName + '" class="btn bg-green install-plugin-link">@T("Admin.Configuration.Plugins.Fields.Install")</button> <button type="button" name="delete-plugin-link-' + row.SystemName + '" class="btn bg-red delete-plugin-link" >@T("Admin.Configuration.Plugins.Fields.Delete")</button>';
                                 }
                             }
                         </script>
