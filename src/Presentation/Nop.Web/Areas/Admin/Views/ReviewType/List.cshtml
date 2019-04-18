@@ -4,7 +4,45 @@
     <p>
         <em>@T("Admin.Settings.ReviewType.Description")</em>
     </p>
-    @await Html.PartialAsync("Table", Model.Grid)
+    @await Html.PartialAsync("Table", new DataTablesModel
+    {
+        Name = "reviewtypes-grid",
+        UrlRead = new DataUrl("List", "ReviewType", null),
+        Length = Model.PageSize,
+        LengthMenu = Model.AvailablePageSizes,
+        ColumnCollection = new List<ColumnProperty>
+        {
+            new ColumnProperty(nameof(ReviewTypeModel.Name))
+            {
+                Title = T("Admin.Settings.ReviewType.Fields.Name"),
+                Width = "300"
+            },
+            new ColumnProperty(nameof(ReviewTypeModel.IsRequired))
+            {
+                Title = T("Admin.Settings.ReviewType.Fields.IsRequired"),
+                Width = "100",
+                Render = new RenderBoolean()
+            },
+            new ColumnProperty(nameof(ReviewTypeModel.VisibleToAllCustomers))
+            {
+                Title = T("Admin.Settings.ReviewType.Fields.VisibleToAllCustomers"),
+                Width = "100",
+                Render = new RenderBoolean()
+            },
+            new ColumnProperty(nameof(ReviewTypeModel.DisplayOrder))
+            {
+                Title = T("Admin.Settings.ReviewType.Fields.DisplayOrder"),
+                Width = "100"
+            },
+            new ColumnProperty(nameof(ReviewTypeModel.Id))
+            {
+                Title = T("Admin.Common.Edit"),
+                Width = "100",
+                ClassName =  StyleColumn.ButtonStyle,
+                Render = new RenderButtonEdit(new DataUrl("~/Admin/ReviewType/Edit/"))
+            }
+        }
+    })
 </div>    
 <div class="panel-footer">
     <a class="btn btn-primary" href="@Url.Action("Create", "ReviewType")">
