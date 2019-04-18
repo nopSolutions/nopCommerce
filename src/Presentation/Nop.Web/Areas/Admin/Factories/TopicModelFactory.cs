@@ -69,107 +69,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #endregion
 
-        #region Utilities
-
-        /// <summary>
-        /// Prepare datatables model
-        /// </summary>
-        /// <param name="searchModel">Search model</param>
-        /// <returns>Datatables model</returns>
-        protected virtual DataTablesModel PrepareTopicGridModel(TopicSearchModel searchModel)
-        {
-            //prepare common properties
-            var model = new DataTablesModel
-            {
-                Name = "topics-grid",
-                UrlRead = new DataUrl("List", "Topic", null),
-                SearchButtonId = "search-topics",
-                Length = searchModel.PageSize,
-                LengthMenu = searchModel.AvailablePageSizes
-            };
-
-            //prepare filters to search
-            model.Filters = new List<FilterParameter>
-            {
-                new FilterParameter(nameof(searchModel.SearchKeywords)),
-                new FilterParameter(nameof(searchModel.SearchStoreId))
-            };
-
-            //prepare model columns
-            model.ColumnCollection = new List<ColumnProperty>
-            {
-                new ColumnProperty(nameof(TopicModel.SystemName))
-                {
-                    Title = _localizationService.GetResource("Admin.ContentManagement.Topics.Fields.SystemName")
-                },
-                new ColumnProperty(nameof(TopicModel.Published))
-                {
-                    Title = _localizationService.GetResource("Admin.ContentManagement.Topics.Fields.Published"),
-                    Width = "150",
-                    ClassName =  StyleColumn.CenterAll,
-                    Render = new RenderBoolean()
-                },
-                new ColumnProperty(nameof(TopicModel.IsPasswordProtected))
-                {
-                    Title = _localizationService.GetResource("Admin.ContentManagement.Topics.Fields.IsPasswordProtected"),
-                    Width = "150",
-                    ClassName =  StyleColumn.CenterAll,
-                    Render = new RenderBoolean()
-                },
-                new ColumnProperty(nameof(TopicModel.IncludeInSitemap))
-                {
-                    Title = _localizationService.GetResource("Admin.ContentManagement.Topics.Fields.IncludeInSitemap"),
-                    Width = "150",
-                    ClassName =  StyleColumn.CenterAll,
-                    Render = new RenderBoolean()
-                },
-                new ColumnProperty(nameof(TopicModel.IncludeInTopMenu))
-                {
-                    Title = _localizationService.GetResource("Admin.ContentManagement.Topics.Fields.IncludeInTopMenu"),
-                    Width = "150",
-                    ClassName =  StyleColumn.CenterAll,
-                    Render = new RenderBoolean()
-                },
-                new ColumnProperty(nameof(TopicModel.IncludeInFooterColumn1))
-                {
-                    Title = _localizationService.GetResource("Admin.ContentManagement.Topics.Fields.IncludeInFooterColumn1"),
-                    Width = "150",
-                    ClassName =  StyleColumn.CenterAll,
-                    Render = new RenderBoolean()
-                },
-                new ColumnProperty(nameof(TopicModel.IncludeInFooterColumn2))
-                {
-                    Title = _localizationService.GetResource("Admin.ContentManagement.Topics.Fields.IncludeInFooterColumn2"),
-                    Width = "150",
-                    ClassName =  StyleColumn.CenterAll,
-                    Render = new RenderBoolean()
-                },
-                new ColumnProperty(nameof(TopicModel.IncludeInFooterColumn3))
-                {
-                    Title = _localizationService.GetResource("Admin.ContentManagement.Topics.Fields.IncludeInFooterColumn3"),
-                    Width = "150",
-                    ClassName =  StyleColumn.CenterAll,
-                    Render = new RenderBoolean()
-                },
-                new ColumnProperty(nameof(TopicModel.DisplayOrder))
-                {
-                    Title = _localizationService.GetResource("Admin.ContentManagement.Topics.Fields.DisplayOrder"),
-                    Width = "100",
-                },
-                new ColumnProperty(nameof(TopicModel.Id))
-                {
-                    Title = _localizationService.GetResource("Admin.Common.Edit"),
-                    Width = "100",
-                    ClassName =  StyleColumn.ButtonStyle,
-                    Render = new RenderButtonEdit(new DataUrl("Edit"))
-                }
-            };
-
-            return model;
-        }
-
-        #endregion
-
         #region Methods
 
         /// <summary>
@@ -189,7 +88,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
-            searchModel.Grid = PrepareTopicGridModel(searchModel);
 
             return searchModel;
         }
