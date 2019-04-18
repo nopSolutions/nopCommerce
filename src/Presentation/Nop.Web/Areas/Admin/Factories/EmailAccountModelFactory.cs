@@ -21,91 +21,24 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Fields
 
         private readonly EmailAccountSettings _emailAccountSettings;
-        private readonly IActionContextAccessor _actionContextAccessor;
         private readonly IEmailAccountService _emailAccountService;
         private readonly ILocalizationService _localizationService;
-        private readonly IUrlHelperFactory _urlHelperFactory;
 
         #endregion
 
         #region Ctor
 
         public EmailAccountModelFactory(EmailAccountSettings emailAccountSettings,
-            IActionContextAccessor actionContextAccessor,
             IEmailAccountService emailAccountService,
-            ILocalizationService localizationService,
-            IUrlHelperFactory urlHelperFactory)
+            ILocalizationService localizationService)
         {
             _emailAccountSettings = emailAccountSettings;
-            _actionContextAccessor = actionContextAccessor;
             _emailAccountService = emailAccountService;
             _localizationService = localizationService;
-            _urlHelperFactory = urlHelperFactory;
         }
 
         #endregion
-
-        #region Utilities
-
-        /// <summary>
-        /// Prepare datatables model
-        /// </summary>
-        /// <param name="searchModel">Search model</param>
-        /// <returns>Datatables model</returns>
-        protected virtual DataTablesModel PrepareEmailAccountGridModel(EmailAccountSearchModel searchModel)
-        {
-            var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
-
-            //prepare common properties
-            var model = new DataTablesModel
-            {
-                Name = "email-accounts-grid",
-                UrlRead = new DataUrl("List", "EmailAccount", null),
-                Length = searchModel.PageSize,
-                LengthMenu = searchModel.AvailablePageSizes
-            };
-            
-            //prepare model columns
-            model.ColumnCollection = new List<ColumnProperty>
-            {
-                new ColumnProperty(nameof(EmailAccountModel.Email))
-                {
-                    Title = _localizationService.GetResource("Admin.Configuration.EmailAccounts.Fields.Email")
-                },
-                new ColumnProperty(nameof(EmailAccountModel.DisplayName))
-                {
-                    Title = _localizationService.GetResource("Admin.Configuration.EmailAccounts.Fields.DisplayName"),
-                    Width = "200"
-                },
-                new ColumnProperty(nameof(EmailAccountModel.IsDefaultEmailAccount))
-                {
-                    Title = _localizationService.GetResource("Admin.Configuration.EmailAccounts.Fields.IsDefaultEmailAccount"),
-                    Width = "200",
-                    ClassName =  StyleColumn.CenterAll,
-                    Render = new RenderBoolean()
-                },
-                new ColumnProperty(nameof(EmailAccountModel.Id))
-                {
-                    Title = _localizationService.GetResource("Admin.Configuration.EmailAccounts.Fields.MarkAsDefaultEmail"),
-                    Width = "200",
-                    ClassName =  StyleColumn.CenterAll,
-                    Render = new RenderButtonCustom(urlHelper.Content("~/Admin/EmailAccount/MarkAsDefaultEmail/"), StyleButton.Success, _localizationService.GetResource("Admin.Configuration.EmailAccounts.Fields.MarkAsDefaultEmail"))
-
-                },
-                new ColumnProperty(nameof(EmailAccountModel.Id))
-                {
-                    Title = _localizationService.GetResource("Admin.Common.Edit"),
-                    Width = "100",
-                    ClassName =  StyleColumn.ButtonStyle,
-                    Render = new RenderButtonEdit(new DataUrl("Edit"))
-                }
-            };
-
-            return model;
-        }
-
-        #endregion
-
+        
         #region Methods
 
         /// <summary>
@@ -120,7 +53,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
-            searchModel.Grid = PrepareEmailAccountGridModel(searchModel);
 
             return searchModel;
         }

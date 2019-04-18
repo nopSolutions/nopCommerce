@@ -26,7 +26,47 @@
         <div class="panel-group">
             <div class="panel panel-default">
                 <div class="panel-body">
-                    @await Html.PartialAsync("Table", Model.Grid)
+                    @await Html.PartialAsync("Table", new DataTablesModel
+                    {
+                        Name = "email-accounts-grid",
+                        UrlRead = new DataUrl("List", "EmailAccount", null),
+                        Length = Model.PageSize,
+                        LengthMenu = Model.AvailablePageSizes,
+                        ColumnCollection = new List<ColumnProperty>
+                        {
+                            new ColumnProperty(nameof(EmailAccountModel.Email))
+                            {
+                                Title = T("Admin.Configuration.EmailAccounts.Fields.Email").Text
+                            },
+                            new ColumnProperty(nameof(EmailAccountModel.DisplayName))
+                            {
+                                Title = T("Admin.Configuration.EmailAccounts.Fields.DisplayName").Text,
+                                Width = "200"
+                            },
+                            new ColumnProperty(nameof(EmailAccountModel.IsDefaultEmailAccount))
+                            {
+                                Title = T("Admin.Configuration.EmailAccounts.Fields.IsDefaultEmailAccount").Text,
+                                Width = "200",
+                                ClassName =  StyleColumn.CenterAll,
+                                Render = new RenderBoolean()
+                            },
+                            new ColumnProperty(nameof(EmailAccountModel.Id))
+                            {
+                                Title = T("Admin.Configuration.EmailAccounts.Fields.MarkAsDefaultEmail").Text,
+                                Width = "200",
+                                ClassName =  StyleColumn.CenterAll,
+                                Render = new RenderButtonCustom(Url.Content("~/Admin/EmailAccount/MarkAsDefaultEmail/"), StyleButton.Success, T("Admin.Configuration.EmailAccounts.Fields.MarkAsDefaultEmail").Text)
+
+                            },
+                            new ColumnProperty(nameof(EmailAccountModel.Id))
+                            {
+                                Title = T("Admin.Common.Edit").Text,
+                                Width = "100",
+                                ClassName =  StyleColumn.ButtonStyle,
+                                Render = new RenderButtonEdit(new DataUrl("Edit"))
+                            }
+                        }
+                    })
                 </div>
             </div>
         </div>
