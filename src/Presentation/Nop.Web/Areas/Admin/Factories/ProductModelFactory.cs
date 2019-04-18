@@ -2634,9 +2634,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 .GetAllProductAttributeCombinations(product.Id).ToPagedList(searchModel);
 
             //prepare grid model
-            var model = new ProductAttributeCombinationListModel
+            var model = new ProductAttributeCombinationListModel().PrepareToGrid(searchModel, productAttributeCombinations, () =>
             {
-                Data = productAttributeCombinations.Select(combination =>
+                return productAttributeCombinations.Select(combination =>
                 {
                     //fill in model values from the entity
                     var productAttributeCombinationModel = combination.ToModel<ProductAttributeCombinationModel>();
@@ -2656,9 +2656,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     productAttributeCombinationModel.Warnings = new List<string> { warnings };
 
                     return productAttributeCombinationModel;
-                }),
-                Total = productAttributeCombinations.TotalCount
-            };
+                });
+            });
 
             return model;
         }
