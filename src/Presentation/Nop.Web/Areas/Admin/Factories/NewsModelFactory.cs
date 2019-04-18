@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Domain.Catalog;
@@ -15,7 +14,6 @@ using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.News;
 using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;
-using Nop.Web.Framework.Models.DataTables;
 using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
@@ -63,90 +61,7 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         #endregion
-
-        #region Utilities
-
-        /// <summary>
-        /// Prepare datatables model
-        /// </summary>
-        /// <param name="searchModel">Search model</param>
-        /// <returns>Datatables model</returns>
-        protected virtual DataTablesModel PrepareNewsItemGridModel(NewsItemSearchModel searchModel)
-        {
-            //prepare common properties
-            var model = new DataTablesModel
-            {
-                Name = "newsitem-grid",
-                UrlRead = new DataUrl("List", "News", null),
-                SearchButtonId = "search-newsitem",
-                Length = searchModel.PageSize,
-                LengthMenu = searchModel.AvailablePageSizes
-            };
-
-            //prepare filters to search
-            model.Filters = new List<FilterParameter>
-            {
-                new FilterParameter(nameof(searchModel.SearchStoreId))
-            };
-
-            //prepare model columns
-            model.ColumnCollection = new List<ColumnProperty>
-            {
-                new ColumnProperty(nameof(NewsItemModel.Title))
-                {
-                    Title = _localizationService.GetResource("Admin.ContentManagement.News.NewsItems.Fields.Title")
-                },
-                new ColumnProperty(nameof(NewsItemModel.LanguageName))
-                {
-                    Title = _localizationService.GetResource("Admin.ContentManagement.News.NewsItems.Fields.Language"),
-                    Width = "200"
-                },
-                new ColumnProperty(nameof(NewsItemModel.Id))
-                {
-                    Title = _localizationService.GetResource("Admin.ContentManagement.News.NewsItems.Fields.Comments"),
-                    Width = "200",
-                    ClassName =  StyleColumn.ButtonStyle,
-                    Render = new RenderCustom("renderColumnComments")
-                },
-                new ColumnProperty(nameof(NewsItemModel.StartDateUtc))
-                {
-                    Title = _localizationService.GetResource("Admin.ContentManagement.News.NewsItems.Fields.StartDate"),
-                    Width = "200",
-                    Render = new RenderDate()
-                },
-                new ColumnProperty(nameof(NewsItemModel.EndDateUtc))
-                {
-                    Title = _localizationService.GetResource("Admin.ContentManagement.News.NewsItems.Fields.EndDate"),
-                    Width = "200",
-                    Render = new RenderDate()
-                },
-                new ColumnProperty(nameof(NewsItemModel.Published))
-                {
-                    Title = _localizationService.GetResource("Admin.ContentManagement.News.NewsItems.Fields.Published"),
-                    Width = "100",
-                    ClassName =  StyleColumn.CenterAll,
-                    Render = new RenderBoolean()
-                },
-                new ColumnProperty(nameof(NewsItemModel.CreatedOn))
-                {
-                    Title = _localizationService.GetResource("Admin.ContentManagement.News.NewsItems.Fields.CreatedOn"),
-                    Width = "200",
-                    Render = new RenderDate()
-                },
-                new ColumnProperty(nameof(NewsItemModel.Id))
-                {
-                    Title = _localizationService.GetResource("Admin.Common.Edit"),
-                    Width = "100",
-                     ClassName =  StyleColumn.ButtonStyle,
-                    Render = new RenderButtonEdit(new DataUrl("NewsItemEdit"))
-                }
-            };
-
-            return model;
-        }
-
-        #endregion
-
+        
         #region Methods
 
         /// <summary>
@@ -185,7 +100,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
-            searchModel.Grid = PrepareNewsItemGridModel(searchModel);
 
             return searchModel;
         }
