@@ -65,7 +65,45 @@
 
             <div class="panel panel-default">
                 <div class="panel-body">
-                    @await Html.PartialAsync("Table", Model.Grid)                    
+                    @await Html.PartialAsync("Table", new DataTablesModel
+                    {
+                        Name = "vendors-grid",
+                        UrlRead = new DataUrl("List", "Vendor", null),
+                        SearchButtonId = "search-vendors",
+                        Length = Model.PageSize,
+                        LengthMenu = Model.AvailablePageSizes,
+                        Filters = new List<FilterParameter>
+                        {
+                            new FilterParameter(nameof(Model.SearchName))
+                        },
+                        ColumnCollection = new List<ColumnProperty>
+                        {
+                            new ColumnProperty(nameof(VendorModel.Name))
+                            {
+                                Title = T("Admin.Vendors.Fields.Name"),
+                                Width = "300"
+                            },
+                            new ColumnProperty(nameof(VendorModel.Email))
+                            {
+                                Title = T("Admin.Vendors.Fields.Email"),
+                                Width = "300"
+                            },
+                            new ColumnProperty(nameof(VendorModel.Active))
+                            {
+                                Title = T("Admin.Vendors.Fields.Active"),
+                                Width = "50",
+                                ClassName =  StyleColumn.CenterAll,
+                                Render = new RenderBoolean()
+                            },
+                            new ColumnProperty(nameof(VendorModel.Id))
+                            {
+                                Title = T("Admin.Common.Edit"),
+                                Width = "50",
+                                ClassName =  StyleColumn.ButtonStyle,
+                                Render = new RenderButtonEdit(new DataUrl("Edit"))
+                            }
+                        }
+                    })                    
                 </div>
             </div>
         </div>
