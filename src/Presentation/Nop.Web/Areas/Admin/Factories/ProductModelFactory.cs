@@ -1822,9 +1822,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 .GetProductSpecificationAttributes(product.Id).ToPagedList(searchModel);
 
             //prepare grid model
-            var model = new ProductSpecificationAttributeListModel
+            var model = new ProductSpecificationAttributeListModel().PrepareToGrid(searchModel, productSpecificationAttributes, () =>
             {
-                Data = productSpecificationAttributes.Select(attribute =>
+                return productSpecificationAttributes.Select(attribute =>
                 {
                     //fill in model values from the entity
                     var productSpecificationAttributeModel = attribute.ToModel<ProductSpecificationAttributeModel>();
@@ -1852,9 +1852,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     }
 
                     return productSpecificationAttributeModel;
-                }),
-                Total = productSpecificationAttributes.TotalCount
-            };
+                });
+            });
 
             return model;
         }
