@@ -57,12 +57,84 @@
                 </div>
                 <div class="panel panel-default">
                     <div class="panel-body">
-                        @await Html.PartialAsync("Table", Model.Grid)
+                        @await Html.PartialAsync("Table", new DataTablesModel
+                        {
+                            Name = "currencies-grid",
+                            UrlRead = new DataUrl("ListGrid", "Currency", null),
+                            Length = Model.PageSize,
+                            LengthMenu = Model.AvailablePageSizes,
+                            ColumnCollection = new List<ColumnProperty>
+                            {
+                                new ColumnProperty(nameof(CurrencyModel.Name))
+                                {
+                                    Title = T("Admin.Configuration.Currencies.Fields.Name").Text,
+                                    Width = "200"
+                                },
+                                new ColumnProperty(nameof(CurrencyModel.CurrencyCode))
+                                {
+                                    Title = T("Admin.Configuration.Currencies.Fields.CurrencyCode").Text,
+                                    Width = "150"
+                                },
+                                new ColumnProperty(nameof(CurrencyModel.Rate))
+                                {
+                                    Title = T("Admin.Configuration.Currencies.Fields.Rate").Text,
+                                    Width = "100"
+                                },
+                                new ColumnProperty(nameof(CurrencyModel.IsPrimaryExchangeRateCurrency))
+                                {
+                                    Title = T("Admin.Configuration.Currencies.Fields.IsPrimaryExchangeRateCurrency").Text,
+                                    Width = "250",
+                                    ClassName =  StyleColumn.CenterAll,
+                                    Render = new RenderBoolean()
+                                },
+                                new ColumnProperty(nameof(CurrencyModel.Id))
+                                {
+                                    Title = T("Admin.Configuration.Currencies.Fields.MarkAsPrimaryExchangeRateCurrency").Text,
+                                    Width = "200",
+                                    ClassName =  StyleColumn.CenterAll,
+                                    Render = new RenderButtonCustom(StyleButton.Success, "markAsPrimaryExchangeRateCurrency", T("Admin.Configuration.Currencies.Fields.MarkAsPrimaryExchangeRateCurrency").Text)
+                                },
+                                new ColumnProperty(nameof(CurrencyModel.IsPrimaryStoreCurrency))
+                                {
+                                    Title = T("Admin.Configuration.Currencies.Fields.IsPrimaryStoreCurrency").Text,
+                                    Width = "200",
+                                    ClassName =  StyleColumn.CenterAll,
+                                    Render = new RenderBoolean()
+                                },
+                                new ColumnProperty(nameof(CurrencyModel.Id))
+                                {
+                                    Title = T("Admin.Configuration.Currencies.Fields.MarkAsPrimaryStoreCurrency").Text,
+                                    Width = "200",
+                                    ClassName =  StyleColumn.CenterAll,
+                                    Render = new RenderButtonCustom(StyleButton.Olive, "markAsPrimaryStoreCurrency", T("Admin.Configuration.Currencies.Fields.MarkAsPrimaryStoreCurrency").Text)
+                                },
+                                new ColumnProperty(nameof(CurrencyModel.Published))
+                                {
+                                    Title = T("Admin.Configuration.Currencies.Fields.Published").Text,
+                                    Width = "50",
+                                    ClassName =  StyleColumn.CenterAll,
+                                    Render = new RenderBoolean()
+                                },
+                                new ColumnProperty(nameof(CurrencyModel.DisplayOrder))
+                                {
+                                    Title = T("Admin.Configuration.Currencies.Fields.DisplayOrder").Text,
+                                    Width = "100"
+                                },
+                                new ColumnProperty(nameof(CurrencyModel.Id))
+                                {
+                                    Title = T("Admin.Common.Edit").Text,
+                                    Width = "100",
+                                    ClassName =  StyleColumn.ButtonStyle,
+                                    Render = new RenderButtonEdit(new DataUrl("Edit"))
+                                }
+                            }
+                        })
 
-                        <button type="submit" class="btn btn-default" id="btnMarkPERC" style="display:none" />
-                        <button type="submit" class="btn btn-default" id="btnMarkPSC" style="display:none" />
+                        
+                    <button type="submit" class="btn btn-default" id="btnMarkPERC" style="display:none" />
+                    <button type="submit" class="btn btn-default" id="btnMarkPSC" style="display:none" />
 
-                        <script>
+                    <script>
                             var selectedId;
 
                             $(document).ready(function () {
@@ -78,7 +150,7 @@
                                         url: "@(Url.Action("MarkAsPrimaryStoreCurrency", "Currency"))",
                                         data: postData,
                                         success: function (data) {
-                                            $('#@Model.Grid.Name').DataTable().ajax.reload();
+                                            $('#currencies-grid').DataTable().ajax.reload();
                                         },
                                         error: function (xhr, ajaxOptions, thrownError) {
                                             $("#currencyAlert").click();
@@ -98,7 +170,7 @@
                                         url: "@(Url.Action("MarkAsPrimaryExchangeRateCurrency", "Currency"))",
                                         data: postData,
                                         success: function (data) {
-                                           $('#@Model.Grid.Name').DataTable().ajax.reload();
+                                           $('#currencies-grid').DataTable().ajax.reload();
                                         },
                                         error: function (xhr, ajaxOptions, thrownError) {
                                             $("#currencyAlert").click();
@@ -118,9 +190,7 @@
                                 selectedId = id;
                                 $("#btnMarkPSC").click();
                             };
-
-                        </script>
-
+                    </script>
                     </div>
                 </div>
                 @if (Model.ExchangeRateProviderModel.ExchangeRates?.Any() ?? false)
