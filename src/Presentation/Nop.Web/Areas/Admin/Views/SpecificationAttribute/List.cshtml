@@ -28,7 +28,32 @@
                 <p>
                     @T("Admin.Catalog.Attributes.SpecificationAttributes.Description")
                 </p>
-                @await Html.PartialAsync("Table", Model.Grid)
+                @await Html.PartialAsync("Table", new DataTablesModel
+                {
+                    Name = "specificationattributes-grid",
+                    UrlRead = new DataUrl("List", "SpecificationAttribute", null),
+                    Length = Model.PageSize,
+                    LengthMenu = Model.AvailablePageSizes,
+                    ColumnCollection = new List<ColumnProperty>
+                    {
+                        new ColumnProperty(nameof(SpecificationAttributeModel.Name))
+                        {
+                            Title = T("Admin.Catalog.Attributes.SpecificationAttributes.Fields.Name")
+                        },
+                        new ColumnProperty(nameof(SpecificationAttributeModel.DisplayOrder))
+                        {
+                            Title = T("Admin.Catalog.Attributes.SpecificationAttributes.Fields.DisplayOrder"),
+                            Width = "100"
+                        },
+                        new ColumnProperty(nameof(SpecificationAttributeModel.Id))
+                        {
+                            Title = T("Admin.Common.Edit"),
+                            Width = "100",
+                            ClassName =  StyleColumn.ButtonStyle,
+                            Render = new RenderButtonEdit(new DataUrl("Edit"))
+                        }
+                    }
+                })
             </div>
         </div>
     </div>

@@ -1,6 +1,37 @@
 ﻿@model SpecificationAttributeModel
 
 <div class="panel-body">
-    @await Html.PartialAsync("Table", Model.SpecificationAttributeProductSearchModel.Grid)
+    @await Html.PartialAsync("Table", new DataTablesModel
+    {
+        Name = "used-by-products-grid",
+        UrlRead = new DataUrl("UsedByProducts", "SpecificationAttribute", null),
+        SearchButtonId = "search-categories",
+        Length = Model.SpecificationAttributeProductSearchModel.PageSize,
+        LengthMenu = Model.SpecificationAttributeProductSearchModel.AvailablePageSizes,
+        Filters = new List<FilterParameter>
+        {
+            new FilterParameter(nameof(Model.SpecificationAttributeProductSearchModel.SpecificationAttributeId), Model.SpecificationAttributeProductSearchModel.SpecificationAttributeId)
+        },
+        ColumnCollection = new List<ColumnProperty>
+        {
+            new ColumnProperty(nameof(SpecificationAttributeProductModel.ProductName))
+            {
+                Title = T("Admin.Catalog.Attributes.SpecificationAttributes.UsedByProducts.Product")
+            },
+            new ColumnProperty(nameof(SpecificationAttributeProductModel.Published))
+            {
+                Title = T("Admin.Catalog.Attributes.SpecificationAttributes.UsedByProducts.Published"),
+                Width = "100",
+                ClassName =  StyleColumn.CenterAll,
+                Render = new RenderBoolean()
+            },
+            new ColumnProperty(nameof(SpecificationAttributeProductModel.ProductId))
+            {
+                Title = T("Admin.Common.View"),
+                Width = "100",
+                ClassName =  StyleColumn.ButtonStyle,
+                Render = new RenderButtonView(new DataUrl("~/Admin/Product/Edit/"))
+            }
+        }
+    })
 </div>
-

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Domain.Catalog;
 using Nop.Services.Catalog;
@@ -7,7 +6,6 @@ using Nop.Services.Localization;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Framework.Factories;
-using Nop.Web.Framework.Models.DataTables;
 using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
@@ -41,65 +39,6 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Utilities
 
         /// <summary>
-        /// Prepare datatables model
-        /// </summary>
-        /// <param name="searchModel">Search model</param>
-        /// <returns>Datatables model</returns>
-        protected virtual DataTablesModel PrepareSpecificationAttributeOptionGridModel(SpecificationAttributeOptionSearchModel searchModel)
-        {
-            //prepare common properties
-            var model = new DataTablesModel
-            {
-                Name = "specificationattributeoptions-grid",
-                UrlRead = new DataUrl("OptionList", "SpecificationAttribute", null),
-                UrlDelete = new DataUrl("OptionDelete", "SpecificationAttribute", null),
-                Length = searchModel.PageSize,
-                LengthMenu = searchModel.AvailablePageSizes
-            };
-
-            //prepare filters to search
-            model.Filters = new List<FilterParameter>
-            {
-                new FilterParameter(nameof(searchModel.SpecificationAttributeId), searchModel.SpecificationAttributeId)
-            };
-
-            //prepare model columns
-            model.ColumnCollection = new List<ColumnProperty>
-            {
-                new ColumnProperty(nameof(SpecificationAttributeOptionModel.Name))
-                {
-                    Title = _localizationService.GetResource("Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.Name")
-                },
-                new ColumnProperty(nameof(SpecificationAttributeOptionModel.DisplayOrder))
-                {
-                    Title = _localizationService.GetResource("Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.DisplayOrder"),
-                    Width = "100"
-                },
-                new ColumnProperty(nameof(SpecificationAttributeOptionModel.NumberOfAssociatedProducts))
-                {
-                    Title = _localizationService.GetResource("Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.NumberOfAssociatedProducts"),
-                    Width = "250"
-                },
-                new ColumnProperty(nameof(SpecificationAttributeOptionModel.Id))
-                {
-                    Title = _localizationService.GetResource("Admin.Common.Edit"),
-                    Width = "100",
-                    ClassName =  StyleColumn.ButtonStyle,
-                    Render = new RenderCustom("renderColumnEdit")
-                },
-                new ColumnProperty(nameof(SpecificationAttributeOptionModel.Id))
-                {
-                    Title = _localizationService.GetResource("Admin.Common.Delete"),
-                    Width = "100",
-                    Render = new RenderButtonRemove(_localizationService.GetResource("Admin.Common.Delete")) { Style = StyleButton.Default },
-                    ClassName =  StyleColumn.ButtonStyle
-                }
-            };
-
-            return model;
-        }
-
-        /// <summary>
         /// Prepare specification attribute option search model
         /// </summary>
         /// <param name="searchModel">Specification attribute option search model</param>
@@ -118,60 +57,10 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
-            searchModel.Grid = PrepareSpecificationAttributeOptionGridModel(searchModel);
 
             return searchModel;
         }
-
-        /// <summary>
-        /// Prepare datatables model
-        /// </summary>
-        /// <param name="searchModel">Search model</param>
-        /// <returns>Datatables model</returns>
-        protected virtual DataTablesModel PrepareSpecificationAttributeProductGridModel(SpecificationAttributeProductSearchModel searchModel)
-        {
-            //prepare common properties
-            var model = new DataTablesModel
-            {
-                Name = "used-by-products-grid",
-                UrlRead = new DataUrl("UsedByProducts", "SpecificationAttribute", null),
-                SearchButtonId = "search-categories",
-                Length = searchModel.PageSize,
-                LengthMenu = searchModel.AvailablePageSizes
-            };
-
-            //prepare filters to search
-            model.Filters = new List<FilterParameter>
-            {
-                new FilterParameter(nameof(searchModel.SpecificationAttributeId), searchModel.SpecificationAttributeId)
-            };
-
-            //prepare model columns
-            model.ColumnCollection = new List<ColumnProperty>
-            {
-                new ColumnProperty(nameof(SpecificationAttributeProductModel.ProductName))
-                {
-                    Title = _localizationService.GetResource("Admin.Catalog.Attributes.SpecificationAttributes.UsedByProducts.Product")
-                },
-                new ColumnProperty(nameof(SpecificationAttributeProductModel.Published))
-                {
-                    Title = _localizationService.GetResource("Admin.Catalog.Attributes.SpecificationAttributes.UsedByProducts.Published"),
-                    Width = "100",
-                    ClassName =  StyleColumn.CenterAll,
-                    Render = new RenderBoolean()
-                },
-                new ColumnProperty(nameof(SpecificationAttributeProductModel.ProductId))
-                {
-                    Title = _localizationService.GetResource("Admin.Common.View"),
-                    Width = "100",
-                    ClassName =  StyleColumn.ButtonStyle,
-                    Render = new RenderButtonView(new DataUrl("~/Admin/Product/Edit/"))
-                }
-            };
-
-            return model;
-        }
-
+        
         /// <summary>
         /// Prepare search model of products that use the specification attribute
         /// </summary>
@@ -191,49 +80,8 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
-            searchModel.Grid = PrepareSpecificationAttributeProductGridModel(searchModel);
 
             return searchModel;
-        }
-
-        /// <summary>
-        /// Prepare datatables model
-        /// </summary>
-        /// <param name="searchModel">Search model</param>
-        /// <returns>Datatables model</returns>
-        protected virtual DataTablesModel PrepareSpecificationAttributeGridModel(SpecificationAttributeSearchModel searchModel)
-        {
-            //prepare common properties
-            var model = new DataTablesModel
-            {
-                Name = "specificationattributes-grid",
-                UrlRead = new DataUrl("List", "SpecificationAttribute", null),
-                Length = searchModel.PageSize,
-                LengthMenu = searchModel.AvailablePageSizes
-            };
-
-            //prepare model columns
-            model.ColumnCollection = new List<ColumnProperty>
-            {
-                new ColumnProperty(nameof(SpecificationAttributeModel.Name))
-                {
-                    Title = _localizationService.GetResource("Admin.Catalog.Attributes.SpecificationAttributes.Fields.Name")
-                },
-                new ColumnProperty(nameof(SpecificationAttributeModel.DisplayOrder))
-                {
-                    Title = _localizationService.GetResource("Admin.Catalog.Attributes.SpecificationAttributes.Fields.DisplayOrder"),
-                    Width = "100"
-                },
-                new ColumnProperty(nameof(SpecificationAttributeModel.Id))
-                {
-                    Title = _localizationService.GetResource("Admin.Common.Edit"),
-                    Width = "100",
-                    ClassName =  StyleColumn.ButtonStyle,
-                    Render = new RenderButtonEdit(new DataUrl("Edit"))
-                }
-            };
-
-            return model;
         }
 
         #endregion
@@ -252,7 +100,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
-            searchModel.Grid = PrepareSpecificationAttributeGridModel(searchModel);
 
             return searchModel;
         }
