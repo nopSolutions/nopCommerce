@@ -42,73 +42,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #endregion
 
-        #region Utilities
-
-        /// <summary>
-        /// Prepare datatables model
-        /// </summary>
-        /// <param name="searchModel">Search model</param>
-        /// <returns>Datatables model</returns>
-        protected virtual DataTablesModel PrepareCategoryGridModel(LogSearchModel searchModel)
-        {
-            //prepare common properties
-            var model = new DataTablesModel
-            {
-                Name = "log-grid",
-                UrlRead = new DataUrl("LogList", "Log", null),
-                SearchButtonId = "search-log",
-                Length = searchModel.PageSize,
-                LengthMenu = searchModel.AvailablePageSizes
-            };
-
-            //prepare filters to search
-            model.Filters = new List<FilterParameter>
-            {
-                new FilterParameter(nameof(searchModel.CreatedOnFrom)),
-                new FilterParameter(nameof(searchModel.CreatedOnTo)),
-                new FilterParameter(nameof(searchModel.Message)),
-                new FilterParameter(nameof(searchModel.LogLevelId))
-            };
-
-            //prepare model columns
-            model.ColumnCollection = new List<ColumnProperty>
-            {
-                new ColumnProperty(nameof(LogModel.Id))
-                {
-                    IsMasterCheckBox = true,
-                    Render = new RenderCheckBox("checkbox_log"),
-                    ClassName =  StyleColumn.CenterAll,
-                    Width = "50",
-                },
-                new ColumnProperty(nameof(LogModel.LogLevel))
-                {
-                    Title = _localizationService.GetResource("Admin.System.Log.Fields.LogLevel"),
-                    Width = "100"
-                },
-                new ColumnProperty(nameof(LogModel.ShortMessage))
-                {
-                    Title = _localizationService.GetResource("Admin.System.Log.Fields.ShortMessage")
-                },
-                new ColumnProperty(nameof(LogModel.CreatedOn))
-                {
-                    Title = _localizationService.GetResource("Admin.System.Log.Fields.CreatedOn"),
-                    Width = "200",
-                    Render = new RenderDate()
-                },
-                new ColumnProperty(nameof(LogModel.Id))
-                {
-                    Title = _localizationService.GetResource("Admin.Common.View"),
-                    Width = "100",
-                    ClassName =  StyleColumn.ButtonStyle,
-                    Render = new RenderButtonView(new DataUrl("View"))
-                }
-            };
-
-            return model;
-        }
-
-        #endregion
-
         #region Methods
 
         /// <summary>
@@ -126,7 +59,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
-            searchModel.Grid = PrepareCategoryGridModel(searchModel);
 
             return searchModel;
         }

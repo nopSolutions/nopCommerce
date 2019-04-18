@@ -97,8 +97,54 @@
 
                 <div class="panel panel-default">
                     <div class="panel-body">
-                        @await Html.PartialAsync("Table", Model.Grid)
-
+                        @await Html.PartialAsync("Table", new DataTablesModel
+                        {
+                            Name = "log-grid",
+                            UrlRead = new DataUrl("LogList", "Log", null),
+                            SearchButtonId = "search-log",
+                            Length = Model.PageSize,
+                            LengthMenu = Model.AvailablePageSizes,
+                            Filters = new List<FilterParameter>
+                            {
+                                new FilterParameter(nameof(Model.CreatedOnFrom)),
+                                new FilterParameter(nameof(Model.CreatedOnTo)),
+                                new FilterParameter(nameof(Model.Message)),
+                                new FilterParameter(nameof(Model.LogLevelId))
+                            },
+                            ColumnCollection = new List<ColumnProperty>
+                            {
+                                new ColumnProperty(nameof(LogModel.Id))
+                                {
+                                    IsMasterCheckBox = true,
+                                    Render = new RenderCheckBox("checkbox_log"),
+                                    ClassName =  StyleColumn.CenterAll,
+                                    Width = "50",
+                                },
+                                new ColumnProperty(nameof(LogModel.LogLevel))
+                                {
+                                    Title = T("Admin.System.Log.Fields.LogLevel").Text,
+                                    Width = "100"
+                                },
+                                new ColumnProperty(nameof(LogModel.ShortMessage))
+                                {
+                                    Title = T("Admin.System.Log.Fields.ShortMessage").Text
+                                },
+                                new ColumnProperty(nameof(LogModel.CreatedOn))
+                                {
+                                    Title = T("Admin.System.Log.Fields.CreatedOn").Text,
+                                    Width = "200",
+                                    Render = new RenderDate()
+                                },
+                                new ColumnProperty(nameof(LogModel.Id))
+                                {
+                                    Title = T("Admin.Common.View").Text,
+                                    Width = "100",
+                                    ClassName =  StyleColumn.ButtonStyle,
+                                    Render = new RenderButtonView(new DataUrl("View"))
+                                }
+                            }
+                        })
+                        
                         <script>
                             $(document).ready(function() {
                                 //"delete selected" button
@@ -114,7 +160,7 @@
                                         data: postData,
                                         complete: function (data) {
                                             //reload grid
-                                            $('#@Model.Grid.Name').DataTable().ajax.reload();
+                                            $('#log-grid').DataTable().ajax.reload();
                                             //clear selected checkboxes
                                             $('.checkboxGroups').attr('checked', false).change();
                                             selectedIds = [];
