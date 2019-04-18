@@ -66,7 +66,62 @@
 
             <div class="panel panel-default">
                 <div class="panel-body">
-                    @await Html.PartialAsync("Table", Model.BlogPosts.Grid)
+                    @await Html.PartialAsync("Table", new DataTablesModel
+                    {
+                        Name = "blogpost-grid",
+                        UrlRead = new DataUrl("List", "Blog", null),
+                        SearchButtonId = "search-blogpost",
+                        Length = Model.BlogPosts.PageSize,
+                        LengthMenu = Model.BlogPosts.AvailablePageSizes,
+                        Filters = new List<FilterParameter>
+                        {
+                            new FilterParameter(nameof(Model.BlogPosts.SearchStoreId))
+                        },
+                        ColumnCollection = new List<ColumnProperty>
+                        {
+                            new ColumnProperty(nameof(BlogPostModel.Title))
+                            {
+                                Title = T("Admin.ContentManagement.Blog.BlogPosts.Fields.Title")
+                            },
+                            new ColumnProperty(nameof(BlogPostModel.LanguageName))
+                            {
+                                Title = T("Admin.ContentManagement.Blog.BlogPosts.Fields.Language"),
+                                Width = "200"
+                            },
+                            new ColumnProperty(nameof(BlogPostModel.Id))
+                            {
+                                Title = T("Admin.ContentManagement.Blog.BlogPosts.Fields.Comments"),
+                                Width = "200",
+                                ClassName = StyleColumn.ButtonStyle,
+                                Render = new RenderCustom("renderColumnComments")
+                            },
+                            new ColumnProperty(nameof(BlogPostModel.StartDateUtc))
+                            {
+                                Title = T("Admin.ContentManagement.Blog.BlogPosts.Fields.StartDate"),
+                                Width = "200",
+                                Render = new RenderDate()
+                            },
+                            new ColumnProperty(nameof(BlogPostModel.EndDateUtc))
+                            {
+                                Title = T("Admin.ContentManagement.Blog.BlogPosts.Fields.EndDate"),
+                                Width = "200",
+                                Render = new RenderDate()
+                            },
+                            new ColumnProperty(nameof(BlogPostModel.CreatedOn))
+                            {
+                                Title = T("Admin.ContentManagement.Blog.BlogPosts.Fields.CreatedOn"),
+                                Width = "200",
+                                Render = new RenderDate()
+                            },
+                            new ColumnProperty(nameof(BlogPostModel.Id))
+                            {
+                                Title = T("Admin.Common.Edit"),
+                                Width = "100",
+                                ClassName = StyleColumn.ButtonStyle,
+                                Render = new RenderButtonEdit(new DataUrl("BlogPostEdit"))
+                            }
+                        }
+                    })
 
                     <script>
                         function renderColumnComments(data, type, row, meta) {
