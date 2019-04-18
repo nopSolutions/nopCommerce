@@ -36,65 +36,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #endregion
 
-        #region Utilities
-        
-        /// <summary>
-        /// Prepare datatables model
-        /// </summary>
-        /// <param name="searchModel">Search model</param>
-        /// <returns>Datatables model</returns>
-        protected virtual DataTablesModel PrepareTaxProviderGridModel(TaxProviderSearchModel searchModel)
-        {
-            //prepare common properties
-            var model = new DataTablesModel
-            {
-                Name = "tax-providers-grid",
-                UrlRead = new DataUrl("Providers", "Tax", null),
-                Length = searchModel.PageSize,
-                LengthMenu = searchModel.AvailablePageSizes
-            };
-
-            //prepare model columns
-            model.ColumnCollection = new List<ColumnProperty>
-            {
-                new ColumnProperty(nameof(TaxProviderModel.FriendlyName))
-                {
-                    Title = _localizationService.GetResource("Admin.Configuration.Tax.Providers.Fields.FriendlyName"),
-                    Width = "250"
-                },
-                new ColumnProperty(nameof(TaxProviderModel.SystemName))
-                {
-                    Title = _localizationService.GetResource("Admin.Configuration.Tax.Providers.Fields.SystemName"),
-                    Width = "250"
-                },
-                new ColumnProperty(nameof(TaxProviderModel.IsPrimaryTaxProvider))
-                {
-                    Title = _localizationService.GetResource("Admin.Configuration.Tax.Providers.Fields.IsPrimaryTaxProvider"),
-                    Width = "100",
-                    ClassName =  StyleColumn.CenterAll,
-                    Render = new RenderBoolean()
-                },
-                new ColumnProperty(nameof(TaxProviderModel.SystemName))
-                {
-                    Title = _localizationService.GetResource("Admin.Configuration.Tax.Providers.Fields.MarkAsPrimaryProvider"),
-                    Width = "200",
-                    ClassName =  StyleColumn.ButtonStyle,
-                    Render = new RenderCustom("renderColumnSystemName")
-                },
-                new ColumnProperty(nameof(TaxProviderModel.SystemName))
-                {
-                    Title = _localizationService.GetResource("Admin.Configuration.Tax.Providers.Configure"),
-                    Width = "150",
-                    ClassName =  StyleColumn.ButtonStyle,
-                    Render = new RenderCustom("renderColumnConfigure")
-                }
-            };
-
-            return model;
-        }
-        
-        #endregion
-
         #region Methods
 
         /// <summary>
@@ -126,7 +67,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
-            searchModel.Grid = PrepareTaxProviderGridModel(searchModel);
 
             return searchModel;
         }
