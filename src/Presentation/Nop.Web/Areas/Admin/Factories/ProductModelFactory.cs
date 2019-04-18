@@ -2242,9 +2242,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 .GetProductAttributeMappingsByProductId(product.Id).ToPagedList(searchModel);
 
             //prepare grid model
-            var model = new ProductAttributeMappingListModel
+            var model = new ProductAttributeMappingListModel().PrepareToGrid(searchModel, productAttributeMappings, () =>
             {
-                Data = productAttributeMappings.Select(attributeMapping =>
+                return productAttributeMappings.Select(attributeMapping =>
                 {
                     //fill in model values from the entity
                     var productAttributeMappingModel = attributeMapping.ToModel<ProductAttributeMappingModel>();
@@ -2268,9 +2268,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     }
 
                     return productAttributeMappingModel;
-                }),
-                Total = productAttributeMappings.TotalCount
-            };
+                });
+            });
 
             return model;
         }
