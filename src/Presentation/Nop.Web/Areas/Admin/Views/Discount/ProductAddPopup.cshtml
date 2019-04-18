@@ -126,15 +126,15 @@ else
                                         IsMasterCheckBox = true,
                                         Render = new RenderCheckBox(nameof(AddProductToDiscountModel.SelectedProductIds)),
                                         ClassName =  StyleColumn.CenterAll,
-                                        Width = "50",
+                                        Width = "50"
                                     },
                                     new ColumnProperty(nameof(ProductModel.Name))
                                     {
-                                        Title = T("Admin.Catalog.Products.Fields.Name")
+                                        Title = T("Admin.Catalog.Products.Fields.Name").Text
                                     },
                                     new ColumnProperty(nameof(ProductModel.Published))
                                     {
-                                        Title = T("Admin.Catalog.Products.Fields.Published"),
+                                        Title = T("Admin.Catalog.Products.Fields.Published").Text,
                                         Width = "100",
                                         Render = new RenderBoolean()
                                     }

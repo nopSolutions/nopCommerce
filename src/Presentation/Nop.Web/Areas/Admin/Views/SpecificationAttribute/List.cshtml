@@ -38,16 +38,16 @@
                     {
                         new ColumnProperty(nameof(SpecificationAttributeModel.Name))
                         {
-                            Title = T("Admin.Catalog.Attributes.SpecificationAttributes.Fields.Name")
+                            Title = T("Admin.Catalog.Attributes.SpecificationAttributes.Fields.Name").Text
                         },
                         new ColumnProperty(nameof(SpecificationAttributeModel.DisplayOrder))
                         {
-                            Title = T("Admin.Catalog.Attributes.SpecificationAttributes.Fields.DisplayOrder"),
+                            Title = T("Admin.Catalog.Attributes.SpecificationAttributes.Fields.DisplayOrder").Text,
                             Width = "100"
                         },
                         new ColumnProperty(nameof(SpecificationAttributeModel.Id))
                         {
-                            Title = T("Admin.Common.Edit"),
+                            Title = T("Admin.Common.Edit").Text,
                             Width = "100",
                             ClassName =  StyleColumn.ButtonStyle,
                             Render = new RenderButtonEdit(new DataUrl("Edit"))

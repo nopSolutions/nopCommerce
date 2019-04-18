@@ -35,31 +35,31 @@
                             {
                                 new ColumnProperty(nameof(TaxProviderModel.FriendlyName))
                                 {
-                                    Title = T("Admin.Configuration.Tax.Providers.Fields.FriendlyName"),
+                                    Title = T("Admin.Configuration.Tax.Providers.Fields.FriendlyName").Text,
                                     Width = "250"
                                 },
                                 new ColumnProperty(nameof(TaxProviderModel.SystemName))
                                 {
-                                    Title = T("Admin.Configuration.Tax.Providers.Fields.SystemName"),
+                                    Title = T("Admin.Configuration.Tax.Providers.Fields.SystemName").Text,
                                     Width = "250"
                                 },
                                 new ColumnProperty(nameof(TaxProviderModel.IsPrimaryTaxProvider))
                                 {
-                                    Title = T("Admin.Configuration.Tax.Providers.Fields.IsPrimaryTaxProvider"),
+                                    Title = T("Admin.Configuration.Tax.Providers.Fields.IsPrimaryTaxProvider").Text,
                                     Width = "100",
                                     ClassName =  StyleColumn.CenterAll,
                                     Render = new RenderBoolean()
                                 },
                                 new ColumnProperty(nameof(TaxProviderModel.SystemName))
                                 {
-                                    Title = T("Admin.Configuration.Tax.Providers.Fields.MarkAsPrimaryProvider"),
+                                    Title = T("Admin.Configuration.Tax.Providers.Fields.MarkAsPrimaryProvider").Text,
                                     Width = "200",
                                     ClassName =  StyleColumn.ButtonStyle,
                                     Render = new RenderCustom("renderColumnSystemName")
                                 },
                                 new ColumnProperty(nameof(TaxProviderModel.SystemName))
                                 {
-                                    Title = T("Admin.Configuration.Tax.Providers.Configure"),
+                                    Title = T("Admin.Configuration.Tax.Providers.Configure").Text,
                                     Width = "150",
                                     ClassName =  StyleColumn.ButtonStyle,
                                     Render = new RenderCustom("renderColumnConfigure")

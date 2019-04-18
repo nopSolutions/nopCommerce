@@ -112,22 +112,22 @@
                         {
                             new ColumnProperty(nameof(CategoryModel.Breadcrumb))
                             {
-                                Title = T("Admin.Catalog.Categories.Fields.Name")
+                                Title = T("Admin.Catalog.Categories.Fields.Name").Text
                             },
                             new ColumnProperty(nameof(CategoryModel.Published))
                             {
-                                Title = T("Admin.Catalog.Categories.Fields.Published"),
+                                Title = T("Admin.Catalog.Categories.Fields.Published").Text,
                                 Width = "100",
                                 Render = new RenderBoolean()
                             },
                             new ColumnProperty(nameof(CategoryModel.DisplayOrder))
                             {
-                                Title = T("Admin.Catalog.Categories.Fields.DisplayOrder"),
+                                Title = T("Admin.Catalog.Categories.Fields.DisplayOrder").Text,
                                 Width = "150"
                             },
                             new ColumnProperty(nameof(CategoryModel.Id))
                             {
-                                Title = T("Admin.Common.Edit"),
+                                Title = T("Admin.Common.Edit").Text,
                                 Width = "100",
                                 ClassName =  StyleColumn.ButtonStyle,
                                 Render = new RenderButtonEdit(new DataUrl("Edit"))

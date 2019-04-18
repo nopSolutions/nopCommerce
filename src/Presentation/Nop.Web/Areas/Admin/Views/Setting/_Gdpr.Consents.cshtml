@@ -11,33 +11,33 @@
         {
             new ColumnProperty(nameof(GdprConsentModel.Message))
             {
-                Title = T("Admin.Configuration.Settings.Gdpr.Consent.Message")
+                Title = T("Admin.Configuration.Settings.Gdpr.Consent.Message").Text
             },
             new ColumnProperty(nameof(GdprConsentModel.IsRequired))
             {
-                Title = T("Admin.Configuration.Settings.Gdpr.Consent.IsRequired"),
+                Title = T("Admin.Configuration.Settings.Gdpr.Consent.IsRequired").Text,
                 ClassName =  StyleColumn.CenterAll,
                 Render = new RenderBoolean()
             },
             new ColumnProperty(nameof(GdprConsentModel.DisplayDuringRegistration))
             {
-                Title = T("Admin.Configuration.Settings.Gdpr.Consent.DisplayDuringRegistration"),
+                Title = T("Admin.Configuration.Settings.Gdpr.Consent.DisplayDuringRegistration").Text,
                 ClassName =  StyleColumn.CenterAll,
                 Render = new RenderBoolean()
             },
             new ColumnProperty(nameof(GdprConsentModel.DisplayOnCustomerInfoPage))
             {
-                Title = T("Admin.Configuration.Settings.Gdpr.Consent.DisplayOnCustomerInfoPage"),
+                Title = T("Admin.Configuration.Settings.Gdpr.Consent.DisplayOnCustomerInfoPage").Text,
                 ClassName =  StyleColumn.CenterAll,
                 Render = new RenderBoolean()
             },
             new ColumnProperty(nameof(GdprConsentModel.DisplayOrder))
             {
-                Title = T("Admin.Configuration.Settings.Gdpr.Consent.DisplayOrder"),
+                Title = T("Admin.Configuration.Settings.Gdpr.Consent.DisplayOrder").Text
             },
             new ColumnProperty(nameof(GdprConsentModel.Id))
             {
-                Title = T("Admin.Common.Edit"),
+                Title = T("Admin.Common.Edit").Text,
                 Width = "100",
                 ClassName =  StyleColumn.ButtonStyle,
                 Render = new RenderButtonEdit(new DataUrl("~/Admin/Setting/EditGdprConsent/"))

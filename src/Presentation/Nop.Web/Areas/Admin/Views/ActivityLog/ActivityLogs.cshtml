@@ -111,35 +111,35 @@
                         {
                             new ColumnProperty(nameof(ActivityLogModel.ActivityLogTypeName))
                             {
-                                Title = T("Admin.Configuration.ActivityLog.ActivityLog.Fields.ActivityLogType"),
+                                Title = T("Admin.Configuration.ActivityLog.ActivityLog.Fields.ActivityLogType").Text,
                                 Width = "200"
                             },
                             new ColumnProperty(nameof(ActivityLogModel.CustomerEmail))
                             {
-                                Title = T("Admin.Configuration.ActivityLog.ActivityLog.Fields.Customer"),
+                                Title = T("Admin.Configuration.ActivityLog.ActivityLog.Fields.Customer").Text,
                                 Width = "100",
                                 Render = new RenderLink(new DataUrl("~/Admin/Customer/Edit", nameof(ActivityLogModel.CustomerId)))
                             },
                             new ColumnProperty(nameof(ActivityLogModel.IpAddress))
                             {
-                                Title = T("Admin.Customers.Customers.ActivityLog.IpAddress"),
+                                Title = T("Admin.Customers.Customers.ActivityLog.IpAddress").Text,
                                 Width = "100"
                             },
                             new ColumnProperty(nameof(ActivityLogModel.Comment))
                             {
-                                Title = T("Admin.Configuration.ActivityLog.ActivityLog.Fields.Comment")
+                                Title = T("Admin.Configuration.ActivityLog.ActivityLog.Fields.Comment").Text
                             },
                             new ColumnProperty(nameof(ActivityLogModel.CreatedOn))
                             {
-                                Title = T("Admin.System.Log.Fields.CreatedOn"),
+                                Title = T("Admin.System.Log.Fields.CreatedOn").Text,
                                 Width = "200",
                                 Render = new RenderDate()
                             },
                             new ColumnProperty(nameof(ActivityLogModel.Id))
                             {
-                                Title = T("Admin.Common.Delete"),
+                                Title = T("Admin.Common.Delete").Text,
                                 Width = "100",
-                                Render = new RenderButtonRemove(T("Admin.Common.Delete")) {Style = StyleButton.Default},
+                                Render = new RenderButtonRemove(T("Admin.Common.Delete").Text) {Style = StyleButton.Default},
                                 ClassName = StyleColumn.ButtonStyle
                             }
                         }

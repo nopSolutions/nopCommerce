@@ -77,30 +77,30 @@
                             {
                                 new ColumnProperty(nameof(LowStockProductModel.Name))
                                 {
-                                    Title = T("Admin.Catalog.Products.Fields.Name"),
+                                    Title = T("Admin.Catalog.Products.Fields.Name").Text,
                                     Width = "300",
                                     Render = new RenderCustom("renderColumnName")
                                 },
                                 new ColumnProperty(nameof(LowStockProductModel.ManageInventoryMethod))
                                 {
-                                    Title = T("Admin.Catalog.Products.Fields.ManageInventoryMethod"),
+                                    Title = T("Admin.Catalog.Products.Fields.ManageInventoryMethod").Text,
                                     Width = "150"
                                 },
                                 new ColumnProperty(nameof(LowStockProductModel.StockQuantity))
                                 {
-                                    Title = T("Admin.Catalog.Products.Fields.StockQuantity"),
+                                    Title = T("Admin.Catalog.Products.Fields.StockQuantity").Text,
                                     Width = "100"
                                 },
                                 new ColumnProperty(nameof(LowStockProductModel.Published))
                                 {
-                                    Title = T("Admin.Catalog.Products.Fields.Published"),
+                                    Title = T("Admin.Catalog.Products.Fields.Published").Text,
                                     Width = "100",
                                     ClassName =  StyleColumn.CenterAll,
                                     Render = new RenderBoolean()
                                 },
                                 new ColumnProperty(nameof(LowStockProductModel.Id))
                                 {
-                                    Title = T("Admin.Common.View"),
+                                    Title = T("Admin.Common.View").Text,
                                     Width = "100",
                                     ClassName =  StyleColumn.ButtonStyle,
                                     Render = new RenderButtonView(new DataUrl("~/Admin/Product/Edit/"))

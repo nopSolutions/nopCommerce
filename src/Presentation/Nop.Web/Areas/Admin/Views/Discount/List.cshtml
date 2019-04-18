@@ -119,40 +119,40 @@
                         {
                             new ColumnProperty(nameof(DiscountModel.Name))
                             {
-                                Title = T("Admin.Promotions.Discounts.Fields.Name"),
+                                Title = T("Admin.Promotions.Discounts.Fields.Name").Text,
                                 Width = "350"
                             },
                             new ColumnProperty(nameof(DiscountModel.DiscountTypeName))
                             {
-                                Title = T("Admin.Promotions.Discounts.Fields.DiscountType"),
+                                Title = T("Admin.Promotions.Discounts.Fields.DiscountType").Text,
                                 Width = "250"
                             },
                             new ColumnProperty(nameof(DiscountModel.DiscountAmount))
                             {
-                                Title = T("Admin.Promotions.Discounts.Fields.Discount"),
+                                Title = T("Admin.Promotions.Discounts.Fields.Discount").Text,
                                 Width = "200",
                                 Render = new RenderCustom("renderColumnDiscount")
                             },
                             new ColumnProperty(nameof(DiscountModel.StartDateUtc))
                             {
-                                Title = T("Admin.Promotions.Discounts.Fields.StartDate"),
+                                Title = T("Admin.Promotions.Discounts.Fields.StartDate").Text,
                                 Width = "200",
                                 Render = new RenderDate()
                             },
                             new ColumnProperty(nameof(DiscountModel.EndDateUtc))
                             {
-                                Title = T("Admin.Promotions.Discounts.Fields.EndDate"),
+                                Title = T("Admin.Promotions.Discounts.Fields.EndDate").Text,
                                 Width = "200",
                                 Render = new RenderDate()
                             },
                             new ColumnProperty(nameof(DiscountModel.TimesUsed))
                             {
-                                Title = T("Admin.Promotions.Discounts.Fields.TimesUsed"),
+                                Title = T("Admin.Promotions.Discounts.Fields.TimesUsed").Text,
                                 Width = "200"
                             },
                             new ColumnProperty(nameof(DiscountModel.Id))
                             {
-                                Title = T("Admin.Common.Edit"),
+                                Title = T("Admin.Common.Edit").Text,
                                 Width = "100",
                                 ClassName =  StyleColumn.ButtonStyle,
                                 Render = new RenderButtonEdit(new DataUrl("Edit"))

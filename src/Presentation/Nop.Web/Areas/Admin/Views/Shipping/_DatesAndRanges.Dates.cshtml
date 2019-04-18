@@ -14,16 +14,16 @@
         {
             new ColumnProperty(nameof(DeliveryDateModel.Name))
             {
-                Title = T("Admin.Configuration.Shipping.DeliveryDates.Fields.Name")
+                Title = T("Admin.Configuration.Shipping.DeliveryDates.Fields.Name").Text
             },
             new ColumnProperty(nameof(DeliveryDateModel.DisplayOrder))
             {
-                Title = T("Admin.Configuration.Shipping.DeliveryDates.Fields.DisplayOrder"),
+                Title = T("Admin.Configuration.Shipping.DeliveryDates.Fields.DisplayOrder").Text,
                 Width = "150"
             },
             new ColumnProperty(nameof(DeliveryDateModel.Id))
             {
-                Title = T("Admin.Common.Edit"),
+                Title = T("Admin.Common.Edit").Text,
                 Width = "100",
                 ClassName =  StyleColumn.ButtonStyle,
                 Render = new RenderButtonEdit(new DataUrl("EditDeliveryDate"))

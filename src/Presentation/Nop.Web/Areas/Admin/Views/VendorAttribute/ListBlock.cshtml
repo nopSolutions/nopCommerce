@@ -14,29 +14,29 @@
         {
             new ColumnProperty(nameof(VendorAttributeModel.Name))
             {
-                Title = T("Admin.Vendors.VendorAttributes.Fields.Name"),
+                Title = T("Admin.Vendors.VendorAttributes.Fields.Name").Text,
                 Width = "300"
             },
             new ColumnProperty(nameof(VendorAttributeModel.AttributeControlTypeName))
             {
-                Title = T("Admin.Vendors.VendorAttributes.Fields.AttributeControlType"),
+                Title = T("Admin.Vendors.VendorAttributes.Fields.AttributeControlType").Text,
                 Width = "200"
             },
             new ColumnProperty(nameof(VendorAttributeModel.IsRequired))
             {
-                Title = T("Admin.Vendors.VendorAttributes.Fields.IsRequired"),
+                Title = T("Admin.Vendors.VendorAttributes.Fields.IsRequired").Text,
                 Width = "100",
                 ClassName =  StyleColumn.CenterAll,
                 Render = new RenderBoolean()
             },
             new ColumnProperty(nameof(VendorAttributeModel.DisplayOrder))
             {
-                Title = T("Admin.Vendors.VendorAttributes.Fields.DisplayOrder"),
+                Title = T("Admin.Vendors.VendorAttributes.Fields.DisplayOrder").Text,
                 Width = "100"
             },
             new ColumnProperty(nameof(VendorAttributeModel.Id))
             {
-                Title = T("Admin.Common.Edit"),
+                Title = T("Admin.Common.Edit").Text,
                 Width = "100",
                 ClassName =  StyleColumn.ButtonStyle,
                 Render = new RenderButtonEdit(new DataUrl("~/Admin/VendorAttribute/Edit/"))

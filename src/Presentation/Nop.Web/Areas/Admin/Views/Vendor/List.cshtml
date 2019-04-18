@@ -80,24 +80,24 @@
                         {
                             new ColumnProperty(nameof(VendorModel.Name))
                             {
-                                Title = T("Admin.Vendors.Fields.Name"),
+                                Title = T("Admin.Vendors.Fields.Name").Text,
                                 Width = "300"
                             },
                             new ColumnProperty(nameof(VendorModel.Email))
                             {
-                                Title = T("Admin.Vendors.Fields.Email"),
+                                Title = T("Admin.Vendors.Fields.Email").Text,
                                 Width = "300"
                             },
                             new ColumnProperty(nameof(VendorModel.Active))
                             {
-                                Title = T("Admin.Vendors.Fields.Active"),
+                                Title = T("Admin.Vendors.Fields.Active").Text,
                                 Width = "50",
                                 ClassName =  StyleColumn.CenterAll,
                                 Render = new RenderBoolean()
                             },
                             new ColumnProperty(nameof(VendorModel.Id))
                             {
-                                Title = T("Admin.Common.Edit"),
+                                Title = T("Admin.Common.Edit").Text,
                                 Width = "50",
                                 ClassName =  StyleColumn.ButtonStyle,
                                 Render = new RenderButtonEdit(new DataUrl("Edit"))

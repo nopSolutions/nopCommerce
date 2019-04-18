@@ -38,27 +38,27 @@
                     {
                         new ColumnProperty(nameof(CheckoutAttributeModel.Name))
                         {
-                            Title = T("Admin.Catalog.Attributes.CheckoutAttributes.Fields.Name")
+                            Title = T("Admin.Catalog.Attributes.CheckoutAttributes.Fields.Name").Text
                         },
                         new ColumnProperty(nameof(CheckoutAttributeModel.AttributeControlTypeName))
                         {
-                            Title = T("Admin.Catalog.Attributes.CheckoutAttributes.Fields.AttributeControlType"),
+                            Title = T("Admin.Catalog.Attributes.CheckoutAttributes.Fields.AttributeControlType").Text,
                             Width = "200"
                         },
                         new ColumnProperty(nameof(CheckoutAttributeModel.IsRequired))
                         {
-                            Title = T("Admin.Catalog.Attributes.CheckoutAttributes.Fields.IsRequired"),
+                            Title = T("Admin.Catalog.Attributes.CheckoutAttributes.Fields.IsRequired").Text,
                             Width = "100",
                             Render = new RenderBoolean()
                         },
                         new ColumnProperty(nameof(CheckoutAttributeModel.DisplayOrder))
                         {
-                            Title = T("Admin.Catalog.Attributes.CheckoutAttributes.Fields.DisplayOrder"),
+                            Title = T("Admin.Catalog.Attributes.CheckoutAttributes.Fields.DisplayOrder").Text,
                             Width = "100"
                         },
                         new ColumnProperty(nameof(CheckoutAttributeModel.Id))
                         {
-                            Title = T("Admin.Common.Edit"),
+                            Title = T("Admin.Common.Edit").Text,
                             Width = "100",
                             ClassName = StyleColumn.ButtonStyle,
                             Render = new RenderButtonEdit(new DataUrl("Edit"))

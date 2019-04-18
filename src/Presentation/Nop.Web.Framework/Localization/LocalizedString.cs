@@ -20,19 +20,5 @@ namespace Nop.Web.Framework.Localization
         /// Text
         /// </summary>
         public string Text { get; }
-
-        public override string ToString()
-        {
-            return Text;
-        }
-
-        /// <summary>
-        /// Conversion localized string to string
-        /// </summary>
-        /// <param name="localizedString">Localized string to convert</param>
-        public static implicit operator string(LocalizedString localizedString)
-        {
-            return localizedString.ToString();
-        }
     }
 }

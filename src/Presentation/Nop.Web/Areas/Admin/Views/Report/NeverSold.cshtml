@@ -122,11 +122,11 @@
                         {
                             new ColumnProperty(nameof(NeverSoldReportModel.ProductName))
                             {
-                                Title = T("Admin.Reports.Sales.NeverSold.Fields.Name")
+                                Title = T("Admin.Reports.Sales.NeverSold.Fields.Name").Text
                             },
                             new ColumnProperty(nameof(NeverSoldReportModel.ProductId))
                             {
-                                Title = T("Admin.Common.Edit"),
+                                Title = T("Admin.Common.Edit").Text,
                                 Width = "100",
                                 ClassName =  StyleColumn.ButtonStyle,
                                 Render = new RenderButtonView(new DataUrl("~/Admin/Product/Edit/"))
