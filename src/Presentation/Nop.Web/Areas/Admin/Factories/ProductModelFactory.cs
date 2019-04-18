@@ -1985,9 +1985,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 .ToPagedList(searchModel);
 
             //prepare list model
-            var model = new ProductTagListModel
+            var model = new ProductTagListModel().PrepareToGrid(searchModel, productTags, () =>
             {
-                Data = productTags.Select(tag =>
+                return productTags.Select(tag =>
                 {
                     //fill in model values from the entity
                     var productTagModel = tag.ToModel<ProductTagModel>();
@@ -1996,9 +1996,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     productTagModel.ProductCount = _productTagService.GetProductCount(tag.Id, storeId: 0, showHidden: true);
 
                     return productTagModel;
-                }),
-                Total = productTags.TotalCount
-            };
+                });
+            });
 
             return model;
         }
