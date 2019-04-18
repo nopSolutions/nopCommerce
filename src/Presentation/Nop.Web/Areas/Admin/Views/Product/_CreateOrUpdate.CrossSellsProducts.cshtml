@@ -8,10 +8,36 @@
     <div class="panel panel-default">
 
         <div class="panel-body">
-            @await Html.PartialAsync("Table", Model.CrossSellProductSearchModel.Grid)
+            @await Html.PartialAsync("Table", new DataTablesModel
+            {
+                Name = "crosssellproducts-grid",
+                UrlRead = new DataUrl("CrossSellProductList", "Product", null),
+                UrlDelete = new DataUrl("CrossSellProductDelete", "Product", null),
+                Length = Model.CrossSellProductSearchModel.PageSize,
+                LengthMenu = Model.CrossSellProductSearchModel.AvailablePageSizes,
+                Filters = new List<FilterParameter>
+                {
+                    new FilterParameter(nameof(Model.CrossSellProductSearchModel.ProductId), Model.CrossSellProductSearchModel.ProductId)
+                },
+                ColumnCollection = new List<ColumnProperty>
+                {
+                    new ColumnProperty(nameof(CrossSellProductModel.Product2Name))
+                    {
+                        Title = T("Admin.Catalog.Products.CrossSells.Fields.Product").Text,
+                        Render = new RenderCustom("renderColumnCrossSellProductName")
+                    },
+                    new ColumnProperty(nameof(CrossSellProductModel.Id))
+                    {
+                        Title = T("Admin.Common.Delete").Text,
+                        Width = "100",
+                        Render = new RenderButtonRemove(T("Admin.Common.Delete").Text){ Style = StyleButton.Default },
+                        ClassName = StyleColumn.ButtonStyle
+                    }
+                }
+            })
             <script>
                 function renderColumnCrossSellProductName(data, type, row, meta) {
-                   var textRenderer = $.fn.dataTable.render.text().display;
+                    var textRenderer = $.fn.dataTable.render.text().display;
                     return '<a href="@Url.Content("~/Admin/Product/Edit/")' + row.ProductId2 + '">' + textRenderer(row.Product2Name) + '</a>';
                 }
             </script>
@@ -25,7 +51,7 @@
                 $(document).ready(function () {
                     $('#btnRefreshCrossSellProducts').click(function () {
                         //refresh grid
-                        $('#@Model.CrossSellProductSearchModel.Grid.Name').DataTable().ajax.reload();
+                        $('#crosssellproducts-grid').DataTable().ajax.reload();
 
                         //return false to don't reload a page
                         return false;
