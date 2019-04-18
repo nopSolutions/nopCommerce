@@ -73,6 +73,7 @@ else
         url: '@Html.Raw(GetUrl(Model.UrlRead))',
         type: '@WebRequestMethods.Http.Post',
         dataType: 'json',
+        dataSrc: 'Data',
         data: function(data) {
             @if (Model.Filters != null)
             {
