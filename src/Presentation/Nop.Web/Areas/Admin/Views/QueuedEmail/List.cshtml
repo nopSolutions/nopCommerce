@@ -129,7 +129,83 @@
 
                 <div class="panel panel-default">
                     <div class="panel-body">
-                        @await Html.PartialAsync("Table", Model.Grid)
+                        @await Html.PartialAsync("Table", new DataTablesModel
+                        {
+                            Name = "queuedEmails-grid",
+                            UrlRead = new DataUrl("QueuedEmailList", "QueuedEmail", null),
+                            SearchButtonId = "search-queuedemails",
+                            Length = Model.PageSize,
+                            LengthMenu = Model.AvailablePageSizes,
+                            Filters = new List<FilterParameter>
+                            {
+                                new FilterParameter(nameof(Model.SearchStartDate)),
+                                new FilterParameter(nameof(Model.SearchEndDate)),
+                                new FilterParameter(nameof(Model.SearchFromEmail)),
+                                new FilterParameter(nameof(Model.SearchToEmail)),
+                                new FilterParameter(nameof(Model.SearchLoadNotSent), typeof(bool)),
+                                new FilterParameter(nameof(Model.SearchMaxSentTries))
+                            },
+                            ColumnCollection = new List<ColumnProperty>
+                            {
+                                new ColumnProperty(nameof(QueuedEmailModel.Id))
+                                {
+                                    IsMasterCheckBox = true,
+                                    Render = new RenderCheckBox("checkbox_queuedemails"),
+                                    ClassName =  StyleColumn.CenterAll,
+                                    Width = "50",
+                                },
+                                new ColumnProperty(nameof(QueuedEmailModel.Id))
+                                {
+                                    Title = T("Admin.System.QueuedEmails.Fields.Id").Text,
+                                    Width = "100",
+                                },
+                                new ColumnProperty(nameof(QueuedEmailModel.Subject))
+                                {
+                                    Title = T("Admin.System.QueuedEmails.Fields.Subject").Text,
+                                    Width = "300",
+                                },
+                                new ColumnProperty(nameof(QueuedEmailModel.From))
+                                {
+                                    Title = T("Admin.System.QueuedEmails.Fields.From").Text,
+                                    Width = "100",
+                                },
+                                new ColumnProperty(nameof(QueuedEmailModel.To))
+                                {
+                                    Title = T("Admin.System.QueuedEmails.Fields.To").Text,
+                                    Width = "100",
+                                },
+                                new ColumnProperty(nameof(QueuedEmailModel.CreatedOn))
+                                {
+                                    Title = T("Admin.System.QueuedEmails.Fields.CreatedOn").Text,
+                                    Width = "200",
+                                    Render = new RenderDate()
+                                },
+                                new ColumnProperty(nameof(QueuedEmailModel.DontSendBeforeDate))
+                                {
+                                    Title = T("Admin.System.QueuedEmails.Fields.DontSendBeforeDate").Text,
+                                    Width = "200",
+                                    Render = new RenderDate()
+                                },
+                                new ColumnProperty(nameof(QueuedEmailModel.SentOn))
+                                {
+                                    Title = T("Admin.System.QueuedEmails.Fields.SentOn").Text,
+                                    Width = "100",
+                                    Render = new RenderDate()
+                                },
+                                new ColumnProperty(nameof(QueuedEmailModel.PriorityName))
+                                {
+                                    Title = T("Admin.System.QueuedEmails.Fields.Priority").Text,
+                                    Width = "150",
+                                },
+                                new ColumnProperty(nameof(QueuedEmailModel.Id))
+                                {
+                                    Title = T("Admin.Common.Edit").Text,
+                                    Width = "50",
+                                    ClassName =  StyleColumn.ButtonStyle,
+                                    Render = new RenderButtonEdit(new DataUrl("Edit"))
+                                }
+                            }
+                        })
 
                         <script>
                             $(document).ready(function() {
@@ -152,7 +228,7 @@
                                         url: "@(Url.Action("DeleteSelected", "QueuedEmail"))",
                                         data: postData,
                                         complete: function (data) {
-                                            $('#@Model.Grid.Name').DataTable().ajax.reload();
+                                            $('#queuedEmails-grid').DataTable().ajax.reload();
                                             selectedIds = [];
                                         },
                                         error: function (xhr, ajaxOptions, thrownError) {
