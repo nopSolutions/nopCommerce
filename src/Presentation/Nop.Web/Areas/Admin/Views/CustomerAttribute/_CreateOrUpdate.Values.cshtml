@@ -5,7 +5,51 @@
     /*TODO display the following warning if values are not supported by selected attribute control type - 'Values are not required for this attribute control type' */
 
     <div class="panel-body">
-        @await Html.PartialAsync("Table", Model.CustomerAttributeValueSearchModel.Grid)
+        @await Html.PartialAsync("Table", new DataTablesModel
+        {
+            Name = "customerattributevalues-grid",
+            UrlRead = new DataUrl("ValueList", "CustomerAttribute", null),
+            UrlDelete = new DataUrl("ValueDelete", "CustomerAttribute", null),
+            Length = Model.CustomerAttributeValueSearchModel.PageSize,
+            LengthMenu = Model.CustomerAttributeValueSearchModel.AvailablePageSizes,
+            Filters = new List<FilterParameter>
+            {
+                new FilterParameter(nameof(Model.CustomerAttributeValueSearchModel.CustomerAttributeId), Model.CustomerAttributeValueSearchModel.CustomerAttributeId)
+            },
+            ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(CustomerAttributeValueModel.Name))
+                {
+                    Title = T("Admin.Customers.CustomerAttributes.Values.Fields.Name").Text
+                },
+                new ColumnProperty(nameof(CustomerAttributeValueModel.IsPreSelected))
+                {
+                    Title = T("Admin.Customers.CustomerAttributes.Values.Fields.IsPreSelected").Text,
+                    Width = "100",
+                    ClassName = StyleColumn.CenterAll,
+                    Render = new RenderBoolean()
+                },
+                new ColumnProperty(nameof(CustomerAttributeValueModel.DisplayOrder))
+                {
+                    Title = T("Admin.Customers.CustomerAttributes.Values.Fields.DisplayOrder").Text,
+                    Width = "100"
+                },
+                new ColumnProperty(nameof(CustomerAttributeValueModel.Id))
+                {
+                    Title = T("Admin.Common.Edit").Text,
+                    Width = "100",
+                    ClassName =  StyleColumn.ButtonStyle,
+                    Render = new RenderCustom("renderColumnEdit")
+                },
+                new ColumnProperty(nameof(CustomerAttributeValueModel.Id))
+                {
+                    Title = T("Admin.Common.Delete").Text,
+                    Width = "100",
+                    Render = new RenderButtonRemove(T("Admin.Common.Delete").Text) { Style = StyleButton.Default },
+                    ClassName =  StyleColumn.ButtonStyle
+                }
+            }
+        })
     
         <script>
             function renderColumnEdit(data, type, row, meta) {
@@ -22,7 +66,7 @@
             $(document).ready(function () {
                 $('#btnRefresh').click(function () {
                     //refresh grid
-                     $('#@Model.CustomerAttributeValueSearchModel.Grid.Name').DataTable().ajax.reload();
+                     $('#customerattributevalues-grid').DataTable().ajax.reload();
 
                     //return false to don't reload a page
                     return false;
