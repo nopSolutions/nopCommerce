@@ -1,4 +1,5 @@
-﻿@model ActivityLogTypeSearchModel
+﻿@using Newtonsoft.Json
+@model ActivityLogTypeSearchModel
 
 @{
     //page title
@@ -23,7 +24,36 @@
     <div class="content">
         <div class="panel panel-default">
             <div class="panel-body">
-                @await Html.PartialAsync("Table", Model.Grid)
+                @await Html.PartialAsync("Table", new DataTablesModel
+                {
+                    Name = "activityLogType-grid",
+                    Paging = false,
+                    ServerSide = false,
+                    Length = Model.PageSize,
+                    LengthMenu = Model.AvailablePageSizes,
+                    ColumnCollection = new List<ColumnProperty>
+                    {
+                        new ColumnProperty(nameof(ActivityLogTypeModel.Name))
+                        {
+                            Title = T("Admin.Configuration.ActivityLog.ActivityLogType.Fields.Name"),
+                            AutoWidth = true
+                        },
+                        new ColumnProperty(nameof(ActivityLogTypeModel.Enabled))
+                        {
+                            IsMasterCheckBox = true,
+                            Title = T("Admin.Configuration.ActivityLog.ActivityLogType.Fields.Enabled"),
+                            Width = "100",
+                            ClassName = StyleColumn.CenterAll,
+                            Render = new RenderCheckBox("checkbox_activity_types")
+                        }
+                    },
+                    Data = JsonConvert.SerializeObject(Model.ActivityLogTypeListModel.Select(typeModel => new
+                    {
+                        typeModel.Id,
+                        typeModel.Name,
+                        Enabled = typeModel.Enabled.ToString().ToLowerInvariant()
+                    }).ToList())
+                })
             </div>
         </div>
     </div>

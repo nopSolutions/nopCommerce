@@ -92,7 +92,58 @@
 
             <div class="panel panel-default">
                 <div class="panel-body">
-                    @await Html.PartialAsync("Table", Model.Grid)
+                    @await Html.PartialAsync("Table", new DataTablesModel
+                    {
+                        Name = "activityLog-grid",
+                        UrlRead = new DataUrl("ListLogs", "ActivityLog", null),
+                        UrlDelete = new DataUrl("ActivityLogDelete", "ActivityLog", null),
+                        SearchButtonId = "search-log",
+                        Length = Model.PageSize,
+                        LengthMenu = Model.AvailablePageSizes,
+                        Filters = new List<FilterParameter>
+                        {
+                            new FilterParameter(nameof(Model.CreatedOnTo)),
+                            new FilterParameter(nameof(Model.CreatedOnFrom)),
+                            new FilterParameter(nameof(Model.IpAddress)),
+                            new FilterParameter(nameof(Model.ActivityLogTypeId))
+                        },
+                        ColumnCollection = new List<ColumnProperty>
+                        {
+                            new ColumnProperty(nameof(ActivityLogModel.ActivityLogTypeName))
+                            {
+                                Title = T("Admin.Configuration.ActivityLog.ActivityLog.Fields.ActivityLogType"),
+                                Width = "200"
+                            },
+                            new ColumnProperty(nameof(ActivityLogModel.CustomerEmail))
+                            {
+                                Title = T("Admin.Configuration.ActivityLog.ActivityLog.Fields.Customer"),
+                                Width = "100",
+                                Render = new RenderLink(new DataUrl("~/Admin/Customer/Edit", nameof(ActivityLogModel.CustomerId)))
+                            },
+                            new ColumnProperty(nameof(ActivityLogModel.IpAddress))
+                            {
+                                Title = T("Admin.Customers.Customers.ActivityLog.IpAddress"),
+                                Width = "100"
+                            },
+                            new ColumnProperty(nameof(ActivityLogModel.Comment))
+                            {
+                                Title = T("Admin.Configuration.ActivityLog.ActivityLog.Fields.Comment")
+                            },
+                            new ColumnProperty(nameof(ActivityLogModel.CreatedOn))
+                            {
+                                Title = T("Admin.System.Log.Fields.CreatedOn"),
+                                Width = "200",
+                                Render = new RenderDate()
+                            },
+                            new ColumnProperty(nameof(ActivityLogModel.Id))
+                            {
+                                Title = T("Admin.Common.Delete"),
+                                Width = "100",
+                                Render = new RenderButtonRemove(T("Admin.Common.Delete")) {Style = StyleButton.Default},
+                                ClassName = StyleColumn.ButtonStyle
+                            }
+                        }
+                    })
                 </div>
             </div>
         </div>
