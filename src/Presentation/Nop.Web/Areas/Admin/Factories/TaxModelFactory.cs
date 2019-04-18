@@ -78,14 +78,14 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     Title = _localizationService.GetResource("Admin.Configuration.Tax.Providers.Fields.MarkAsPrimaryProvider"),
                     Width = "200",
-                    ClassName =  StyleColumn.CenterAll,
+                    ClassName =  StyleColumn.ButtonStyle,
                     Render = new RenderCustom("renderColumnSystemName")
                 },
                 new ColumnProperty(nameof(TaxProviderModel.SystemName))
                 {
                     Title = _localizationService.GetResource("Admin.Configuration.Tax.Providers.Configure"),
                     Width = "150",
-                    ClassName =  StyleColumn.CenterAll,
+                    ClassName =  StyleColumn.ButtonStyle,
                     Render = new RenderCustom("renderColumnConfigure")
                 }
             };

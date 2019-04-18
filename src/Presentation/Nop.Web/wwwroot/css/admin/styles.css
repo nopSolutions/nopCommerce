@@ -1559,6 +1559,17 @@ span.grid-report-item.red {
   margin-left: 3px;
 }
 
+
+/* JQUERY DATA TABLES */
+.table>tbody>tr>td.button-column {
+  padding: 2px;
+}
+.table>tbody>tr>td.button-column .btn{
+    margin-top: 1px;
+    margin-bottom: 1px;
+    padding: 5px 12px;
+}
+
 @media (max-width: 1200px) {
   /* HEADER */
   .main-header .navbar-custom-menu {

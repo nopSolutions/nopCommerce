@@ -207,7 +207,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     Title = _localizationService.GetResource("Admin.Common.Delete"),
                     Width = "100",
                     Render = new RenderButtonRemove(_localizationService.GetResource("Admin.Common.Delete")) { Style = StyleButton.Default },
-                    ClassName =  StyleColumn.CenterAll
+                    ClassName =  StyleColumn.ButtonStyle
                 }
             };
 

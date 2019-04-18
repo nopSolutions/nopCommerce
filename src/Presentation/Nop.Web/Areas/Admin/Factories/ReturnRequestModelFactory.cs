@@ -90,7 +90,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     Title = _localizationService.GetResource("Admin.Common.Edit"),
                     Width = "100",
-                    ClassName =  StyleColumn.CenterAll,
+                    ClassName =  StyleColumn.ButtonStyle,
                     Render = new RenderButtonEdit(new DataUrl("~/Admin/ReturnRequest/ReturnRequestReasonEdit/"))
                 }
             };
@@ -131,7 +131,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     Title = _localizationService.GetResource("Admin.Common.Edit"),
                     Width = "100",
-                    ClassName =  StyleColumn.CenterAll,
+                    ClassName =  StyleColumn.ButtonStyle,
                     Render = new RenderButtonEdit(new DataUrl("~/Admin/ReturnRequest/ReturnRequestActionEdit/"))
                 }
             };
@@ -193,7 +193,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 new ColumnProperty(nameof(ReturnRequestModel.CustomOrderNumber))
                 {
                     Title = _localizationService.GetResource("Admin.ReturnRequests.Fields.CustomOrderNumber"),
-                    ClassName =  StyleColumn.CenterAll,
+                    ClassName =  StyleColumn.ButtonStyle,
                     Width = "200",
                     Render = new RenderCustom("renderColumnOrderInfo")
                 },
@@ -212,7 +212,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     Title = _localizationService.GetResource("Admin.Common.Edit"),
                     Width = "100",
-                    ClassName =  StyleColumn.CenterAll,
+                    ClassName =  StyleColumn.ButtonStyle,
                     Render = new RenderButtonEdit(new DataUrl("Edit"))
                 }
             };

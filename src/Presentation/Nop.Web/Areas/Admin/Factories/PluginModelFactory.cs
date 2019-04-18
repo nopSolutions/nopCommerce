@@ -187,7 +187,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     Title = _localizationService.GetResource("Admin.Configuration.Plugins.OfficialFeed.Download"),
                     Width = "150",
-                    ClassName =  StyleColumn.CenterAll,
+                    ClassName =  StyleColumn.ButtonStyle,
                     Render = new RenderCustom("renderColumnUrl")
                 },
                 new ColumnProperty(nameof(OfficialFeedPluginModel.CategoryName))
@@ -260,7 +260,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     Title = _localizationService.GetResource("Admin.Configuration.Plugins.Fields.Installation"),
                     Width = "100",
-                    ClassName =  StyleColumn.CenterAll,
+                    ClassName =  StyleColumn.ButtonStyle,
                     Render = new RenderCustom("renderColumnInstalled")
                 }
             };

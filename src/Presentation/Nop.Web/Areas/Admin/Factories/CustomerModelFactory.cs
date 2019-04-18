@@ -473,7 +473,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     Title = _localizationService.GetResource("Admin.Common.Edit"),
                     Width = "100",
-                    ClassName =  StyleColumn.CenterAll,
+                    ClassName =  StyleColumn.ButtonStyle,
                     Render = new RenderButtonEdit(new DataUrl("~/Admin/Customer/AddressEdit?customerId=" + searchModel.CustomerId + "&addressid=", true))
                 },
                 new ColumnProperty(nameof(AddressModel.Id))
@@ -481,7 +481,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     Title = _localizationService.GetResource("Admin.Common.Delete"),
                     Width = "100",
                     Render = new RenderButtonRemove(_localizationService.GetResource("Admin.Common.Delete")) { Style = StyleButton.Default },
-                    ClassName =  StyleColumn.CenterAll
+                    ClassName =  StyleColumn.ButtonStyle
                 }
             };
 
@@ -757,7 +757,7 @@ namespace Nop.Web.Areas.Admin.Factories
             {
                 Title = _localizationService.GetResource("Admin.Common.Edit"),
                 Width = "100",
-                ClassName = StyleColumn.CenterAll,
+                ClassName = StyleColumn.ButtonStyle,
                 Render = new RenderButtonEdit(new DataUrl("Edit"))
             });
             
@@ -1142,7 +1142,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     Title = _localizationService.GetResource("Admin.Common.View"),
                     Width = "100",
-                    ClassName = StyleColumn.CenterAll,
+                    ClassName = StyleColumn.ButtonStyle,
                     Render = new RenderButtonEdit(new DataUrl("~/Admin/Order/Edit/"))
                 }
             };

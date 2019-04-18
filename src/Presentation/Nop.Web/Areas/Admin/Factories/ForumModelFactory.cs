@@ -102,7 +102,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     Title = _localizationService.GetResource("Admin.Common.Edit"),
                     Width = "50",
-                    ClassName = StyleColumn.CenterAll,
+                    ClassName = StyleColumn.ButtonStyle,
                     Render = new RenderButtonEdit(new DataUrl("EditForumGroup"))
                 }
             };
@@ -145,7 +145,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     Title = _localizationService.GetResource("Admin.Common.Edit"),
                     Width = "50",
-                    ClassName = StyleColumn.CenterAll,
+                    ClassName = StyleColumn.ButtonStyle,
                     Render = new RenderButtonEdit(new DataUrl("EditForum"))
                 }
             };

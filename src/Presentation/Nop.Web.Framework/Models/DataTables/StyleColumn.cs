@@ -29,6 +29,12 @@ namespace Nop.Web.Framework.Models.DataTables
         /// Parent-child control element
         /// </summary>
         [EnumMember(Value = "child-control")]
-        ChildControl = 4
+        ChildControl = 4,
+
+        /// <summary>
+        /// Column contains button
+        /// </summary>
+        [EnumMember(Value = "button-column")]
+        ButtonStyle = 5
     }
 }
