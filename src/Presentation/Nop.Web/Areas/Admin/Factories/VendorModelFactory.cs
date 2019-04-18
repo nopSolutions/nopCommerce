@@ -436,9 +436,10 @@ namespace Nop.Web.Areas.Admin.Factories
             var vendorNotes = vendor.VendorNotes.OrderByDescending(note => note.CreatedOnUtc).ToList().ToPagedList(searchModel);
 
             //prepare list model
-            var model = new VendorNoteListModel
+            var model = new VendorNoteListModel().PrepareToGrid(searchModel, vendorNotes, () =>
             {
-                Data = vendorNotes.Select(note =>
+                //fill in model values from the entity
+                return vendorNotes.Select(note =>
                 {
                     //fill in model values from the entity        
                     var vendorNoteModel = note.ToModel<VendorNoteModel>();
@@ -450,9 +451,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     vendorNoteModel.Note = _vendorService.FormatVendorNoteText(note);
 
                     return vendorNoteModel;
-                }),
-                Total = vendorNotes.TotalCount
-            };
+                });
+            });
 
             return model;
         }
