@@ -67,8 +67,6 @@
                 SearchButtonId = "search-orders",
                 Length = Model.AffiliatedOrderSearchModel.PageSize,
                 LengthMenu = Model.AffiliatedOrderSearchModel.AvailablePageSizes,
-
-                //prepare filters to search
                 Filters = new List<FilterParameter>
                 {
                     new FilterParameter(nameof(Model.AffiliatedOrderSearchModel.AffliateId), Model.AffiliatedOrderSearchModel.AffliateId),
@@ -78,8 +76,6 @@
                     new FilterParameter(nameof(Model.AffiliatedOrderSearchModel.PaymentStatusId), nameof(AffiliatedOrderSearchModel)),
                     new FilterParameter(nameof(Model.AffiliatedOrderSearchModel.ShippingStatusId), nameof(AffiliatedOrderSearchModel))
                 },
-
-                //prepare model columns
                 ColumnCollection = new List<ColumnProperty>
                 {
                     new ColumnProperty(nameof(AffiliatedOrderModel.CustomOrderNumber))
