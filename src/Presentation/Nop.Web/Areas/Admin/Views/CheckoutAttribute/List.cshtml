@@ -28,7 +28,43 @@
                 <p>
                     @T("Admin.Catalog.Attributes.CheckoutAttributes.Description")
                 </p>
-                @await Html.PartialAsync("Table", Model.Grid)
+                @await Html.PartialAsync("Table", new DataTablesModel
+                {
+                    Name = "checkoutattributes-grid",
+                    UrlRead = new DataUrl("List", "CheckoutAttribute", null),
+                    Length = Model.PageSize,
+                    LengthMenu = Model.AvailablePageSizes,
+                    ColumnCollection = new List<ColumnProperty>
+                    {
+                        new ColumnProperty(nameof(CheckoutAttributeModel.Name))
+                        {
+                            Title = T("Admin.Catalog.Attributes.CheckoutAttributes.Fields.Name")
+                        },
+                        new ColumnProperty(nameof(CheckoutAttributeModel.AttributeControlTypeName))
+                        {
+                            Title = T("Admin.Catalog.Attributes.CheckoutAttributes.Fields.AttributeControlType"),
+                            Width = "200"
+                        },
+                        new ColumnProperty(nameof(CheckoutAttributeModel.IsRequired))
+                        {
+                            Title = T("Admin.Catalog.Attributes.CheckoutAttributes.Fields.IsRequired"),
+                            Width = "100",
+                            Render = new RenderBoolean()
+                        },
+                        new ColumnProperty(nameof(CheckoutAttributeModel.DisplayOrder))
+                        {
+                            Title = T("Admin.Catalog.Attributes.CheckoutAttributes.Fields.DisplayOrder"),
+                            Width = "100"
+                        },
+                        new ColumnProperty(nameof(CheckoutAttributeModel.Id))
+                        {
+                            Title = T("Admin.Common.Edit"),
+                            Width = "100",
+                            ClassName = StyleColumn.ButtonStyle,
+                            Render = new RenderButtonEdit(new DataUrl("Edit"))
+                        }
+                    }
+                })
             </div>
         </div>
     </div>
