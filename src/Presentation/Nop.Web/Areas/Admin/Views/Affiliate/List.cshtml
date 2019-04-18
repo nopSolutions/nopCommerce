@@ -1,3 +1,4 @@
+@using OfficeOpenXml.FormulaParsing.Excel.Functions.Math
 @model AffiliateSearchModel
 
 @{
@@ -128,7 +129,49 @@
 
             <div class="panel panel-default">
                 <div class="panel-body">
-                    @await Html.PartialAsync("Table", Model.Grid)
+                    @await Html.PartialAsync("Table", new DataTablesModel
+                    {
+                        Name = "affiliates-grid",
+                        UrlRead = new DataUrl("List", "Affiliate", null),
+                        SearchButtonId = "search-affiliates",
+                        Length = Model.PageSize,
+                        LengthMenu = Model.AvailablePageSizes,
+                        Filters = new List<FilterParameter>
+                        {
+                            new FilterParameter(nameof(Model.SearchFirstName)),
+                            new FilterParameter(nameof(Model.SearchLastName)),
+                            new FilterParameter(nameof(Model.SearchFriendlyUrlName)),
+                            new FilterParameter(nameof(Model.LoadOnlyWithOrders), typeof(bool)),
+                            new FilterParameter(nameof(Model.OrdersCreatedFromUtc)),
+                            new FilterParameter(nameof(Model.OrdersCreatedToUtc))
+                        },
+                        ColumnCollection = new List<ColumnProperty>
+                        {
+                            new ColumnProperty($"{nameof(AffiliateModel.Address)}.{nameof(AddressModel.FirstName)}")
+                            {
+                                Title = T("Admin.Address.Fields.FirstName"),
+                                Width = "200"
+                            },
+                            new ColumnProperty($"{nameof(AffiliateModel.Address)}.{nameof(AddressModel.LastName)}")
+                            {
+                                Title = T("Admin.Address.Fields.LastName"),
+                                Width = "200"
+                            },
+                            new ColumnProperty(nameof(AffiliateModel.Active))
+                            {
+                                Title = T("Admin.Affiliates.Fields.Active"),
+                                Width = "100",
+                                Render = new RenderBoolean()
+                            },
+                            new ColumnProperty(nameof(AffiliateModel.Id))
+                            {
+                                Title = T("Admin.Common.Edit"),
+                                Width = "100",
+                                ClassName = StyleColumn.ButtonStyle,
+                                Render = new RenderButtonEdit(new DataUrl("Edit"))
+                            }
+                        }
+                    })
                 </div>
             </div>
         </div>

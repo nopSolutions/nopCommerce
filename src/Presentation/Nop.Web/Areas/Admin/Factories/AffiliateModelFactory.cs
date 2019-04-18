@@ -12,7 +12,6 @@ using Nop.Services.Orders;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Affiliates;
 using Nop.Web.Areas.Admin.Models.Common;
-using Nop.Web.Framework.Models.DataTables;
 using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
@@ -147,65 +146,6 @@ namespace Nop.Web.Areas.Admin.Factories
             return searchModel;
         }
 
-        /// <summary>
-        /// Prepare datatables model
-        /// </summary>
-        /// <param name="searchModel">Search model</param>
-        /// <returns>Datatables model</returns>
-        protected virtual DataTablesModel PrepareAffiliateGridModel(AffiliateSearchModel searchModel)
-        {
-            //prepare common properties
-            var model = new DataTablesModel
-            {
-                Name = "affiliates-grid",
-                UrlRead = new DataUrl("List", "Affiliate", null),
-                SearchButtonId = "search-affiliates",
-                Length = searchModel.PageSize,
-                LengthMenu = searchModel.AvailablePageSizes
-            };
-
-            //prepare filters to search
-            model.Filters = new List<FilterParameter>
-            {
-                new FilterParameter(nameof(searchModel.SearchFirstName)),
-                new FilterParameter(nameof(searchModel.SearchLastName)),
-                new FilterParameter(nameof(searchModel.SearchFriendlyUrlName)),
-                new FilterParameter(nameof(searchModel.LoadOnlyWithOrders), typeof(bool)),
-                new FilterParameter(nameof(searchModel.OrdersCreatedFromUtc)),
-                new FilterParameter(nameof(searchModel.OrdersCreatedToUtc))
-            };
-
-            //prepare model columns
-            model.ColumnCollection = new List<ColumnProperty>
-            {
-                new ColumnProperty($"{nameof(AffiliateModel.Address)}.{nameof(AddressModel.FirstName)}")
-                {
-                    Title = _localizationService.GetResource("Admin.Address.Fields.FirstName"),
-                    Width = "200"
-                },
-                new ColumnProperty($"{nameof(AffiliateModel.Address)}.{nameof(AddressModel.LastName)}")
-                {
-                    Title = _localizationService.GetResource("Admin.Address.Fields.LastName"),
-                    Width = "200"
-                },
-                new ColumnProperty(nameof(AffiliateModel.Active))
-                {
-                    Title = _localizationService.GetResource("Admin.Affiliates.Fields.Active"),
-                    Width = "100",
-                    Render = new RenderBoolean()
-                },
-                new ColumnProperty(nameof(AffiliateModel.Id))
-                {
-                    Title = _localizationService.GetResource("Admin.Common.Edit"),
-                    Width = "100",
-                    ClassName =  StyleColumn.ButtonStyle,
-                    Render = new RenderButtonEdit(new DataUrl("Edit"))
-                }
-            };
-
-            return model;
-        }
-
         #endregion
 
         #region Methods
@@ -222,7 +162,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
-            searchModel.Grid = PrepareAffiliateGridModel(searchModel);
 
             return searchModel;
         }
