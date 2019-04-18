@@ -579,7 +579,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
-            searchModel.Grid = PrepareCustomerActivityLogGridModel(searchModel);
 
             return searchModel;
         }
@@ -970,58 +969,6 @@ namespace Nop.Web.Areas.Admin.Factories
                     new ColumnProperty(nameof(CustomerBackInStockSubscriptionModel.CreatedOn))
                     {
                         Title = _localizationService.GetResource("Admin.Customers.Customers.BackInStockSubscriptions.CreatedOn"),
-                        Width = "200",
-                        Render = new RenderDate()
-                    }
-                }
-            };
-
-            return model;
-        }
-
-        /// <summary>
-        /// Prepare datatables model
-        /// </summary>
-        /// <param name="searchModel">Search model</param>
-        /// <returns>Datatables model</returns>
-        protected virtual DataTablesModel PrepareCustomerActivityLogGridModel(
-            CustomerActivityLogSearchModel searchModel)
-        {
-            //prepare common properties
-            var model = new DataTablesModel
-            {
-                Name = "activitylog-grid",
-                UrlRead = new DataUrl("ListActivityLog", "Customer", null),
-                Length = searchModel.PageSize,
-                LengthMenu = searchModel.AvailablePageSizes,
-
-                //prepare filters to search
-                Filters = new List<FilterParameter>
-                {
-                    new FilterParameter(nameof(searchModel.CustomerId), searchModel.CustomerId)
-                },
-
-                //prepare model columns
-                ColumnCollection = new List<ColumnProperty>
-                {
-                    new ColumnProperty(nameof(CustomerActivityLogModel.ActivityLogTypeName))
-                    {
-                        Title = _localizationService.GetResource(
-                            "Admin.Customers.Customers.ActivityLog.ActivityLogType"),
-                        Width = "300"
-                    },
-                    new ColumnProperty(nameof(CustomerActivityLogModel.IpAddress))
-                    {
-                        Title = _localizationService.GetResource("Admin.Customers.Customers.ActivityLog.IpAddress"),
-                        Width = "100"
-                    },
-                    new ColumnProperty(nameof(CustomerActivityLogModel.Comment))
-                    {
-                        Title = _localizationService.GetResource("Admin.Customers.Customers.ActivityLog.Comment")
-                    },
-                    new ColumnProperty(nameof(CustomerActivityLogModel.CreatedOn))
-                    {
-                        Title = _localizationService.GetResource("Admin.Customers.Customers.ActivityLog.CreatedOn"),
                         Width = "200",
                         Render = new RenderDate()
                     }
