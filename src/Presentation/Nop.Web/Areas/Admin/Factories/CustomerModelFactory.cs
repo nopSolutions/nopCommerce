@@ -815,56 +815,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             return model;
         }
-
-        /// <summary>
-        /// Prepare datatables model
-        /// </summary>
-        /// <param name="searchModel">Search model</param>
-        /// <returns>Datatables model</returns>
-        protected virtual DataTablesModel PrepareGdprLogGridModel(GdprLogSearchModel searchModel)
-        {
-            //prepare common properties
-            var model = new DataTablesModel
-            {
-                Name = "log-grid",
-                UrlRead = new DataUrl("GdprLogList", "Customer", null),
-                SearchButtonId = "search-log",
-                Length = searchModel.PageSize,
-                LengthMenu = searchModel.AvailablePageSizes
-            };
-
-            //prepare filters to search
-            model.Filters = new List<FilterParameter>
-            {
-                new FilterParameter(nameof(searchModel.SearchRequestTypeId)),
-                new FilterParameter(nameof(searchModel.SearchEmail))                
-            };
-
-            //prepare model columns
-            model.ColumnCollection = new List<ColumnProperty>
-            {                
-                new ColumnProperty(nameof(GdprLogModel.CustomerInfo))
-                {
-                    Title = _localizationService.GetResource("Admin.Customers.GdprLog.Fields.CustomerInfo")
-                },
-                new ColumnProperty(nameof(GdprLogModel.RequestType))
-                {
-                    Title = _localizationService.GetResource("Admin.Customers.GdprLog.Fields.RequestType")
-                },
-                new ColumnProperty(nameof(GdprLogModel.RequestDetails))
-                {
-                    Title = _localizationService.GetResource("Admin.Customers.GdprLog.Fields.RequestDetails")
-                },
-                new ColumnProperty(nameof(GdprLogModel.CreatedOn))
-                {
-                    Title = _localizationService.GetResource("Admin.Customers.GdprLog.Fields.CreatedOn"),
-                    Render = new RenderDate()
-                }                
-            };
-            
-            return model;
-        }
-
+        
         /// <summary>
         /// Prepare datatables model
         /// </summary>
@@ -1764,7 +1715,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
-            searchModel.Grid = PrepareGdprLogGridModel(searchModel);
 
             return searchModel;
         }
