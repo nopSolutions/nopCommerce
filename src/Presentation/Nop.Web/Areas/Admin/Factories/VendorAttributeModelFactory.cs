@@ -39,68 +39,7 @@ namespace Nop.Web.Areas.Admin.Factories
         #endregion
 
         #region Utilities
-
-        /// <summary>
-        /// Prepare datatables model
-        /// </summary>
-        /// <param name="searchModel">Search model</param>
-        /// <returns>Datatables model</returns>
-        protected virtual DataTablesModel PrepareVendorAttributeValueGridModel(VendorAttributeValueSearchModel searchModel)
-        {
-            //prepare common properties
-            var model = new DataTablesModel
-            {
-                Name = "vendorattributevalues-grid",
-                UrlRead = new DataUrl("ValueList", "VendorAttribute", null),
-                UrlDelete = new DataUrl("ValueDelete", "VendorAttribute", null),
-                Length = searchModel.PageSize,
-                LengthMenu = searchModel.AvailablePageSizes
-            };
-
-            //prepare filters to search
-            model.Filters = new List<FilterParameter>
-            {
-                new FilterParameter(nameof(searchModel.VendorAttributeId), searchModel.VendorAttributeId)
-            };
-
-            //prepare model columns
-            model.ColumnCollection = new List<ColumnProperty>
-            {
-                new ColumnProperty(nameof(VendorAttributeValueModel.Name))
-                {
-                    Title = _localizationService.GetResource("Admin.Vendors.VendorAttributes.Values.Fields.Name")
-                },
-                new ColumnProperty(nameof(VendorAttributeValueModel.IsPreSelected))
-                {
-                    Title = _localizationService.GetResource("Admin.Vendors.VendorAttributes.Values.Fields.IsPreSelected"),
-                    Width = "100",
-                    ClassName = StyleColumn.CenterAll,
-                    Render = new RenderBoolean()
-                },
-                new ColumnProperty(nameof(VendorAttributeValueModel.DisplayOrder))
-                {
-                    Title = _localizationService.GetResource("Admin.Vendors.VendorAttributes.Values.Fields.DisplayOrder"),
-                    Width = "100"
-                },
-                new ColumnProperty(nameof(VendorAttributeValueModel.Id))
-                {
-                    Title = _localizationService.GetResource("Admin.Common.Edit"),
-                    Width = "100",
-                    ClassName =  StyleColumn.ButtonStyle,
-                    Render = new RenderCustom("renderColumnEdit")
-                },
-                new ColumnProperty(nameof(VendorAttributeValueModel.Id))
-                {
-                    Title = _localizationService.GetResource("Admin.Common.Delete"),
-                    Width = "100",
-                    Render = new RenderButtonRemove(_localizationService.GetResource("Admin.Common.Delete")) { Style = StyleButton.Default },
-                    ClassName =  StyleColumn.ButtonStyle
-                }
-            };
-
-            return model;
-        }
-
+        
         /// <summary>
         /// Prepare vendor attribute value search model
         /// </summary>
@@ -120,64 +59,10 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
-            searchModel.Grid = PrepareVendorAttributeValueGridModel(searchModel);
 
             return searchModel;
         }
-
-        /// <summary>
-        /// Prepare datatables model
-        /// </summary>
-        /// <param name="searchModel">Search model</param>
-        /// <returns>Datatables model</returns>
-        protected virtual DataTablesModel PrepareVendorAttributeGridModel(VendorAttributeSearchModel searchModel)
-        {
-            //prepare common properties
-            var model = new DataTablesModel
-            {
-                Name = "vendorattributes-grid",
-                UrlRead = new DataUrl("List", "VendorAttribute", null),
-                Length = searchModel.PageSize,
-                LengthMenu = searchModel.AvailablePageSizes
-            };
-
-            //prepare model columns
-            model.ColumnCollection = new List<ColumnProperty>
-            {
-                new ColumnProperty(nameof(VendorAttributeModel.Name))
-                {
-                    Title = _localizationService.GetResource("Admin.Vendors.VendorAttributes.Fields.Name"),
-                    Width = "300"
-                },
-                new ColumnProperty(nameof(VendorAttributeModel.AttributeControlTypeName))
-                {
-                    Title = _localizationService.GetResource("Admin.Vendors.VendorAttributes.Fields.AttributeControlType"),
-                    Width = "200"
-                },
-                new ColumnProperty(nameof(VendorAttributeModel.IsRequired))
-                {
-                    Title = _localizationService.GetResource("Admin.Vendors.VendorAttributes.Fields.IsRequired"),
-                    Width = "100",
-                    ClassName =  StyleColumn.CenterAll,
-                    Render = new RenderBoolean()
-                },
-                new ColumnProperty(nameof(VendorAttributeModel.DisplayOrder))
-                {
-                    Title = _localizationService.GetResource("Admin.Vendors.VendorAttributes.Fields.DisplayOrder"),
-                    Width = "100"
-                },
-                new ColumnProperty(nameof(VendorAttributeModel.Id))
-                {
-                    Title = _localizationService.GetResource("Admin.Common.Edit"),
-                    Width = "100",
-                    ClassName =  StyleColumn.ButtonStyle,
-                    Render = new RenderButtonEdit(new DataUrl("~/Admin/VendorAttribute/Edit/"))
-                }
-            };
-
-            return model;
-        }
-
+        
         #endregion
 
         #region Methods
@@ -194,7 +79,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
-            searchModel.Grid = PrepareVendorAttributeGridModel(searchModel);
 
             return searchModel;
         }

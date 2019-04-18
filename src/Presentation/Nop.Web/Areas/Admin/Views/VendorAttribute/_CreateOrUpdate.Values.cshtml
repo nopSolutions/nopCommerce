@@ -1,13 +1,54 @@
 ﻿@model VendorAttributeModel
-
-
 @if (Model.Id > 0)
 {
     /*TODO display the following warning if values are not supported by selected attribute control type - 'Values are not required for this attribute control type' */
     
     <div class="panel-body">
-        @await Html.PartialAsync("Table", Model.VendorAttributeValueSearchModel.Grid)
-    
+        @await Html.PartialAsync("Table", new DataTablesModel
+        {
+            Name = "vendorattributevalues-grid",
+            UrlRead = new DataUrl("ValueList", "VendorAttribute", null),
+            UrlDelete = new DataUrl("ValueDelete", "VendorAttribute", null),
+            Length = Model.VendorAttributeValueSearchModel.PageSize,
+            LengthMenu = Model.VendorAttributeValueSearchModel.AvailablePageSizes,
+            Filters = new List<FilterParameter>
+            {
+                new FilterParameter(nameof(Model.VendorAttributeValueSearchModel.VendorAttributeId), Model.VendorAttributeValueSearchModel.VendorAttributeId)
+            },
+            ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(VendorAttributeValueModel.Name))
+                {
+                    Title = T("Admin.Vendors.VendorAttributes.Values.Fields.Name")
+                },
+                new ColumnProperty(nameof(VendorAttributeValueModel.IsPreSelected))
+                {
+                    Title = T("Admin.Vendors.VendorAttributes.Values.Fields.IsPreSelected"),
+                    Width = "100",
+                    ClassName = StyleColumn.CenterAll,
+                    Render = new RenderBoolean()
+                },
+                new ColumnProperty(nameof(VendorAttributeValueModel.DisplayOrder))
+                {
+                    Title = T("Admin.Vendors.VendorAttributes.Values.Fields.DisplayOrder"),
+                    Width = "100"
+                },
+                new ColumnProperty(nameof(VendorAttributeValueModel.Id))
+                {
+                    Title = T("Admin.Common.Edit"),
+                    Width = "100",
+                    ClassName =  StyleColumn.ButtonStyle,
+                    Render = new RenderCustom("renderColumnEdit")
+                },
+                new ColumnProperty(nameof(VendorAttributeValueModel.Id))
+                {
+                    Title = T("Admin.Common.Delete"),
+                    Width = "100",
+                    Render = new RenderButtonRemove(T("Admin.Common.Delete")) { Style = StyleButton.Default },
+                    ClassName =  StyleColumn.ButtonStyle
+                }
+            }
+        })
         <script>
             function renderColumnEdit(data, type, row, meta) {
                 return '<button onclick=\"javascript:OpenWindow(\'@Url.Content("~/Admin/VendorAttribute/ValueEditPopup/")' + data + '?btnId = btnRefresh&formId=vendorattribute-form\', 800, 400, true); return false;\" class="btn btn-default"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</button>';
@@ -23,7 +64,7 @@
             $(document).ready(function () {
                 $('#btnRefresh').click(function () {
                     //refresh grid
-                    $('#@Model.VendorAttributeValueSearchModel.Grid.Name').DataTable().ajax.reload();
+                    $('#vendorattributevalues-grid').DataTable().ajax.reload();
 
                     //return false to don't reload a page
                     return false;

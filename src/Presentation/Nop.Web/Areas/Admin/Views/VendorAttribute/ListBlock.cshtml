@@ -4,7 +4,45 @@
     <p>
         <em>@T("Admin.Vendors.VendorAttributes.Description")</em>
     </p>
-    @await Html.PartialAsync("Table", Model.Grid)
+    @await Html.PartialAsync("Table", new DataTablesModel
+    {
+        Name = "vendorattributes-grid",
+        UrlRead = new DataUrl("List", "VendorAttribute", null),
+        Length = Model.PageSize,
+        LengthMenu = Model.AvailablePageSizes,
+        ColumnCollection = new List<ColumnProperty>
+        {
+            new ColumnProperty(nameof(VendorAttributeModel.Name))
+            {
+                Title = T("Admin.Vendors.VendorAttributes.Fields.Name"),
+                Width = "300"
+            },
+            new ColumnProperty(nameof(VendorAttributeModel.AttributeControlTypeName))
+            {
+                Title = T("Admin.Vendors.VendorAttributes.Fields.AttributeControlType"),
+                Width = "200"
+            },
+            new ColumnProperty(nameof(VendorAttributeModel.IsRequired))
+            {
+                Title = T("Admin.Vendors.VendorAttributes.Fields.IsRequired"),
+                Width = "100",
+                ClassName =  StyleColumn.CenterAll,
+                Render = new RenderBoolean()
+            },
+            new ColumnProperty(nameof(VendorAttributeModel.DisplayOrder))
+            {
+                Title = T("Admin.Vendors.VendorAttributes.Fields.DisplayOrder"),
+                Width = "100"
+            },
+            new ColumnProperty(nameof(VendorAttributeModel.Id))
+            {
+                Title = T("Admin.Common.Edit"),
+                Width = "100",
+                ClassName =  StyleColumn.ButtonStyle,
+                Render = new RenderButtonEdit(new DataUrl("~/Admin/VendorAttribute/Edit/"))
+            }
+        }
+    })
 </div>
 <div class="panel-footer">
     <a class="btn btn-primary" href="@Url.Action("Create", "VendorAttribute")">
