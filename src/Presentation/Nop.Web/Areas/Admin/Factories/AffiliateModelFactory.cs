@@ -312,18 +312,17 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new AffiliatedCustomerListModel
+            var model = new AffiliatedCustomerListModel().PrepareToGrid(searchModel, customers, () =>
             {
                 //fill in model values from the entity
-                Data = customers.Select(customer =>
+                return customers.Select(customer =>
                 {
                     var affiliatedCustomerModel = customer.ToModel<AffiliatedCustomerModel>();
                     affiliatedCustomerModel.Name = customer.Email;
 
                     return affiliatedCustomerModel;
-                }),
-                Total = customers.TotalCount
-            };
+                });
+            });
 
             return model;
         }
