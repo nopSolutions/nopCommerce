@@ -39,7 +39,44 @@
         </div>
     }
 
-    @await Html.PartialAsync("Table", Model.RecurringPaymentHistorySearchModel.Grid)
+    @await Html.PartialAsync("Table", new DataTablesModel
+    {
+        Name = "history-grid",
+        UrlRead = new DataUrl("HistoryList", "RecurringPayment", new RouteValueDictionary { [nameof(Model.RecurringPaymentHistorySearchModel.RecurringPaymentId)] = Model.RecurringPaymentHistorySearchModel.RecurringPaymentId }),
+        Length = Model.RecurringPaymentHistorySearchModel.PageSize,
+        LengthMenu = Model.RecurringPaymentHistorySearchModel.AvailablePageSizes,
+        ColumnCollection = new List<ColumnProperty>
+        {
+            new ColumnProperty(nameof(RecurringPaymentHistoryModel.CustomOrderNumber))
+            {
+                Title = T("Admin.RecurringPayments.History.CustomOrderNumber").Text,
+                ClassName =  StyleColumn.ButtonStyle,
+                Width = "200",
+                Render = new RenderCustom("renderColumnOrderInfo")
+            },
+            new ColumnProperty(nameof(RecurringPaymentHistoryModel.OrderStatus))
+            {
+                Title = T("Admin.RecurringPayments.History.OrderStatus").Text,
+                Width = "200"
+            },
+            new ColumnProperty(nameof(RecurringPaymentHistoryModel.PaymentStatus))
+            {
+                Title = T("Admin.RecurringPayments.History.PaymentStatus").Text,
+                Width = "200"
+            },
+            new ColumnProperty(nameof(RecurringPaymentHistoryModel.ShippingStatus))
+            {
+                Title = T("Admin.RecurringPayments.History.ShippingStatus").Text,
+                Width = "200"
+            },
+            new ColumnProperty(nameof(RecurringPaymentHistoryModel.CreatedOn))
+            {
+                Title = T("Admin.RecurringPayments.History.CreatedOn").Text,
+                Width = "100",
+                Render = new RenderDate()
+            }
+        }
+    })
     <script>
         function renderColumnOrderInfo(data, type, row, meta) {
             if (row.OrderId > 0) {
@@ -49,6 +86,5 @@
                 return 'order item is deleted';
             }
         }
-
     </script>
 </div>
