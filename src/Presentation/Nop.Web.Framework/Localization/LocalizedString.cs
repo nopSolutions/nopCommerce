@@ -7,23 +7,32 @@ namespace Nop.Web.Framework.Localization
     /// </summary>
     public class LocalizedString : HtmlString
     {
-        private readonly string _localized;
-
         /// <summary>
         /// Ctor
         /// </summary>
         /// <param name="localized">Localized value</param>
         public LocalizedString(string localized): base (localized)
         {
-            _localized = localized;
+            Text = localized;
         }
         
         /// <summary>
         /// Text
         /// </summary>
-        public string Text
+        public string Text { get; }
+
+        public override string ToString()
         {
-            get { return _localized; }
+            return Text;
+        }
+
+        /// <summary>
+        /// Conversion localized string to string
+        /// </summary>
+        /// <param name="localizedString">Localized string to convert</param>
+        public static implicit operator string(LocalizedString localizedString)
+        {
+            return localizedString.ToString();
         }
     }
 }
