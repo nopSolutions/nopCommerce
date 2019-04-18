@@ -107,51 +107,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             return searchModel;
         }
-
-        /// <summary>
-        /// Prepare datatables model
-        /// </summary>
-        /// <param name="searchModel">Search model</param>
-        /// <returns>Datatables model</returns>
-        protected virtual DataTablesModel PrepareDiscountProductGridModel(DiscountProductSearchModel searchModel)
-        {
-            //prepare common properties
-            var model = new DataTablesModel
-            {
-                Name = "products-grid",
-                UrlRead = new DataUrl("ProductList", "Discount", new RouteValueDictionary { [nameof(searchModel.DiscountId)] = searchModel.DiscountId }),
-                UrlDelete = new DataUrl("ProductDelete", "Discount", new RouteValueDictionary { [nameof(searchModel.DiscountId)] = searchModel.DiscountId }),
-                BindColumnNameActionDelete = nameof(DiscountProductModel.ProductId),
-                Length = searchModel.PageSize,
-                LengthMenu = searchModel.AvailablePageSizes
-            };
-
-            //prepare model columns
-            model.ColumnCollection = new List<ColumnProperty>
-            {
-                new ColumnProperty(nameof(DiscountProductModel.ProductName))
-                {
-                    Title = _localizationService.GetResource("Admin.Promotions.Discounts.AppliedToProducts.Product")
-                },
-                new ColumnProperty(nameof(DiscountProductModel.ProductId))
-                {
-                    Title = _localizationService.GetResource("Admin.Common.View"),
-                    Width = "150",
-                    ClassName =  StyleColumn.ButtonStyle,
-                    Render = new RenderButtonView(new DataUrl("~/Admin/Product/Edit/"))
-                },
-                new ColumnProperty(nameof(DiscountProductModel.ProductId))
-                {
-                    Title = _localizationService.GetResource("Admin.Common.Delete"),
-                    Width = "150",
-                    Render = new RenderButtonRemove(_localizationService.GetResource("Admin.Common.Delete")) { Style = StyleButton.Default },
-                    ClassName =  StyleColumn.ButtonStyle
-                }
-            };
-
-            return model;
-        }
-
+        
         /// <summary>
         /// Prepare discount product search model
         /// </summary>
@@ -170,55 +126,10 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
-            searchModel.Grid = PrepareDiscountProductGridModel(searchModel);
 
             return searchModel;
         }
-
-        /// <summary>
-        /// Prepare datatables model
-        /// </summary>
-        /// <param name="searchModel">Search model</param>
-        /// <returns>Datatables model</returns>
-        protected virtual DataTablesModel PrepareDiscountCategoryGridModel(DiscountCategorySearchModel searchModel)
-        {
-            //prepare common properties
-            var model = new DataTablesModel
-            {
-                Name = "categories-grid",
-                UrlRead = new DataUrl("CategoryList", "Discount", new RouteValueDictionary { [nameof(searchModel.DiscountId)] = searchModel.DiscountId }),
-                UrlDelete = new DataUrl("CategoryDelete", "Discount", new RouteValueDictionary { [nameof(searchModel.DiscountId)] = searchModel.DiscountId }),
-                BindColumnNameActionDelete = nameof(DiscountCategoryModel.CategoryId),
-                Length = searchModel.PageSize,
-                LengthMenu = searchModel.AvailablePageSizes
-            };
-
-            //prepare model columns
-            model.ColumnCollection = new List<ColumnProperty>
-            {
-                new ColumnProperty(nameof(DiscountCategoryModel.CategoryName))
-                {
-                    Title = _localizationService.GetResource("Admin.Promotions.Discounts.AppliedToCategories.Category")
-                },
-                new ColumnProperty(nameof(DiscountCategoryModel.CategoryId))
-                {
-                    Title = _localizationService.GetResource("Admin.Common.View"),
-                    Width = "150",
-                    ClassName =  StyleColumn.ButtonStyle,
-                    Render = new RenderButtonView(new DataUrl("~/Admin/Category/Edit/"))
-                },
-                new ColumnProperty(nameof(DiscountCategoryModel.CategoryId))
-                {
-                    Title = _localizationService.GetResource("Admin.Common.Delete"),
-                    Width = "150",
-                    Render = new RenderButtonRemove(_localizationService.GetResource("Admin.Common.Delete")) { Style = StyleButton.Default },
-                    ClassName =  StyleColumn.ButtonStyle
-                }
-            };
-
-            return model;
-        }
-
+        
         /// <summary>
         /// Prepare discount category search model
         /// </summary>
@@ -237,55 +148,10 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
-            searchModel.Grid = PrepareDiscountCategoryGridModel(searchModel);
 
             return searchModel;
         }
-
-        /// <summary>
-        /// Prepare datatables model
-        /// </summary>
-        /// <param name="searchModel">Search model</param>
-        /// <returns>Datatables model</returns>
-        protected virtual DataTablesModel PrepareDiscountManufacturerGridModel(DiscountManufacturerSearchModel searchModel)
-        {
-            //prepare common properties
-            var model = new DataTablesModel
-            {
-                Name = "manufacturers-grid",
-                UrlRead = new DataUrl("ManufacturerList", "Discount", new RouteValueDictionary { [nameof(searchModel.DiscountId)] = searchModel.DiscountId }),
-                UrlDelete = new DataUrl("ManufacturerDelete", "Discount", new RouteValueDictionary { [nameof(searchModel.DiscountId)] = searchModel.DiscountId }),
-                BindColumnNameActionDelete = nameof(DiscountManufacturerModel.ManufacturerId),
-                Length = searchModel.PageSize,
-                LengthMenu = searchModel.AvailablePageSizes
-            };
-
-            //prepare model columns
-            model.ColumnCollection = new List<ColumnProperty>
-            {
-                new ColumnProperty(nameof(DiscountManufacturerModel.ManufacturerName))
-                {
-                    Title = _localizationService.GetResource("Admin.Promotions.Discounts.AppliedToManufacturers.Manufacturer")
-                },
-                new ColumnProperty(nameof(DiscountManufacturerModel.ManufacturerId))
-                {
-                    Title = _localizationService.GetResource("Admin.Common.View"),
-                    Width = "150",
-                    ClassName =  StyleColumn.ButtonStyle,
-                    Render = new RenderButtonView(new DataUrl("~/Admin/Manufacturer/Edit/"))
-                },
-                new ColumnProperty(nameof(DiscountManufacturerModel.ManufacturerId))
-                {
-                    Title = _localizationService.GetResource("Admin.Common.Delete"),
-                    Width = "150",
-                    Render = new RenderButtonRemove(_localizationService.GetResource("Admin.Common.Delete")) { Style = StyleButton.Default },
-                    ClassName =  StyleColumn.ButtonStyle
-                }
-            };
-
-            return model;
-        }
-
+        
         /// <summary>
         /// Prepare discount manufacturer search model
         /// </summary>
@@ -305,233 +171,8 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
-            searchModel.Grid = PrepareDiscountManufacturerGridModel(searchModel);
 
             return searchModel;
-        }
-
-        /// <summary>
-        /// Prepare datatables model
-        /// </summary>
-        /// <param name="searchModel">Search model</param>
-        /// <returns>Datatables model</returns>
-        protected virtual DataTablesModel PrepareDiscountGridModel(DiscountSearchModel searchModel)
-        {
-            //prepare common properties
-            var model = new DataTablesModel
-            {
-                Name = "discounts-grid",
-                UrlRead = new DataUrl("List", "Discount", null),
-                SearchButtonId = "search-discounts",
-                Length = searchModel.PageSize,
-                LengthMenu = searchModel.AvailablePageSizes
-            };
-
-            //prepare filters to search
-            model.Filters = new List<FilterParameter>
-            {
-                new FilterParameter(nameof(searchModel.SearchDiscountTypeId)),
-                new FilterParameter(nameof(searchModel.SearchDiscountCouponCode)),
-                new FilterParameter(nameof(searchModel.SearchDiscountName)),
-                new FilterParameter(nameof(searchModel.SearchStartDate)),
-                new FilterParameter(nameof(searchModel.SearchEndDate))
-            };
-
-            //prepare model columns
-            model.ColumnCollection = new List<ColumnProperty>
-            {
-                new ColumnProperty(nameof(DiscountModel.Name))
-                {
-                    Title = _localizationService.GetResource("Admin.Promotions.Discounts.Fields.Name"),
-                    Width = "350"
-                },
-                new ColumnProperty(nameof(DiscountModel.DiscountTypeName))
-                {
-                    Title = _localizationService.GetResource("Admin.Promotions.Discounts.Fields.DiscountType"),
-                    Width = "250"
-                },
-                new ColumnProperty(nameof(DiscountModel.DiscountAmount))
-                {
-                    Title = _localizationService.GetResource("Admin.Promotions.Discounts.Fields.Discount"),
-                    Width = "200",
-                    Render = new RenderCustom("renderColumnDiscount")
-                },
-                new ColumnProperty(nameof(DiscountModel.StartDateUtc))
-                {
-                    Title = _localizationService.GetResource("Admin.Promotions.Discounts.Fields.StartDate"),
-                    Width = "200",
-                    Render = new RenderDate()
-                },
-                new ColumnProperty(nameof(DiscountModel.EndDateUtc))
-                {
-                    Title = _localizationService.GetResource("Admin.Promotions.Discounts.Fields.EndDate"),
-                    Width = "200",
-                    Render = new RenderDate()
-                },
-                new ColumnProperty(nameof(DiscountModel.TimesUsed))
-                {
-                    Title = _localizationService.GetResource("Admin.Promotions.Discounts.Fields.TimesUsed"),
-                    Width = "200"
-                },
-                new ColumnProperty(nameof(DiscountModel.Id))
-                {
-                    Title = _localizationService.GetResource("Admin.Common.Edit"),
-                    Width = "100",
-                    ClassName =  StyleColumn.ButtonStyle,
-                    Render = new RenderButtonEdit(new DataUrl("Edit"))
-                }
-            };
-
-            return model;
-        }
-
-        /// <summary>
-        /// Prepare datatables model
-        /// </summary>
-        /// <param name="searchModel">Search model</param>
-        /// <returns>Datatables model</returns>
-        protected virtual DataTablesModel PrepareAddProductGridModel(AddProductToDiscountSearchModel searchModel)
-        {
-            //prepare common properties
-            var model = new DataTablesModel
-            {
-                Name = "products-grid",
-                UrlRead = new DataUrl("ProductAddPopupList", "Discount", null),
-                SearchButtonId = "search-products",
-                Length = searchModel.PageSize,
-                LengthMenu = searchModel.AvailablePageSizes
-            };
-
-            //prepare filters to search
-            model.Filters = new List<FilterParameter>
-            {
-                new FilterParameter(nameof(searchModel.SearchProductName)),
-                new FilterParameter(nameof(searchModel.SearchCategoryId)),
-                new FilterParameter(nameof(searchModel.SearchManufacturerId)),
-                new FilterParameter(nameof(searchModel.SearchStoreId)),
-                new FilterParameter(nameof(searchModel.SearchVendorId)),
-                new FilterParameter(nameof(searchModel.SearchProductTypeId))
-            };
-
-            //prepare model columns
-            model.ColumnCollection = new List<ColumnProperty>
-            {
-                new ColumnProperty(nameof(ProductModel.Id))
-                {
-                    IsMasterCheckBox = true,
-                    Render = new RenderCheckBox(nameof(AddProductToDiscountModel.SelectedProductIds)),
-                    ClassName =  StyleColumn.CenterAll,
-                    Width = "50",
-                },
-                new ColumnProperty(nameof(ProductModel.Name))
-                {
-                    Title = _localizationService.GetResource("Admin.Catalog.Products.Fields.Name")
-                },
-                new ColumnProperty(nameof(ProductModel.Published))
-                {
-                    Title = _localizationService.GetResource("Admin.Catalog.Products.Fields.Published"),
-                    Width = "100",
-                    Render = new RenderBoolean()
-                }
-            };
-
-            return model;
-        }
-
-        /// <summary>
-        /// Prepare datatables model
-        /// </summary>
-        /// <param name="searchModel">Search model</param>
-        /// <returns>Datatables model</returns>
-        protected virtual DataTablesModel PrepareAddCategoryGridModel(AddCategoryToDiscountSearchModel searchModel)
-        {
-            //prepare common properties
-            var model = new DataTablesModel
-            {
-                Name = "categories-grid",
-                UrlRead = new DataUrl("CategoryAddPopupList", "Discount", null),
-                SearchButtonId = "search-categories",
-                Length = searchModel.PageSize,
-                LengthMenu = searchModel.AvailablePageSizes
-            };
-
-            //prepare filters to search
-            model.Filters = new List<FilterParameter>
-            {
-                new FilterParameter(nameof(searchModel.SearchCategoryName))
-            };
-
-            //prepare model columns
-            model.ColumnCollection = new List<ColumnProperty>
-            {
-                new ColumnProperty(nameof(CategoryModel.Id))
-                {
-                    IsMasterCheckBox = true,
-                    Render = new RenderCheckBox(nameof(AddCategoryToDiscountModel.SelectedCategoryIds)),
-                    ClassName =  StyleColumn.CenterAll,
-                    Width = "50",
-                },
-                new ColumnProperty(nameof(CategoryModel.Breadcrumb))
-                {
-                    Title = _localizationService.GetResource("")
-                },
-                new ColumnProperty(nameof(CategoryModel.Published))
-                {
-                    Title = _localizationService.GetResource("Admin.Catalog.Categories.Fields.Published"),
-                    Width = "100",
-                    Render = new RenderBoolean()
-                }
-            };
-
-            return model;
-        }
-
-        /// <summary>
-        /// Prepare datatables model
-        /// </summary>
-        /// <param name="searchModel">Search model</param>
-        /// <returns>Datatables model</returns>
-        protected virtual DataTablesModel PrepareAddManufacturerGridModel(AddManufacturerToDiscountSearchModel searchModel)
-        {
-            //prepare common properties
-            var model = new DataTablesModel
-            {
-                Name = "manufacturers-grid",
-                UrlRead = new DataUrl("ManufacturerAddPopupList", "Discount", null),
-                SearchButtonId = "search-manufacturers",
-                Length = searchModel.PageSize,
-                LengthMenu = searchModel.AvailablePageSizes
-            };
-
-            //prepare filters to search
-            model.Filters = new List<FilterParameter>
-            {
-                new FilterParameter(nameof(searchModel.SearchManufacturerName))
-            };
-
-            //prepare model columns
-            model.ColumnCollection = new List<ColumnProperty>
-            {
-                new ColumnProperty(nameof(ManufacturerModel.Id))
-                {
-                    IsMasterCheckBox = true,
-                    Render = new RenderCheckBox(nameof(AddManufacturerToDiscountModel.SelectedManufacturerIds)),
-                    ClassName =  StyleColumn.CenterAll,
-                    Width = "50",
-                },
-                new ColumnProperty(nameof(ManufacturerModel.Name))
-                {
-                    Title = _localizationService.GetResource("Admin.Catalog.Manufacturers.Fields.Name")
-                },
-                new ColumnProperty(nameof(ManufacturerModel.Published))
-                {
-                    Title = _localizationService.GetResource("Admin.Catalog.Manufacturers.Fields.Published"),
-                    Width = "100",
-                    Render = new RenderBoolean()
-                }
-            };
-
-            return model;
         }
         
         #endregion
@@ -553,7 +194,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
-            searchModel.Grid = PrepareDiscountGridModel(searchModel);
 
             return searchModel;
         }
@@ -834,7 +474,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetPopupGridPageSize();
-            searchModel.Grid = PrepareAddProductGridModel(searchModel);
 
             return searchModel;
         }
@@ -923,7 +562,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetPopupGridPageSize();
-            searchModel.Grid = PrepareAddCategoryGridModel(searchModel);
 
             return searchModel;
         }
@@ -1011,7 +649,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetPopupGridPageSize();
-            searchModel.Grid = PrepareAddManufacturerGridModel(searchModel);
 
             return searchModel;
         }
