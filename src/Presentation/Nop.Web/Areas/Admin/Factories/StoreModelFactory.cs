@@ -40,54 +40,7 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         #endregion
-
-        #region Utilities
-
-        /// <summary>
-        /// Prepare datatables model
-        /// </summary>
-        /// <param name="searchModel">Search model</param>
-        /// <returns>Datatables model</returns>
-        protected virtual DataTablesModel PrepareStoreGridModel(StoreSearchModel searchModel)
-        {
-            //prepare common properties
-            var model = new DataTablesModel
-            {
-                Name = "stores-grid",
-                UrlRead = new DataUrl("List", "Store", null),
-                Length = searchModel.PageSize,
-                LengthMenu = searchModel.AvailablePageSizes
-            };
-
-            //prepare model columns
-            model.ColumnCollection = new List<ColumnProperty>
-            {
-                new ColumnProperty(nameof(StoreModel.Name))
-                {
-                    Title = _localizationService.GetResource("Admin.Configuration.Stores.Fields.Name")
-                },
-                new ColumnProperty(nameof(StoreModel.Url))
-                {
-                    Title = _localizationService.GetResource("Admin.Configuration.Stores.Fields.Url")
-                },
-                new ColumnProperty(nameof(StoreModel.DisplayOrder))
-                {
-                    Title = _localizationService.GetResource("Admin.Configuration.Stores.Fields.DisplayOrder")
-                },
-                new ColumnProperty(nameof(StoreModel.Id))
-                {
-                    Title = _localizationService.GetResource("Admin.Common.Edit"),
-                    Width = "100",
-                    ClassName =  StyleColumn.ButtonStyle,
-                    Render = new RenderButtonEdit(new DataUrl("Edit"))
-                }
-            };
-
-            return model;
-        }
-
-        #endregion
-
+        
         #region Methods
 
         /// <summary>
@@ -102,7 +55,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
-            searchModel.Grid = PrepareStoreGridModel(searchModel);
 
             return searchModel;
         }
