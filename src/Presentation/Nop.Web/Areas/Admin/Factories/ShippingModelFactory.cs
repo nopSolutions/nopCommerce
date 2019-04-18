@@ -14,7 +14,6 @@ using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Areas.Admin.Models.Directory;
 using Nop.Web.Areas.Admin.Models.Shipping;
 using Nop.Web.Framework.Factories;
-using Nop.Web.Framework.Models.DataTables;
 using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
@@ -105,7 +104,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
-            searchModel.Grid = PrepareDeliveryDateGridModel(searchModel);
 
             return searchModel;
         }
@@ -122,172 +120,8 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
-            searchModel.Grid = PrepareProductAvailabilityRangeGridModel(searchModel);
 
             return searchModel;
-        }
-
-        /// <summary>
-        /// Prepare datatables model
-        /// </summary>
-        /// <param name="searchModel">Search model</param>
-        /// <returns>Datatables model</returns>
-        protected virtual DataTablesModel PrepareWarehouseGridModel(WarehouseSearchModel searchModel)
-        {
-            //prepare common properties
-            var model = new DataTablesModel
-            {
-                Name = "warehouse-grid",
-                UrlRead = new DataUrl("Warehouses", "Shipping", null),
-                Length = searchModel.PageSize,
-                LengthMenu = searchModel.AvailablePageSizes
-            };
-            
-            //prepare model columns
-            model.ColumnCollection = new List<ColumnProperty>
-            {
-                new ColumnProperty(nameof(WarehouseModel.Name))
-                {
-                    Title = _localizationService.GetResource("Admin.Configuration.Shipping.Warehouses.Fields.Name")
-                },
-                
-                new ColumnProperty(nameof(WarehouseModel.Id))
-                {
-                    Title = _localizationService.GetResource("Admin.Common.Edit"),
-                    Width = "100",
-                    ClassName =  StyleColumn.ButtonStyle,
-                    Render = new RenderButtonEdit(new DataUrl("EditWarehouse"))
-                }
-            };
-
-            return model;
-        }
-
-        /// <summary>
-        /// Prepare datatables model
-        /// </summary>
-        /// <param name="searchModel">Search model</param>
-        /// <returns>Datatables model</returns>
-        protected virtual DataTablesModel PrepareDeliveryDateGridModel(DeliveryDateSearchModel searchModel)
-        {
-            //prepare common properties
-            var model = new DataTablesModel
-            {
-                Name = "deliverydate-grid",
-                UrlRead = new DataUrl("DeliveryDates", "Shipping", null),
-                Length = searchModel.PageSize,
-                LengthMenu = searchModel.AvailablePageSizes
-            };
-            
-            //prepare model columns
-            model.ColumnCollection = new List<ColumnProperty>
-            {
-                new ColumnProperty(nameof(DeliveryDateModel.Name))
-                {
-                    Title = _localizationService.GetResource("Admin.Configuration.Shipping.DeliveryDates.Fields.Name")
-                },
-                new ColumnProperty(nameof(DeliveryDateModel.DisplayOrder))
-                {
-                    Title = _localizationService.GetResource("Admin.Configuration.Shipping.DeliveryDates.Fields.DisplayOrder"),
-                    Width = "150"
-                },
-                new ColumnProperty(nameof(DeliveryDateModel.Id))
-                {
-                    Title = _localizationService.GetResource("Admin.Common.Edit"),
-                    Width = "100",
-                    ClassName =  StyleColumn.ButtonStyle,
-                    Render = new RenderButtonEdit(new DataUrl("EditDeliveryDate"))
-                }
-            };
-
-            return model;
-        }
-
-        /// <summary>
-        /// Prepare datatables model
-        /// </summary>
-        /// <param name="searchModel">Search model</param>
-        /// <returns>Datatables model</returns>
-        protected virtual DataTablesModel PrepareProductAvailabilityRangeGridModel(ProductAvailabilityRangeSearchModel searchModel)
-        {
-            //prepare common properties
-            var model = new DataTablesModel
-            {
-                Name = "productavailabilityrange-grid",
-                UrlRead = new DataUrl("ProductAvailabilityRanges", "Shipping", null),
-                SearchButtonId = "search-categories",
-                Length = searchModel.PageSize,
-                LengthMenu = searchModel.AvailablePageSizes
-            };
-
-            //prepare model columns
-            model.ColumnCollection = new List<ColumnProperty>
-            {
-                new ColumnProperty(nameof(ProductAvailabilityRangeModel.Name))
-                {
-                    Title = _localizationService.GetResource("Admin.Configuration.Shipping.ProductAvailabilityRanges.Fields.Name")
-                },
-                new ColumnProperty(nameof(ProductAvailabilityRangeModel.DisplayOrder))
-                {
-                    Title = _localizationService.GetResource("Admin.Configuration.Shipping.ProductAvailabilityRanges.Fields.DisplayOrder"),
-                    Width = "150"
-                },
-                new ColumnProperty(nameof(ProductAvailabilityRangeModel.Id))
-                {
-                    Title = _localizationService.GetResource("Admin.Common.Edit"),
-                    Width = "100",
-                    ClassName =  StyleColumn.ButtonStyle,
-                    Render = new RenderButtonEdit(new DataUrl("EditProductAvailabilityRange"))
-                }
-            };
-
-            return model;
-        }
-
-        /// <summary>
-        /// Prepare datatables model
-        /// </summary>
-        /// <param name="searchModel">Search model</param>
-        /// <returns>Datatables model</returns>
-        protected virtual DataTablesModel PrepareShippingMethodGridModel(ShippingMethodSearchModel searchModel)
-        {
-            //prepare common properties
-            var model = new DataTablesModel
-            {
-                Name = "shippingmethod-grid",
-                UrlRead = new DataUrl("Methods", "Shipping", null),
-                Length = searchModel.PageSize,
-                LengthMenu = searchModel.AvailablePageSizes
-            };
-
-            //prepare model columns
-            model.ColumnCollection = new List<ColumnProperty>
-            {
-                new ColumnProperty(nameof(ShippingMethodModel.Name))
-                {
-                    Title = _localizationService.GetResource("Admin.Configuration.Shipping.Methods.Fields.Name"),
-                    Width = "200"
-                },
-                new ColumnProperty(nameof(ShippingMethodModel.Description))
-                {
-                    Title = _localizationService.GetResource("Admin.Configuration.Shipping.Methods.Fields.Description"),
-                    Width = "400"
-                },
-                new ColumnProperty(nameof(ShippingMethodModel.DisplayOrder))
-                {
-                    Title = _localizationService.GetResource("Admin.Configuration.Shipping.Methods.Fields.DisplayOrder"),
-                    Width = "100"
-                },
-                new ColumnProperty(nameof(ShippingMethodModel.Id))
-                {
-                    Title = _localizationService.GetResource("Admin.Common.Edit"),
-                    Width = "100",
-                    ClassName =  StyleColumn.ButtonStyle,
-                    Render = new RenderButtonEdit(new DataUrl("EditMethod"))
-                }
-            };
-
-            return model;
         }
         
         #endregion
@@ -406,7 +240,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
-            searchModel.Grid = PrepareShippingMethodGridModel(searchModel);
 
             return searchModel;
         }
@@ -601,7 +434,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
-            searchModel.Grid = PrepareWarehouseGridModel(searchModel);
 
             return searchModel;
         }
