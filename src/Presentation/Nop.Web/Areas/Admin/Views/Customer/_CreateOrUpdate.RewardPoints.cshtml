@@ -1,10 +1,47 @@
 ﻿@model CustomerModel
-
 @using Nop.Core.Domain.Customers
 @using Nop.Services
+@using Nop.Services.Stores
+@inject IStoreService storeService
 <div class="panel-body">
     <div class="sub-panel">
-        @await Html.PartialAsync("Table", Model.CustomerRewardPointsSearchModel.Grid)
+        @await Html.PartialAsync("Table", new DataTablesModel
+        {
+            Name = "customer-rewardpoints-grid",
+            UrlRead = new DataUrl("RewardPointsHistorySelect", "Customer", new RouteValueDictionary { [nameof(Model.CustomerRewardPointsSearchModel.CustomerId)] = Model.CustomerRewardPointsSearchModel.CustomerId }),
+            Length = Model.CustomerRewardPointsSearchModel.PageSize,
+            LengthMenu = Model.CustomerRewardPointsSearchModel.AvailablePageSizes,
+            ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(CustomerRewardPointsModel.StoreName))
+                {
+                    Title = T("Admin.Customers.Customers.RewardPoints.Fields.Store").Text,
+                    Visible = storeService.GetAllStores().Count > 1
+                },
+                new ColumnProperty(nameof(CustomerRewardPointsModel.Points))
+                {
+                    Title = T("Admin.Customers.Customers.RewardPoints.Fields.Points").Text
+                },
+                new ColumnProperty(nameof(CustomerRewardPointsModel.PointsBalance))
+                {
+                    Title = T("Admin.Customers.Customers.RewardPoints.Fields.PointsBalance").Text
+                },
+                new ColumnProperty(nameof(CustomerRewardPointsModel.Message))
+                {
+                    Title = T("Admin.Customers.Customers.RewardPoints.Fields.Message").Text
+                },
+                new ColumnProperty(nameof(CustomerRewardPointsModel.CreatedOn))
+                {
+                    Title = T("Admin.Customers.Customers.RewardPoints.Fields.CreatedDate").Text,
+                    Render = new RenderDate()
+                },
+                new ColumnProperty(nameof(CustomerRewardPointsModel.EndDate))
+                {
+                    Title = T("Admin.Customers.Customers.RewardPoints.Fields.EndDate").Text,
+                    Render = new RenderDate()
+                }
+            }
+        })
     </div>
     <div class="panel panel-default no-margin">
         <div class="panel-heading">
@@ -105,7 +142,7 @@
                     success: function (data) {
                         if (data.Result) {
                             //reload grid
-                            $('#@Model.CustomerRewardPointsSearchModel.Grid.Name').DataTable().ajax.reload();
+                            $('#customer-rewardpoints-grid').DataTable().ajax.reload();
 
                             $("#@Html.IdFor(model => model.AddRewardPoints.Points)").val(0);
                             $("#@Html.IdFor(model => model.AddRewardPoints.Message)").val(data.Message);

@@ -413,7 +413,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
-            searchModel.Grid = PrepareRewardPointGridModel(searchModel);
 
             return searchModel;
         }
@@ -1148,58 +1147,7 @@ namespace Nop.Web.Areas.Admin.Factories
             };
             return model;
         }
-
-        /// <summary>
-        /// Prepare datatables model
-        /// </summary>
-        /// <param name="searchModel">Search model</param>
-        /// <returns>Datatables model</returns>
-        protected virtual DataTablesModel PrepareRewardPointGridModel(CustomerRewardPointsSearchModel searchModel)
-        {
-            //prepare common properties
-            var model = new DataTablesModel
-            {
-                Name = "customer-rewardpoints-grid",
-                UrlRead = new DataUrl("RewardPointsHistorySelect", "Customer", new RouteValueDictionary { [nameof(searchModel.CustomerId)] = searchModel.CustomerId }),
-                Length = searchModel.PageSize,
-                LengthMenu = searchModel.AvailablePageSizes
-            };
-
-            //prepare model columns
-            model.ColumnCollection = new List<ColumnProperty>
-            {
-                new ColumnProperty(nameof(CustomerRewardPointsModel.StoreName))
-                {
-                    Title = _localizationService.GetResource("Admin.Customers.Customers.RewardPoints.Fields.Store"),
-                    Visible = _storeService.GetAllStores().Count > 1
-                },
-                new ColumnProperty(nameof(CustomerRewardPointsModel.Points))
-                {
-                    Title = _localizationService.GetResource("Admin.Customers.Customers.RewardPoints.Fields.Points")
-                },
-                new ColumnProperty(nameof(CustomerRewardPointsModel.PointsBalance))
-                {
-                    Title = _localizationService.GetResource("Admin.Customers.Customers.RewardPoints.Fields.PointsBalance")
-                },
-                new ColumnProperty(nameof(CustomerRewardPointsModel.Message))
-                {
-                    Title = _localizationService.GetResource("Admin.Customers.Customers.RewardPoints.Fields.Message")
-                },
-                new ColumnProperty(nameof(CustomerRewardPointsModel.CreatedOn))
-                {
-                    Title = _localizationService.GetResource("Admin.Customers.Customers.RewardPoints.Fields.CreatedDate"),
-                    Render = new RenderDate()
-                },
-                new ColumnProperty(nameof(CustomerRewardPointsModel.EndDate))
-                {
-                    Title = _localizationService.GetResource("Admin.Customers.Customers.RewardPoints.Fields.EndDate"),
-                    Render = new RenderDate()
-                }
-            };
-
-            return model;
-        }
-
+        
         #endregion
 
         #region Methods
