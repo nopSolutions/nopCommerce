@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Domain.Forums;
 using Nop.Services.Forums;
@@ -7,7 +6,6 @@ using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Forums;
-using Nop.Web.Framework.Models.DataTables;
 using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
@@ -56,105 +54,6 @@ namespace Nop.Web.Areas.Admin.Factories
             return searchModel;
         }
 
-        /// <summary>
-        /// Prepare datatables model
-        /// </summary>
-        /// <param name="searchModel">Search model</param>
-        /// <returns>Datatables model</returns>
-        protected virtual DataTablesModel PrepareForumGridModel(ForumGroupSearchModel searchModel)
-        {
-            //prepare common properties
-            var model = new DataTablesModel
-            {
-                Name = "forumgroup-grid",
-                UrlRead = new DataUrl("ForumGroupList", "Forum", null),
-                Length = searchModel.PageSize,
-                LengthMenu = searchModel.AvailablePageSizes
-            };
-
-            //prepare model columns
-            model.ColumnCollection = new List<ColumnProperty>
-            {
-                new ColumnProperty(null)
-                {
-                    Render = new RenderChildCaret(),
-                    Width = "5",
-                    Searchable = false,
-                    ClassName =  StyleColumn.ChildControl
-                },
-                new ColumnProperty(nameof(ForumGroupModel.Name))
-                {
-                    Title = _localizationService.GetResource("Admin.ContentManagement.Forums.ForumGroup.Fields.Name"),
-                    Width = "300"
-                },
-                new ColumnProperty(nameof(ForumGroupModel.DisplayOrder))
-                {
-                    Title = _localizationService.GetResource("Admin.ContentManagement.Forums.ForumGroup.Fields.DisplayOrder"),
-                    Width = "100"
-                },
-                new ColumnProperty(nameof(ForumGroupModel.CreatedOn))
-                {
-                    Title = _localizationService.GetResource("Admin.ContentManagement.Forums.ForumGroup.Fields.CreatedOn"),
-                    Width = "200",
-                    Render = new RenderDate()
-                },
-                new ColumnProperty(nameof(ForumGroupModel.Id))
-                {
-                    Title = _localizationService.GetResource("Admin.Common.Edit"),
-                    Width = "50",
-                    ClassName = StyleColumn.ButtonStyle,
-                    Render = new RenderButtonEdit(new DataUrl("EditForumGroup"))
-                }
-            };
-
-            //prepare common properties for detail table
-            var detailModel = new DataTablesModel
-            {
-                Name = "shipments-grid",
-                UrlRead = new DataUrl("ForumList", "Forum", null),
-                IsChildTable = true,
-                Length = searchModel.PageSize,
-                LengthMenu = searchModel.AvailablePageSizes
-            };
-
-            //prepare filters to search
-            detailModel.Filters = new List<FilterParameter>
-            {
-                new FilterParameter(nameof(ForumModel.ForumGroupId), nameof(ForumGroupModel.Id), true)
-            };
-
-            detailModel.ColumnCollection = new List<ColumnProperty>
-            {
-                new ColumnProperty(nameof(ForumModel.Name))
-                {
-                    Title = _localizationService.GetResource("Admin.ContentManagement.Forums.Forum.Fields.Name"),
-                    Width = "300"
-                },
-                new ColumnProperty(nameof(ForumModel.DisplayOrder))
-                {
-                    Title = _localizationService.GetResource("Admin.ContentManagement.Forums.Forum.Fields.DisplayOrder"),
-                    Width = "150"
-                },
-                new ColumnProperty(nameof(ForumModel.CreatedOn))
-                {
-                    Title = _localizationService.GetResource("Admin.ContentManagement.Forums.Forum.Fields.CreatedOn"),
-                    Width = "150",
-                    Render = new RenderDate()
-                },
-                new ColumnProperty(nameof(ForumModel.Id))
-                {
-                    Title = _localizationService.GetResource("Admin.Common.Edit"),
-                    Width = "50",
-                    ClassName = StyleColumn.ButtonStyle,
-                    Render = new RenderButtonEdit(new DataUrl("EditForum"))
-                }
-            };
-
-            model.ChildTable = detailModel;
-
-            return model;
-        }
-
         #endregion
 
         #region Methods
@@ -174,7 +73,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
-            searchModel.Grid = PrepareForumGridModel(searchModel);
 
             return searchModel;
         }
