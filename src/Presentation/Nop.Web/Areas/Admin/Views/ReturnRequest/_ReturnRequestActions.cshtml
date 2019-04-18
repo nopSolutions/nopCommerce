@@ -8,7 +8,33 @@
         <p>
             <em>@T("Admin.Configuration.Settings.Order.ReturnRequestActions.Hint")</em>
         </p>
-        @await Html.PartialAsync("Table", Model.Grid)
+        @await Html.PartialAsync("Table",  new DataTablesModel
+        {
+            Name = "returnrequestactions-grid",
+            UrlRead = new DataUrl("ReturnRequestActionList", "ReturnRequest", null),
+            Length = Model.PageSize,
+            LengthMenu = Model.AvailablePageSizes,
+            ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(ReturnRequestActionModel.Name))
+                {
+                    Title = T("Admin.Configuration.Settings.Order.ReturnRequestActions.Name"),
+                    Width = "300"
+                },
+                new ColumnProperty(nameof(ReturnRequestActionModel.DisplayOrder))
+                {
+                    Title = T("Admin.Configuration.Settings.Order.ReturnRequestActions.DisplayOrder"),
+                    Width = "100"
+                },
+                new ColumnProperty(nameof(ReturnRequestActionModel.Id))
+                {
+                    Title = T("Admin.Common.Edit"),
+                    Width = "100",
+                    ClassName =  StyleColumn.ButtonStyle,
+                    Render = new RenderButtonEdit(new DataUrl("~/Admin/ReturnRequest/ReturnRequestActionEdit/"))
+                }
+            }
+        })
     </div>
     <div class="panel-footer">
         <a asp-action="ReturnRequestActionCreate" asp-controller="ReturnRequest" class="btn btn-primary">

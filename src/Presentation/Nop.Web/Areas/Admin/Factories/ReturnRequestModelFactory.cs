@@ -55,173 +55,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #endregion
 
-        #region Utilities
-
-        /// <summary>
-        /// Prepare datatables model
-        /// </summary>
-        /// <param name="searchModel">Search model</param>
-        /// <returns>Datatables model</returns>
-        protected virtual DataTablesModel PrepareReturnRequestReasonGridModel(ReturnRequestReasonSearchModel searchModel)
-        {
-            //prepare common properties
-            var model = new DataTablesModel
-            {
-                Name = "returnrequestreasons-grid",
-                UrlRead = new DataUrl("ReturnRequestReasonList", "ReturnRequest", null),
-                Length = searchModel.PageSize,
-                LengthMenu = searchModel.AvailablePageSizes
-            };
-            
-            //prepare model columns
-            model.ColumnCollection = new List<ColumnProperty>
-            {
-                new ColumnProperty(nameof(ReturnRequestReason.Name))
-                {
-                    Title = _localizationService.GetResource("Admin.Configuration.Settings.Order.ReturnRequestReasons.Name"),
-                    Width = "300"
-                },
-                new ColumnProperty(nameof(ReturnRequestReason.DisplayOrder))
-                {
-                    Title = _localizationService.GetResource("Admin.Configuration.Settings.Order.ReturnRequestReasons.DisplayOrder"),
-                    Width = "100"
-                },
-                new ColumnProperty(nameof(ReturnRequestReason.Id))
-                {
-                    Title = _localizationService.GetResource("Admin.Common.Edit"),
-                    Width = "100",
-                    ClassName =  StyleColumn.ButtonStyle,
-                    Render = new RenderButtonEdit(new DataUrl("~/Admin/ReturnRequest/ReturnRequestReasonEdit/"))
-                }
-            };
-
-            return model;
-        }
-
-        /// <summary>
-        /// Prepare datatables model
-        /// </summary>
-        /// <param name="searchModel">Search model</param>
-        /// <returns>Datatables model</returns>
-        protected virtual DataTablesModel PrepareReturnRequestActionGridModel(ReturnRequestActionSearchModel searchModel)
-        {
-            //prepare common properties
-            var model = new DataTablesModel
-            {
-                Name = "returnrequestactions-grid",
-                UrlRead = new DataUrl("ReturnRequestActionList", "ReturnRequest", null),
-                Length = searchModel.PageSize,
-                LengthMenu = searchModel.AvailablePageSizes
-            };
-
-            //prepare model columns
-            model.ColumnCollection = new List<ColumnProperty>
-            {
-                new ColumnProperty(nameof(ReturnRequestAction.Name))
-                {
-                    Title = _localizationService.GetResource("Admin.Configuration.Settings.Order.ReturnRequestActions.Name"),
-                    Width = "300"
-                },
-                new ColumnProperty(nameof(ReturnRequestAction.DisplayOrder))
-                {
-                    Title = _localizationService.GetResource("Admin.Configuration.Settings.Order.ReturnRequestActions.DisplayOrder"),
-                    Width = "100"
-                },
-                new ColumnProperty(nameof(ReturnRequestAction.Id))
-                {
-                    Title = _localizationService.GetResource("Admin.Common.Edit"),
-                    Width = "100",
-                    ClassName =  StyleColumn.ButtonStyle,
-                    Render = new RenderButtonEdit(new DataUrl("~/Admin/ReturnRequest/ReturnRequestActionEdit/"))
-                }
-            };
-
-            return model;
-        }
-
-        /// <summary>
-        /// Prepare datatables model
-        /// </summary>
-        /// <param name="searchModel">Search model</param>
-        /// <returns>Datatables model</returns>
-        protected virtual DataTablesModel PrepareReturnRequestGridModel(ReturnRequestSearchModel searchModel)
-        {
-            //prepare common properties
-            var model = new DataTablesModel
-            {
-                Name = "returnrequests-grid",
-                UrlRead = new DataUrl("List", "ReturnRequest", null),
-                SearchButtonId = "search-returnrequests",
-                Length = searchModel.PageSize,
-                LengthMenu = searchModel.AvailablePageSizes
-            };
-
-            //prepare filters to search
-            model.Filters = new List<FilterParameter>
-            {
-                new FilterParameter(nameof(searchModel.StartDate)),
-                new FilterParameter(nameof(searchModel.EndDate)),
-                new FilterParameter(nameof(searchModel.CustomNumber)),
-                new FilterParameter(nameof(searchModel.ReturnRequestStatusId))
-            };
-
-            //prepare model columns
-            model.ColumnCollection = new List<ColumnProperty>
-            {
-                new ColumnProperty(nameof(ReturnRequestModel.CustomNumber))
-                {
-                    Title = _localizationService.GetResource("Admin.ReturnRequests.Fields.CustomNumber"),
-                    Width = "100"
-                },
-                new ColumnProperty(nameof(ReturnRequestModel.ProductName))
-                {
-                    Title = _localizationService.GetResource("Admin.ReturnRequests.Fields.Product"),
-                    Width = "350",
-                    Render = new RenderCustom("renderColumnProductName")
-                },
-                new ColumnProperty(nameof(ReturnRequestModel.Quantity))
-                {
-                    Title = _localizationService.GetResource("Admin.ReturnRequests.Fields.Quantity"),
-                    Width = "100"
-                },
-                new ColumnProperty(nameof(ReturnRequestModel.CustomerId))
-                {
-                    Title = _localizationService.GetResource("Admin.ReturnRequests.Fields.Customer"),
-                    Width = "350",
-                    Render = new RenderCustom("renderColumnCustomerInfo")
-                },
-                new ColumnProperty(nameof(ReturnRequestModel.CustomOrderNumber))
-                {
-                    Title = _localizationService.GetResource("Admin.ReturnRequests.Fields.CustomOrderNumber"),
-                    ClassName =  StyleColumn.ButtonStyle,
-                    Width = "200",
-                    Render = new RenderCustom("renderColumnOrderInfo")
-                },
-                new ColumnProperty(nameof(ReturnRequestModel.ReturnRequestStatusStr))
-                {
-                    Title = _localizationService.GetResource("Admin.ReturnRequests.Fields.Status"),
-                    Width = "200"
-                },
-                new ColumnProperty(nameof(ReturnRequestModel.CreatedOn))
-                {
-                    Title = _localizationService.GetResource("Admin.ReturnRequests.Fields.CreatedOn"),
-                    Width = "100",
-                    Render = new RenderDate()
-                },
-                new ColumnProperty(nameof(ReturnRequestModel.Id))
-                {
-                    Title = _localizationService.GetResource("Admin.Common.Edit"),
-                    Width = "100",
-                    ClassName =  StyleColumn.ButtonStyle,
-                    Render = new RenderButtonEdit(new DataUrl("Edit"))
-                }
-            };
-
-            return model;
-        }
-
-        #endregion
-
         #region Methods
 
         /// <summary>
@@ -248,7 +81,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
-            searchModel.Grid = PrepareReturnRequestGridModel(searchModel);
 
             return searchModel;
         }
@@ -370,7 +202,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
-            searchModel.Grid = PrepareReturnRequestReasonGridModel(searchModel);
 
             return searchModel;
         }
@@ -440,7 +271,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
-            searchModel.Grid = PrepareReturnRequestActionGridModel(searchModel);
 
             return searchModel;
         }

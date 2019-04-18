@@ -90,7 +90,71 @@
                     <p>
                         @T("Admin.ReturnRequests.Description")
                     </p>
-                    @await Html.PartialAsync("Table", Model.Grid)
+                    @await Html.PartialAsync("Table", new DataTablesModel
+                    {
+                        Name = "returnrequests-grid",
+                        UrlRead = new DataUrl("List", "ReturnRequest", null),
+                        SearchButtonId = "search-returnrequests",
+                        Length = Model.PageSize,
+                        LengthMenu = Model.AvailablePageSizes,
+                        Filters = new List<FilterParameter>
+                        {
+                            new FilterParameter(nameof(Model.StartDate)),
+                            new FilterParameter(nameof(Model.EndDate)),
+                            new FilterParameter(nameof(Model.CustomNumber)),
+                            new FilterParameter(nameof(Model.ReturnRequestStatusId))
+                        },
+                        ColumnCollection = new List<ColumnProperty>
+                        {
+                            new ColumnProperty(nameof(ReturnRequestModel.CustomNumber))
+                            {
+                                Title = T("Admin.ReturnRequests.Fields.CustomNumber"),
+                                Width = "100"
+                            },
+                            new ColumnProperty(nameof(ReturnRequestModel.ProductName))
+                            {
+                                Title = T("Admin.ReturnRequests.Fields.Product"),
+                                Width = "350",
+                                Render = new RenderCustom("renderColumnProductName")
+                            },
+                            new ColumnProperty(nameof(ReturnRequestModel.Quantity))
+                            {
+                                Title = T("Admin.ReturnRequests.Fields.Quantity"),
+                                Width = "100"
+                            },
+                            new ColumnProperty(nameof(ReturnRequestModel.CustomerId))
+                            {
+                                Title = T("Admin.ReturnRequests.Fields.Customer"),
+                                Width = "350",
+                                Render = new RenderCustom("renderColumnCustomerInfo")
+                            },
+                            new ColumnProperty(nameof(ReturnRequestModel.CustomOrderNumber))
+                            {
+                                Title = T("Admin.ReturnRequests.Fields.CustomOrderNumber"),
+                                ClassName =  StyleColumn.ButtonStyle,
+                                Width = "200",
+                                Render = new RenderCustom("renderColumnOrderInfo")
+                            },
+                            new ColumnProperty(nameof(ReturnRequestModel.ReturnRequestStatusStr))
+                            {
+                                Title = T("Admin.ReturnRequests.Fields.Status"),
+                                Width = "200"
+                            },
+                            new ColumnProperty(nameof(ReturnRequestModel.CreatedOn))
+                            {
+                                Title = T("Admin.ReturnRequests.Fields.CreatedOn"),
+                                Width = "100",
+                                Render = new RenderDate()
+                            },
+                            new ColumnProperty(nameof(ReturnRequestModel.Id))
+                            {
+                                Title = T("Admin.Common.Edit"),
+                                Width = "100",
+                                ClassName =  StyleColumn.ButtonStyle,
+                                Render = new RenderButtonEdit(new DataUrl("Edit"))
+                            }
+                        }
+                    })
                     
                     <script>
                         function renderColumnProductName(data, type, row, meta) {
