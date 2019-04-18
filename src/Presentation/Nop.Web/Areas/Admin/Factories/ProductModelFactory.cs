@@ -2001,9 +2001,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare grid model
-            var model = new ProductOrderListModel
+            var model = new ProductOrderListModel().PrepareToGrid(searchModel, orders, () =>
             {
-                Data = orders.Select(order =>
+                return orders.Select(order =>
                 {
                     //fill in model values from the entity
                     var orderModel = new OrderModel
@@ -2023,9 +2023,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     orderModel.ShippingStatus = _localizationService.GetLocalizedEnum(order.ShippingStatus);
 
                     return orderModel;
-                }),
-                Total = orders.TotalCount
-            };
+                });
+            });
 
             return model;
         }
