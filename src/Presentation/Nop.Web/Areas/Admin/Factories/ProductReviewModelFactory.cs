@@ -59,112 +59,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #endregion
 
-        #region Utilities
-
-        /// <summary>
-        /// Prepare datatables model
-        /// </summary>
-        /// <param name="searchModel">Search model</param>
-        /// <returns>Datatables model</returns>
-        protected virtual DataTablesModel PrepareProductReviewGridModel(ProductReviewSearchModel searchModel)
-        {
-            //prepare common properties
-            var model = new DataTablesModel
-            {
-                Name = "productreviews-grid",
-                UrlRead = new DataUrl("List", "ProductReview", null),
-                SearchButtonId = "search-productreviews",
-                Length = searchModel.PageSize,
-                LengthMenu = searchModel.AvailablePageSizes
-            };
-
-            //prepare filters to search
-            model.Filters = new List<FilterParameter>
-            {
-                new FilterParameter(nameof(searchModel.CreatedOnFrom)),
-                new FilterParameter(nameof(searchModel.CreatedOnTo)),
-                new FilterParameter(nameof(searchModel.SearchText)),
-                new FilterParameter(nameof(searchModel.SearchStoreId)),
-                new FilterParameter(nameof(searchModel.SearchProductId)),
-                new FilterParameter(nameof(searchModel.SearchApprovedId))                
-            };
-
-            //prepare model columns
-            model.ColumnCollection = new List<ColumnProperty>
-            {
-                new ColumnProperty(nameof(ProductReviewModel.Id))
-                {
-                    IsMasterCheckBox = true,
-                    Render = new RenderCheckBox("checkbox_product_reviews"),
-                    Visible = !searchModel.IsLoggedInAsVendor,
-                    ClassName =  StyleColumn.CenterAll,
-                    Width = "50",
-                },
-                new ColumnProperty(nameof(ProductReviewModel.StoreName))
-                {
-                    Title = _localizationService.GetResource("Admin.Catalog.ProductReviews.Fields.Store"),
-                    Visible = _storeService.GetAllStores().Count > 1 ? true : false,
-                    Width = "150"
-                },
-                new ColumnProperty(nameof(ProductReviewModel.ProductName))
-                {
-                    Title = _localizationService.GetResource("Admin.Catalog.ProductReviews.Fields.Product"),
-                    Width = "200",
-                    Render = new RenderLink(new DataUrl("~/Admin/Product/Edit", nameof(ProductReviewModel.ProductId)))
-                },
-                new ColumnProperty(nameof(ProductReviewModel.CustomerInfo))
-                {
-                    Title = _localizationService.GetResource("Admin.Catalog.ProductReviews.Fields.Customer"),
-                    Width = "200",
-                    Render = new RenderLink(new DataUrl("~/Admin/Customer/Edit", nameof(ProductReviewModel.CustomerId)))
-                },
-                new ColumnProperty(nameof(ProductReviewModel.Title))
-                {
-                    Title = _localizationService.GetResource("Admin.Catalog.ProductReviews.Fields.Title"),
-                    Width = "200"
-                },
-                new ColumnProperty(nameof(ProductReviewModel.ReviewText))
-                {
-                    Title = _localizationService.GetResource("Admin.Catalog.ProductReviews.Fields.ReviewText"),
-                    Width = "400"
-                },
-                new ColumnProperty(nameof(ProductReviewModel.ReplyText))
-                {
-                    Title = _localizationService.GetResource("Admin.Catalog.ProductReviews.Fields.ReplyText"),
-                    Width = "400"
-                },
-                new ColumnProperty(nameof(ProductReviewModel.Rating))
-                {
-                    Title = _localizationService.GetResource("Admin.Catalog.ProductReviews.Fields.Rating"),
-                    Width = "100"
-                },
-                new ColumnProperty(nameof(ProductReviewModel.IsApproved))
-                {
-                    Title = _localizationService.GetResource("Admin.Catalog.ProductReviews.Fields.IsApproved"),
-                    Width = "100",
-                    ClassName =  StyleColumn.CenterAll,
-                    Render = new RenderBoolean()
-                },
-                new ColumnProperty(nameof(ProductReviewModel.CreatedOn))
-                {
-                    Title = _localizationService.GetResource("Admin.Catalog.ProductReviews.Fields.CreatedOn"),
-                    Width = "200",
-                    Render = new RenderDate()
-                },
-                new ColumnProperty(nameof(ProductReviewModel.Id))
-                {
-                    Title = _localizationService.GetResource("Admin.Common.Edit"),
-                    Width = "100",
-                    ClassName =  StyleColumn.ButtonStyle,
-                    Render = new RenderButtonEdit(new DataUrl("Edit"))
-                }
-            };
-
-            return model;
-        }
-
-        #endregion
-
         #region Methods
 
         /// <summary>
@@ -203,7 +97,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
-            searchModel.Grid = PrepareProductReviewGridModel(searchModel);
 
             return searchModel;
         }

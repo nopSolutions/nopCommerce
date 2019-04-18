@@ -1,4 +1,5 @@
-﻿@model ProductReviewSearchModel
+﻿@using Nop.Services.Stores
+@model ProductReviewSearchModel
 
 @{
     //page title
@@ -11,6 +12,7 @@
     const string hideSearchBlockAttributeName = "ProductReviewsPage.HideSearchBlock";
     var hideSearchBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSearchBlockAttributeName);
 }
+@inject IStoreService storeService
 
 <nop-antiforgery-token />
 <div class="content-header clearfix">
@@ -148,7 +150,94 @@
 
             <div class="panel panel-default">
                 <div class="panel-body">
-                    @await Html.PartialAsync("Table", Model.Grid)
+                    @await Html.PartialAsync("Table", new DataTablesModel
+                    {
+                        Name = "productreviews-grid",
+                        UrlRead = new DataUrl("List", "ProductReview", null),
+                        SearchButtonId = "search-productreviews",
+                        Length = Model.PageSize,
+                        LengthMenu = Model.AvailablePageSizes,
+                        Filters = new List<FilterParameter>
+                        {
+                            new FilterParameter(nameof(Model.CreatedOnFrom)),
+                            new FilterParameter(nameof(Model.CreatedOnTo)),
+                            new FilterParameter(nameof(Model.SearchText)),
+                            new FilterParameter(nameof(Model.SearchStoreId)),
+                            new FilterParameter(nameof(Model.SearchProductId)),
+                            new FilterParameter(nameof(Model.SearchApprovedId))
+                        },
+                        ColumnCollection = new List<ColumnProperty>
+                        {
+                            new ColumnProperty(nameof(ProductReviewModel.Id))
+                            {
+                                IsMasterCheckBox = true,
+                                Render = new RenderCheckBox("checkbox_product_reviews"),
+                                Visible = !Model.IsLoggedInAsVendor,
+                                ClassName =  StyleColumn.CenterAll,
+                                Width = "50",
+                            },
+                            new ColumnProperty(nameof(ProductReviewModel.StoreName))
+                            {
+                                Title = T("Admin.Catalog.ProductReviews.Fields.Store").Text,
+                                Visible = storeService.GetAllStores().Count > 1 ? true : false,
+                                Width = "150"
+                            },
+                            new ColumnProperty(nameof(ProductReviewModel.ProductName))
+                            {
+                                Title = T("Admin.Catalog.ProductReviews.Fields.Product").Text,
+                                Width = "200",
+                                Render = new RenderLink(new DataUrl("~/Admin/Product/Edit", nameof(ProductReviewModel.ProductId)))
+                            },
+                            new ColumnProperty(nameof(ProductReviewModel.CustomerInfo))
+                            {
+                                Title = T("Admin.Catalog.ProductReviews.Fields.Customer").Text,
+                                Width = "200",
+                                Render = new RenderLink(new DataUrl("~/Admin/Customer/Edit", nameof(ProductReviewModel.CustomerId)))
+                            },
+                            new ColumnProperty(nameof(ProductReviewModel.Title))
+                            {
+                                Title = T("Admin.Catalog.ProductReviews.Fields.Title").Text,
+                                Width = "200"
+                            },
+                            new ColumnProperty(nameof(ProductReviewModel.ReviewText))
+                            {
+                                Title = T("Admin.Catalog.ProductReviews.Fields.ReviewText").Text,
+                                Width = "400",
+                                Encode = false
+                            },
+                            new ColumnProperty(nameof(ProductReviewModel.ReplyText))
+                            {
+                                Title = T("Admin.Catalog.ProductReviews.Fields.ReplyText").Text,
+                                Width = "400",
+                                Encode = false
+                            },
+                            new ColumnProperty(nameof(ProductReviewModel.Rating))
+                            {
+                                Title = T("Admin.Catalog.ProductReviews.Fields.Rating").Text,
+                                Width = "100"
+                            },
+                            new ColumnProperty(nameof(ProductReviewModel.IsApproved))
+                            {
+                                Title = T("Admin.Catalog.ProductReviews.Fields.IsApproved").Text,
+                                Width = "100",
+                                ClassName =  StyleColumn.CenterAll,
+                                Render = new RenderBoolean()
+                            },
+                            new ColumnProperty(nameof(ProductReviewModel.CreatedOn))
+                            {
+                                Title = T("Admin.Catalog.ProductReviews.Fields.CreatedOn").Text,
+                                Width = "200",
+                                Render = new RenderDate()
+                            },
+                            new ColumnProperty(nameof(ProductReviewModel.Id))
+                            {
+                                Title = T("Admin.Common.Edit").Text,
+                                Width = "100",
+                                ClassName =  StyleColumn.ButtonStyle,
+                                Render = new RenderButtonEdit(new DataUrl("Edit"))
+                            }
+                        }
+                    })
 
                     <script>
                         $(document).ready(function() {
@@ -169,7 +258,7 @@
                                     data: postData,
                                     complete: function(data) {
                                         //reload grid
-                                        $('#@Model.Grid.Name').DataTable().ajax.reload();
+                                        $('#productreviews-grid').DataTable().ajax.reload();
                                     },
                                     error: function(xhr, ajaxOptions, thrownError) {
                                         $('#approveSelectedFailed-info').html(thrownError);
@@ -196,7 +285,7 @@
                                     data: postData,
                                     complete: function(data) {
                                         //reload grid
-                                        $('#@Model.Grid.Name').DataTable().ajax.reload();
+                                        $('#productreviews-grid').DataTable().ajax.reload();
                                     },
                                     error: function(xhr, ajaxOptions, thrownError) {
                                         $('#disapproveSelectedFailed-info').html(thrownError);
@@ -220,7 +309,7 @@
                                     data: postData,
                                     complete: function (data) {
                                         //reload grid
-                                        $('#@Model.Grid.Name').DataTable().ajax.reload();
+                                        $('#productreviews-grid').DataTable().ajax.reload();
                                     },
                                     error: function (xhr, ajaxOptions, thrownError) {
                                         $('#deleteSelectedFailed-info').html(thrownError);
@@ -230,7 +319,7 @@
                                 $('#delete-selected-action-confirmation').modal('toggle');
                                 return false;
                             });
-                        });                        
+                        });
                     </script>
                 </div>
             </div>
