@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Domain.Catalog;
@@ -11,7 +10,6 @@ using Nop.Services.Orders;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Orders;
 using Nop.Web.Framework.Factories;
-using Nop.Web.Framework.Models.DataTables;
 using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
@@ -125,131 +123,8 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
-            searchModel.Grid = PrepareCheckoutAttributeValueGridModel(searchModel);
 
             return searchModel;
-        }
-
-        /// <summary>
-        /// Prepare datatables model
-        /// </summary>
-        /// <param name="searchModel">Search model</param>
-        /// <returns>Datatables model</returns>
-        protected virtual DataTablesModel PrepareCheckoutAttributeValueGridModel(CheckoutAttributeValueSearchModel searchModel)
-        {
-            //prepare common properties
-            var model = new DataTablesModel
-            {
-                Name = "checkoutattributevalues-grid",
-                UrlRead = new DataUrl("ValueList", "CheckoutAttribute", null),
-                UrlDelete = new DataUrl("ValueDelete", "CheckoutAttribute", null),
-                Length = searchModel.PageSize,
-                LengthMenu = searchModel.AvailablePageSizes,
-
-                //prepare filters to search
-                Filters = new List<FilterParameter>
-                {
-                    new FilterParameter(nameof(CheckoutAttributeValueSearchModel.CheckoutAttributeId), searchModel.CheckoutAttributeId)
-                },
-
-                //prepare model columns
-                ColumnCollection = new List<ColumnProperty>
-                {
-                    new ColumnProperty(nameof(CheckoutAttributeValueModel.Name))
-                    {
-                        Title = _localizationService.GetResource("Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.Name")
-                    },
-                    new ColumnProperty(nameof(CheckoutAttributeValueModel.PriceAdjustment))
-                    {
-                        Title = _localizationService.GetResource("Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.PriceAdjustment"),
-                        Width = "200"
-                    },
-                    new ColumnProperty(nameof(CheckoutAttributeValueModel.WeightAdjustment))
-                    {
-                        Title = _localizationService.GetResource("Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.WeightAdjustment"),
-                        Width = "200"
-                    },
-                    new ColumnProperty(nameof(CheckoutAttributeValueModel.IsPreSelected))
-                    {
-                        Title = _localizationService.GetResource("Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.IsPreSelected"),
-                        Width = "100",
-                        ClassName = StyleColumn.CenterAll,
-                        Render = new RenderBoolean()
-                    },
-                    new ColumnProperty(nameof(CheckoutAttributeValueModel.DisplayOrder))
-                    {
-                        Title = _localizationService.GetResource("Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.DisplayOrder"),
-                        Width = "100"
-                    },
-                    new ColumnProperty(nameof(CheckoutAttributeValueModel.Id))
-                    {
-                        Title = _localizationService.GetResource("Admin.Common.Edit"),
-                        Width = "100",
-                        ClassName = StyleColumn.ButtonStyle,
-                        Render = new RenderCustom("renderColumnEdit")
-                    },
-                    new ColumnProperty(nameof(CheckoutAttributeValueModel.Id))
-                    {
-                        Title = _localizationService.GetResource("Admin.Common.Delete"),
-                        Width = "100",
-                        Render = new RenderButtonRemove(_localizationService.GetResource("Admin.Common.Delete")){ Style = StyleButton.Default },
-                        ClassName = StyleColumn.ButtonStyle
-                    }
-                }
-            };
-            
-            return model;
-        }
-
-        /// <summary>
-        /// Prepare datatables model
-        /// </summary>
-        /// <param name="searchModel">Search model</param>
-        /// <returns>Datatables model</returns>
-        protected virtual DataTablesModel PrepareCheckoutAttributeGridModel(CheckoutAttributeSearchModel searchModel)
-        {
-            //prepare common properties
-            var model = new DataTablesModel
-            {
-                Name = "checkoutattributes-grid",
-                UrlRead = new DataUrl("List", "CheckoutAttribute", null),
-                Length = searchModel.PageSize,
-                LengthMenu = searchModel.AvailablePageSizes
-            };
-
-            //prepare model columns
-            model.ColumnCollection = new List<ColumnProperty>
-            {
-                new ColumnProperty(nameof(CheckoutAttributeModel.Name))
-                {
-                    Title = _localizationService.GetResource("Admin.Catalog.Attributes.CheckoutAttributes.Fields.Name")
-                },
-                new ColumnProperty(nameof(CheckoutAttributeModel.AttributeControlTypeName))
-                {
-                    Title = _localizationService.GetResource("Admin.Catalog.Attributes.CheckoutAttributes.Fields.AttributeControlType"),
-                    Width = "200"
-                },
-                new ColumnProperty(nameof(CheckoutAttributeModel.IsRequired))
-                {
-                    Title = _localizationService.GetResource("Admin.Catalog.Attributes.CheckoutAttributes.Fields.IsRequired"),
-                    Width = "100",
-                    Render = new RenderBoolean()
-                },
-                new ColumnProperty(nameof(CheckoutAttributeModel.DisplayOrder))
-                {
-                    Title = _localizationService.GetResource("Admin.Catalog.Attributes.CheckoutAttributes.Fields.DisplayOrder"),
-                    Width = "100"
-                },
-                new ColumnProperty(nameof(CheckoutAttributeModel.Id))
-                {
-                    Title = _localizationService.GetResource("Admin.Common.Edit"),
-                    Width = "100",
-                    ClassName =  StyleColumn.ButtonStyle,
-                    Render = new RenderButtonEdit(new DataUrl("Edit"))
-                }
-            };
-
-            return model;
         }
 
         #endregion
@@ -268,7 +143,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
-            searchModel.Grid = PrepareCheckoutAttributeGridModel(searchModel);
 
             return searchModel;
         }
