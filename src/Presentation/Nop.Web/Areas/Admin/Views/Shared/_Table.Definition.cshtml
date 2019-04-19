@@ -2,7 +2,6 @@
 @using System.Net;
 @using System.Runtime.Serialization;
 @using System.Text.Encodings.Web
-@using Nop.Web.Framework.Models.DataTables;
 
 @{
     //the locale which MomentJS should use - the default is en (English).
@@ -132,7 +131,18 @@ paging: @Model.Paging.ToString().ToLower(),
 pagingType: '@Model.PagingType',
 language: @await Html.PartialAsync("_GridLocalization"),
 pageLength: @Model.Length,
-lengthMenu: [@Model.LengthMenu],
+@if (!string.IsNullOrEmpty(Model.LengthMenu))
+{
+    <text>
+        lengthMenu: [@Model.LengthMenu],
+    </text>
+}
+else
+{
+    <text>
+        lengthChange: false,
+    </text>
+}
 ordering: @Model.Ordering.ToString().ToLower(),
 fixedHeader: @Model.FixedHeader.ToString().ToLower(),
 dom: '@Model.Dom',

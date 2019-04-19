@@ -57,15 +57,10 @@ namespace Nop.Web.Framework.Models
         /// <summary>
         /// Set grid page parameters
         /// </summary>
-        /// <param name="pageSize">Page size; pass null to use default value</param>
-        /// <param name="availablePageSizes">Available page sizes; pass null to use default value</param>
-        public void SetGridPageSize(int? pageSize = null, string availablePageSizes = null)
+        public void SetGridPageSize()
         {
             var adminAreaSettings = EngineContext.Current.Resolve<AdminAreaSettings>();
-
-            Start = 0;
-            Length = pageSize ?? adminAreaSettings.DefaultGridPageSize;
-            AvailablePageSizes = availablePageSizes ?? adminAreaSettings.GridPageSizes;
+            SetGridPageSize(adminAreaSettings.DefaultGridPageSize, adminAreaSettings.GridPageSizes);
         }
 
         /// <summary>
@@ -74,10 +69,19 @@ namespace Nop.Web.Framework.Models
         public void SetPopupGridPageSize()
         {
             var adminAreaSettings = EngineContext.Current.Resolve<AdminAreaSettings>();
+            SetGridPageSize(adminAreaSettings.PopupGridPageSize, adminAreaSettings.GridPageSizes);
+        }
 
+        /// <summary>
+        /// Set grid page parameters
+        /// </summary>
+        /// <param name="pageSize">Page size; pass null to use default value</param>
+        /// <param name="availablePageSizes">Available page sizes; pass null to use default value</param>
+        public void SetGridPageSize(int pageSize, string availablePageSizes = null)
+        {
             Start = 0;
-            Length = adminAreaSettings.PopupGridPageSize;
-            AvailablePageSizes = adminAreaSettings.GridPageSizes;
+            Length = pageSize;
+            AvailablePageSizes = availablePageSizes;
         }
 
         #endregion
