@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Nop.Plugin.Pickup.PickupInStore.Models;
 using Nop.Plugin.Pickup.PickupInStore.Services;
 using Nop.Services.Localization;
 using Nop.Services.Stores;
-using Nop.Web.Framework.Models.DataTables;
 using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Plugin.Pickup.PickupInStore.Factories
@@ -34,75 +32,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Factories
         }
 
         #endregion
-
-        #region Utilities
-
-        /// <summary>
-        /// Prepare datatables model
-        /// </summary>
-        /// <param name="searchModel">Search model</param>
-        /// <returns>Datatables model</returns>
-        protected virtual DataTablesModel StorePickupPointGridModel(StorePickupPointSearchModel searchModel)
-        {
-            //prepare common properties
-            var model = new DataTablesModel
-            {
-                Name = "pickup-points-grid",
-                UrlRead = new DataUrl("List", "PickupInStore", null),
-                UrlDelete = new DataUrl("Delete", "PickupInStore", null),
-                Length = searchModel.PageSize,
-                LengthMenu = searchModel.AvailablePageSizes,
-
-                //prepare model columns
-                ColumnCollection = new List<ColumnProperty>
-                {
-                    new ColumnProperty(nameof(StorePickupPointModel.Name))
-                    {
-                        Title = _localizationService.GetResource("Plugins.Pickup.PickupInStore.Fields.Name"),
-                        Width = "200"
-                    },
-                    new ColumnProperty(nameof(StorePickupPointModel.OpeningHours))
-                    {
-                        Title = _localizationService.GetResource("Plugins.Pickup.PickupInStore.Fields.OpeningHours"),
-                        Width = "200"
-                    },
-                    new ColumnProperty(nameof(StorePickupPointModel.PickupFee))
-                    {
-                        Title = _localizationService.GetResource("Plugins.Pickup.PickupInStore.Fields.PickupFee"),
-                        Width = "100"
-                    },
-                    new ColumnProperty(nameof(StorePickupPointModel.DisplayOrder))
-                    {
-                        Title = _localizationService.GetResource("Plugins.Pickup.PickupInStore.Fields.DisplayOrder"),
-                        Width = "100"
-                    },
-                    new ColumnProperty(nameof(StorePickupPointModel.StoreName))
-                    {
-                        Title = _localizationService.GetResource("Plugins.Pickup.PickupInStore.Fields.Store"),
-                        Width = "100"
-                    },
-                    new ColumnProperty(nameof(StorePickupPointModel.Id))
-                    {
-                        Title = _localizationService.GetResource("Admin.Common.Edit"),
-                        ClassName = StyleColumn.ButtonStyle,
-                        Width = "100",
-                        Render = new RenderCustom("renderColumnEdit")
-                    },
-                    new ColumnProperty(nameof(StorePickupPointModel.Id))
-                    {
-                        Title = _localizationService.GetResource("Admin.Common.Delete"),
-                        ClassName = StyleColumn.ButtonStyle,
-                        Render = new RenderButtonRemove(_localizationService.GetResource("Admin.Common.Delete")) { Style = StyleButton.Default },
-                        Width = "100"
-                    }
-                }
-            };
-
-            return model;
-        }
-
-        #endregion
-
+        
         #region Methods
 
         /// <summary>
@@ -149,7 +79,6 @@ namespace Nop.Plugin.Pickup.PickupInStore.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
-            searchModel.Grid = StorePickupPointGridModel(searchModel);
 
             return searchModel;
         }
