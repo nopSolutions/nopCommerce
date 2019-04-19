@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Models
 {
-    public class ConfigurationModel : BaseNopModel
+    public class ConfigurationModel : BaseSearchModel
     {
         [NopResourceDisplayName("Plugins.Shipping.FixedByWeightByTotal.Fields.LimitMethodsToCreated")]
         public bool LimitMethodsToCreated { get; set; }
@@ -38,8 +38,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Models
 
         [NopResourceDisplayName("Plugins.Shipping.FixedByWeightByTotal.Fields.ShippingMethod")]
         public int SearchShippingMethodId { get; set; }
-
-
+        
         public IList<SelectListItem> AvailableCountries { get; set; }
         public IList<SelectListItem> AvailableStates { get; set; }
         public IList<SelectListItem> AvailableShippingMethods { get; set; }
