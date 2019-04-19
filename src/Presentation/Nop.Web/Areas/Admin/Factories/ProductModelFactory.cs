@@ -2151,18 +2151,17 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare grid model
-            var model = new AssociateProductToAttributeValueListModel
+            var model = new AssociateProductToAttributeValueListModel().PrepareToGrid(searchModel, products, () =>
             {
                 //fill in model values from the entity
-                Data = products.Select(product =>
+                return products.Select(product =>
                 {
                     var productModel = product.ToModel<ProductModel>();
                     productModel.SeName = _urlRecordService.GetSeName(product, 0, true, false);
 
                     return productModel;
-                }),
-                Total = products.TotalCount
-            };
+                });
+            });
 
             return model;
         }
