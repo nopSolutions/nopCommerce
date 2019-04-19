@@ -36,19 +36,19 @@
                         {
                             new ColumnProperty(nameof(StoreModel.Name))
                             {
-                                Title = T("Admin.Configuration.Stores.Fields.Name")
+                                Title = T("Admin.Configuration.Stores.Fields.Name").Text
                             },
                             new ColumnProperty(nameof(StoreModel.Url))
                             {
-                                Title = T("Admin.Configuration.Stores.Fields.Url")
+                                Title = T("Admin.Configuration.Stores.Fields.Url").Text
                             },
                             new ColumnProperty(nameof(StoreModel.DisplayOrder))
                             {
-                                Title = T("Admin.Configuration.Stores.Fields.DisplayOrder")
+                                Title = T("Admin.Configuration.Stores.Fields.DisplayOrder").Text
                             },
                             new ColumnProperty(nameof(StoreModel.Id))
                             {
-                                Title = T("Admin.Common.Edit"),
+                                Title = T("Admin.Common.Edit").Text,
                                 Width = "100",
                                 ClassName =  StyleColumn.ButtonStyle,
                                 Render = new RenderButtonEdit(new DataUrl("Edit"))
