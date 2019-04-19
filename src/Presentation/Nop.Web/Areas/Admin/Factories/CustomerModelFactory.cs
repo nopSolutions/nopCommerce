@@ -35,7 +35,6 @@ using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Areas.Admin.Models.Customers;
 using Nop.Web.Areas.Admin.Models.ShoppingCart;
 using Nop.Web.Framework.Factories;
-using Nop.Web.Framework.Models.DataTables;
 using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
@@ -557,137 +556,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
             return searchModel;
         }
-
-        /// <summary>
-        /// Prepare datatables model
-        /// </summary>
-        /// <param name="searchModel">Search model</param>
-        /// <returns>Datatables model</returns>
-        protected virtual DataTablesModel PrepareCustomerGridModel(CustomerSearchModel searchModel)
-        {
-            //prepare common properties
-            var model = new DataTablesModel
-            {
-                Name = "customers-grid",
-                UrlRead = new DataUrl("CustomerList", "Customer", null),
-                SearchButtonId = "search-customers",
-                Length = searchModel.PageSize,
-                LengthMenu = searchModel.AvailablePageSizes
-            };
-
-            //prepare filters to search
-            model.Filters = new List<FilterParameter>
-            {
-                new FilterParameter(nameof(searchModel.SelectedCustomerRoleIds)),
-                new FilterParameter(nameof(searchModel.SearchEmail)),
-                new FilterParameter(nameof(searchModel.SearchUsername)),
-                new FilterParameter(nameof(searchModel.SearchFirstName)),
-                new FilterParameter(nameof(searchModel.SearchLastName)),
-                new FilterParameter(nameof(searchModel.SearchDayOfBirth)),
-                new FilterParameter(nameof(searchModel.SearchMonthOfBirth)),
-                new FilterParameter(nameof(searchModel.SearchCompany)),
-                new FilterParameter(nameof(searchModel.SearchPhone)),
-                new FilterParameter(nameof(searchModel.SearchZipPostalCode)),
-                new FilterParameter(nameof(searchModel.SearchIpAddress)),
-            };
-
-            //prepare model columns
-            var columnsProperty = new List<ColumnProperty>();
-            columnsProperty.Add(new ColumnProperty(nameof(CustomerModel.Id))
-            {
-                IsMasterCheckBox = true,
-                Render = new RenderCheckBox("checkbox_customers"),
-                ClassName = StyleColumn.CenterAll,
-                Width = "50",
-            });
-            columnsProperty.Add(new ColumnProperty(nameof(CustomerModel.Email))
-            {
-                Title = _localizationService.GetResource("Admin.Customers.Customers.Fields.Email"),
-                Width = "200"
-            });
-            if (searchModel.AvatarEnabled)
-            {
-                columnsProperty.Add(new ColumnProperty(nameof(CustomerModel.AvatarUrl))
-                {
-                    Title = _localizationService.GetResource("Admin.Customers.Customers.Fields.Avatar"),
-                    Width = "100",
-                    Render = new RenderPicture()
-                });
-            }
-            if (searchModel.UsernamesEnabled)
-            {
-                columnsProperty.Add(new ColumnProperty(nameof(CustomerModel.Username))
-                {
-                    Title = _localizationService.GetResource("Admin.Customers.Customers.Fields.Username"),
-                    Width = "200"
-                });
-            }
-            columnsProperty.Add(new ColumnProperty(nameof(CustomerModel.FullName))
-            {
-                Title = _localizationService.GetResource("Admin.Customers.Customers.Fields.FullName"),
-                Width = "200"
-            });
-            columnsProperty.Add(new ColumnProperty(nameof(CustomerModel.CustomerRoleNames))
-            {
-                Title = _localizationService.GetResource("Admin.Customers.Customers.Fields.CustomerRoles"),
-                Width = "200"
-            });
-            if (searchModel.CompanyEnabled)
-            {
-                columnsProperty.Add(new ColumnProperty(nameof(CustomerModel.Company))
-                {
-                    Title = _localizationService.GetResource("Admin.Customers.Customers.Fields.Company"),
-                    Width = "200"
-                });
-            }
-            if (searchModel.PhoneEnabled)
-            {
-                columnsProperty.Add(new ColumnProperty(nameof(CustomerModel.Phone))
-                {
-                    Title = _localizationService.GetResource("Admin.Customers.Customers.Fields.Phone"),
-                    Width = "200"
-                });
-            }
-            if (searchModel.ZipPostalCodeEnabled)
-            {
-                columnsProperty.Add(new ColumnProperty(nameof(CustomerModel.ZipPostalCode))
-                {
-                    Title = _localizationService.GetResource("Admin.Customers.Customers.Fields.ZipPostalCode"),
-                    Width = "200"
-                });
-            }
-            columnsProperty.Add(new ColumnProperty(nameof(CustomerModel.Active))
-            {
-                Title = _localizationService.GetResource("Admin.Customers.Customers.Fields.Active"),
-                Width = "100",
-                ClassName = StyleColumn.CenterAll,
-                Render = new RenderBoolean()
-            });
-
-            columnsProperty.Add(new ColumnProperty(nameof(CustomerModel.CreatedOn))
-            {
-                Title = _localizationService.GetResource("Admin.Customers.Customers.Fields.CreatedOn"),
-                Width = "200",
-                Render = new RenderDate()
-            });
-            columnsProperty.Add(new ColumnProperty(nameof(CustomerModel.LastActivityDate))
-            {
-                Title = _localizationService.GetResource("Admin.Customers.Customers.Fields.LastActivityDate"),
-                Width = "200",
-                Render = new RenderDate()
-            });
-            columnsProperty.Add(new ColumnProperty(nameof(CustomerModel.Id))
-            {
-                Title = _localizationService.GetResource("Admin.Common.Edit"),
-                Width = "100",
-                ClassName = StyleColumn.ButtonStyle,
-                Render = new RenderButtonEdit(new DataUrl("Edit"))
-            });
-            
-            model.ColumnCollection = columnsProperty;
-
-            return model;
-        }
         
         #endregion
 
@@ -720,7 +588,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
-            searchModel.Grid = PrepareCustomerGridModel(searchModel);
 
             return searchModel;
         }
