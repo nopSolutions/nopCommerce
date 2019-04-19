@@ -357,7 +357,8 @@
                             gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.StoreName))
                             {
                                 Title = T("Admin.Orders.Fields.Store").Text,
-                                Width = "100"
+                                Width = "100",
+                                Visible = storeService.GetAllStores().Count > 1
                             });
                             gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.CreatedOn))
                             {
