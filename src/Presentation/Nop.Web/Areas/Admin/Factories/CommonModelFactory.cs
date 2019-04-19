@@ -903,7 +903,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //prepare page parameters
-            searchModel.SetGridPageSize(5, "5");
+            searchModel.SetGridPageSize(5);
 
             return searchModel;
         }
@@ -922,16 +922,14 @@ namespace Nop.Web.Areas.Admin.Factories
             var searchTermRecordLines = _searchTermService.GetStats(pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new PopularSearchTermListModel
+            var model = new PopularSearchTermListModel().PrepareToGrid(searchModel, searchTermRecordLines, () =>
             {
-                //fill in model values from the entity
-                Data = searchTermRecordLines.Select(searchTerm => new PopularSearchTermModel
+                return searchTermRecordLines.Select(searchTerm => new PopularSearchTermModel
                 {
                     Keyword = searchTerm.Keyword,
                     Count = searchTerm.Count
-                }),
-                Total = searchTermRecordLines.TotalCount
-            };
+                });
+            });
 
             return model;
         }
