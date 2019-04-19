@@ -70,6 +70,16 @@
         public bool Searchable { get; set; }
 
         /// <summary>
+        /// Enable or disable editing on the data in this column.
+        /// </summary>
+        public bool Editable { get; set; }
+
+        /// <summary>
+        /// Data column type
+        /// </summary>
+        public EditType EditType { get; set; }
+
+        /// <summary>
         /// Enable or disable encode on the data in this column.
         /// </summary>
         public bool Encode { get; set; }

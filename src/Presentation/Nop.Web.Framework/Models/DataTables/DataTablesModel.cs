@@ -49,9 +49,14 @@ namespace Nop.Web.Framework.Models.DataTables
         public DataUrl UrlRead { get; set; }
 
         /// <summary>
-        /// Gets or sets URL for custom action
+        /// Gets or sets URL for delete action (ajax)
         /// </summary>
         public DataUrl UrlDelete { get; set; }
+
+        /// <summary>
+        /// Gets or sets URL for update action (ajax)
+        /// </summary>
+        public DataUrl UrlUpdate { get; set; }
 
         /// <summary>
         /// Gets or sets search button Id

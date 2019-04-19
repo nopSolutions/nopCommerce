@@ -226,8 +226,17 @@ columns: [
                 case RenderButtonRemove button:
                     <text>
                     render: function (data, type, row, meta) {
-                        return '<a href="#" class="@GetEnumValue(typeof(StyleButton), button.Style)" onclick="DeleteData_@(model_name)(\'' + data + '\')"><i class="fa fa-remove"></i>@button.Title</a>';
+                        return '<a href="#" class="@GetEnumValue(typeof(StyleButton), button.Style)" onclick="DeleteData_@(model_name)(\'' + data + '\');"><i class="fa fa-remove"></i>@button.Title</a>';
                     },
+                    </text>
+                    break;
+                    case RenderButtonsInlineEdit button:
+                    <text>
+                        render: function (data, type, row, meta) {
+                            return '<a href="#" class="@GetEnumValue(typeof(StyleButton), StyleButton.Default)" id="buttonEdit_@(model_name)'+ data + '" onclick="EditData_@(model_name)($(this).parent().parent(), ' + data + ');return false;"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>' +
+                                '<a href="#" class="@GetEnumValue(typeof(StyleButton), StyleButton.Default)" id="buttonConfirm_@(model_name)'+ data + '" style="display:none" onclick="ConfirmEditData_@(model_name)($(this).parent().parent(), ' + data + ');return false;"><i class="fa fa-check"></i>@T("Admin.Common.Update")</a>' +
+                                '<a href="#" class="@GetEnumValue(typeof(StyleButton), StyleButton.Default)" id="buttonCancel_@(model_name)'+ data + '" style="display:none" onclick="CancelEditData_@(model_name)(\'' + row + '\', ' + data + ');return false;"><i class="fa fa-ban"></i>@T("Admin.Common.Cancel")</a>';
+                        },                         
                     </text>
                     break;
                 case RenderButtonEdit buttonEdit:
@@ -257,7 +266,7 @@ columns: [
                     {
                         <text>
                         render: function (data, type, row, meta) {
-                            return '<a class="@GetEnumValue(typeof(StyleButton), buttonCustom.Style)" onclick="@buttonCustom.OnClickFunctionName' + '(' + data + ')">@JavaScriptEncoder.Default.Encode(buttonCustom.Title)</a>';
+                            return '<a class="@GetEnumValue(typeof(StyleButton), buttonCustom.Style)" onclick="@buttonCustom.OnClickFunctionName' + '(' + data + ');">@JavaScriptEncoder.Default.Encode(buttonCustom.Title)</a>';
                         },
                         </text>
                     }
@@ -313,7 +322,8 @@ columns: [
                     </text>
                     break;
             }
-            data: '@column.Data'
+            data: '@column.Data',
+            class: '@column.Data'
         },
         </text>
     }

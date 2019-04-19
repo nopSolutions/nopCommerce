@@ -4,17 +4,14 @@
 {
 <div class="panel-body">
     @await Html.PartialAsync("Table", new DataTablesModel
-    {
-        Name = "products-grid",
-        UrlRead = new DataUrl("ProductList", "Category", null),
-        UrlDelete = new DataUrl("ProductDelete", "Category", null),
-        Length = Model.CategoryProductSearchModel.PageSize,
-        LengthMenu = Model.CategoryProductSearchModel.AvailablePageSizes,
-        Filters = new List<FilterParameter>
-        {
-            new FilterParameter(nameof(Model.CategoryProductSearchModel.CategoryId), Model.CategoryProductSearchModel.CategoryId)
-        },
-        ColumnCollection = new List<ColumnProperty>
+{
+    Name = "products-grid",
+    UrlRead = new DataUrl("ProductList", "Category", new RouteValueDictionary { [nameof(Model.CategoryProductSearchModel.CategoryId)] = Model.CategoryProductSearchModel.CategoryId }),
+    UrlDelete = new DataUrl("ProductDelete", "Category", null),
+    UrlUpdate = new DataUrl("ProductUpdate", "Category", null),
+    Length = Model.CategoryProductSearchModel.PageSize,
+    LengthMenu = Model.CategoryProductSearchModel.AvailablePageSizes,
+    ColumnCollection = new List<ColumnProperty>
         {
             new ColumnProperty(nameof(CategoryProductModel.ProductName))
             {
@@ -25,12 +22,16 @@
                 Title = T("Admin.Catalog.Categories.Products.Fields.IsFeaturedProduct").Text,
                 Width = "150",
                 ClassName = StyleColumn.CenterAll,
-                Render = new RenderBoolean()
+                Render = new RenderBoolean(),
+                Editable = true,
+                EditType = EditType.Checkbox
             },
             new ColumnProperty(nameof(CategoryProductModel.DisplayOrder))
             {
                 Title = T("Admin.Catalog.Categories.Products.Fields.DisplayOrder").Text,
-                Width = "150"
+                Width = "150",
+                Editable = true,
+                EditType = EditType.Number
             },
             new ColumnProperty(nameof(CategoryProductModel.Id))
             {
@@ -42,9 +43,9 @@
             new ColumnProperty(nameof(CategoryProductModel.Id))
             {
                 Title = T("Admin.Common.Edit").Text,
-                Width = "100",
+                Width = "200",
                 ClassName =  StyleColumn.ButtonStyle,
-                Render = new RenderButtonEdit(new DataUrl("Edit"))
+                Render = new RenderButtonsInlineEdit()
             },
             new ColumnProperty(nameof(CategoryProductModel.Id))
             {
@@ -54,7 +55,7 @@
                 ClassName = StyleColumn.ButtonStyle
             }
         }
-    })
+})
 </div>
     <div class="panel-footer">
         <button type="submit" id="btnAddNewProduct"
@@ -73,8 +74,8 @@
                     return false;
                 });
             });
-        </script>
-    </div>
+    </script>
+</div>
 }
 else
 {
