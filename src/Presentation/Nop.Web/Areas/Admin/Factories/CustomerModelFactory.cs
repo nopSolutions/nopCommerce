@@ -418,76 +418,6 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
-        /// Prepare datatables model
-        /// </summary>
-        /// <param name="searchModel">Search model</param>
-        /// <returns>Datatables model</returns>
-        protected virtual DataTablesModel PrepareCustomerAddressGridModel(CustomerAddressSearchModel searchModel)
-        {
-            //prepare common properties
-            var model = new DataTablesModel
-            {
-                Name = "customer-addresses-grid",
-                UrlRead = new DataUrl("AddressesSelect", "Customer", null),
-                UrlDelete = new DataUrl("AddressDelete", "Customer", new RouteValueDictionary { [nameof(searchModel.CustomerId)] = searchModel.CustomerId }),
-                Length = searchModel.PageSize,
-                LengthMenu = searchModel.AvailablePageSizes
-            };
-
-            //prepare filters to search
-            model.Filters = new List<FilterParameter>
-            {
-                new FilterParameter(nameof(searchModel.CustomerId), searchModel.CustomerId)
-            };
-
-            //prepare model columns
-            model.ColumnCollection = new List<ColumnProperty>
-            {
-                new ColumnProperty(nameof(AddressModel.FirstName))
-                {
-                    Title = _localizationService.GetResource("Admin.Address.Fields.FirstName")
-                },
-                new ColumnProperty(nameof(AddressModel.LastName))
-                {
-                    Title = _localizationService.GetResource("Admin.Address.Fields.LastName")
-                },
-                new ColumnProperty(nameof(AddressModel.Email))
-                {
-                    Title = _localizationService.GetResource("Admin.Address.Fields.Email")
-                },
-                new ColumnProperty(nameof(AddressModel.PhoneNumber))
-                {
-                    Title = _localizationService.GetResource("Admin.Address.Fields.PhoneNumber")
-                },
-                new ColumnProperty(nameof(AddressModel.FaxNumber))
-                {
-                    Title = _localizationService.GetResource("Admin.Address.Fields.FaxNumber")
-                },
-                new ColumnProperty(nameof(AddressModel.AddressHtml))
-                {
-                    Title = _localizationService.GetResource("Admin.Address"),
-                    Encode = false
-                },
-                new ColumnProperty(nameof(AddressModel.Id))
-                {
-                    Title = _localizationService.GetResource("Admin.Common.Edit"),
-                    Width = "100",
-                    ClassName =  StyleColumn.ButtonStyle,
-                    Render = new RenderButtonEdit(new DataUrl("~/Admin/Customer/AddressEdit?customerId=" + searchModel.CustomerId + "&addressid=", true))
-                },
-                new ColumnProperty(nameof(AddressModel.Id))
-                {
-                    Title = _localizationService.GetResource("Admin.Common.Delete"),
-                    Width = "100",
-                    Render = new RenderButtonRemove(_localizationService.GetResource("Admin.Common.Delete")) { Style = StyleButton.Default },
-                    ClassName =  StyleColumn.ButtonStyle
-                }
-            };
-
-            return model;
-        }
-
-        /// <summary>
         /// Prepare customer address search model
         /// </summary>
         /// <param name="searchModel">Customer address search model</param>
@@ -505,7 +435,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
-            searchModel.Grid = PrepareCustomerAddressGridModel(searchModel);
 
             return searchModel;
         }
