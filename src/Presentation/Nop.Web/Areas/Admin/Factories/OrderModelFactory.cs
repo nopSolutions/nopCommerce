@@ -796,126 +796,6 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Search model</param>
         /// <returns>Datatables model</returns>
-        protected virtual DataTablesModel PrepareOrderGridModel(OrderSearchModel searchModel)
-        {
-            //prepare common properties
-            var model = new DataTablesModel
-            {
-                Name = "orders-grid",
-                UrlRead = new DataUrl("OrderList", "Order", null),
-                SearchButtonId = "search-orders",
-                Length = searchModel.PageSize,
-                LengthMenu = searchModel.AvailablePageSizes,
-            };
-
-            //prepare filters to search
-            model.Filters = new List<FilterParameter>
-            {
-                new FilterParameter(nameof(searchModel.StartDate)),
-                new FilterParameter(nameof(searchModel.EndDate)),
-                new FilterParameter(nameof(searchModel.OrderStatusIds)),
-                new FilterParameter(nameof(searchModel.PaymentStatusIds)),
-                new FilterParameter(nameof(searchModel.ShippingStatusIds)),
-                new FilterParameter(nameof(searchModel.StoreId)),
-                new FilterParameter(nameof(searchModel.VendorId)),
-                new FilterParameter(nameof(searchModel.WarehouseId)),
-                new FilterParameter(nameof(searchModel.BillingEmail)),
-                new FilterParameter(nameof(searchModel.BillingPhone)),
-                new FilterParameter(nameof(searchModel.BillingLastName)),
-                new FilterParameter(nameof(searchModel.BillingCountryId)),
-                new FilterParameter(nameof(searchModel.PaymentMethodSystemName)),
-                new FilterParameter(nameof(searchModel.ProductId)),
-                new FilterParameter(nameof(searchModel.OrderNotes))
-            };
-
-            //prepare model columns
-            model.ColumnCollection = new List<ColumnProperty>
-            {
-                new ColumnProperty(nameof(OrderModel.Id))
-                {
-                    IsMasterCheckBox = true,
-                    Render = new RenderCheckBox("checkbox_orders"),
-                    ClassName =  StyleColumn.CenterAll,
-                    Width = "50",
-                },
-                new ColumnProperty(nameof(OrderModel.CustomOrderNumber))
-                {
-                    Title = _localizationService.GetResource("Admin.Orders.Fields.CustomOrderNumber"),
-                    Width = "80"
-                }
-            };
-
-            //a vendor does not have access to this functionality
-            if (!searchModel.IsLoggedInAsVendor)
-            {
-                model.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.OrderStatus))
-                {
-                    Title = _localizationService.GetResource("Admin.Orders.Fields.OrderStatus"),
-                    Width = "100",
-                    Render = new RenderCustom("renderColumnOrderStatus")
-                });
-            }
-
-            model.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.PaymentStatus))
-            {
-                Title = _localizationService.GetResource("Admin.Orders.Fields.PaymentStatus"),
-                Width = "150"
-            });
-
-            //a vendor does not have access to this functionality
-            if (!searchModel.IsLoggedInAsVendor)
-            {
-                model.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.ShippingStatus))
-                {
-                    Title = _localizationService.GetResource("Admin.Orders.Fields.ShippingStatus"),
-                    Width = "150"
-                });
-            }
-
-            model.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.CustomerEmail))
-            {
-                Title = _localizationService.GetResource("Admin.Orders.Fields.Customer"),
-                Width = "250",
-                Render = new RenderLink(new DataUrl("~/Admin/Customer/Edit", nameof(OrderModel.CustomerId)))
-            });
-            model.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.StoreName))
-            {
-                Title = _localizationService.GetResource("Admin.Orders.Fields.Store"),
-                Width = "100"
-            });
-            model.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.CreatedOn))
-            {
-                Title = _localizationService.GetResource("Admin.Orders.Fields.CreatedOn"),
-                Width = "100",
-                Render = new RenderDate()
-            });
-
-            //a vendor does not have access to this functionality
-            if (!searchModel.IsLoggedInAsVendor)
-            {
-                model.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.OrderTotal))
-                {
-                    Title = _localizationService.GetResource("Admin.Orders.Fields.OrderTotal"),
-                    Width = "100",
-                });
-            }
-
-            model.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.Id))
-            {
-                Title = _localizationService.GetResource("Admin.Common.View"),
-                Width = "50",
-                ClassName = StyleColumn.ButtonStyle,
-                Render = new RenderButtonEdit(new DataUrl("Edit"))
-            });
-
-            return model;
-        }
-
-        /// <summary>
-        /// Prepare datatables model
-        /// </summary>
-        /// <param name="searchModel">Search model</param>
-        /// <returns>Datatables model</returns>
         protected virtual DataTablesModel PrepareShipmentGridModel(ShipmentSearchModel searchModel)
         {
             //prepare common properties
@@ -1129,7 +1009,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare grid
             searchModel.SetGridPageSize();
-            searchModel.Grid = PrepareOrderGridModel(searchModel);
 
             searchModel.HideStoresList = _catalogSettings.IgnoreStoreLimitations || searchModel.AvailableStores.SelectionIsNotPossible();
 
