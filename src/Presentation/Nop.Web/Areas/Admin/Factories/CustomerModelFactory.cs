@@ -530,7 +530,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
-            searchModel.Grid = PrepareCustomerBackInStockSubscriptionGridModel(searchModel);
 
             return searchModel;
         }
@@ -691,56 +690,6 @@ namespace Nop.Web.Areas.Admin.Factories
             return model;
         }
         
-        /// <summary>
-        /// Prepare datatables model
-        /// </summary>
-        /// <param name="searchModel">Search model</param>
-        /// <returns>Datatables model</returns>
-        protected virtual DataTablesModel PrepareCustomerBackInStockSubscriptionGridModel(CustomerBackInStockSubscriptionSearchModel searchModel)
-        {
-            var stores = _storeService.GetAllStores();
-
-            //prepare common properties
-            var model = new DataTablesModel
-            {
-                Name = "backinstock-subscriptions-grid",
-                UrlRead = new DataUrl("BackInStockSubscriptionList", "Customer", null),
-                Length = searchModel.PageSize,
-                LengthMenu = searchModel.AvailablePageSizes,
-
-                //prepare filters to search
-                Filters = new List<FilterParameter>
-                {
-                    new FilterParameter(nameof(searchModel.CustomerId), searchModel.CustomerId)
-                },
-
-                //prepare model columns
-                ColumnCollection = new List<ColumnProperty>
-                {
-                    new ColumnProperty(nameof(CustomerBackInStockSubscriptionModel.StoreName))
-                    {
-                        Title = _localizationService.GetResource("Admin.Customers.Customers.BackInStockSubscriptions.Store"),
-                        Width = "200",
-                        Visible = stores.Count > 1
-                    },
-                    new ColumnProperty(nameof(CustomerBackInStockSubscriptionModel.ProductName))
-                    {
-                        Title = _localizationService.GetResource("Admin.Customers.Customers.BackInStockSubscriptions.Product"),
-                        Width = "300",
-                        Render = new RenderLink(new DataUrl("~/Admin/Product/Edit/", nameof(CustomerBackInStockSubscriptionModel.ProductId)))
-                    },
-                    new ColumnProperty(nameof(CustomerBackInStockSubscriptionModel.CreatedOn))
-                    {
-                        Title = _localizationService.GetResource("Admin.Customers.Customers.BackInStockSubscriptions.CreatedOn"),
-                        Width = "200",
-                        Render = new RenderDate()
-                    }
-                }
-            };
-
-            return model;
-        }
-
         /// <summary>
         /// Prepare datatables model
         /// </summary>
