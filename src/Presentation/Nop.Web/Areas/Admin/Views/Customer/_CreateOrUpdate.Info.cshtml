@@ -76,48 +76,6 @@
             <span asp-validation-for="Password"></span>
         </div>
     </div>
-    @if (Model.Id > 0 && Model.CustomerAssociatedExternalAuthRecordsSearchModel.AssociatedExternalAuthRecords.Count > 0)
-    {
-        <div class="form-group">
-            <div class="col-md-3">
-                <nop-label asp-for="CustomerAssociatedExternalAuthRecordsSearchModel.AssociatedExternalAuthRecords" />
-            </div>
-            <div class="col-md-9">
-                @await Html.PartialAsync("Table", new DataTablesModel
-                {
-                    Name = "externalauthrecords-grid",
-                    Paging = false,
-                    ServerSide = false,
-                    Length = Model.CustomerAssociatedExternalAuthRecordsSearchModel.PageSize,
-                    LengthMenu = Model.CustomerAssociatedExternalAuthRecordsSearchModel.AvailablePageSizes,
-                    ColumnCollection = new List<ColumnProperty>
-                    {
-                        new ColumnProperty(nameof(CustomerAssociatedExternalAuthModel.AuthMethodName))
-                        {
-                            Title = T("Admin.Customers.Customers.AssociatedExternalAuth.Fields.AuthMethodName").Text,
-                            Width = "100"
-                        },
-                        new ColumnProperty(nameof(CustomerAssociatedExternalAuthModel.Email))
-                        {
-                            Title = T("Admin.Customers.Customers.AssociatedExternalAuth.Fields.Email").Text,
-                            Width = "100"
-                        },
-                        new ColumnProperty(nameof(CustomerAssociatedExternalAuthModel.ExternalIdentifier))
-                        {
-                            Title = T("Admin.Customers.Customers.AssociatedExternalAuth.Fields.ExternalIdentifier").Text,
-                            Width = "300"
-                        }
-                    },
-                    Data = JsonConvert.SerializeObject(Model.CustomerAssociatedExternalAuthRecordsSearchModel.AssociatedExternalAuthRecords.Select(externalAuthRecord => new
-                    {
-                        AuthMethodName = JavaScriptEncoder.Default.Encode(externalAuthRecord.AuthMethodName),
-                        Email = JavaScriptEncoder.Default.Encode(externalAuthRecord.Email),
-                        ExternalIdentifier = JavaScriptEncoder.Default.Encode(externalAuthRecord.ExternalIdentifier)
-                    }).ToList())
-                })
-            </div>
-        </div>
-    }
     <div class="form-group">
         <div class="col-md-3">
             <nop-label asp-for="FirstName" />
@@ -428,6 +386,49 @@
             <span asp-validation-for="Active"></span>
         </div>
     </div>
+    
+    @if (Model.Id > 0 && Model.CustomerAssociatedExternalAuthRecordsSearchModel.AssociatedExternalAuthRecords.Count > 0)
+    {
+        <div class="form-group">
+            <div class="col-md-3">
+                <nop-label asp-for="CustomerAssociatedExternalAuthRecordsSearchModel.AssociatedExternalAuthRecords" />
+            </div>
+            <div class="col-md-9">
+                @await Html.PartialAsync("Table", new DataTablesModel
+                {
+                    Name = "externalauthrecords-grid",
+                    Paging = false,
+                    ServerSide = false,
+                    Length = Model.CustomerAssociatedExternalAuthRecordsSearchModel.PageSize,
+                    LengthMenu = Model.CustomerAssociatedExternalAuthRecordsSearchModel.AvailablePageSizes,
+                    ColumnCollection = new List<ColumnProperty>
+                    {
+                        new ColumnProperty(nameof(CustomerAssociatedExternalAuthModel.AuthMethodName))
+                        {
+                            Title = T("Admin.Customers.Customers.AssociatedExternalAuth.Fields.AuthMethodName").Text,
+                            Width = "100"
+                        },
+                        new ColumnProperty(nameof(CustomerAssociatedExternalAuthModel.Email))
+                        {
+                            Title = T("Admin.Customers.Customers.AssociatedExternalAuth.Fields.Email").Text,
+                            Width = "100"
+                        },
+                        new ColumnProperty(nameof(CustomerAssociatedExternalAuthModel.ExternalIdentifier))
+                        {
+                            Title = T("Admin.Customers.Customers.AssociatedExternalAuth.Fields.ExternalIdentifier").Text,
+                            Width = "300"
+                        }
+                    },
+                    Data = JsonConvert.SerializeObject(Model.CustomerAssociatedExternalAuthRecordsSearchModel.AssociatedExternalAuthRecords.Select(externalAuthRecord => new
+                    {
+                        AuthMethodName = JavaScriptEncoder.Default.Encode(externalAuthRecord.AuthMethodName),
+                        Email = JavaScriptEncoder.Default.Encode(externalAuthRecord.Email),
+                        ExternalIdentifier = JavaScriptEncoder.Default.Encode(externalAuthRecord.ExternalIdentifier)
+                    }).ToList())
+                })
+            </div>
+        </div>
+    }
     <div class="form-group">
         <div class="col-md-3">
             <nop-label asp-for="AdminComment" />
