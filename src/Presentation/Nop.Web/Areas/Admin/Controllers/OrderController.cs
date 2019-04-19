@@ -2860,7 +2860,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult OrderIncompleteReportList()
+        public virtual IActionResult OrderIncompleteReportList(OrderIncompleteReportSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedKendoGridJson();
@@ -2870,7 +2870,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return Content(string.Empty);
 
             //prepare model
-            var model = _orderModelFactory.PrepareOrderIncompleteReportListModel();
+            var model = _orderModelFactory.PrepareOrderIncompleteReportListModel(searchModel);
 
             return Json(model);
         }

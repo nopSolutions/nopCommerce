@@ -157,7 +157,8 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare incomplete order report list model
         /// </summary>
+        /// <param name="searchModel">Incomplete order report search model</param>
         /// <returns>Incomplete order report list model</returns>
-        OrderIncompleteReportListModel PrepareOrderIncompleteReportListModel();
+        OrderIncompleteReportListModel PrepareOrderIncompleteReportListModel(OrderIncompleteReportSearchModel searchModel);
     }
 }

@@ -1732,8 +1732,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare incomplete order report list model
         /// </summary>
+        /// <param name="searchModel">Incomplete order report search model</param>
         /// <returns>Incomplete order report list model</returns>
-        public virtual OrderIncompleteReportListModel PrepareOrderIncompleteReportListModel()
+        public virtual OrderIncompleteReportListModel PrepareOrderIncompleteReportListModel(OrderIncompleteReportSearchModel searchModel)
         {
             var orderIncompleteReportModels = new List<OrderIncompleteReportModel>();
 
@@ -1785,12 +1786,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var pagedList = new PagedList<OrderIncompleteReportModel>(orderIncompleteReportModels, 0, int.MaxValue);
 
             //prepare list model
-            var model = new OrderIncompleteReportListModel
-            {
-                Data = pagedList,
-                Total = pagedList.TotalCount
-            };
-
+            var model = new OrderIncompleteReportListModel().PrepareToGrid(searchModel, pagedList, () => pagedList);
             return model;
         }
 
