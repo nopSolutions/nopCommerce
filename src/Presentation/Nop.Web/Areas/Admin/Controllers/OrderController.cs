@@ -2844,7 +2844,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult OrderAverageReportList(DataSourceRequest command)
+        public virtual IActionResult OrderAverageReportList(OrderAverageReportSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedKendoGridJson();
@@ -2854,7 +2854,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return Content(string.Empty);
 
             //prepare model
-            var model = _orderModelFactory.PrepareOrderAverageReportListModel();
+            var model = _orderModelFactory.PrepareOrderAverageReportListModel(searchModel);
 
             return Json(model);
         }

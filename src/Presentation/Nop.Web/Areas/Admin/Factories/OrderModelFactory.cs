@@ -1696,8 +1696,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare order average line summary report list model
         /// </summary>
+        /// <param name="searchModel">Order average line summary report search model</param>
         /// <returns>Order average line summary report list model</returns>
-        public virtual OrderAverageReportListModel PrepareOrderAverageReportListModel()
+        public virtual OrderAverageReportListModel PrepareOrderAverageReportListModel(OrderAverageReportSearchModel searchModel)
         {
             //get report
             var report = new List<OrderAverageReportLineSummary>
@@ -1711,9 +1712,10 @@ namespace Nop.Web.Areas.Admin.Factories
             var pagedList = new PagedList<OrderAverageReportLineSummary>(report, 0, int.MaxValue);
 
             //prepare list model
-            var model = new OrderAverageReportListModel
+            var model = new OrderAverageReportListModel().PrepareToGrid(searchModel, pagedList, () =>
             {
-                Data = pagedList.Select(reportItem => new OrderAverageReportModel
+                //fill in model values from the entity
+                return pagedList.Select(reportItem => new OrderAverageReportModel
                 {
                     OrderStatus = _localizationService.GetLocalizedEnum(reportItem.OrderStatus),
                     SumTodayOrders = _priceFormatter.FormatPrice(reportItem.SumTodayOrders, true, false),
@@ -1721,9 +1723,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     SumThisMonthOrders = _priceFormatter.FormatPrice(reportItem.SumThisMonthOrders, true, false),
                     SumThisYearOrders = _priceFormatter.FormatPrice(reportItem.SumThisYearOrders, true, false),
                     SumAllTimeOrders = _priceFormatter.FormatPrice(reportItem.SumAllTimeOrders, true, false)
-                }),
-                Total = pagedList.TotalCount
-            };
+                });
+            });
 
             return model;
         }
