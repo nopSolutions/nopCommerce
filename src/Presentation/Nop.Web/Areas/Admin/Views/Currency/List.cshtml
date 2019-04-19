@@ -261,7 +261,7 @@
                                         url: '@(Url.Action("ApplyRates"))',
                                         data: postData,
                                         success: function (data) {
-                                            $('#@Model.Grid.Name').DataTable().ajax.reload();
+                                            $('#currencies-grid').DataTable().ajax.reload();
                                         },
                                         error: function (xhr, ajaxOptions, thrownError) {
                                             $("#currencyAlert").click();
