@@ -42,7 +42,90 @@
         <div class="panel-group">
             <div class="panel panel-default">
                 <div class="panel-body">
-                    @await Html.PartialAsync("Table", Model.Grid)
+                    @await Html.PartialAsync("Table", new DataTablesModel
+                    {
+                        Name = "countries-grid",
+                        UrlRead = new DataUrl("CountryList", "Country", null),
+                        SearchButtonId = "search-categories",
+                        Length = Model.PageSize,
+                        LengthMenu = Model.AvailablePageSizes,
+                        ColumnCollection = new List<ColumnProperty>
+                        {
+                            new ColumnProperty(nameof(CountryModel.Id))
+                            {
+                                IsMasterCheckBox = true,
+                                Render = new RenderCheckBox("checkbox_countries"),
+                                ClassName =  StyleColumn.CenterAll,
+                                Width = "50",
+                            },
+                            new ColumnProperty(nameof(CountryModel.Name))
+                            {
+                                Title = T("Admin.Configuration.Countries.Fields.Name").Text,
+                                Width = "200"
+                            },
+                            new ColumnProperty(nameof(CountryModel.AllowsBilling))
+                            {
+                                Title = T("Admin.Configuration.Countries.Fields.AllowsBilling").Text,
+                                Width = "100",
+                                ClassName =  StyleColumn.CenterAll,
+                                Render = new RenderBoolean()
+                            },
+                            new ColumnProperty(nameof(CountryModel.AllowsShipping))
+                            {
+                                Title = T("Admin.Configuration.Countries.Fields.AllowsShipping").Text,
+                                Width = "100",
+                                ClassName =  StyleColumn.CenterAll,
+                                Render = new RenderBoolean()
+                            },
+                            new ColumnProperty(nameof(CountryModel.TwoLetterIsoCode))
+                            {
+                                Title = T("Admin.Configuration.Countries.Fields.TwoLetterIsoCode").Text,
+                                Width = "150"
+                            },
+                            new ColumnProperty(nameof(CountryModel.ThreeLetterIsoCode))
+                            {
+                                Title = T("Admin.Configuration.Countries.Fields.ThreeLetterIsoCode").Text,
+                                Width = "150"
+                            },
+                            new ColumnProperty(nameof(CountryModel.NumericIsoCode))
+                            {
+                                Title = T("Admin.Configuration.Countries.Fields.NumericIsoCode").Text,
+                                Width = "150"
+                            },
+                            new ColumnProperty(nameof(CountryModel.SubjectToVat))
+                            {
+                                Title = T("Admin.Configuration.Countries.Fields.SubjectToVat").Text,
+                                Width = "100",
+                                ClassName =  StyleColumn.CenterAll,
+                                Render = new RenderBoolean()
+                            },
+                            new ColumnProperty(nameof(CountryModel.NumberOfStates))
+                            {
+                                Title = T("Admin.Configuration.Countries.Fields.NumberOfStates").Text,
+                                Width = "150"
+                            },
+                            new ColumnProperty(nameof(CountryModel.DisplayOrder))
+                            {
+                                Title = T("Admin.Configuration.Countries.Fields.DisplayOrder").Text,
+                                Width = "100"
+                            },
+                            new ColumnProperty(nameof(CountryModel.Published))
+                            {
+                                Title = T("Admin.Configuration.Countries.Fields.Published").Text,
+                                Width = "100",
+                                ClassName =  StyleColumn.CenterAll,
+                                Render = new RenderBoolean()
+                            },
+                            new ColumnProperty(nameof(CountryModel.Id))
+                            {
+                                Title = T("Admin.Common.Edit").Text,
+                                Width = "50",
+                                ClassName =  StyleColumn.ButtonStyle,
+                                Render = new RenderButtonEdit(new DataUrl("Edit"))
+                            }
+                        }
+                    })
+                    
                     
                     <script>
                         $(document).ready(function () {
@@ -62,7 +145,7 @@
                                     data: postData,
                                     complete: function (data) {
                                         //reload grid
-                                        $('#@Model.Grid.Name').DataTable().ajax.reload();
+                                        $('#countries-grid').DataTable().ajax.reload();
                                     },
                                     error: function (xhr, ajaxOptions, thrownError) {
                                         $('#publishSelectedFailed-info').html(thrownError);
@@ -89,7 +172,7 @@
                                     data: postData,
                                     complete: function (data) {
                                         //reload grid
-                                        $('#@Model.Grid.Name').DataTable().ajax.reload();
+                                        $('#countries-grid').DataTable().ajax.reload();
                                     },
                                     error: function (xhr, ajaxOptions, thrownError) {
                                         $('#unpublishSelectedFailed-info').html(thrownError);
@@ -98,8 +181,8 @@
                                     traditional: true
                                 });
                                 return false;
-                            });                          
-                        });                       
+                            });
+                        });
                     </script>
                 </div>
             </div>

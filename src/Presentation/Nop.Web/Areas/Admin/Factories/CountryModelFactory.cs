@@ -135,104 +135,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             return model;
         }
-
-        /// <summary>
-        /// Prepare datatables model
-        /// </summary>
-        /// <param name="searchModel">Search model</param>
-        /// <returns>Datatables model</returns>
-        protected virtual DataTablesModel PrepareCountryGridModel(CountrySearchModel searchModel)
-        {
-            //prepare common properties
-            var model = new DataTablesModel
-            {
-                Name = "countries-grid",
-                UrlRead = new DataUrl("CountryList", "Country", null),
-                SearchButtonId = "search-categories",
-                Length = searchModel.PageSize,
-                LengthMenu = searchModel.AvailablePageSizes
-            };
-            
-            //prepare model columns
-            model.ColumnCollection = new List<ColumnProperty>
-            {
-                new ColumnProperty(nameof(CountryModel.Id))
-                {
-                    IsMasterCheckBox = true,
-                    Render = new RenderCheckBox("checkbox_countries"),
-                    ClassName =  StyleColumn.CenterAll,
-                    Width = "50",
-                },
-                new ColumnProperty(nameof(CountryModel.Name))
-                {
-                    Title = _localizationService.GetResource("Admin.Configuration.Countries.Fields.Name"),
-                    Width = "200"
-                },
-                new ColumnProperty(nameof(CountryModel.AllowsBilling))
-                {
-                    Title = _localizationService.GetResource("Admin.Configuration.Countries.Fields.AllowsBilling"),
-                    Width = "100",
-                    ClassName =  StyleColumn.CenterAll,
-                    Render = new RenderBoolean()
-                },
-                new ColumnProperty(nameof(CountryModel.AllowsShipping))
-                {
-                    Title = _localizationService.GetResource("Admin.Configuration.Countries.Fields.AllowsShipping"),
-                    Width = "100",
-                    ClassName =  StyleColumn.CenterAll,
-                    Render = new RenderBoolean()
-                },
-                new ColumnProperty(nameof(CountryModel.TwoLetterIsoCode))
-                {
-                    Title = _localizationService.GetResource("Admin.Configuration.Countries.Fields.TwoLetterIsoCode"),
-                    Width = "150"
-                },
-                new ColumnProperty(nameof(CountryModel.ThreeLetterIsoCode))
-                {
-                    Title = _localizationService.GetResource("Admin.Configuration.Countries.Fields.ThreeLetterIsoCode"),
-                    Width = "150"
-                },
-                new ColumnProperty(nameof(CountryModel.NumericIsoCode))
-                {
-                    Title = _localizationService.GetResource("Admin.Configuration.Countries.Fields.NumericIsoCode"),
-                    Width = "150"
-                },
-                new ColumnProperty(nameof(CountryModel.SubjectToVat))
-                {
-                    Title = _localizationService.GetResource("Admin.Configuration.Countries.Fields.SubjectToVat"),
-                    Width = "100",
-                    ClassName =  StyleColumn.CenterAll,
-                    Render = new RenderBoolean()
-                },
-                new ColumnProperty(nameof(CountryModel.NumberOfStates))
-                {
-                    Title = _localizationService.GetResource("Admin.Configuration.Countries.Fields.NumberOfStates"),
-                    Width = "150"
-                },
-                new ColumnProperty(nameof(CountryModel.DisplayOrder))
-                {
-                    Title = _localizationService.GetResource("Admin.Configuration.Countries.Fields.DisplayOrder"),
-                    Width = "100"
-                },
-                new ColumnProperty(nameof(CountryModel.Published))
-                {
-                    Title = _localizationService.GetResource("Admin.Configuration.Countries.Fields.Published"),
-                    Width = "100",
-                    ClassName =  StyleColumn.CenterAll,
-                    Render = new RenderBoolean()
-                },
-                new ColumnProperty(nameof(CountryModel.Id))
-                {
-                    Title = _localizationService.GetResource("Admin.Common.Edit"),
-                    Width = "50",
-                    ClassName =  StyleColumn.ButtonStyle,
-                    Render = new RenderButtonEdit(new DataUrl("Edit"))
-                }
-            };
-
-            return model;
-        }
-
+        
         #endregion
 
         #region Methods
@@ -249,7 +152,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
-            searchModel.Grid = PrepareCountryGridModel(searchModel);
 
             return searchModel;
         }
