@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
@@ -9,11 +8,9 @@ using Nop.Core.Html;
 using Nop.Services.Catalog;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
-using Nop.Services.Stores;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Framework.Extensions;
-using Nop.Web.Framework.Models.DataTables;
 using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
@@ -31,7 +28,6 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly ILocalizationService _localizationService;
         private readonly IProductService _productService;
         private readonly IReviewTypeService _reviewTypeService;
-        private readonly IStoreService _storeService;
         private readonly IWorkContext _workContext;
 
         #endregion
@@ -44,7 +40,6 @@ namespace Nop.Web.Areas.Admin.Factories
             ILocalizationService localizationService,
             IProductService productService,
             IReviewTypeService reviewTypeService,
-            IStoreService storeService,
             IWorkContext workContext)
         {
             _catalogSettings = catalogSettings;
@@ -53,7 +48,6 @@ namespace Nop.Web.Areas.Admin.Factories
             _localizationService = localizationService;
             _productService = productService;
             _reviewTypeService = reviewTypeService;
-            _storeService = storeService;
             _workContext = workContext;
         }
 
@@ -245,24 +239,28 @@ namespace Nop.Web.Areas.Admin.Factories
                 .GetProductReviewReviewTypeMappingsByProductReviewId(productReview.Id).ToPagedList(searchModel);
 
             //prepare grid model
-            var model = new ProductReviewReviewTypeMappingListModel
+            var model = new ProductReviewReviewTypeMappingListModel().PrepareToGrid(searchModel, productReviewReviewTypeMappings, () =>
             {
-                Data = productReviewReviewTypeMappings.Select(productReviewReviewTypeMapping =>
+                return productReviewReviewTypeMappings.Select(productReviewReviewTypeMapping =>
                 {
                     //fill in model values from the entity
-                    var productReviewReviewTypeMappingModel = productReviewReviewTypeMapping.ToModel<ProductReviewReviewTypeMappingModel>();
+                    var productReviewReviewTypeMappingModel = productReviewReviewTypeMapping
+                        .ToModel<ProductReviewReviewTypeMappingModel>();
 
                     //fill in additional values (not existing in the entity)
-                    var reviewType = _reviewTypeService.GetReviewTypeById(productReviewReviewTypeMapping.ReviewTypeId);
+                    var reviewType =
+                        _reviewTypeService.GetReviewTypeById(productReviewReviewTypeMapping.ReviewTypeId);
 
-                    productReviewReviewTypeMappingModel.Name = _localizationService.GetLocalized(reviewType, entity => entity.Name);
-                    productReviewReviewTypeMappingModel.Description = _localizationService.GetLocalized(reviewType, entity => entity.Description);
-                    productReviewReviewTypeMappingModel.VisibleToAllCustomers = reviewType.VisibleToAllCustomers;
+                    productReviewReviewTypeMappingModel.Name =
+                        _localizationService.GetLocalized(reviewType, entity => entity.Name);
+                    productReviewReviewTypeMappingModel.Description =
+                        _localizationService.GetLocalized(reviewType, entity => entity.Description);
+                    productReviewReviewTypeMappingModel.VisibleToAllCustomers =
+                        reviewType.VisibleToAllCustomers;
 
                     return productReviewReviewTypeMappingModel;
-                }),
-                Total = productReviewReviewTypeMappings.TotalCount
-            };
+                });
+            });
 
             return model;
         }
