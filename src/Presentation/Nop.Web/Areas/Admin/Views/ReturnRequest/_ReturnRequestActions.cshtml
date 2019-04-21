@@ -18,17 +18,17 @@
             {
                 new ColumnProperty(nameof(ReturnRequestActionModel.Name))
                 {
-                    Title = T("Admin.Configuration.Settings.Order.ReturnRequestActions.Name"),
+                    Title = T("Admin.Configuration.Settings.Order.ReturnRequestActions.Name").Text,
                     Width = "300"
                 },
                 new ColumnProperty(nameof(ReturnRequestActionModel.DisplayOrder))
                 {
-                    Title = T("Admin.Configuration.Settings.Order.ReturnRequestActions.DisplayOrder"),
+                    Title = T("Admin.Configuration.Settings.Order.ReturnRequestActions.DisplayOrder").Text,
                     Width = "100"
                 },
                 new ColumnProperty(nameof(ReturnRequestActionModel.Id))
                 {
-                    Title = T("Admin.Common.Edit"),
+                    Title = T("Admin.Common.Edit").Text,
                     Width = "100",
                     ClassName =  StyleColumn.ButtonStyle,
                     Render = new RenderButtonEdit(new DataUrl("~/Admin/ReturnRequest/ReturnRequestActionEdit/"))
