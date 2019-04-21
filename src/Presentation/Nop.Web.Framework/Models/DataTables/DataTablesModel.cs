@@ -10,8 +10,6 @@ namespace Nop.Web.Framework.Models.DataTables
     {
         #region Const
 
-        protected const string DEFAULT_DOM = "lrtip";
-
         protected const string DEFAULT_PAGING_TYPE = "full_numbers";
 
         #endregion
@@ -24,7 +22,6 @@ namespace Nop.Web.Framework.Models.DataTables
         public DataTablesModel()
         {
             //set default values
-            Dom = DEFAULT_DOM;
             ServerSide = true;
             Processing = true;
             Paging = true;
@@ -107,11 +104,6 @@ namespace Nop.Web.Framework.Models.DataTables
         /// Determines whether the table header should be fixed when scrolling
         /// </summary>
         public bool FixedHeader { get; set; }
-
-        /// <summary>
-        /// Define the table control elements to appear on the page and in what order.
-        /// </summary>
-        public string Dom { get; set; }
 
         /// <summary>
         /// Gets or sets custom render header function name(js)

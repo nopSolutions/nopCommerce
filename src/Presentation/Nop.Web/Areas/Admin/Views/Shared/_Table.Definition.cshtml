@@ -145,7 +145,14 @@ else
 }
 ordering: @Model.Ordering.ToString().ToLower(),
 fixedHeader: @Model.FixedHeader.ToString().ToLower(),
-dom: '@Model.Dom',
+dom: '<"row"<"col-md-12"t>>' +
+     '<"row"' +
+        '<"col-md-8"<"row"' +
+            '<"col-md-6"<"pull-left"p>>' +
+            '<"col-md-6"<"pull-left data-tables-length"l>>' +
+        '>>' +
+        '<"col-md-4"<"pull-right"i>>' +
+     '>',
 columns: [
     @foreach (var column in Model.ColumnCollection)
     {

@@ -1626,13 +1626,8 @@ span.grid-report-item.red {
     margin-bottom: 1px;
     padding: 5px 12px;
 }
-div.dataTables_wrapper div.dataTables_info{
-    display: table;
-    float: left;
-}
-div.dataTables_wrapper div.dataTables_paginate{
-    display: table;
-    float: right;
+.data-tables-length {
+  margin: 5px 5px 0 5px;
 }
 
 @media (max-width: 1200px) {
