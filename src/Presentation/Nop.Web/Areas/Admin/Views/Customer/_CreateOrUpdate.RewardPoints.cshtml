@@ -1,4 +1,5 @@
 ﻿@model CustomerModel
+@using System.Text.Encodings.Web
 @using Nop.Core.Domain.Customers
 @using Nop.Services
 @using Nop.Services.Stores
@@ -145,7 +146,7 @@
                             $('#customer-rewardpoints-grid').DataTable().ajax.reload();
 
                             $("#@Html.IdFor(model => model.AddRewardPoints.Points)").val(0);
-                            $("#@Html.IdFor(model => model.AddRewardPoints.Message)").val(data.Message);
+                            $("#@Html.IdFor(model => model.AddRewardPoints.Message)").val('@JavaScriptEncoder.Default.Encode(Model.AddRewardPoints.Message)');
                             $("#@Html.IdFor(model => model.AddRewardPoints.StoreId)").val(@Model.AddRewardPoints.StoreId);
                             $("#@Html.IdFor(model => model.AddRewardPoints.ActivationDelayPeriodId)").val(@Model.AddRewardPoints.ActivationDelayPeriodId);
                             $("#@Html.IdFor(model => model.AddRewardPoints.ActivationDelay)").val(@Model.AddRewardPoints.ActivationDelay);
