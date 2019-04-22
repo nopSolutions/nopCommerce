@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
-using System.Text.Encodings.Web;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
@@ -1103,7 +1102,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //prevent adding a new row with zero value
             if (model.Points == 0)
-                return Json(new { Result = false, Error = JavaScriptEncoder.Default.Encode(_localizationService.GetResource("Admin.Customers.Customers.RewardPoints.AddingZeroValueNotAllowed")) });
+                return Json(new { Result = false, Error = _localizationService.GetResource("Admin.Customers.Customers.RewardPoints.AddingZeroValueNotAllowed") });
 
             //try to get a customer with the specified id
             var customer = _customerService.GetCustomerById(model.CustomerId);

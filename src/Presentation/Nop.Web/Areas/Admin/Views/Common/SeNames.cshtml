@@ -159,7 +159,7 @@
                     selectedIds = [];
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
-                    $('#deleteSelectedSeNamesFailed-info').html(thrownError);
+                    $('#deleteSelectedSeNamesFailed-info').text(thrownError);
                     $("#deleteSelectedSeNamesFailed").click();
                 },
                 traditional: true

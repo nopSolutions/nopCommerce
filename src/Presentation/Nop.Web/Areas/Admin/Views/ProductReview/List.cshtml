@@ -261,7 +261,7 @@
                                         $('#productreviews-grid').DataTable().ajax.reload();
                                     },
                                     error: function(xhr, ajaxOptions, thrownError) {
-                                        $('#approveSelectedFailed-info').html(thrownError);
+                                        $('#approveSelectedFailed-info').text(thrownError);
                                         $("#approveSelectedFailed").click();
                                     },
                                     traditional: true
@@ -288,7 +288,7 @@
                                         $('#productreviews-grid').DataTable().ajax.reload();
                                     },
                                     error: function(xhr, ajaxOptions, thrownError) {
-                                        $('#disapproveSelectedFailed-info').html(thrownError);
+                                        $('#disapproveSelectedFailed-info').text(thrownError);
                                         $("#disapproveSelectedFailed").click();
                                     },
                                     traditional: true
@@ -312,7 +312,7 @@
                                         $('#productreviews-grid').DataTable().ajax.reload();
                                     },
                                     error: function (xhr, ajaxOptions, thrownError) {
-                                        $('#deleteSelectedFailed-info').html(thrownError);
+                                        $('#deleteSelectedFailed-info').text(thrownError);
                                         $("#deleteSelectedFailed").click();
                                     }
                                 });

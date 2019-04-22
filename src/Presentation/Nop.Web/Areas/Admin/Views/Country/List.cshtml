@@ -148,7 +148,7 @@
                                         $('#countries-grid').DataTable().ajax.reload();
                                     },
                                     error: function (xhr, ajaxOptions, thrownError) {
-                                        $('#publishSelectedFailed-info').html(thrownError);
+                                        $('#publishSelectedFailed-info').text(thrownError);
                                         $("#publishSelectedFailed").click();
                                     },
                                     traditional: true
@@ -175,7 +175,7 @@
                                         $('#countries-grid').DataTable().ajax.reload();
                                     },
                                     error: function (xhr, ajaxOptions, thrownError) {
-                                        $('#unpublishSelectedFailed-info').html(thrownError);
+                                        $('#unpublishSelectedFailed-info').text(thrownError);
                                         $("#unpublishSelectedFailed").click();
                                     },
                                     traditional: true

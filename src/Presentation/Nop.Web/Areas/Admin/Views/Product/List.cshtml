@@ -301,7 +301,7 @@
                                             $('#search-products').DataTable().ajax.reload();
                                         },
                                         error: function (xhr, ajaxOptions, thrownError) {
-                                            $('#deleteSelectedFailed-info').html(thrownError);
+                                            $('#deleteSelectedFailed-info').text(thrownError);
                                             $('#deleteSelectedFailed').click();
                                         }
                                     });

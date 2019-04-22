@@ -21,17 +21,17 @@
     function toggleLoadedAssemblies() {
         $('#pnlLoadedAssemblies').toggle();
         if ($('#pnlLoadedAssemblies').css('display') == 'none') {
-            $('#loadedAssembliesShowHide').html('@T("Admin.Common.Show")');
+            $('#loadedAssembliesShowHide').text('@T("Admin.Common.Show")');
         }
         else {
-            $('#loadedAssembliesShowHide').html('@T("Admin.Common.Hide")');
+            $('#loadedAssembliesShowHide').text('@T("Admin.Common.Hide")');
         }
     }
 
     function toggleLoadedHeaders() {
         $('#pnlHeaders').toggle();
         if ($('#pnlHeaders').css('display') == 'none') {
-            $('#headersShowHide').html('@T("Admin.Common.Show")');
+            $('#headersShowHide').text('@T("Admin.Common.Show")');
         }
         else {
             $('#headersShowHide').html('@T("Admin.Common.Hide")');

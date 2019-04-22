@@ -145,7 +145,7 @@
                 data: postData,
                  success: function (data) {
                      if (data.Error) {
-                         $('#orderNoteAddFailed-info').html(data.Error);
+                         $('#orderNoteAddFailed-info').text(data.Error);
                          $("#orderNoteAddFailed").click();
                      }
 

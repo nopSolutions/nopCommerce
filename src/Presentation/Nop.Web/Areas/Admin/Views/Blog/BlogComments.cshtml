@@ -278,7 +278,7 @@
                                         grid.dataSource.read();
                                     },
                                     error: function (xhr, ajaxOptions, thrownError) {
-                                        $('#deleteSelectedCommentsFailed-info').html(thrownError);
+                                        $('#deleteSelectedCommentsFailed-info').text(thrownError);
                                         $("#deleteSelectedCommentsFailed").click();
                                     }
                                 });
@@ -307,7 +307,7 @@
                                             grid.dataSource.read();
                                         },
                                         error: function(xhr, ajaxOptions, thrownError) {
-                                            $('#approveSelectedFailed-info').html(thrownError);
+                                            $('#approveSelectedFailed-info').text(thrownError);
                                             $("#approveSelectedFailed").click();
                                         },
                                         traditional: true
@@ -336,7 +336,7 @@
                                             grid.dataSource.read();
                                         },
                                         error: function(xhr, ajaxOptions, thrownError) {
-                                            $('#disapproveSelectedFailed-info').html(thrownError);
+                                            $('#disapproveSelectedFailed-info').text(thrownError);
                                             $("#disapproveSelectedFailed").click();
                                         },
                                         traditional: true

@@ -77,7 +77,7 @@
                     return false;
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
-                    $('#createConfigurationFailed-info').html(thrownError);
+                    $('#createConfigurationFailed-info').text(thrownError);
                     $("#createConfigurationFailed").click();
                 }
             });

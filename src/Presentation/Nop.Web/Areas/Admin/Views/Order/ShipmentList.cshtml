@@ -317,7 +317,7 @@
                                     $('#shipments-grid').DataTable().draw(false);                                    
                                 },
                                 error: function(xhr, ajaxOptions, thrownError) {
-                                    $('#setAsShippedSelectedFailed-info').html(thrownError);
+                                    $('#setAsShippedSelectedFailed-info').text(thrownError);
                                     $("#setAsShippedSelectedFailed").click();
                                 },
                                 traditional: true
@@ -344,7 +344,7 @@
                                     $('#shipments-grid').DataTable().draw(false);
                                 },
                                 error: function(xhr, ajaxOptions, thrownError) {
-                                    $('#setAsDeliveredSelectedFailed-info').html(thrownError);
+                                    $('#setAsDeliveredSelectedFailed-info').text(thrownError);
                                     $("#setAsDeliveredSelectedFailed").click();
                                 },
                                 traditional: true
