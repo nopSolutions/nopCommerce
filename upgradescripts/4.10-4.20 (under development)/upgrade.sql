@@ -650,6 +650,9 @@ set @resources='
   <LocaleResource Name="Plugins.Shipping.UPS.Fields.SaturdayDeliveryEnabled.Hint">
     <Value>Check to get rates for Saturday Delivery options.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.Warnings.Errors">
+    <Value><![CDATA[The store has some error(s) or warning(s). Please find more information on the <a href="{0}">Warnings</a> page]]></Value>
+  </LocaleResource>
 </Language>'
 
 CREATE TABLE #LocaleStringResourceTmp
