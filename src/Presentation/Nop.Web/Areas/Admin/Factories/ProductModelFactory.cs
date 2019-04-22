@@ -1801,21 +1801,24 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare grid model
-            var model = new StockQuantityHistoryListModel
+            var model = new StockQuantityHistoryListModel().PrepareToGrid(searchModel, stockQuantityHistory, () =>
             {
-                Data = stockQuantityHistory.Select(historyEntry =>
+                return stockQuantityHistory.Select(historyEntry =>
                 {
                     //fill in model values from the entity
                     var stockQuantityHistoryModel = historyEntry.ToModel<StockQuantityHistoryModel>();
 
                     //convert dates to the user time
-                    stockQuantityHistoryModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(historyEntry.CreatedOnUtc, DateTimeKind.Utc);
+                    stockQuantityHistoryModel.CreatedOn =
+                        _dateTimeHelper.ConvertToUserTime(historyEntry.CreatedOnUtc, DateTimeKind.Utc);
 
                     //fill in additional values (not existing in the entity)
-                    var combination = _productAttributeService.GetProductAttributeCombinationById(historyEntry.CombinationId ?? 0);
+                    var combination =
+                        _productAttributeService.GetProductAttributeCombinationById(historyEntry.CombinationId ?? 0);
                     if (combination != null)
                     {
-                        stockQuantityHistoryModel.AttributeCombination = _productAttributeFormatter.FormatAttributes(historyEntry.Product,
+                        stockQuantityHistoryModel.AttributeCombination = _productAttributeFormatter.FormatAttributes(
+                            historyEntry.Product,
                             combination.AttributesXml, _workContext.CurrentCustomer, renderGiftCardAttributes: false);
                     }
 
@@ -1824,9 +1827,8 @@ namespace Nop.Web.Areas.Admin.Factories
                         : _localizationService.GetResource("Admin.Catalog.Products.Fields.Warehouse.None");
 
                     return stockQuantityHistoryModel;
-                }),
-                Total = stockQuantityHistory.TotalCount
-            };
+                });
+            });
 
             return model;
         }
