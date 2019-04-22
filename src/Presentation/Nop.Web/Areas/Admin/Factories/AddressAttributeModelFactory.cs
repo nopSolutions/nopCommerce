@@ -99,20 +99,20 @@ namespace Nop.Web.Areas.Admin.Factories
             var addressAttributes = _addressAttributeService.GetAllAddressAttributes().ToPagedList(searchModel);
 
             //prepare grid model
-            var model = new AddressAttributeListModel
+            var model = new AddressAttributeListModel().PrepareToGrid(searchModel, addressAttributes, () =>
             {
-                Data = addressAttributes.Select(attribute =>
+                return addressAttributes.Select(attribute =>
                 {
                     //fill in model values from the entity
                     var attributeModel = attribute.ToModel<AddressAttributeModel>();
 
                     //fill in additional values (not existing in the entity)
-                    attributeModel.AttributeControlTypeName = _localizationService.GetLocalizedEnum(attribute.AttributeControlType);
+                    attributeModel.AttributeControlTypeName =
+                        _localizationService.GetLocalizedEnum(attribute.AttributeControlType);
 
                     return attributeModel;
-                }),
-                Total = addressAttributes.TotalCount
-            };
+                });
+            });
 
             return model;
         }
