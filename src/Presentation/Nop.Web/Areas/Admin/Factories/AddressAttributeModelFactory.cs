@@ -170,12 +170,11 @@ namespace Nop.Web.Areas.Admin.Factories
             var addressAttributeValues = _addressAttributeService.GetAddressAttributeValues(addressAttribute.Id).ToPagedList(searchModel);
 
             //prepare grid model
-            var model = new AddressAttributeValueListModel
+            var model = new AddressAttributeValueListModel().PrepareToGrid(searchModel, addressAttributeValues, () =>
             {
                 //fill in model values from the entity
-                Data = addressAttributeValues.Select(value => value.ToModel<AddressAttributeValueModel>()),
-                Total = addressAttributeValues.TotalCount
-            };
+                return addressAttributeValues.Select(value => value.ToModel<AddressAttributeValueModel>());
+            });
 
             return model;
         }
