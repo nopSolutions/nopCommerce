@@ -21,7 +21,6 @@
                     Title = T("Admin.Address.AddressAttributes.Fields.Name").Text,
                     Width = "300"
                 },
-              
                 new ColumnProperty(nameof(AddressAttributeModel.AttributeControlTypeName))
                 {
                     Title = T("Admin.Address.AddressAttributes.Fields.AttributeControlType").Text,
@@ -31,12 +30,14 @@
                 {
                     Title = T("Admin.Address.AddressAttributes.Fields.IsRequired").Text,
                     Width = "100",
+                    ClassName = StyleColumn.CenterAll,
                     Render = new RenderBoolean()
                 },
                 new ColumnProperty(nameof(AddressAttributeModel.DisplayOrder))
                 {
                     Title = T("Admin.Address.AddressAttributes.Fields.DisplayOrder").Text,
-                    Width = "100"
+                    Width = "100",
+                    ClassName =  StyleColumn.CenterAll
                 },
                 new ColumnProperty(nameof(AddressAttributeValueModel.Id))
                 {

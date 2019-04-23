@@ -43,20 +43,21 @@
                             {
                                 Title = T("Admin.Catalog.Products.SpecificationAttributes.Fields.AllowFiltering").Text,
                                 Width = "150",
-                                Render = new RenderBoolean(),
-                                ClassName = StyleColumn.CenterAll
+                                ClassName = StyleColumn.CenterAll,
+                                Render = new RenderBoolean()
                             },
                             new ColumnProperty(nameof(ProductSpecificationAttributeModel.ShowOnProductPage))
                             {
                                 Title = T("Admin.Catalog.Products.SpecificationAttributes.Fields.ShowOnProductPage").Text,
                                 Width = "150",
-                                Render = new RenderBoolean(),
-                                ClassName = StyleColumn.CenterAll
+                                ClassName = StyleColumn.CenterAll,
+                                Render = new RenderBoolean()
                             },
                             new ColumnProperty(nameof(ProductSpecificationAttributeModel.DisplayOrder))
                             {
                                 Title = T("Admin.Catalog.Products.SpecificationAttributes.Fields.DisplayOrder").Text,
-                                Width = "150"
+                                Width = "150",
+                                ClassName =  StyleColumn.CenterAll
                             },
                             new ColumnProperty(nameof(ProductSpecificationAttributeModel.Id))
                             {

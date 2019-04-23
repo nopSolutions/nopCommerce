@@ -102,12 +102,14 @@
                             new ColumnProperty(nameof(CountryModel.NumberOfStates))
                             {
                                 Title = T("Admin.Configuration.Countries.Fields.NumberOfStates").Text,
-                                Width = "150"
+                                Width = "150",
+                                ClassName =  StyleColumn.CenterAll
                             },
                             new ColumnProperty(nameof(CountryModel.DisplayOrder))
                             {
                                 Title = T("Admin.Configuration.Countries.Fields.DisplayOrder").Text,
-                                Width = "100"
+                                Width = "100",
+                                ClassName = StyleColumn.CenterAll
                             },
                             new ColumnProperty(nameof(CountryModel.Published))
                             {
