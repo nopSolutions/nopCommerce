@@ -1618,16 +1618,28 @@ span.grid-report-item.red {
 
 
 /* JQUERY DATA TABLES */
+.button-column{
+  text-align: center;
+}
 .table>tbody>tr>td.button-column {
   padding: 2px;
 }
 .table>tbody>tr>td.button-column .btn{
-    margin-top: 1px;
-    margin-bottom: 1px;
-    padding: 5px 12px;
+  margin-top: 1px;
+  margin-bottom: 1px;
+  padding: 5px 12px;
 }
 .data-tables-length {
   margin: 5px 5px 0 5px;
+}
+table.dataTable.no-footer {
+  border-bottom: 1px solid #f4f4f4;
+}
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+  padding: 0;
+}
+div.dataTables_wrapper div.dataTables_paginate{
+  padding-top: 0;
 }
 
 @media (max-width: 1200px) {
