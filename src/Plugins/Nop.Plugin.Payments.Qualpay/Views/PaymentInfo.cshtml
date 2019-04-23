@@ -9,7 +9,7 @@
     Html.AddCssFileParts(Nop.Plugin.Payments.Qualpay.QualpayDefaults.EmbeddedFieldsStylePath, excludeFromBundle: true);
 }
 
-<script>
+<script asp-location="Footer">
     $(document).ready(function() {
         $("#@Html.IdFor(model => model.BillingCardId)").change(toggleBillingCard);
         toggleBillingCard();
@@ -192,3 +192,5 @@
         </tr>
     }
 </table>
+
+@Html.NopInlineScripts(ResourceLocation.Footer)
