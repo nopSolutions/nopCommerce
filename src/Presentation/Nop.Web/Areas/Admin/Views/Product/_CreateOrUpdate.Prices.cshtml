@@ -286,14 +286,10 @@
                     @await Html.PartialAsync("Table", new DataTablesModel
                     {
                         Name = "tierprices-grid",
-                        UrlRead = new DataUrl("TierPriceList", "Product", null),
+                        UrlRead = new DataUrl("TierPriceList", "Product", new RouteValueDictionary { [nameof(Model.ProductPictureSearchModel.ProductId)] = Model.ProductPictureSearchModel.ProductId }),
                         UrlDelete = new DataUrl("TierPriceDelete", "Product", null),
                         Length = Model.ProductPictureSearchModel.PageSize,
                         LengthMenu = Model.ProductPictureSearchModel.AvailablePageSizes,
-                        Filters = new List<FilterParameter>
-                        {
-                            new FilterParameter(nameof(Model.ProductPictureSearchModel.ProductId), Model.ProductPictureSearchModel.ProductId)
-                        },
                         ColumnCollection = new List<ColumnProperty>
                         {
                             new ColumnProperty(nameof(TierPriceModel.Store))

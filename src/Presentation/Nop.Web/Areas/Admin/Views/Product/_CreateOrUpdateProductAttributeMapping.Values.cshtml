@@ -4,17 +4,13 @@
 {
     <div class="panel-body">
         @await Html.PartialAsync("Table", new DataTablesModel
-        {
-            Name = "productattributevalues-grid",
-            UrlRead = new DataUrl("ProductAttributeValueList", "Product", null),
-            UrlDelete = new DataUrl("ProductAttributeValueDelete", "Product", null),
-            Length = Model.ProductAttributeValueSearchModel.PageSize,
-            LengthMenu = Model.ProductAttributeValueSearchModel.AvailablePageSizes,
-            Filters = new List<FilterParameter>
-            {
-                new FilterParameter(nameof(Model.ProductAttributeValueSearchModel.ProductAttributeMappingId), Model.ProductAttributeValueSearchModel.ProductAttributeMappingId)
-            },
-            ColumnCollection = new List<ColumnProperty>
+   {
+       Name = "productattributevalues-grid",
+       UrlRead = new DataUrl("ProductAttributeValueList", "Product", new RouteValueDictionary { [nameof(Model.ProductAttributeValueSearchModel.ProductAttributeMappingId)] = Model.ProductAttributeValueSearchModel.ProductAttributeMappingId }),
+       UrlDelete = new DataUrl("ProductAttributeValueDelete", "Product", null),
+       Length = Model.ProductAttributeValueSearchModel.PageSize,
+       LengthMenu = Model.ProductAttributeValueSearchModel.AvailablePageSizes,
+       ColumnCollection = new List<ColumnProperty>
             {
                 new ColumnProperty(nameof(ProductAttributeValueModel.AttributeValueTypeName))
                 {
@@ -76,7 +72,7 @@
                     ClassName =  StyleColumn.ButtonStyle
                 }
             }
-        })
+   })
     
         <script>
             function renderColumnEdit(data, type, row, meta) {

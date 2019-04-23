@@ -30,14 +30,13 @@
         @await Html.PartialAsync("Table", new DataTablesModel
    {
        Name = "stock-quantity-history-grid",
-       UrlRead = new DataUrl("StockQuantityHistory", "Product", null),
+       UrlRead = new DataUrl("StockQuantityHistory", "Product", new RouteValueDictionary { [nameof(Model.StockQuantityHistorySearchModel.ProductId)] = Model.StockQuantityHistorySearchModel.ProductId }),
        SearchButtonId = "search-stock-quantity-history",
        Length = Model.StockQuantityHistorySearchModel.PageSize,
        LengthMenu = Model.StockQuantityHistorySearchModel.AvailablePageSizes,
        Filters = new List<FilterParameter>
             {
-                new FilterParameter(nameof(StockQuantityHistorySearchModel.WarehouseId), nameof(StockQuantityHistorySearchModel)),
-                new FilterParameter(nameof(StockQuantityHistorySearchModel.ProductId), Model.Id)
+                new FilterParameter(nameof(StockQuantityHistorySearchModel.WarehouseId), nameof(StockQuantityHistorySearchModel))
             },
        ColumnCollection = new List<ColumnProperty>
             {

@@ -508,13 +508,9 @@
                 @await Html.PartialAsync("Table", new DataTablesModel
                 {
                     Name = "shipments-grid",
-                    UrlRead = new DataUrl("ShipmentsByOrder", "Order", null),
+                    UrlRead = new DataUrl("ShipmentsByOrder", "Order", new RouteValueDictionary { [nameof(OrderShipmentSearchModel.OrderId)] = Model.Id }),
                     Length = Model.OrderShipmentSearchModel.PageSize,
                     LengthMenu = Model.OrderShipmentSearchModel.AvailablePageSizes,
-                    Filters = new List<FilterParameter>
-                    {
-                        new FilterParameter(nameof(OrderShipmentSearchModel.OrderId), Model.Id)
-                    },
                     ColumnCollection = new List<ColumnProperty>
                     {
                         new ColumnProperty(null)

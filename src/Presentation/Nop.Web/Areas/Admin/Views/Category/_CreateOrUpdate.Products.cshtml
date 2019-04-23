@@ -6,14 +6,10 @@
     @await Html.PartialAsync("Table", new DataTablesModel
     {
         Name = "products-grid",
-        UrlRead = new DataUrl("ProductList", "Category", null),
+        UrlRead = new DataUrl("ProductList", "Category", new RouteValueDictionary { [nameof(Model.CategoryProductSearchModel.CategoryId)] = Model.CategoryProductSearchModel.CategoryId }),
         UrlDelete = new DataUrl("ProductDelete", "Category", null),
         Length = Model.CategoryProductSearchModel.PageSize,
         LengthMenu = Model.CategoryProductSearchModel.AvailablePageSizes,
-        Filters = new List<FilterParameter>
-        {
-            new FilterParameter(nameof(Model.CategoryProductSearchModel.CategoryId), Model.CategoryProductSearchModel.CategoryId)
-        },
         ColumnCollection = new List<ColumnProperty>
         {
             new ColumnProperty(nameof(CategoryProductModel.ProductName))

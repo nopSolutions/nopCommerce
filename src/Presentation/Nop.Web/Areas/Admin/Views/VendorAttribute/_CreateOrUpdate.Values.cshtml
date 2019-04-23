@@ -7,14 +7,10 @@
         @await Html.PartialAsync("Table", new DataTablesModel
         {
             Name = "vendorattributevalues-grid",
-            UrlRead = new DataUrl("ValueList", "VendorAttribute", null),
+            UrlRead = new DataUrl("ValueList", "VendorAttribute", new RouteValueDictionary { [nameof(Model.VendorAttributeValueSearchModel.VendorAttributeId)] = Model.VendorAttributeValueSearchModel.VendorAttributeId }),
             UrlDelete = new DataUrl("ValueDelete", "VendorAttribute", null),
             Length = Model.VendorAttributeValueSearchModel.PageSize,
             LengthMenu = Model.VendorAttributeValueSearchModel.AvailablePageSizes,
-            Filters = new List<FilterParameter>
-            {
-                new FilterParameter(nameof(Model.VendorAttributeValueSearchModel.VendorAttributeId), Model.VendorAttributeValueSearchModel.VendorAttributeId)
-            },
             ColumnCollection = new List<ColumnProperty>
             {
                 new ColumnProperty(nameof(VendorAttributeValueModel.Name))

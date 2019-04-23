@@ -7,13 +7,9 @@
             @await Html.PartialAsync("Table", new DataTablesModel
             {
                 Name = "productattributemappings-grid",
-                UrlRead = new DataUrl("ProductAttributeMappingList", "Product", null),
+                UrlRead = new DataUrl("ProductAttributeMappingList", "Product", new RouteValueDictionary { [nameof(Model.ProductAttributeMappingSearchModel.ProductId)] = Model.ProductAttributeMappingSearchModel.ProductId }),
                 Length = Model.ProductPictureSearchModel.PageSize,
                 LengthMenu = Model.ProductPictureSearchModel.AvailablePageSizes,
-                Filters = new List<FilterParameter>
-                {
-                    new FilterParameter(nameof(Model.ProductAttributeMappingSearchModel.ProductId), Model.Id)
-                },
                 ColumnCollection = new List<ColumnProperty>
                 {
                     new ColumnProperty(nameof(ProductAttributeMappingModel.ProductAttribute))

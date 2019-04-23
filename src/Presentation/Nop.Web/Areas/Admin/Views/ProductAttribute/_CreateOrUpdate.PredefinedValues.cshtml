@@ -9,14 +9,10 @@
         @await Html.PartialAsync("Table", new DataTablesModel
         {
             Name = "productattributevalues-grid",
-            UrlRead = new DataUrl("PredefinedProductAttributeValueList", "ProductAttribute", null),
+            UrlRead = new DataUrl("PredefinedProductAttributeValueList", "ProductAttribute", new RouteValueDictionary { [nameof(Model.PredefinedProductAttributeValueSearchModel.ProductAttributeId)] = Model.PredefinedProductAttributeValueSearchModel.ProductAttributeId }),
             UrlDelete = new DataUrl("PredefinedProductAttributeValueDelete", "ProductAttribute", null),
             Length = Model.PredefinedProductAttributeValueSearchModel.PageSize,
             LengthMenu = Model.PredefinedProductAttributeValueSearchModel.AvailablePageSizes,
-            Filters = new List<FilterParameter>
-            {
-                new FilterParameter(nameof(Model.PredefinedProductAttributeValueSearchModel.ProductAttributeId), Model.PredefinedProductAttributeValueSearchModel.ProductAttributeId)
-            },
             ColumnCollection = new List<ColumnProperty>
             {
                 new ColumnProperty(nameof(PredefinedProductAttributeValueModel.Name))

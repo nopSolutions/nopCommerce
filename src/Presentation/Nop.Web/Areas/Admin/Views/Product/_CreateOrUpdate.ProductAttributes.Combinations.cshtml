@@ -8,17 +8,13 @@
                 @T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Description")
             </p>
             @await Html.PartialAsync("Table", new DataTablesModel
-            {
-                Name = "attributecombinations-grid",
-                UrlRead = new DataUrl("ProductAttributeCombinationList", "Product", null),
-                UrlDelete = new DataUrl("ProductAttributeCombinationDelete", "Product", null),
-                Length = Model.ProductPictureSearchModel.PageSize,
-                LengthMenu = Model.ProductPictureSearchModel.AvailablePageSizes,
-                Filters = new List<FilterParameter>
-                {
-                    new FilterParameter(nameof(Model.ProductAttributeCombinationSearchModel.ProductId), Model.ProductAttributeCombinationSearchModel.ProductId)
-                },
-                ColumnCollection = new List<ColumnProperty>
+       {
+           Name = "attributecombinations-grid",
+           UrlRead = new DataUrl("ProductAttributeCombinationList", "Product", new RouteValueDictionary { [nameof(Model.ProductAttributeCombinationSearchModel.ProductId)] = Model.ProductAttributeCombinationSearchModel.ProductId }),
+           UrlDelete = new DataUrl("ProductAttributeCombinationDelete", "Product", null),
+           Length = Model.ProductPictureSearchModel.PageSize,
+           LengthMenu = Model.ProductPictureSearchModel.AvailablePageSizes,
+           ColumnCollection = new List<ColumnProperty>
                 {
                     new ColumnProperty(nameof(ProductAttributeCombinationModel.AttributesXml))
                     {
@@ -85,7 +81,7 @@
                         ClassName =  StyleColumn.ButtonStyle
                     }
                 }
-            })
+       })
 
             <script>
                 function renderColumnPrice(data, type, row, meta) {

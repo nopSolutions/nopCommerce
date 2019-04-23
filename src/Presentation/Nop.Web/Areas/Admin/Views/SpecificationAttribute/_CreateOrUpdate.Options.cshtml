@@ -6,14 +6,10 @@
         @await Html.PartialAsync("Table", new DataTablesModel
         {
             Name = "specificationattributeoptions-grid",
-            UrlRead = new DataUrl("OptionList", "SpecificationAttribute", null),
+            UrlRead = new DataUrl("OptionList", "SpecificationAttribute", new RouteValueDictionary { [nameof(Model.SpecificationAttributeOptionSearchModel.SpecificationAttributeId)] = Model.SpecificationAttributeOptionSearchModel.SpecificationAttributeId }),
             UrlDelete = new DataUrl("OptionDelete", "SpecificationAttribute", null),
             Length = Model.SpecificationAttributeOptionSearchModel.PageSize,
             LengthMenu = Model.SpecificationAttributeOptionSearchModel.AvailablePageSizes,
-            Filters = new List<FilterParameter>
-            {
-                new FilterParameter(nameof(Model.SpecificationAttributeOptionSearchModel.SpecificationAttributeId), Model.SpecificationAttributeOptionSearchModel.SpecificationAttributeId)
-            },
             ColumnCollection = new List<ColumnProperty>
             {
                 new ColumnProperty(nameof(SpecificationAttributeOptionModel.Name))

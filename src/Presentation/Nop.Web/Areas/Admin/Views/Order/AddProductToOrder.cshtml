@@ -91,13 +91,12 @@
                     @await Html.PartialAsync("Table", new DataTablesModel
                     {
                         Name = "products-grid",
-                        UrlRead = new DataUrl("AddProductToOrder", "Order", null),
+                        UrlRead = new DataUrl("AddProductToOrder", "Order", new RouteValueDictionary { [nameof(Model.OrderId)] = Model.OrderId }),
                         SearchButtonId = "search-products",
                         Length = Model.PageSize,
                         LengthMenu = Model.AvailablePageSizes,
                         Filters = new List<FilterParameter>
                         {
-                            new FilterParameter(nameof(Model.OrderId), Model.OrderId),
                             new FilterParameter(nameof(Model.SearchProductName)),
                             new FilterParameter(nameof(Model.SearchCategoryId)),
                             new FilterParameter(nameof(Model.SearchManufacturerId)),

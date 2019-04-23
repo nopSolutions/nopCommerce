@@ -9,14 +9,10 @@
         @await Html.PartialAsync("Table", new DataTablesModel
         {
             Name = "addressattributevalues-grid",
-            UrlRead = new DataUrl("ValueList", "AddressAttribute", null),
+            UrlRead = new DataUrl("ValueList", "AddressAttribute", new RouteValueDictionary { [nameof(AddressAttributeValueSearchModel.AddressAttributeId)] = Model.Id }),
             UrlDelete = new DataUrl("ValueDelete", "AddressAttribute", null),
             Length = Model.AddressAttributeValueSearchModel.PageSize,
             LengthMenu = Model.AddressAttributeValueSearchModel.AvailablePageSizes,
-            Filters = new List<FilterParameter>
-            {
-                new FilterParameter(nameof(AddressAttributeValueSearchModel.AddressAttributeId), Model.Id)
-            },
             ColumnCollection = new List<ColumnProperty>
             {
                 new ColumnProperty(nameof(AddressAttributeValueModel.Name))
