@@ -278,27 +278,33 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
             }
             else
             {
-                var orderNumber = string.Empty;
-                values.TryGetValue("custom", out orderNumber);
+                if (!values.TryGetValue("custom", out var orderNumber))
+                    orderNumber = _webHelper.QueryString<string>("cm");
+
                 var orderNumberGuid = Guid.Empty;
                 try
                 {
                     orderNumberGuid = new Guid(orderNumber);
                 }
-                catch { }
-                var order = _orderService.GetOrderByGuid(orderNumberGuid);
-                if (order != null)
+                catch
                 {
-                    //order note
-                    order.OrderNotes.Add(new OrderNote
-                    {
-                        Note = "PayPal PDT failed. " + response,
-                        DisplayToCustomer = false,
-                        CreatedOnUtc = DateTime.UtcNow
-                    });
-                    _orderService.UpdateOrder(order);
+                    // ignored
                 }
-                return RedirectToAction("Index", "Home", new { area = "" });
+
+                var order = _orderService.GetOrderByGuid(orderNumberGuid);
+                if (order == null) 
+                    return RedirectToAction("Index", "Home", new {area = ""});
+
+                //order note
+                order.OrderNotes.Add(new OrderNote
+                {
+                    Note = "PayPal PDT failed. " + response,
+                    DisplayToCustomer = false,
+                    CreatedOnUtc = DateTime.UtcNow
+                });
+                _orderService.UpdateOrder(order);
+
+                return RedirectToRoute("CheckoutCompleted", new { orderId = order.Id });
             }
         }
 
