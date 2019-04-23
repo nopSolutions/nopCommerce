@@ -492,7 +492,7 @@
   <LocaleResource Name="Account.Login.Fields.RememberMe">
     <Value>Remember me?</Value>
   </LocaleResource>
-  <LocaleResource Name="Account.Login.Fields.UserName">
+  <LocaleResource Name="Account.Login.Fields.Username">
     <Value>Username</Value>
   </LocaleResource>
   <LocaleResource Name="Account.Login.ForgotPassword">

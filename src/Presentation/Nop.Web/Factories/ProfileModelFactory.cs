@@ -89,7 +89,7 @@ namespace Nop.Web.Factories
                 pagingPosts = true;
             }
 
-            var name = _customerService.FormatUserName(customer);
+            var name = _customerService.FormatUsername(customer);
             var title = string.Format(_localizationService.GetResource("Profile.ProfileOf"), name);
 
             var model = new ProfileIndexModel

@@ -653,6 +653,12 @@ set @resources='
   <LocaleResource Name="Admin.System.Warnings.Errors">
     <Value><![CDATA[The store has some error(s) or warning(s). Please find more information on the <a href="{0}">Warnings</a> page]]></Value>
   </LocaleResource>
+  <LocaleResource Name="Account.Login.Fields.UserName">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Login.Fields.Username">
+    <Value>Username</Value>
+  </LocaleResource>
 </Language>'
 
 CREATE TABLE #LocaleStringResourceTmp

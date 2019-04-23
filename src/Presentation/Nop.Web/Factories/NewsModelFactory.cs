@@ -89,7 +89,7 @@ namespace Nop.Web.Factories
             {
                 Id = newsComment.Id,
                 CustomerId = newsComment.CustomerId,
-                CustomerName = _customerService.FormatUserName(newsComment.Customer),
+                CustomerName = _customerService.FormatUsername(newsComment.Customer),
                 CommentTitle = newsComment.CommentTitle,
                 CommentText = newsComment.CommentText,
                 CreatedOn = _dateTimeHelper.ConvertToUserTime(newsComment.CreatedOnUtc, DateTimeKind.Utc),

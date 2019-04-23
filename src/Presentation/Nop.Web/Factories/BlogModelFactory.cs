@@ -90,7 +90,7 @@ namespace Nop.Web.Factories
             {
                 Id = blogComment.Id,
                 CustomerId = blogComment.CustomerId,
-                CustomerName = _customerService.FormatUserName(blogComment.Customer),
+                CustomerName = _customerService.FormatUsername(blogComment.Customer),
                 CommentText = blogComment.CommentText,
                 CreatedOn = _dateTimeHelper.ConvertToUserTime(blogComment.CreatedOnUtc, DateTimeKind.Utc),
                 AllowViewingProfiles = _customerSettings.AllowViewingProfiles && blogComment.Customer != null && !blogComment.Customer.IsGuest()

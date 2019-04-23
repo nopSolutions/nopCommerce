@@ -1311,7 +1311,7 @@ namespace Nop.Services.Messages
         public virtual void AddForumPostTokens(IList<Token> tokens, ForumPost forumPost)
         {
             var forumService = EngineContext.Current.Resolve<IForumService>();
-            tokens.Add(new Token("Forums.PostAuthor", _customerService.FormatUserName(forumPost.Customer)));
+            tokens.Add(new Token("Forums.PostAuthor", _customerService.FormatUsername(forumPost.Customer)));
             tokens.Add(new Token("Forums.PostBody", forumService.FormatPostText(forumPost), true));
 
             //event notification

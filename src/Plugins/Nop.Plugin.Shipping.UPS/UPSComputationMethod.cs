@@ -127,7 +127,7 @@ namespace Nop.Plugin.Shipping.UPS
             _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.SaturdayDeliveryEnabled", "Saturday Delivery enabled");
             _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.SaturdayDeliveryEnabled.Hint", "Check to get rates for Saturday Delivery options.");
             _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.Tracing", "Tracing");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.Tracing.Hint", "Check if you want to record plugin tracing in System Log. Warning: The entire request and response XML will be logged (including AccessKey/UserName,Password). Do not leave this enabled in a production environment.");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.Tracing.Hint", "Check if you want to record plugin tracing in System Log. Warning: The entire request and response XML will be logged (including AccessKey/Username,Password). Do not leave this enabled in a production environment.");
             _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.Username", "Username");
             _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.Username.Hint", "Specify UPS username.");
             _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.UseSandbox", "Use sandbox");

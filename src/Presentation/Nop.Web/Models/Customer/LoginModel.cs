@@ -20,7 +20,7 @@ namespace Nop.Web.Models.Customer
 
         public UserRegistrationType RegistrationType { get; set; }
 
-        [NopResourceDisplayName("Account.Login.Fields.UserName")]
+        [NopResourceDisplayName("Account.Login.Fields.Username")]
         public string Username { get; set; }
 
         [DataType(DataType.Password)]

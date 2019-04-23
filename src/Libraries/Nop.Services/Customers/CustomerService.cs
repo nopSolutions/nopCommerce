@@ -671,7 +671,7 @@ namespace Nop.Services.Customers
         /// <param name="stripTooLong">Strip too long customer name</param>
         /// <param name="maxLength">Maximum customer name length</param>
         /// <returns>Formatted text</returns>
-        public virtual string FormatUserName(Customer customer, bool stripTooLong = false, int maxLength = 0)
+        public virtual string FormatUsername(Customer customer, bool stripTooLong = false, int maxLength = 0)
         {
             if (customer == null)
                 return string.Empty;
