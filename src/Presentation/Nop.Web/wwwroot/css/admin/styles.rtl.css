@@ -161,10 +161,6 @@ ul.common-list {
   margin-bottom: 5px;
 }
 
-.panel.collapsible-panel .panel {
-  margin-bottom: 0;
-}
-
 .panel.collapsible-panel >.panel-heading {
   padding-right: 45px;
   position: relative;
