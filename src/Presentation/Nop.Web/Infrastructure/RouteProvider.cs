@@ -253,10 +253,7 @@ namespace Nop.Web.Infrastructure
             routeBuilder.MapLocalizedRoute("CustomerDownloadableProducts", "customer/downloadableproducts",
 				new { controller = "Customer", action = "DownloadableProducts" });
 
-            routeBuilder.MapLocalizedRoute("CustomerBackInStockSubscriptions", "backinstocksubscriptions/manage",
-				new { controller = "BackInStockSubscription", action = "CustomerSubscriptions" });
-
-            routeBuilder.MapLocalizedRoute("CustomerBackInStockSubscriptionsPaged", "backinstocksubscriptions/manage/{pageNumber:regex(\\d*)}",
+            routeBuilder.MapLocalizedRoute("CustomerBackInStockSubscriptions", "backinstocksubscriptions/manage/{pageNumber:regex(\\d*)?}",
 				new { controller = "BackInStockSubscription", action = "CustomerSubscriptions" });
 
             routeBuilder.MapLocalizedRoute("CustomerRewardPoints", "rewardpoints/history",
