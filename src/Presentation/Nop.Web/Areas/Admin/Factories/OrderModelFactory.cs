@@ -1509,10 +1509,10 @@ namespace Nop.Web.Areas.Admin.Factories
             var pagedShipments = shipments.ToPagedList(searchModel);
 
             //prepare list model
-            var model = new OrderShipmentListModel
+            var model = new OrderShipmentListModel().PrepareToGrid(searchModel, pagedShipments, () =>
             {
                 //fill in model values from the entity
-                Data = pagedShipments.Select(shipment =>
+                return pagedShipments.Select(shipment =>
                 {
                     //fill in model values from the entity
                     var shipmentModel = shipment.ToModel<ShipmentModel>();
@@ -1535,9 +1535,8 @@ namespace Nop.Web.Areas.Admin.Factories
                         shipmentModel.TotalWeight = $"{shipment.TotalWeight:F2} [{baseWeight}]";
 
                     return shipmentModel;
-                }),
-                Total = pagedShipments.TotalCount
-            };
+                });
+            });
 
             return model;
         }
