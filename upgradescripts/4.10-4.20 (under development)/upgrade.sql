@@ -238,12 +238,12 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.DT.EmptyTable">
     <Value>No data available in table</Value>
-  </LocaleResource>
+  </LocaleResource>  
   <LocaleResource Name="Admin.DT.Info">
-    <Value>Showing _START_ to _END_ of _TOTAL_ entries</Value>
+    <Value>_START_-_END_ of _TOTAL_ items</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.DT.InfoEmpty">
-    <Value>Showing 0 to 0 of 0 entries</Value>
+    <Value>No records</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.DT.InfoFiltered">
     <Value>(filtered from _MAX_ total entries)</Value>
@@ -252,7 +252,7 @@ set @resources='
     <Value>,</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.DT.lengthMenu">
-    <Value>Show _MENU_ entries</Value>
+    <Value>Show _MENU_ items</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.DT.LoadingRecords">
     <Value>Loading...</Value>
