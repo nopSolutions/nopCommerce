@@ -22,6 +22,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
         private const string RenderFormControlClassAttributeName = "asp-render-form-control-class";
         private const string TemplateAttributeName = "asp-template";
         private const string PostfixAttributeName = "asp-postfix";
+        private const string ValueAttributeName = "asp-value";
 
         private readonly IHtmlHelper _htmlHelper;
 
@@ -62,6 +63,12 @@ namespace Nop.Web.Framework.TagHelpers.Admin
         public string Postfix { set; get; }
 
         /// <summary>
+        /// The value of the element
+        /// </summary>
+        [HtmlAttributeName(ValueAttributeName)]
+        public string Value { set; get; }
+
+        /// <summary>
         /// ViewContext
         /// </summary>
         [HtmlAttributeNotBound]
@@ -99,6 +106,10 @@ namespace Nop.Web.Framework.TagHelpers.Admin
 
             //container for additional attributes
             var htmlAttributes = new Dictionary<string, object>();
+
+            //set value if exists
+            if (!string.IsNullOrEmpty(Value))
+                htmlAttributes.Add("value", Value);
 
             //disabled attribute
             bool.TryParse(IsDisabled, out bool disabled);
