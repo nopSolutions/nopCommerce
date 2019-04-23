@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Domain.Catalog;
 using Nop.Services.Catalog;
@@ -7,7 +6,6 @@ using Nop.Services.Localization;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Framework.Factories;
-using Nop.Web.Framework.Models.DataTables;
 using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
@@ -42,7 +40,7 @@ namespace Nop.Web.Areas.Admin.Factories
         #endregion
 
         #region Utilities
-
+        
         /// <summary>
         /// Prepare predefined product attribute value search model
         /// </summary>
@@ -89,45 +87,6 @@ namespace Nop.Web.Areas.Admin.Factories
             return searchModel;
         }
 
-        /// <summary>
-        /// Prepare datatables model
-        /// </summary>
-        /// <param name="searchModel">Search model</param>
-        /// <returns>Datatables model</returns>
-        protected virtual DataTablesModel PrepareProductAttributesGridModel(ProductAttributeSearchModel searchModel)
-        {
-            //prepare common properties
-            var model = new DataTablesModel
-            {
-                Name = "products-grid",
-                UrlRead = new DataUrl("List", "ProductAttribute", null),
-                Length = searchModel.PageSize,
-                LengthMenu = searchModel.AvailablePageSizes
-            };
-
-            //prepare filters to search
-            model.Filters = null;
-
-            //prepare model columns
-            model.ColumnCollection = new List<ColumnProperty>
-            {
-                new ColumnProperty(nameof(ProductAttributeModel.Name))
-                {
-                    Title = _localizationService.GetResource("Admin.Catalog.Attributes.ProductAttributes.Fields.Name"),
-                    Width = "400"
-                },                
-                new ColumnProperty(nameof(ProductAttributeModel.Id))
-                {
-                    Title = _localizationService.GetResource("Admin.Common.Edit"),
-                    Width = "100",
-                    ClassName =  StyleColumn.CenterAll,
-                    Render = new RenderButtonEdit(new DataUrl("Edit"))
-                }
-            };
-
-            return model;
-        }
-
         #endregion
 
         #region Methods
@@ -144,7 +103,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
-            searchModel.Grid = PrepareProductAttributesGridModel(searchModel);
 
             return searchModel;
         }
@@ -229,9 +187,9 @@ namespace Nop.Web.Areas.Admin.Factories
             var values = _productAttributeService.GetPredefinedProductAttributeValues(productAttribute.Id).ToPagedList(searchModel);
 
             //prepare list model
-            var model = new PredefinedProductAttributeValueListModel
+            var model = new PredefinedProductAttributeValueListModel().PrepareToGrid(searchModel, values, () =>
             {
-                Data = values.Select(value =>
+                return values.Select(value =>
                 {
                     //fill in model values from the entity
                     var predefinedProductAttributeValueModel = value.ToModel<PredefinedProductAttributeValueModel>();
@@ -242,9 +200,8 @@ namespace Nop.Web.Areas.Admin.Factories
                         .ToString("G29") + (value.PriceAdjustmentUsePercentage ? " %" : string.Empty);
 
                     return predefinedProductAttributeValueModel;
-                }),
-                Total = values.TotalCount
-            };
+                });
+            });
 
             return model;
         }
@@ -309,17 +266,16 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new ProductAttributeProductListModel
+            var model = new ProductAttributeProductListModel().PrepareToGrid(searchModel, products, () =>
             {
                 //fill in model values from the entity
-                Data = products.Select(product =>
+                return products.Select(product =>
                 {
                     var productAttributeProductModel = product.ToModel<ProductAttributeProductModel>();
                     productAttributeProductModel.ProductName = product.Name;
                     return productAttributeProductModel;
-                }),
-                Total = products.TotalCount
-            };
+                });
+            });
 
             return model;
         }

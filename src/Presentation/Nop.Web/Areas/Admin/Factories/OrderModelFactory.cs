@@ -37,7 +37,6 @@ using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Areas.Admin.Models.Orders;
 using Nop.Web.Areas.Admin.Models.Reports;
 using Nop.Web.Framework.Extensions;
-using Nop.Web.Framework.Models.DataTables;
 using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
@@ -791,283 +790,6 @@ namespace Nop.Web.Areas.Admin.Factories
             return searchModel;
         }
 
-        /// <summary>
-        /// Prepare datatables model
-        /// </summary>
-        /// <param name="searchModel">Search model</param>
-        /// <returns>Datatables model</returns>
-        protected virtual DataTablesModel PrepareOrderGridModel(OrderSearchModel searchModel)
-        {
-            //prepare common properties
-            var model = new DataTablesModel
-            {
-                Name = "orders-grid",
-                UrlRead = new DataUrl("OrderList", "Order", null),
-                SearchButtonId = "search-orders",
-                Length = searchModel.PageSize,
-                LengthMenu = searchModel.AvailablePageSizes,
-            };
-
-            //prepare filters to search
-            model.Filters = new List<FilterParameter>()
-            {
-                new FilterParameter(nameof(searchModel.StartDate)),
-                new FilterParameter(nameof(searchModel.EndDate)),
-                new FilterParameter(nameof(searchModel.OrderStatusIds)),
-                new FilterParameter(nameof(searchModel.PaymentStatusIds)),
-                new FilterParameter(nameof(searchModel.ShippingStatusIds)),
-                new FilterParameter(nameof(searchModel.StoreId)),
-                new FilterParameter(nameof(searchModel.VendorId)),
-                new FilterParameter(nameof(searchModel.WarehouseId)),
-                new FilterParameter(nameof(searchModel.BillingEmail)),
-                new FilterParameter(nameof(searchModel.BillingPhone)),
-                new FilterParameter(nameof(searchModel.BillingLastName)),
-                new FilterParameter(nameof(searchModel.BillingCountryId)),
-                new FilterParameter(nameof(searchModel.PaymentMethodSystemName)),
-                new FilterParameter(nameof(searchModel.ProductId)),
-                new FilterParameter(nameof(searchModel.OrderNotes))
-            };
-
-            //prepare model columns
-            model.ColumnCollection = new List<ColumnProperty>
-            {
-                new ColumnProperty(nameof(OrderModel.CustomerId))
-                {
-                    Visible = false
-                },
-                new ColumnProperty(nameof(OrderModel.OrderStatusId))
-                {
-                    Visible = false
-                },
-                new ColumnProperty(nameof(OrderModel.Id))
-                {
-                    IsMasterCheckBox = true,
-                    Render = new RenderCheckBox("checkbox_orders"),
-                    ClassName =  StyleColumn.CenterAll,
-                    Width = "50",
-                },
-                new ColumnProperty(nameof(OrderModel.CustomOrderNumber))
-                {
-                    Title = _localizationService.GetResource("Admin.Orders.Fields.CustomOrderNumber"),
-                    Width = "80"
-                }
-            };
-
-            //a vendor does not have access to this functionality
-            if (!searchModel.IsLoggedInAsVendor)
-            {
-                model.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.OrderStatus))
-                {
-                    Title = _localizationService.GetResource("Admin.Orders.Fields.OrderStatus"),
-                    Width = "100",
-                    Render = new RenderCustom("renderColumnOrderStatus")
-                });
-            }
-
-            model.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.PaymentStatus))
-            {
-                Title = _localizationService.GetResource("Admin.Orders.Fields.PaymentStatus"),
-                Width = "150"
-            });
-
-            //a vendor does not have access to this functionality
-            if (!searchModel.IsLoggedInAsVendor)
-            {
-                model.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.ShippingStatus))
-                {
-                    Title = _localizationService.GetResource("Admin.Orders.Fields.ShippingStatus"),
-                    Width = "150"
-                });
-            }
-
-            model.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.CustomerEmail))
-            {
-                Title = _localizationService.GetResource("Admin.Orders.Fields.Customer"),
-                Width = "250",
-                Render = new RenderLink(new DataUrl("~/Admin/Customer/Edit", nameof(OrderModel.CustomerId)))
-            });
-            model.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.StoreName))
-            {
-                Title = _localizationService.GetResource("Admin.Orders.Fields.Store"),
-                Width = "100"
-            });
-            model.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.CreatedOn))
-            {
-                Title = _localizationService.GetResource("Admin.Orders.Fields.CreatedOn"),
-                Width = "100",
-                Render = new RenderDate()
-            });
-
-            //a vendor does not have access to this functionality
-            if (!searchModel.IsLoggedInAsVendor)
-            {
-                model.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.OrderTotal))
-                {
-                    Title = _localizationService.GetResource("Admin.Orders.Fields.OrderTotal"),
-                    Width = "100",
-                });
-            }
-
-            model.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.Id))
-            {
-                Title = _localizationService.GetResource("Admin.Common.View"),
-                Width = "50",
-                ClassName = StyleColumn.CenterAll,
-                Render = new RenderButtonEdit(new DataUrl("Edit"))
-            });
-
-            return model;
-        }
-
-        /// <summary>
-        /// Prepare datatables model
-        /// </summary>
-        /// <param name="searchModel">Search model</param>
-        /// <returns>Datatables model</returns>
-        protected virtual DataTablesModel PrepareShipmentGridModel(ShipmentSearchModel searchModel)
-        {
-            //prepare common properties
-            var model = new DataTablesModel
-            {
-                Name = "shipments-grid",
-                UrlRead = new DataUrl("ShipmentListSelect", "Order", null),
-                SearchButtonId = "search-shipments",
-                Length = searchModel.PageSize,
-                LengthMenu = searchModel.AvailablePageSizes
-            };
-
-            //prepare filters to search
-            model.Filters = new List<FilterParameter>()
-            {
-                new FilterParameter(nameof(searchModel.StartDate)),
-                new FilterParameter(nameof(searchModel.EndDate)),
-                new FilterParameter(nameof(searchModel.TrackingNumber)),
-                new FilterParameter(nameof(searchModel.CountryId)),
-                new FilterParameter(nameof(searchModel.StateProvinceId)),
-                new FilterParameter(nameof(searchModel.County)),
-                new FilterParameter(nameof(searchModel.City)),
-                new FilterParameter(nameof(searchModel.WarehouseId)),
-                new FilterParameter(nameof(searchModel.LoadNotShipped), typeof(bool))
-            };
-
-            //prepare model columns
-            model.ColumnCollection = new List<ColumnProperty>
-            {
-                new ColumnProperty(null)
-                {
-                    Render = new RenderChildCaret(),
-                    Width = "5",
-                    Searchable = false,
-                    ClassName =  StyleColumn.ChildControl,
-                },
-                new ColumnProperty(nameof(ShipmentModel.Id))
-                {
-                    IsMasterCheckBox = true,
-                    Render = new RenderCheckBox("checkbox_shipments"),
-                    Searchable = false,
-                    Width = "10",
-                },
-            };
-
-            model.ColumnCollection.Add(new ColumnProperty(nameof(ShipmentModel.Id))
-            {
-                Title = _localizationService.GetResource("Admin.Orders.Shipments.ID"),
-                Width = "50"                
-            });
-
-            model.ColumnCollection.Add(new ColumnProperty(nameof(ShipmentModel.CustomOrderNumber))
-            {
-                Title = _localizationService.GetResource("Admin.Orders.Shipments.CustomOrderNumber"),
-                Width = "100"
-            });
-
-            model.ColumnCollection.Add(new ColumnProperty(nameof(ShipmentModel.TrackingNumber))
-            {
-                Title = _localizationService.GetResource("Admin.Orders.Shipments.TrackingNumber"),
-                Width = "100"
-            });
-
-            model.ColumnCollection.Add(new ColumnProperty(nameof(ShipmentModel.TotalWeight))
-            {
-                Title = _localizationService.GetResource("Admin.Orders.Shipments.TotalWeight"),
-                Width = "100"
-            });
-
-            model.ColumnCollection.Add(new ColumnProperty(nameof(ShipmentModel.ShippedDate))
-            {
-                Title = _localizationService.GetResource("Admin.Orders.Shipments.ShippedDate"),
-                Width = "200",
-                Render = new RenderDate()
-            });
-            model.ColumnCollection.Add(new ColumnProperty(nameof(ShipmentModel.DeliveryDate))
-            {
-                Title = _localizationService.GetResource("Admin.Orders.Shipments.DeliveryDate"),
-                Width = "200",
-                Render = new RenderDate()
-            });
-
-            model.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.Id))
-            {
-                Title = _localizationService.GetResource("Admin.Common.View"),
-                Width = "50",
-                ClassName = StyleColumn.CenterAll,
-                Render = new RenderButtonEdit(new DataUrl("~/Admin/Order/ShipmentDetails/"))
-            });
-
-            var searchChildModel = new ShipmentItemSearchModel();
-
-            //prepare common properties for detail table
-            var detailModel = new DataTablesModel
-            {
-                Name = "shipments-grid",
-                UrlRead = new DataUrl("ShipmentsItemsByShipmentId", "Order", null),
-                
-                IsChildTable = true,
-                Paging = false,
-                Length = searchModel.PageSize,
-                LengthMenu = searchModel.AvailablePageSizes
-            };
-
-            //prepare filters to search
-            detailModel.Filters = new List<FilterParameter>()
-            {
-                new FilterParameter(nameof(searchChildModel.ShipmentId))
-            };
-
-            detailModel.ColumnCollection = new List<ColumnProperty>
-            {
-                new ColumnProperty(nameof(ShipmentItemModel.ProductName))
-                {
-                    Title = _localizationService.GetResource("Admin.Orders.Shipments.Products.ProductName"),
-                    Width = "400"
-                },
-                new ColumnProperty(nameof(ShipmentItemModel.ShippedFromWarehouse))
-                {
-                    Title = _localizationService.GetResource("Admin.Orders.Shipments.Products.Warehouse"),
-                    Width = "150"
-                },
-                new ColumnProperty(nameof(ShipmentItemModel.QuantityInThisShipment))
-                {
-                    Title = _localizationService.GetResource("Admin.Orders.Shipments.Products.QtyShipped"),
-                    Width = "150"
-                },
-                new ColumnProperty(nameof(ShipmentItemModel.ItemWeight))
-                {
-                    Title = _localizationService.GetResource("Admin.Orders.Shipments.Products.ItemWeight"),
-                    Width = "150"
-                },
-                new ColumnProperty(nameof(ShipmentItemModel.ItemDimensions))
-                {
-                    Title = _localizationService.GetResource("Admin.Orders.Shipments.Products.ItemDimensions"),
-                    Width = "150"
-                }
-            };
-
-            model.ChildTable = detailModel;
-
-            return model;
-        }
-
         #endregion
 
         #region Methods
@@ -1146,7 +868,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare grid
             searchModel.SetGridPageSize();
-            searchModel.Grid = PrepareOrderGridModel(searchModel);
 
             searchModel.HideStoresList = _catalogSettings.IgnoreStoreLimitations || searchModel.AvailableStores.SelectionIsNotPossible();
 
@@ -1444,18 +1165,17 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare grid model
-            var model = new AddProductToOrderListModel
+            var model = new AddProductToOrderListModel().PrepareToGrid(searchModel, products, () =>
             {
                 //fill in model values from the entity
-                Data = products.Select(product =>
+                return products.Select(product =>
                 {
                     var productModel = product.ToModel<ProductModel>();
                     productModel.SeName = _urlRecordService.GetSeName(product, 0, true, false);
 
                     return productModel;
-                }),
-                Total = products.TotalCount
-            };
+                });
+            });
 
             return model;
         }
@@ -1567,7 +1287,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
-            searchModel.Grid = PrepareShipmentGridModel(searchModel);
 
             return searchModel;
         }
@@ -1896,10 +1615,10 @@ namespace Nop.Web.Areas.Admin.Factories
             var orderNotes = order.OrderNotes.OrderByDescending(on => on.CreatedOnUtc).ToList().ToPagedList(searchModel);
 
             //prepare list model
-            var model = new OrderNoteListModel
+            var model = new OrderNoteListModel().PrepareToGrid(searchModel, orderNotes, () =>
             {
                 //fill in model values from the entity
-                Data = orderNotes.Select(orderNote =>
+                return orderNotes.Select(orderNote =>
                 {
                     //fill in model values from the entity
                     var orderNoteModel = orderNote.ToModel<OrderNoteModel>();
@@ -1912,9 +1631,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     orderNoteModel.DownloadGuid = _downloadService.GetDownloadById(orderNote.DownloadId)?.DownloadGuid ?? Guid.Empty;
 
                     return orderNoteModel;
-                }),
-                Total = orderNotes.TotalCount
-            };
+                });
+            });
 
             return model;
         }
@@ -1930,7 +1648,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //prepare page parameters
-            searchModel.SetGridPageSize(5, "5");
+            searchModel.SetGridPageSize(5);
 
             return searchModel;
         }
@@ -1952,9 +1670,10 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new BestsellerBriefListModel
+            var model = new BestsellerBriefListModel().PrepareToGrid(searchModel, bestsellers, () =>
             {
-                Data = bestsellers.Select(bestseller =>
+                //fill in model values from the entity
+                return bestsellers.Select(bestseller =>
                 {
                     //fill in model values from the entity
                     var bestsellerModel = new BestsellerModel
@@ -1968,9 +1687,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     bestsellerModel.TotalAmount = _priceFormatter.FormatPrice(bestseller.TotalAmount, true, false);
 
                     return bestsellerModel;
-                }),
-                Total = bestsellers.TotalCount
-            };
+                });
+            });
 
             return model;
         }
@@ -1978,8 +1696,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare order average line summary report list model
         /// </summary>
+        /// <param name="searchModel">Order average line summary report search model</param>
         /// <returns>Order average line summary report list model</returns>
-        public virtual OrderAverageReportListModel PrepareOrderAverageReportListModel()
+        public virtual OrderAverageReportListModel PrepareOrderAverageReportListModel(OrderAverageReportSearchModel searchModel)
         {
             //get report
             var report = new List<OrderAverageReportLineSummary>
@@ -1993,9 +1712,10 @@ namespace Nop.Web.Areas.Admin.Factories
             var pagedList = new PagedList<OrderAverageReportLineSummary>(report, 0, int.MaxValue);
 
             //prepare list model
-            var model = new OrderAverageReportListModel
+            var model = new OrderAverageReportListModel().PrepareToGrid(searchModel, pagedList, () =>
             {
-                Data = pagedList.Select(reportItem => new OrderAverageReportModel
+                //fill in model values from the entity
+                return pagedList.Select(reportItem => new OrderAverageReportModel
                 {
                     OrderStatus = _localizationService.GetLocalizedEnum(reportItem.OrderStatus),
                     SumTodayOrders = _priceFormatter.FormatPrice(reportItem.SumTodayOrders, true, false),
@@ -2003,9 +1723,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     SumThisMonthOrders = _priceFormatter.FormatPrice(reportItem.SumThisMonthOrders, true, false),
                     SumThisYearOrders = _priceFormatter.FormatPrice(reportItem.SumThisYearOrders, true, false),
                     SumAllTimeOrders = _priceFormatter.FormatPrice(reportItem.SumAllTimeOrders, true, false)
-                }),
-                Total = pagedList.TotalCount
-            };
+                });
+            });
 
             return model;
         }
@@ -2013,8 +1732,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare incomplete order report list model
         /// </summary>
+        /// <param name="searchModel">Incomplete order report search model</param>
         /// <returns>Incomplete order report list model</returns>
-        public virtual OrderIncompleteReportListModel PrepareOrderIncompleteReportListModel()
+        public virtual OrderIncompleteReportListModel PrepareOrderIncompleteReportListModel(OrderIncompleteReportSearchModel searchModel)
         {
             var orderIncompleteReportModels = new List<OrderIncompleteReportModel>();
 
@@ -2066,12 +1786,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var pagedList = new PagedList<OrderIncompleteReportModel>(orderIncompleteReportModels, 0, int.MaxValue);
 
             //prepare list model
-            var model = new OrderIncompleteReportListModel
-            {
-                Data = pagedList,
-                Total = pagedList.TotalCount
-            };
-
+            var model = new OrderIncompleteReportListModel().PrepareToGrid(searchModel, pagedList, () => pagedList);
             return model;
         }
 

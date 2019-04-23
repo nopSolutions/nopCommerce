@@ -595,7 +595,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 });
             }
         }
-
+        
         #endregion
 
         #region Methods
@@ -778,24 +778,16 @@ namespace Nop.Web.Areas.Admin.Factories
             var backupFiles = _maintenanceService.GetAllBackupFiles().ToPagedList(searchModel);
 
             //prepare list model
-            var model = new BackupFileListModel
+            var model = new BackupFileListModel().PrepareToGrid(searchModel, backupFiles, ()=>
             {
-                Data = backupFiles.Select(file =>
+                return backupFiles.Select(file => new BackupFileModel
                 {
-                    //fill in model values from the entity
-                    var backupFileModel = new BackupFileModel
-                    {
-                        Name = _fileProvider.GetFileName(file)
-                    };
-
+                    Name = _fileProvider.GetFileName(file),
                     //fill in additional values (not existing in the entity)
-                    backupFileModel.Length = $"{_fileProvider.FileLength(file) / 1024f / 1024f:F2} Mb";
-                    backupFileModel.Link = $"{_webHelper.GetStoreLocation(false)}db_backups/{backupFileModel.Name}";
-
-                    return backupFileModel;
-                }),
-                Total = backupFiles.TotalCount
-            };
+                    Length = $"{_fileProvider.FileLength(file) / 1024f / 1024f:F2} Mb",
+                    Link = $"{_webHelper.GetStoreLocation(false)}db_backups/{_fileProvider.GetFileName(file)}"
+                });
+            });
 
             return model;
         }
@@ -834,9 +826,9 @@ namespace Nop.Web.Areas.Admin.Factories
             var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
 
             //prepare list model
-            var model = new UrlRecordListModel
+            var model = new UrlRecordListModel().PrepareToGrid(searchModel, urlRecords, () =>
             {
-                Data = urlRecords.Select(urlRecord =>
+                return urlRecords.Select(urlRecord =>
                 {
                     //fill in model values from the entity
                     var urlRecordModel = urlRecord.ToModel<UrlRecordModel>();
@@ -878,10 +870,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     urlRecordModel.DetailsUrl = detailsUrl;
 
                     return urlRecordModel;
-                }),
-                Total = urlRecords.TotalCount
-            };
-
+                });
+            });
             return model;
         }
 
@@ -913,7 +903,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //prepare page parameters
-            searchModel.SetGridPageSize(5, "5");
+            searchModel.SetGridPageSize(5);
 
             return searchModel;
         }
@@ -932,16 +922,14 @@ namespace Nop.Web.Areas.Admin.Factories
             var searchTermRecordLines = _searchTermService.GetStats(pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new PopularSearchTermListModel
+            var model = new PopularSearchTermListModel().PrepareToGrid(searchModel, searchTermRecordLines, () =>
             {
-                //fill in model values from the entity
-                Data = searchTermRecordLines.Select(searchTerm => new PopularSearchTermModel
+                return searchTermRecordLines.Select(searchTerm => new PopularSearchTermModel
                 {
                     Keyword = searchTerm.Keyword,
                     Count = searchTerm.Count
-                }),
-                Total = searchTermRecordLines.TotalCount
-            };
+                });
+            });
 
             return model;
         }

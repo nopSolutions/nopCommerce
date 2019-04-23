@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using Microsoft.AspNetCore.Routing;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
@@ -10,6 +12,7 @@ using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Orders;
+using Nop.Web.Framework.Models.DataTables;
 using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
@@ -109,9 +112,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new RecurringPaymentListModel
+            var model = new RecurringPaymentListModel().PrepareToGrid(searchModel, recurringPayments, () =>
             {
-                Data = recurringPayments.Select(recurringPayment =>
+                return recurringPayments.Select(recurringPayment =>
                 {
                     //fill in model values from the entity
                     var recurringPaymentModel = recurringPayment.ToModel<RecurringPaymentModel>();
@@ -134,9 +137,8 @@ namespace Nop.Web.Areas.Admin.Factories
                         ? recurringPayment.InitialOrder.Customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
 
                     return recurringPaymentModel;
-                }),
-                Total = recurringPayments.TotalCount
-            };
+                });
+            });
 
             return model;
         }
@@ -156,9 +158,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //fill in model values from the entity
             if (model == null)
-            {
                 model = recurringPayment.ToModel<RecurringPaymentModel>();
-            }
 
             //convert dates to the user time
             if (recurringPayment.NextPaymentDate.HasValue)
@@ -200,9 +200,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 .ToPagedList(searchModel);
 
             //prepare list model
-            var model = new RecurringPaymentHistoryListModel
+            var model = new RecurringPaymentHistoryListModel().PrepareToGrid(searchModel, recurringPayments, () =>
             {
-                Data = recurringPayments.Select(historyEntry =>
+                return recurringPayments.Select(historyEntry =>
                 {
                     //fill in model values from the entity
                     var historyModel = historyEntry.ToModel<RecurringPaymentHistoryModel>();
@@ -221,9 +221,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     historyModel.CustomOrderNumber = order.CustomOrderNumber;
 
                     return historyModel;
-                }),
-                Total = recurringPayments.TotalCount
-            };
+                });
+            });
 
             return model;
         }

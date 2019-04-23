@@ -93,90 +93,45 @@
 
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <div id="best-customers-numberoforders-grid"></div>
-
-                    <script>
-                    $(document).ready(function() {
-                        $("#best-customers-numberoforders-grid").kendoGrid({
-                            dataSource: {
-                                type: "json",
-                                transport: {
-                                    read: {
-                                        url: "@Html.Raw(Url.Action("ReportBestCustomersByNumberOfOrdersList", "Report"))",
-                                        type: "POST",
-                                        dataType: "json",
-                                        data: function() {
-                                            var data = {
-                                                OrderBy : 2,
-                                                StartDate: $('#@Html.IdFor(model => model.BestCustomersByNumberOfOrders.StartDate)').val(),
-                                                EndDate: $('#@Html.IdFor(model => model.BestCustomersByNumberOfOrders.EndDate)').val(),
-                                                OrderStatusId: $('#@Html.IdFor(model => model.BestCustomersByNumberOfOrders.OrderStatusId)').val(),
-                                                PaymentStatusId: $('#@Html.IdFor(model => model.BestCustomersByNumberOfOrders.PaymentStatusId)').val(),
-                                                ShippingStatusId: $('#@Html.IdFor(model => model.BestCustomersByNumberOfOrders.ShippingStatusId)').val()
-                                            };
-                                            addAntiForgeryToken(data);
-                                            return data;
-                                        }
-                                    }
-                                },
-                                schema: {
-                                    data: "Data",
-                                    total: "Total",
-                                    errors: "Errors"
-                                },
-                                error: function(e) {
-                                    display_kendoui_grid_error(e);
-                                    // Cancel the changes
-                                    this.cancelChanges();
-                                },
-                                pageSize: @(Model.BestCustomersByNumberOfOrders.PageSize),
-                                serverPaging: true,
-                                serverFiltering: true,
-                                serverSorting: true
+                    @await Html.PartialAsync("Table", new DataTablesModel
+                    {
+                        Name = "best-customers-numberoforders-grid",
+                        UrlRead = new DataUrl("ReportBestCustomersByNumberOfOrdersList", "Report", null),
+                        SearchButtonId = "search-best-customers-numberoforders-grid",
+                        Length = Model.BestCustomersByNumberOfOrders.PageSize,
+                        LengthMenu = Model.BestCustomersByNumberOfOrders.AvailablePageSizes,
+                        Filters = new List<FilterParameter>
+                        {
+                            new FilterParameter(nameof(Model.BestCustomersByNumberOfOrders.OrderBy), 2),
+                            new FilterParameter(nameof(Model.BestCustomersByNumberOfOrders.StartDate), nameof(CustomerReportsSearchModel.BestCustomersByNumberOfOrders)),
+                            new FilterParameter(nameof(Model.BestCustomersByNumberOfOrders.EndDate), nameof(CustomerReportsSearchModel.BestCustomersByNumberOfOrders)),
+                            new FilterParameter(nameof(Model.BestCustomersByNumberOfOrders.OrderStatusId), nameof(CustomerReportsSearchModel.BestCustomersByNumberOfOrders)),
+                            new FilterParameter(nameof(Model.BestCustomersByNumberOfOrders.PaymentStatusId), nameof(CustomerReportsSearchModel.BestCustomersByNumberOfOrders)),
+                            new FilterParameter(nameof(Model.BestCustomersByNumberOfOrders.ShippingStatusId), nameof(CustomerReportsSearchModel.BestCustomersByNumberOfOrders))
+                        },
+                        ColumnCollection = new List<ColumnProperty>
+                        {
+                            new ColumnProperty(nameof(BestCustomersReportModel.CustomerName))
+                            {
+                                Title = T("Admin.Reports.Customers.BestBy.Fields.Customer").Text
                             },
-                            pageable: {
-                                refresh: true,
-                                pageSizes: [@(Model.BestCustomersByNumberOfOrders.AvailablePageSizes)],
-                                @await Html.PartialAsync("_GridPagerMessages")
+                            new ColumnProperty(nameof(BestCustomersReportModel.OrderTotal))
+                            {
+                                Title = T("Admin.Reports.Customers.BestBy.Fields.OrderTotal").Text
                             },
-                            editable: {
-                                confirmation: "@T("Admin.Common.DeleteConfirmation")",
-                                mode: "inline"
+                            new ColumnProperty(nameof(BestCustomersReportModel.OrderCount))
+                            {
+                                Title = T("Admin.Reports.Customers.BestBy.Fields.OrderCount").Text
                             },
-                            scrollable: false,
-                            columns: [
-                                {
-                                    field: "CustomerName",
-                                    title: "@T("Admin.Reports.Customers.BestBy.Fields.Customer")"
-                                }, {
-                                    field: "OrderTotal",
-                                    title: "@T("Admin.Reports.Customers.BestBy.Fields.OrderTotal")"
-                                }, {
-                                    field: "OrderCount",
-                                    title: "@T("Admin.Reports.Customers.BestBy.Fields.OrderCount")"
-                                }, {
-                                    field: "Id",
-                                    title: "@T("Admin.Common.View")",
-                                    width: 100,
-                                    headerAttributes: { style: "text-align:center" },
-                                    attributes: { style: "text-align:center" },
-                                    template: '<a class="btn btn-default" href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#"><i class="fa fa-eye"></i>@T("Admin.Common.View")</a>'
-                                }
-                            ]
-                        });
-                    });
-                    </script>
-
-                    <script>
-                        $(document).ready(function () {
-                            $('#search-best-customers-numberoforders-grid').click(function () {
-                                var grid = $('#best-customers-numberoforders-grid').data('kendoGrid');
-                                grid.dataSource.page(1); //new search. Set page size to 1
-                                //grid.dataSource.read(); we already loaded the grid above using "page" function
-                                return false;
-                            });
-                        });
-                    </script>
+                            new ColumnProperty(nameof(BestCustomersReportModel.CustomerId))
+                            {
+                                Title = T("Admin.Common.View").Text,
+                                Width = "100",
+                                ClassName =  StyleColumn.ButtonStyle,
+                                Render = new RenderButtonView(new DataUrl("~/Admin/Customer/Edit/"))
+                            }
+                        }
+                    })
                 </div>
             </div>
         </div>

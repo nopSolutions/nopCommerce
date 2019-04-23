@@ -11,7 +11,6 @@ using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;
-using Nop.Web.Framework.Models.DataTables;
 using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
@@ -90,62 +89,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             return searchModel;
         }
-
-        /// <summary>
-        /// Prepare datatables model
-        /// </summary>
-        /// <param name="searchModel">Search model</param>
-        /// <returns>Datatables model</returns>
-        protected virtual DataTablesModel PrepareManufacturerGridModel(ManufacturerSearchModel searchModel)
-        {
-            //prepare common properties
-            var model = new DataTablesModel
-            {
-                Name = "manufacturers-grid",
-                UrlRead = new DataUrl("List", "Manufacturer", null),
-                SearchButtonId = "search-manufacturers",
-                Length = searchModel.PageSize,
-                LengthMenu = searchModel.AvailablePageSizes
-            };
-
-            //prepare filters to search
-            model.Filters = new List<FilterParameter>()
-            {
-                new FilterParameter(nameof(searchModel.SearchManufacturerName)),
-                new FilterParameter(nameof(searchModel.SearchStoreId))
-            };
-
-            //prepare model columns
-            model.ColumnCollection = new List<ColumnProperty>
-            {
-                new ColumnProperty(nameof(ManufacturerModel.Name))
-                {
-                    Title = _localizationService.GetResource("Admin.Catalog.Manufacturers.Fields.Name")
-                },
-                new ColumnProperty(nameof(ManufacturerModel.Published))
-                {
-                    Title = _localizationService.GetResource("Admin.Catalog.Manufacturers.Fields.Published"),
-                    Width = "100",
-                    ClassName =  StyleColumn.CenterAll,
-                    Render = new RenderBoolean()
-                },
-                new ColumnProperty(nameof(ManufacturerModel.DisplayOrder))
-                {
-                    Title = _localizationService.GetResource("Admin.Catalog.Manufacturers.Fields.DisplayOrder"),
-                    Width = "150"
-                },
-                new ColumnProperty(nameof(ManufacturerModel.Id))
-                {
-                    Title = _localizationService.GetResource("Admin.Common.Edit"),
-                    Width = "100",
-                    ClassName =  StyleColumn.CenterAll,
-                    Render = new RenderButtonEdit(new DataUrl("Edit"))
-                }
-            };
-
-            return model;
-        }
-
+        
         #endregion
 
         #region Methods
@@ -167,7 +111,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
-            searchModel.Grid = PrepareManufacturerGridModel(searchModel);
 
             return searchModel;
         }
@@ -292,7 +235,6 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare grid model
             var model = new ManufacturerProductListModel
             {
-                
                 Data = productManufacturers.Select(productManufacturer =>
                 {
                     //fill in model values from the entity
@@ -361,18 +303,16 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare grid model
-            var model = new AddProductToManufacturerListModel
+            var model = new AddProductToManufacturerListModel().PrepareToGrid(searchModel, products, () =>
             {
-                //fill in model values from the entity
-                Data = products.Select(product =>
+                return products.Select(product =>
                 {
                     var productModel = product.ToModel<ProductModel>();
                     productModel.SeName = _urlRecordService.GetSeName(product, 0, true, false);
 
                     return productModel;
-                }),
-                Total = products.TotalCount
-            };
+                });
+            });
 
             return model;
         }

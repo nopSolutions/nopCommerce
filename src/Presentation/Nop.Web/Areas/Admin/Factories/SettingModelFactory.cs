@@ -1357,9 +1357,9 @@ namespace Nop.Web.Areas.Admin.Factories
             var consentList = _gdprService.GetAllConsents().ToPagedList(searchModel);
 
             //prepare list model
-            var model = new GdprConsentListModel
+            var model = new GdprConsentListModel().PrepareToGrid(searchModel, consentList, () =>
             {
-                Data = consentList.Select(consent =>
+                return consentList.Select(consent =>
                 {
                     var gdprConsentModel = consent.ToModel<GdprConsentModel>();
                     var gdprConsent = _gdprService.GetConsentById(gdprConsentModel.Id);
@@ -1367,9 +1367,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     gdprConsentModel.RequiredMessage = _localizationService.GetLocalized(gdprConsent, entity => entity.RequiredMessage);
 
                     return gdprConsentModel;
-                }),
-                Total = consentList.TotalCount
-            };
+                });
+            });
 
             return model;
         }

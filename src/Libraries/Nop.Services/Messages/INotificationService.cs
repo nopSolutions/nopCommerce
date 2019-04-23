@@ -12,29 +12,28 @@ namespace Nop.Services.Messages
         /// Display success notification
         /// </summary>
         /// <param name="message">Message</param>
-        /// <param name="context">HttpContext</param>
-        void SuccessNotification(string message, HttpContext context = null);
+        /// <param name="encode">A value indicating whether the message should not be encoded</param>
+        void SuccessNotification(string message, bool encode = true);
 
         /// <summary>
         /// Display warning notification
         /// </summary>
         /// <param name="message">Message</param>
-        /// <param name="context">HttpContext</param>
-        void WarningNotification(string message, HttpContext context = null);
+        /// <param name="encode">A value indicating whether the message should not be encoded</param>
+        void WarningNotification(string message, bool encode = true);
 
         /// <summary>
         /// Display error notification
         /// </summary>
         /// <param name="message">Message</param>
-        /// <param name="context">HttpContext</param>
-        void ErrorNotification(string message, HttpContext context = null);
+        /// <param name="encode">A value indicating whether the message should not be encoded</param>
+        void ErrorNotification(string message, bool encode = true);
 
         /// <summary>
         /// Display error notification
         /// </summary>
         /// <param name="exception">Exception</param>
         /// <param name="logException">A value indicating whether exception should be logged</param>
-        /// <param name="context">HttpContext</param>
-        void ErrorNotification(Exception exception, bool logException = true, HttpContext context = null);
+        void ErrorNotification(Exception exception, bool logException = true);
     }
 }

@@ -36,7 +36,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly INotificationService _notificationService;
         private readonly IPermissionService _permissionService;
         private readonly IProductService _productService;
-        private readonly IWebHelper _webHelper;
 
         #endregion
 
@@ -52,8 +51,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             IManufacturerService manufacturerService,
             INotificationService notificationService,
             IPermissionService permissionService,
-            IProductService productService,
-            IWebHelper webHelper)
+            IProductService productService)
         {
             _catalogSettings = catalogSettings;
             _categoryService = categoryService;
@@ -66,7 +64,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             _notificationService = notificationService;
             _permissionService = permissionService;
             _productService = productService;
-            _webHelper = webHelper;
         }
 
         #endregion

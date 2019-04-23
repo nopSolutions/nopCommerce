@@ -12,19 +12,19 @@
     var hideCommonBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideCommonBlockAttributeName);
 
     const string hideSecurityBlockAttributeName = "CustomerUserSettingsPage.HideSecurityBlock";
-    var hideSecurityBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSecurityBlockAttributeName, defaultValue: true);
+    var hideSecurityBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSecurityBlockAttributeName);
 
     const string hideAccountBlockAttributeName = "CustomerUserSettingsPage.HideAccountBlock";
-    var hideAccountBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideAccountBlockAttributeName, defaultValue: true);
+    var hideAccountBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideAccountBlockAttributeName);
 
     const string hideProfileBlockAttributeName = "CustomerUserSettingsPage.HideProfileBlock";
-    var hideProfileBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideProfileBlockAttributeName, defaultValue: true);
+    var hideProfileBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideProfileBlockAttributeName);
 
     const string hideCustomerFormFieldsBlockAttributeName = "CustomerUserSettingsPage.HideCustomerFormFieldsBlock";
-    var hideCustomerFormFieldsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideCustomerFormFieldsBlockAttributeName, defaultValue: true);
+    var hideCustomerFormFieldsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideCustomerFormFieldsBlockAttributeName);
 
     const string hideAddressFormFieldsBlockAttributeName = "CustomerUserSettingsPage.HideAddressFormFieldsBlock";
-    var hideAddressFormFieldsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideAddressFormFieldsBlockAttributeName, defaultValue: true);
+    var hideAddressFormFieldsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideAddressFormFieldsBlockAttributeName);
 }
 
 <form asp-controller="Setting" asp-action="CustomerUser" method="post">

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Domain.Catalog;
 using Nop.Services.Catalog;
@@ -7,7 +6,6 @@ using Nop.Services.Localization;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Framework.Factories;
-using Nop.Web.Framework.Models.DataTables;
 using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
@@ -62,7 +60,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             return searchModel;
         }
-
+        
         /// <summary>
         /// Prepare search model of products that use the specification attribute
         /// </summary>
@@ -86,49 +84,6 @@ namespace Nop.Web.Areas.Admin.Factories
             return searchModel;
         }
 
-        /// <summary>
-        /// Prepare datatables model
-        /// </summary>
-        /// <param name="searchModel">Search model</param>
-        /// <returns>Datatables model</returns>
-        protected virtual DataTablesModel PrepareSpecificationAttributeGridModel(SpecificationAttributeSearchModel searchModel)
-        {
-            //prepare common properties
-            var model = new DataTablesModel
-            {
-                Name = "specificationattributes-grid",
-                UrlRead = new DataUrl("List", "SpecificationAttribute", null),
-                Length = searchModel.PageSize,
-                LengthMenu = searchModel.AvailablePageSizes
-            };
-
-            //prepare filters to search
-            model.Filters = null;
-
-            //prepare model columns
-            model.ColumnCollection = new List<ColumnProperty>
-            {
-                new ColumnProperty(nameof(SpecificationAttributeModel.Name))
-                {
-                    Title = _localizationService.GetResource("Admin.Catalog.Attributes.SpecificationAttributes.Fields.Name")
-                },
-                new ColumnProperty(nameof(SpecificationAttributeModel.DisplayOrder))
-                {
-                    Title = _localizationService.GetResource("Admin.Catalog.Attributes.SpecificationAttributes.Fields.DisplayOrder"),
-                    Width = "100"
-                },
-                new ColumnProperty(nameof(SpecificationAttributeModel.Id))
-                {
-                    Title = _localizationService.GetResource("Admin.Common.Edit"),
-                    Width = "100",
-                    ClassName =  StyleColumn.CenterAll,
-                    Render = new RenderButtonEdit(new DataUrl("Edit"))
-                }
-            };
-
-            return model;
-        }
-
         #endregion
 
         #region Methods
@@ -145,7 +100,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
-            searchModel.Grid = PrepareSpecificationAttributeGridModel(searchModel);
 
             return searchModel;
         }
@@ -229,9 +183,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 .GetSpecificationAttributeOptionsBySpecificationAttribute(specificationAttribute.Id).ToPagedList(searchModel);
 
             //prepare list model
-            var model = new SpecificationAttributeOptionListModel
+            var model = new SpecificationAttributeOptionListModel().PrepareToGrid(searchModel, options, () =>
             {
-                Data = options.Select(option =>
+                return options.Select(option =>
                 {
                     //fill in model values from the entity
                     var optionModel = option.ToModel<SpecificationAttributeOptionModel>();
@@ -241,9 +195,8 @@ namespace Nop.Web.Areas.Admin.Factories
                         .GetProductSpecificationAttributeCount(specificationAttributeOptionId: option.Id);
 
                     return optionModel;
-                }),
-                Total = options.TotalCount
-            };
+                });
+            });
 
             return model;
         }
@@ -309,10 +262,10 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new SpecificationAttributeProductListModel
+            var model = new SpecificationAttributeProductListModel().PrepareToGrid(searchModel, products, () =>
             {
                 //fill in model values from the entity
-                Data = products.Select(product =>
+                return products.Select(product =>
                 {
                     var specificationAttributeProductModel = product.ToModel<SpecificationAttributeProductModel>();
                     specificationAttributeProductModel.ProductId = product.Id;
@@ -320,9 +273,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     specificationAttributeProductModel.SpecificationAttributeId = specificationAttribute.Id;
 
                     return specificationAttributeProductModel;
-                }),
-                Total = products.TotalCount
-            };
+                });
+            });
 
             return model;
         }

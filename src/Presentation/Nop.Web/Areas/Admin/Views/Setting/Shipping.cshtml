@@ -12,13 +12,13 @@
     var hideCommonBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideCommonBlockAttributeName);
 
     const string hideNotificationsBlockAttributeName = "ShippingSettingsPage.HideNotificationsBlock";
-    var hideNotificationsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideNotificationsBlockAttributeName, defaultValue: true);
+    var hideNotificationsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideNotificationsBlockAttributeName);
 
     const string hideCheckoutBlockAttributeName = "ShippingSettingsPage.HideCheckoutBlock";
-    var hideCheckoutBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideCheckoutBlockAttributeName, defaultValue: true);
+    var hideCheckoutBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideCheckoutBlockAttributeName);
 
     const string hideShippingOriginBlockAttributeName = "ShippingSettingsPage.HideShippingOriginBlock";
-    var hideShippingOriginBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideShippingOriginBlockAttributeName, defaultValue: true);
+    var hideShippingOriginBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideShippingOriginBlockAttributeName);
 }
 
 <form asp-controller="Setting" asp-action="Shipping" method="post">

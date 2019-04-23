@@ -11,7 +11,6 @@ using Nop.Services.Seo;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Areas.Admin.Models.Customers;
-using Nop.Web.Framework.Models.DataTables;
 using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
@@ -51,82 +50,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #endregion
 
-        #region Utilities
-
-        /// <summary>
-        /// Prepare datatables model
-        /// </summary>
-        /// <param name="searchModel">Search model</param>
-        /// <returns>Datatables model</returns>
-        protected virtual DataTablesModel PrepareCustomerRoleGridModel(CustomerRoleSearchModel searchModel)
-        {
-            //prepare common properties
-            var model = new DataTablesModel
-            {
-                Name = "customerroles-grid",
-                UrlRead = new DataUrl("List", "CustomerRole", null),
-                Length = searchModel.PageSize,
-                LengthMenu = searchModel.AvailablePageSizes
-            };
-
-            //prepare filters to search
-            model.Filters = null;
-
-            //prepare model columns
-            model.ColumnCollection = new List<ColumnProperty>()
-            {
-                new ColumnProperty(nameof(CustomerRoleModel.Name))
-                {
-                    Title = _localizationService.GetResource("Admin.Customers.CustomerRoles.Fields.Name"),
-                    Width = "300"
-                },
-                new ColumnProperty(nameof(CustomerRoleModel.FreeShipping))
-                {
-                    Title = _localizationService.GetResource("Admin.Customers.CustomerRoles.Fields.FreeShipping"),
-                    Width = "100",
-                    ClassName =  StyleColumn.CenterAll,
-                    Render = new RenderBoolean()
-                },
-                new ColumnProperty(nameof(CustomerRoleModel.TaxExempt))
-                {
-                    Title = _localizationService.GetResource("Admin.Customers.CustomerRoles.Fields.TaxExempt"),
-                    Width = "100",
-                    ClassName =  StyleColumn.CenterAll,
-                    Render = new RenderBoolean()
-                },
-                new ColumnProperty(nameof(CustomerRoleModel.Active))
-                {
-                    Title = _localizationService.GetResource("Admin.Customers.CustomerRoles.Fields.Active"),
-                    Width = "100",
-                    ClassName =  StyleColumn.CenterAll,
-                    Render = new RenderBoolean()
-                },
-                new ColumnProperty(nameof(CustomerRoleModel.IsSystemRole))
-                {
-                    Title = _localizationService.GetResource("Admin.Customers.CustomerRoles.Fields.IsSystemRole"),
-                    Width = "100",
-                    ClassName =  StyleColumn.CenterAll,
-                    Render = new RenderBoolean()
-                },
-                new ColumnProperty(nameof(CustomerRoleModel.PurchasedWithProductName))
-                {
-                    Title = _localizationService.GetResource("Admin.Customers.CustomerRoles.Fields.PurchasedWithProduct"),
-                    Width = "200"
-                },
-                new ColumnProperty(nameof(CustomerRoleModel.Id))
-                {
-                    Title = _localizationService.GetResource("Admin.Common.Edit"),
-                    Width = "100",
-                    ClassName =  StyleColumn.CenterAll,
-                    Render = new RenderButtonEdit(new DataUrl("Edit"))                    
-                }
-            };
-
-            return model;
-        }
-
-        #endregion
-
+   
         #region Methods
 
         /// <summary>
@@ -141,7 +65,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
-            searchModel.Grid = PrepareCustomerRoleGridModel(searchModel);
 
             return searchModel;
         }
@@ -262,18 +185,16 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare grid model
-            var model = new CustomerRoleProductListModel
+            var model = new CustomerRoleProductListModel().PrepareToGrid(searchModel, products, () =>
             {
-                //fill in model values from the entity
-                Data = products.Select(product =>
+                return products.Select(product =>
                 {
                     var productModel = product.ToModel<ProductModel>();
                     productModel.SeName = _urlRecordService.GetSeName(product, 0, true, false);
 
                     return productModel;
-                }),
-                Total = products.TotalCount
-            };
+                });
+            });
 
             return model;
         }

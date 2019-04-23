@@ -26,7 +26,51 @@
         <div class="panel-group">
             <div class="panel panel-default">
                 <div class="panel-body">
-                    @await Html.PartialAsync("Table", Model.Grid)
+                    @await Html.PartialAsync("Table", new DataTablesModel
+                    {
+                        Name = "languages-grid",
+                        UrlRead = new DataUrl("List", "Language", null),
+                        Length = Model.PageSize,
+                        LengthMenu = Model.AvailablePageSizes,
+                        ColumnCollection = new List<ColumnProperty>
+                        {
+                            new ColumnProperty(nameof(LanguageModel.Name))
+                            {
+                                Title = T("Admin.Configuration.Languages.Fields.Name").Text
+                            },
+                            new ColumnProperty(nameof(LanguageModel.FlagImageFileName))
+                            {
+                                Title = T("Admin.Configuration.Languages.Fields.FlagImage").Text,
+                                Width = "100",
+                                ClassName =  StyleColumn.CenterAll,
+                                Render = new RenderPicture(Url.Content("~/images/flags/"))
+                            },
+                            new ColumnProperty(nameof(LanguageModel.LanguageCulture))
+                            {
+                                Title = T("Admin.Configuration.Languages.Fields.LanguageCulture").Text,
+                                Width = "200"
+                            },
+                            new ColumnProperty(nameof(LanguageModel.DisplayOrder))
+                            {
+                                Title = T("Admin.Configuration.Languages.Fields.DisplayOrder").Text,
+                                Width = "150"
+                            },
+                            new ColumnProperty(nameof(LanguageModel.Published))
+                            {
+                                Title = T("Admin.Configuration.Languages.Fields.Published").Text,
+                                Width = "150",
+                                ClassName =  StyleColumn.CenterAll,
+                                Render = new RenderBoolean()
+                            },
+                            new ColumnProperty(nameof(LanguageModel.Id))
+                            {
+                                Title = T("Admin.Common.Edit").Text,
+                                Width = "100",
+                                ClassName =  StyleColumn.ButtonStyle,
+                                Render = new RenderButtonEdit(new DataUrl("Edit"))
+                            }
+                        }
+                    })
                 </div>
             </div>
         </div>

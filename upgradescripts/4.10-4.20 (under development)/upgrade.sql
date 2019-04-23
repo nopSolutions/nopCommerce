@@ -238,12 +238,12 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.DT.EmptyTable">
     <Value>No data available in table</Value>
-  </LocaleResource>
+  </LocaleResource>  
   <LocaleResource Name="Admin.DT.Info">
-    <Value>Showing _START_ to _END_ of _TOTAL_ entries</Value>
+    <Value>_START_-_END_ of _TOTAL_ items</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.DT.InfoEmpty">
-    <Value>Showing 0 to 0 of 0 entries</Value>
+    <Value>No records</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.DT.InfoFiltered">
     <Value>(filtered from _MAX_ total entries)</Value>
@@ -252,7 +252,7 @@ set @resources='
     <Value>,</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.DT.lengthMenu">
-    <Value>Show _MENU_ entries</Value>
+    <Value>Show _MENU_ items</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.DT.LoadingRecords">
     <Value>Loading...</Value>
@@ -631,6 +631,27 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Topics.Display">
     <Value>Display</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.UPS.Fields.Url">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.UPS.Fields.Url.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.UPS.Fields.UseSandbox">
+    <Value>Use sandbox</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.UPS.Fields.UseSandbox.Hint">
+    <Value>Check to use sandbox (testing environment).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.UPS.Fields.SaturdayDeliveryEnabled">
+    <Value>Saturday Delivery enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.UPS.Fields.SaturdayDeliveryEnabled.Hint">
+    <Value>Check to get rates for Saturday Delivery options.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Warnings.Errors">
+    <Value><![CDATA[The store has some error(s) or warning(s). Please find more information on the <a href="{0}">Warnings</a> page]]></Value>
   </LocaleResource>
 </Language>'
 
@@ -1825,4 +1846,29 @@ BEGIN
     INSERT [Setting] ([Name], [Value], [StoreId])
     VALUES (N'proxysettings.preauthenticate', N'True', 0)
 END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'upssettings.usesandbox')
+BEGIN
+    IF EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'upssettings.url' AND [Value] LIKE '%wwwcie.ups.com%')
+        INSERT [Setting] ([Name], [Value], [StoreId]) VALUES (N'upssettings.usesandbox', N'True', 0)
+    ELSE
+        INSERT [Setting] ([Name], [Value], [StoreId]) VALUES (N'upssettings.usesandbox', N'False', 0)    
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'upssettings.saturdaydeliveryenabled')
+BEGIN
+    IF EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'upssettings.carrierservicesoffered' AND [Value] LIKE '%[sa]%')
+        INSERT [Setting] ([Name], [Value], [StoreId]) VALUES (N'upssettings.saturdaydeliveryenabled', N'True', 0)
+    ELSE
+        INSERT [Setting] ([Name], [Value], [StoreId]) VALUES (N'upssettings.saturdaydeliveryenabled', N'False', 0)
+END
+GO
+
+--delete setting
+DELETE FROM [Setting]
+WHERE [Name] = N'upssettings.url'
 GO

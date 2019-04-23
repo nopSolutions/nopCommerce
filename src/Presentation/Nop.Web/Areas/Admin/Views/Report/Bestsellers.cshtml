@@ -126,91 +126,48 @@
 
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <div id="salesreport-grid"></div>
-
-                    <script>
-                        $(document).ready(function () {
-                            $("#salesreport-grid").kendoGrid({
-                                dataSource: {
-                                    type: "json",
-                                    transport: {
-                                        read: {
-                                            url: "@Html.Raw(Url.Action("BestsellersList", "Report"))",
-                                            type: "POST",
-                                            dataType: "json",
-                                            data: function() {
-                                                var data = {
-                                                    StartDate: $('#@Html.IdFor(model => model.StartDate)').val(),
-                                                    EndDate: $('#@Html.IdFor(model => model.EndDate)').val(),
-                                                    StoreId: $('#StoreId').val(),
-                                                    OrderStatusId: $('#OrderStatusId').val(),
-                                                    PaymentStatusId: $('#PaymentStatusId').val(),
-                                                    CategoryId: $('#CategoryId').val(),
-                                                    ManufacturerId: $('#ManufacturerId').val(),
-                                                    BillingCountryId: $('#BillingCountryId').val(),
-                                                    VendorId: $('#VendorId').val()
-                                                };
-                                                addAntiForgeryToken(data);
-                                                return data;
-                                            }
-                                        }
-                                    },
-                                    schema: {
-                                        data: "Data",
-                                        total: "Total",
-                                        errors: "Errors"
-                                    },
-                                    error: function(e) {
-                                        display_kendoui_grid_error(e);
-                                        // Cancel the changes
-                                        this.cancelChanges();
-                                    },
-                                    pageSize: @(Model.PageSize),
-                                    serverPaging: true,
-                                    serverFiltering: true,
-                                    serverSorting: true
-                                },
-                                pageable: {
-                                    refresh: true,
-                                    pageSizes: [@(Model.AvailablePageSizes)],
-                                    @await Html.PartialAsync("_GridPagerMessages")
-                                },
-                                editable: {
-                                    confirmation: "@T("Admin.Common.DeleteConfirmation")",
-                                    mode: "inline"
-                                },
-                                scrollable: false,
-                                columns: [{
-                                    field: "ProductName",
-                                    title: "@T("Admin.Reports.Sales.Bestsellers.Fields.Name")"
-                                }, {
-                                    field: "TotalQuantity",
-                                    title: "@T("Admin.Reports.Sales.Bestsellers.Fields.TotalQuantity")"
-                                },{
-                                    field: "TotalAmount",
-                                    title: "@T("Admin.Reports.Sales.Bestsellers.Fields.TotalAmount")"
-                                },{
-                                    field: "ProductId",
-                                    title: "@T("Admin.Common.View")",
-                                    width: 100,
-                                    headerAttributes: { style: "text-align:center" },
-                                    attributes: { style: "text-align:center" },
-                                    template: '<a class="btn btn-default" href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#"><i class="fa fa-eye"></i>@T("Admin.Common.View")</a>'
-                                }]
-                            });
-                        });
-                    </script>
-
-                    <script>
-                        $(document).ready(function () {
-                            $('#search-salesreport').click(function () {
-                                var grid = $('#salesreport-grid').data('kendoGrid');
-                                grid.dataSource.page(1); //new search. Set page size to 1
-                                //grid.dataSource.read(); we already loaded the grid above using "page" function
-                                return false;
-                            });
-                        });
-                    </script>
+                    @await Html.PartialAsync("Table", new DataTablesModel
+                    {
+                        Name = "salesreport-grid",
+                        UrlRead = new DataUrl("BestsellersList", "Report", null),
+                        SearchButtonId = "search-salesreport",
+                        Length = Model.PageSize,
+                        LengthMenu = Model.AvailablePageSizes,
+                        Filters = new List<FilterParameter>
+                        {
+                            new FilterParameter(nameof(Model.StartDate)),
+                            new FilterParameter(nameof(Model.EndDate)),
+                            new FilterParameter(nameof(Model.StoreId)),
+                            new FilterParameter(nameof(Model.OrderStatusId)),
+                            new FilterParameter(nameof(Model.PaymentStatusId)),
+                            new FilterParameter(nameof(Model.CategoryId)),
+                            new FilterParameter(nameof(Model.ManufacturerId)),
+                            new FilterParameter(nameof(Model.BillingCountryId)),
+                            new FilterParameter(nameof(Model.VendorId))
+                        },
+                        ColumnCollection = new List<ColumnProperty>
+                        {
+                            new ColumnProperty(nameof(BestsellerModel.ProductName))
+                            {
+                                Title = T("Admin.Reports.Sales.Bestsellers.Fields.Name").Text
+                            },
+                            new ColumnProperty(nameof(BestsellerModel.TotalQuantity))
+                            {
+                                Title = T("Admin.Reports.Sales.Bestsellers.Fields.TotalQuantity").Text
+                            },
+                            new ColumnProperty(nameof(BestsellerModel.TotalAmount))
+                            {
+                                Title = T("Admin.Reports.Sales.Bestsellers.Fields.TotalAmount").Text
+                            },
+                            new ColumnProperty(nameof(BestsellerModel.ProductId))
+                            {
+                                Title = T("Admin.Common.View").Text,
+                                Width = "100",
+                                ClassName =  StyleColumn.ButtonStyle,
+                                Render = new RenderButtonView(new DataUrl("~/Admin/Product/Edit/"))
+                            }
+                        }
+                    })
                 </div>
             </div>
         </div>

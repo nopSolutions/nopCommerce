@@ -1,4 +1,5 @@
 ﻿@model MaintenanceModel
+@using System.Text.Encodings.Web
 
 <div class="panel-body">
     <div class="form-group">
@@ -13,6 +14,14 @@
                     <i class="fa fa-gears"></i>
                     @T("Admin.System.Maintenance.ReIndexTables.ReIndexNow")
                 </button>
+                <script>
+                    $(document).ready(function() {
+                        $("button[name='re-index']").on("click", function () {
+                            $("html, body").animate({ scrollTop: 0 }, 400);
+                            showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Admin.System.Maintenance.ReIndexTables.Progress").Text))');
+                        });
+                    });
+                </script>
             </div>
         </div>
     </div>

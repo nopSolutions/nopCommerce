@@ -95,9 +95,9 @@ namespace Nop.Web.Areas.Admin.Factories
             var customerAttributes = _customerAttributeService.GetAllCustomerAttributes().ToPagedList(searchModel);
 
             //prepare list model
-            var model = new CustomerAttributeListModel
+            var model = new CustomerAttributeListModel().PrepareToGrid(searchModel, customerAttributes, () =>
             {
-                Data = customerAttributes.Select(attribute =>
+                return customerAttributes.Select(attribute =>
                 {
                     //fill in model values from the entity
                     var attributeModel = attribute.ToModel<CustomerAttributeModel>();
@@ -106,9 +106,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     attributeModel.AttributeControlTypeName = _localizationService.GetLocalizedEnum(attribute.AttributeControlType);
 
                     return attributeModel;
-                }),
-                Total = customerAttributes.TotalCount
-            };
+                });
+            });
 
             return model;
         }
@@ -167,12 +166,11 @@ namespace Nop.Web.Areas.Admin.Factories
                 .GetCustomerAttributeValues(customerAttribute.Id).ToPagedList(searchModel);
 
             //prepare list model
-            var model = new CustomerAttributeValueListModel
+            var model = new CustomerAttributeValueListModel().PrepareToGrid(searchModel, customerAttributeValues, () =>
             {
                 //fill in model values from the entity
-                Data = customerAttributeValues.Select(value => value.ToModel<CustomerAttributeValueModel>()),
-                Total = customerAttributeValues.TotalCount
-            };
+                return customerAttributeValues.Select(value => value.ToModel<CustomerAttributeValueModel>());
+            });
 
             return model;
         }

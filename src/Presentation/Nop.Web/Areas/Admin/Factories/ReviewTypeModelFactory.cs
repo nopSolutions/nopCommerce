@@ -68,12 +68,11 @@ namespace Nop.Web.Areas.Admin.Factories
             var reviewTypes = _reviewTypeService.GetAllReviewTypes().ToPagedList(searchModel);
 
             //prepare list model
-            var model = new ReviewTypeListModel
+            var model = new ReviewTypeListModel().PrepareToGrid(searchModel, reviewTypes, () =>
             {
                 //fill in model values from the entity
-                Data = reviewTypes.Select(reviewType => reviewType.ToModel<ReviewTypeModel>()),
-                Total = reviewTypes.TotalCount
-            };
+                return reviewTypes.Select(reviewType => reviewType.ToModel<ReviewTypeModel>());
+            });
 
             return model;
         }

@@ -12,10 +12,10 @@
     var hideCommonBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideCommonBlockAttributeName);
 
     const string hideProductBlockAttributeName = "MediaSettingsPage.HideProductBlock";
-    var hideProductBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideProductBlockAttributeName, defaultValue: true);
+    var hideProductBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideProductBlockAttributeName);
 
     const string hideOtherPagesBlockAttributeName = "MediaSettingsPage.HideOtherPagesBlock";
-    var hideOtherPagesBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideOtherPagesBlockAttributeName, defaultValue: true);
+    var hideOtherPagesBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideOtherPagesBlockAttributeName);
 }
 
 <form asp-controller="Setting" asp-action="Media" method="post">

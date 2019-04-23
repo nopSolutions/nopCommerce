@@ -4,7 +4,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Text.Encodings.Web;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
@@ -29,7 +28,6 @@ using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Orders;
 using Nop.Web.Areas.Admin.Models.Reports;
 using Nop.Web.Framework.Controllers;
-using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
 
@@ -2758,7 +2756,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (string.IsNullOrEmpty(message))
             {
-                return Json(new { Result = false, Error = JavaScriptEncoder.Default.Encode(_localizationService.GetResource("Admin.Orders.OrderNotes.Fields.Note.Validation")) });
+                return Json(new { Result = false, Error = _localizationService.GetResource("Admin.Orders.OrderNotes.Fields.Note.Validation") });
             }
 
             //try to get an order with the specified id
@@ -2844,7 +2842,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult OrderAverageReportList(DataSourceRequest command)
+        public virtual IActionResult OrderAverageReportList(OrderAverageReportSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedKendoGridJson();
@@ -2854,13 +2852,13 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return Content(string.Empty);
 
             //prepare model
-            var model = _orderModelFactory.PrepareOrderAverageReportListModel();
+            var model = _orderModelFactory.PrepareOrderAverageReportListModel(searchModel);
 
             return Json(model);
         }
 
         [HttpPost]
-        public virtual IActionResult OrderIncompleteReportList()
+        public virtual IActionResult OrderIncompleteReportList(OrderIncompleteReportSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedKendoGridJson();
@@ -2870,7 +2868,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return Content(string.Empty);
 
             //prepare model
-            var model = _orderModelFactory.PrepareOrderIncompleteReportListModel();
+            var model = _orderModelFactory.PrepareOrderIncompleteReportListModel(searchModel);
 
             return Json(model);
         }

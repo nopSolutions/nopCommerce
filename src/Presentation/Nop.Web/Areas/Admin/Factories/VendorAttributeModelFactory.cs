@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Domain.Vendors;
 using Nop.Services.Localization;
@@ -6,6 +7,7 @@ using Nop.Services.Vendors;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Vendors;
 using Nop.Web.Framework.Factories;
+using Nop.Web.Framework.Models.DataTables;
 using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
@@ -37,7 +39,7 @@ namespace Nop.Web.Areas.Admin.Factories
         #endregion
 
         #region Utilities
-
+        
         /// <summary>
         /// Prepare vendor attribute value search model
         /// </summary>
@@ -60,7 +62,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             return searchModel;
         }
-
+        
         #endregion
 
         #region Methods
@@ -95,9 +97,9 @@ namespace Nop.Web.Areas.Admin.Factories
             var vendorAttributes = _vendorAttributeService.GetAllVendorAttributes().ToPagedList(searchModel);
 
             //prepare list model
-            var model = new VendorAttributeListModel
+            var model = new VendorAttributeListModel().PrepareToGrid(searchModel, vendorAttributes, () =>
             {
-                Data = vendorAttributes.Select(attribute =>
+                return vendorAttributes.Select(attribute =>
                 {
                     //fill in model values from the entity
                     var attributeModel = attribute.ToModel<VendorAttributeModel>();
@@ -106,9 +108,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     attributeModel.AttributeControlTypeName = _localizationService.GetLocalizedEnum(attribute.AttributeControlType);
 
                     return attributeModel;
-                }),
-                Total = vendorAttributes.TotalCount
-            };
+                });
+            });
 
             return model;
         }
@@ -166,12 +167,11 @@ namespace Nop.Web.Areas.Admin.Factories
             var vendorAttributeValues = _vendorAttributeService.GetVendorAttributeValues(vendorAttribute.Id).ToPagedList(searchModel);
 
             //prepare list model
-            var model = new VendorAttributeValueListModel
+            var model = new VendorAttributeValueListModel().PrepareToGrid(searchModel, vendorAttributeValues, () =>
             {
                 //fill in model values from the entity
-                Data = vendorAttributeValues.Select(value => value.ToModel<VendorAttributeValueModel>()),
-                Total = vendorAttributeValues.TotalCount
-            };
+                return vendorAttributeValues.Select(value => value.ToModel<VendorAttributeValueModel>());
+            });
 
             return model;
         }

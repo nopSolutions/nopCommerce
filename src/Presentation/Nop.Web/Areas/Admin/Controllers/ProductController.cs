@@ -1556,14 +1556,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 _notificationService.WarningNotification(_localizationService.GetResource("Admin.Catalog.Products.AssociatedProducts.TryToAddSelfGroupedProduct"));
 
-                var _addAssociatedProductSearchModel = _productModelFactory.PrepareAddAssociatedProductSearchModel(new AddAssociatedProductSearchModel());
-
+                var addAssociatedProductSearchModel = _productModelFactory.PrepareAddAssociatedProductSearchModel(new AddAssociatedProductSearchModel());
                 //set current product id
-                _addAssociatedProductSearchModel.ProductId = model.ProductId;
+                addAssociatedProductSearchModel.ProductId = model.ProductId;
 
                 ViewBag.RefreshPage = true;
 
-                return View(_addAssociatedProductSearchModel);
+                return View(addAssociatedProductSearchModel);
             }
 
             ViewBag.RefreshPage = true;
@@ -2459,7 +2458,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 //fill entity from model
                 var tierPrice = model.ToEntity<TierPrice>();
-
+                tierPrice.ProductId = product.Id;
                 tierPrice.CustomerRoleId = model.CustomerRoleId > 0 ? model.CustomerRoleId : (int?)null;
 
                 _productService.InsertTierPrice(tierPrice);
@@ -2527,8 +2526,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //fill entity from model
                 tierPrice = model.ToEntity(tierPrice);
                 tierPrice.CustomerRoleId = model.CustomerRoleId > 0 ? model.CustomerRoleId : (int?)null;
-                tierPrice.StartDateTimeUtc = model.StartDateTimeUtc;
-                tierPrice.EndDateTimeUtc = model.EndDateTimeUtc;
                 _productService.UpdateTierPrice(tierPrice);
 
                 ViewBag.RefreshPage = true;

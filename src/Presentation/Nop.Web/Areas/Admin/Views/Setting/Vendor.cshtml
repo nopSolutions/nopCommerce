@@ -13,10 +13,10 @@
     var hideCommonBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideCommonBlockAttributeName);
 
     const string hideCatalogBlockAttributeName = "VendorSettingsPage.HideCatalogBlock";
-    var hideCatalogBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideCatalogBlockAttributeName, defaultValue: true);
+    var hideCatalogBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideCatalogBlockAttributeName);
 
     const string hideVendorAttributeBlockAttributeName = "VendorSettingsPage.HideVendorAttributeBlock";
-    var hideVendorAttributeBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideVendorAttributeBlockAttributeName, defaultValue: true);
+    var hideVendorAttributeBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideVendorAttributeBlockAttributeName);
 }
 
 <form asp-controller="Setting" asp-action="Vendor" method="post">

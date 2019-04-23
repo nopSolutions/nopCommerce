@@ -36,7 +36,7 @@
                         $("#@(clientId + "value") input").val(data.downloadId);
                     }
                     else {
-                        $('saveDownloadUrlFailed-info').html(data.message);
+                        $('saveDownloadUrlFailed-info').text(data.message);
                         $("#saveDownloadUrlFailed").click();
                     }
                     $('#saveDownloadUrl@(randomNumber)').attr('disabled', false);

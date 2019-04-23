@@ -156,6 +156,8 @@
         public static string ProductDetailsBeforeCollateral => "productdetails_before_collateral";
         public static string ProductDetailsBeforePictures => "productdetails_before_pictures";
         public static string ProductDetailsBottom => "productdetails_bottom";
+        public static string ProductDetailsEssentialBottom => "productdetails_essential_bottom";
+        public static string ProductDetailsEssentialTop => "productdetails_essential_top";
         public static string ProductDetailsInsideOverviewButtonsAfter => "productdetails_inside_overview_buttons_after";
         public static string ProductDetailsInsideOverviewButtonsBefore => "productdetails_inside_overview_buttons_before";
         public static string ProductDetailsOverviewBottom => "productdetails_overview_bottom";

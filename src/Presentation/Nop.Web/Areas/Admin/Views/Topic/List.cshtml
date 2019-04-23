@@ -72,7 +72,87 @@
 
             <div class="panel panel-default">
                 <div class="panel-body">
-                    @await Html.PartialAsync("Table", Model.Grid)
+                    @await Html.PartialAsync("Table", new DataTablesModel
+                    {
+                        Name = "topics-grid",
+                        UrlRead = new DataUrl("List", "Topic", null),
+                        SearchButtonId = "search-topics",
+                        Length = Model.PageSize,
+                        LengthMenu = Model.AvailablePageSizes,
+                        Filters = new List<FilterParameter>
+                        {
+                            new FilterParameter(nameof(Model.SearchKeywords)),
+                            new FilterParameter(nameof(Model.SearchStoreId))
+                        },
+                        ColumnCollection = new List<ColumnProperty>
+                        {
+                            new ColumnProperty(nameof(TopicModel.SystemName))
+                            {
+                                Title = T("Admin.ContentManagement.Topics.Fields.SystemName").Text
+                            },
+                            new ColumnProperty(nameof(TopicModel.Published))
+                            {
+                                Title = T("Admin.ContentManagement.Topics.Fields.Published").Text,
+                                Width = "150",
+                                ClassName = StyleColumn.CenterAll,
+                                Render = new RenderBoolean()
+                            },
+                            new ColumnProperty(nameof(TopicModel.IsPasswordProtected))
+                            {
+                                Title = T("Admin.ContentManagement.Topics.Fields.IsPasswordProtected").Text,
+                                Width = "150",
+                                ClassName = StyleColumn.CenterAll,
+                                Render = new RenderBoolean()
+                            },
+                            new ColumnProperty(nameof(TopicModel.IncludeInSitemap))
+                            {
+                                Title = T("Admin.ContentManagement.Topics.Fields.IncludeInSitemap").Text,
+                                Width = "150",
+                                ClassName = StyleColumn.CenterAll,
+                                Render = new RenderBoolean()
+                            },
+                            new ColumnProperty(nameof(TopicModel.IncludeInTopMenu))
+                            {
+                                Title = T("Admin.ContentManagement.Topics.Fields.IncludeInTopMenu").Text,
+                                Width = "150",
+                                ClassName = StyleColumn.CenterAll,
+                                Render = new RenderBoolean()
+                            },
+                            new ColumnProperty(nameof(TopicModel.IncludeInFooterColumn1))
+                            {
+                                Title = T("Admin.ContentManagement.Topics.Fields.IncludeInFooterColumn1").Text,
+                                Width = "150",
+                                ClassName = StyleColumn.CenterAll,
+                                Render = new RenderBoolean()
+                            },
+                            new ColumnProperty(nameof(TopicModel.IncludeInFooterColumn2))
+                            {
+                                Title = T("Admin.ContentManagement.Topics.Fields.IncludeInFooterColumn2").Text,
+                                Width = "150",
+                                ClassName = StyleColumn.CenterAll,
+                                Render = new RenderBoolean()
+                            },
+                            new ColumnProperty(nameof(TopicModel.IncludeInFooterColumn3))
+                            {
+                                Title = T("Admin.ContentManagement.Topics.Fields.IncludeInFooterColumn3").Text,
+                                Width = "150",
+                                ClassName = StyleColumn.CenterAll,
+                                Render = new RenderBoolean()
+                            },
+                            new ColumnProperty(nameof(TopicModel.DisplayOrder))
+                            {
+                                Title = T("Admin.ContentManagement.Topics.Fields.DisplayOrder").Text,
+                                Width = "100"
+                            },
+                            new ColumnProperty(nameof(TopicModel.Id))
+                            {
+                                Title = T("Admin.Common.Edit").Text,
+                                Width = "100",
+                                ClassName = StyleColumn.ButtonStyle,
+                                Render = new RenderButtonEdit(new DataUrl("Edit"))
+                            }
+                        }
+                    })
                 </div>
             </div>
         </div>
