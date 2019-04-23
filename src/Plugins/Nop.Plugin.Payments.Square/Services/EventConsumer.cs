@@ -11,7 +11,7 @@ using Nop.Web.Framework.UI;
 namespace Nop.Plugin.Payments.Square.Services
 {
     /// <summary>
-    /// Represents event consumer of the Square payment plugin
+    /// Represents plugin event consumer
     /// </summary>
     public class EventConsumer :
         IConsumer<PageRenderingEvent>,
@@ -46,16 +46,13 @@ namespace Nop.Plugin.Payments.Square.Services
         /// <param name="eventMessage">Event message</param>
         public void HandleEvent(PageRenderingEvent eventMessage)
         {
-            if (eventMessage?.Helper?.ViewContext?.ActionDescriptor == null)
-                return;
-
             //check whether the plugin is active
             if (!_paymentPluginManager.IsPluginActive(SquarePaymentDefaults.SystemName))
                 return;
 
             //add js script to one page checkout
-            if (eventMessage.GetRouteNames().Any(r => r.Equals("CheckoutOnePage")))
-                eventMessage.Helper.AddScriptParts(ResourceLocation.Footer, SquarePaymentDefaults.PaymentFormScriptPath, excludeFromBundle: true);
+            if (eventMessage.GetRouteNames().Any(routeName => routeName.Equals(SquarePaymentDefaults.OnePageCheckoutRouteName)))
+                eventMessage.Helper?.AddScriptParts(ResourceLocation.Footer, SquarePaymentDefaults.PaymentFormScriptPath, excludeFromBundle: true);
         }
 
         /// <summary>

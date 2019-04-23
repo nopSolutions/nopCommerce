@@ -3,11 +3,14 @@ using System.ComponentModel.DataAnnotations;
 using FluentValidation.Attributes;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Plugin.Payments.Square.Validators;
-using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Plugin.Payments.Square.Models
 {
+    /// <summary>
+    /// Represents configuration model
+    /// </summary>
     [Validator(typeof(ConfigurationModelValidator))]
     public class ConfigurationModel : BaseNopModel
     {
@@ -48,7 +51,6 @@ namespace Nop.Plugin.Payments.Square.Models
 
         [NopResourceDisplayName("Plugins.Payments.Square.Fields.TransactionMode")]
         public int TransactionModeId { get; set; }
-        public SelectList TransactionModes { get; set; }
 
         [NopResourceDisplayName("Plugins.Payments.Square.Fields.Location")]
         public string LocationId { get; set; }

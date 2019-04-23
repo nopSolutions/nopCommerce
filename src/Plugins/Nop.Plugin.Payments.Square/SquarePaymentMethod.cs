@@ -11,6 +11,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Tasks;
 using Nop.Plugin.Payments.Square.Domain;
+using Nop.Plugin.Payments.Square.Models;
 using Nop.Plugin.Payments.Square.Services;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
@@ -221,7 +222,7 @@ namespace Nop.Plugin.Payments.Square
 
             //try to get previously stored card details
             var storedCardKey = _localizationService.GetResource("Plugins.Payments.Square.Fields.StoredCard.Key");
-            if (paymentRequest.CustomValues.TryGetValue(storedCardKey, out object storedCardId) && !storedCardId.ToString().Equals("0"))
+            if (paymentRequest.CustomValues.TryGetValue(storedCardKey, out var storedCardId) && !storedCardId.ToString().Equals(Guid.Empty.ToString()))
             {
                 //check whether customer exists
                 var customerId = _genericAttributeService.GetAttribute<string>(customer, SquarePaymentDefaults.CustomerIdAttribute);
@@ -237,7 +238,7 @@ namespace Nop.Plugin.Payments.Square
 
             //or try to get the card nonce
             var cardNonceKey = _localizationService.GetResource("Plugins.Payments.Square.Fields.CardNonce.Key");
-            if (!paymentRequest.CustomValues.TryGetValue(cardNonceKey, out object cardNonce) || string.IsNullOrEmpty(cardNonce?.ToString()))
+            if (!paymentRequest.CustomValues.TryGetValue(cardNonceKey, out var cardNonce) || string.IsNullOrEmpty(cardNonce?.ToString()))
                 throw new NopException("Failed to get the card nonce");
 
             //remove the card nonce from payment custom values, since it is no longer needed
@@ -245,7 +246,7 @@ namespace Nop.Plugin.Payments.Square
 
             //whether to save card details for the future purchasing
             var saveCardKey = _localizationService.GetResource("Plugins.Payments.Square.Fields.SaveCard.Key");
-            if (paymentRequest.CustomValues.TryGetValue(saveCardKey, out object saveCardValue) && saveCardValue is bool saveCard && saveCard && !customer.IsGuest())
+            if (paymentRequest.CustomValues.TryGetValue(saveCardKey, out var saveCardValue) && saveCardValue is bool saveCard && saveCard && !customer.IsGuest())
             {
                 //remove the value from payment custom values, since it is no longer needed
                 paymentRequest.CustomValues.Remove(saveCardKey);
@@ -286,7 +287,7 @@ namespace Nop.Plugin.Payments.Square
 
                     //set postal code
                     var postalCodeKey = _localizationService.GetResource("Plugins.Payments.Square.Fields.PostalCode.Key");
-                    if (paymentRequest.CustomValues.TryGetValue(postalCodeKey, out object postalCode) && !string.IsNullOrEmpty(postalCode.ToString()))
+                    if (paymentRequest.CustomValues.TryGetValue(postalCodeKey, out var postalCode) && !string.IsNullOrEmpty(postalCode.ToString()))
                     {
                         //remove the value from payment custom values, since it is no longer needed
                         paymentRequest.CustomValues.Remove(postalCodeKey);
@@ -357,9 +358,6 @@ namespace Nop.Plugin.Payments.Square
         /// <returns>true - hide; false - display.</returns>
         public bool HidePaymentMethod(IList<ShoppingCartItem> cart)
         {
-            //you can put any logic here
-            //for example, hide this payment method if all products in the cart are downloadable
-            //or hide this payment method if current customer is from certain country
             return false;
         }
 
@@ -370,10 +368,8 @@ namespace Nop.Plugin.Payments.Square
         /// <returns>Additional handling fee</returns>
         public decimal GetAdditionalHandlingFee(IList<ShoppingCartItem> cart)
         {
-            var result = _paymentService.CalculateAdditionalFee(cart,
+            return _paymentService.CalculateAdditionalFee(cart,
                 _squarePaymentSettings.AdditionalFee, _squarePaymentSettings.AdditionalFeePercentage);
-
-            return result;
         }
 
         /// <summary>
@@ -528,10 +524,6 @@ namespace Nop.Plugin.Payments.Square
         /// <returns>Result</returns>
         public bool CanRePostProcessPayment(Order order)
         {
-            if (order == null)
-                throw new ArgumentNullException(nameof(order));
-
-            //it's not a redirection payment method. So we always return false
             return false;
         }
 
@@ -543,7 +535,7 @@ namespace Nop.Plugin.Payments.Square
         public IList<string> ValidatePaymentForm(IFormCollection form)
         {
             //try to get errors
-            if (form.TryGetValue("Errors", out StringValues errorsString) && !StringValues.IsNullOrEmpty(errorsString))
+            if (form.TryGetValue(nameof(PaymentInfoModel.Errors), out var errorsString) && !StringValues.IsNullOrEmpty(errorsString))
                 return errorsString.ToString().Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries).ToList();
 
             return new List<string>();
@@ -559,16 +551,16 @@ namespace Nop.Plugin.Payments.Square
             var paymentRequest = new ProcessPaymentRequest();
 
             //pass custom values to payment processor
-            if (form.TryGetValue("CardNonce", out StringValues cardNonce) && !StringValues.IsNullOrEmpty(cardNonce))
+            if (form.TryGetValue(nameof(PaymentInfoModel.CardNonce), out var cardNonce) && !StringValues.IsNullOrEmpty(cardNonce))
                 paymentRequest.CustomValues.Add(_localizationService.GetResource("Plugins.Payments.Square.Fields.CardNonce.Key"), cardNonce.ToString());
 
-            if (form.TryGetValue("StoredCardId", out StringValues storedCardId) && !StringValues.IsNullOrEmpty(storedCardId) && !storedCardId.Equals("0"))
+            if (form.TryGetValue(nameof(PaymentInfoModel.StoredCardId), out var storedCardId) && !StringValues.IsNullOrEmpty(storedCardId) && !storedCardId.Equals(Guid.Empty.ToString()))
                 paymentRequest.CustomValues.Add(_localizationService.GetResource("Plugins.Payments.Square.Fields.StoredCard.Key"), storedCardId.ToString());
 
-            if (form.TryGetValue("SaveCard", out StringValues saveCardValue) && !StringValues.IsNullOrEmpty(saveCardValue) && bool.TryParse(saveCardValue[0], out bool saveCard) && saveCard)
+            if (form.TryGetValue(nameof(PaymentInfoModel.SaveCard), out var saveCardValue) && !StringValues.IsNullOrEmpty(saveCardValue) && bool.TryParse(saveCardValue[0], out var saveCard) && saveCard)
                 paymentRequest.CustomValues.Add(_localizationService.GetResource("Plugins.Payments.Square.Fields.SaveCard.Key"), saveCard);
 
-            if (form.TryGetValue("PostalCode", out StringValues postalCode) && !StringValues.IsNullOrEmpty(postalCode))
+            if (form.TryGetValue(nameof(PaymentInfoModel.PostalCode), out var postalCode) && !StringValues.IsNullOrEmpty(postalCode))
                 paymentRequest.CustomValues.Add(_localizationService.GetResource("Plugins.Payments.Square.Fields.PostalCode.Key"), postalCode.ToString());
 
             return paymentRequest;
@@ -588,7 +580,7 @@ namespace Nop.Plugin.Payments.Square
         /// <returns>View component name</returns>
         public string GetPublicViewComponentName()
         {
-            return SquarePaymentDefaults.ViewComponentName;
+            return SquarePaymentDefaults.VIEW_COMPONENT_NAME;
         }
 
         /// <summary>
@@ -750,68 +742,42 @@ namespace Nop.Plugin.Payments.Square
         /// <summary>
         /// Gets a value indicating whether capture is supported
         /// </summary>
-        public bool SupportCapture
-        {
-            get { return true; }
-        }
+        public bool SupportCapture => true;
 
         /// <summary>
         /// Gets a value indicating whether partial refund is supported
         /// </summary>
-        public bool SupportPartiallyRefund
-        {
-            get { return true; }
-        }
+        public bool SupportPartiallyRefund => true;
 
         /// <summary>
         /// Gets a value indicating whether refund is supported
         /// </summary>
-        public bool SupportRefund
-        {
-            get { return true; }
-        }
+        public bool SupportRefund => true;
 
         /// <summary>
         /// Gets a value indicating whether void is supported
         /// </summary>
-        public bool SupportVoid
-        {
-            get { return true; }
-        }
+        public bool SupportVoid => true;
 
         /// <summary>
         /// Gets a recurring payment type of payment method
         /// </summary>
-        public RecurringPaymentType RecurringPaymentType
-        {
-            get { return RecurringPaymentType.Manual; }
-        }
+        public RecurringPaymentType RecurringPaymentType => RecurringPaymentType.Manual;
 
         /// <summary>
         /// Gets a payment method type
         /// </summary>
-        public PaymentMethodType PaymentMethodType
-        {
-            get { return PaymentMethodType.Standard; }
-        }
+        public PaymentMethodType PaymentMethodType => PaymentMethodType.Standard;
 
         /// <summary>
         /// Gets a value indicating whether we should display a payment information page for this plugin
         /// </summary>
-        public bool SkipPaymentInfo
-        {
-            get { return false; }
-        }
+        public bool SkipPaymentInfo => false;
 
         /// <summary>
         /// Gets a payment method description that will be displayed on checkout pages in the public store
         /// </summary>
-        public string PaymentMethodDescription
-        {
-            //return description of this payment method to be display on "payment method" checkout step. good practice is to make it localizable
-            //for example, for a redirection payment method, description may be like this: "You will be redirected to PayPal site to complete the payment"
-            get { return _localizationService.GetResource("Plugins.Payments.Square.PaymentMethodDescription"); }
-        }
+        public string PaymentMethodDescription => _localizationService.GetResource("Plugins.Payments.Square.PaymentMethodDescription");
 
         #endregion
     }

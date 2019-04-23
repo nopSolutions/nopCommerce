@@ -1878,3 +1878,11 @@ GO
 DELETE FROM [Setting]
 WHERE [Name] = N'upssettings.url'
 GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'squarepaymentsettings.refreshtoken')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'squarepaymentsettings.refreshtoken', N'00000000-0000-0000-0000-000000000000', 0)
+END
+GO
