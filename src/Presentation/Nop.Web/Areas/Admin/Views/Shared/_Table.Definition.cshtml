@@ -207,16 +207,17 @@ columns: [
                 case RenderLink link:
                     <text>
                     render: function (data, type, row, meta) {
+                        var textRenderer = $.fn.dataTable.render.text().display;
                         @if (!string.IsNullOrEmpty(link.Title))
                         {
                             <text>
-                            return '<a href="@GetUrl(link.Url)' + row.@link.Url.DataId + '">@JavaScriptEncoder.Default.Encode(link.Title)</a>';
+                            return '<a href="@GetUrl(link.Url)' + textRenderer(row.@link.Url.DataId) + '">@JavaScriptEncoder.Default.Encode(link.Title)</a>';
                             </text>
                         }
                         else
                         {
                             <text>
-                                return '<a href="@GetUrl(link.Url)' + row.@link.Url.DataId + '">' + data + '</a>';
+                            return '<a href="@GetUrl(link.Url)' + textRenderer(row.@link.Url.DataId) + '">' + textRenderer(data) + '</a>';
                             </text>
                         }
                     },
