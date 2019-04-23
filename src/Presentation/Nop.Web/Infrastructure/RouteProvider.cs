@@ -290,7 +290,7 @@ namespace Nop.Web.Infrastructure
             routeBuilder.MapLocalizedRoute("CustomerProfile", "profile/{id:min(0)}",
 				new { controller = "Profile", action = "Index" });
 
-            routeBuilder.MapLocalizedRoute("CustomerProfilePaged", "profile/{id}/page/{pageNumber:min(0)}",
+            routeBuilder.MapLocalizedRoute("CustomerProfilePaged", "profile/{id:min(0)}/page/{pageNumber:min(0)}",
 				new { controller = "Profile", action = "Index" });
 
             //orders
