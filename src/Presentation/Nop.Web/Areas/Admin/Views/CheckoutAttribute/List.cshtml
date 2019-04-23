@@ -49,12 +49,14 @@
                         {
                             Title = T("Admin.Catalog.Attributes.CheckoutAttributes.Fields.IsRequired").Text,
                             Width = "100",
+                            ClassName = StyleColumn.CenterAll,
                             Render = new RenderBoolean()
                         },
                         new ColumnProperty(nameof(CheckoutAttributeModel.DisplayOrder))
                         {
                             Title = T("Admin.Catalog.Attributes.CheckoutAttributes.Fields.DisplayOrder").Text,
-                            Width = "100"
+                            Width = "100",
+                            ClassName = StyleColumn.CenterAll
                         },
                         new ColumnProperty(nameof(CheckoutAttributeModel.Id))
                         {

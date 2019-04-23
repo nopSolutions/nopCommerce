@@ -21,18 +21,21 @@
             {
                 Title = T("Admin.Settings.ReviewType.Fields.IsRequired").Text,
                 Width = "100",
+                ClassName = StyleColumn.CenterAll,
                 Render = new RenderBoolean()
             },
             new ColumnProperty(nameof(ReviewTypeModel.VisibleToAllCustomers))
             {
                 Title = T("Admin.Settings.ReviewType.Fields.VisibleToAllCustomers").Text,
                 Width = "100",
+                ClassName = StyleColumn.CenterAll,
                 Render = new RenderBoolean()
             },
             new ColumnProperty(nameof(ReviewTypeModel.DisplayOrder))
             {
                 Title = T("Admin.Settings.ReviewType.Fields.DisplayOrder").Text,
-                Width = "100"
+                Width = "100",
+                ClassName = StyleColumn.CenterAll
             },
             new ColumnProperty(nameof(ReviewTypeModel.Id))
             {

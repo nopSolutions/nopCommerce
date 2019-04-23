@@ -47,7 +47,8 @@
                             new ColumnProperty(nameof(ForumGroupModel.DisplayOrder))
                             {
                                 Title = T("Admin.ContentManagement.Forums.ForumGroup.Fields.DisplayOrder").Text,
-                                Width = "100"
+                                Width = "100",
+                                ClassName =  StyleColumn.CenterAll
                             },
                             new ColumnProperty(nameof(ForumGroupModel.CreatedOn))
                             {
@@ -84,7 +85,8 @@
                                 new ColumnProperty(nameof(ForumModel.DisplayOrder))
                                 {
                                     Title = T("Admin.ContentManagement.Forums.Forum.Fields.DisplayOrder").Text,
-                                    Width = "150"
+                                    Width = "150",
+                                    ClassName =  StyleColumn.CenterAll
                                 },
                                 new ColumnProperty(nameof(ForumModel.CreatedOn))
                                 {

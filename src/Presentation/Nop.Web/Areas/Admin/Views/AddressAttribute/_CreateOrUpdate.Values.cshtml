@@ -27,12 +27,14 @@
                 {
                     Title = T("Admin.Address.AddressAttributes.Values.Fields.IsPreSelected").Text,
                     Width = "10",
+                    ClassName = StyleColumn.CenterAll,
                     Render = new RenderBoolean()
                 },
                 new ColumnProperty(nameof(AddressAttributeValueModel.DisplayOrder))
                 {
                     Title = T("Admin.Address.AddressAttributes.Values.Fields.DisplayOrder").Text,
-                    Width = "100"
+                    Width = "100",
+                    ClassName =  StyleColumn.CenterAll
                 },
                 new ColumnProperty(nameof(AddressAttributeValueModel.Id))
                 {
