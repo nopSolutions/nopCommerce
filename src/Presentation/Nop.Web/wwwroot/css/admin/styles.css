@@ -833,6 +833,10 @@ div.dataTables_wrapper div.dataTables_processing .fa {
     font-size: 30px;
 }
 
+.dataTables_wrapper.no-footer .dataTables_scrollBody {
+  border-bottom: 1px solid #f4f4f4;
+}
+
 /* NAV BAR */
 .navbar-custom-menu > .navbar-nav > li {
     height: 50px;
