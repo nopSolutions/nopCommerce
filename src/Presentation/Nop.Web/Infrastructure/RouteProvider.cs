@@ -342,7 +342,7 @@ namespace Nop.Web.Infrastructure
                 new { controller = "Customer", action = "GdprTools" });
 
             //customer check gift card balance 
-            routeBuilder.MapLocalizedRoute("CheckGiftCardBalance", "customer/CheckGiftCardBalance",
+            routeBuilder.MapLocalizedRoute("CheckGiftCardBalance", "customer/checkgiftcardbalance",
                 new { controller = "Customer", action = "CheckGiftCardBalance" });
 
             //poll vote AJAX link
