@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Linq;
 using System.Runtime.ExceptionServices;
 using System.Threading.Tasks;
@@ -6,6 +7,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Net.Http.Headers;
@@ -18,6 +20,7 @@ using Nop.Core.Infrastructure;
 using Nop.Services.Authentication;
 using Nop.Services.Common;
 using Nop.Services.Installation;
+using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Web.Framework.Globalization;
 using Nop.Web.Framework.Mvc.Routing;
@@ -280,6 +283,26 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 return;
 
             application.UseMiddleware<AuthenticationMiddleware>();
+        }
+
+        /// <summary>
+        /// Configure the request localization feature
+        /// </summary>
+        /// <param name="application">Builder for configuring an application's request pipeline</param>
+        public static void UseNopRequestLocalization(this IApplicationBuilder application)
+        {
+            application.UseRequestLocalization(options =>
+            {
+                if (!DataSettingsManager.DatabaseIsInstalled)
+                    return;
+
+                //prepare supported cultures
+                var cultures = EngineContext.Current.Resolve<ILanguageService>().GetAllLanguages()
+                    .OrderBy(language => language.DisplayOrder)
+                    .Select(language => new CultureInfo(language.LanguageCulture)).ToList();
+                options.SupportedCultures = cultures;
+                options.DefaultRequestCulture = new RequestCulture(cultures.FirstOrDefault());
+            });
         }
 
         /// <summary>

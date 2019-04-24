@@ -69,7 +69,7 @@ namespace Nop.Web.Framework.Infrastructure
             application.UseSession();
 
             //use request localization
-            application.UseRequestLocalization();
+            application.UseNopRequestLocalization();
 
             //set request culture
             application.UseCulture();
