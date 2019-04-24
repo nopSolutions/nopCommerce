@@ -234,7 +234,7 @@ columns: [
                 case RenderButtonRemove button:
                     <text>
                     render: function (data, type, row, meta) {
-                        return '<a href="#" class="@GetEnumValue(typeof(StyleButton), button.Style)" onclick="DeleteData_@(model_name)(\'' + data + '\')"><i class="fa fa-remove"></i>@button.Title</a>';
+                        return '<a href="#" class="@GetEnumValue(typeof(StyleButton), button.Style)" onclick="DeleteData_@(model_name)(\'' + data + '\');return false;"><i class="fa fa-remove"></i>@button.Title</a>';
                     },
                     </text>
                     break;
@@ -265,7 +265,7 @@ columns: [
                     {
                         <text>
                         render: function (data, type, row, meta) {
-                            return '<a class="@GetEnumValue(typeof(StyleButton), buttonCustom.Style)" onclick="@buttonCustom.OnClickFunctionName' + '(' + data + ')">@JavaScriptEncoder.Default.Encode(buttonCustom.Title)</a>';
+                            return '<a class="@GetEnumValue(typeof(StyleButton), buttonCustom.Style)" onclick="@buttonCustom.OnClickFunctionName' + '(' + data + ');">@JavaScriptEncoder.Default.Encode(buttonCustom.Title)</a>';
                         },
                         </text>
                     }
