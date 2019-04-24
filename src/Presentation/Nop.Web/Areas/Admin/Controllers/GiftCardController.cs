@@ -96,7 +96,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult GiftCardList(GiftCardSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageGiftCards))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _giftCardModelFactory.PrepareGiftCardListModel(searchModel);
@@ -293,7 +293,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult UsageHistoryList(GiftCardUsageHistorySearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageGiftCards))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //try to get a gift card with the specified id
             var giftCard = _giftCardService.GetGiftCardById(searchModel.GiftCardId)

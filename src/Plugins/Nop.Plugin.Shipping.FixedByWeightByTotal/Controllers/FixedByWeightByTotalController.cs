@@ -147,7 +147,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Controllers
         public IActionResult FixedShippingRateList(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             var rateModels = _shippingService.GetAllShippingMethods().Select(shippingMethod => new FixedRateModel
             {
@@ -186,7 +186,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Controllers
         public IActionResult RateByWeightByTotalList(ConfigurationModel searchModel, ConfigurationModel filter)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //var records = _shippingByWeightService.GetAll(command.Page - 1, command.PageSize);
             var records = _shippingByWeightService.FindRecords(

@@ -65,7 +65,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult List(WidgetSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageWidgets))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _widgetModelFactory.PrepareWidgetListModel(searchModel);

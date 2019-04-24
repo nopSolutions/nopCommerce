@@ -123,7 +123,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult ListSelect(PluginSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _pluginModelFactory.PreparePluginListModel(searchModel);
@@ -536,7 +536,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult OfficialFeedSelect(OfficialFeedPluginSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _pluginModelFactory.PrepareOfficialFeedPluginListModel(searchModel);

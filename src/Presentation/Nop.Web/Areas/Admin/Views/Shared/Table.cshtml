@@ -123,7 +123,12 @@
                 type: '@WebRequestMethods.Http.Post',
                 dataType: 'json',
                 data: postData,
-                success: function () {
+                success: function (result) {
+                    //display error if returned
+                    if (result) {
+                        display_datatables_error(result);
+                    }
+                    //refresh grid
                     $('#@Model.Name').DataTable().draw(false);
                 },
                 error: function (xhr, ajaxOptions, thrownError) {

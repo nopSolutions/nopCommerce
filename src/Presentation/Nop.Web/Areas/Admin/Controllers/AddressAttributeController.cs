@@ -103,7 +103,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult List(AddressAttributeSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _addressAttributeModelFactory.PrepareAddressAttributeListModel(searchModel);
@@ -242,7 +242,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult ValueList(AddressAttributeValueSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //try to get an address attribute with the specified id
             var addressAttribute = _addressAttributeService.GetAddressAttributeById(searchModel.AddressAttributeId)

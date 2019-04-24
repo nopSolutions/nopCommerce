@@ -439,7 +439,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult OrderList(OrderSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _orderModelFactory.PrepareOrderListModel(searchModel);
@@ -451,7 +451,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult ReportAggregates(OrderSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _orderModelFactory.PrepareOrderAggregatorModel(searchModel);
@@ -1804,7 +1804,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult AddProductToOrder(AddProductToOrderSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //try to get an order with the specified id
             var order = _orderService.GetOrderById(searchModel.OrderId)
@@ -2094,7 +2094,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult ShipmentListSelect(ShipmentSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _orderModelFactory.PrepareShipmentListModel(searchModel);
@@ -2106,7 +2106,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult ShipmentsByOrder(OrderShipmentSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //try to get an order with the specified id
             var order = _orderService.GetOrderById(searchModel.OrderId)
@@ -2126,7 +2126,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult ShipmentsItemsByShipmentId(ShipmentItemSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //try to get a shipment with the specified id
             var shipment = _shipmentService.GetShipmentById(searchModel.ShipmentId)
@@ -2733,7 +2733,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult OrderNotesSelect(OrderNoteSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //try to get an order with the specified id
             var order = _orderService.GetOrderById(searchModel.OrderId)
@@ -2821,7 +2821,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult BestsellersBriefReportByQuantityList(BestsellerBriefSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _orderModelFactory.PrepareBestsellerBriefListModel(searchModel);
@@ -2833,7 +2833,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult BestsellersBriefReportByAmountList(BestsellerBriefSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _orderModelFactory.PrepareBestsellerBriefListModel(searchModel);
@@ -2845,7 +2845,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult OrderAverageReportList(OrderAverageReportSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //a vendor doesn't have access to this report
             if (_workContext.CurrentVendor != null)
@@ -2861,7 +2861,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult OrderIncompleteReportList(OrderIncompleteReportSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //a vendor doesn't have access to this report
             if (_workContext.CurrentVendor != null)

@@ -77,6 +77,32 @@ function bindBootstrapTabSelectEvent(tabsId, inputId) {
     });
 }
 
+function display_datatables_error(e) {
+  if (e.error) {
+    if ((typeof e.error) == 'string') {
+      //single error
+      //display the message
+      alert(e.error);
+    } else {
+      //array of errors
+      //source: http://docs.kendoui.com/getting-started/using-kendo-with/aspnet-mvc/helpers/grid/faq#how-do-i-display-model-state-errors?
+      var message = "The following errors have occurred:";
+      //create a message containing all errors.
+      $.each(e.error, function (key, value) {
+        if (value.error) {
+          message += "\n";
+          message += value.error.join("\n");
+        }
+      });
+      //display the message
+      alert(message);
+    }
+    //ignore empty error
+  } else if (e.errorThrown) {
+    alert('Error happened');
+  }
+}
+
 function display_kendoui_grid_error(e) {
     if (e.errors) {
         if ((typeof e.errors) == 'string') {

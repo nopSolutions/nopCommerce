@@ -76,7 +76,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult List(CustomerRoleSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _customerRoleModelFactory.PrepareCustomerRoleListModel(searchModel);
@@ -233,7 +233,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult AssociateProductToCustomerRolePopupList(CustomerRoleProductSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _customerRoleModelFactory.PrepareCustomerRoleProductListModel(searchModel);
