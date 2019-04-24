@@ -1424,7 +1424,7 @@ span.grid-report-item.red {
 
 .onoffswitch {
     position: relative;
-    display: inline-block;
+    width: 130px;
     -webkit-user-select:none; 
     -moz-user-select:none; 
     -ms-user-select: none;
