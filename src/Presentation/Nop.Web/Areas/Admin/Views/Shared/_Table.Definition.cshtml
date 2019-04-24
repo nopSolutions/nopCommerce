@@ -154,8 +154,9 @@ dom: '<"row"<"col-md-12"t>>' +
         '<"col-md-2"<"pull-right"i>>' +
      '>',
 columns: [
-    @foreach (var column in Model.ColumnCollection)
+    @for (int i = 0; i < Model.ColumnCollection.Count; i++)
     {
+        var column = Model.ColumnCollection[i];
         <text>
         {            
             @if (!string.IsNullOrEmpty(column.Title) && !column.IsMasterCheckBox)
@@ -322,7 +323,8 @@ columns: [
                     break;
             }
             data: '@column.Data'
-        },
+        } 
+        @if (i != Model.ColumnCollection.Count - 1) {<text>,</text>}
         </text>
     }
 ]
