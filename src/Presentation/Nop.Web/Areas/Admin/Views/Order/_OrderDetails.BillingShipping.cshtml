@@ -168,7 +168,7 @@
             </div>
             @if (Model.IsShippable)
             {
-                if (!Model.PickUpInStore && Model.ShippingAddress != null)
+                if (!Model.PickupInStore && Model.ShippingAddress != null)
                 {
                     <div class="col-md-6">
                         <div class="row">
@@ -339,7 +339,7 @@
                     </div>
                 }
 
-                if (Model.PickUpInStore && Model.PickupAddress != null)
+                if (Model.PickupInStore && Model.PickupAddress != null)
                 {
                     <div class="col-md-6">
                         <div class="row">

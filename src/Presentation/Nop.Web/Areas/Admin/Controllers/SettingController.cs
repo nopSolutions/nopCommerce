@@ -391,9 +391,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             //this behavior can increase performance because cached settings will not be cleared 
             //and loaded from database after each update
             _settingService.SaveSettingOverridablePerStore(shippingSettings, x => x.ShipToSameAddress, model.ShipToSameAddress_OverrideForStore, storeScope, false);
-            _settingService.SaveSettingOverridablePerStore(shippingSettings, x => x.AllowPickUpInStore, model.AllowPickUpInStore_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(shippingSettings, x => x.AllowPickupInStore, model.AllowPickupInStore_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(shippingSettings, x => x.DisplayPickupPointsOnMap, model.DisplayPickupPointsOnMap_OverrideForStore, storeScope, false);
-            _settingService.SaveSettingOverridablePerStore(shippingSettings, x => x.IgnoreAdditionalShippingChargeForPickUpInStore, model.IgnoreAdditionalShippingChargeForPickUpInStore_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(shippingSettings, x => x.IgnoreAdditionalShippingChargeForPickupInStore, model.IgnoreAdditionalShippingChargeForPickupInStore_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(shippingSettings, x => x.GoogleMapsApiKey, model.GoogleMapsApiKey_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(shippingSettings, x => x.UseWarehouseLocation, model.UseWarehouseLocation_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(shippingSettings, x => x.NotifyCustomerAboutShippingFromMultipleLocations, model.NotifyCustomerAboutShippingFromMultipleLocations_OverrideForStore, storeScope, false);

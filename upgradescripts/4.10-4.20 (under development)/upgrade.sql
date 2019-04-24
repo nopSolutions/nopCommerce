@@ -659,6 +659,30 @@ set @resources='
   <LocaleResource Name="Account.Login.Fields.Username">
     <Value>Username</Value>
   </LocaleResource>
+ <LocaleResource Name="Admin.Configuration.Settings.Shipping.AllowPickUpInStore">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.AllowPickUpInStore.Hint">
+    <Value></Value>
+  </LocaleResource>
+   <LocaleResource Name="Admin.Configuration.Settings.Shipping.AllowPickupInStore">
+    <Value>"Pick Up in Store" enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.AllowPickupInStore.Hint">
+    <Value>A value indicating whether "Pick Up in Store" option is enabled during checkout. Please ensure that you have at least one active pickup point provider.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.IgnoreAdditionalShippingChargeForPickUpInStore">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.IgnoreAdditionalShippingChargeForPickUpInStore.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.IgnoreAdditionalShippingChargeForPickupInStore">
+    <Value>Ignore additional shipping charge for pick up in store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.IgnoreAdditionalShippingChargeForPickupInStore.Hint">
+    <Value>Check if you want ignore additional shipping charge for pick up in store.</Value>
+  </LocaleResource>  
 </Language>'
 
 CREATE TABLE #LocaleStringResourceTmp
@@ -1884,5 +1908,13 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'squarepaymentsettings.re
 BEGIN
     INSERT [Setting] ([Name], [Value], [StoreId])
     VALUES (N'squarepaymentsettings.refreshtoken', N'00000000-0000-0000-0000-000000000000', 0)
+END
+GO
+
+--rename column
+IF EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[Order]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
+AND EXISTS (SELECT 1 FROM sys.columns WHERE object_id = OBJECT_ID(N'[Order]') and NAME='PickUpInStore')
+BEGIN
+    EXEC sp_RENAME '[Order].[PickUpInStore]', 'PickupInStore', 'COLUMN'
 END
 GO

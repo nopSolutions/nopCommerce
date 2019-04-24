@@ -564,8 +564,8 @@ namespace Nop.Web.Areas.Admin.Factories
             model.IsShippable = true;
             model.ShippingMethod = order.ShippingMethod;
             model.CanAddNewShipments = _orderService.HasItemsToAddToShipment(order);
-            model.PickUpInStore = order.PickUpInStore;
-            if (!order.PickUpInStore)
+            model.PickupInStore = order.PickupInStore;
+            if (!order.PickupInStore)
             {
                 model.ShippingAddress = order.ShippingAddress.ToModel(model.ShippingAddress);
                 PrepareAddressModel(model.ShippingAddress, order.ShippingAddress);

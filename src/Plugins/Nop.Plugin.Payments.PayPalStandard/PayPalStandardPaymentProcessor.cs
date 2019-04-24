@@ -142,7 +142,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
             var storeLocation = _webHelper.GetStoreLocation();
 
             //choosing correct order address
-            var orderAddress = postProcessPaymentRequest.Order.PickUpInStore
+            var orderAddress = postProcessPaymentRequest.Order.PickupInStore
                     ? postProcessPaymentRequest.Order.PickupAddress
                     : postProcessPaymentRequest.Order.ShippingAddress;
 

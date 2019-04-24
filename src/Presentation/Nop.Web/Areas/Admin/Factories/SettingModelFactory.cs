@@ -871,9 +871,9 @@ namespace Nop.Web.Areas.Admin.Factories
             if (storeId > 0)
             {
                 model.ShipToSameAddress_OverrideForStore = _settingService.SettingExists(shippingSettings, x => x.ShipToSameAddress, storeId);
-                model.AllowPickUpInStore_OverrideForStore = _settingService.SettingExists(shippingSettings, x => x.AllowPickUpInStore, storeId);
+                model.AllowPickupInStore_OverrideForStore = _settingService.SettingExists(shippingSettings, x => x.AllowPickupInStore, storeId);
                 model.DisplayPickupPointsOnMap_OverrideForStore = _settingService.SettingExists(shippingSettings, x => x.DisplayPickupPointsOnMap, storeId);
-                model.IgnoreAdditionalShippingChargeForPickUpInStore_OverrideForStore = _settingService.SettingExists(shippingSettings, x => x.IgnoreAdditionalShippingChargeForPickUpInStore, storeId);
+                model.IgnoreAdditionalShippingChargeForPickupInStore_OverrideForStore = _settingService.SettingExists(shippingSettings, x => x.IgnoreAdditionalShippingChargeForPickupInStore, storeId);
                 model.GoogleMapsApiKey_OverrideForStore = _settingService.SettingExists(shippingSettings, x => x.GoogleMapsApiKey, storeId);
                 model.UseWarehouseLocation_OverrideForStore = _settingService.SettingExists(shippingSettings, x => x.UseWarehouseLocation, storeId);
                 model.NotifyCustomerAboutShippingFromMultipleLocations_OverrideForStore = _settingService.SettingExists(shippingSettings, x => x.NotifyCustomerAboutShippingFromMultipleLocations, storeId);

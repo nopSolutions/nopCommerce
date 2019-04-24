@@ -211,7 +211,7 @@ var Shipping = {
         $(document).trigger({ type: "onepagecheckout_shipping_address_new" });
     },
 
-    togglePickUpInStore: function (pickupInStoreInput) {
+    togglePickupInStore: function (pickupInStoreInput) {
         if (pickupInStoreInput.checked) {
             $('#pickup-points-form').show();
             $('#shipping-addresses-form').hide();

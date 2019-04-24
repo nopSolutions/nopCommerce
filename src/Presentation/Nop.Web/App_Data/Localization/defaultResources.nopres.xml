@@ -7998,10 +7998,10 @@
   <LocaleResource Name="Admin.Configuration.Settings.Shipping">
     <Value>Shipping settings</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Shipping.AllowPickUpInStore">
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.AllowPickupInStore">
     <Value>"Pick Up in Store" enabled</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Shipping.AllowPickUpInStore.Hint">
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.AllowPickupInStore.Hint">
     <Value>A value indicating whether "Pick Up in Store" option is enabled during checkout. Please ensure that you have at least one active pickup point provider.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.BlockTitle.Checkout">
@@ -8079,10 +8079,10 @@
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.HideShippingTotal.Hint">
     <Value>Check if you want to hide 'Shipping total' label when shipping is not required.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Shipping.IgnoreAdditionalShippingChargeForPickUpInStore">
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.IgnoreAdditionalShippingChargeForPickupInStore">
     <Value>Ignore additional shipping charge for pick up in store</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Shipping.IgnoreAdditionalShippingChargeForPickUpInStore.Hint">
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.IgnoreAdditionalShippingChargeForPickupInStore.Hint">
     <Value>Check if you want ignore additional shipping charge for pick up in store.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.NotifyCustomerAboutShippingFromMultipleLocations">

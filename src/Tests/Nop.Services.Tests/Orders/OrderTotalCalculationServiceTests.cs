@@ -136,8 +136,8 @@ namespace Nop.Services.Tests.Orders
             _shippingSettings = new ShippingSettings
             {
                 ActiveShippingRateComputationMethodSystemNames = new List<string>(),
-                AllowPickUpInStore = true,
-                IgnoreAdditionalShippingChargeForPickUpInStore = false
+                AllowPickupInStore = true,
+                IgnoreAdditionalShippingChargeForPickupInStore = false
             };
             _shippingSettings.ActiveShippingRateComputationMethodSystemNames.Add("FixedRateTestShippingRateComputationMethod");
 
