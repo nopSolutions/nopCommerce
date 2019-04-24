@@ -1575,15 +1575,6 @@ span.grid-report-item.red {
 .data-tables-length {
   margin: 5px 5px 0 5px;
 }
-table.dataTable.no-footer {
-  border-bottom: 1px solid #f4f4f4;
-}
-.dataTables_wrapper .dataTables_paginate .paginate_button {
-  padding: 0;
-}
-div.dataTables_wrapper div.dataTables_paginate{
-  padding-top: 0;
-}
 
 @media (max-width: 1200px) {
   /* HEADER */
