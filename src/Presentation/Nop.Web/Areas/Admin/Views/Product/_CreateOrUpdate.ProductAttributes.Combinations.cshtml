@@ -135,8 +135,7 @@
                         dataType: 'json',
                         complete: function (data) {
                             //reload grid
-                            var grid = $('#attributecombinations-grid').data('kendoGrid');
-                            grid.dataSource.read();
+                            $('#attributecombinations-grid').DataTable().ajax.reload();
                         },
                         error: function (xhr, ajaxOptions, thrownError) {
                             $("#generateAllAttributeCombinationsAlert").click();
