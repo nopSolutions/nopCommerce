@@ -299,7 +299,7 @@
                                         url: "@(Url.Action("DeleteSelected", "Product"))",
                                         data: postData,
                                         complete: function (data) {
-                                            $('#search-products').DataTable().ajax.reload();
+                                            $('#products-grid').DataTable().ajax.reload();
                                         },
                                         error: function (xhr, ajaxOptions, thrownError) {
                                             $('#deleteSelectedFailed-info').text(thrownError);
