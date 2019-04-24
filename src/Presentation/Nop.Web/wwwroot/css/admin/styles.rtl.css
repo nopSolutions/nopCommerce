@@ -846,6 +846,10 @@ div.dataTables_wrapper div.dataTables_processing .fa {
   border-bottom: 1px solid #f4f4f4;
 }
 
+.dataTables_wrapper tbody td {
+  vertical-align: middle !important;
+}
+
 /* NAV BAR */
 .navbar-custom-menu > .navbar-nav > li {
     height: 50px;
