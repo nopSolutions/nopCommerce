@@ -638,7 +638,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult SortOptionsList(SortOptionSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _settingModelFactory.PrepareSortOptionListModel(searchModel);
@@ -1051,7 +1051,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult GdprConsentList(GdprConsentSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _settingModelFactory.PrepareGdprConsentListModel(searchModel);
@@ -1659,7 +1659,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult AllSettings(SettingSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _settingModelFactory.PrepareSettingListModel(searchModel);
@@ -1679,7 +1679,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 model.Value = model.Value.Trim();
 
             if (!ModelState.IsValid)
-                return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
+                return ErrorForDataTablesJson(ModelState.SerializeErrors());
 
             //try to get a setting with the specified id
             var setting = _settingService.GetSettingById(model.Id)
@@ -1714,7 +1714,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 model.Value = model.Value.Trim();
 
             if (!ModelState.IsValid)
-                return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
+                return ErrorForDataTablesJson(ModelState.SerializeErrors());
 
             var storeId = model.StoreId;
             _settingService.SetSetting(model.Name, model.Value, storeId);

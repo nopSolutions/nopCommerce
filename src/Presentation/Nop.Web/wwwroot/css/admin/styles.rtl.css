@@ -842,6 +842,14 @@ div.dataTables_wrapper div.dataTables_processing .fa {
     font-size: 30px;
 }
 
+.dataTables_wrapper.no-footer .dataTables_scrollBody {
+  border-bottom: 1px solid #f4f4f4;
+}
+
+.dataTables_wrapper tbody td {
+  vertical-align: middle !important;
+}
+
 /* NAV BAR */
 .navbar-custom-menu > .navbar-nav > li {
     height: 50px;
@@ -1219,7 +1227,7 @@ table td .form-group {
 .qq-upload-list {
     float: right;
 }
-.qq-upload-list .qq-upload-success {
+.qq-upload-list .qq-upload-success, .qq-upload-list .qq-upload-fail {
     margin-left: 5px !important;
 }
 .qq-upload-list li.qq-upload-success {
@@ -1424,7 +1432,7 @@ span.grid-report-item.red {
 
 .onoffswitch {
     position: relative;
-    display: inline-block;
+    width: 130px;
     -webkit-user-select:none; 
     -moz-user-select:none; 
     -ms-user-select: none;
@@ -1627,15 +1635,6 @@ span.grid-report-item.red {
 }
 .data-tables-length {
   margin: 5px 5px 0 5px;
-}
-table.dataTable.no-footer {
-  border-bottom: 1px solid #f4f4f4;
-}
-.dataTables_wrapper .dataTables_paginate .paginate_button {
-  padding: 0;
-}
-div.dataTables_wrapper div.dataTables_paginate{
-  padding-top: 0;
 }
 
 @media (max-width: 1200px) {

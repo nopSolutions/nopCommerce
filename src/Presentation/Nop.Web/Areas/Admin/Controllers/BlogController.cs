@@ -115,7 +115,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult List(BlogPostSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageBlog))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _blogModelFactory.PrepareBlogPostListModel(searchModel);
@@ -276,7 +276,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult Comments(BlogCommentSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageBlog))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _blogModelFactory.PrepareBlogCommentListModel(searchModel, searchModel.BlogPostId);

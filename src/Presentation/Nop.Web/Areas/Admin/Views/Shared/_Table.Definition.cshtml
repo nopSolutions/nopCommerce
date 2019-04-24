@@ -126,6 +126,7 @@ else
     },
     </text>
 }
+scrollX: true,
 paging: @Model.Paging.ToString().ToLower(),
 pagingType: '@Model.PagingType',
 language: @await Html.PartialAsync("_GridLocalization"),
@@ -146,11 +147,11 @@ ordering: @Model.Ordering.ToString().ToLower(),
 fixedHeader: @Model.FixedHeader.ToString().ToLower(),
 dom: '<"row"<"col-md-12"t>>' +
      '<"row"' +
-        '<"col-md-8"<"row"' +
-            '<"col-md-6"<"pull-left"p>>' +
-            '<"col-md-6"<"pull-left data-tables-length"l>>' +
+        '<"col-md-10"<"row"' +
+            '<"col-md-8"<"pull-left"p>>' +
+            '<"col-md-2s"<"pull-left data-tables-length"l>>' +
         '>>' +
-        '<"col-md-4"<"pull-right"i>>' +
+        '<"col-md-2"<"pull-right"i>>' +
      '>',
 columns: [
     @foreach (var column in Model.ColumnCollection)
@@ -233,7 +234,7 @@ columns: [
                 case RenderButtonRemove button:
                     <text>
                     render: function (data, type, row, meta) {
-                        return '<a href="#" class="@GetEnumValue(typeof(StyleButton), button.Style)" onclick="DeleteData_@(model_name)(\'' + data + '\')"><i class="fa fa-remove"></i>@button.Title</a>';
+                        return '<a href="#" class="@GetEnumValue(typeof(StyleButton), button.Style)" onclick="DeleteData_@(model_name)(\'' + data + '\');return false;"><i class="fa fa-remove"></i>@button.Title</a>';
                     },
                     </text>
                     break;
@@ -264,7 +265,7 @@ columns: [
                     {
                         <text>
                         render: function (data, type, row, meta) {
-                            return '<a class="@GetEnumValue(typeof(StyleButton), buttonCustom.Style)" onclick="@buttonCustom.OnClickFunctionName' + '(' + data + ')">@JavaScriptEncoder.Default.Encode(buttonCustom.Title)</a>';
+                            return '<a class="@GetEnumValue(typeof(StyleButton), buttonCustom.Style)" onclick="@buttonCustom.OnClickFunctionName' + '(' + data + ');">@JavaScriptEncoder.Default.Encode(buttonCustom.Title)</a>';
                         },
                         </text>
                     }

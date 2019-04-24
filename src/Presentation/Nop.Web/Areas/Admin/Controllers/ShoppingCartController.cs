@@ -60,7 +60,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult CurrentCarts(ShoppingCartSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrentCarts))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _shoppingCartModelFactory.PrepareShoppingCartListModel(searchModel);
@@ -102,7 +102,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult GetCartDetails(ShoppingCartItemSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrentCarts))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //try to get a customer with the specified id
             var customer = _customerService.GetCustomerById(searchModel.CustomerId)
@@ -118,7 +118,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult DeleteItem(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrentCarts))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
             
             _shoppingCartService.DeleteShoppingCartItem(id);
 

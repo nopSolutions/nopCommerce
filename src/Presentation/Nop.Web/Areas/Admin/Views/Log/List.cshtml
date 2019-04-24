@@ -127,7 +127,8 @@
                                 },
                                 new ColumnProperty(nameof(LogModel.ShortMessage))
                                 {
-                                    Title = T("Admin.System.Log.Fields.ShortMessage").Text
+                                    Title = T("Admin.System.Log.Fields.ShortMessage").Text,
+                                    Encode = false
                                 },
                                 new ColumnProperty(nameof(LogModel.CreatedOn))
                                 {

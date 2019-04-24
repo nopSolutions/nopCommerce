@@ -76,7 +76,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult List(EmailAccountSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageEmailAccounts))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _emailAccountModelFactory.PrepareEmailAccountListModel(searchModel);

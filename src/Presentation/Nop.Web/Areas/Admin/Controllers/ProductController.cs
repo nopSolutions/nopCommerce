@@ -745,7 +745,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult ProductList(ProductSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _productModelFactory.PrepareProductListModel(searchModel);
@@ -1195,7 +1195,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult RequiredProductAddPopupList(AddRequiredProductSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _productModelFactory.PrepareAddRequiredProductListModel(searchModel);
@@ -1211,7 +1211,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult RelatedProductList(RelatedProductSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //try to get a product with the specified id
             var product = _productService.GetProductById(searchModel.ProductId)
@@ -1291,7 +1291,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult RelatedProductAddPopupList(AddRelatedProductSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _productModelFactory.PrepareAddRelatedProductListModel(searchModel);
@@ -1341,7 +1341,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult CrossSellProductList(CrossSellProductSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //try to get a product with the specified id
             var product = _productService.GetProductById(searchModel.ProductId)
@@ -1395,7 +1395,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult CrossSellProductAddPopupList(AddCrossSellProductSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _productModelFactory.PrepareAddCrossSellProductListModel(searchModel);
@@ -1444,7 +1444,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult AssociatedProductList(AssociatedProductSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //try to get a product with the specified id
             var product = _productService.GetProductById(searchModel.ProductId)
@@ -1515,7 +1515,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult AssociatedProductAddPopupList(AddAssociatedProductSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _productModelFactory.PrepareAddAssociatedProductListModel(searchModel);
@@ -1623,7 +1623,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult ProductPictureList(ProductPictureSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //try to get a product with the specified id
             var product = _productService.GetProductById(searchModel.ProductId)
@@ -1791,7 +1791,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult ProductSpecAttrList(ProductSpecificationAttributeSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //try to get a product with the specified id
             var product = _productService.GetProductById(searchModel.ProductId)
@@ -1956,7 +1956,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult ProductTags(ProductTagSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProductTags))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _productModelFactory.PrepareProductTagListModel(searchModel);
@@ -2033,7 +2033,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult PurchasedWithOrders(ProductOrderSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //try to get a product with the specified id
             var product = _productService.GetProductById(searchModel.ProductId)
@@ -2314,7 +2314,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult BulkEditSelect(BulkEditProductSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _productModelFactory.PrepareBulkEditProductListModel(searchModel);
@@ -2408,7 +2408,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult TierPriceList(TierPriceSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //try to get a product with the specified id
             var product = _productService.GetProductById(searchModel.ProductId)
@@ -2574,7 +2574,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult ProductAttributeMappingList(ProductAttributeMappingSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //try to get a product with the specified id
             var product = _productService.GetProductById(searchModel.ProductId)
@@ -2799,7 +2799,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult ProductAttributeValueList(ProductAttributeValueSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //try to get a product attribute mapping with the specified id
             var productAttributeMapping = _productAttributeService.GetProductAttributeMappingById(searchModel.ProductAttributeMappingId)
@@ -3043,7 +3043,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult AssociateProductToAttributeValuePopupList(AssociateProductToAttributeValueSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _productModelFactory.PrepareAssociateProductToAttributeValueListModel(searchModel);
@@ -3113,7 +3113,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult ProductAttributeCombinationList(ProductAttributeCombinationSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //try to get a product with the specified id
             var product = _productService.GetProductById(searchModel.ProductId)
@@ -3426,7 +3426,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult StockQuantityHistory(StockQuantityHistorySearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             var product = _productService.GetProductById(searchModel.ProductId)
                 ?? throw new ArgumentException("No product found with the specified id");
