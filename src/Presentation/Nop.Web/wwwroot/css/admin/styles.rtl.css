@@ -1219,7 +1219,7 @@ table td .form-group {
 .qq-upload-list {
     float: right;
 }
-.qq-upload-list .qq-upload-success {
+.qq-upload-list .qq-upload-success, .qq-upload-list .qq-upload-fail {
     margin-left: 5px !important;
 }
 .qq-upload-list li.qq-upload-success {

@@ -1165,7 +1165,7 @@ input[type=file].form-control {
 .qq-upload-list {
     float: left;
 }
-.qq-upload-list .qq-upload-success {
+.qq-upload-list .qq-upload-success, .qq-upload-list .qq-upload-fail {
     margin-right: 5px !important;
 }
 .qq-upload-list li.qq-upload-success {
