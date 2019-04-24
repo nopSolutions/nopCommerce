@@ -274,11 +274,8 @@ namespace Nop.Web.Infrastructure
             routeBuilder.MapLocalizedRoute("EmailRevalidation", "customer/revalidateemail",
 				new { controller = "Customer", action = "EmailRevalidation" });
 
-            routeBuilder.MapLocalizedRoute("CustomerForumSubscriptions", "boards/forumsubscriptions",
+            routeBuilder.MapLocalizedRoute("CustomerForumSubscriptions", "boards/forumsubscriptions/{pageNumber:int?}",
 				new { controller = "Boards", action = "CustomerForumSubscriptions" });
-
-            routeBuilder.MapLocalizedRoute("CustomerForumSubscriptionsPaged", "boards/forumsubscriptions/{pageNumber:int}",
-                new { controller = "Boards", action = "CustomerForumSubscriptions" });
 
             routeBuilder.MapLocalizedRoute("CustomerAddressEdit", "customer/addressedit/{addressId:min(0)}",
 				new { controller = "Customer", action = "AddressEdit" });
