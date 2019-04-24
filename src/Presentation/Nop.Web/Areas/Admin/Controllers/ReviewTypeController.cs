@@ -94,7 +94,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult List(ReviewTypeSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _reviewTypeModelFactory.PrepareReviewTypeListModel(searchModel);

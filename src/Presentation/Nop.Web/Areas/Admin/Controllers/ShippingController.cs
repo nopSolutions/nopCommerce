@@ -131,7 +131,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult Providers(ShippingProviderSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _shippingModelFactory.PrepareShippingProviderListModel(searchModel);
@@ -198,7 +198,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult PickupPointProviders(PickupPointProviderSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _shippingModelFactory.PreparePickupPointProviderListModel(searchModel);
@@ -263,7 +263,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult Methods(ShippingMethodSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _shippingModelFactory.PrepareShippingMethodListModel(searchModel);
@@ -395,7 +395,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult DeliveryDates(DeliveryDateSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _shippingModelFactory.PrepareDeliveryDateListModel(searchModel);
@@ -513,7 +513,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult ProductAvailabilityRanges(ProductAvailabilityRangeSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _shippingModelFactory.PrepareProductAvailabilityRangeListModel(searchModel);
@@ -642,7 +642,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult Warehouses(WarehouseSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _shippingModelFactory.PrepareWarehouseListModel(searchModel);

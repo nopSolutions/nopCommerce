@@ -83,7 +83,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult Methods(PaymentMethodSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePaymentMethods))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _paymentModelFactory.PreparePaymentMethodListModel(searchModel);

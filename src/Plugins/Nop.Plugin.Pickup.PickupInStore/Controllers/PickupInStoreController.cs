@@ -82,7 +82,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
         public IActionResult List(StorePickupPointSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _storePickupPointModelFactory.PrepareStorePickupPointListModel(searchModel);

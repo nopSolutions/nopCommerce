@@ -272,7 +272,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult CustomerList(CustomerSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _customerModelFactory.PrepareCustomerListModel(searchModel);
@@ -1083,7 +1083,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult RewardPointsHistorySelect(CustomerRewardPointsSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //try to get a customer with the specified id
             var customer = _customerService.GetCustomerById(searchModel.CustomerId)
@@ -1138,7 +1138,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult AddressesSelect(CustomerAddressSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //try to get a customer with the specified id
             var customer = _customerService.GetCustomerById(searchModel.CustomerId)
@@ -1307,7 +1307,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult OrderList(CustomerOrderSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //try to get a customer with the specified id
             var customer = _customerService.GetCustomerById(searchModel.CustomerId)
@@ -1415,7 +1415,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult GetCartList(CustomerShoppingCartSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //try to get a customer with the specified id
             var customer = _customerService.GetCustomerById(searchModel.CustomerId)
@@ -1435,7 +1435,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult ListActivityLog(CustomerActivityLogSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //try to get a customer with the specified id
             var customer = _customerService.GetCustomerById(searchModel.CustomerId)
@@ -1455,7 +1455,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult BackInStockSubscriptionList(CustomerBackInStockSubscriptionSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //try to get a customer with the specified id
             var customer = _customerService.GetCustomerById(searchModel.CustomerId)
@@ -1486,7 +1486,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult GdprLogList(GdprLogSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _customerModelFactory.PrepareGdprLogListModel(searchModel);

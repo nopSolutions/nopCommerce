@@ -115,7 +115,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult List(NewsItemSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageNews))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _newsModelFactory.PrepareNewsItemListModel(searchModel);
@@ -276,7 +276,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult Comments(NewsCommentSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageNews))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _newsModelFactory.PrepareNewsCommentListModel(searchModel, searchModel.NewsItemId);

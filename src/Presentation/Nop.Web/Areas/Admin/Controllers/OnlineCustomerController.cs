@@ -42,7 +42,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult List(OnlineCustomerSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _customerModelFactory.PrepareOnlineCustomerListModel(searchModel);

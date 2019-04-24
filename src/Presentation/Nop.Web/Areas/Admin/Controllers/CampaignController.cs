@@ -100,7 +100,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult List(CampaignSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _campaignModelFactory.PrepareCampaignListModel(searchModel);

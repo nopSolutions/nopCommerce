@@ -97,7 +97,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult ListLogs(ActivityLogSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageActivityLog))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _activityLogModelFactory.PrepareActivityLogListModel(searchModel);
