@@ -196,15 +196,12 @@ columns: [
             @if (column.ClassName.HasValue)
             {
                 <text>
-                className: '@GetEnumValue(typeof(StyleColumn), column.ClassName.Value) @column.Data',
+                className: '@GetEnumValue(typeof(StyleColumn), column.ClassName.Value)',
                 </text>
             }
-            else
-            {
-                <text>
-                className: '@column.Data',
-                </text>
-            }
+            createdCell: function (td, cellData, rowData, row, col) {
+               $(td).attr('data-columnname', '@column.Data');
+            },
             @if (column.Encode && column.Render == null)
             {
                 <text>
