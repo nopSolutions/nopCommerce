@@ -1331,25 +1331,24 @@ namespace Nop.Web.Areas.Admin.Factories
             var productPictures = _productService.GetProductPicturesByProductId(product.Id).ToPagedList(searchModel);
 
             //prepare grid model
-            var model = new ProductPictureListModel
+            var model = new ProductPictureListModel().PrepareToGrid(searchModel, productPictures, () =>
             {
-                Data = productPictures.Select(productPicture =>
+                return productPictures.Select(productPicture =>
                 {
                     //fill in model values from the entity
                     var productPictureModel = productPicture.ToModel<ProductPictureModel>();
 
                     //fill in additional values (not existing in the entity)
                     var picture = _pictureService.GetPictureById(productPicture.PictureId)
-                        ?? throw new Exception("Picture cannot be loaded");
+                                  ?? throw new Exception("Picture cannot be loaded");
 
                     productPictureModel.PictureUrl = _pictureService.GetPictureUrl(picture);
                     productPictureModel.OverrideAltAttribute = picture.AltAttribute;
                     productPictureModel.OverrideTitleAttribute = picture.TitleAttribute;
 
                     return productPictureModel;
-                }),
-                Total = productPictures.TotalCount
-            };
+                });
+            });
 
             return model;
         }
