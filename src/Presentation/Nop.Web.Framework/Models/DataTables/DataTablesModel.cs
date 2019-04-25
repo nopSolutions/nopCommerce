@@ -21,6 +21,7 @@ namespace Nop.Web.Framework.Models.DataTables
         public DataTablesModel()
         {
             //set default values
+            Info = true;
             ServerSide = true;
             Processing = true;
             Paging = true;
@@ -83,6 +84,11 @@ namespace Nop.Web.Framework.Models.DataTables
         /// Enable or disable table pagination.
         /// </summary>
         public bool Paging { get; set; }
+
+        /// <summary>
+        /// Enable or disable information ("1 to n of n entries")
+        /// </summary>
+        public bool Info { get; set; }
 
         /// <summary>
         /// Pagination button display options.
