@@ -189,9 +189,8 @@
                     $($(curRow).children("[data-columnname='" + cellName + "']")[0]).html('<input value="' + EditRowData_@(model_name)[cellName] + '" class="userinput" type="number" min="0" max="100"/>');
                 }
                 if (columnType == 'checkbox') {
-                    //'<i class="fa fa-close false-icon"></i>'
-                    //'<i class="fa fa-check true-icon"></i>'
-                    if (EditRowData_@(model_name)[cellName] === '<i class="fa fa-check true-icon"></i>') {
+                    var cellValue = EditRowData_@(model_name)[cellName];
+                    if ($(cellValue).attr('nop-value') === 'true') {
                         $($(curRow).children("[data-columnname='" + cellName + "']")[0]).html('<input value="true" checked class="userinput" type="checkbox" onclick="checkBoxClick_@(model_name)(this)"/>');
                     }
                     else {
