@@ -86,9 +86,9 @@ namespace Nop.Web.Areas.Admin.Factories
             var paymentMethods = _paymentPluginManager.LoadAllPlugins().ToPagedList(searchModel);
 
             //prepare grid model
-            var model = new PaymentMethodListModel
+            var model = new PaymentMethodListModel().PrepareToGrid(searchModel, paymentMethods, () =>
             {
-                Data = paymentMethods.Select(method =>
+                return paymentMethods.Select(method =>
                 {
                     //fill in model values from the entity
                     var paymentMethodModel = method.ToPluginModel<PaymentMethodModel>();
@@ -100,9 +100,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     paymentMethodModel.RecurringPaymentType = _localizationService.GetLocalizedEnum(method.RecurringPaymentType);
 
                     return paymentMethodModel;
-                }),
-                Total = paymentMethods.TotalCount
-            };
+                });
+            });
 
             return model;
         }
