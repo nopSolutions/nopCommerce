@@ -1425,6 +1425,7 @@ span.grid-report-item.red {
     display: block;
 }
 
+
 /*advanced settings*/
 .basic-settings-mode .advanced-setting {
     display: none !important;
@@ -1435,7 +1436,7 @@ span.grid-report-item.red {
 }
 
 .onoffswitch {
-    position: relative;
+    position: relative; 
     width: 130px;
     -webkit-user-select:none; 
     -moz-user-select:none; 
@@ -1449,12 +1450,13 @@ span.grid-report-item.red {
     overflow: hidden; 
     cursor: pointer;
     border: 1px solid #367fa9;
-    margin: 0;
     border-radius: 3px;
 }
 .onoffswitch-inner {
     display: block; 
     width: 200%; 
+    margin-right: -100%;
+    transition: margin 0.3s ease-in 0s;
 }
 .onoffswitch-inner:before, .onoffswitch-inner:after {
     display: block;
@@ -1470,39 +1472,37 @@ span.grid-report-item.red {
 }
 .onoffswitch-inner:before {
     content: attr(data-locale-advanced);
-    padding: 0 10px 0 30px;
+    padding-right: 10px;
     background-color: #3c8dbc;
-    color: #FFFFFF;
+    color: #FFFFFF; 
 }
 .onoffswitch-inner:after {
     content: attr(data-locale-basic);
-    padding: 0 30px 0 10px;
+    padding-left: 10px;
     background-color: #efefef;
     color: #3380ad;
     text-align: left;
 }
 .onoffswitch-switch {
-    display: block;
+    display: block; 
     width: 16px;
     margin: 6.5px;
     background: #FFFFFF;
-    position: absolute;
-    top: 0;
+    position: absolute; 
+    top: 0; 
     bottom: 0;
-    left: calc(100% - 29px /* width + margin * 2 */ );
+    left: 95px;
     border: 1px solid #367fa9;
     border-radius: 15px;
     transition: all 0.3s ease-in 0s;
 }
+.onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-inner {
+    margin-right: 0;
+}
 .onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-switch {
     left: 0px; 
 }
-.onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-inner:after {
-    display: none;
-}
-.onoffswitch-checkbox:not(:checked) + .onoffswitch-label .onoffswitch-inner:before {
-    display: none;
-}
+
 
 /*bootstrap touchspin*/
 .bootstrap-touchspin {
