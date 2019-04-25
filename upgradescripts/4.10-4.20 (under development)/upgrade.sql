@@ -1918,3 +1918,15 @@ BEGIN
     EXEC sp_RENAME '[Order].[PickUpInStore]', 'PickupInStore', 'COLUMN'
 END
 GO
+
+--update setting
+UPDATE [Setting]
+SET [Value] = '7'
+WHERE [Name] = 'adminareasettings.popupgridpagesize'
+GO
+
+--update setting
+UPDATE [Setting]
+SET [Value] = '7, 15, 20, 50, 100'
+WHERE [Name] = 'adminareasettings.gridpagesizes'
+GO

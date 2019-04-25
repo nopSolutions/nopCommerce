@@ -6105,8 +6105,8 @@ namespace Nop.Services.Installation
             settingService.SaveSetting(new AdminAreaSettings
             {
                 DefaultGridPageSize = 15,
-                PopupGridPageSize = 10,
-                GridPageSizes = "10, 15, 20, 50, 100",
+                PopupGridPageSize = 7,
+                GridPageSizes = "7, 15, 20, 50, 100",
                 RichEditorAdditionalSettings = null,
                 RichEditorAllowJavaScript = false,
                 RichEditorAllowStyleTag = false,
