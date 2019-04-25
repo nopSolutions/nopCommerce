@@ -135,22 +135,24 @@
                             new ColumnProperty(nameof(NewsCommentModel.StoreName))
                             {
                                 Title = T("Admin.ContentManagement.News.Comments.Fields.StoreName").Text,
-                                Width = "150",
+                                Width = "100",
                                 Visible = storeService.GetAllStores().Count > 1
                             },
                             new ColumnProperty(nameof(NewsCommentModel.CustomerInfo))
                             {
                                 Title = T("Admin.ContentManagement.News.Comments.Fields.Customer").Text,
-                                Width = "200",
+                                Width = "100",
                                 Render = new RenderLink(new DataUrl("~/Admin/Customer/Edit/", "CustomerId"))
                             },
                             new ColumnProperty(nameof(NewsCommentModel.CommentTitle))
                             {
-                                Title = T("Admin.ContentManagement.News.Comments.Fields.CommentTitle").Text
+                                Title = T("Admin.ContentManagement.News.Comments.Fields.CommentTitle").Text,
+                                Width = "200"
                             },
                             new ColumnProperty(nameof(NewsCommentModel.CommentText))
                             {
                                 Title = T("Admin.ContentManagement.News.Comments.Fields.CommentText").Text,
+                                Width = "200",
                                 Encode = false
                             },
                             new ColumnProperty(nameof(NewsCommentModel.IsApproved))

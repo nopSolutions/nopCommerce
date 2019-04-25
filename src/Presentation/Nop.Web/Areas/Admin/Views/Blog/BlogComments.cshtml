@@ -135,18 +135,19 @@
                             new ColumnProperty(nameof(BlogCommentModel.StoreName))
                             {
                                 Title = T("Admin.ContentManagement.Blog.Comments.Fields.StoreName").Text,
-                                Width = "150",
+                                Width = "100",
                                 Visible = storeService.GetAllStores().Count > 1
                             },
                             new ColumnProperty(nameof(BlogCommentModel.CustomerInfo))
                             {
                                 Title = T("Admin.ContentManagement.Blog.Comments.Fields.Customer").Text,
-                                Width = "200",
+                                Width = "100",
                                 Render = new RenderLink(new DataUrl("~/Admin/Customer/Edit/", "CustomerId"))
                             },
                             new ColumnProperty(nameof(BlogCommentModel.Comment))
                             {
                                 Title = T("Admin.ContentManagement.Blog.Comments.Fields.Comment").Text,
+                                Width = "200",
                                 Encode = false
                             },
                             new ColumnProperty(nameof(BlogCommentModel.IsApproved))
