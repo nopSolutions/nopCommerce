@@ -1218,18 +1218,16 @@ namespace Nop.Web.Areas.Admin.Factories
                 vendorId: _workContext.CurrentVendor?.Id ?? 0).ToPagedList(searchModel);
 
             //prepare grid model
-            var model = new AssociatedProductListModel
+            var model = new AssociatedProductListModel().PrepareToGrid(searchModel, associatedProducts, () =>
             {
-                //fill in model values from the entity
-                Data = associatedProducts.Select(associatedProduct =>
+                return associatedProducts.Select(associatedProduct =>
                 {
                     var associatedProductModel = associatedProduct.ToModel<AssociatedProductModel>();
                     associatedProductModel.ProductName = associatedProduct.Name;
 
                     return associatedProductModel;
-                }),
-                Total = associatedProducts.TotalCount
-            };
+                });
+            });
 
             return model;
         }
