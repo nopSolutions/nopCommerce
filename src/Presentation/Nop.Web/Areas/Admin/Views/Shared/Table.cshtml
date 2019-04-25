@@ -140,6 +140,158 @@
     </text>
 }
 
+@if ((Model.UrlUpdate != null) || (Model.ChildTable?.UrlUpdate != null))
+{
+    <text>
+    <script>
+        var editIndexTable_@(model_name) = -1;
+        var EditRowData_@(model_name) = [];
+        var ColumnData_@(model_name) = [];
+        @foreach(var column in Model.ColumnCollection.Where(x => x.Editable == true))
+        {
+            <text>
+                var obj = { 'Data': '@column.Data', 'Editable': @column.Editable.ToString().ToLower(), 'Type': '@column.EditType.ToString().ToLower()' }
+                ColumnData_@(model_name).push(obj);
+            </text>
+        }
+
+        function EditData_@(model_name)(DataId, data) {
+            $('#buttonEdit_@(model_name)' + data).hide();
+            $('#buttonConfirm_@(model_name)' + data).show();
+            $('#buttonCancel_@(model_name)' + data).show();
+            RoweditMode(DataId);
+        }
+
+        function RoweditMode(rowid) {
+            var prevRow;
+            var rowIndexVlaue = parseInt(rowid[0].rowIndex);
+            if (editIndexTable_@(model_name) == -1) {
+                saveRowIntoArray(rowid);
+                rowid.attr("editState", "editState");
+                editIndexTable_@(model_name) = rowid.rowIndex;
+                setEditStateValue(rowid, rowIndexVlaue);
+            }
+            else {
+                prevRow = $("[editState=editState]");
+                prevRow.attr("editState", "");
+                rowid.attr("editState", "editState");
+                editIndexTable_@(model_name) = rowIndexVlaue;
+                saveArrayIntoRow(prevRow);
+                saveRowIntoArray(rowid);
+                setEditStateValue(rowid, rowIndexVlaue);
+            }
+        }
+
+        function setEditStateValue(td1, indexRow) {
+            for (var k in EditRowData_@(model_name)) {
+                var columnType = 'string';
+
+                $.each(ColumnData_@(model_name), function (index, element) {
+                    if (element.Data == k) {
+                        columnType = element.Type;
+                    }
+                });
+
+                if (columnType == 'number') {
+                    $($(td1).children('.' + k)[0]).html('<input value="' + EditRowData_@(model_name)[k] + '" class="userinput" type="number" min="0" max="100"/>');
+                }
+                if (columnType == 'checkbox') {
+                    //'<i class="fa fa-close false-icon"></i>'
+                    //'<i class="fa fa-check true-icon"></i>'
+                    if (EditRowData_@(model_name)[k] === '<i class="fa fa-check true-icon"></i>') {
+                        $($(td1).children('.' + k)[0]).html('<input value="true" checked class="userinput" type="checkbox" onclick="checkBoxClick(this)"/>');
+                    }
+                    else {
+                        $($(td1).children('.' + k)[0]).html('<input value="false" class="userinput" type="checkbox" onclick="checkBoxClick(this)"/>');
+                    }
+                }
+                if (columnType == 'string') {
+                    $($(td1).children('.' + k)[0]).html('<input value="' + EditRowData_@(model_name)[k] + '" class="userinput"  style="width: 99% " />');
+                }
+            }
+        }
+
+        function checkBoxClick(checkBox) {
+            var input = $(checkBox);
+            if ($(input).val() === 'true') {
+                $(input).val('false');
+                $(input).removeAttr('checked');
+            } else {
+                $(input).val('true');
+                $(input).attr('checked', 'checked');
+            }
+        }
+
+        function ConfirmEditData_@(model_name)(DataId, data) {
+            $('#buttonEdit_@(model_name)' + data).show();
+            $('#buttonConfirm_@(model_name)' + data).hide();
+            $('#buttonCancel_@(model_name)' + data).hide();
+            updateRowData(DataId, data);
+        }
+
+        function updateRowData(currentCells, data) {
+            var UpdateRowData = [];
+            UpdateRowData.push({ 'pname': 'Id', 'pvalue': data });
+            $.each(ColumnData_@(model_name), function (index, element) {
+                if (element.Editable == true) {
+                    UpdateRowData.push({
+                        'pname': element.Data, 'pvalue': $($($(currentCells).children('.' + element.Data)).children('input')[0]).val()
+                    });
+                }
+            });
+            var postData = {};
+            for (i = 0; i < UpdateRowData.length; i++) {
+                postData[UpdateRowData[i].pname] = UpdateRowData[i].pvalue;
+            }
+            var tokenInput = $('input[name=__RequestVerificationToken]').val();
+            postData['__RequestVerificationToken'] = tokenInput;
+            addAntiForgeryToken(postData);
+
+            $.ajax({
+                url: '@Html.Raw(GetUrl((Model.ChildTable?.UrlUpdate != null) ? Model.ChildTable?.UrlUpdate : Model.UrlUpdate))',
+                type: 'POST',
+                dataType: 'json',
+                data: postData,
+                success: function (data) {
+                     $('#@Model.Name').DataTable().draw(false);
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert(thrownError);
+                }
+            });
+        }
+
+        function CancelEditData_@(model_name)(DataId, data) {
+            $('#buttonEdit_@(model_name)' + data).show();
+            $('#buttonConfirm_@(model_name)' + data).hide();
+            $('#buttonCancel_@(model_name)' + data).hide();
+
+            var prevRow = $("[editState=editState]");
+            prevRow.attr("editState", "");
+            if (prevRow.length > 0) {
+                saveArrayIntoRow($(prevRow));
+            }
+            editIndexTable_@(model_name) = -1;
+        }
+        
+        function saveArrayIntoRow(cureentCells) {
+            for (var k in EditRowData_@(model_name)) {
+                $($(cureentCells).children('.' + k)[0]).html(EditRowData_@(model_name)[k]);
+            }
+        }
+
+        function saveRowIntoArray(cureentCells) {
+            $.each(ColumnData_@(model_name), function (index, element) {
+                if (element.Editable == true) {
+                    var htmlVal = $($(cureentCells).children('.' + element.Data)[0]).html();
+                    EditRowData_@(model_name)[element.Data] = htmlVal;
+                }
+            });
+        }
+    </script>
+    </text>
+}
+
 @if (Model.ChildTable != null)
 {
     <text>
