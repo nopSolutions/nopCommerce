@@ -206,7 +206,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
 
         /// <summary>
         /// Create blogs maps 
-        /// </summary>
+        /// </summary>new
         protected virtual void CreateBlogsMaps()
         {
             CreateMap<BlogComment, BlogCommentModel>()
@@ -1157,9 +1157,14 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.NewsItemTitle, options => options.Ignore())
                 .ForMember(model => model.StoreName, options => options.Ignore());
             CreateMap<NewsCommentModel, NewsComment>()
+                .ForMember(entity => entity.NewsItem, options => options.Ignore())
+                .ForMember(entity => entity.CommentTitle, options => options.Ignore())
+                .ForMember(entity => entity.CommentText, options => options.Ignore())
                 .ForMember(entity => entity.CreatedOnUtc, options => options.Ignore())
                 .ForMember(entity => entity.Customer, options => options.Ignore())
-                .ForMember(entity => entity.NewsItem, options => options.Ignore())
+                .ForMember(entity => entity.NewsItemId, options => options.Ignore())
+                .ForMember(entity => entity.CustomerId, options => options.Ignore())
+                .ForMember(entity => entity.StoreId, options => options.Ignore())
                 .ForMember(entity => entity.Store, options => options.Ignore());
 
             CreateMap<NewsItem, NewsItemModel>()
