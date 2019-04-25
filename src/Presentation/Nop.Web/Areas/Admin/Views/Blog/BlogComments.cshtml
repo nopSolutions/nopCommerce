@@ -1,5 +1,7 @@
 @model BlogCommentSearchModel
 
+@inject IStoreService storeService
+@using Nop.Services.Stores
 @{
     //page title
     ViewBag.Title = T("Admin.ContentManagement.Blog.Comments").Text;
@@ -30,8 +32,8 @@
             <i class="fa fa-trash-o"></i>
             @T("Admin.ContentManagement.Blog.Comments.DeleteSelected")
         </button>
-        <nop-action-confirmation asp-button-id="delete-selected"/>
-        @await Component.InvokeAsync("AdminWidget", new {widgetZone = AdminWidgetZones.BlogCommentListButtons })
+        <nop-action-confirmation asp-button-id="delete-selected" />
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.BlogCommentListButtons })
     </div>
 </div>
 
@@ -130,10 +132,11 @@
                                 Width = "200",
                                 Render = new RenderLink(new DataUrl("~/Admin/Blog/BlogPostEdit/", "BlogPostId"))
                             },
-                            new ColumnProperty(nameof(BlogCommentModel.StoreId))
+                            new ColumnProperty(nameof(BlogCommentModel.StoreName))
                             {
                                 Title = T("Admin.ContentManagement.Blog.Comments.Fields.StoreName").Text,
-                                Width = "150"
+                                Width = "150",
+                                Visible = storeService.GetAllStores().Count > 1
                             },
                             new ColumnProperty(nameof(BlogCommentModel.CustomerInfo))
                             {
@@ -267,6 +270,6 @@
         </div>
     </div>
 </div>
-<nop-alert asp-alert-id="deleteSelectedCommentsFailed "/>
+<nop-alert asp-alert-id="deleteSelectedCommentsFailed " />
 <nop-alert asp-alert-id="approveSelectedFailed" />
 <nop-alert asp-alert-id="disapproveSelectedFailed" />
