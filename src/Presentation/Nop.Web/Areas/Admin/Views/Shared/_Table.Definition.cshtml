@@ -147,11 +147,11 @@ ordering: @Model.Ordering.ToString().ToLower(),
 fixedHeader: @Model.FixedHeader.ToString().ToLower(),
 dom: '<"row"<"col-md-12"t>>' +
      '<"row"' +
-        '<"col-md-10"<"row"' +
-            '<"col-md-8"<"pull-left"p>>' +
-            '<"col-md-2s"<"pull-left data-tables-length"l>>' +
+        '<"col-md-11"<"row"' +
+            '<"col-md-9"<"pull-left"p>>' +
+            '<"col-md-2"<"pull-left data-tables-length"l>>' +
         '>>' +
-        '<"col-md-2"<"pull-right"i>>' +
+        '<"col-md-1"<"pull-right"i>>' +
      '>',
 columns: [
     @for (int i = 0; i < Model.ColumnCollection.Count; i++)
