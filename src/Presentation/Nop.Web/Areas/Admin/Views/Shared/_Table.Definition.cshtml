@@ -199,9 +199,14 @@ columns: [
                 className: '@GetEnumValue(typeof(StyleColumn), column.ClassName.Value)',
                 </text>
             }
-            createdCell: function (td, cellData, rowData, row, col) {
-               $(td).attr('data-columnname', '@column.Data');
-            },
+            @if ((Model.UrlUpdate != null) || (Model.ChildTable?.UrlUpdate != null))
+            {
+                <text>
+                createdCell: function (td, cellData, rowData, row, col) {
+                   $(td).attr('data-columnname', '@column.Data');
+                },
+                </text>
+            }
             @if (column.Encode && column.Render == null)
             {
                 <text>
