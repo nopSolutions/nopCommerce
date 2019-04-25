@@ -14,13 +14,6 @@
             ? $"{(dataUrl.Url.StartsWith("~/", StringComparison.Ordinal) ? Url.Content(dataUrl.Url) : dataUrl.Url).TrimEnd('/')}" + (!dataUrl.TrimEnd ? "/" : "")
             : string.Empty;
     }
-
-    string GetEnumValue(Type type, object value)
-    {
-        return type.GetMember(value.ToString())?[0]
-            ?.GetCustomAttributes(false).OfType<EnumMemberAttribute>().FirstOrDefault()
-            ?.Value;
-    }
 }
 
 <table class="table table-bordered table-hover table-striped dataTable" width="100%" id="@Model.Name"></table>

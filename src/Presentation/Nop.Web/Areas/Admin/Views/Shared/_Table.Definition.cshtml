@@ -195,7 +195,13 @@ columns: [
             @if (column.ClassName.HasValue)
             {
                 <text>
-                className: '@GetEnumValue(typeof(StyleColumn), column.ClassName.Value)',
+                className: '@GetEnumValue(typeof(StyleColumn), column.ClassName.Value) @column.Data',
+                </text>
+            }
+            else
+            {
+                <text>
+                className: '@column.Data',
                 </text>
             }
             @if (column.Encode && column.Render == null)
@@ -331,8 +337,7 @@ columns: [
                     </text>
                     break;
             }
-            data: '@column.Data',
-            class: '@column.Data'
+            data: '@column.Data'            
         }
         @if (i != Model.ColumnCollection.Count - 1) {<text>,</text>}
         </text>
