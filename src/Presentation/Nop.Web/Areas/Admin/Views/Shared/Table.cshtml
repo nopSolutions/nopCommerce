@@ -159,30 +159,30 @@
             $('#buttonEdit_@(model_name)' + data).hide();
             $('#buttonConfirm_@(model_name)' + data).show();
             $('#buttonCancel_@(model_name)' + data).show();
-            RoweditMode(DataId);
+            RoweditMode_@(model_name)(DataId);
         }
 
-        function RoweditMode(rowid) {
+        function RoweditMode_@(model_name)(rowid) {
             var prevRow;
             var rowIndexVlaue = parseInt(rowid[0].rowIndex);
             if (editIndexTable_@(model_name) == -1) {
-                saveRowIntoArray(rowid);
+                saveRowIntoArray_@(model_name)(rowid);
                 rowid.attr("editState", "editState");
                 editIndexTable_@(model_name) = rowid.rowIndex;
-                setEditStateValue(rowid, rowIndexVlaue);
+                setEditStateValue_@(model_name)(rowid, rowIndexVlaue);
             }
             else {
                 prevRow = $("[editState=editState]");
                 prevRow.attr("editState", "");
                 rowid.attr("editState", "editState");
                 editIndexTable_@(model_name) = rowIndexVlaue;
-                saveArrayIntoRow(prevRow);
-                saveRowIntoArray(rowid);
-                setEditStateValue(rowid, rowIndexVlaue);
+                saveArrayIntoRow_@(model_name)(prevRow);
+                saveRowIntoArray_@(model_name)(rowid);
+                setEditStateValue_@(model_name)(rowid, rowIndexVlaue);
             }
         }
 
-        function setEditStateValue(td1, indexRow) {
+        function setEditStateValue_@(model_name)(td1, indexRow) {
             for (var k in EditRowData_@(model_name)) {
                 var columnType = 'string';
 
@@ -199,10 +199,10 @@
                     //'<i class="fa fa-close false-icon"></i>'
                     //'<i class="fa fa-check true-icon"></i>'
                     if (EditRowData_@(model_name)[k] === '<i class="fa fa-check true-icon"></i>') {
-                        $($(td1).children('.' + k)[0]).html('<input value="true" checked class="userinput" type="checkbox" onclick="checkBoxClick(this)"/>');
+                        $($(td1).children('.' + k)[0]).html('<input value="true" checked class="userinput" type="checkbox" onclick="checkBoxClick_@(model_name)(this)"/>');
                     }
                     else {
-                        $($(td1).children('.' + k)[0]).html('<input value="false" class="userinput" type="checkbox" onclick="checkBoxClick(this)"/>');
+                        $($(td1).children('.' + k)[0]).html('<input value="false" class="userinput" type="checkbox" onclick="checkBoxClick_@(model_name)(this)"/>');
                     }
                 }
                 if (columnType == 'string') {
@@ -211,7 +211,7 @@
             }
         }
 
-        function checkBoxClick(checkBox) {
+        function checkBoxClick_@(model_name)(checkBox) {
             var input = $(checkBox);
             if ($(input).val() === 'true') {
                 $(input).val('false');
@@ -226,10 +226,10 @@
             $('#buttonEdit_@(model_name)' + data).show();
             $('#buttonConfirm_@(model_name)' + data).hide();
             $('#buttonCancel_@(model_name)' + data).hide();
-            updateRowData(DataId, data);
+            updateRowData_@(model_name)(DataId, data);
         }
 
-        function updateRowData(currentCells, data) {
+        function updateRowData_@(model_name)(currentCells, data) {
             var UpdateRowData = [];
             UpdateRowData.push({ 'pname': 'Id', 'pvalue': data });
             $.each(ColumnData_@(model_name), function (index, element) {
@@ -269,18 +269,18 @@
             var prevRow = $("[editState=editState]");
             prevRow.attr("editState", "");
             if (prevRow.length > 0) {
-                saveArrayIntoRow($(prevRow));
+                saveArrayIntoRow_@(model_name)($(prevRow));
             }
             editIndexTable_@(model_name) = -1;
         }
         
-        function saveArrayIntoRow(cureentCells) {
+        function saveArrayIntoRow_@(model_name)(cureentCells) {
             for (var k in EditRowData_@(model_name)) {
                 $($(cureentCells).children('.' + k)[0]).html(EditRowData_@(model_name)[k]);
             }
         }
 
-        function saveRowIntoArray(cureentCells) {
+        function saveRowIntoArray_@(model_name)(cureentCells) {
             $.each(ColumnData_@(model_name), function (index, element) {
                 if (element.Editable == true) {
                     var htmlVal = $($(cureentCells).children('.' + element.Data)[0]).html();
