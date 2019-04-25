@@ -370,6 +370,8 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
             CreateMap<ProductManufacturer, ManufacturerProductModel>()
                 .ForMember(model => model.ProductName, options => options.Ignore());
             CreateMap<ManufacturerProductModel, ProductManufacturer>()
+                .ForMember(entity => entity.ManufacturerId, options => options.Ignore())
+                .ForMember(entity => entity.ProductId, options => options.Ignore())
                 .ForMember(entity => entity.Manufacturer, options => options.Ignore())
                 .ForMember(entity => entity.Product, options => options.Ignore());
 
