@@ -142,7 +142,7 @@
                             {
                                 Title = T("Admin.ContentManagement.News.Comments.Fields.Customer").Text,
                                 Width = "100",
-                                Render = new RenderLink(new DataUrl("~/Admin/Customer/Edit/", "CustomerId"))
+                                Render = new RenderLink(new DataUrl("~/Admin/Customer/Edit/", nameof(NewsCommentModel.CustomerId)))
                             },
                             new ColumnProperty(nameof(NewsCommentModel.CommentTitle))
                             {

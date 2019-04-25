@@ -130,7 +130,7 @@
                             {
                                 Title = T("Admin.ContentManagement.Blog.Comments.Fields.BlogPost").Text,
                                 Width = "200",
-                                Render = new RenderLink(new DataUrl("~/Admin/Blog/BlogPostEdit/", "BlogPostId"))
+                                Render = new RenderLink(new DataUrl("~/Admin/Blog/BlogPostEdit/", nameof(BlogCommentModel.BlogPostId)))
                             },
                             new ColumnProperty(nameof(BlogCommentModel.StoreName))
                             {
@@ -142,7 +142,7 @@
                             {
                                 Title = T("Admin.ContentManagement.Blog.Comments.Fields.Customer").Text,
                                 Width = "100",
-                                Render = new RenderLink(new DataUrl("~/Admin/Customer/Edit/", "CustomerId"))
+                                Render = new RenderLink(new DataUrl("~/Admin/Customer/Edit/", nameof(BlogCommentModel.CustomerId)))
                             },
                             new ColumnProperty(nameof(BlogCommentModel.Comment))
                             {
