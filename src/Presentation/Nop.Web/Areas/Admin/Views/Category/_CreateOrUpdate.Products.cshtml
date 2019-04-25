@@ -30,10 +30,11 @@
             {
                 Title = T("Admin.Catalog.Categories.Products.Fields.DisplayOrder").Text,
                 Width = "150",
+                ClassName = StyleColumn.CenterAll,
                 Editable = true,
                 EditType = EditType.Number
             },
-            new ColumnProperty(nameof(CategoryProductModel.Id))
+            new ColumnProperty(nameof(CategoryProductModel.ProductId))
             {
                 Title = T("Admin.Common.View").Text,
                 Width = "150",
