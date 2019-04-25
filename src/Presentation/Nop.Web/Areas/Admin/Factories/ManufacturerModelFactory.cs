@@ -233,9 +233,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare grid model
-            var model = new ManufacturerProductListModel
+            var model = new ManufacturerProductListModel().PrepareToGrid(searchModel, productManufacturers, () =>
             {
-                Data = productManufacturers.Select(productManufacturer =>
+                return productManufacturers.Select(productManufacturer =>
                 {
                     //fill in model values from the entity
                     var manufacturerProductModel = productManufacturer.ToModel<ManufacturerProductModel>();
@@ -244,9 +244,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     manufacturerProductModel.ProductName = _productService.GetProductById(productManufacturer.ProductId)?.Name;
 
                     return manufacturerProductModel;
-                }),
-                Total = productManufacturers.TotalCount
-            };
+                });
+            });
 
             return model;
         }

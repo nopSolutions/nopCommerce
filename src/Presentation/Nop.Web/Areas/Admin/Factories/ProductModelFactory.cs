@@ -998,9 +998,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 .GetRelatedProductsByProductId1(productId1: product.Id, showHidden: true).ToPagedList(searchModel);
 
             //prepare grid model
-            var model = new RelatedProductListModel
+            var model = new RelatedProductListModel().PrepareToGrid(searchModel, relatedProducts, () =>
             {
-                Data = relatedProducts.Select(relatedProduct =>
+                return relatedProducts.Select(relatedProduct =>
                 {
                     //fill in model values from the entity
                     var relatedProductModel = relatedProduct.ToModel<RelatedProductModel>();
@@ -1009,10 +1009,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     relatedProductModel.Product2Name = _productService.GetProductById(relatedProduct.ProductId2)?.Name;
 
                     return relatedProductModel;
-                }),
-                Total = relatedProducts.TotalCount
-            };
-
+                });
+            });
             return model;
         }
 
