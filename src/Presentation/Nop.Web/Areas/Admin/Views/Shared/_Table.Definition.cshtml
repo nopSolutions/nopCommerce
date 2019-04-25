@@ -251,9 +251,14 @@ columns: [
                     case RenderButtonsInlineEdit button:
                     <text>
                         render: function (data, type, row, meta) {
-                            return '<a href="#" class="@GetEnumValue(typeof(StyleButton), StyleButton.Default)" id="buttonEdit_@(model_name)'+ data + '" onclick="EditData_@(model_name)($(this).parent().parent(), ' + data + ');return false;"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>' +
-                                '<a href="#" class="@GetEnumValue(typeof(StyleButton), StyleButton.Default)" id="buttonConfirm_@(model_name)'+ data + '" style="display:none" onclick="ConfirmEditData_@(model_name)($(this).parent().parent(), ' + data + ');return false;"><i class="fa fa-check"></i>@T("Admin.Common.Update")</a>' +
-                                '<a href="#" class="@GetEnumValue(typeof(StyleButton), StyleButton.Default)" id="buttonCancel_@(model_name)'+ data + '" style="display:none" onclick="CancelEditData_@(model_name)(\'' + row + '\', ' + data + ');return false;"><i class="fa fa-ban"></i>@T("Admin.Common.Cancel")</a>';
+                            var origData = data;
+                            var modData = data;
+                            if (typeof data == 'string'){
+                                modData = data.replace(/[.*+?^${}()|[\]\\]/g, "_");
+                            }
+                            return '<a href="#" class="@GetEnumValue(typeof(StyleButton), StyleButton.Default)" id="buttonEdit_@(model_name)'+ modData + '" onclick="EditData_@(model_name)($(this).parent().parent(), \'' + origData + '\');return false;"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>' +
+                            '<a href="#" class="@GetEnumValue(typeof(StyleButton), StyleButton.Default)" id="buttonConfirm_@(model_name)'+ modData + '" style="display:none" onclick="ConfirmEditData_@(model_name)($(this).parent().parent(), \'' + origData + '\', \'@column.Data\');return false;"><i class="fa fa-check"></i>@T("Admin.Common.Update")</a>' +
+                            '<a href="#" class="@GetEnumValue(typeof(StyleButton), StyleButton.Default)" id="buttonCancel_@(model_name)'+ modData + '" style="display:none" onclick="CancelEditData_@(model_name)(\'' + row + '\', \'' + origData + '\');return false;"><i class="fa fa-ban"></i>@T("Admin.Common.Cancel")</a>';
                         },                         
                     </text>
                     break;

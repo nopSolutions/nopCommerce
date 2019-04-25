@@ -149,9 +149,13 @@
         }
 
         function EditData_@(model_name)(DataId, data) {
-            $('#buttonEdit_@(model_name)' + data).hide();
-            $('#buttonConfirm_@(model_name)' + data).show();
-            $('#buttonCancel_@(model_name)' + data).show();
+            var modData = data;
+            if (typeof data == 'string') {
+                modData = data.replace(/[.*+?^${}()|[\]\\]/g, "_");
+            }
+            $('#buttonEdit_@(model_name)' + modData).hide();
+            $('#buttonConfirm_@(model_name)' + modData).show();
+            $('#buttonCancel_@(model_name)' + modData).show();
             RoweditMode_@(model_name)(DataId);
         }
 
@@ -214,16 +218,22 @@
             }
         }
 
-        function ConfirmEditData_@(model_name)(DataId, data) {
-            $('#buttonEdit_@(model_name)' + data).show();
-            $('#buttonConfirm_@(model_name)' + data).hide();
-            $('#buttonCancel_@(model_name)' + data).hide();
-            updateRowData_@(model_name)(DataId, data);
+        function ConfirmEditData_@(model_name)(DataId, data, nameData) {
+            var origData = data;
+            var modData = data;
+            if (typeof data == 'string') {
+                modData = data.replace(/[.*+?^${}()|[\]\\]/g, "_");
+            }
+            $('#buttonEdit_@(model_name)' + modData).show();
+            $('#buttonConfirm_@(model_name)' + modData).hide();
+            $('#buttonCancel_@(model_name)' + modData).hide();
+
+            updateRowData_@(model_name)(DataId, origData, nameData);
         }
 
-        function updateRowData_@(model_name)(currentCells, data) {
+        function updateRowData_@(model_name)(currentCells, data, nameData) {
             var UpdateRowData = [];
-            UpdateRowData.push({ 'pname': 'Id', 'pvalue': data });
+            UpdateRowData.push({ 'pname': nameData, 'pvalue': data });
             $.each(ColumnData_@(model_name), function (index, element) {
                 if (element.Editable == true) {
                     UpdateRowData.push({
@@ -254,9 +264,13 @@
         }
 
         function CancelEditData_@(model_name)(DataId, data) {
-            $('#buttonEdit_@(model_name)' + data).show();
-            $('#buttonConfirm_@(model_name)' + data).hide();
-            $('#buttonCancel_@(model_name)' + data).hide();
+            var modData = data;
+            if (typeof data == 'string') {
+                modData = data.replace(/[.*+?^${}()|[\]\\]/g, "_");
+            }
+            $('#buttonEdit_@(model_name)' + modData).show();
+            $('#buttonConfirm_@(model_name)' + modData).hide();
+            $('#buttonCancel_@(model_name)' + modData).hide();
 
             var prevRow = $("[editState=editState]");
             prevRow.attr("editState", "");
