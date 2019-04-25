@@ -218,6 +218,9 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(entity => entity.CommentText, options => options.Ignore())
                 .ForMember(entity => entity.CreatedOnUtc, options => options.Ignore())
                 .ForMember(entity => entity.Customer, options => options.Ignore())
+                .ForMember(entity => entity.BlogPostId, options => options.Ignore())
+                .ForMember(entity => entity.CustomerId, options => options.Ignore())
+                .ForMember(entity => entity.StoreId, options => options.Ignore())
                 .ForMember(entity => entity.Store, options => options.Ignore());
 
             CreateMap<BlogPost, BlogPostModel>()
