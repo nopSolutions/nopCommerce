@@ -682,7 +682,55 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.IgnoreAdditionalShippingChargeForPickupInStore.Hint">
     <Value>Check if you want ignore additional shipping charge for pick up in store.</Value>
-  </LocaleResource>  
+  </LocaleResource> 
+  <LocaleResource Name="Admin.Catalog.BulkEdit">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.BulkEdit.Fields.ManageInventoryMethod">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.BulkEdit.Fields.ManageInventoryMethod.MultipleWarehouse">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.BulkEdit.Fields.Name">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.BulkEdit.Fields.OldPrice">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.BulkEdit.Fields.Price">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.BulkEdit.Fields.Published">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.BulkEdit.Fields.SKU">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.BulkEdit.Fields.StockQuantity">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.BulkEdit.List.SearchCategory">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.BulkEdit.List.SearchCategory.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.BulkEdit.List.SearchManufacturer">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.BulkEdit.List.SearchManufacturer.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.BulkEdit.List.SearchProductName">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.BulkEdit.List.SearchProductName.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Common.BulkEdit">
+    <Value></Value>
+  </LocaleResource>
 </Language>'
 
 CREATE TABLE #LocaleStringResourceTmp

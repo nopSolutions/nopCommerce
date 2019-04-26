@@ -250,9 +250,6 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
         /// </summary>
         protected virtual void CreateCatalogMaps()
         {
-            CreateMap<Product, BulkEditProductModel>()
-               .ForMember(model => model.ManageInventoryMethod, options => options.Ignore());
-
             CreateMap<CatalogSettings, CatalogSettingsModel>()
                 .ForMember(model => model.AllowAnonymousUsersToEmailAFriend_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.AllowAnonymousUsersToReviewProduct_OverrideForStore, options => options.Ignore())

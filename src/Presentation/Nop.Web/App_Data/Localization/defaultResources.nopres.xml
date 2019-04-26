@@ -1992,51 +1992,6 @@
   <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.UsedByProducts.Published">
     <Value>Published</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.BulkEdit">
-    <Value>Bulk edit products</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.BulkEdit.Fields.ManageInventoryMethod">
-    <Value>Manage inventory</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.BulkEdit.Fields.ManageInventoryMethod.MultipleWarehouse">
-    <Value>(multi-warehouse)</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.BulkEdit.Fields.Name">
-    <Value>Name</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.BulkEdit.Fields.OldPrice">
-    <Value>Old price</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.BulkEdit.Fields.Price">
-    <Value>Price</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.BulkEdit.Fields.Published">
-    <Value>Published</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.BulkEdit.Fields.SKU">
-    <Value>SKU</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.BulkEdit.Fields.StockQuantity">
-    <Value>Stock qty</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.BulkEdit.List.SearchCategory">
-    <Value>Category</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.BulkEdit.List.SearchCategory.Hint">
-    <Value>Search by a specific category.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.BulkEdit.List.SearchManufacturer">
-    <Value>Manufacturer</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.BulkEdit.List.SearchManufacturer.Hint">
-    <Value>Search by a specific manufacturer.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.BulkEdit.List.SearchProductName">
-    <Value>Product name</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.BulkEdit.List.SearchProductName.Hint">
-    <Value>A product name.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories">
     <Value>Categories</Value>
   </LocaleResource>
@@ -4073,9 +4028,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Common.AreYouSure">
     <Value>Are you sure?</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Common.BulkEdit">
-    <Value>Bulk edit</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Common.Cancel">
     <Value>Cancel</Value>
