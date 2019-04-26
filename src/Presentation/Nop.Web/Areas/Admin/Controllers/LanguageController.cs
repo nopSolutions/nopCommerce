@@ -339,7 +339,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             _localizationService.UpdateLocaleStringResource(resource);
 
-            return new NullJsonResult();
+            return new NullJsonResult();            
         }
 
         [HttpPost]
@@ -373,7 +373,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return ErrorForDataTablesJson(string.Format(_localizationService.GetResource("Admin.Configuration.Languages.Resources.NameAlreadyExists"), model.ResourceName));
             }
 
-            return new NullJsonResult();
+            return Json(new { Result = true });
         }
 
         [HttpPost]

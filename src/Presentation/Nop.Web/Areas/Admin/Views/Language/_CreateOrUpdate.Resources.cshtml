@@ -104,7 +104,79 @@
                         });
                     });
                 </script>
+                <div class="panel panel-default no-margin">
+                    <div class="panel-heading">
+                        @T("Admin.Common.AddNewRecord")
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="@Model.AddResourceString.ResourceName" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="@Model.AddResourceString.ResourceName" />
+                                <span asp-validation-for="@Model.AddResourceString.ResourceName"></span>
+                            </div>
+                        </div>           
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="@Model.AddResourceString.ResourceValue" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="@Model.AddResourceString.ResourceValue" />
+                                <span asp-validation-for="@Model.AddResourceString.ResourceValue"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-9 col-md-offset-3">
+                                <button type="button" id="addResourceString" class="btn btn-primary">@T("Admin.Common.AddNewRecord")</button>
+                            </div>
+                        </div>
+                    </div>
+                    <script>
+                    $(document).ready(function () {
+                        $('#addResourceString').click(function () {
+                            $('#addResourceString').attr('disabled', true);
+                            var postData = {
+                                ResourceName: $("#@Html.IdFor(model => model.AddResourceString.ResourceName)").val(),
+                                ResourceValue: $("#@Html.IdFor(model => model.AddResourceString.ResourceValue)").val()
+                            };
+                            addAntiForgeryToken(postData);
+
+                            $.ajax({
+                                cache:false,
+                                type: "POST",
+                                url: "@Html.Raw(Url.Action("ResourceAdd", "Language", new { languageId = Model.Id }))",
+                                data: postData,
+                                success: function (data) {
+                                    if (data.Result) {
+                                        //reload grid
+                                        $('#resources-grid').DataTable().ajax.reload();
+
+                                        $("#@Html.IdFor(model => model.AddResourceString.ResourceName)").val('@Model.AddResourceString.ResourceName');
+                                        $("#@Html.IdFor(model => model.AddResourceString.ResourceValue)").val('@Model.AddResourceString.ResourceValue');
+
+                                    } else {
+                                        if (data.Error != undefined) {
+                                            $('#resourceStringAddFailed-info').text(data.Error);
+                                            $("#resourceStringAddFailed").click();
+                                        }
+                                    }
+
+                                    $('#addResourceString').attr('disabled', false);
+                                },
+                                error:function (xhr, ajaxOptions, thrownError){
+                                    $("#resourceStringAddAlert").click();
+                                    $('#addResourceString').attr('disabled', false);
+                                }
+                            });
+                        });
+                    });
+                    </script>
+                </div>
             </div>
         </div>
     }
 </div>
+<nop-alert asp-alert-id="resourceStringAddAlert" asp-alert-message="@T("Admin.Common.Alert.Add.Error")" />
+<nop-alert asp-alert-id="resourceStringAddFailed" />
