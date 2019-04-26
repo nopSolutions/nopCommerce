@@ -6,7 +6,7 @@ declare @resources xml
 set @resources='
 <Language>
   <LocaleResource Name="Admin.ContentManagement.Topics.Fields.Title.Required">
-    <Value>Title is required</Value>
+    <Value></Value>
   </LocaleResource>  
   <LocaleResource Name="Admin.Configuration.Settings.Order.DisableBillingAddressCheckoutStep.Hint">
     <Value>Check to disable "Billing address" step during checkout. Billing address will be pre-filled and saved using the default registration data (this option cannot be used with guest checkout enabled). Also ensure that appropriate address fields that cannot be pre-filled are not required (or disabled). If a customer doesn''t have a billing address, then the billing address step will be displayed.</Value>
@@ -761,12 +761,7 @@ SET [IncludeInFooterColumn1] = 0
 WHERE [SystemName] = 'VendorTermsOfService'
 GO
 
-UPDATE [Topic]
-SET [Title] = ISNULL([SystemName], '')
-WHERE [Title] IS NULL OR [Title] = ''
-GO
-
-ALTER TABLE [Topic] ALTER COLUMN [Title] nvarchar(max) NOT NULL
+ALTER TABLE [Topic] ALTER COLUMN [Title] nvarchar(max) NULL
 GO
 
 -- #3236

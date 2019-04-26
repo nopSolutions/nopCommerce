@@ -8,6 +8,9 @@
     Html.AppendPageCssClassParts("html-contact-page");
 }
 <div class="page contact-page">
+    <div class="page-title">
+        <h1>@T("PageTitle.ContactUs")</h1>
+    </div>
     <div class="page-body">
         @await Component.InvokeAsync("TopicBlock", new { systemName = "ContactUs" })
         @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ContactUsTop })
@@ -31,7 +34,7 @@
                         </div>
                         <div class="inputs">
                             <label asp-for="Email" asp-postfix=":"></label>
-                            <input asp-for="Email" placeholder="@T("ContactUs.Email.Hint")" class="email"/>
+                            <input asp-for="Email" placeholder="@T("ContactUs.Email.Hint")" class="email" />
                             <nop-required />
                             <span asp-validation-for="Email"></span>
                         </div>
