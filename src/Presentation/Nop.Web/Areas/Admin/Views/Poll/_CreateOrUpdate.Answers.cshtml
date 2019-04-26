@@ -8,15 +8,11 @@
         {
             //TODO: need to configure "Add" button
             Name = "answers-grid",
-            UrlRead = new DataUrl("PollAnswers", "Poll", null),
-            UrlUpdate = new DataUrl("PollAnswerUpdate", "Poll", null),
+            UrlRead = new DataUrl("PollAnswers", "Poll", new RouteValueDictionary { [nameof(PollAnswerSearchModel.PollId)] = Model.PollAnswerSearchModel.PollId }),
+            UrlUpdate = new DataUrl("PollAnswerUpdate", "Poll", new RouteValueDictionary { [nameof(PollAnswerSearchModel.PollId)] = Model.PollAnswerSearchModel.PollId }),
             UrlDelete = new DataUrl("PollAnswerDelete", "Poll", null),
             Length = Model.PollAnswerSearchModel.PageSize,
             LengthMenu = Model.PollAnswerSearchModel.AvailablePageSizes,
-            Filters = new List<FilterParameter>
-            {
-                new FilterParameter(nameof(PollAnswerSearchModel.PollId), Model.Id)
-            },
             ColumnCollection = new List<ColumnProperty>
             {
                 new ColumnProperty(nameof(PollAnswerModel.Name))
