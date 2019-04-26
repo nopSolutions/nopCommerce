@@ -1,0 +1,39 @@
+﻿h2 {
+  color: #3498cb;
+  font-family: Montserrat,Arial,Helvetica,sans-serif;
+  font-size: 24px
+}
+
+.logo {
+  color: #3498cb;
+  font-size: 25px;
+  font-weight: bold;
+  font-family: Open Sans,Arial,Helvetica,sans-serif;
+}
+
+  .logo .sib-logo-icon {
+    margin: 0;
+    font-size: 30px;
+    position: relative;
+    top: 3px;
+  }
+
+  .logo .t-logo-text {
+    position: relative;
+  }
+
+.list {
+  padding-left: 20px;
+}
+
+.list-unstyled {
+  list-style: none;
+}
+
+.apikey {
+  width: 650px;
+}
+
+.custombody {
+  padding-left: 15px;
+}
