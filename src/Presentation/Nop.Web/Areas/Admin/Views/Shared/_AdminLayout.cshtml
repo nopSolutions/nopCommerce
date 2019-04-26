@@ -279,7 +279,7 @@
         @Html.NopScripts(ResourceLocation.Footer)
         <a id="backTop" class="btn btn-back-top bg-teal"></a>
         <script>
-            var hideSidebar =  @(genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSidebarAttributeName).ToString().ToLower());;
+            var hideSidebar = @(genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSidebarAttributeName).ToString().ToLower());
 
             function toggleSidebar() {      
                 var isMobile = $(window).width() <= '750';
