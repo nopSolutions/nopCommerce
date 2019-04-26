@@ -1082,9 +1082,9 @@ namespace Nop.Web.Areas.Admin.Factories
             var sortOptions = Enum.GetValues(typeof(ProductSortingEnum)).OfType<ProductSortingEnum>().ToList().ToPagedList(searchModel);
 
             //prepare list model
-            var model = new SortOptionListModel
+            var model = new SortOptionListModel().PrepareToGrid(searchModel, sortOptions, () =>
             {
-                Data = sortOptions.Select(option =>
+                return sortOptions.Select(option =>
                 {
                     //fill in model values from the entity
                     var sortOptionModel = new SortOptionModel
@@ -1099,9 +1099,8 @@ namespace Nop.Web.Areas.Admin.Factories
                         .ProductSortingEnumDisplayOrder.TryGetValue((int)option, out var value) ? value : (int)option;
 
                     return sortOptionModel;
-                }).OrderBy(option => option.DisplayOrder).ToList(),
-                Total = sortOptions.TotalCount
-            };
+                }).OrderBy(option => option.DisplayOrder);
+            });
 
             return model;
         }
