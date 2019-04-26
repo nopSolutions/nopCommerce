@@ -262,6 +262,9 @@ namespace Nop.Services.Plugins
             if (_pluginsInfo.PluginNamesToUninstall.Contains(systemName))
                 return;
 
+            var plugin = GetPluginDescriptorBySystemName<IPlugin>(systemName)?.Instance<IPlugin>();
+            plugin?.PreparePluginToUninstall();
+
             _pluginsInfo.PluginNamesToUninstall.Add(systemName);
             _pluginsInfo.Save();
         }
