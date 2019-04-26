@@ -21,7 +21,49 @@
             @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.TaxCategoryListButtons })
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <div id="tax-categories-grid"></div>
+                    @await Html.PartialAsync("Table", new DataTablesModel
+                    {
+                        Name = "tax-categories-grid",
+                        UrlRead = new DataUrl("Categories", "Tax", null),
+                        UrlDelete = new DataUrl("CategoryDelete", "Tax", null),
+                        UrlUpdate = new DataUrl("CategoryUpdate", "Tax", null),
+                        Length = Model.PageSize,
+                        LengthMenu = Model.AvailablePageSizes,
+                        ColumnCollection = new List<ColumnProperty>
+                            {
+                                new ColumnProperty(nameof(TaxCategoryModel.Name))
+                                {
+                                    Title = T("Admin.Configuration.Tax.Categories.Fields.Name").Text,
+                                    Width = "300",
+                                    Editable = true,
+                                    EditType = EditType.String
+                                },
+                                new ColumnProperty(nameof(TaxCategoryModel.DisplayOrder))
+                                {
+                                    Title = T("Admin.Configuration.Tax.Categories.Fields.DisplayOrder").Text,
+                                    Width = "100",
+                                    ClassName = StyleColumn.CenterAll,
+                                    Editable = true,
+                                    EditType = EditType.Number
+                                },
+                                new ColumnProperty(nameof(TaxCategoryModel.Id))
+                                {
+                                    Title = T("Admin.Common.Edit").Text,
+                                    Width = "200",
+                                    ClassName =  StyleColumn.ButtonStyle,
+                                    Render = new RenderButtonsInlineEdit()
+                                },
+                                new ColumnProperty(nameof(TaxCategoryModel.Id))
+                                {
+                                    Title = T("Admin.Common.Delete").Text,
+                                    Width = "100",
+                                    Render = new RenderButtonRemove(T("Admin.Common.Delete").Text){ Style = StyleButton.Default },
+                                    ClassName = StyleColumn.ButtonStyle
+                                }
+                            }
+                    })
+
+                    @*<div id="tax-categories-grid"></div>
 
                     <script>
                         $(document).ready(function() {
@@ -123,7 +165,7 @@
                                 ]
                             });
                         });
-                    </script>
+                    </script>*@
                 </div>
             </div>
         </div>
