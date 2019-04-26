@@ -243,7 +243,12 @@
                 type: 'POST',
                 dataType: 'json',
                 data: postData,
-                success: function (data) {
+                success: function (result) {
+                    //display error if returned
+                    if (result) {
+                        display_datatables_error(result);
+                    }
+                    //refresh grid
                      $('#@Model.Name').DataTable().draw(false);
                 },
                 error: function (xhr, ajaxOptions, thrownError) {

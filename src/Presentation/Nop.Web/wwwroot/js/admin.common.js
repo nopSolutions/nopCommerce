@@ -89,9 +89,9 @@ function display_datatables_error(e) {
       var message = "The following errors have occurred:";
       //create a message containing all errors.
       $.each(e.error, function (key, value) {
-        if (value.error) {
+        if (value.errors) {
           message += "\n";
-          message += value.error.join("\n");
+          message += value.errors.join("\n");
         }
       });
       //display the message
