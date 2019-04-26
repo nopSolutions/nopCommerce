@@ -1016,6 +1016,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
         {
             CreateMap<Language, LanguageModel>()
                 .ForMember(model => model.AvailableCurrencies, options => options.Ignore())
+                .ForMember(model => model.AddResourceString, options => options.Ignore())
                 .ForMember(model => model.LocaleResourceSearchModel, options => options.Ignore());
             CreateMap<LanguageModel, Language>();
 

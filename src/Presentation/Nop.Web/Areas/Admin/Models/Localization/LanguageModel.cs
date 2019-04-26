@@ -21,6 +21,7 @@ namespace Nop.Web.Areas.Admin.Models.Localization
             SelectedStoreIds = new List<int>();
             AvailableStores = new List<SelectListItem>();
             LocaleResourceSearchModel = new LocaleResourceSearchModel();
+            AddResourceString = new LocaleResourceModel();
         }
 
         #endregion
@@ -63,6 +64,8 @@ namespace Nop.Web.Areas.Admin.Models.Localization
 
         // search
         public LocaleResourceSearchModel LocaleResourceSearchModel { get; set; }
+
+        public LocaleResourceModel AddResourceString { get; set; }
 
         #endregion
     }
