@@ -385,9 +385,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new DiscountUsageHistoryListModel
+            var model = new DiscountUsageHistoryListModel().PrepareToGrid(searchModel, history, () =>
             {
-                Data = history.Select(historyEntry =>
+                return history.Select(historyEntry =>
                 {
                     //fill in model values from the entity
                     var discountUsageHistoryModel = historyEntry.ToModel<DiscountUsageHistoryModel>();
@@ -404,9 +404,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     }
 
                     return discountUsageHistoryModel;
-                }),
-                Total = history.TotalCount
-            };
+                });
+            });
 
             return model;
         }

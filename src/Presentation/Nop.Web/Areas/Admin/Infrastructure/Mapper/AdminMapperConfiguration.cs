@@ -250,9 +250,6 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
         /// </summary>
         protected virtual void CreateCatalogMaps()
         {
-            CreateMap<Product, BulkEditProductModel>()
-               .ForMember(model => model.ManageInventoryMethod, options => options.Ignore());
-
             CreateMap<CatalogSettings, CatalogSettingsModel>()
                 .ForMember(model => model.AllowAnonymousUsersToEmailAFriend_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.AllowAnonymousUsersToReviewProduct_OverrideForStore, options => options.Ignore())
@@ -1395,6 +1392,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
             CreateMap<PollAnswer, PollAnswerModel>();
             CreateMap<PollAnswerModel, PollAnswer>()
                 .ForMember(entity => entity.Poll, options => options.Ignore())
+                .ForMember(entity => entity.PollId, options => options.Ignore())
                 .ForMember(entity => entity.PollVotingRecords, options => options.Ignore());
 
             CreateMap<Poll, PollModel>()

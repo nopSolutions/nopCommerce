@@ -214,14 +214,12 @@
                             new ColumnProperty(nameof(ShipmentModel.ShippedDate))
                             {
                                 Title = T("Admin.Orders.Shipments.ShippedDate").Text,
-                                Width = "200",
-                                Render = new RenderDate()
+                                Width = "200"
                             },
                             new ColumnProperty(nameof(ShipmentModel.DeliveryDate))
                             {
                                 Title = T("Admin.Orders.Shipments.DeliveryDate").Text,
-                                Width = "200",
-                                Render = new RenderDate()
+                                Width = "200"
                             },
                             new ColumnProperty(nameof(OrderModel.Id))
                             {
@@ -314,7 +312,8 @@
                                 data: postData,
                                 complete: function(data) {
                                     //reload grid
-                                    $('#shipments-grid').DataTable().draw(false);                                    
+                                    $('#shipments-grid').DataTable().draw(false);
+                                    selectedIds = [];
                                 },
                                 error: function(xhr, ajaxOptions, thrownError) {
                                     $('#setAsShippedSelectedFailed-info').text(thrownError);
@@ -342,6 +341,7 @@
                                 complete: function(data) {
                                     //reload grid
                                     $('#shipments-grid').DataTable().draw(false);
+                                    selectedIds = [];
                                 },
                                 error: function(xhr, ajaxOptions, thrownError) {
                                     $('#setAsDeliveredSelectedFailed-info').text(thrownError);

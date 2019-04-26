@@ -199,6 +199,7 @@
                                     complete: function (data) {
                                         //reload grid
                                         $('#comments-grid').DataTable().ajax.reload();
+                                        selectedIds = [];
                                     },
                                     error: function (xhr, ajaxOptions, thrownError) {
                                         $('#deleteSelectedCommentsFailed-info').text(thrownError);
@@ -210,8 +211,7 @@
                             });
 
                             //"approve selected" button
-                            $('#approve-selected')
-                                .click(function(e) {
+                            $('#approve-selected').click(function(e) {
                                     e.preventDefault();
 
                                     var postData = {
@@ -227,6 +227,7 @@
                                         complete: function(data) {
                                             //reload grid
                                             $('#comments-grid').DataTable().ajax.reload();
+                                            selectedIds = [];
                                         },
                                         error: function(xhr, ajaxOptions, thrownError) {
                                             $('#approveSelectedFailed-info').text(thrownError);
@@ -238,8 +239,7 @@
                                 });
 
                             //"disapprove selected" button
-                            $('#disapprove-selected')
-                                .click(function(e) {
+                            $('#disapprove-selected').click(function(e) {
                                     e.preventDefault();
 
                                     var postData = {
@@ -255,6 +255,7 @@
                                         complete: function(data) {
                                             //reload grid
                                             $('#comments-grid').DataTable().ajax.reload();
+                                            selectedIds = [];
                                         },
                                         error: function(xhr, ajaxOptions, thrownError) {
                                             $('#disapproveSelectedFailed-info').text(thrownError);

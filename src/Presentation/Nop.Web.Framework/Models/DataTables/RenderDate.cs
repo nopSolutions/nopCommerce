@@ -10,7 +10,7 @@
         /// <summary>
         /// Default date format
         /// </summary>
-        private string DEFAULT_DATE_FORMAT = "MM-DD-YYYY HH:mm:ss";
+        private string DEFAULT_DATE_FORMAT = "MM/DD/YYYY HH:mm:ss";
 
         #endregion
 

@@ -41,25 +41,5 @@ namespace Nop.Web.Areas.Admin.Controllers
             return base.Json(data, serializerSettings);
         }
 
-        /// <summary>
-        /// Creates an object that serializes the specified object to JSON.
-        /// </summary>
-        /// <typeparam name="T">Model type</typeparam>
-        /// <param name="model">The model to serialize.</param>
-        /// <returns>The created object that serializes the specified data to JSON format for the response.</returns>
-        public JsonResult Json<T>(BasePagedListModel<T> model) where T : BaseNopModel
-        {
-            return Json(new
-            {
-                draw = model.Draw,
-                recordsTotal = model.RecordsTotal,
-                recordsFiltered = model.RecordsFiltered,
-                data = model.Data,
-
-                //TODO: remove after moving to DataTables grids
-                Total = model.Total,
-                Data = model.Data
-            });
-        }
     }
 }

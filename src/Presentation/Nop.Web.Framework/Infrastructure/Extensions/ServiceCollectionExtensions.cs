@@ -338,7 +338,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         /// <param name="services">Collection of service descriptors</param>
         public static void AddNopObjectContext(this IServiceCollection services)
         {
-            services.AddDbContext<NopObjectContext>(optionsBuilder =>
+            services.AddDbContextPool<NopObjectContext>(optionsBuilder =>
             {
                 optionsBuilder.UseSqlServerWithLazyLoading(services);
             });

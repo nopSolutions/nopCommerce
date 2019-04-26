@@ -89,9 +89,9 @@ function display_datatables_error(e) {
       var message = "The following errors have occurred:";
       //create a message containing all errors.
       $.each(e.error, function (key, value) {
-        if (value.error) {
+        if (value.errors) {
           message += "\n";
-          message += value.error.join("\n");
+          message += value.errors.join("\n");
         }
       });
       //display the message
@@ -302,15 +302,20 @@ function ToggleSearchBlockAndSavePreferences() {
     $(this).toggleClass("opened");
 }
 
+function ensureDataTablesRendered() {
+  $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
+}
+
 //scrolling and hidden DataTables issue workaround
 //More info - https://datatables.net/examples/api/tabs_and_scrolling.html
 $(document).ready(function () {
   $('ul li a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-    $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
+    ensureDataTablesRendered();
   });
-  $(document).ready(function () {
-    $(".panel.collapsible-panel >.panel-heading").click(function () {
-      $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
-    });
+  $(".panel.collapsible-panel >.panel-heading").click(function () {
+    ensureDataTablesRendered();
+  });
+  $('#advanced-settings-mode').on('click', function (e) {
+    ensureDataTablesRendered();
   });
 });

@@ -194,12 +194,8 @@ namespace Nop.Web.Areas.Admin.Factories
             var pollAnswers = poll.PollAnswers.OrderBy(pollAnswer => pollAnswer.DisplayOrder).ToList().ToPagedList(searchModel);
 
             //prepare list model
-            var model = new PollAnswerListModel
-            {
-                //fill in model values from the entity
-                Data = pollAnswers.Select(pollAnswer => pollAnswer.ToModel<PollAnswerModel>()),
-                Total = pollAnswers.TotalCount
-            };
+            var model = new PollAnswerListModel().PrepareToGrid(searchModel, pollAnswers,
+                () => pollAnswers.Select(pollAnswer => pollAnswer.ToModel<PollAnswerModel>()));
 
             return model;
         }

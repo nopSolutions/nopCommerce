@@ -144,23 +144,23 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Controllers
         #region Fixed rate
 
         [HttpPost]
-        public IActionResult FixedShippingRateList(DataSourceRequest command)
+        public IActionResult FixedShippingRateList(ConfigurationModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedDataTablesJson();
 
-            var rateModels = _shippingService.GetAllShippingMethods().Select(shippingMethod => new FixedRateModel
-            {
-                ShippingMethodId = shippingMethod.Id,
-                ShippingMethodName = shippingMethod.Name,
-                Rate = _settingService.GetSettingByKey<decimal>(string.Format(FixedByWeightByTotalDefaults.FixedRateSettingsKey, shippingMethod.Id))
-            }).ToList();
+            var shippingMethods = _shippingService.GetAllShippingMethods().ToPagedList(searchModel);
 
-            var gridModel = new DataSourceResult
+            var gridModel = new FixedRateListModel().PrepareToGrid(searchModel, shippingMethods, () =>
             {
-                Data = rateModels,
-                Total = rateModels.Count
-            };
+                return shippingMethods.Select(shippingMethod => new FixedRateModel
+                {
+                    ShippingMethodId = shippingMethod.Id,
+                    ShippingMethodName = shippingMethod.Name,
+                    Rate = _settingService.GetSettingByKey<decimal>(
+                        string.Format(FixedByWeightByTotalDefaults.FixedRateSettingsKey, shippingMethod.Id))
+                });
+            });
 
             return Json(gridModel);
         }

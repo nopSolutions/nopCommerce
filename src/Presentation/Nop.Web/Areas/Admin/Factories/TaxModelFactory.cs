@@ -132,12 +132,11 @@ namespace Nop.Web.Areas.Admin.Factories
             var taxCategories = _taxCategoryService.GetAllTaxCategories().ToPagedList(searchModel);
 
             //prepare grid model
-            var model = new TaxCategoryListModel
+            var model = new TaxCategoryListModel().PrepareToGrid(searchModel, taxCategories, () =>
             {
                 //fill in model values from the entity
-                Data = taxCategories.Select(taxCategory => taxCategory.ToModel<TaxCategoryModel>()),
-                Total = taxCategories.TotalCount
-            };
+                return taxCategories.Select(taxCategory => taxCategory.ToModel<TaxCategoryModel>());
+            });
 
             return model;
         }

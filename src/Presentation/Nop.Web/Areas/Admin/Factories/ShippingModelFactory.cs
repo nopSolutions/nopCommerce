@@ -207,9 +207,9 @@ namespace Nop.Web.Areas.Admin.Factories
             var pickupPointProviders = _pickupPluginManager.LoadAllPlugins().ToPagedList(searchModel);
 
             //prepare grid model
-            var model = new PickupPointProviderListModel
+            var model = new PickupPointProviderListModel().PrepareToGrid(searchModel, pickupPointProviders, () =>
             {
-                Data = pickupPointProviders.Select(provider =>
+                return pickupPointProviders.Select(provider =>
                 {
                     //fill in model values from the entity
                     var pickupPointProviderModel = provider.ToPluginModel<PickupPointProviderModel>();
@@ -220,9 +220,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     pickupPointProviderModel.LogoUrl = _pickupPluginManager.GetPluginLogoUrl(provider);
 
                     return pickupPointProviderModel;
-                }),
-                Total = pickupPointProviders.TotalCount
-            };
+                });
+            });
 
             return model;
         }

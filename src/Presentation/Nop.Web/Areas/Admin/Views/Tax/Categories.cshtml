@@ -21,109 +21,47 @@
             @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.TaxCategoryListButtons })
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <div id="tax-categories-grid"></div>
-
-                    <script>
-                        $(document).ready(function() {
-                            $("#tax-categories-grid").kendoGrid({
-                                dataSource: {
-                                    type: "json",
-                                    transport: {
-                                        read: {
-                                            url: "@Html.Raw(Url.Action("Categories", "Tax"))",
-                                            type: "POST",
-                                            dataType: "json",
-                                            data: addAntiForgeryToken
-                                        },
-                                        create: {
-                                            url: "@Html.Raw(Url.Action("CategoryAdd", "Tax"))",
-                                            type: "POST",
-                                            dataType: "json",
-                                            data: addAntiForgeryToken
-                                        },
-                                        update: {
-                                            url: "@Html.Raw(Url.Action("CategoryUpdate", "Tax"))",
-                                            type: "POST",
-                                            dataType: "json",
-                                            data: addAntiForgeryToken
-                                        },
-                                        destroy: {
-                                            url: "@Html.Raw(Url.Action("CategoryDelete", "Tax"))",
-                                            type: "POST",
-                                            dataType: "json",
-                                            data: addAntiForgeryToken
-                                        }
-                                    },
-                                    schema: {
-                                        data: "Data",
-                                        total: "Total",
-                                        errors: "Errors",
-                                        model: {
-                                            id: "Id",
-                                            fields: {
-                                                Name: { editable: true, type: "string" },
-                                                DisplayOrder: { editable: true, type: "number" },
-                                                Id: { editable: false, type: "number" }
-                                            }
-                                        }
-                                    },
-                                    requestEnd: function(e) {
-                                        if (e.type == "create" || e.type == "update") {
-                                            this.read();
-                                        }
-                                    },
-                                    error: function(e) {
-                                        display_kendoui_grid_error(e);
-                                        // Cancel the changes
-                                        this.cancelChanges();
-                                    },
-                                    pageSize: @(Model.PageSize),
-                                    serverPaging: true,
-                                    serverFiltering: true,
-                                    serverSorting: true
+                    @await Html.PartialAsync("Table", new DataTablesModel
+                    {
+                        Name = "tax-categories-grid",
+                        UrlRead = new DataUrl("Categories", "Tax", null),
+                        UrlDelete = new DataUrl("CategoryDelete", "Tax", null),
+                        UrlUpdate = new DataUrl("CategoryUpdate", "Tax", null),
+                        Length = Model.PageSize,
+                        LengthMenu = Model.AvailablePageSizes,
+                        ColumnCollection = new List<ColumnProperty>
+                            {
+                                new ColumnProperty(nameof(TaxCategoryModel.Name))
+                                {
+                                    Title = T("Admin.Configuration.Tax.Categories.Fields.Name").Text,
+                                    Width = "300",
+                                    Editable = true,
+                                    EditType = EditType.String
                                 },
-                                pageable: {
-                                    refresh: true,
-                                    pageSizes: [@(Model.AvailablePageSizes)],
-                                    @await Html.PartialAsync("_GridPagerMessages")
+                                new ColumnProperty(nameof(TaxCategoryModel.DisplayOrder))
+                                {
+                                    Title = T("Admin.Configuration.Tax.Categories.Fields.DisplayOrder").Text,
+                                    Width = "100",
+                                    ClassName = StyleColumn.CenterAll,
+                                    Editable = true,
+                                    EditType = EditType.Number
                                 },
-                                toolbar: [{ name: "create", text: "@T("Admin.Common.AddNewRecord")" }],
-                                editable: {
-                                    confirmation: "@T("Admin.Common.DeleteConfirmation")",
-                                    mode: "inline"
+                                new ColumnProperty(nameof(TaxCategoryModel.Id))
+                                {
+                                    Title = T("Admin.Common.Edit").Text,
+                                    Width = "200",
+                                    ClassName =  StyleColumn.ButtonStyle,
+                                    Render = new RenderButtonsInlineEdit()
                                 },
-                                scrollable: false,
-                                columns: [
-                                    {
-                                        field: "Name",
-                                        title: "@T("Admin.Configuration.Tax.Categories.Fields.Name")",
-                                        width: 300
-                                    }, {
-                                        field: "DisplayOrder",
-                                        title: "@T("Admin.Configuration.Tax.Categories.Fields.DisplayOrder")",
-                                        //integer format
-                                        format: "{0:0}",
-                                        width: 100
-                                    }, {
-                                        command: [
-                                            {
-                                                name: "edit",
-                                                text: {
-                                                    edit: "@T("Admin.Common.Edit")",
-                                                    update: "@T("Admin.Common.Update")",
-                                                    cancel: "@T("Admin.Common.Cancel")"
-                                                }
-                                            }, {
-                                                name: "destroy",
-                                                text: "@T("Admin.Common.Delete")"
-                                            }
-                                        ],
-                                        width: 200
-                                    }
-                                ]
-                            });
-                        });
-                    </script>
+                                new ColumnProperty(nameof(TaxCategoryModel.Id))
+                                {
+                                    Title = T("Admin.Common.Delete").Text,
+                                    Width = "100",
+                                    Render = new RenderButtonRemove(T("Admin.Common.Delete").Text){ Style = StyleButton.Default },
+                                    ClassName = StyleColumn.ButtonStyle
+                                }
+                            }
+                    })
                 </div>
             </div>
         </div>

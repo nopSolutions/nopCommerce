@@ -122,6 +122,11 @@ namespace Nop.Web.Framework.Models.DataTables
         public string HeaderCallback { get; set; }
 
         /// <summary>
+        /// Gets or sets a number of columns to generate in a footer. Set 0 to disable footer
+        /// </summary>
+        public int FooterColumns { get; set; }
+
+        /// <summary>
         /// Gets or sets custom render footer function name(js)
         /// See also https://datatables.net/reference/option/footerCallback
         /// </summary>

@@ -148,6 +148,7 @@
                                     complete: function (data) {
                                         //reload grid
                                         $('#countries-grid').DataTable().ajax.reload();
+                                        selectedIds = [];
                                     },
                                     error: function (xhr, ajaxOptions, thrownError) {
                                         $('#publishSelectedFailed-info').text(thrownError);
@@ -175,6 +176,7 @@
                                     complete: function (data) {
                                         //reload grid
                                         $('#countries-grid').DataTable().ajax.reload();
+                                        selectedIds = [];
                                     },
                                     error: function (xhr, ajaxOptions, thrownError) {
                                         $('#unpublishSelectedFailed-info').text(thrownError);
