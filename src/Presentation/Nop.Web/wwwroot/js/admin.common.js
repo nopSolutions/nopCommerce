@@ -315,4 +315,7 @@ $(document).ready(function () {
   $(".panel.collapsible-panel >.panel-heading").click(function () {
     ensureDataTablesRendered();
   });
+  $('#advanced-settings-mode').on('click', function (e) {
+    ensureDataTablesRendered();
+  });
 });
