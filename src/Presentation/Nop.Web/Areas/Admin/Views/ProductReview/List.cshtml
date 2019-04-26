@@ -260,6 +260,7 @@
                                     complete: function(data) {
                                         //reload grid
                                         $('#productreviews-grid').DataTable().ajax.reload();
+                                        selectedIds = [];
                                     },
                                     error: function(xhr, ajaxOptions, thrownError) {
                                         $('#approveSelectedFailed-info').text(thrownError);
@@ -287,6 +288,7 @@
                                     complete: function(data) {
                                         //reload grid
                                         $('#productreviews-grid').DataTable().ajax.reload();
+                                        selectedIds = [];
                                     },
                                     error: function(xhr, ajaxOptions, thrownError) {
                                         $('#disapproveSelectedFailed-info').text(thrownError);
@@ -311,6 +313,7 @@
                                     complete: function (data) {
                                         //reload grid
                                         $('#productreviews-grid').DataTable().ajax.reload();
+                                        selectedIds = [];
                                     },
                                     error: function (xhr, ajaxOptions, thrownError) {
                                         $('#deleteSelectedFailed-info').text(thrownError);

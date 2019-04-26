@@ -314,7 +314,8 @@
                                 data: postData,
                                 complete: function(data) {
                                     //reload grid
-                                    $('#shipments-grid').DataTable().draw(false);                                    
+                                    $('#shipments-grid').DataTable().draw(false);
+                                    selectedIds = [];
                                 },
                                 error: function(xhr, ajaxOptions, thrownError) {
                                     $('#setAsShippedSelectedFailed-info').text(thrownError);
@@ -342,6 +343,7 @@
                                 complete: function(data) {
                                     //reload grid
                                     $('#shipments-grid').DataTable().draw(false);
+                                    selectedIds = [];
                                 },
                                 error: function(xhr, ajaxOptions, thrownError) {
                                     $('#setAsDeliveredSelectedFailed-info').text(thrownError);

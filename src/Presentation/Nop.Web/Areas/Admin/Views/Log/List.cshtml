@@ -162,8 +162,6 @@
                                         complete: function (data) {
                                             //reload grid
                                             $('#log-grid').DataTable().ajax.reload();
-                                            //clear selected checkboxes
-                                            $('.checkboxGroups').attr('checked', false).change();
                                             selectedIds = [];
                                         },
                                         error: function (xhr, ajaxOptions, thrownError) {

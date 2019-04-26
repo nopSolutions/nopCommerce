@@ -300,6 +300,7 @@
                                         data: postData,
                                         complete: function (data) {
                                             $('#products-grid').DataTable().ajax.reload();
+                                            selectedIds = [];
                                         },
                                         error: function (xhr, ajaxOptions, thrownError) {
                                             $('#deleteSelectedFailed-info').text(thrownError);
