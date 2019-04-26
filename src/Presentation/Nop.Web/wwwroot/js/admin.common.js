@@ -302,15 +302,17 @@ function ToggleSearchBlockAndSavePreferences() {
     $(this).toggleClass("opened");
 }
 
+function ensureDataTablesRendered() {
+  $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
+}
+
 //scrolling and hidden DataTables issue workaround
 //More info - https://datatables.net/examples/api/tabs_and_scrolling.html
 $(document).ready(function () {
   $('ul li a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-    $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
+    ensureDataTablesRendered();
   });
-  $(document).ready(function () {
-    $(".panel.collapsible-panel >.panel-heading").click(function () {
-      $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
-    });
+  $(".panel.collapsible-panel >.panel-heading").click(function () {
+    ensureDataTablesRendered();
   });
 });
