@@ -23,9 +23,9 @@ namespace Nop.Web.Models.Checkout
         public bool NewAddressPreselected { get; set; }
 
         public IList<CheckoutPickupPointModel> PickupPoints { get; set; }
-        public bool AllowPickUpInStore { get; set; }
-        public bool PickUpInStore { get; set; }
-        public bool PickUpInStoreOnly { get; set; }
+        public bool AllowPickupInStore { get; set; }
+        public bool PickupInStore { get; set; }
+        public bool PickupInStoreOnly { get; set; }
         public bool DisplayPickupPointsOnMap { get; set; }
         public string GoogleMapsApiKey { get; set; }
     }

@@ -3,8 +3,8 @@
 namespace Nop.Web.Framework.Models.DataTables
 {
     /// <summary>
-    /// Represenrs a button style 
-    /// using https://adminlte.io/themes/AdminLTE/pages/UI/buttons.html
+    /// Represents a button style 
+    /// https://adminlte.io/themes/AdminLTE/pages/UI/buttons.html
     /// </summary>
     public enum StyleButton
     {

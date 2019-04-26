@@ -127,6 +127,7 @@ else
     </text>
 }
 scrollX: true,
+info: @Model.Info.ToString().ToLower(),
 paging: @Model.Paging.ToString().ToLower(),
 pagingType: '@Model.PagingType',
 language: @await Html.PartialAsync("_GridLocalization"),
@@ -147,15 +148,16 @@ ordering: @Model.Ordering.ToString().ToLower(),
 fixedHeader: @Model.FixedHeader.ToString().ToLower(),
 dom: '<"row"<"col-md-12"t>>' +
      '<"row"' +
-        '<"col-md-10"<"row"' +
-            '<"col-md-8"<"pull-left"p>>' +
-            '<"col-md-2s"<"pull-left data-tables-length"l>>' +
+        '<"col-md-11"<"row"' +
+            '<"col-md-9"<"pull-left"p>>' +
+            '<"col-md-2"<"pull-left data-tables-length"l>>' +
         '>>' +
-        '<"col-md-2"<"pull-right"i>>' +
+        '<"col-md-1"<"pull-right"i>>' +
      '>',
 columns: [
-    @foreach (var column in Model.ColumnCollection)
+    @for (int i = 0; i < Model.ColumnCollection.Count; i++)
     {
+        var column = Model.ColumnCollection[i];
         <text>
         {            
             @if (!string.IsNullOrEmpty(column.Title) && !column.IsMasterCheckBox)
@@ -195,6 +197,14 @@ columns: [
             {
                 <text>
                 className: '@GetEnumValue(typeof(StyleColumn), column.ClassName.Value)',
+                </text>
+            }
+            @if ((Model.UrlUpdate != null) || (Model.ChildTable?.UrlUpdate != null))
+            {
+                <text>
+                createdCell: function (td, cellData, rowData, row, col) {
+                   $(td).attr('data-columnname', '@column.Data');
+                },
                 </text>
             }
             @if (column.Encode && column.Render == null)
@@ -238,6 +248,20 @@ columns: [
                     },
                     </text>
                     break;
+                    case RenderButtonsInlineEdit button:
+                    <text>
+                        render: function (data, type, row, meta) {
+                            var origData = data;
+                            var modData = data;
+                            if (typeof data == 'string'){
+                                modData = data.replace(/[.*+?^${}()|[\]\\]/g, "_");
+                            }
+                            return '<a href="#" class="@GetEnumValue(typeof(StyleButton), StyleButton.Default)" id="buttonEdit_@(model_name)'+ modData + '" onclick="EditData_@(model_name)($(this).parent().parent(), \'' + origData + '\');return false;"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>' +
+                            '<a href="#" class="@GetEnumValue(typeof(StyleButton), StyleButton.Default)" id="buttonConfirm_@(model_name)'+ modData + '" style="display:none" onclick="ConfirmEditData_@(model_name)($(this).parent().parent(), \'' + origData + '\', \'@column.Data\');return false;"><i class="fa fa-check"></i>@T("Admin.Common.Update")</a>' +
+                            '<a href="#" class="@GetEnumValue(typeof(StyleButton), StyleButton.Default)" id="buttonCancel_@(model_name)'+ modData + '" style="display:none" onclick="CancelEditData_@(model_name)(\'' + row + '\', \'' + origData + '\');return false;"><i class="fa fa-ban"></i>@T("Admin.Common.Cancel")</a>';
+                        },                         
+                    </text>
+                    break;
                 case RenderButtonEdit buttonEdit:
                     <text>
                     render: function (data, type, row, meta) {
@@ -257,7 +281,7 @@ columns: [
                     {
                         <text>
                         render: function (data, type, row, meta) {
-                            return '<a class="@GetEnumValue(typeof(StyleButton), buttonCustom.Style)" href="@buttonCustom.Url' + data + '">@buttonCustom.Title</a>';
+                            return '<a class="@GetEnumValue(typeof(StyleButton), buttonCustom.Style)" href="@buttonCustom.Url' + data + '">@JavaScriptEncoder.Default.Encode(buttonCustom.Title)</a>';
                         },
                         </text>
                     }
@@ -301,8 +325,8 @@ columns: [
                     <text>
                     render: function (data, type, row) {
                         return (data == true)
-                            ? '<i class="fa fa-check true-icon"></i>'
-                            : '<i class="fa fa-close false-icon"></i>';
+                            ? '<i class="fa fa-check true-icon" nop-value="true"></i>'
+                            : '<i class="fa fa-close false-icon" nop-value="false"></i>';
                     },
                     </text>
                     break;
@@ -321,8 +345,9 @@ columns: [
                     </text>
                     break;
             }
-            data: '@column.Data'
-        },
+            data: '@column.Data'            
+        }
+        @if (i != Model.ColumnCollection.Count - 1) {<text>,</text>}
         </text>
     }
 ]

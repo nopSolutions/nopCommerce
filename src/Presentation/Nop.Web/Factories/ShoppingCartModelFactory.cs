@@ -640,8 +640,8 @@ namespace Nop.Web.Factories
 
                 var pickupPoint = _genericAttributeService.GetAttribute<PickupPoint>(_workContext.CurrentCustomer,
                     NopCustomerDefaults.SelectedPickupPointAttribute, _storeContext.CurrentStore.Id);
-                model.SelectedPickUpInStore = _shippingSettings.AllowPickUpInStore && pickupPoint != null;
-                if (!model.SelectedPickUpInStore)
+                model.SelectedPickupInStore = _shippingSettings.AllowPickupInStore && pickupPoint != null;
+                if (!model.SelectedPickupInStore)
                 {
                     if (_workContext.CurrentCustomer.ShippingAddress != null)
                     {
@@ -1283,7 +1283,7 @@ namespace Nop.Web.Factories
                     foreach (var error in getShippingOptionResponse.Errors)
                         model.Warnings.Add(error);
 
-                if (_shippingSettings.AllowPickUpInStore)
+                if (_shippingSettings.AllowPickupInStore)
                 {
                     var pickupPointsResponse = _shippingService.GetPickupPoints(address, _workContext.CurrentCustomer, storeId: _storeContext.CurrentStore.Id);
                     if (pickupPointsResponse.Success)

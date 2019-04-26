@@ -998,9 +998,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 .GetRelatedProductsByProductId1(productId1: product.Id, showHidden: true).ToPagedList(searchModel);
 
             //prepare grid model
-            var model = new RelatedProductListModel
+            var model = new RelatedProductListModel().PrepareToGrid(searchModel, relatedProducts, () =>
             {
-                Data = relatedProducts.Select(relatedProduct =>
+                return relatedProducts.Select(relatedProduct =>
                 {
                     //fill in model values from the entity
                     var relatedProductModel = relatedProduct.ToModel<RelatedProductModel>();
@@ -1009,10 +1009,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     relatedProductModel.Product2Name = _productService.GetProductById(relatedProduct.ProductId2)?.Name;
 
                     return relatedProductModel;
-                }),
-                Total = relatedProducts.TotalCount
-            };
-
+                });
+            });
             return model;
         }
 
@@ -1220,18 +1218,16 @@ namespace Nop.Web.Areas.Admin.Factories
                 vendorId: _workContext.CurrentVendor?.Id ?? 0).ToPagedList(searchModel);
 
             //prepare grid model
-            var model = new AssociatedProductListModel
+            var model = new AssociatedProductListModel().PrepareToGrid(searchModel, associatedProducts, () =>
             {
-                //fill in model values from the entity
-                Data = associatedProducts.Select(associatedProduct =>
+                return associatedProducts.Select(associatedProduct =>
                 {
                     var associatedProductModel = associatedProduct.ToModel<AssociatedProductModel>();
                     associatedProductModel.ProductName = associatedProduct.Name;
 
                     return associatedProductModel;
-                }),
-                Total = associatedProducts.TotalCount
-            };
+                });
+            });
 
             return model;
         }
@@ -1335,25 +1331,24 @@ namespace Nop.Web.Areas.Admin.Factories
             var productPictures = _productService.GetProductPicturesByProductId(product.Id).ToPagedList(searchModel);
 
             //prepare grid model
-            var model = new ProductPictureListModel
+            var model = new ProductPictureListModel().PrepareToGrid(searchModel, productPictures, () =>
             {
-                Data = productPictures.Select(productPicture =>
+                return productPictures.Select(productPicture =>
                 {
                     //fill in model values from the entity
                     var productPictureModel = productPicture.ToModel<ProductPictureModel>();
 
                     //fill in additional values (not existing in the entity)
                     var picture = _pictureService.GetPictureById(productPicture.PictureId)
-                        ?? throw new Exception("Picture cannot be loaded");
+                                  ?? throw new Exception("Picture cannot be loaded");
 
                     productPictureModel.PictureUrl = _pictureService.GetPictureUrl(picture);
                     productPictureModel.OverrideAltAttribute = picture.AltAttribute;
                     productPictureModel.OverrideTitleAttribute = picture.TitleAttribute;
 
                     return productPictureModel;
-                }),
-                Total = productPictures.TotalCount
-            };
+                });
+            });
 
             return model;
         }

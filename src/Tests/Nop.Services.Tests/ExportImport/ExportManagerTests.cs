@@ -415,7 +415,7 @@ namespace Nop.Services.Tests.ExportImport
                     { "OrderStatusId", "OrderStatus" },
                     { "PaymentStatusId", "PaymentStatus" },
                     { "ShippingStatusId", "ShippingStatus" },
-                    { "ShippingPickUpInStore", "PickUpInStore" }
+                    { "ShippingPickupInStore", "PickupInStore" }
                 };
 
             var order = orders.First();

@@ -61,9 +61,10 @@ namespace Nop.Web.Areas.Admin.Factories
             var externalAuthenticationMethods = _authenticationPluginManager.LoadAllPlugins().ToPagedList(searchModel);
 
             //prepare grid model
-            var model = new ExternalAuthenticationMethodListModel
+            var model = new ExternalAuthenticationMethodListModel().PrepareToGrid(searchModel, externalAuthenticationMethods, () =>
             {
-                Data = externalAuthenticationMethods.Select(method =>
+                //fill in model values from the entity
+                return externalAuthenticationMethods.Select(method =>
                 {
                     //fill in model values from the entity
                     var externalAuthenticationMethodModel = method.ToPluginModel<ExternalAuthenticationMethodModel>();
@@ -73,9 +74,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     externalAuthenticationMethodModel.ConfigurationUrl = method.GetConfigurationPageUrl();
 
                     return externalAuthenticationMethodModel;
-                }),
-                Total = externalAuthenticationMethods.TotalCount
-            };
+                });
+            });
 
             return model;
         }

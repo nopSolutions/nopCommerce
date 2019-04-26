@@ -63,9 +63,9 @@ namespace Nop.Web.Areas.Admin.Factories
             var scheduleTasks = _scheduleTaskService.GetAllTasks(true).ToPagedList(searchModel);
 
             //prepare list model
-            var model = new ScheduleTaskListModel
+            var model = new ScheduleTaskListModel().PrepareToGrid(searchModel, scheduleTasks, () =>
             {
-                Data = scheduleTasks.Select(scheduleTask =>
+                return scheduleTasks.Select(scheduleTask =>
                 {
                     //fill in model values from the entity
                     var scheduleTaskModel = scheduleTask.ToModel<ScheduleTaskModel>();
@@ -90,10 +90,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     }
 
                     return scheduleTaskModel;
-                }),
-                Total = scheduleTasks.TotalCount
-            };
-
+                });
+            });
             return model;
         }
 

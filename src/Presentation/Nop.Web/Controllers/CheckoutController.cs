@@ -463,7 +463,7 @@ namespace Nop.Web.Controllers
             _workContext.CurrentCustomer.ShippingAddress = address;
             _customerService.UpdateCustomer(_workContext.CurrentCustomer);
 
-            if (_shippingSettings.AllowPickUpInStore)
+            if (_shippingSettings.AllowPickupInStore)
             {
                 //set value indicating that "pick up in store" option has not been chosen
                 _genericAttributeService.SaveAttribute<PickupPoint>(_workContext.CurrentCustomer, NopCustomerDefaults.SelectedPickupPointAttribute, null, _storeContext.CurrentStore.Id);
@@ -499,9 +499,9 @@ namespace Nop.Web.Controllers
             }
 
             //pickup point
-            if (_shippingSettings.AllowPickUpInStore)
+            if (_shippingSettings.AllowPickupInStore)
             {
-                if (model.PickUpInStore)
+                if (model.PickupInStore)
                 {
                     //no shipping address selected
                     _workContext.CurrentCustomer.ShippingAddress = null;
@@ -1303,9 +1303,9 @@ namespace Nop.Web.Controllers
                     throw new Exception("Shipping is not required");
 
                 //pickup point
-                if (_shippingSettings.AllowPickUpInStore)
+                if (_shippingSettings.AllowPickupInStore)
                 {
-                    if (model.PickUpInStore)
+                    if (model.PickupInStore)
                     {
                         //no shipping address selected
                         _workContext.CurrentCustomer.ShippingAddress = null;

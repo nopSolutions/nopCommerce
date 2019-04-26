@@ -1482,7 +1482,7 @@ namespace Nop.Services.ExportImport
             var ignore = _workContext.CurrentVendor != null;
 
             //lambda expression for choosing correct order address
-            Address orderAddress(Order o) => o.PickUpInStore ? o.PickupAddress : o.ShippingAddress;
+            Address orderAddress(Order o) => o.PickupInStore ? o.PickupAddress : o.ShippingAddress;
 
             //property array
             var properties = new[]
@@ -1511,7 +1511,7 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Order>("CustomerCurrencyCode", p => p.CustomerCurrencyCode),
                 new PropertyByName<Order>("AffiliateId", p => p.AffiliateId, ignore),
                 new PropertyByName<Order>("PaymentMethodSystemName", p => p.PaymentMethodSystemName, ignore),
-                new PropertyByName<Order>("ShippingPickUpInStore", p => p.PickUpInStore, ignore),
+                new PropertyByName<Order>("ShippingPickupInStore", p => p.PickupInStore, ignore),
                 new PropertyByName<Order>("ShippingMethod", p => p.ShippingMethod),
                 new PropertyByName<Order>("ShippingRateComputationMethodSystemName", p => p.ShippingRateComputationMethodSystemName, ignore),
                 new PropertyByName<Order>("CustomValuesXml", p => p.CustomValuesXml, ignore),
@@ -1752,7 +1752,7 @@ namespace Nop.Services.ExportImport
                 throw new ArgumentNullException(nameof(customer));
 
             //lambda expression for choosing correct order address
-            Address orderAddress(Order o) => o.PickUpInStore ? o.PickupAddress : o.ShippingAddress;
+            Address orderAddress(Order o) => o.PickupInStore ? o.PickupAddress : o.ShippingAddress;
 
             //customer info and customer attributes
             var customerManager = new PropertyManager<Customer>(new[]

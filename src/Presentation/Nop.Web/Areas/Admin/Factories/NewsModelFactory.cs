@@ -253,9 +253,9 @@ namespace Nop.Web.Areas.Admin.Factories
             var storeNames = _storeService.GetAllStores().ToDictionary(store => store.Id, store => store.Name);
 
             //prepare list model
-            var model = new NewsCommentListModel
+            var model = new NewsCommentListModel().PrepareToGrid(searchModel, comments, () =>
             {
-                Data = comments.Select(newsComment =>
+                return comments.Select(newsComment =>
                 {
                     //fill in model values from the entity
                     var commentModel = newsComment.ToModel<NewsCommentModel>();
@@ -271,9 +271,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     commentModel.StoreName = storeNames.ContainsKey(newsComment.StoreId) ? storeNames[newsComment.StoreId] : "Deleted";
 
                     return commentModel;
-                }),
-                Total = comments.TotalCount
-            };
+                });
+            });
 
             return model;
         }

@@ -3,23 +3,23 @@
 <div class="panel-body">
     <div class="form-group">
         <div class="col-md-3">
-            <nop-override-store-checkbox asp-for="AllowPickUpInStore_OverrideForStore" asp-input="AllowPickUpInStore" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-            <nop-label asp-for="AllowPickUpInStore" />
+            <nop-override-store-checkbox asp-for="AllowPickupInStore_OverrideForStore" asp-input="AllowPickupInStore" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="AllowPickupInStore" />
         </div>
         <div class="col-md-9">
-            <nop-editor asp-for="AllowPickUpInStore" />
-            <span asp-validation-for="AllowPickUpInStore"></span>
+            <nop-editor asp-for="AllowPickupInStore" />
+            <span asp-validation-for="AllowPickupInStore"></span>
         </div>
     </div>
-    <nop-nested-setting asp-for="AllowPickUpInStore">
-        <div class="form-group advanced-setting" id="pnlIgnoreAdditionalShippingChargeForPickUpInStore">
+    <nop-nested-setting asp-for="AllowPickupInStore">
+        <div class="form-group advanced-setting" id="pnlIgnoreAdditionalShippingChargeForPickupInStore">
             <div class="col-md-3">
-                <nop-override-store-checkbox asp-for="IgnoreAdditionalShippingChargeForPickUpInStore_OverrideForStore" asp-input="IgnoreAdditionalShippingChargeForPickUpInStore" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                <nop-label asp-for="IgnoreAdditionalShippingChargeForPickUpInStore" />
+                <nop-override-store-checkbox asp-for="IgnoreAdditionalShippingChargeForPickupInStore_OverrideForStore" asp-input="IgnoreAdditionalShippingChargeForPickupInStore" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="IgnoreAdditionalShippingChargeForPickupInStore" />
             </div>
             <div class="col-md-9">
-                <nop-editor asp-for="IgnoreAdditionalShippingChargeForPickUpInStore" />
-                <span asp-validation-for="IgnoreAdditionalShippingChargeForPickUpInStore"></span>
+                <nop-editor asp-for="IgnoreAdditionalShippingChargeForPickupInStore" />
+                <span asp-validation-for="IgnoreAdditionalShippingChargeForPickupInStore"></span>
             </div>
         </div>
         <div class="form-group advanced-setting" id="pnlDisplayPickupPointsOnMap">
