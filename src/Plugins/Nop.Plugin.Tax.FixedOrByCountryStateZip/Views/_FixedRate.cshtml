@@ -1,102 +1,38 @@
-﻿<div class="panel-group basic-setting">
+﻿@using Nop.Plugin.Tax.FixedOrByCountryStateZip.Models
+@using Nop.Web.Framework.Models.DataTables
+<div class="panel-group basic-setting">
     <div class="panel panel-default">
         <div class="panel-body">
-            <div id="tax-categories-grid"></div>
-            <script>
-                $(document)
-                    .ready(function() {
-                        $("#tax-categories-grid")
-                            .kendoGrid({
-                                dataSource: {
-                                    type: "json",
-                                    transport: {
-                                        read: {
-                                            url:
-                                                "@Html.Raw(Url.Action("FixedRatesList", "FixedOrByCountryStateZip"))",
-                                            type: "POST",
-                                            dataType: "json",
-                                            data: addAntiForgeryToken
-                                        },
-                                        update: {
-                                            url:
-                                                "@Html.Raw(Url.Action("FixedRateUpdate", "FixedOrByCountryStateZip"))",
-                                            type: "POST",
-                                            dataType: "json",
-                                            data: addAntiForgeryToken
-                                        }
-                                    },
-                                    schema: {
-                                        data: "Data",
-                                        total: "Total",
-                                        errors: "Errors",
-                                        model: {
-                                            id: "TaxCategoryId",
-                                            fields: {
-                                                TaxCategoryId: { editable: false, type: "number" },
-                                                TaxCategoryName: { editable: false, type: "string" },
-                                                Rate: { editable: true, type: "number" }
-                                            }
-                                        }
-                                    },
-                                    requestEnd: function(e) {
-                                        if (e.type == "update") {
-                                            this.read();
-                                        }
-                                    },
-                                    error: function(e) {
-                                        display_kendoui_grid_error(e);
-                                        // Cancel the changes
-                                        this.cancelChanges();
-                                    },
-                                    serverPaging: true,
-                                    serverFiltering: true,
-                                    serverSorting: true
-                                },
-                                pageable: {
-                                    refresh: true,
-                                    numeric: false,
-                                    previousNext: false,
-                                    info: false,
-                                    @await Html.PartialAsync("~/Areas/Admin/Views/Shared/_GridPagerMessages.cshtml")
-                                },
-                                editable: {
-                                    confirmation: "@T("Admin.Common.DeleteConfirmation")",
-                                    mode: "inline"
-                                },
-                                scrollable: false,
-                                columns: [
-                                {
-                                    field: "TaxCategoryName",
-                                    title: "@T("Plugins.Tax.FixedOrByCountryStateZip.Fields.TaxCategoryName")",
-                                    width: 400
-                                }, {
-                                    field: "Rate",
-                                    title: "@T("Plugins.Tax.FixedOrByCountryStateZip.Fields.Rate")",
-                                    width: 200,
-                                    editor: function(container, options) {
-                                        $('<input name="' + options.field + '"/>')
-                                            .appendTo(container)
-                                            .kendoNumericTextBox({
-                                                format: "{0:n4}",
-                                                decimals: 4
-                                            });
-                                    }
-                                }, {
-                                    command: {
-                                        name: "edit",
-                                        text: {
-                                            edit: "@T("Admin.Common.Edit")",
-                                            update: "@T("Admin.Common.Update")",
-                                            cancel: "@T("Admin.Common.Cancel")"
-                                        }
-                                    },
-                                    title: "@T("Admin.Common.Edit")",
-                                        width: 150
-                                    }
-                                ]
-                            });
-                    });
-            </script>
+            @await Html.PartialAsync("Table", new DataTablesModel
+            {
+                Name = "tax-categories-grid",
+                UrlRead = new DataUrl("FixedRatesList", "FixedOrByCountryStateZip", null),
+                UrlUpdate = new DataUrl("FixedRateUpdate", "FixedOrByCountryStateZip", null),
+                Length = Model.PageSize,
+                LengthMenu = Model.AvailablePageSizes,
+                ColumnCollection = new List<ColumnProperty>
+                {
+                    new ColumnProperty(nameof(FixedTaxRateModel.TaxCategoryName))
+                    {
+                        Title = T("Plugins.Tax.FixedOrByCountryStateZip.Fields.TaxCategoryName").Text,
+                        Width = "400"
+                    },
+                    new ColumnProperty(nameof(FixedTaxRateModel.Rate))
+                    {
+                        Title = T("Plugins.Tax.FixedOrByCountryStateZip.Fields.Rate").Text,
+                        Width = "200",
+                        Editable = true,
+                        EditType = EditType.Number
+                    },
+                    new ColumnProperty(nameof(FixedTaxRateModel.TaxCategoryId))
+                    {
+                        Title = T("Admin.Common.Edit").Text,
+                        Width = "200",
+                        ClassName =  StyleColumn.ButtonStyle,
+                        Render = new RenderButtonsInlineEdit()
+                    }
+                }
+            })
         </div>
     </div>
 </div>
