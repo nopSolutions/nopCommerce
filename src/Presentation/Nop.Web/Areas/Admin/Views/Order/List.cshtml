@@ -288,40 +288,42 @@
                                 SearchButtonId = "search-orders",
                                 Length = Model.PageSize,
                                 LengthMenu = Model.AvailablePageSizes,
+                                FooterCallback = !Model.IsLoggedInAsVendor ? "ordersfootercallback" : null,
+                                FooterColumns = !Model.IsLoggedInAsVendor ? 3 : 0,
                                 Filters = new List<FilterParameter>
-                                {
-                                    new FilterParameter(nameof(Model.StartDate)),
-                                    new FilterParameter(nameof(Model.EndDate)),
-                                    new FilterParameter(nameof(Model.OrderStatusIds)),
-                                    new FilterParameter(nameof(Model.PaymentStatusIds)),
-                                    new FilterParameter(nameof(Model.ShippingStatusIds)),
-                                    new FilterParameter(nameof(Model.StoreId)),
-                                    new FilterParameter(nameof(Model.VendorId)),
-                                    new FilterParameter(nameof(Model.WarehouseId)),
-                                    new FilterParameter(nameof(Model.BillingEmail)),
-                                    new FilterParameter(nameof(Model.BillingPhone)),
-                                    new FilterParameter(nameof(Model.BillingLastName)),
-                                    new FilterParameter(nameof(Model.BillingCountryId)),
-                                    new FilterParameter(nameof(Model.PaymentMethodSystemName)),
-                                    new FilterParameter(nameof(Model.ProductId)),
-                                    new FilterParameter(nameof(Model.OrderNotes))
-                                }
+                                                {
+                                                    new FilterParameter(nameof(Model.StartDate)),
+                                                    new FilterParameter(nameof(Model.EndDate)),
+                                                    new FilterParameter(nameof(Model.OrderStatusIds)),
+                                                    new FilterParameter(nameof(Model.PaymentStatusIds)),
+                                                    new FilterParameter(nameof(Model.ShippingStatusIds)),
+                                                    new FilterParameter(nameof(Model.StoreId)),
+                                                    new FilterParameter(nameof(Model.VendorId)),
+                                                    new FilterParameter(nameof(Model.WarehouseId)),
+                                                    new FilterParameter(nameof(Model.BillingEmail)),
+                                                    new FilterParameter(nameof(Model.BillingPhone)),
+                                                    new FilterParameter(nameof(Model.BillingLastName)),
+                                                    new FilterParameter(nameof(Model.BillingCountryId)),
+                                                    new FilterParameter(nameof(Model.PaymentMethodSystemName)),
+                                                    new FilterParameter(nameof(Model.ProductId)),
+                                                    new FilterParameter(nameof(Model.OrderNotes))
+                                                }
                             };
                             gridModel.ColumnCollection = new List<ColumnProperty>
-                            {
-                                new ColumnProperty(nameof(OrderModel.Id))
-                                {
-                                    IsMasterCheckBox = true,
-                                    Render = new RenderCheckBox("checkbox_orders"),
-                                    ClassName =  StyleColumn.CenterAll,
-                                    Width = "50",
-                                },
-                                new ColumnProperty(nameof(OrderModel.CustomOrderNumber))
-                                {
-                                    Title = T("Admin.Orders.Fields.CustomOrderNumber").Text,
-                                    Width = "80"
-                                }
-                            };
+                                            {
+                                                new ColumnProperty(nameof(OrderModel.Id))
+                                                {
+                                                    IsMasterCheckBox = true,
+                                                    Render = new RenderCheckBox("checkbox_orders"),
+                                                    ClassName =  StyleColumn.CenterAll,
+                                                    Width = "50",
+                                                },
+                                                new ColumnProperty(nameof(OrderModel.CustomOrderNumber))
+                                                {
+                                                    Title = T("Admin.Orders.Fields.CustomOrderNumber").Text,
+                                                    Width = "80"
+                                                }
+                                            };
                             //a vendor does not have access to this functionality
                             if (!Model.IsLoggedInAsVendor)
                             {
@@ -380,7 +382,9 @@
                                 ClassName = StyleColumn.ButtonStyle,
                                 Render = new RenderButtonEdit(new DataUrl("Edit"))
                             });
+                            var orderSummaryColumnNumber = 2;
                         }
+
                         @await Html.PartialAsync("Table", gridModel)
 
                         <script>
@@ -402,9 +406,6 @@
                                 }
                                 return '<span class="grid-report-item ' + color + '">' + data + '</span >';
                             }
-                        </script>
-                        <script>
-                            var reportAggregates = "";
 
                             $(document).ready(function() {
                                 $("#@Html.IdFor(model => model.GoDirectlyToCustomOrderNumber)").keydown(
@@ -414,10 +415,8 @@
                                             return false;
                                         }
                                     });
-
                             });
-
-                            function onDataBound(e) {
+                            function ordersfootercallback(tfoot, data, start, end, display) {
                                 //update order totals summary
                                 var postData = {
                                     StartDate: $('#@Html.IdFor(model => model.StartDate)').val(),
@@ -432,8 +431,7 @@
                                     BillingPhone: $('#@Html.IdFor(model => model.BillingPhone)').val(),
                                     BillingLastName: $('#@Html.IdFor(model => model.BillingLastName)').val(),
                                     BillingCountryId: $('#@Html.IdFor(model => model.BillingCountryId)').val(),
-                                    PaymentMethodSystemName: $('#@Html.IdFor(model => model.PaymentMethodSystemName)')
-                                        .val(),
+                                    PaymentMethodSystemName: $('#@Html.IdFor(model => model.PaymentMethodSystemName)').val(),
                                     ProductId: $('#@Html.IdFor(model => model.ProductId)').val(),
                                     OrderNotes: $('#@Html.IdFor(model => model.OrderNotes)').val()
                                 };
@@ -447,10 +445,13 @@
                                     success: function(data) {
                                         if (data) {
                                             for (var key in data) {
-                                                $('#aggregator-profit-block').text(data['aggregatorprofit']);
-                                                $('#aggregator-shipping-block').text(data['aggregatorshipping']);
-                                                $('#aggregator-tax-block').text(data['aggregatortax']);
-                                                $('#aggregator-total-block').text(data['aggregatortotal']);
+                                                var reportSummary = '<div><strong>@T("Admin.Orders.Report.Summary")</strong></div>' +
+                                                    '<div>@T("Admin.Orders.Report.Profit") <span>' + data['aggregatorprofit'] +'</span></div>' +
+                                                    '<div>@T("Admin.Orders.Report.Shipping") <span>' + data['aggregatorshipping'] + '</span></div>' +
+                                                    '<div>@T("Admin.Orders.Report.Tax") <span>' +  data['aggregatortax'] + '</span></div>' +
+                                                    '<div>@T("Admin.Orders.Report.Total") <span>' + data['aggregatortotal'] + '</span></div>'
+                                                var orderTotalsColumn = $('#orders-grid').DataTable().column(@(orderSummaryColumnNumber));
+                                                $(orderTotalsColumn.footer()).html(reportSummary);
                                             }
                                         }
                                     }

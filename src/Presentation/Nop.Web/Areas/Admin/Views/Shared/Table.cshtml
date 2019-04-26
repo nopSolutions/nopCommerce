@@ -11,7 +11,22 @@
             : string.Empty;
     }
 }
-<table class="table table-bordered table-hover table-striped dataTable" width="100%" id="@Model.Name"></table>
+<table class="table table-bordered table-hover table-striped dataTable" width="100%" id="@Model.Name">
+    @if (Model.FooterColumns > 0)
+    {
+        //You need to add the footer before you create the table
+        //as DataTables doesn't provide a method for creating a footer at the moment
+        <tfoot>
+            <tr>
+                @for (int i = 0; i < Model.FooterColumns; i++)
+                {
+                    <td></td>
+                }
+            </tr>
+        </tfoot>
+    }
+</table>
+
 @{ 
     //check using MasterCheckBox
     var isMasterCheckBoxUsed = Model.ColumnCollection.Any(x => x.IsMasterCheckBox);
