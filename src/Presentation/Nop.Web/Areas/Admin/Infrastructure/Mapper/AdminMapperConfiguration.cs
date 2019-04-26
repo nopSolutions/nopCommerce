@@ -1395,6 +1395,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
             CreateMap<PollAnswer, PollAnswerModel>();
             CreateMap<PollAnswerModel, PollAnswer>()
                 .ForMember(entity => entity.Poll, options => options.Ignore())
+                .ForMember(entity => entity.PollId, options => options.Ignore())
                 .ForMember(entity => entity.PollVotingRecords, options => options.Ignore());
 
             CreateMap<Poll, PollModel>()

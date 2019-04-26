@@ -13,8 +13,6 @@ namespace Nop.Web.Areas.Admin.Models.Polls
     {
         #region Properties
 
-        public int PollId { get; set; }
-
         [NopResourceDisplayName("Admin.ContentManagement.Polls.Answers.Fields.Name")]
         public string Name { get; set; }
 
