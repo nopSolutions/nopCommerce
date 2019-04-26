@@ -53,7 +53,7 @@
                 {
                     //TODO: need to configure "Add" button
                     Name = "resources-grid",
-                    UrlRead = new DataUrl("Resources", "Language", null),
+                    UrlRead = new DataUrl("Resources", "Language", new RouteValueDictionary { [nameof(Model.LocaleResourceSearchModel.LanguageId)] = Model.Id }),
                     UrlUpdate = new DataUrl("ResourceUpdate", "Language", null),
                     UrlDelete = new DataUrl("ResourceDelete", "Language", null),
                     SearchButtonId = "search-resources",
@@ -61,7 +61,6 @@
                     LengthMenu = Model.LocaleResourceSearchModel.AvailablePageSizes,
                     Filters = new List<FilterParameter>
                     {
-                        new FilterParameter(nameof(Model.LocaleResourceSearchModel.LanguageId), Model.Id),
                         new FilterParameter(nameof(Model.LocaleResourceSearchModel.SearchResourceName), nameof(LocaleResourceSearchModel)),
                         new FilterParameter(nameof(Model.LocaleResourceSearchModel.SearchResourceValue), nameof(LocaleResourceSearchModel))
                     },
