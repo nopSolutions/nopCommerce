@@ -35,6 +35,7 @@ using Nop.Services.Installation;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Media;
+using Nop.Services.Media.RoxyFileman;
 using Nop.Services.Messages;
 using Nop.Services.News;
 using Nop.Services.Orders;
@@ -253,6 +254,17 @@ namespace Nop.Web.Framework.Infrastructure
                 builder.RegisterType<AzurePictureService>().As<IPictureService>().InstancePerLifetimeScope();
             else
                 builder.RegisterType<PictureService>().As<IPictureService>().InstancePerLifetimeScope();
+
+            //roxy file manager service
+            builder.Register(context =>
+            {
+                var pictureService = context.Resolve<IPictureService>();
+
+                return EngineContext.Current.ResolveUnregistered(pictureService.StoreInDb
+                    ? typeof(DatabaseRoxyFilemanService)
+                    : typeof(FileRoxyFilemanService));
+
+            }).As<IRoxyFilemanService>().InstancePerLifetimeScope();
 
             //installation service
             if (!DataSettingsManager.DatabaseIsInstalled)

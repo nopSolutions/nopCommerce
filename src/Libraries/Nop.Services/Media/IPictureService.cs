@@ -1,4 +1,5 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Microsoft.AspNetCore.Http;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Media;
@@ -10,6 +11,13 @@ namespace Nop.Services.Media
     /// </summary>
     public partial interface IPictureService
     {
+        /// <summary>
+        /// Returns the file extension from mime type.
+        /// </summary>
+        /// <param name="mimeType">Mime type</param>
+        /// <returns>File extension</returns>
+        string GetFileExtensionFromMimeType(string mimeType);
+
         /// <summary>
         /// Gets the loaded picture binary depending on picture storage settings
         /// </summary>
@@ -90,10 +98,11 @@ namespace Nop.Services.Media
         /// <summary>
         /// Gets a collection of pictures
         /// </summary>
+        /// <param name="virtualPath">Virtual path</param>
         /// <param name="pageIndex">Current page</param>
         /// <param name="pageSize">Items on each page</param>
         /// <returns>Paged list of pictures</returns>
-        IPagedList<Picture> GetPictures(int pageIndex = 0, int pageSize = int.MaxValue);
+        IPagedList<Picture> GetPictures(string virtualPath = "", int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>
         /// Gets pictures by product identifier
@@ -119,6 +128,15 @@ namespace Nop.Services.Media
             bool isNew = true, bool validateBinary = true);
 
         /// <summary>
+        /// Inserts a picture
+        /// </summary>
+        /// <param name="formFile">Form file</param>
+        /// <param name="defaultFileName">File name which will be use if IFormFile.FileName not present</param>
+        /// <param name="virtualPath">Virtual path</param>
+        /// <returns>Picture</returns>
+        Picture InsertPicture(IFormFile formFile, string defaultFileName = "", string virtualPath = "");
+
+        /// <summary>
         /// Updates the picture
         /// </summary>
         /// <param name="pictureId">The picture identifier</param>
@@ -133,6 +151,13 @@ namespace Nop.Services.Media
         Picture UpdatePicture(int pictureId, byte[] pictureBinary, string mimeType,
             string seoFilename, string altAttribute = null, string titleAttribute = null,
             bool isNew = true, bool validateBinary = true);
+
+        /// <summary>
+        /// Updates the picture
+        /// </summary>
+        /// <param name="picture">The picture to update</param>
+        /// <returns>Picture</returns>
+        Picture UpdatePicture(Picture picture);
 
         /// <summary>
         /// Updates a SEO filename of a picture

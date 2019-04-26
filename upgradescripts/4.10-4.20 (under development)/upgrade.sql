@@ -1925,3 +1925,11 @@ UPDATE [Setting]
 SET [Value] = '7, 15, 20, 50, 100'
 WHERE [Name] = 'adminareasettings.gridpagesizes'
 GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id = object_id('[Picture]') AND NAME = 'VirtualPath')
+BEGIN
+	ALTER TABLE [Picture] ADD
+	VirtualPath nvarchar(MAX) NULL
+END
+GO
