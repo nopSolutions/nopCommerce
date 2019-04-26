@@ -244,7 +244,7 @@ columns: [
                 case RenderButtonRemove button:
                     <text>
                     render: function (data, type, row, meta) {
-                        return '<a href="#" class="@GetEnumValue(typeof(StyleButton), button.Style)" onclick="DeleteData_@(model_name)(\'' + data + '\');return false;"><i class="fa fa-remove"></i>@button.Title</a>';
+                        return '<a href="#" class="@GetEnumValue(typeof(StyleButton), button.Style)" onclick="table_deletedata_@(model_name)(\'' + data + '\');return false;"><i class="fa fa-remove"></i>@button.Title</a>';
                     },
                     </text>
                     break;
@@ -256,9 +256,9 @@ columns: [
                             if (typeof data == 'string'){
                                 modData = data.replace(/[.*+?^${}()|[\]\\]/g, "_");
                             }
-                            return '<a href="#" class="@GetEnumValue(typeof(StyleButton), StyleButton.Default)" id="buttonEdit_@(model_name)'+ modData + '" onclick="EditData_@(model_name)($(this).parent().parent(), \'' + origData + '\');return false;"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>' +
-                            '<a href="#" class="@GetEnumValue(typeof(StyleButton), StyleButton.Default)" id="buttonConfirm_@(model_name)'+ modData + '" style="display:none" onclick="ConfirmEditData_@(model_name)($(this).parent().parent(), \'' + origData + '\', \'@column.Data\');return false;"><i class="fa fa-check"></i>@T("Admin.Common.Update")</a>' +
-                            '<a href="#" class="@GetEnumValue(typeof(StyleButton), StyleButton.Default)" id="buttonCancel_@(model_name)'+ modData + '" style="display:none" onclick="CancelEditData_@(model_name)(\'' + row + '\', \'' + origData + '\');return false;"><i class="fa fa-ban"></i>@T("Admin.Common.Cancel")</a>';
+                            return '<a href="#" class="@GetEnumValue(typeof(StyleButton), StyleButton.Default)" id="buttonEdit_@(model_name)'+ modData + '" onclick="editData_@(model_name)($(this).parent().parent(), \'' + origData + '\');return false;"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>' +
+                            '<a href="#" class="@GetEnumValue(typeof(StyleButton), StyleButton.Default)" id="buttonConfirm_@(model_name)'+ modData + '" style="display:none" onclick="confirmEditData_@(model_name)($(this).parent().parent(), \'' + origData + '\', \'@column.Data\');return false;"><i class="fa fa-check"></i>@T("Admin.Common.Update")</a>' +
+                            '<a href="#" class="@GetEnumValue(typeof(StyleButton), StyleButton.Default)" id="buttonCancel_@(model_name)'+ modData + '" style="display:none" onclick="cancelEditData_@(model_name)(\'' + row + '\', \'' + origData + '\');return false;"><i class="fa fa-ban"></i>@T("Admin.Common.Cancel")</a>';
                         },                         
                     </text>
                     break;
