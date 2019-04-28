@@ -21,7 +21,6 @@ namespace Nop.Web.Areas.Admin.Models.Localization
             SelectedStoreIds = new List<int>();
             AvailableStores = new List<SelectListItem>();
             LocaleResourceSearchModel = new LocaleResourceSearchModel();
-            AddResourceString = new LocaleResourceModel();
         }
 
         #endregion
@@ -65,7 +64,14 @@ namespace Nop.Web.Areas.Admin.Models.Localization
         // search
         public LocaleResourceSearchModel LocaleResourceSearchModel { get; set; }
 
-        public LocaleResourceModel AddResourceString { get; set; }
+
+        //TODO find more elegant way
+        //workaround to add locales copied from \Models\Localization\LocaleResourceModel.cs)
+        //we cannot use "LocaleResourceModel" property because it's automatically validated when editing a language
+        [NopResourceDisplayName("Admin.Configuration.Languages.Resources.Fields.Name")]
+        public string AddResourceName { get; set; }
+        [NopResourceDisplayName("Admin.Configuration.Languages.Resources.Fields.Value")]
+        public string AddResourceValue { get; set; }
 
         #endregion
     }
