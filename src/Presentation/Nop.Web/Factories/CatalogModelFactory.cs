@@ -1484,6 +1484,47 @@ namespace Nop.Web.Factories
 
         #endregion
 
+        #region New products
+
+        /// <summary>
+        /// Prepare new products list
+        /// </summary>
+        /// <param name="command">Catalog paging filtering command</param>
+        /// <returns>New Products catalog</returns>
+        public virtual NewProductsModel PrepaireNewProductsModel(CatalogPagingFilteringModel command)
+        {
+            var model = new NewProductsModel();
+
+            //sorting
+            PrepareSortingOptions(model.PagingFilteringContext, command);
+            //view mode
+            PrepareViewModes(model.PagingFilteringContext, command);
+            //prepare size
+            PreparePageSizeOptions(
+                model.PagingFilteringContext,
+                command,
+                _catalogSettings.NewProductsAllowCustomersToSelectPageSize,
+                _catalogSettings.NewProductsPageSizeOptions,
+                _catalogSettings.NewProductsPageSize);
+
+            // products
+            var products = _productService.SearchProducts(
+                storeId: _storeContext.CurrentStore.Id,
+                visibleIndividuallyOnly: true,
+                markedAsNewOnly: true,
+                orderBy: ProductSortingEnum.CreatedOn,
+                pageIndex: command.PageNumber - 1,
+                pageSize: _catalogSettings.NewProductsPageSize,
+                totalRecordsOutput: _catalogSettings.NewProductsNumber);
+        
+            model.Products = _productModelFactory.PrepareProductOverviewModels(products).ToList();
+            model.PagingFilteringContext.LoadPagedList(products);
+
+            return model;
+        }
+
+        #endregion
+
         #region Utilities
 
         protected virtual CategorySimpleModel GetCategorySimpleModel(XElement elem)

@@ -89,10 +89,13 @@
     }
 
     function toggleNewProducts() {
+        console.log('#pnlNewProductsNumber');
         if ($('#@Html.IdFor(model => model.NewProductsEnabled)').is(':checked')) {
             $('#pnlNewProductsNumber').show();
+            $('#pnlNewProductsPageSize').show();
         } else {
             $('#pnlNewProductsNumber').hide();
+            $('#pnlNewProductsPageSize').hide();
         }
     }
 

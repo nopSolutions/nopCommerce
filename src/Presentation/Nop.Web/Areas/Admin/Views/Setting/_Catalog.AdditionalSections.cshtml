@@ -98,7 +98,18 @@
                 <span asp-validation-for="NewProductsNumber"></span>
             </div>
         </div>
+        <div class="form-group" id="pnlNewProductsPageSize">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="NewProductsPageSize_OverrideForStore" asp-input="NewProductsPageSize" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="NewProductsPageSize" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="NewProductsPageSize" />
+                <span asp-validation-for="NewProductsPageSize"></span>
+            </div>
+        </div>
     </nop-nested-setting>
+    
     <div class="form-group">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="DisplayDatePreOrderAvailability_OverrideForStore" asp-input="DisplayDatePreOrderAvailability" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />

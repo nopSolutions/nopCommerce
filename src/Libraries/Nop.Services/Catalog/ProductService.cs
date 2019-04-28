@@ -517,6 +517,7 @@ namespace Nop.Services.Catalog
         /// true - load only "Published" products
         /// false - load only "Unpublished" products
         /// </param>
+        /// <param name="totalRecordsOutput">Return total records</param>
         /// <returns>Products</returns>
         public virtual IPagedList<Product> SearchProducts(
             int pageIndex = 0,
@@ -542,7 +543,8 @@ namespace Nop.Services.Catalog
             IList<int> filteredSpecs = null,
             ProductSortingEnum orderBy = ProductSortingEnum.Position,
             bool showHidden = false,
-            bool? overridePublished = null)
+            bool? overridePublished = null,
+            int? totalRecordsOutput = null)
         {
             return SearchProducts(out var _, false,
                 pageIndex, pageSize, categoryIds, manufacturerId,
@@ -550,7 +552,7 @@ namespace Nop.Services.Catalog
                 productType, visibleIndividuallyOnly, markedAsNewOnly, featuredProducts,
                 priceMin, priceMax, productTagId, keywords, searchDescriptions, searchManufacturerPartNumber, searchSku,
                 searchProductTags, languageId, filteredSpecs,
-                orderBy, showHidden, overridePublished);
+                orderBy, showHidden, overridePublished, totalRecordsOutput);
         }
 
         /// <summary>
@@ -586,6 +588,7 @@ namespace Nop.Services.Catalog
         /// true - load only "Published" products
         /// false - load only "Unpublished" products
         /// </param>
+        /// <param name="totalRecordsOutput">Return total records</param>
         /// <returns>Products</returns>
         public virtual IPagedList<Product> SearchProducts(
             out IList<int> filterableSpecificationAttributeOptionIds,
@@ -613,7 +616,8 @@ namespace Nop.Services.Catalog
             IList<int> filteredSpecs = null,
             ProductSortingEnum orderBy = ProductSortingEnum.Position,
             bool showHidden = false,
-            bool? overridePublished = null)
+            bool? overridePublished = null,
+            int? totalRecordsOutput = null)
         {
             filterableSpecificationAttributeOptionIds = new List<int>();
 
@@ -741,6 +745,8 @@ namespace Nop.Services.Catalog
             }
             //return products
             var totalRecords = pTotalRecords.Value != DBNull.Value ? Convert.ToInt32(pTotalRecords.Value) : 0;
+            if (totalRecordsOutput != null)
+                totalRecords = (int)totalRecordsOutput;
             return new PagedList<Product>(products, pageIndex, pageSize, totalRecords);
         }
 
