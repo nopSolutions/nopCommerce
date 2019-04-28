@@ -119,7 +119,7 @@
                     success: function (result) {
                         //display error if returned
                         if (result) {
-                            display_datatables_error(result);
+                            display_nop_error(result);
                         }
                         //refresh grid
                         $('#@Model.Name').DataTable().draw(false);
@@ -261,7 +261,7 @@
                 success: function (result) {
                     //display error if returned
                     if (result) {
-                        display_datatables_error(result);
+                        display_nop_error(result);
                     }
                     //refresh grid
                      $('#@Model.Name').DataTable().draw(false);

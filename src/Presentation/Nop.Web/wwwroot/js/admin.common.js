@@ -77,7 +77,7 @@ function bindBootstrapTabSelectEvent(tabsId, inputId) {
     });
 }
 
-function display_datatables_error(e) {
+function display_nop_error(e) {
   if (e.error) {
     if ((typeof e.error) == 'string') {
       //single error
