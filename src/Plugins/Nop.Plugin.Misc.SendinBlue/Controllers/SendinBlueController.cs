@@ -17,11 +17,11 @@ using Nop.Services.Messages;
 using Nop.Services.Stores;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
-using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Models.Extensions;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
+using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Plugin.Misc.SendinBlue.Controllers
 {
@@ -538,7 +538,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Controllers
         public IActionResult SMSAdd(SmsModel model)
         {
             if (!ModelState.IsValid)
-                return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
+                return ErrorForDataTablesJson(ModelState.SerializeErrors());
 
             var message = _messageTemplateService.GetMessageTemplateById(model.MessageId);
             if (message != null)
@@ -557,7 +557,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Controllers
         public IActionResult SMSDelete(SmsModel model)
         {
             if (!ModelState.IsValid)
-                return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
+                return ErrorForDataTablesJson(ModelState.SerializeErrors());
 
             //delete generic attributes
             var message = _messageTemplateService.GetMessageTemplateById(model.Id);

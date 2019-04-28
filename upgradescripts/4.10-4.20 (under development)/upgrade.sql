@@ -731,6 +731,42 @@ set @resources='
   <LocaleResource Name="Admin.Common.BulkEdit">
     <Value></Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Pager.All">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Pager.Display">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Pager.Empty">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Pager.First">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Pager.ItemsPerPage">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Pager.Last">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Pager.MorePages">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Pager.Next">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Pager.Of">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Pager.Page">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Pager.Previous">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Pager.Refresh">
+    <Value></Value>
+  </LocaleResource>
 </Language>'
 
 CREATE TABLE #LocaleStringResourceTmp

@@ -13,9 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Nop.Core;
 using Nop.Core.Infrastructure;
 using Nop.Services.Localization;
-using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Models;
-using Nop.Web.Framework.Models.DataTables;
 using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Framework.UI;
 
