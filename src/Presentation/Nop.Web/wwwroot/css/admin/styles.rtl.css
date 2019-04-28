@@ -1641,6 +1641,23 @@ span.grid-report-item.red {
   margin: 5px 5px 0 5px;
 }
 
+.table-bordered {
+  border: 1px solid #e3e3e3;
+}
+
+.table-bordered>thead>tr>th, 
+.table-bordered>tbody>tr>th, 
+.table-bordered>tfoot>tr>th {
+  border: 1px solid #e3e3e3;
+}
+
+.table-bordered>thead>tr>td, 
+.table-bordered>tbody>tr>td, 
+.table-bordered>tfoot>tr>td {
+  border-top: 1px solid #f3f3f3;
+  border-left: 1px solid #e3e3e3;
+}
+
 @media (max-width: 1200px) {
     /* HEADER */
     .main-header .navbar-custom-menu {
