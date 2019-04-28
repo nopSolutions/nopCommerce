@@ -70,6 +70,15 @@ namespace Nop.Web.Areas.Admin.Models.Polls
 
         public PollAnswerSearchModel PollAnswerSearchModel { get; set; }
 
+        //TODO find more elegant way
+        //workaround to add locales copied from \Models\Polls\PollAnswerModel.cs)
+        //we cannot use "LocaleResourceModel" property because it's automatically validated when editing a language
+        [NopResourceDisplayName("Admin.ContentManagement.Polls.Answers.Fields.Name")]
+        public string AddName { get; set; }
+        [NopResourceDisplayName("Admin.ContentManagement.Polls.Answers.Fields.DisplayOrder")]
+        public int AddDisplayOrder { get; set; }
+
+
         #endregion
     }
 }

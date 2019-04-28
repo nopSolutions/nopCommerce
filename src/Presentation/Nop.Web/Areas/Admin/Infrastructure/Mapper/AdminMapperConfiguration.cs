@@ -1399,7 +1399,9 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
 
             CreateMap<Poll, PollModel>()
                 .ForMember(model => model.AvailableLanguages, options => options.Ignore())
-                .ForMember(model => model.PollAnswerSearchModel, options => options.Ignore());
+                .ForMember(model => model.PollAnswerSearchModel, options => options.Ignore())
+                .ForMember(model => model.AddName, options => options.Ignore())
+                .ForMember(model => model.AddDisplayOrder, options => options.Ignore());
             CreateMap<PollModel, Poll>()
                 .ForMember(entity => entity.EndDateUtc, options => options.Ignore())
                 .ForMember(entity => entity.Language, options => options.Ignore())

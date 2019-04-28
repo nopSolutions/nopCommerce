@@ -271,7 +271,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             poll.PollAnswers.Add(model.ToEntity<PollAnswer>());
             _pollService.UpdatePoll(poll);
 
-            return new NullJsonResult();
+            return Json(new { Result = true });
         }
 
         [HttpPost]
