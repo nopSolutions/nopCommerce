@@ -153,20 +153,14 @@
                                         //reload grid
                                         $('#resources-grid').DataTable().ajax.reload();
 
-                                        $("#@Html.IdFor(model => model.AddResourceString.ResourceName)").val('@Model.AddResourceString.ResourceName');
-                                        $("#@Html.IdFor(model => model.AddResourceString.ResourceValue)").val('@Model.AddResourceString.ResourceValue');
-
                                     } else {
-                                        if (data.Error != undefined) {
-                                            $('#resourceStringAddFailed-info').text(data.Error);
-                                            $("#resourceStringAddFailed").click();
-                                        }
+                                        //display errors if returned
+                                        display_nop_error(data);
                                     }
 
                                     $('#addResourceString').attr('disabled', false);
                                 },
                                 error:function (xhr, ajaxOptions, thrownError){
-                                    $("#resourceStringAddAlert").click();
                                     $('#addResourceString').attr('disabled', false);
                                 }
                             });
@@ -178,5 +172,3 @@
         </div>
     }
 </div>
-<nop-alert asp-alert-id="resourceStringAddAlert" asp-alert-message="@T("Admin.Common.Alert.Add.Error")" />
-<nop-alert asp-alert-id="resourceStringAddFailed" />
