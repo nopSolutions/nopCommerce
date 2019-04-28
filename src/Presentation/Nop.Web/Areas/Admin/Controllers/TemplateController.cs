@@ -104,7 +104,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             template = model.ToEntity(template);
             _categoryTemplateService.InsertCategoryTemplate(template);
 
-            return new NullJsonResult();
+            return Json(new { Result = true });
         }
 
         [HttpPost]
@@ -170,7 +170,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             template = model.ToEntity(template);
             _manufacturerTemplateService.InsertManufacturerTemplate(template);
 
-            return new NullJsonResult();
+            return Json(new { Result = true });
         }
 
         [HttpPost]
@@ -236,7 +236,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             template = model.ToEntity(template);
             _productTemplateService.InsertProductTemplate(template);
 
-            return new NullJsonResult();
+            return Json(new { Result = true });
         }
 
         [HttpPost]
@@ -302,7 +302,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             template = model.ToEntity(template);
             _topicTemplateService.InsertTopicTemplate(template);
 
-            return new NullJsonResult();
+            return Json(new { Result = true });
         }
 
         [HttpPost]

@@ -51,7 +51,6 @@
             <div class="panel-body">
                 @await Html.PartialAsync("Table", new DataTablesModel
                 {
-                    //TODO: need to configure "Add" button
                     Name = "resources-grid",
                     UrlRead = new DataUrl("Resources", "Language", new RouteValueDictionary { [nameof(Model.LocaleResourceSearchModel.LanguageId)] = Model.Id }),
                     UrlUpdate = new DataUrl("ResourceUpdate", "Language", null),
