@@ -26,6 +26,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public string SearchSettingValue { get; set; }
 
         public SettingModel AddSetting { get; set; }
+
         #endregion
     }
 }

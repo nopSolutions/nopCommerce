@@ -150,7 +150,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             taxCategory = model.ToEntity(taxCategory);
             _taxCategoryService.InsertTaxCategory(taxCategory);
 
-            return new NullJsonResult();
+            return Json(new { Result = true });
         }
 
         [HttpPost]
