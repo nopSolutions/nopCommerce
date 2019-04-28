@@ -1705,16 +1705,12 @@ namespace Nop.Web.Areas.Admin.Controllers
             var setting = _settingService.GetSettingById(model.Id)
                 ?? throw new ArgumentException("No setting found with the specified id");
 
-            var storeId = model.StoreId;
-
-            if (!setting.Name.Equals(model.Name, StringComparison.InvariantCultureIgnoreCase) ||
-                setting.StoreId != storeId)
+            if (!setting.Name.Equals(model.Name, StringComparison.InvariantCultureIgnoreCase))
             {
-                //setting name or store has been changed
+                //setting name has been changed
                 _settingService.DeleteSetting(setting);
             }
-
-            _settingService.SetSetting(model.Name, model.Value, storeId);
+            _settingService.SetSetting(model.Name, model.Value, setting.StoreId);
 
             //activity log
             _customerActivityService.InsertActivity("EditSettings", _localizationService.GetResource("ActivityLog.EditSettings"), setting);

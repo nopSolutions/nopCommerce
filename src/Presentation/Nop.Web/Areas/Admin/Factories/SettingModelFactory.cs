@@ -1512,9 +1512,9 @@ namespace Nop.Web.Areas.Admin.Factories
             var pagedSettings = settings.ToList().ToPagedList(searchModel);
 
             //prepare list model
-            var model = new SettingListModel
+            var model = new SettingListModel().PrepareToGrid(searchModel, pagedSettings, () =>
             {
-                Data = pagedSettings.Select(setting =>
+                return pagedSettings.Select(setting =>
                 {
                     //fill in model values from the entity
                     var settingModel = setting.ToModel<SettingModel>();
@@ -1525,10 +1525,8 @@ namespace Nop.Web.Areas.Admin.Factories
                         : _localizationService.GetResource("Admin.Configuration.Settings.AllSettings.Fields.StoreName.AllStores");
 
                     return settingModel;
-                }),
-
-                Total = pagedSettings.TotalCount
-            };
+                });
+            });
 
             return model;
         }
