@@ -79,15 +79,6 @@
                 return (data > 0 ? '+' : '') + data;
             }
         </script>
-
-        <script>
-            $(document).ready(function () {
-                $('#search-stock-quantity-history').click(function () {
-                    $('#stock-quantity-history-grid').DataTable().ajax.reload();
-                    return false;
-                });
-            });
-        </script>
     </div>
     @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductDetailsStockQuantityHistoryBottom, additionalData = Model })
 </div>

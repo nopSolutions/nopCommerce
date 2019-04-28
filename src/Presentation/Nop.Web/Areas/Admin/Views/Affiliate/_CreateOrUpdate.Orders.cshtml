@@ -130,16 +130,6 @@
 
                     return '<span class="grid-report-item ' + color + '">' + data + '</span >';
                 }
-
-                $(document).ready(function() {
-                    //search button
-                    $('#search-orders').click(function() {
-                        //search
-                        $('#orders-grid').DataTable().ajax.reload();
-                        //grid.dataSource.read(); we already loaded the grid above using "page" function
-                        return false;
-                    });
-                });
             </script>
         </div>
     </div>
