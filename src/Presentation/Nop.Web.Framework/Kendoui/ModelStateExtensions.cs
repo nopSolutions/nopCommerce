@@ -39,19 +39,5 @@ namespace Nop.Web.Framework.Kendoui
             return modelStateDictionary.Where(entry => entry.Value.Errors.Any())
                 .ToDictionary(entry => entry.Key, entry => SerializeModelState(entry.Value));
         }
-
-        /// <summary>
-        /// Serialized ModelStateDictionary errors
-        /// </summary>
-        /// <param name="modelState">ModelStateDictionary</param>
-        /// <returns>Result</returns>
-        public static object ToDataSourceResult(this ModelStateDictionary modelState)
-        {
-            if (!modelState.IsValid)
-            {
-                return modelState.SerializeErrors();
-            }
-            return null;
-        }
     }
 }
