@@ -1732,7 +1732,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!ModelState.IsValid)
                 return ErrorForDataTablesJson(ModelState.SerializeErrors());
 
-            var storeId = model.StoreId;
+            var storeId = 0;
             _settingService.SetSetting(model.Name, model.Value, storeId);
 
             //activity log
@@ -1740,7 +1740,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 string.Format(_localizationService.GetResource("ActivityLog.AddNewSetting"), model.Name),
                 _settingService.GetSetting(model.Name, storeId));
 
-            return new NullJsonResult();
+            return Json(new { Result = true });
         }
         [HttpPost]
         public virtual IActionResult SettingDelete(int id)
