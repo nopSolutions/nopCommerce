@@ -5,14 +5,13 @@
 
         @await Html.PartialAsync("Table", new DataTablesModel
         {
-            //TODO: need to configure "Add" button
             Name = "measuredimension-grid",
             UrlRead = new DataUrl("Dimensions", "Measure", null),
             UrlUpdate = new DataUrl("DimensionUpdate", "Measure", null),
             UrlDelete = new DataUrl("DimensionDelete", "Measure", null),
             SearchButtonId = "search-resources",
             Length = Model.PageSize,
-            LengthMenu = Model.AvailablePageSizes,                    
+            LengthMenu = Model.AvailablePageSizes,
             ColumnCollection = new List<ColumnProperty>
             {
                 new ColumnProperty(nameof(MeasureDimensionModel.Name))
@@ -73,8 +72,8 @@
                 }
             }
         })
-       
-        <button type="submit" class="btn btn-default" id="btnMarkAsPrimaryDimension" style="display:none" />
+
+        <button type="submit" class="btn btn-default" id="btnMarkAsPrimaryDimension" style="display:none"></button>
 
         <script>
             var selectedId;
@@ -106,6 +105,91 @@
                 });
             });
         </script>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                @T("Admin.Common.AddNewRecord")
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="@Model.AddMeasureDimension.Name" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="@Model.AddMeasureDimension.Name" />
+                        <span asp-validation-for="@Model.AddMeasureDimension.Name"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="@Model.AddMeasureDimension.SystemKeyword" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="@Model.AddMeasureDimension.SystemKeyword" />
+                        <span asp-validation-for="@Model.AddMeasureDimension.SystemKeyword"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="@Model.AddMeasureDimension.Ratio" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="@Model.AddMeasureDimension.Ratio" />
+                        <span asp-validation-for="@Model.AddMeasureDimension.Ratio"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="@Model.AddMeasureDimension.DisplayOrder" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="@Model.AddMeasureDimension.DisplayOrder" />
+                        <span asp-validation-for="@Model.AddMeasureDimension.DisplayOrder"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-9 col-md-offset-3">
+                        <button type="button" id="addMeasureDimension" class="btn btn-primary">@T("Admin.Common.AddNewRecord")</button>
+                    </div>
+                </div>
+            </div>
+            <script>
+                $(document).ready(function () {
+                    $('#addMeasureDimension').click(function () {
+                        $('#addMeasureDimension').attr('disabled', true);
+                        var postData = {
+                            Name: $("#@Html.IdFor(model => model.AddMeasureDimension.Name)").val(),
+                            SystemKeyword: $("#@Html.IdFor(model => model.AddMeasureDimension.SystemKeyword)").val(),
+                            Ratio: $("#@Html.IdFor(model => model.AddMeasureDimension.Ratio)").val(),
+                            DisplayOrder: $("#@Html.IdFor(model => model.AddMeasureDimension.DisplayOrder)").val()
+                        };
+                        addAntiForgeryToken(postData);
+
+                        $.ajax({
+                            cache:false,
+                            type: "POST",
+                            url: "@Html.Raw(Url.Action("DimensionAdd", "Measure", null))",
+                            data: postData,
+                            success: function (data) {
+                                if (data.Result) {
+                                    //reload grid
+                                    $('#measuredimension-grid').DataTable().ajax.reload();
+
+                                } else {
+                                    //display errors if returned
+                                    display_nop_error(data);
+                                }
+
+                                $('#addMeasureDimension').attr('disabled', false);
+                            },
+                            error:function (xhr, ajaxOptions, thrownError){
+                                $('#addMeasureDimension').attr('disabled', false);
+                            }
+                        });
+                    });
+                });
+            </script>
+        </div>
     </div>
 </div>
 <nop-alert asp-alert-id="markAsPrimaryDimensionAlert" asp-alert-message="@T("Admin.Configuration.Shipping.Measures.Dimensions.MarkAsPrimaryDimension.Alert.FailedToUpdate")" />
