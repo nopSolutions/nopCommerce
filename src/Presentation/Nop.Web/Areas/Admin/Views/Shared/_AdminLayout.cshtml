@@ -82,10 +82,6 @@
         Html.AppendHeadCustomParts($"<meta http-equiv=\"X-UA-Compatible\" content=\"{commonSettings.XuaCompatibleValue}\"/>");
     }
 
-    //sidebar
-    const string hideSidebarAttributeName = "HideSidebar";
-    var hideSidebar = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSidebarAttributeName);
-
     //avatar
     var currentCustomer = workContext.CurrentCustomer;
 
@@ -111,8 +107,7 @@
         @*Insert favicon and app icons head code*@
         @await Component.InvokeAsync("Favicon")
     </head>
-    <body class="hold-transition skin-blue sidebar-mini @if (hideSidebar) 
-                                                    {<text>sidebar-collapse</text>}">
+    <body class="hold-transition skin-blue sidebar-mini">
         <div class="throbber">
             <div class="curtain">
             </div>
@@ -287,12 +282,6 @@
 
                 //enable tooltips
                 $('[data-toggle="tooltip"]').tooltip();
-
-                //save sidebar preferences
-                $('a.sidebar-toggle').on('click', function () {
-                    var collapsed = !$('body').hasClass('sidebar-collapse');
-                    saveUserPreferences('@(Url.Action("SavePreference", "Preferences"))', '@hideSidebarAttributeName', collapsed);
-                });
             });
         </script>
     </body>
