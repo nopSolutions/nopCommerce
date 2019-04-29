@@ -372,8 +372,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Controllers
                 return messageTemplates.Select(messageTemplate =>
                 {
                     //standard template of message is edited in the admin area, SendinBlue template is edited in the SendinBlue account
-                    var isStandardTemplate = !_genericAttributeService.GetAttribute<bool>(messageTemplate, SendinBlueDefaults.SendinBlueTemplateAttribute);
-                    var templateId = _genericAttributeService.GetAttribute<int>(messageTemplate, SendinBlueDefaults.TemplateIdAttribute);
+                    var templateId = _genericAttributeService.GetAttribute<int?>(messageTemplate, SendinBlueDefaults.TemplateIdAttribute);
                     var stores = _storeService.GetAllStores()
                         .Where(store => !messageTemplate.LimitedToStores || _storeMappingService.GetStoresIdsWithAccess(messageTemplate).Contains(store.Id))
                         .Aggregate(string.Empty, (current, next) => $"{current}, {next.Name}").Trim(',');
@@ -384,13 +383,10 @@ namespace Nop.Plugin.Misc.SendinBlue.Controllers
                         Name = messageTemplate.Name,
                         IsActive = messageTemplate.IsActive,
                         ListOfStores = stores,
-                        TemplateTypeId = isStandardTemplate ? 0 : 1,
-                        TemplateType = isStandardTemplate
-                            ? _localizationService.GetResource("Plugins.Misc.SendinBlue.StandardTemplate")
-                            : _localizationService.GetResource("Plugins.Misc.SendinBlue.SendinBlueTemplate"),
-                        EditLink = isStandardTemplate
-                            ? Url.Action("Edit", "MessageTemplate", new { id = messageTemplate.Id, area = AreaNames.Admin })
-                            : $"{string.Format(SendinBlueDefaults.EditMessageTemplateUrl, templateId)}"
+                        UseSendinBlueTemplate = templateId.HasValue,
+                        EditLink = templateId.HasValue
+                            ? $"{string.Format(SendinBlueDefaults.EditMessageTemplateUrl, templateId.Value)}"
+                            : Url.Action("Edit", "MessageTemplate", new { id = messageTemplate.Id, area = AreaNames.Admin })
                     };
                 });
             });
@@ -408,29 +404,24 @@ namespace Nop.Plugin.Misc.SendinBlue.Controllers
 
             var message = _messageTemplateService.GetMessageTemplateById(model.Id);
 
-            //standard message template
-            if (model.TemplateTypeId == 0)
-            {
-                _genericAttributeService.SaveAttribute(message, SendinBlueDefaults.SendinBlueTemplateAttribute, false);
-                model.TemplateType = _localizationService.GetResource("Plugins.Misc.SendinBlue.StandardTemplate");
-                model.EditLink = Url.Action("Edit", "MessageTemplate", new { id = model.Id, area = AreaNames.Admin });
-            }
-
             //SendinBlue message template
-            if (model.TemplateTypeId == 1)
+            if (model.UseSendinBlueTemplate)
             {
                 var storeId = _storeContext.ActiveStoreScopeConfiguration;
                 var sendinBlueSettings = _settingService.LoadSetting<SendinBlueSettings>(storeId);
 
                 //get template or create new one
-                var currentTemplateId = _genericAttributeService.GetAttribute<int>(message, SendinBlueDefaults.TemplateIdAttribute);
+                var currentTemplateId = _genericAttributeService.GetAttribute<int?>(message, SendinBlueDefaults.TemplateIdAttribute);
                 var templateId = _sendinBlueEmailManager.GetTemplateId(currentTemplateId, message,
                     _emailAccountService.GetEmailAccountById(sendinBlueSettings.EmailAccountId));
-
-                _genericAttributeService.SaveAttribute(message, SendinBlueDefaults.SendinBlueTemplateAttribute, true);
                 _genericAttributeService.SaveAttribute(message, SendinBlueDefaults.TemplateIdAttribute, templateId);
-                model.TemplateType = _localizationService.GetResource("Plugins.Misc.SendinBlue.SendinBlueTemplate");
                 model.EditLink = $"{string.Format(SendinBlueDefaults.EditMessageTemplateUrl, templateId)}";
+            }
+            else
+            {
+                //standard message template
+                _genericAttributeService.SaveAttribute<int?>(message, SendinBlueDefaults.TemplateIdAttribute, null);
+                model.EditLink = Url.Action("Edit", "MessageTemplate", new { id = model.Id, area = AreaNames.Admin });
             }
 
             //update message template
