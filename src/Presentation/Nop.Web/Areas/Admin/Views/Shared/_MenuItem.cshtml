@@ -19,14 +19,14 @@
 @if (!string.IsNullOrEmpty(url))
 {
     <li @(isActive ? Html.Raw("class=\"active current-active-item\"") : null)>
-        <a href="@url"@(Model.OpenUrlInNewTab ? Html.Raw(" target=\"_blank\"") : null)>
+        <a href="@url" class="menu-item-link" @(Model.OpenUrlInNewTab ? Html.Raw(" target=\"_blank\"") : null)>
             @if (!string.IsNullOrEmpty(Model.IconClass))
             {
                 <text>
                 <i class="fa @Url.Content(Model.IconClass)"></i>
                 </text>
             }
-            <span>@Model.Title</span>
+            <span class="menu-item-title">@Model.Title</span>
         </a>
     </li>
 }
