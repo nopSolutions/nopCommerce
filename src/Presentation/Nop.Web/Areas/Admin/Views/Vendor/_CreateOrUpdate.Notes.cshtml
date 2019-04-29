@@ -72,16 +72,21 @@
                 type: "POST",
                 url: "@( Url.Action("VendorNoteAdd", "Vendor"))",
                 data: postData,
-                success: function(data) {
-                    $("#vendornotes-grid").DataTable().ajax.reload();
+                success: function (data) {
+                    if (data.Result) {
+                        //reload grid
+                        $("#vendornotes-grid").DataTable().ajax.reload();
+                    } else {
+                        //display errors if returned
+                        display_nop_error(data);
+                    }
+                    
                     $('#addVendorNote').attr('disabled', false);
                 },
                 error: function(xhr, ajaxOptions, thrownError) {
-                    $("#vendorNoteAddAlert").click();
                     $('#addVendorNote').attr('disabled', false);
                 }
             });
         });
     });
 </script>
-<nop-alert asp-alert-id="vendorNoteAddAlert" asp-alert-message="@T("Admin.Vendors.VendorNotes.AddTitle.Alert.FailedAddNote")" />

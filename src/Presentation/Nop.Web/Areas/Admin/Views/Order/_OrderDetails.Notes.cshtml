@@ -121,13 +121,14 @@
 
 <script>
     $(document).ready(function () {
-        $('#addOrderNote').click(function () {
+        $('#addOrderNote').click(function() {
             var orderNoteMessage = $("#@Html.IdFor(model => model.AddOrderNoteMessage)").val();
             var orderNoteDownloadId = 0;
             if ($('#@Html.IdFor(model => model.AddOrderNoteHasDownload)').is(':checked')) {
                 orderNoteDownloadId = $("#@Html.IdFor(model => model.AddOrderNoteDownloadId)").val();
             }
-            var orderNoteDisplayToCustomer = $("#@Html.IdFor(model => model.AddOrderNoteDisplayToCustomer)").is(':checked');
+            var orderNoteDisplayToCustomer =
+                $("#@Html.IdFor(model => model.AddOrderNoteDisplayToCustomer)").is(':checked');
             $('#addOrderNote').attr('disabled', true);
 
             var postData = {
@@ -138,30 +139,26 @@
             };
             addAntiForgeryToken(postData);
 
-             $.ajax({
-                cache:false,
+            $.ajax({
+                cache: false,
                 type: "POST",
                 url: "@(Url.Action("OrderNoteAdd", "Order"))",
                 data: postData,
-                 success: function (data) {
-                     if (data.Error) {
-                         $('#orderNoteAddFailed-info').text(data.Error);
-                         $("#orderNoteAddFailed").click();
-                     }
-
-                     if (data.Result) { 
+                success: function(data) {
+                    if (data.Result) {
+                        //reload grid
                         $('#ordernotes-grid').DataTable().ajax.reload();
-                     }
+                    } else {
+                        //display errors if returned
+                        display_nop_error(data);
+                    }
 
                     $('#addOrderNote').attr('disabled', false);
                 },
-                 error: function (xhr, ajaxOptions, thrownError) {
-                     $("#orderNoteAddAlert").click(); 
-                     $('#addOrderNote').attr('disabled', false);
+                error: function(xhr, ajaxOptions, thrownError) {
+                    $('#addOrderNote').attr('disabled', false);
                 }
             });
         });
     });
 </script>
-<nop-alert asp-alert-id="orderNoteAddAlert" asp-alert-message="@T("Admin.Orders.OrderNotes.Alert.Add")" />
-<nop-alert asp-alert-id="orderNoteAddFailed" />

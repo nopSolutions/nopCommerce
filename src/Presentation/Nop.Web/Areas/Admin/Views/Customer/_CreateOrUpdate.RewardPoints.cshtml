@@ -154,16 +154,13 @@
 
                             activatePointsImmediately();
                         } else {
-                            if (data.Error != undefined) {
-                                $('#rewardPointsHistoryAddFailed-info').text(data.Error);
-                                $("#rewardPointsHistoryAddFailed").click();
-                            }
+                            //display errors if returned
+                            display_nop_error(data);
                         }
 
                         $('#addRewardPoints').attr('disabled', false);
                     },
                     error:function (xhr, ajaxOptions, thrownError){
-                        $("#rewardPointsHistoryAddAlert").click();
                         $('#addRewardPoints').attr('disabled', false);
                     }
                 });
@@ -179,6 +176,3 @@
         </script>
     </div>
 </div>
-
-<nop-alert asp-alert-id="rewardPointsHistoryAddAlert" asp-alert-message="@T("Admin.Customers.Customers.RewardPoints.Alert.HistoryAdd")" />
-<nop-alert asp-alert-id="rewardPointsHistoryAddFailed" />

@@ -108,7 +108,7 @@ set @resources='
     <Value>Failed to save download object.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Vendors.VendorNotes.AddTitle.Alert.FailedAddNote">
-    <Value>Failed to add vendor note.</Value>
+    <Value></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.SpecificationAttributes.Alert.FailedAdd">
     <Value></Value>
@@ -766,6 +766,9 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.Pager.Refresh">
     <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.VendorNotes.Fields.Note.Validation">
+      <Value>Vendor note can not be empty.</Value>
   </LocaleResource>
 </Language>'
 

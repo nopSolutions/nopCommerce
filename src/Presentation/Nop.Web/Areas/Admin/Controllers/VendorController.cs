@@ -471,7 +471,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             //try to get a vendor with the specified id
             var vendor = _vendorService.GetVendorById(vendorId);
             if (vendor == null)
-                return Json(new { Result = false });
+                return ErrorForDataTablesJson("Vendor cannot be loaded");
+
+            if (string.IsNullOrEmpty(message))
+                return ErrorForDataTablesJson(_localizationService.GetResource("Admin.Orders.OrderNotes.Fields.Note.Validation"));
 
             var vendorNote = new VendorNote
             {

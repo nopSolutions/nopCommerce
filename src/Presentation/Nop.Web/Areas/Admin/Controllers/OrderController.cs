@@ -2755,18 +2755,16 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             if (string.IsNullOrEmpty(message))
-            {
-                return Json(new { Result = false, Error = _localizationService.GetResource("Admin.Orders.OrderNotes.Fields.Note.Validation") });
-            }
-
+                return ErrorForDataTablesJson(_localizationService.GetResource("Admin.Orders.OrderNotes.Fields.Note.Validation"));
+            
             //try to get an order with the specified id
             var order = _orderService.GetOrderById(orderId);
             if (order == null)
-                return Json(new { Result = false });
+                return ErrorForDataTablesJson("Order cannot be loaded");
 
             //a vendor does not have access to this functionality
             if (_workContext.CurrentVendor != null)
-                return Json(new { Result = false });
+                return ErrorForDataTablesJson("No access for vendors");
 
             var orderNote = new OrderNote
             {
@@ -2783,8 +2781,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (displayToCustomer)
             {
                 //email
-                _workflowMessageService.SendNewOrderNoteAddedCustomerNotification(
-                    orderNote, _workContext.WorkingLanguage.Id);
+                _workflowMessageService.SendNewOrderNoteAddedCustomerNotification(orderNote, _workContext.WorkingLanguage.Id);
             }
 
             return Json(new { Result = true });
