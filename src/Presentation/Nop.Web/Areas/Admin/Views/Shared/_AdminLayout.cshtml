@@ -84,6 +84,7 @@
 
     //sidebar
     const string hideSidebarAttributeName = "HideSidebar";
+    var hideSidebar = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSidebarAttributeName);
 
     //avatar
     var currentCustomer = workContext.CurrentCustomer;
@@ -110,7 +111,8 @@
         @*Insert favicon and app icons head code*@
         @await Component.InvokeAsync("Favicon")
     </head>
-    <body class="hold-transition skin-blue sidebar-mini">
+    <body class="hold-transition skin-blue sidebar-mini @if (hideSidebar) 
+                                                    {<text>sidebar-collapse</text>}">
         <div class="throbber">
             <div class="curtain">
             </div>
@@ -279,53 +281,6 @@
         @Html.NopScripts(ResourceLocation.Footer)
         <a id="backTop" class="btn btn-back-top bg-teal"></a>
         <script>
-            var hideSidebar = @(genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSidebarAttributeName).ToString().ToLower());
-
-            function toggleSidebar() {      
-                var isMobile = $(window).width() <= '750';
-
-                //mobile view
-                if (isMobile) {
-                    //bar is close 
-                    if (hideSidebar) {
-                        if ($('body').hasClass('sidebar-collapse')) {
-                            $('body').removeClass('sidebar-collapse');
-                        }
-                        if ($('body').hasClass('sidebar-open')) {
-                            $('body').removeClass('sidebar-open');
-                        }
-                    } //bar is open
-                    else {
-                        $('body').addClass('sidebar-open');
-                        if ($('body').hasClass('sidebar-collapse')) {
-                            $('body').removeClass('sidebar-collapse');
-                        }
-                    }
-                }//decktop view
-                else {
-                    //bar is close 
-                    if (hideSidebar) {
-                        $('body').addClass('sidebar-collapse');
-                        if ($('body').hasClass('sidebar-open')) {
-                            $('body').removeClass('sidebar-open');
-                        }
-                        
-                    }//bar is open
-                    else {
-                        if ($('body').hasClass('sidebar-open')) {
-                            $('body').removeClass('sidebar-open');
-                        }
-                        if ($('body').hasClass('sidebar-collapse')) {
-                            $('body').removeClass('sidebar-collapse');
-                        }
-                    }
-                }
-            };
-
-            $(window).on("orientationchange resize", function () {
-                toggleSidebar();
-            });
-
             $(document).ready(function () {
                 //enable "back top" arrow
                 $('#backTop').backTop();
@@ -333,18 +288,10 @@
                 //enable tooltips
                 $('[data-toggle="tooltip"]').tooltip();
 
-                toggleSidebar();                
-
                 //save sidebar preferences
                 $('a.sidebar-toggle').on('click', function () {
-                    var isMobile = $(window).width() <= '750';
-                    if (isMobile) {
-                        var collapsed = $('body').hasClass('sidebar-open');
-                        saveUserPreferences('@(Url.Action("SavePreference", "Preferences"))', '@hideSidebarAttributeName', collapsed);
-                    } else {
-                        var collapsed = !$('body').hasClass('sidebar-collapse');
-                        saveUserPreferences('@(Url.Action("SavePreference", "Preferences"))', '@hideSidebarAttributeName', collapsed);
-                    }
+                    var collapsed = !$('body').hasClass('sidebar-collapse');
+                    saveUserPreferences('@(Url.Action("SavePreference", "Preferences"))', '@hideSidebarAttributeName', collapsed);
                 });
             });
         </script>
