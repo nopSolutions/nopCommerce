@@ -1132,7 +1132,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
         /// <param name="message">Message template</param>
         /// <param name="emailAccount">Email account</param>
         /// <returns>Email template identifier</returns>
-        public int GetTemplateId(int templateId, MessageTemplate message, EmailAccount emailAccount)
+        public int? GetTemplateId(int? templateId, MessageTemplate message, EmailAccount emailAccount)
         {
             try
             {
@@ -1161,13 +1161,13 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                     templateName: message.Name, htmlContent: body, subject: subject, isActive: true);
                 var emailTemplate = client.CreateSmtpTemplate(createSmtpTemplate);
 
-                return (int)emailTemplate.Id;
+                return (int?)emailTemplate.Id;
             }
             catch (Exception exception)
             {
                 //log full error
                 _logger.Error($"SendinBlue error: {exception.Message}.", exception, _workContext.CurrentCustomer);
-                return 0;
+                return null;
             }
         }
 

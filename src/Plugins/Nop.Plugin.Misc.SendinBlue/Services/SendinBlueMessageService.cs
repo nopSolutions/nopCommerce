@@ -158,8 +158,8 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                 return null;
 
             //whether to send email by the passed message template
-            var sendEmailForThisMessageTemplate = _genericAttributeService
-                .GetAttribute<bool>(messageTemplate, SendinBlueDefaults.SendinBlueTemplateAttribute);
+            var templateId = _genericAttributeService.GetAttribute<int?>(messageTemplate, SendinBlueDefaults.TemplateIdAttribute);
+            var sendEmailForThisMessageTemplate = templateId.HasValue;
             if (!sendEmailForThisMessageTemplate)
                 return null;
 
@@ -167,8 +167,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
             emailAccount = _emailAccountService.GetEmailAccountById(sendinBlueSettings.EmailAccountId) ?? emailAccount;
 
             //get an email from the template
-            var templateId = _genericAttributeService.GetAttribute<int>(messageTemplate, SendinBlueDefaults.TemplateIdAttribute);
-            var email = _sendinBlueEmailManager.GetQueuedEmailFromTemplate(templateId)
+            var email = _sendinBlueEmailManager.GetQueuedEmailFromTemplate(templateId.Value)
                 ?? throw new NopException($"There is no template with id {templateId}");
 
             //replace body and subject tokens

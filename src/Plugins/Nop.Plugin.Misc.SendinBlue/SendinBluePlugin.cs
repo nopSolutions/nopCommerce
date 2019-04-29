@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using Nop.Core;
 using Nop.Core.Domain.Tasks;
-using Nop.Data.Extensions;
 using Nop.Services.Cms;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
@@ -162,17 +160,15 @@ namespace Nop.Plugin.Misc.SendinBlue
             _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Misc.SendinBlue.MyPhone", "Store owner phone number");
             _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Misc.SendinBlue.PhoneType", "Type of phone number");
             _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Misc.SendinBlue.PhoneType.Hint", "Specify the type of phone number to send SMS.");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Misc.SendinBlue.SendinBlueTemplate", "SendinBlue email template");
             _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Misc.SendinBlue.SMS", "SMS");
             _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Misc.SendinBlue.SMS.Campaigns", "SMS campaigns");
             _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Misc.SendinBlue.SMS.Campaigns.Sent", "Campaign successfully sent");
             _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Misc.SendinBlue.SMS.Campaigns.Submit", "Send campaign");
             _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Misc.SendinBlue.SMSText", "Text");
             _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Misc.SendinBlue.SMSText.Hint", "Enter SMS text to send.");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Misc.SendinBlue.StandardTemplate", "Standard message template");
             _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Misc.SendinBlue.Synchronization", "Contacts");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Misc.SendinBlue.TemplateType", "Template type");
             _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Misc.SendinBlue.Transactional", "Transactional emails");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Misc.SendinBlue.UseSendinBlueTemplate", "SendinBlue template");
 
             base.Install();
         }
@@ -201,12 +197,7 @@ namespace Nop.Plugin.Misc.SendinBlue
                 var messageTemplates = _messageTemplateService.GetAllMessageTemplates(store.Id);
                 foreach (var messageTemplate in messageTemplates)
                 {
-                    var genericAttributes = _genericAttributeService
-                        .GetAttributesForEntity(messageTemplate.Id, messageTemplate.GetUnproxiedEntityType().Name)
-                        .Where(attribute => attribute.Key.Equals(SendinBlueDefaults.TemplateIdAttribute)
-                            || attribute.Key.Equals(SendinBlueDefaults.SendinBlueTemplateAttribute))
-                        .ToList();
-                    _genericAttributeService.DeleteAttributes(genericAttributes);
+                    _genericAttributeService.SaveAttribute<int?>(messageTemplate, SendinBlueDefaults.TemplateIdAttribute, null);
                 }
             }
 
@@ -275,11 +266,9 @@ namespace Nop.Plugin.Misc.SendinBlue
             _localizationService.DeletePluginLocaleResource("Plugins.Misc.SendinBlue.SMSText");
             _localizationService.DeletePluginLocaleResource("Plugins.Misc.SendinBlue.SMSText.Hint");
             _localizationService.DeletePluginLocaleResource("Plugins.Misc.SendinBlue.StandardTemplate");
-            _localizationService.DeletePluginLocaleResource("Plugins.Misc.SendinBlue.StandardTemplate");
-            _localizationService.DeletePluginLocaleResource("Plugins.Misc.SendinBlue.StandardTemplate");
             _localizationService.DeletePluginLocaleResource("Plugins.Misc.SendinBlue.Synchronization");
-            _localizationService.DeletePluginLocaleResource("Plugins.Misc.SendinBlue.TemplateType");
             _localizationService.DeletePluginLocaleResource("Plugins.Misc.SendinBlue.Transactional");
+            _localizationService.DeletePluginLocaleResource("Plugins.Misc.SendinBlue.UseSendinBlueTemplate");
 
             base.Uninstall();
         }

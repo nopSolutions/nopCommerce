@@ -268,11 +268,6 @@ namespace Nop.Plugin.Misc.SendinBlue
         public static string MarketingAutomationKeyHeader => "ma-key";
 
         /// <summary>
-        /// Gets a key of the attribute to store a value indicating whether non-standard template used
-        /// </summary>
-        public static string SendinBlueTemplateAttribute => "SendinBlueTemplate";
-
-        /// <summary>
         /// Gets a key of the attribute to store template identifier
         /// </summary>
         public static string TemplateIdAttribute => "TemplateId";

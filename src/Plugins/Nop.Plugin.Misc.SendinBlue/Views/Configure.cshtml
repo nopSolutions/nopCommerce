@@ -279,12 +279,14 @@
                                         {
                                             Title = T("Admin.ContentManagement.MessageTemplates.Fields.LimitedToStores").Text
                                         },
-                                        new ColumnProperty(nameof(SendinBlueMessageTemplateModel.TemplateType))
+                                        new ColumnProperty(nameof(SendinBlueMessageTemplateModel.UseSendinBlueTemplate))
                                         {
-                                            Title = T("Plugins.Misc.SendinBlue.TemplateType").Text,
-                                            Width = "300",
+                                            Title = T("Plugins.Misc.SendinBlue.UseSendinBlueTemplate").Text,
+                                            Width = "100",
+                                            ClassName = StyleColumn.CenterAll,
+                                            Render = new RenderBoolean(),
                                             Editable = true,
-                                            EditType = EditType.String
+                                            EditType = EditType.Checkbox
                                         },
                                         new ColumnProperty(nameof(SendinBlueMessageTemplateModel.Id))
                                         {
@@ -304,21 +306,6 @@
                                         }
                                     }
                                 })
-                                @* TODO: move editor to Datatables
-                                <script>
-                                    function typeEditor(container, options) {
-                                        $('<input required data-text-field="Name" data-value-field="Id" data-bind="value:TemplateTypeId"/>')
-                                            .appendTo(container)
-                                            .kendoDropDownList({
-                                                autoBind: false,
-                                                dataSource: [
-                                                    { Id : 0, Name : "@T("Plugins.Misc.SendinBlue.StandardTemplate")" },
-                                                    { Id : 1, Name : "@T("Plugins.Misc.SendinBlue.SendinBlueTemplate")" }
-                                                ]
-                                            });
-                                        }
-                                    }
-                                </script>*@
                             </div>
                         </div>
                     }
@@ -466,41 +453,34 @@
                                         </div>
                                     </div>
                                     <script>
-                                    $(document).ready(function () {
-                                        $('#addSms').click(function () {
-                                            $('#addSms').attr('disabled', true);
-                                            var postData = {
-                                                MessageId: $("#@Html.IdFor(model => model.AddSms.MessageId)").val(),
-                                                PhoneTypeId: $("#@Html.IdFor(model => model.AddSms.PhoneTypeId)").val(),
-                                                Text: $("#@Html.IdFor(model => model.AddSms.Text)").val()
-                                            };
-                                            addAntiForgeryToken(postData);
-                                            $.ajax({
-                                                cache:false,
-                                                type: "POST",
-                                                url: "@Html.Raw(Url.Action("SMSAdd", "SendinBlue"))",
-                                                data: postData,
-                                                success: function (data) {
-                                                    if (data.Result) {
-                                                        $('#sms-grid').DataTable().ajax.reload();
-                                                        $("#@Html.IdFor(model => model.AddSms.MessageId)").val('@Model.AddSms.MessageId');
-                                                        $("#@Html.IdFor(model => model.AddSms.PhoneTypeId)").val('@Model.AddSms.PhoneTypeId');
-                                                        $("#@Html.IdFor(model => model.AddSms.Text)").val('@Model.AddSms.Text');
-                                                    } else {
-                                                        if (data.Error != undefined) {
-                                                            $('#smsAddFailed-info').text(data.Error);
-                                                            $("#smsAddFailed").click();
+                                        $(document).ready(function () {
+                                            $('#addSms').click(function () {
+                                                $('#addSms').attr('disabled', true);
+                                                var postData = {
+                                                    MessageId: $("#@Html.IdFor(model => model.AddSms.MessageId)").val(),
+                                                    PhoneTypeId: $("#@Html.IdFor(model => model.AddSms.PhoneTypeId)").val(),
+                                                    Text: $("#@Html.IdFor(model => model.AddSms.Text)").val()
+                                                };
+                                                addAntiForgeryToken(postData);
+                                                $.ajax({
+                                                    cache:false,
+                                                    type: "POST",
+                                                    url: "@Html.Raw(Url.Action("SMSAdd", "SendinBlue"))",
+                                                    data: postData,
+                                                    success: function (data) {
+                                                        if (data.Result) {
+                                                            $('#sms-grid').DataTable().ajax.reload();
+                                                        } else {
+                                                            display_nop_error(data);
                                                         }
+                                                        $('#addSms').attr('disabled', false);
+                                                    },
+                                                    error:function (xhr, ajaxOptions, thrownError){
+                                                        $('#addSms').attr('disabled', false);
                                                     }
-                                                    $('#addSms').attr('disabled', false);
-                                                },
-                                                error:function (xhr, ajaxOptions, thrownError){
-                                                    $("#smsAddAlert").click();
-                                                    $('#addSms').attr('disabled', false);
-                                                }
+                                                });
                                             });
                                         });
-                                    });
                                     </script>
                                 </div>
                             </div>
@@ -613,6 +593,3 @@
         }
     </nop-panels>
 </form>
-
-<nop-alert asp-alert-id="smsAddAlert" asp-alert-message="@T("Admin.Common.Alert.Add.Error")" />
-<nop-alert asp-alert-id="smsAddFailed" />

@@ -13,9 +13,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Models
 
         public string ListOfStores { get; set; }
 
-        public string TemplateType { get; set; }
-
-        public int TemplateTypeId { get; set; }
+        public bool UseSendinBlueTemplate { get; set; }
 
         public string EditLink { get; set; }
     }
