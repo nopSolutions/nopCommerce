@@ -1102,12 +1102,12 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //prevent adding a new row with zero value
             if (model.Points == 0)
-                return ErrorForDataTablesJson(_localizationService.GetResource("Admin.Customers.Customers.RewardPoints.AddingZeroValueNotAllowed"));
+                return ErrorJson(_localizationService.GetResource("Admin.Customers.Customers.RewardPoints.AddingZeroValueNotAllowed"));
 
             //try to get a customer with the specified id
             var customer = _customerService.GetCustomerById(model.CustomerId);
             if (customer == null)
-                return ErrorForDataTablesJson("Customer cannot be loaded");
+                return ErrorJson("Customer cannot be loaded");
 
             //check whether delay is set
             DateTime? activatingDate = null;

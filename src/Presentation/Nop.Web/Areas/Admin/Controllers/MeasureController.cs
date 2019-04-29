@@ -83,7 +83,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
-                return ErrorForDataTablesJson(ModelState.SerializeErrors());
+                return ErrorJson(ModelState.SerializeErrors());
 
             var weight = _measureService.GetMeasureWeightById(model.Id);
             weight = model.ToEntity(weight);
@@ -103,7 +103,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
-                return ErrorForDataTablesJson(ModelState.SerializeErrors());
+                return ErrorJson(ModelState.SerializeErrors());
 
             var weight = new MeasureWeight();
             weight = model.ToEntity(weight);
@@ -128,7 +128,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (weight.Id == _measureSettings.BaseWeightId)
             {
-                return ErrorForDataTablesJson(_localizationService.GetResource("Admin.Configuration.Shipping.Measures.Weights.CantDeletePrimary"));
+                return ErrorJson(_localizationService.GetResource("Admin.Configuration.Shipping.Measures.Weights.CantDeletePrimary"));
             }
 
             _measureService.DeleteMeasureWeight(weight);
@@ -179,7 +179,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
-                return ErrorForDataTablesJson(ModelState.SerializeErrors());
+                return ErrorJson(ModelState.SerializeErrors());
 
             var dimension = _measureService.GetMeasureDimensionById(model.Id);
             dimension = model.ToEntity(dimension);
@@ -199,7 +199,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
-                return ErrorForDataTablesJson(ModelState.SerializeErrors());
+                return ErrorJson(ModelState.SerializeErrors());
 
             var dimension = new MeasureDimension();
             dimension = model.ToEntity(dimension);
@@ -224,7 +224,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (dimension.Id == _measureSettings.BaseDimensionId)
             {
-                return ErrorForDataTablesJson(_localizationService.GetResource("Admin.Configuration.Shipping.Measures.Dimensions.CantDeletePrimary"));
+                return ErrorJson(_localizationService.GetResource("Admin.Configuration.Shipping.Measures.Dimensions.CantDeletePrimary"));
             }
 
             _measureService.DeleteMeasureDimension(dimension);

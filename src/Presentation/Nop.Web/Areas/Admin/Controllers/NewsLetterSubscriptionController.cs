@@ -92,7 +92,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
-                return ErrorForDataTablesJson(ModelState.SerializeErrors());
+                return ErrorJson(ModelState.SerializeErrors());
 
             var subscription = _newsLetterSubscriptionService.GetNewsLetterSubscriptionById(model.Id);
 

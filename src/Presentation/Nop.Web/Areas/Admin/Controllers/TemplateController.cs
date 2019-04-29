@@ -79,7 +79,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
-                return ErrorForDataTablesJson(ModelState.SerializeErrors());
+                return ErrorJson(ModelState.SerializeErrors());
 
             //try to get a category template with the specified id
             var template = _categoryTemplateService.GetCategoryTemplateById(model.Id)
@@ -98,7 +98,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
-                return ErrorForDataTablesJson(ModelState.SerializeErrors());
+                return ErrorJson(ModelState.SerializeErrors());
 
             var template = new CategoryTemplate();
             template = model.ToEntity(template);
@@ -145,7 +145,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
-                return ErrorForDataTablesJson(ModelState.SerializeErrors());
+                return ErrorJson(ModelState.SerializeErrors());
 
             //try to get a manufacturer template with the specified id
             var template = _manufacturerTemplateService.GetManufacturerTemplateById(model.Id)
@@ -164,7 +164,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
-                return ErrorForDataTablesJson(ModelState.SerializeErrors());
+                return ErrorJson(ModelState.SerializeErrors());
 
             var template = new ManufacturerTemplate();
             template = model.ToEntity(template);
@@ -211,7 +211,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
-                return ErrorForDataTablesJson(ModelState.SerializeErrors());
+                return ErrorJson(ModelState.SerializeErrors());
 
             //try to get a product template with the specified id
             var template = _productTemplateService.GetProductTemplateById(model.Id)
@@ -230,7 +230,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
-                return ErrorForDataTablesJson(ModelState.SerializeErrors());
+                return ErrorJson(ModelState.SerializeErrors());
 
             var template = new ProductTemplate();
             template = model.ToEntity(template);
@@ -277,7 +277,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
-                return ErrorForDataTablesJson(ModelState.SerializeErrors());
+                return ErrorJson(ModelState.SerializeErrors());
 
             //try to get a topic template with the specified id
             var template = _topicTemplateService.GetTopicTemplateById(model.Id)
@@ -296,7 +296,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
-                return ErrorForDataTablesJson(ModelState.SerializeErrors());
+                return ErrorJson(ModelState.SerializeErrors());
 
             var template = new TopicTemplate();
             template = model.ToEntity(template);

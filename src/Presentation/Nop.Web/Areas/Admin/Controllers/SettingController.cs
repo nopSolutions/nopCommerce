@@ -1699,7 +1699,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 model.Value = model.Value.Trim();
 
             if (!ModelState.IsValid)
-                return ErrorForDataTablesJson(ModelState.SerializeErrors());
+                return ErrorJson(ModelState.SerializeErrors());
 
             //try to get a setting with the specified id
             var setting = _settingService.GetSettingById(model.Id)
@@ -1730,7 +1730,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 model.Value = model.Value.Trim();
 
             if (!ModelState.IsValid)
-                return ErrorForDataTablesJson(ModelState.SerializeErrors());
+                return ErrorJson(ModelState.SerializeErrors());
 
             var storeId = 0;
             _settingService.SetSetting(model.Name, model.Value, storeId);

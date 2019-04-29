@@ -400,7 +400,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Controllers
         public IActionResult MessageUpdate(SendinBlueMessageTemplateModel model)
         {
             if (!ModelState.IsValid)
-                return ErrorForDataTablesJson(ModelState.SerializeErrors().ToString());
+                return ErrorJson(ModelState.SerializeErrors().ToString());
 
             var message = _messageTemplateService.GetMessageTemplateById(model.Id);
 
@@ -529,7 +529,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Controllers
         public IActionResult SMSAdd(SmsModel model)
         {
             if (!ModelState.IsValid)
-                return ErrorForDataTablesJson(ModelState.SerializeErrors());
+                return ErrorJson(ModelState.SerializeErrors());
 
             var message = _messageTemplateService.GetMessageTemplateById(model.MessageId);
             if (message != null)
@@ -548,7 +548,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Controllers
         public IActionResult SMSDelete(SmsModel model)
         {
             if (!ModelState.IsValid)
-                return ErrorForDataTablesJson(ModelState.SerializeErrors());
+                return ErrorJson(ModelState.SerializeErrors());
 
             //delete generic attributes
             var message = _messageTemplateService.GetMessageTemplateById(model.Id);

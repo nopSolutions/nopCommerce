@@ -242,7 +242,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
-                return ErrorForDataTablesJson(ModelState.SerializeErrors());
+                return ErrorJson(ModelState.SerializeErrors());
 
             //try to get a poll answer with the specified id
             var pollAnswer = _pollService.GetPollAnswerById(model.Id)
@@ -261,7 +261,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
-                return ErrorForDataTablesJson(ModelState.SerializeErrors());
+                return ErrorJson(ModelState.SerializeErrors());
 
             //try to get a poll with the specified id
             var poll = _pollService.GetPollById(pollId)

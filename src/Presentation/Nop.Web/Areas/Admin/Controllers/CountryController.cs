@@ -473,7 +473,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (_addressService.GetAddressTotalByStateProvinceId(state.Id) > 0)
             {
-                return ErrorForDataTablesJson(_localizationService.GetResource("Admin.Configuration.Countries.States.CantDeleteWithAddresses"));
+                return ErrorJson(_localizationService.GetResource("Admin.Configuration.Countries.States.CantDeleteWithAddresses"));
             }
 
             //int countryId = state.CountryId;

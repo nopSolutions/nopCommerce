@@ -2755,16 +2755,16 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             if (string.IsNullOrEmpty(message))
-                return ErrorForDataTablesJson(_localizationService.GetResource("Admin.Orders.OrderNotes.Fields.Note.Validation"));
+                return ErrorJson(_localizationService.GetResource("Admin.Orders.OrderNotes.Fields.Note.Validation"));
             
             //try to get an order with the specified id
             var order = _orderService.GetOrderById(orderId);
             if (order == null)
-                return ErrorForDataTablesJson("Order cannot be loaded");
+                return ErrorJson("Order cannot be loaded");
 
             //a vendor does not have access to this functionality
             if (_workContext.CurrentVendor != null)
-                return ErrorForDataTablesJson("No access for vendors");
+                return ErrorJson("No access for vendors");
 
             var orderNote = new OrderNote
             {

@@ -320,7 +320,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (!ModelState.IsValid)
             {
-                return ErrorForDataTablesJson(ModelState.SerializeErrors());
+                return ErrorJson(ModelState.SerializeErrors());
             }
 
             var resource = _localizationService.GetLocaleStringResourceById(model.Id);
@@ -330,7 +330,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 var res = _localizationService.GetLocaleStringResourceByName(model.ResourceName, model.LanguageId, false);
                 if (res != null && res.Id != resource.Id)
                 {
-                    return ErrorForDataTablesJson(string.Format(_localizationService.GetResource("Admin.Configuration.Languages.Resources.NameAlreadyExists"), res.ResourceName));
+                    return ErrorJson(string.Format(_localizationService.GetResource("Admin.Configuration.Languages.Resources.NameAlreadyExists"), res.ResourceName));
                 }
             }
 
@@ -355,7 +355,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (!ModelState.IsValid)
             {
-                return ErrorForDataTablesJson(ModelState.SerializeErrors());
+                return ErrorJson(ModelState.SerializeErrors());
             }
 
             var res = _localizationService.GetLocaleStringResourceByName(model.ResourceName, model.LanguageId, false);
@@ -370,7 +370,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
             else
             {
-                return ErrorForDataTablesJson(string.Format(_localizationService.GetResource("Admin.Configuration.Languages.Resources.NameAlreadyExists"), model.ResourceName));
+                return ErrorJson(string.Format(_localizationService.GetResource("Admin.Configuration.Languages.Resources.NameAlreadyExists"), model.ResourceName));
             }
 
             return Json(new { Result = true });

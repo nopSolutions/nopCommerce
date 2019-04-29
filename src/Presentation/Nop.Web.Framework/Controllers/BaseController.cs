@@ -166,11 +166,11 @@ namespace Nop.Web.Framework.Controllers
         #region Notifications
 
         /// <summary>
-        /// Error's JSON data for DataTables grid
+        /// Error's JSON data
         /// </summary>
         /// <param name="error">Error text</param>
         /// <returns>Error's JSON data</returns>
-        protected JsonResult ErrorForDataTablesJson(string error)
+        protected JsonResult ErrorJson(string error)
         {
             return Json(new
             {
@@ -179,11 +179,11 @@ namespace Nop.Web.Framework.Controllers
         }
 
         /// <summary>
-        /// Error's JSON data for DataTables grid
+        /// Error's JSON data
         /// </summary>
         /// <param name="errors">Error messages</param>
         /// <returns>Error's JSON data</returns>
-        protected JsonResult ErrorForDataTablesJson(object errors)
+        protected JsonResult ErrorJson(object errors)
         {
             return Json(new
             {
@@ -263,7 +263,7 @@ namespace Nop.Web.Framework.Controllers
         protected JsonResult AccessDeniedDataTablesJson()
         {
             var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
-            return ErrorForDataTablesJson(localizationService.GetResource("Admin.AccessDenied.Description"));
+            return ErrorJson(localizationService.GetResource("Admin.AccessDenied.Description"));
         }
 
         #endregion

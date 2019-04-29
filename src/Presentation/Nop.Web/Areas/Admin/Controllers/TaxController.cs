@@ -128,7 +128,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
-                return ErrorForDataTablesJson(ModelState.SerializeErrors());
+                return ErrorJson(ModelState.SerializeErrors());
 
             var taxCategory = _taxCategoryService.GetTaxCategoryById(model.Id);
             taxCategory = model.ToEntity(taxCategory);
@@ -144,7 +144,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
-                return ErrorForDataTablesJson(ModelState.SerializeErrors());
+                return ErrorJson(ModelState.SerializeErrors());
 
             var taxCategory = new TaxCategory();
             taxCategory = model.ToEntity(taxCategory);
