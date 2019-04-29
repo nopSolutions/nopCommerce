@@ -154,10 +154,13 @@ namespace Nop.Services.Plugins
 
             //filter by the passed type
             if (typeof(TPlugin) != typeof(IPlugin))
-                pluginDescriptors = pluginDescriptors.Where(descriptor => typeof(TPlugin).IsAssignableFrom(descriptor.PluginType));
-
-            //order by group name
-            pluginDescriptors = pluginDescriptors.OrderBy(descriptor => descriptor.Group).ToList();
+            {
+                pluginDescriptors = pluginDescriptors
+                    .Where(descriptor => typeof(TPlugin).IsAssignableFrom(descriptor.PluginType))
+                    .OrderBy(descriptor => descriptor.DisplayOrder);
+            }
+            else
+                pluginDescriptors = pluginDescriptors.OrderBy(descriptor => descriptor.Group);
 
             return pluginDescriptors;
         }
@@ -245,7 +248,7 @@ namespace Nop.Services.Plugins
         public virtual void PreparePluginToInstall(string systemName, Customer customer = null)
         {
             //add plugin name to the appropriate list (if not yet contained) and save changes
-            if (_pluginsInfo.PluginNamesToInstall.Any(item => item.SystemName == systemName)) 
+            if (_pluginsInfo.PluginNamesToInstall.Any(item => item.SystemName == systemName))
                 return;
 
             _pluginsInfo.PluginNamesToInstall.Add((systemName, customer?.CustomerGuid));
@@ -276,7 +279,7 @@ namespace Nop.Services.Plugins
         public virtual void PreparePluginToDelete(string systemName)
         {
             //add plugin name to the appropriate list (if not yet contained) and save changes
-            if (_pluginsInfo.PluginNamesToDelete.Contains(systemName)) 
+            if (_pluginsInfo.PluginNamesToDelete.Contains(systemName))
                 return;
 
             _pluginsInfo.PluginNamesToDelete.Add(systemName);
