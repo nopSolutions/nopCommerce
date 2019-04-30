@@ -1,6 +1,4 @@
-﻿using FluentValidation.Attributes;
-using Nop.Web.Areas.Admin.Validators.Directory;
-using Nop.Web.Framework.Mvc.ModelBinding;
+﻿using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Directory
@@ -8,7 +6,6 @@ namespace Nop.Web.Areas.Admin.Models.Directory
     /// <summary>
     /// Represents a measure weight model
     /// </summary>
-    [Validator(typeof(MeasureWeightValidator))]
     public partial class MeasureWeightModel : BaseNopEntityModel
     {
         #region Properties

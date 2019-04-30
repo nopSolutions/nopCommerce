@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Configuration;
@@ -33,7 +34,6 @@ using Nop.Services.Logging;
 using Nop.Services.Plugins;
 using Nop.Services.Security;
 using Nop.Services.Tasks;
-using Nop.Web.Framework.FluentValidation;
 using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Mvc.Routing;
 using Nop.Web.Framework.Security.Captcha;
@@ -311,7 +311,13 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             //add fluent validation
             mvcBuilder.AddFluentValidation(configuration =>
             {
-                configuration.ValidatorFactoryType = typeof(NopValidatorFactory);
+                //register all available validators from Nop assemblies
+                var assemblies = mvcBuilder.PartManager.ApplicationParts
+                    .OfType<AssemblyPart>()
+                    .Where(part => part.Name.StartsWith("Nop", StringComparison.InvariantCultureIgnoreCase))
+                    .Select(part => part.Assembly);
+                configuration.RegisterValidatorsFromAssemblies(assemblies);
+
                 //implicit/automatic validation of child properties
                 configuration.ImplicitlyValidateChildProperties = true;
             });

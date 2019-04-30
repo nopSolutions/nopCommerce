@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using FluentValidation.Attributes;
-using Nop.Web.Areas.Admin.Validators.Shipping;
 using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
@@ -9,7 +7,6 @@ namespace Nop.Web.Areas.Admin.Models.Shipping
     /// <summary>
     /// Represents a shipping method model
     /// </summary>
-    [Validator(typeof(ShippingMethodValidator))]
     public partial class ShippingMethodModel : BaseNopEntityModel, ILocalizedModel<ShippingMethodLocalizedModel>
     {
         #region Ctor

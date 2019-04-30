@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using FluentValidation.Attributes;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Domain.Catalog;
-using Nop.Web.Areas.Admin.Validators.Customers;
 using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Models;
 
@@ -13,7 +11,6 @@ namespace Nop.Web.Areas.Admin.Models.Customers
     /// <summary>
     /// Represents a customer model
     /// </summary>
-    [Validator(typeof(CustomerValidator))]
     public partial class CustomerModel : BaseNopEntityModel, IAclSupportedModel
     {
         #region Ctor

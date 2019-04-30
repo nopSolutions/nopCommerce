@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
-using FluentValidation.Attributes;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Web.Areas.Admin.Validators.Catalog;
 using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
@@ -10,7 +8,6 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
     /// <summary>
     /// Represents a review type model
     /// </summary>
-    [Validator(typeof(ReviewTypeValidator))]
     public partial class ReviewTypeModel : BaseNopEntityModel, ILocalizedModel<ReviewTypeLocalizedModel>
     {
         #region Ctor
