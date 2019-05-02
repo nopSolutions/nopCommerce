@@ -776,6 +776,93 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.AllSettings.Fields.Store.Hint">
     <Value>A store name in which this setting is applied.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Languages.Resources.Fields.Name.Hint">
+    <Value>Enter the locale resource name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Languages.Resources.Fields.Value.Hint">
+    <Value>Enter the locale resource value.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Dimensions.Fields.Name.Hint">
+    <Value>Enter the dimension name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Dimensions.Fields.SystemKeyword.Hint">
+    <Value>Enter the dimension system keyword.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Dimensions.Fields.Ratio.Hint">
+    <Value>Specify the dimension ratio.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Dimensions.Fields.DisplayOrder.Hint">
+    <Value>The display order of this dimension. 1 represents the top of the list.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Weights.Fields.Name.Hint">
+    <Value>Enter the weight name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Weights.Fields.SystemKeyword.Hint">
+    <Value>Enter the weight system keyword.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Weights.Fields.Ratio.Hint">
+    <Value>Specify the weight ratio.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Weights.Fields.DisplayOrder.Hint">
+    <Value>The display order of this weight. 1 represents the top of the list.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Polls.Answers.Fields.Name.Hint">
+    <Value>Enter the poll answer name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Polls.Answers.Fields.DisplayOrder.Hint">
+    <Value>The display order of this poll answer. 1 represents the top of the list.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.AllSettings.Fields.Name.Hint">
+    <Value>Enter the setting name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.AllSettings.Fields.Value.Hint">
+    <Value>Enter the setting value.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Tax.Categories.Fields.Name.Hint">
+    <Value>Enter the tax category name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Tax.Categories.Fields.DisplayOrder.Hint">
+    <Value>The display order of this tax category. 1 represents the top of the list.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Category.Name.Hint">
+    <Value>Enter the template name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Category.DisplayOrder.Hint">
+    <Value>The display order of this template. 1 represents the top of the list.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Category.ViewPath.Hint">
+    <Value>Enter the template view path.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Manufacturer.Name.Hint">
+    <Value>Enter the template name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Manufacturer.DisplayOrder.Hint">
+    <Value>The display order of this template. 1 represents the top of the list.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Manufacturer.ViewPath.Hint">
+    <Value>Enter the template view path.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Product.Name.Hint">
+    <Value>Enter the template name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Product.DisplayOrder.Hint">
+    <Value>The display order of this template. 1 represents the top of the list.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Product.ViewPath.Hint">
+    <Value>Enter the template view path.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Product.IgnoredProductTypes.Hint">
+    <Value>Specify ignored product types for this template.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Topic.Name.Hint">
+    <Value>Enter the template name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Topic.DisplayOrder.Hint">
+    <Value>The display order of this template. 1 represents the top of the list.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Topic.ViewPath.Hint">
+    <Value>Enter the template view path.</Value>
+  </LocaleResource>
 </Language>'
 
 CREATE TABLE #LocaleStringResourceTmp
