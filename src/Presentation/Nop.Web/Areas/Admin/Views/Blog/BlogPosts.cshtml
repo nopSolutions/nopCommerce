@@ -81,12 +81,13 @@
                         {
                             new ColumnProperty(nameof(BlogPostModel.Title))
                             {
-                                Title = T("Admin.ContentManagement.Blog.BlogPosts.Fields.Title").Text
+                                Title = T("Admin.ContentManagement.Blog.BlogPosts.Fields.Title").Text,
+                                Width = "400"
                             },
                             new ColumnProperty(nameof(BlogPostModel.LanguageName))
                             {
                                 Title = T("Admin.ContentManagement.Blog.BlogPosts.Fields.Language").Text,
-                                Width = "200"
+                                Width = "150"
                             },
                             new ColumnProperty(nameof(BlogPostModel.Id))
                             {
