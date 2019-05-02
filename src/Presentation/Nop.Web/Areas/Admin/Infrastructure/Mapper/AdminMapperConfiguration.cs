@@ -682,6 +682,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(settings => settings.PreselectCountryIfOnlyOne, options => options.Ignore());
 
             CreateMap<Setting, SettingModel>()
+                .ForMember(setting => setting.AvailableStores, options => options.Ignore())
                 .ForMember(setting => setting.Store, options => options.Ignore());
         }
 
