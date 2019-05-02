@@ -152,6 +152,15 @@
                             </div>
                         </div>
                         <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="@Model.AddSetting.StoreId" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-select asp-for="@Model.AddSetting.StoreId" asp-items="@Model.AddSetting.AvailableStores" />
+                                <span asp-validation-for="@Model.AddSetting.StoreId"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <div class="col-md-9 col-md-offset-3">
                                 <button type="button" id="addSetting" class="btn btn-primary">@T("Admin.Common.AddNewRecord")</button>
                             </div>
@@ -163,7 +172,8 @@
                         $('#addSetting').attr('disabled', true);
                         var postData = {
                             Name: $("#@Html.IdFor(model => model.AddSetting.Name)").val(),
-                            Value: $("#@Html.IdFor(model => model.AddSetting.Value)").val()
+                            Value: $("#@Html.IdFor(model => model.AddSetting.Value)").val(),
+                            StoreId: $("#@Html.IdFor(model => model.AddSetting.StoreId)").val()
                         };
                         addAntiForgeryToken(postData);
 
