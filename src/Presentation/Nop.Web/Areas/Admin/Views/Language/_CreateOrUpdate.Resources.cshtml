@@ -102,20 +102,20 @@
                     <div class="panel-body">
                         <div class="form-group">
                             <div class="col-md-3">
-                                <nop-label asp-for="@Model.AddResourceName" />
+                                <nop-label asp-for="@Model.LocaleResourceSearchModel.AddResourceString.ResourceName" />
                             </div>
                             <div class="col-md-9">
-                                <nop-editor asp-for="@Model.AddResourceName" />
-                                <span asp-validation-for="@Model.AddResourceName"></span>
+                                <nop-editor asp-for="@Model.LocaleResourceSearchModel.AddResourceString.ResourceName" />
+                                <span asp-validation-for="@Model.LocaleResourceSearchModel.AddResourceString.ResourceName"></span>
                             </div>
-                        </div>           
+                        </div>
                         <div class="form-group">
                             <div class="col-md-3">
-                                <nop-label asp-for="@Model.AddResourceValue" />
+                                <nop-label asp-for="@Model.LocaleResourceSearchModel.AddResourceString.ResourceValue" />
                             </div>
                             <div class="col-md-9">
-                                <nop-editor asp-for="@Model.AddResourceValue" />
-                                <span asp-validation-for="@Model.AddResourceValue"></span>
+                                <nop-editor asp-for="@Model.LocaleResourceSearchModel.AddResourceString.ResourceValue" />
+                                <span asp-validation-for="@Model.LocaleResourceSearchModel.AddResourceString.ResourceValue"></span>
                             </div>
                         </div>
                         <div class="form-group">
@@ -129,8 +129,8 @@
                         $('#addResourceString').click(function () {
                             $('#addResourceString').attr('disabled', true);
                             var postData = {
-                                ResourceName: $("#@Html.IdFor(model => model.AddResourceName)").val(),
-                                ResourceValue: $("#@Html.IdFor(model => model.AddResourceValue)").val()
+                                ResourceName: $("#@Html.IdFor(model => model.LocaleResourceSearchModel.AddResourceString.ResourceName)").val(),
+                                ResourceValue: $("#@Html.IdFor(model => model.LocaleResourceSearchModel.AddResourceString.ResourceValue)").val()
                             };
                             addAntiForgeryToken(postData);
 

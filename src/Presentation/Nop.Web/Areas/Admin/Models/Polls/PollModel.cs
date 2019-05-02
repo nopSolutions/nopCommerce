@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Polls
 {
@@ -59,22 +59,13 @@ namespace Nop.Web.Areas.Admin.Models.Polls
         [NopResourceDisplayName("Admin.ContentManagement.Polls.Fields.EndDate")]
         [UIHint("DateTimeNullable")]
         public DateTime? EndDateUtc { get; set; }
-        
+
         [NopResourceDisplayName("Admin.ContentManagement.Polls.Fields.LimitedToStores")]
         public IList<int> SelectedStoreIds { get; set; }
 
         public IList<SelectListItem> AvailableStores { get; set; }
 
         public PollAnswerSearchModel PollAnswerSearchModel { get; set; }
-
-        //TODO find more elegant way
-        //workaround to add locales copied from \Models\Polls\PollAnswerModel.cs)
-        //we cannot use "LocaleResourceModel" property because it's automatically validated when editing a language
-        [NopResourceDisplayName("Admin.ContentManagement.Polls.Answers.Fields.Name")]
-        public string AddName { get; set; }
-        [NopResourceDisplayName("Admin.ContentManagement.Polls.Answers.Fields.DisplayOrder")]
-        public int AddDisplayOrder { get; set; }
-
 
         #endregion
     }
