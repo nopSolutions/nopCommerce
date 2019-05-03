@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.Web.Mvc;
-using System.Web.Routing;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Domain.Catalog;
-using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Models;
 using Nop.Web.Models.Common;
 using Nop.Web.Models.Media;
 
@@ -14,15 +13,12 @@ namespace Nop.Web.Models.ShoppingCart
         {
             Items = new List<ShoppingCartItemModel>();
             Warnings = new List<string>();
-            EstimateShipping = new EstimateShippingModel();
             DiscountBox = new DiscountBoxModel();
             GiftCardBox = new GiftCardBoxModel();
             CheckoutAttributes = new List<CheckoutAttributeModel>();
             OrderReviewData = new OrderReviewDataModel();
 
-            ButtonPaymentMethodActionNames = new List<string>();
-            ButtonPaymentMethodControllerNames = new List<string>();
-            ButtonPaymentMethodRouteValues = new List<RouteValueDictionary>();
+            ButtonPaymentMethodViewComponentNames = new List<string>();
         }
 
         public bool OnePageCheckoutEnabled { get; set; }
@@ -31,8 +27,7 @@ namespace Nop.Web.Models.ShoppingCart
         public bool ShowProductImages { get; set; }
         public bool IsEditable { get; set; }
         public IList<ShoppingCartItemModel> Items { get; set; }
-
-        public string CheckoutAttributeInfo { get; set; }
+        
         public IList<CheckoutAttributeModel> CheckoutAttributes { get; set; }
 
         public IList<string> Warnings { get; set; }
@@ -40,16 +35,17 @@ namespace Nop.Web.Models.ShoppingCart
         public bool DisplayTaxShippingInfo { get; set; }
         public bool TermsOfServiceOnShoppingCartPage { get; set; }
         public bool TermsOfServiceOnOrderConfirmPage { get; set; }
-        public EstimateShippingModel EstimateShipping { get; set; }
+        public bool TermsOfServicePopup { get; set; }
         public DiscountBoxModel DiscountBox { get; set; }
         public GiftCardBoxModel GiftCardBox { get; set; }
         public OrderReviewDataModel OrderReviewData { get; set; }
 
-        public IList<string> ButtonPaymentMethodActionNames { get; set; }
-        public IList<string> ButtonPaymentMethodControllerNames { get; set; }
-        public IList<RouteValueDictionary> ButtonPaymentMethodRouteValues { get; set; }
+        public IList<string> ButtonPaymentMethodViewComponentNames { get; set; }
 
-		#region Nested Classes
+        public bool HideCheckoutButton { get; set; }
+        public bool ShowVendorName { get; set; }
+
+        #region Nested Classes
 
         public partial class ShoppingCartItemModel : BaseNopEntityModel
         {
@@ -59,7 +55,10 @@ namespace Nop.Web.Models.ShoppingCart
                 AllowedQuantities = new List<SelectListItem>();
                 Warnings = new List<string>();
             }
+
             public string Sku { get; set; }
+
+            public string VendorName { get; set; }
 
             public PictureModel Picture {get;set;}
 
@@ -74,6 +73,7 @@ namespace Nop.Web.Models.ShoppingCart
             public string SubTotal { get; set; }
 
             public string Discount { get; set; }
+            public int? MaximumDiscountedQty { get; set; }
 
             public int Quantity { get; set; }
             public List<SelectListItem> AllowedQuantities { get; set; }
@@ -86,8 +86,9 @@ namespace Nop.Web.Models.ShoppingCart
 
             public bool AllowItemEditing { get; set; }
 
-            public IList<string> Warnings { get; set; }
+            public bool DisableRemoval { get; set; }
 
+            public IList<string> Warnings { get; set; }
         }
 
         public partial class CheckoutAttributeModel : BaseNopEntityModel
@@ -142,10 +143,21 @@ namespace Nop.Web.Models.ShoppingCart
 
         public partial class DiscountBoxModel: BaseNopModel
         {
+            public DiscountBoxModel()
+            {
+                AppliedDiscountsWithCodes = new List<DiscountInfoModel>();
+                Messages = new List<string>();
+            }
+
+            public List<DiscountInfoModel> AppliedDiscountsWithCodes { get; set; }
             public bool Display { get; set; }
-            public string Message { get; set; }
-            public string CurrentCode { get; set; }
+            public List<string> Messages { get; set; }
             public bool IsApplied { get; set; }
+
+            public class DiscountInfoModel : BaseNopEntityModel
+            {
+                public string CouponCode { get; set; }
+            }
         }
 
         public partial class GiftCardBoxModel : BaseNopModel
@@ -159,9 +171,10 @@ namespace Nop.Web.Models.ShoppingCart
         {
             public OrderReviewDataModel()
             {
-                this.BillingAddress = new AddressModel();
-                this.ShippingAddress = new AddressModel();
-                this.CustomValues= new Dictionary<string, object>();
+                BillingAddress = new AddressModel();
+                ShippingAddress = new AddressModel();
+                PickupAddress = new AddressModel();
+                CustomValues= new Dictionary<string, object>();
             }
             public bool Display { get; set; }
 
@@ -169,13 +182,15 @@ namespace Nop.Web.Models.ShoppingCart
 
             public bool IsShippable { get; set; }
             public AddressModel ShippingAddress { get; set; }
-            public bool SelectedPickUpInStore { get; set; }
+            public bool SelectedPickupInStore { get; set; }
+            public AddressModel PickupAddress { get; set; }
             public string ShippingMethod { get; set; }
 
             public string PaymentMethod { get; set; }
 
             public Dictionary<string, object> CustomValues { get; set; }
         }
-		#endregion
+
+        #endregion
     }
 }

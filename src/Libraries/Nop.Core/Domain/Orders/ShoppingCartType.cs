@@ -1,8 +1,7 @@
-
 namespace Nop.Core.Domain.Orders
 {
     /// <summary>
-    /// Represents a shoping cart type
+    /// Represents a shopping cart type
     /// </summary>
     public enum ShoppingCartType
     {
@@ -10,9 +9,10 @@ namespace Nop.Core.Domain.Orders
         /// Shopping cart
         /// </summary>
         ShoppingCart = 1,
+
         /// <summary>
         /// Wishlist
         /// </summary>
-        Wishlist = 2,
+        Wishlist = 2
     }
 }

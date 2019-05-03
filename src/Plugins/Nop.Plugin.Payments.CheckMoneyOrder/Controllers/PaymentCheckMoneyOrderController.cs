@@ -1,53 +1,71 @@
-﻿using System.Collections.Generic;
-using System.Web.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Plugin.Payments.CheckMoneyOrder.Models;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
-using Nop.Services.Payments;
-using Nop.Services.Stores;
+using Nop.Services.Messages;
+using Nop.Services.Security;
+using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Plugin.Payments.CheckMoneyOrder.Controllers
 {
+    [AuthorizeAdmin]
+    [Area(AreaNames.Admin)]
     public class PaymentCheckMoneyOrderController : BasePaymentController
     {
-        private readonly IWorkContext _workContext;
-        private readonly IStoreService _storeService;
-        private readonly IStoreContext _storeContext;
-        private readonly ISettingService _settingService;
-        private readonly ILocalizationService _localizationService;
-        private readonly ILanguageService _languageService;
+        #region Fields
 
-        public PaymentCheckMoneyOrderController(IWorkContext workContext,
-            IStoreService storeService,
-            ISettingService settingService,
-            IStoreContext storeContext,
+        private readonly ILanguageService _languageService;
+        private readonly ILocalizationService _localizationService;
+        private readonly INotificationService _notificationService;
+        private readonly IPermissionService _permissionService;
+        private readonly ISettingService _settingService;
+        private readonly IStoreContext _storeContext;
+
+        #endregion
+
+        #region Ctor
+
+        public PaymentCheckMoneyOrderController(ILanguageService languageService,
             ILocalizationService localizationService,
-            ILanguageService languageService)
+            INotificationService notificationService,
+            IPermissionService permissionService,
+            ISettingService settingService,
+            IStoreContext storeContext)
         {
-            this._workContext = workContext;
-            this._storeService = storeService;
-            this._settingService = settingService;
-            this._storeContext = storeContext;
-            this._localizationService = localizationService;
-            this._languageService = languageService;
+            _languageService = languageService;
+            _localizationService = localizationService;
+            _notificationService = notificationService;
+            _permissionService = permissionService;
+            _settingService = settingService;
+            _storeContext = storeContext;
         }
-        
-        [AdminAuthorize]
-        [ChildActionOnly]
-        public ActionResult Configure()
+
+        #endregion
+
+        #region Methods
+
+        public IActionResult Configure()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePaymentMethods))
+                return AccessDeniedView();
+
             //load settings for a chosen store scope
-            var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = _storeContext.ActiveStoreScopeConfiguration;
             var checkMoneyOrderPaymentSettings = _settingService.LoadSetting<CheckMoneyOrderPaymentSettings>(storeScope);
 
-            var model = new ConfigurationModel();
-            model.DescriptionText = checkMoneyOrderPaymentSettings.DescriptionText;
+            var model = new ConfigurationModel
+            {
+                DescriptionText = checkMoneyOrderPaymentSettings.DescriptionText
+            };
+
             //locales
             AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
-                locale.DescriptionText = checkMoneyOrderPaymentSettings.GetLocalizedSetting(x => x.DescriptionText, languageId, false, false);
+                locale.DescriptionText = _localizationService
+                    .GetLocalizedSetting(checkMoneyOrderPaymentSettings, x => x.DescriptionText, languageId, 0, false, false);
             });
             model.AdditionalFee = checkMoneyOrderPaymentSettings.AdditionalFee;
             model.AdditionalFeePercentage = checkMoneyOrderPaymentSettings.AdditionalFeePercentage;
@@ -62,19 +80,21 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder.Controllers
                 model.ShippableProductRequired_OverrideForStore = _settingService.SettingExists(checkMoneyOrderPaymentSettings, x => x.ShippableProductRequired, storeScope);
             }
 
-            return View("~/Plugins/Payments.CheckMoneyOrder/Views/PaymentCheckMoneyOrder/Configure.cshtml", model);
+            return View("~/Plugins/Payments.CheckMoneyOrder/Views/Configure.cshtml", model);
         }
 
         [HttpPost]
-        [AdminAuthorize]
-        [ChildActionOnly]
-        public ActionResult Configure(ConfigurationModel model)
+        [AdminAntiForgery]
+        public IActionResult Configure(ConfigurationModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePaymentMethods))
+                return AccessDeniedView();
+
             if (!ModelState.IsValid)
                 return Configure();
 
             //load settings for a chosen store scope
-            var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = _storeContext.ActiveStoreScopeConfiguration;
             var checkMoneyOrderPaymentSettings = _settingService.LoadSetting<CheckMoneyOrderPaymentSettings>(storeScope);
 
             //save settings
@@ -86,25 +106,10 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder.Controllers
             /* We do not clear cache after each setting update.
              * This behavior can increase performance because cached settings will not be cleared 
              * and loaded from database after each update */
-            if (model.DescriptionText_OverrideForStore || storeScope == 0)
-                _settingService.SaveSetting(checkMoneyOrderPaymentSettings, x => x.DescriptionText, storeScope, false);
-            else if (storeScope > 0)
-                _settingService.DeleteSetting(checkMoneyOrderPaymentSettings, x => x.DescriptionText, storeScope);
-
-            if (model.AdditionalFee_OverrideForStore || storeScope == 0)
-                _settingService.SaveSetting(checkMoneyOrderPaymentSettings, x => x.AdditionalFee, storeScope, false);
-            else if (storeScope > 0)
-                _settingService.DeleteSetting(checkMoneyOrderPaymentSettings, x => x.AdditionalFee, storeScope);
-
-            if (model.AdditionalFeePercentage_OverrideForStore || storeScope == 0)
-                _settingService.SaveSetting(checkMoneyOrderPaymentSettings, x => x.AdditionalFeePercentage, storeScope, false);
-            else if (storeScope > 0)
-                _settingService.DeleteSetting(checkMoneyOrderPaymentSettings, x => x.AdditionalFeePercentage, storeScope);
-
-            if (model.ShippableProductRequired_OverrideForStore || storeScope == 0)
-                _settingService.SaveSetting(checkMoneyOrderPaymentSettings, x => x.ShippableProductRequired, storeScope, false);
-            else if (storeScope > 0)
-                _settingService.DeleteSetting(checkMoneyOrderPaymentSettings, x => x.ShippableProductRequired, storeScope);
+            _settingService.SaveSettingOverridablePerStore(checkMoneyOrderPaymentSettings, x => x.DescriptionText, model.DescriptionText_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(checkMoneyOrderPaymentSettings, x => x.AdditionalFee, model.AdditionalFee_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(checkMoneyOrderPaymentSettings, x => x.AdditionalFeePercentage, model.AdditionalFeePercentage_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(checkMoneyOrderPaymentSettings, x => x.ShippableProductRequired, model.ShippableProductRequired_OverrideForStore, storeScope, false);
 
             //now clear settings cache
             _settingService.ClearCache();
@@ -112,41 +117,15 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder.Controllers
             //localization. no multi-store support for localization yet.
             foreach (var localized in model.Locales)
             {
-                checkMoneyOrderPaymentSettings.SaveLocalizedSetting(x => x.DescriptionText,
-                    localized.LanguageId,
-                    localized.DescriptionText);
+                _localizationService.SaveLocalizedSetting(checkMoneyOrderPaymentSettings,
+                    x => x.DescriptionText, localized.LanguageId, localized.DescriptionText);
             }
 
-            SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
+            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
 
             return Configure();
         }
 
-        [ChildActionOnly]
-        public ActionResult PaymentInfo()
-        {
-            var checkMoneyOrderPaymentSettings = _settingService.LoadSetting<CheckMoneyOrderPaymentSettings>(_storeContext.CurrentStore.Id);
-
-            var model = new PaymentInfoModel
-            {
-                DescriptionText = checkMoneyOrderPaymentSettings.GetLocalizedSetting(x => x.DescriptionText, _workContext.WorkingLanguage.Id)
-            };
-
-            return View("~/Plugins/Payments.CheckMoneyOrder/Views/PaymentCheckMoneyOrder/PaymentInfo.cshtml", model);
-        }
-
-        [NonAction]
-        public override IList<string> ValidatePaymentForm(FormCollection form)
-        {
-            var warnings = new List<string>();
-            return warnings;
-        }
-
-        [NonAction]
-        public override ProcessPaymentRequest GetPaymentInfo(FormCollection form)
-        {
-            var paymentInfo = new ProcessPaymentRequest();
-            return paymentInfo;
-        }
+        #endregion
     }
 }

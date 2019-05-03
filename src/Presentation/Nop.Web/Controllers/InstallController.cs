@@ -2,16 +2,16 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Security.Principal;
 using System.Threading;
-using System.Web.Hosting;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
+using Nop.Core.Caching;
 using Nop.Core.Configuration;
 using Nop.Core.Data;
 using Nop.Core.Infrastructure;
-using Nop.Core.Plugins;
 using Nop.Services.Installation;
+using Nop.Services.Plugins;
 using Nop.Services.Security;
 using Nop.Web.Framework.Security;
 using Nop.Web.Infrastructure.Installation;
@@ -19,21 +19,25 @@ using Nop.Web.Models.Install;
 
 namespace Nop.Web.Controllers
 {
-    public partial class InstallController : BasePublicController
+    public partial class InstallController : Controller
     {
         #region Fields
 
         private readonly IInstallationLocalizationService _locService;
+        private readonly INopFileProvider _fileProvider;
         private readonly NopConfig _config;
 
         #endregion
 
         #region Ctor
 
-        public InstallController(IInstallationLocalizationService locService, NopConfig config)
+        public InstallController(IInstallationLocalizationService locService,
+            INopFileProvider fileProvider,
+            NopConfig config)
         {
-            this._locService = locService;
-            this._config = config;
+            _locService = locService;
+            _fileProvider = fileProvider;
+            _config = config;
         }
 
         #endregion
@@ -43,18 +47,14 @@ namespace Nop.Web.Controllers
         /// <summary>
         /// A value indicating whether we use MARS (Multiple Active Result Sets)
         /// </summary>
-        protected bool UseMars
-        {
-            get { return false; }
-        }
+        protected virtual bool UseMars => false;
 
         /// <summary>
         /// Checks if the specified database exists, returns true if database exists
         /// </summary>
         /// <param name="connectionString">Connection string</param>
         /// <returns>Returns true if the database exists.</returns>
-        [NonAction]
-        protected bool SqlServerDatabaseExists(string connectionString)
+        protected virtual bool SqlServerDatabaseExists(string connectionString)
         {
             try
             {
@@ -63,9 +63,10 @@ namespace Nop.Web.Controllers
                 {
                     conn.Open();
                 }
+
                 return true;
             }
-            catch 
+            catch
             {
                 return false;
             }
@@ -76,9 +77,13 @@ namespace Nop.Web.Controllers
         /// </summary>
         /// <param name="connectionString">Connection string</param>
         /// <param name="collation">Server collation; the default one will be used if not specified</param>
+        /// <param name="triesToConnect">
+        /// Number of times to try to connect to database. 
+        /// If connection cannot be open, then error will be returned. 
+        /// Pass 0 to skip this validation.
+        /// </param>
         /// <returns>Error</returns>
-        [NonAction]
-        protected string CreateDatabase(string connectionString, string collation)
+        protected virtual string CreateDatabase(string connectionString, string collation, int triesToConnect = 10)
         {
             try
             {
@@ -88,16 +93,35 @@ namespace Nop.Web.Controllers
                 //now create connection string to 'master' dabatase. It always exists.
                 builder.InitialCatalog = "master";
                 var masterCatalogConnectionString = builder.ToString();
-                string query = string.Format("CREATE DATABASE [{0}]", databaseName);
-                if (!String.IsNullOrWhiteSpace(collation))
-                    query = string.Format("{0} COLLATE {1}", query, collation);
+                var query = $"CREATE DATABASE [{databaseName}]";
+                if (!string.IsNullOrWhiteSpace(collation))
+                    query = $"{query} COLLATE {collation}";
                 using (var conn = new SqlConnection(masterCatalogConnectionString))
                 {
                     conn.Open();
                     using (var command = new SqlCommand(query, conn))
                     {
-                        command.ExecuteNonQuery();  
-                    } 
+                        command.ExecuteNonQuery();
+                    }
+                }
+
+                //try connect
+                if (triesToConnect <= 0) 
+                    return string.Empty;
+
+                //sometimes on slow servers (hosting) there could be situations when database requires some time to be created.
+                //but we have already started creation of tables and sample data.
+                //as a result there is an exception thrown and the installation process cannot continue.
+                //that's why we are in a cycle of "triesToConnect" times trying to connect to a database with a delay of one second.
+                for (var i = 0; i <= triesToConnect; i++)
+                {
+                    if (i == triesToConnect)
+                        throw new Exception("Unable to connect to the new database. Please try one more time");
+
+                    if (!SqlServerDatabaseExists(connectionString))
+                        Thread.Sleep(1000);
+                    else
+                        break;
                 }
 
                 return string.Empty;
@@ -107,40 +131,45 @@ namespace Nop.Web.Controllers
                 return string.Format(_locService.GetResource("DatabaseCreationError"), ex.Message);
             }
         }
-        
+
         /// <summary>
         /// Create contents of connection strings used by the SqlConnection class
         /// </summary>
         /// <param name="trustedConnection">Avalue that indicates whether User ID and Password are specified in the connection (when false) or whether the current Windows account credentials are used for authentication (when true)</param>
         /// <param name="serverName">The name or network address of the instance of SQL Server to connect to</param>
         /// <param name="databaseName">The name of the database associated with the connection</param>
-        /// <param name="userName">The user ID to be used when connecting to SQL Server</param>
+        /// <param name="username">The user ID to be used when connecting to SQL Server</param>
         /// <param name="password">The password for the SQL Server account</param>
         /// <param name="timeout">The connection timeout</param>
         /// <returns>Connection string</returns>
-        [NonAction]
-        protected string CreateConnectionString(bool trustedConnection,
-            string serverName, string databaseName, 
-            string userName, string password, int timeout = 0)
+        protected virtual string CreateConnectionString(bool trustedConnection,
+            string serverName, string databaseName,
+            string username, string password, int timeout = 0)
         {
-            var builder = new SqlConnectionStringBuilder();
-            builder.IntegratedSecurity = trustedConnection;
-            builder.DataSource = serverName;
-            builder.InitialCatalog = databaseName;
+            var builder = new SqlConnectionStringBuilder
+            {
+                IntegratedSecurity = trustedConnection,
+                DataSource = serverName,
+                InitialCatalog = databaseName
+            };
+
             if (!trustedConnection)
             {
-                builder.UserID = userName;
+                builder.UserID = username;
                 builder.Password = password;
             }
+
             builder.PersistSecurityInfo = false;
-            if (this.UseMars)
+            if (UseMars)
             {
                 builder.MultipleActiveResultSets = true;
             }
+
             if (timeout > 0)
             {
                 builder.ConnectTimeout = timeout;
             }
+
             return builder.ConnectionString;
         }
 
@@ -148,37 +177,32 @@ namespace Nop.Web.Controllers
 
         #region Methods
 
-        public ActionResult Index()
+        public virtual IActionResult Index()
         {
-            if (DataSettingsHelper.DatabaseIsInstalled())
-                return RedirectToRoute("HomePage");
-
-            //set page timeout to 5 minutes
-            this.Server.ScriptTimeout = 300;
-
+            if (DataSettingsManager.DatabaseIsInstalled)
+                return RedirectToRoute("Homepage");
 
             var model = new InstallModel
             {
                 AdminEmail = "admin@yourStore.com",
                 InstallSampleData = false,
-                DatabaseConnectionString = "",
-                DataProvider = "sqlserver",
+                DatabaseConnectionString = string.Empty,
+                DataProvider = DataProviderType.SqlServer,
                 //fast installation service does not support SQL compact
-                DisableSqlCompact = _config.UseFastInstallationService,
                 DisableSampleDataOption = _config.DisableSampleDataDuringInstallation,
                 SqlAuthenticationType = "sqlauthentication",
                 SqlConnectionInfo = "sqlconnectioninfo_values",
                 SqlServerCreateDatabase = false,
                 UseCustomCollation = false,
-                Collation = "SQL_Latin1_General_CP1_CI_AS",
+                Collation = "SQL_Latin1_General_CP1_CI_AS"
             };
             foreach (var lang in _locService.GetAvailableLanguages())
             {
                 model.AvailableLanguages.Add(new SelectListItem
                 {
-                    Value = Url.Action("ChangeLanguage", "Install", new { language = lang.Code}),
+                    Value = Url.Action("ChangeLanguage", "Install", new { language = lang.Code }),
                     Text = lang.Name,
-                    Selected = _locService.GetCurrentLanguage().Code == lang.Code,
+                    Selected = _locService.GetCurrentLanguage().Code == lang.Code
                 });
             }
 
@@ -186,13 +210,10 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult Index(InstallModel model)
+        public virtual IActionResult Index(InstallModel model)
         {
-            if (DataSettingsHelper.DatabaseIsInstalled())
-                return RedirectToRoute("HomePage");
-
-            //set page timeout to 5 minutes
-            this.Server.ScriptTimeout = 300;
+            if (DataSettingsManager.DatabaseIsInstalled)
+                return RedirectToRoute("Homepage");
 
             if (model.DatabaseConnectionString != null)
                 model.DatabaseConnectionString = model.DatabaseConnectionString.Trim();
@@ -204,52 +225,50 @@ namespace Nop.Web.Controllers
                 {
                     Value = Url.Action("ChangeLanguage", "Install", new { language = lang.Code }),
                     Text = lang.Name,
-                    Selected = _locService.GetCurrentLanguage().Code == lang.Code,
+                    Selected = _locService.GetCurrentLanguage().Code == lang.Code
                 });
             }
 
-            model.DisableSqlCompact = _config.UseFastInstallationService;
             model.DisableSampleDataOption = _config.DisableSampleDataDuringInstallation;
 
             //SQL Server
-            if (model.DataProvider.Equals("sqlserver", StringComparison.InvariantCultureIgnoreCase))
+            if (model.DataProvider == DataProviderType.SqlServer)
             {
                 if (model.SqlConnectionInfo.Equals("sqlconnectioninfo_raw", StringComparison.InvariantCultureIgnoreCase))
                 {
                     //raw connection string
                     if (string.IsNullOrEmpty(model.DatabaseConnectionString))
-                        ModelState.AddModelError("", _locService.GetResource("ConnectionStringRequired"));
+                        ModelState.AddModelError(string.Empty, _locService.GetResource("ConnectionStringRequired"));
 
                     try
                     {
                         //try to create connection string
-                        new SqlConnectionStringBuilder(model.DatabaseConnectionString);
+                        var unused = new SqlConnectionStringBuilder(model.DatabaseConnectionString);    
                     }
                     catch
                     {
-                        ModelState.AddModelError("", _locService.GetResource("ConnectionStringWrongFormat"));
+                        ModelState.AddModelError(string.Empty, _locService.GetResource("ConnectionStringWrongFormat"));
                     }
                 }
                 else
                 {
                     //values
                     if (string.IsNullOrEmpty(model.SqlServerName))
-                        ModelState.AddModelError("", _locService.GetResource("SqlServerNameRequired"));
+                        ModelState.AddModelError(string.Empty, _locService.GetResource("SqlServerNameRequired"));
                     if (string.IsNullOrEmpty(model.SqlDatabaseName))
-                        ModelState.AddModelError("", _locService.GetResource("DatabaseNameRequired"));
+                        ModelState.AddModelError(string.Empty, _locService.GetResource("DatabaseNameRequired"));
 
                     //authentication type
                     if (model.SqlAuthenticationType.Equals("sqlauthentication", StringComparison.InvariantCultureIgnoreCase))
                     {
                         //SQL authentication
                         if (string.IsNullOrEmpty(model.SqlServerUsername))
-                            ModelState.AddModelError("", _locService.GetResource("SqlServerUsernameRequired"));
+                            ModelState.AddModelError(string.Empty, _locService.GetResource("SqlServerUsernameRequired"));
                         if (string.IsNullOrEmpty(model.SqlServerPassword))
-                            ModelState.AddModelError("", _locService.GetResource("SqlServerPasswordRequired"));
+                            ModelState.AddModelError(string.Empty, _locService.GetResource("SqlServerPasswordRequired"));
                     }
                 }
             }
-
 
             //Consider granting access rights to the resource to the ASP.NET request identity. 
             //ASP.NET has a base process identity 
@@ -259,164 +278,147 @@ namespace Nop.Web.Controllers
             //the identity will be the anonymous user (typically IUSR_MACHINENAME) or the authenticated request user.
             var webHelper = EngineContext.Current.Resolve<IWebHelper>();
             //validate permissions
-            var dirsToCheck = FilePermissionHelper.GetDirectoriesWrite(webHelper);
-            foreach (string dir in dirsToCheck)
+            var dirsToCheck = FilePermissionHelper.GetDirectoriesWrite();
+            foreach (var dir in dirsToCheck)
                 if (!FilePermissionHelper.CheckPermissions(dir, false, true, true, false))
-                    ModelState.AddModelError("", string.Format(_locService.GetResource("ConfigureDirectoryPermissions"), WindowsIdentity.GetCurrent().Name, dir));
+                    ModelState.AddModelError(string.Empty, string.Format(_locService.GetResource("ConfigureDirectoryPermissions"), CurrentOSUser.FullName, dir));
 
-            var filesToCheck = FilePermissionHelper.GetFilesWrite(webHelper);
-            foreach (string file in filesToCheck)
-                if (!FilePermissionHelper.CheckPermissions(file, false, true, true, true))
-                    ModelState.AddModelError("", string.Format(_locService.GetResource("ConfigureFilePermissions"), WindowsIdentity.GetCurrent().Name, file));
-            
-            if (ModelState.IsValid)
+            var filesToCheck = FilePermissionHelper.GetFilesWrite();
+            foreach (var file in filesToCheck)
             {
-                var settingsManager = new DataSettingsManager();
-                try
+                if (!_fileProvider.FileExists(file))
+                    continue;
+
+                if (!FilePermissionHelper.CheckPermissions(file, false, true, true, true))
+                    ModelState.AddModelError(string.Empty, string.Format(_locService.GetResource("ConfigureFilePermissions"), CurrentOSUser.FullName, file));
+            }
+
+            if (!ModelState.IsValid) 
+                return View(model);
+
+            try
+            {
+                var connectionString = string.Empty;
+                if (model.DataProvider == DataProviderType.SqlServer)
                 {
-                    string connectionString;
-                    if (model.DataProvider.Equals("sqlserver", StringComparison.InvariantCultureIgnoreCase))
+                    //SQL Server
+
+                    if (model.SqlConnectionInfo.Equals("sqlconnectioninfo_raw", StringComparison.InvariantCultureIgnoreCase))
                     {
-                        //SQL Server
+                        //raw connection string
 
-                        if (model.SqlConnectionInfo.Equals("sqlconnectioninfo_raw", StringComparison.InvariantCultureIgnoreCase))
-                        {
-                            //raw connection string
+                        //we know that MARS option is required when using Entity Framework
+                        //let's ensure that it's specified
+                        var sqlCsb = new SqlConnectionStringBuilder(model.DatabaseConnectionString);
+                        if (UseMars)
+                            sqlCsb.MultipleActiveResultSets = true;
 
-                            //we know that MARS option is required when using Entity Framework
-                            //let's ensure that it's specified
-                            var sqlCsb = new SqlConnectionStringBuilder(model.DatabaseConnectionString);
-                            if (this.UseMars)
-                            {
-                                sqlCsb.MultipleActiveResultSets = true;
-                            }
-                            connectionString = sqlCsb.ToString();
-                        }
-                        else
+                        connectionString = sqlCsb.ToString();
+                    }
+                    else
+                    {
+                        //values
+                        connectionString = CreateConnectionString(model.SqlAuthenticationType == "windowsauthentication",
+                            model.SqlServerName, model.SqlDatabaseName,
+                            model.SqlServerUsername, model.SqlServerPassword);
+                    }
+
+                    if (model.SqlServerCreateDatabase)
+                    {
+                        if (!SqlServerDatabaseExists(connectionString))
                         {
-                            //values
-                            connectionString = CreateConnectionString(model.SqlAuthenticationType == "windowsauthentication",
-                                model.SqlServerName, model.SqlDatabaseName,
-                                model.SqlServerUsername, model.SqlServerPassword);
-                        }
-                        
-                        if (model.SqlServerCreateDatabase)
-                        {
-                            if (!SqlServerDatabaseExists(connectionString))
-                            {
-                                //create database
-                                var collation = model.UseCustomCollation ? model.Collation : "";
-                                var errorCreatingDatabase = CreateDatabase(connectionString, collation);
-                                if (!String.IsNullOrEmpty(errorCreatingDatabase))
-                                    throw new Exception(errorCreatingDatabase);
-                                
-                                //Database cannot be created sometimes. Weird! Seems to be Entity Framework issue
-                                //that's just wait 5 seconds (3 seconds is not enough for some reasons)
-                                Thread.Sleep(5000);
-                            }
-                        }
-                        else
-                        {
-                            //check whether database exists
-                            if (!SqlServerDatabaseExists(connectionString))
-                                throw new Exception(_locService.GetResource("DatabaseNotExists"));
+                            //create database
+                            var collation = model.UseCustomCollation ? model.Collation : string.Empty;
+                            var errorCreatingDatabase = CreateDatabase(connectionString, collation);
+                            if (!string.IsNullOrEmpty(errorCreatingDatabase))
+                                throw new Exception(errorCreatingDatabase);
                         }
                     }
                     else
                     {
-                        //SQL CE
-                        string databaseFileName = "Nop.Db.sdf";
-                        string databasePath = @"|DataDirectory|\" + databaseFileName;
-                        connectionString = "Data Source=" + databasePath + ";Persist Security Info=False";
-
-                        //drop database if exists
-                        string databaseFullPath = HostingEnvironment.MapPath("~/App_Data/") + databaseFileName;
-                        if (System.IO.File.Exists(databaseFullPath))
-                        {
-                            System.IO.File.Delete(databaseFullPath);
-                        }
+                        //check whether database exists
+                        if (!SqlServerDatabaseExists(connectionString))
+                            throw new Exception(_locService.GetResource("DatabaseNotExists"));
                     }
-
-                    //save settings
-                    var dataProvider = model.DataProvider;
-                    var settings = new DataSettings
-                    {
-                        DataProvider = dataProvider,
-                        DataConnectionString = connectionString
-                    };
-                    settingsManager.SaveSettings(settings);
-
-                    //init data provider
-                    var dataProviderInstance = EngineContext.Current.Resolve<BaseDataProviderManager>().LoadDataProvider();
-                    dataProviderInstance.InitDatabase();
-                    
-                    
-                    //now resolve installation service
-                    var installationService = EngineContext.Current.Resolve<IInstallationService>();
-                    installationService.InstallData(model.AdminEmail, model.AdminPassword, model.InstallSampleData);
-
-                    //reset cache
-                    DataSettingsHelper.ResetCache();
-
-                    //install plugins
-                    PluginManager.MarkAllPluginsAsUninstalled();
-                    var pluginFinder = EngineContext.Current.Resolve<IPluginFinder>();
-                    var plugins = pluginFinder.GetPlugins<IPlugin>(LoadPluginsMode.All)
-                        .ToList()
-                        .OrderBy(x => x.PluginDescriptor.Group)
-                        .ThenBy(x => x.PluginDescriptor.DisplayOrder)
-                        .ToList();
-                    var pluginsIgnoredDuringInstallation = String.IsNullOrEmpty(_config.PluginsIgnoredDuringInstallation) ? 
-                        new List<string>():
-                        _config.PluginsIgnoredDuringInstallation
-                        .Split(new [] {','}, StringSplitOptions.RemoveEmptyEntries)
-                        .Select(x => x.Trim())
-                        .ToList();
-                    foreach (var plugin in plugins)
-                    {
-                        if (pluginsIgnoredDuringInstallation.Contains(plugin.PluginDescriptor.SystemName))
-                            continue;
-                        plugin.Install();
-                    }
-                    
-                    //register default permissions
-                    //var permissionProviders = EngineContext.Current.Resolve<ITypeFinder>().FindClassesOfType<IPermissionProvider>();
-                    var permissionProviders = new List<Type>();
-                    permissionProviders.Add(typeof(StandardPermissionProvider));
-                    foreach (var providerType in permissionProviders)
-                    {
-                        dynamic provider = Activator.CreateInstance(providerType);
-                        EngineContext.Current.Resolve<IPermissionService>().InstallPermissions(provider);
-                    }
-
-                    //restart application
-                    webHelper.RestartAppDomain();
-
-                    //Redirect to home page
-                    return RedirectToRoute("HomePage");
                 }
-                catch (Exception exception)
+
+                //save settings
+                DataSettingsManager.SaveSettings(new DataSettings
                 {
-                    //reset cache
-                    DataSettingsHelper.ResetCache();
+                    DataProvider = model.DataProvider,
+                    DataConnectionString = connectionString
+                }, _fileProvider);
 
-                    //clear provider settings if something got wrong
-                    settingsManager.SaveSettings(new DataSettings
-                    {
-                        DataProvider = null,
-                        DataConnectionString = null
-                    });
+                //initialize database
+                EngineContext.Current.Resolve<IDataProvider>().InitializeDatabase();
 
-                    ModelState.AddModelError("", string.Format(_locService.GetResource("SetupFailed"), exception.Message));
+                //now resolve installation service
+                var installationService = EngineContext.Current.Resolve<IInstallationService>();
+                installationService.InstallRequiredData(model.AdminEmail, model.AdminPassword);
+
+                if (model.InstallSampleData)
+                    installationService.InstallSampleData(model.AdminEmail);
+
+                //reset cache
+                DataSettingsManager.ResetCache();
+
+                //prepare plugins to install
+                var pluginService = EngineContext.Current.Resolve<IPluginService>();
+                pluginService.ClearInstalledPluginsList();
+
+                var pluginsIgnoredDuringInstallation = new List<string>();
+                if (!string.IsNullOrEmpty(_config.PluginsIgnoredDuringInstallation))
+                {
+                    pluginsIgnoredDuringInstallation = _config.PluginsIgnoredDuringInstallation
+                        .Split(',', StringSplitOptions.RemoveEmptyEntries).Select(pluginName => pluginName.Trim()).ToList();
                 }
+
+                var plugins = pluginService.GetPluginDescriptors<IPlugin>(LoadPluginsMode.All)
+                    .Where(pluginDescriptor => !pluginsIgnoredDuringInstallation.Contains(pluginDescriptor.SystemName))
+                    .OrderBy(pluginDescriptor => pluginDescriptor.Group).ThenBy(pluginDescriptor => pluginDescriptor.DisplayOrder)
+                    .ToList();
+
+                foreach (var plugin in plugins)
+                {
+                    pluginService.PreparePluginToInstall(plugin.SystemName);
+                }
+
+                //register default permissions
+                //var permissionProviders = EngineContext.Current.Resolve<ITypeFinder>().FindClassesOfType<IPermissionProvider>();
+                var permissionProviders = new List<Type> { typeof(StandardPermissionProvider) };
+                foreach (var providerType in permissionProviders)
+                {
+                    var provider = (IPermissionProvider)Activator.CreateInstance(providerType);
+                    EngineContext.Current.Resolve<IPermissionService>().InstallPermissions(provider);
+                }
+
+                //restart application
+                webHelper.RestartAppDomain();
+
+                //Redirect to home page
+                return RedirectToRoute("Homepage");
             }
+            catch (Exception exception)
+            {
+                //reset cache
+                DataSettingsManager.ResetCache();
+
+                var cacheManager = EngineContext.Current.Resolve<IStaticCacheManager>();
+                cacheManager.Clear();
+
+                //clear provider settings if something got wrong
+                DataSettingsManager.SaveSettings(new DataSettings(), _fileProvider);
+
+                ModelState.AddModelError(string.Empty, string.Format(_locService.GetResource("SetupFailed"), exception.Message));
+            }
+
             return View(model);
         }
 
-        public ActionResult ChangeLanguage(string language)
+        public virtual IActionResult ChangeLanguage(string language)
         {
-            if (DataSettingsHelper.DatabaseIsInstalled())
-                return RedirectToRoute("HomePage");
+            if (DataSettingsManager.DatabaseIsInstalled)
+                return RedirectToRoute("Homepage");
 
             _locService.SaveCurrentLanguage(language);
 
@@ -424,17 +426,18 @@ namespace Nop.Web.Controllers
             return RedirectToAction("Index", "Install");
         }
 
-        public ActionResult RestartInstall()
+        [HttpPost]
+        public virtual IActionResult RestartInstall()
         {
-            if (DataSettingsHelper.DatabaseIsInstalled())
-                return RedirectToRoute("HomePage");
-            
+            if (DataSettingsManager.DatabaseIsInstalled)
+                return RedirectToRoute("Homepage");
+
             //restart application
             var webHelper = EngineContext.Current.Resolve<IWebHelper>();
             webHelper.RestartAppDomain();
 
             //Redirect to home page
-            return RedirectToRoute("HomePage");
+            return RedirectToRoute("Homepage");
         }
 
         #endregion

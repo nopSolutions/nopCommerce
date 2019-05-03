@@ -47,6 +47,9 @@
   <LocaleResource Name="DatabaseCreationError">
     <Value>データベース({0})を生成中にエラーが発生しました</Value>
   </LocaleResource>
+  <LocaleResource Name="Database">
+    <Value>データベース</Value>
+  </LocaleResource>
   <LocaleResource Name="DatabaseInformation">
     <Value>データベース情報</Value>
   </LocaleResource>

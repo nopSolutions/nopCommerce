@@ -1,95 +1,46 @@
 ﻿using System;
 using System.Linq;
 using Nop.Core.Infrastructure;
-using Nop.Core.Plugins;
 using Nop.Services.Logging;
 
 namespace Nop.Services.Events
 {
     /// <summary>
-    /// Evnt publisher
+    /// Represents the event publisher implementation
     /// </summary>
-    public class EventPublisher : IEventPublisher
+    public partial class EventPublisher : IEventPublisher
     {
-        private readonly ISubscriptionService _subscriptionService;
+        #region Methods
 
         /// <summary>
-        /// Ctor
+        /// Publish event to consumers
         /// </summary>
-        /// <param name="subscriptionService"></param>
-        public EventPublisher(ISubscriptionService subscriptionService)
+        /// <typeparam name="TEvent">Type of event</typeparam>
+        /// <param name="event">Event object</param>
+        public virtual void Publish<TEvent>(TEvent @event)
         {
-            _subscriptionService = subscriptionService;
-        }
+            //get all event consumers
+            var consumers = EngineContext.Current.ResolveAll<IConsumer<TEvent>>().ToList();
 
-        /// <summary>
-        /// Publish to cunsumer
-        /// </summary>
-        /// <typeparam name="T">Type</typeparam>
-        /// <param name="x">Event consumer</param>
-        /// <param name="eventMessage">Event message</param>
-        protected virtual void PublishToConsumer<T>(IConsumer<T> x, T eventMessage)
-        {
-            //Ignore not installed plugins
-            var plugin = FindPlugin(x.GetType());
-            if (plugin != null && !plugin.Installed)
-                return;
-
-            try
+            foreach (var consumer in consumers)
             {
-                x.HandleEvent(eventMessage);
-            }
-            catch (Exception exc)
-            {
-                //log error
-                var logger = EngineContext.Current.Resolve<ILogger>();
-                //we put in to nested try-catch to prevent possible cyclic (if some error occurs)
                 try
                 {
-                    logger.Error(exc.Message, exc);
+                    //try to handle published event
+                    consumer.HandleEvent(@event);
                 }
-                catch (Exception)
+                catch (Exception exception)
                 {
-                    //do nothing
+                    //log error, we put in to nested try-catch to prevent possible cyclic (if some error occurs)
+                    try
+                    {
+                        EngineContext.Current.Resolve<ILogger>()?.Error(exception.Message, exception);
+                    }
+                    catch { }
                 }
             }
         }
 
-        /// <summary>
-        /// Find a plugin descriptor by some type which is located into its assembly
-        /// </summary>
-        /// <param name="providerType">Provider type</param>
-        /// <returns>Plugin descriptor</returns>
-        protected virtual PluginDescriptor FindPlugin(Type providerType)
-        {
-            if (providerType == null)
-                throw new ArgumentNullException("providerType");
-
-            if (PluginManager.ReferencedPlugins == null)
-                return null;
-
-            foreach (var plugin in PluginManager.ReferencedPlugins)
-            {
-                if (plugin.ReferencedAssembly == null)
-                    continue;
-
-                if (plugin.ReferencedAssembly.FullName == providerType.Assembly.FullName)
-                    return plugin;
-            }
-
-            return null;
-        }
-
-        /// <summary>
-        /// Publish event
-        /// </summary>
-        /// <typeparam name="T">Type</typeparam>
-        /// <param name="eventMessage">Event message</param>
-        public virtual void Publish<T>(T eventMessage)
-        {
-            var subscriptions = _subscriptionService.GetSubscriptions<T>();
-            subscriptions.ToList().ForEach(x => PublishToConsumer(x, eventMessage));
-        }
-
+        #endregion
     }
 }

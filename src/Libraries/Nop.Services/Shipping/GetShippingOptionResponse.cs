@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Nop.Core.Domain.Shipping;
 
 namespace Nop.Services.Shipping
@@ -8,13 +9,10 @@ namespace Nop.Services.Shipping
     /// </summary>
     public partial class GetShippingOptionResponse
     {
-        /// <summary>
-        /// Ctor
-        /// </summary>
         public GetShippingOptionResponse()
         {
-            this.Errors = new List<string>();
-            this.ShippingOptions = new List<ShippingOption>();
+            Errors = new List<string>();
+            ShippingOptions = new List<ShippingOption>();
         }
 
         /// <summary>
@@ -28,20 +26,14 @@ namespace Nop.Services.Shipping
         public bool ShippingFromMultipleLocations { get; set; }
 
         /// <summary>
-        /// Gets or sets an address
+        /// Gets or sets errors
         /// </summary>
         public IList<string> Errors { get; set; }
 
         /// <summary>
         /// Gets a value indicating whether request has been completed successfully
         /// </summary>
-        public bool Success
-        {
-            get 
-            { 
-                return this.Errors.Count == 0; 
-            }
-        }
+        public bool Success => !Errors.Any();
 
         /// <summary>
         /// Add error
@@ -49,7 +41,7 @@ namespace Nop.Services.Shipping
         /// <param name="error">Error</param>
         public void AddError(string error)
         {
-            this.Errors.Add(error);
+            Errors.Add(error);
         }
     }
 }

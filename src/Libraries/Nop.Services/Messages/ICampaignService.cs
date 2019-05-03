@@ -3,6 +3,9 @@ using Nop.Core.Domain.Messages;
 
 namespace Nop.Services.Messages
 {
+    /// <summary>
+    /// Campaign service
+    /// </summary>
     public partial interface ICampaignService
     {
         /// <summary>
@@ -33,8 +36,9 @@ namespace Nop.Services.Messages
         /// <summary>
         /// Gets all campaigns
         /// </summary>
+        /// <param name="storeId">Store identifier; 0 to load all records</param>
         /// <returns>Campaigns</returns>
-        IList<Campaign> GetAllCampaigns();
+        IList<Campaign> GetAllCampaigns(int storeId = 0);
         
         /// <summary>
         /// Sends a campaign to specified emails

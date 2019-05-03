@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Moq;
 using Nop.Core;
-using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Orders;
+using Nop.Data;
 using Nop.Services.Catalog;
 using Nop.Services.Directory;
 using Nop.Services.Events;
@@ -15,37 +16,37 @@ using Nop.Services.Media;
 using Nop.Services.Tax;
 using Nop.Tests;
 using NUnit.Framework;
-using Rhino.Mocks;
 
 namespace Nop.Services.Tests.Catalog
 {
     [TestFixture]
     public class ProductAttributeParserTests : ServiceTest
     {
-        private IRepository<ProductAttribute> _productAttributeRepo;
-        private IRepository<ProductAttributeMapping> _productAttributeMappingRepo;
-        private IRepository<ProductAttributeCombination> _productAttributeCombinationRepo;
-        private IRepository<ProductAttributeValue> _productAttributeValueRepo;
-        private IRepository<PredefinedProductAttributeValue> _predefinedProductAttributeValueRepo;
+        private Mock<IRepository<ProductAttribute>> _productAttributeRepo;
+        private Mock<IRepository<ProductAttributeMapping>> _productAttributeMappingRepo;
+        private Mock<IRepository<ProductAttributeCombination>> _productAttributeCombinationRepo;
+        private Mock<IRepository<ProductAttributeValue>> _productAttributeValueRepo;
+        private Mock<IRepository<PredefinedProductAttributeValue>> _predefinedProductAttributeValueRepo;
         private IProductAttributeService _productAttributeService;
         private IProductAttributeParser _productAttributeParser;
-        private IEventPublisher _eventPublisher;
+        private Mock<IDbContext> _context;
+        private Mock<IEventPublisher> _eventPublisher;
 
-        private IWorkContext _workContext;
-        private ICurrencyService _currencyService;
+        private Mock<IWorkContext> _workContext;
+        private Mock<ICurrencyService> _currencyService;
         private ILocalizationService _localizationService;
-        private ITaxService _taxService;
-        private IPriceFormatter _priceFormatter;
-        private IPriceCalculationService _priceCalculationService;
-        private IDownloadService _downloadService;
-        private IWebHelper _webHelper;
+        private Mock<ITaxService> _taxService;
+        private Mock<IPriceFormatter> _priceFormatter;
+        private Mock<IPriceCalculationService> _priceCalculationService;
+        private Mock<IDownloadService> _downloadService;
+        private Mock<IWebHelper> _webHelper;
         private ShoppingCartSettings _shoppingCartSettings;
         private IProductAttributeFormatter _productAttributeFormatter;
 
-        private ProductAttribute pa1, pa2, pa3;
-        private ProductAttributeMapping pam1_1, pam2_1, pam3_1;
-        private ProductAttributeValue pav1_1, pav1_2, pav2_1, pav2_2;
-        
+        private ProductAttribute pa1, pa2, pa3, pa4;
+        private ProductAttributeMapping pam1_1, pam2_1, pam3_1, pam4_1;
+        private ProductAttributeValue pav1_1, pav1_2, pav2_1, pav2_2, pav4_1;
+
         [SetUp]
         public new void SetUp()
         {
@@ -55,7 +56,7 @@ namespace Nop.Services.Tests.Catalog
             pa1 = new ProductAttribute
             {
                 Id = 1,
-                Name = "Color",
+                Name = "Color"
             };
             pam1_1 = new ProductAttributeMapping
             {
@@ -73,7 +74,7 @@ namespace Nop.Services.Tests.Catalog
                 Id = 11,
                 Name = "Green",
                 DisplayOrder = 1,
-                ProductAttributeMapping= pam1_1,
+                ProductAttributeMapping = pam1_1,
                 ProductAttributeMappingId = pam1_1.Id
             };
             pav1_2 = new ProductAttributeValue
@@ -91,7 +92,7 @@ namespace Nop.Services.Tests.Catalog
             pa2 = new ProductAttribute
             {
                 Id = 2,
-                Name = "Some custom option",
+                Name = "Some custom option"
             };
             pam2_1 = new ProductAttributeMapping
             {
@@ -127,7 +128,7 @@ namespace Nop.Services.Tests.Catalog
             pa3 = new ProductAttribute
             {
                 Id = 3,
-                Name = "Custom text",
+                Name = "Custom text"
             };
             pam3_1 = new ProductAttributeMapping
             {
@@ -141,83 +142,109 @@ namespace Nop.Services.Tests.Catalog
                 ProductAttributeId = pa3.Id
             };
 
+            //option radio
+            pa4 = new ProductAttribute
+            {
+                Id = 4,
+                Name = "Radio list"
+            };
+            pam4_1 = new ProductAttributeMapping
+            {
+                Id = 41,
+                ProductId = 1,
+                TextPrompt = "Select option and enter the quantity:",
+                IsRequired = true,
+                AttributeControlType = AttributeControlType.RadioList,
+                DisplayOrder = 2,
+                ProductAttribute = pa4,
+                ProductAttributeId = pa4.Id
+            };
+            pav4_1 = new ProductAttributeValue
+            {
+                Id = 41,
+                Name = "Option with quantity",
+                DisplayOrder = 1,
+                ProductAttributeMapping = pam4_1,
+                ProductAttributeMappingId = pam4_1.Id
+            };
 
             #endregion
-            
-            _productAttributeRepo = MockRepository.GenerateMock<IRepository<ProductAttribute>>();
-            _productAttributeRepo.Expect(x => x.Table).Return(new List<ProductAttribute> { pa1, pa2, pa3 }.AsQueryable());
-            _productAttributeRepo.Expect(x => x.GetById(pa1.Id)).Return(pa1);
-            _productAttributeRepo.Expect(x => x.GetById(pa2.Id)).Return(pa2);
-            _productAttributeRepo.Expect(x => x.GetById(pa3.Id)).Return(pa3);
 
-            _productAttributeMappingRepo = MockRepository.GenerateMock<IRepository<ProductAttributeMapping>>();
-            _productAttributeMappingRepo.Expect(x => x.Table).Return(new List<ProductAttributeMapping> { pam1_1, pam2_1, pam3_1 }.AsQueryable());
-            _productAttributeMappingRepo.Expect(x => x.GetById(pam1_1.Id)).Return(pam1_1);
-            _productAttributeMappingRepo.Expect(x => x.GetById(pam2_1.Id)).Return(pam2_1);
-            _productAttributeMappingRepo.Expect(x => x.GetById(pam3_1.Id)).Return(pam3_1);
+            _productAttributeRepo = new Mock<IRepository<ProductAttribute>>();
+            _productAttributeRepo.Setup(x => x.Table).Returns(new List<ProductAttribute> { pa1, pa2, pa3, pa4 }.AsQueryable());
+            _productAttributeRepo.Setup(x => x.GetById(pa1.Id)).Returns(pa1);
+            _productAttributeRepo.Setup(x => x.GetById(pa2.Id)).Returns(pa2);
+            _productAttributeRepo.Setup(x => x.GetById(pa3.Id)).Returns(pa3);
+            _productAttributeRepo.Setup(x => x.GetById(pa4.Id)).Returns(pa4);
 
-            _productAttributeCombinationRepo = MockRepository.GenerateMock<IRepository<ProductAttributeCombination>>();
-            _productAttributeCombinationRepo.Expect(x => x.Table).Return(new List<ProductAttributeCombination>().AsQueryable());
+            _productAttributeMappingRepo = new Mock<IRepository<ProductAttributeMapping>>();
+            _productAttributeMappingRepo.Setup(x => x.Table).Returns(new List<ProductAttributeMapping> { pam1_1, pam2_1, pam3_1, pam4_1 }.AsQueryable());
+            _productAttributeMappingRepo.Setup(x => x.GetById(pam1_1.Id)).Returns(pam1_1);
+            _productAttributeMappingRepo.Setup(x => x.GetById(pam2_1.Id)).Returns(pam2_1);
+            _productAttributeMappingRepo.Setup(x => x.GetById(pam3_1.Id)).Returns(pam3_1);
+            _productAttributeMappingRepo.Setup(x => x.GetById(pam4_1.Id)).Returns(pam4_1);
 
-            _productAttributeValueRepo = MockRepository.GenerateMock<IRepository<ProductAttributeValue>>();
-            _productAttributeValueRepo.Expect(x => x.Table).Return(new List<ProductAttributeValue> { pav1_1, pav1_2, pav2_1, pav2_2 }.AsQueryable());
-            _productAttributeValueRepo.Expect(x => x.GetById(pav1_1.Id)).Return(pav1_1);
-            _productAttributeValueRepo.Expect(x => x.GetById(pav1_2.Id)).Return(pav1_2);
-            _productAttributeValueRepo.Expect(x => x.GetById(pav2_1.Id)).Return(pav2_1);
-            _productAttributeValueRepo.Expect(x => x.GetById(pav2_2.Id)).Return(pav2_2);
+            _productAttributeCombinationRepo = new Mock<IRepository<ProductAttributeCombination>>();
+            _productAttributeCombinationRepo.Setup(x => x.Table).Returns(new List<ProductAttributeCombination>().AsQueryable());
 
-            _predefinedProductAttributeValueRepo = MockRepository.GenerateMock<IRepository<PredefinedProductAttributeValue>>();
+            _productAttributeValueRepo = new Mock<IRepository<ProductAttributeValue>>();
+            _productAttributeValueRepo.Setup(x => x.Table).Returns(new List<ProductAttributeValue> { pav1_1, pav1_2, pav2_1, pav2_2, pav4_1 }.AsQueryable());
+            _productAttributeValueRepo.Setup(x => x.GetById(pav1_1.Id)).Returns(pav1_1);
+            _productAttributeValueRepo.Setup(x => x.GetById(pav1_2.Id)).Returns(pav1_2);
+            _productAttributeValueRepo.Setup(x => x.GetById(pav2_1.Id)).Returns(pav2_1);
+            _productAttributeValueRepo.Setup(x => x.GetById(pav2_2.Id)).Returns(pav2_2);
+            _productAttributeValueRepo.Setup(x => x.GetById(pav4_1.Id)).Returns(pav4_1);
 
-            _eventPublisher = MockRepository.GenerateMock<IEventPublisher>();
-            _eventPublisher.Expect(x => x.Publish(Arg<object>.Is.Anything));
+            _predefinedProductAttributeValueRepo = new Mock<IRepository<PredefinedProductAttributeValue>>();
 
-            var cacheManager = new NopNullCache();
+            _eventPublisher = new Mock<IEventPublisher>();
+            _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
 
-            _productAttributeService = new ProductAttributeService(cacheManager, 
-                _productAttributeRepo,
-                _productAttributeMappingRepo,
-                _productAttributeCombinationRepo,
-                _productAttributeValueRepo,
-                _predefinedProductAttributeValueRepo,
-                _eventPublisher);
+            var cacheManager = new TestCacheManager();
 
-            _productAttributeParser = new ProductAttributeParser(_productAttributeService);
+            _productAttributeService = new ProductAttributeService(cacheManager,
+                _eventPublisher.Object,
+                _predefinedProductAttributeValueRepo.Object,
+                _productAttributeRepo.Object,
+                _productAttributeCombinationRepo.Object,
+                _productAttributeMappingRepo.Object,
+                _productAttributeValueRepo.Object,
+                new TestCacheManager());
 
-            _priceCalculationService = MockRepository.GenerateMock<IPriceCalculationService>();
+            _context = new Mock<IDbContext>();
 
+            _productAttributeParser = new ProductAttributeParser(_context.Object, _productAttributeService);
+
+            _priceCalculationService = new Mock<IPriceCalculationService>();
 
             var workingLanguage = new Language();
-            _workContext = MockRepository.GenerateMock<IWorkContext>();
-            _workContext.Expect(x => x.WorkingLanguage).Return(workingLanguage);
-            _currencyService = MockRepository.GenerateMock<ICurrencyService>();
-            _localizationService = MockRepository.GenerateMock<ILocalizationService>();
-            _localizationService.Expect(x => x.GetResource("GiftCardAttribute.For.Virtual")).Return("For: {0} <{1}>");
-            _localizationService.Expect(x => x.GetResource("GiftCardAttribute.From.Virtual")).Return("From: {0} <{1}>");
-            _localizationService.Expect(x => x.GetResource("GiftCardAttribute.For.Physical")).Return("For: {0}");
-            _localizationService.Expect(x => x.GetResource("GiftCardAttribute.From.Physical")).Return("From: {0}");
-            _taxService = MockRepository.GenerateMock<ITaxService>();
-            _priceFormatter = MockRepository.GenerateMock<IPriceFormatter>();
-            _downloadService = MockRepository.GenerateMock<IDownloadService>();
-            _webHelper = MockRepository.GenerateMock<IWebHelper>();
-            _shoppingCartSettings = MockRepository.GenerateMock<ShoppingCartSettings>();
+            _workContext = new Mock<IWorkContext>();
+            _workContext.Setup(x => x.WorkingLanguage).Returns(workingLanguage);
+            _currencyService = new Mock<ICurrencyService>();
+            _localizationService = TestLocalizationService.Init();
+            
+            _taxService = new Mock<ITaxService>();
+            _priceFormatter = new Mock<IPriceFormatter>();
+            _downloadService = new Mock<IDownloadService>();
+            _webHelper = new Mock<IWebHelper>();
+            _shoppingCartSettings = new ShoppingCartSettings();
 
-            _productAttributeFormatter = new ProductAttributeFormatter(_workContext,
-                _productAttributeService,
-                _productAttributeParser,
-                _currencyService,
+            _productAttributeFormatter = new ProductAttributeFormatter(_currencyService.Object,
+                _downloadService.Object,
                 _localizationService,
-                _taxService,
-                _priceFormatter,
-                _downloadService,
-                _webHelper,
-                _priceCalculationService,
+                _priceCalculationService.Object,
+                _priceFormatter.Object,
+                _productAttributeParser,
+                _taxService.Object,
+                _webHelper.Object,
+                _workContext.Object,
                 _shoppingCartSettings);
         }
-        
+
         [Test]
         public void Can_add_and_parse_productAttributes()
         {
-            string attributes = "";
+            var attributes = "";
             //color: green
             attributes = _productAttributeParser.AddProductAttribute(attributes, pam1_1, pav1_1.Id.ToString());
             //custom option: option 1, option 2
@@ -242,7 +269,7 @@ namespace Nop.Services.Tests.Catalog
         [Test]
         public void Can_add_and_remove_productAttributes()
         {
-            string attributes = "";
+            var attributes = "";
             //color: green
             attributes = _productAttributeParser.AddProductAttribute(attributes, pam1_1, pav1_1.Id.ToString());
             //custom option: option 1, option 2
@@ -268,18 +295,17 @@ namespace Nop.Services.Tests.Catalog
         [Test]
         public void Can_add_and_parse_giftCardAttributes()
         {
-            string attributes = "";
+            var attributes = "";
             attributes = _productAttributeParser.AddGiftCardAttribute(attributes,
-                "recipientName 1", "recipientEmail@gmail.com", 
+                "recipientName 1", "recipientEmail@gmail.com",
                 "senderName 1", "senderEmail@gmail.com", "custom message");
 
-            string recipientName, recipientEmail, senderName, senderEmail, giftCardMessage;
-            _productAttributeParser.GetGiftCardAttribute(attributes, 
-                out recipientName,
-                out recipientEmail,
-                out senderName,
-                out senderEmail,
-                out giftCardMessage);
+            _productAttributeParser.GetGiftCardAttribute(attributes,
+                out var recipientName,
+                out var recipientEmail,
+                out var senderName,
+                out var senderEmail,
+                out var giftCardMessage);
             recipientName.ShouldEqual("recipientName 1");
             recipientEmail.ShouldEqual("recipientEmail@gmail.com");
             senderName.ShouldEqual("senderName 1");
@@ -290,43 +316,43 @@ namespace Nop.Services.Tests.Catalog
         [Test]
         public void Can_render_virtual_gift_cart()
         {
-            string attributes = _productAttributeParser.AddGiftCardAttribute("",
+            var attributes = _productAttributeParser.AddGiftCardAttribute("",
                 "recipientName 1", "recipientEmail@gmail.com",
                 "senderName 1", "senderEmail@gmail.com", "custom message");
 
             var product = new Product
             {
                 IsGiftCard = true,
-                GiftCardType = GiftCardType.Virtual,
+                GiftCardType = GiftCardType.Virtual
             };
             var customer = new Customer();
-            string formattedAttributes = _productAttributeFormatter.FormatAttributes(product,
-                attributes, customer, "<br />", false, false, true, true);
+            var formattedAttributes = _productAttributeFormatter.FormatAttributes(product,
+                attributes, customer, "<br />", false, false);
             formattedAttributes.ShouldEqual("From: senderName 1 <senderEmail@gmail.com><br />For: recipientName 1 <recipientEmail@gmail.com>");
         }
 
         [Test]
         public void Can_render_physical_gift_cart()
         {
-            string attributes = _productAttributeParser.AddGiftCardAttribute("",
+            var attributes = _productAttributeParser.AddGiftCardAttribute("",
                 "recipientName 1", "recipientEmail@gmail.com",
                 "senderName 1", "senderEmail@gmail.com", "custom message");
 
             var product = new Product
             {
                 IsGiftCard = true,
-                GiftCardType = GiftCardType.Physical,
+                GiftCardType = GiftCardType.Physical
             };
             var customer = new Customer();
-            string formattedAttributes = _productAttributeFormatter.FormatAttributes(product,
-                attributes, customer, "<br />", false, false, true, true);
+            var formattedAttributes = _productAttributeFormatter.FormatAttributes(product,
+                attributes, customer, "<br />", false, false);
             formattedAttributes.ShouldEqual("From: senderName 1<br />For: recipientName 1");
         }
 
         [Test]
         public void Can_render_attributes_withoutPrices()
         {
-            string attributes = "";
+            var attributes = "";
             //color: green
             attributes = _productAttributeParser.AddProductAttribute(attributes, pam1_1, pav1_1.Id.ToString());
             //custom option: option 1, option 2
@@ -343,11 +369,11 @@ namespace Nop.Services.Tests.Catalog
             var product = new Product
             {
                 IsGiftCard = true,
-                GiftCardType = GiftCardType.Virtual,
+                GiftCardType = GiftCardType.Virtual
             };
             var customer = new Customer();
-            string formattedAttributes = _productAttributeFormatter.FormatAttributes(product,
-                attributes, customer, "<br />", false, false, true, true);
+            var formattedAttributes = _productAttributeFormatter.FormatAttributes(product,
+                attributes, customer, "<br />", false, false);
             formattedAttributes.ShouldEqual("Color: Green<br />Some custom option: Option 1<br />Some custom option: Option 2<br />Color: Some custom text goes here<br />From: senderName 1 <senderEmail@gmail.com><br />For: recipientName 1 <recipientEmail@gmail.com>");
         }
     }

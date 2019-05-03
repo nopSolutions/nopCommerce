@@ -39,6 +39,11 @@ namespace Nop.Core.Domain.Forums
         public DateTime UpdatedOnUtc { get; set; }
 
         /// <summary>
+        /// Gets or sets the count of votes
+        /// </summary>
+        public int VoteCount { get; set; }
+
+        /// <summary>
         /// Gets the topic
         /// </summary>
         public virtual ForumTopic ForumTopic { get; set; }
@@ -47,6 +52,5 @@ namespace Nop.Core.Domain.Forums
         /// Gets the customer
         /// </summary>
         public virtual Customer Customer { get; set; }
-
     }
 }

@@ -1,0 +1,140 @@
+﻿@model NeverSoldReportSearchModel
+
+@{
+    //page title
+    ViewBag.Title = T("Admin.Reports.Sales.NeverSold").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Products never purchased");
+}
+
+@{
+    const string hideSearchBlockAttributeName = "NeverSoldReportPage.HideSearchBlock";
+    var hideSearchBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSearchBlockAttributeName);
+}
+
+<nop-antiforgery-token />
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        @T("Admin.Reports.Sales.NeverSold")
+    </h1>
+    <div class="pull-right">
+        &nbsp;
+    </div>
+</div>
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default panel-search">
+                <div class="panel-body">
+                    <div class="row search-row @(!hideSearchBlock ? "opened" : "")" data-hideAttribute="@hideSearchBlockAttributeName">
+                        <div class="search-text">@T("Admin.Common.Search")</div>
+                        <div class="icon-search"><i class="fa fa-search" aria-hidden="true"></i></div>
+                        <div class="icon-collapse"><i class="fa fa-angle-down" aria-hidden="true"></i></div>
+                    </div>
+
+                    <div class="search-body @(hideSearchBlock ? "closed" : "")">
+                        <div class="row">
+                            <div class="col-md-5">
+                                <div class="form-group" @(Model.AvailableCategories.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="SearchCategoryId" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-select asp-for="SearchCategoryId" asp-items="Model.AvailableCategories" />
+                                    </div>
+                                </div>
+                                <div class="form-group" @(Model.AvailableManufacturers.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="SearchManufacturerId" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-select asp-for="SearchManufacturerId" asp-items="Model.AvailableManufacturers" />
+                                    </div>
+                                </div>
+                                <div class="form-group" @(Model.AvailableStores.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="SearchStoreId" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-select asp-for="SearchStoreId" asp-items="Model.AvailableStores" />
+                                    </div>
+                                </div>
+                                <div class="form-group" @(Model.AvailableVendors.SelectionIsNotPossible() || Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="SearchVendorId" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-select asp-for="SearchVendorId" asp-items="Model.AvailableVendors" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-7">
+                                <div class="form-group">
+                                    <div class="col-md-3">
+                                        <nop-label asp-for="StartDate" />
+                                    </div>
+                                    <div class="col-md-9">
+                                        <nop-editor asp-for="StartDate" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-3">
+                                        <nop-label asp-for="EndDate" />
+                                    </div>
+                                    <div class="col-md-9">
+                                        <nop-editor asp-for="EndDate" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-7 col-md-offset-5">
+                                    <button type="button" id="search-neversoldreport" class="btn btn-primary btn-search">
+                                        <i class="fa fa-line-chart"></i>
+                                        @T("Admin.Reports.Sales.NeverSold.RunReport")
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    @await Html.PartialAsync("Table", new DataTablesModel
+                    {
+                        Name = "neversoldreport-grid",
+                        UrlRead = new DataUrl("NeverSoldList", "Report", null),
+                        SearchButtonId = "search-neversoldreport",
+                        Length = Model.PageSize,
+                        LengthMenu = Model.AvailablePageSizes,
+                        Filters = new List<FilterParameter>
+                        {
+                            new FilterParameter(nameof(Model.StartDate)),
+                            new FilterParameter(nameof(Model.EndDate)),
+                            new FilterParameter(nameof(Model.SearchCategoryId)),
+                            new FilterParameter(nameof(Model.SearchManufacturerId)),
+                            new FilterParameter(nameof(Model.SearchStoreId)),
+                            new FilterParameter(nameof(Model.SearchVendorId))
+                        },
+                        ColumnCollection = new List<ColumnProperty>
+                        {
+                            new ColumnProperty(nameof(NeverSoldReportModel.ProductName))
+                            {
+                                Title = T("Admin.Reports.Sales.NeverSold.Fields.Name").Text
+                            },
+                            new ColumnProperty(nameof(NeverSoldReportModel.ProductId))
+                            {
+                                Title = T("Admin.Common.Edit").Text,
+                                Width = "100",
+                                ClassName =  StyleColumn.ButtonStyle,
+                                Render = new RenderButtonView(new DataUrl("~/Admin/Product/Edit/"))
+                            }
+                        }
+                    })
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

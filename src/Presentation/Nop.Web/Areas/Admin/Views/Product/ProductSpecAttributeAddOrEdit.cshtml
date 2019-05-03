@@ -1,0 +1,292 @@
+﻿@model AddSpecificationAttributeModel
+
+@using Nop.Core.Domain.Catalog
+@using Nop.Services
+
+@{
+    Html.SetActiveMenuItemSystemName("Products");
+}
+
+<form asp-controller="Product" asp-action="ProductSpecAttrUpdate" id="spec-form" method="post">
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @if (Model.SpecificationId == 0)
+            {
+                <text>@T("Admin.Catalog.Products.SpecificationAttributes.AddNew")</text>
+            }
+            else
+            {
+                <text>@T("Admin.Catalog.Attributes.SpecificationAttributes.EditAttributeDetails") - @Model.AttributeName</text>
+            }
+            <small>
+                <i class="fa fa-arrow-circle-left"></i>
+                <a asp-action="Edit" asp-route-id="@Model.ProductId">
+                    @T("Admin.Catalog.Products.ProductAttributes.Attributes.BackToProduct")
+                </a>
+            </small>
+        </h1>
+        <div class="pull-right">
+            @if (Model.AttributeId == 0)
+            {
+                <button type="submit"
+                        name="save"
+                        formaction="@Url.Action("ProductSpecificationAttributeAdd")"
+                        formmethod="post"
+                        class="btn bg-blue">
+                    <i class="fa fa-floppy-o"></i>
+                    @T("Admin.Common.Save")
+                </button>
+                <button type="submit"
+                        name="save-continue"
+                        formaction="@Url.Action("ProductSpecificationAttributeAdd")"
+                        formmethod="post"
+                        class="btn bg-blue">
+                    <i class="fa fa-floppy-o"></i>
+                    @T("Admin.Common.SaveContinue")
+                </button>
+            }
+            else
+            {
+                <button type="submit" name="save" class="btn bg-blue">
+                    <i class="fa fa-floppy-o"></i>
+                    @T("Admin.Common.Save")
+                </button>
+                <button type="submit" name="save-continue" class="btn bg-blue">
+                    <i class="fa fa-floppy-o"></i>
+                    @T("Admin.Common.SaveContinue")
+                </button>
+                <button type="submit"
+                        name="delete"
+                        formaction="@Url.Action("ProductSpecAttrDelete")"
+                        formmethod="post"
+                        class="btn bg-red">
+                    <i class="fa fa-trash-o"></i>
+                    @T("Admin.Common.Delete")
+                </button>
+            }
+        </div>
+    </div>
+    <div class="content">
+        <div class="form-horizontal">
+            <div class="panel-group">
+                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductDetailsSpecificationAttributeDetailsTop, additionalData = Model })
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="AttributeTypeName" />
+                            </div>
+                            <div class="col-md-9">
+                                @if (Model.SpecificationId != 0)
+                                {
+                                    <nop-editor asp-for="AttributeTypeName" asp-disabled="true" />
+                                }
+                                else
+                                {
+                                    <nop-select asp-for="AttributeTypeId" asp-items="@(((SpecificationAttributeType) Model.AttributeTypeId).ToSelectList())" />
+                                }
+                                <span asp-validation-for="AttributeTypeId"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="AttributeName" />
+                            </div>
+                            <div class="col-md-9">
+                                @if (Model.SpecificationId != 0)
+                                {
+                                    <nop-editor asp-for="AttributeName" asp-disabled="true" />
+                                }
+                                else
+                                {
+                                    <nop-select asp-for="AttributeId" asp-items="@Model.AvailableAttributes" />
+                                }
+                            </div>
+                        </div>
+
+                        <script>
+                            $(document).ready(function() {
+                                var valueContainers = {
+                                    @((int) SpecificationAttributeType.Option): $('#AttributeValueOptionSection'),
+                                    @((int) SpecificationAttributeType.CustomText): $('#AttributeValueCustomTextSection'),
+                                    @((int) SpecificationAttributeType.CustomHtmlText): $('#AttributeValueCustomHtmlTextSection'),
+                                    @((int) SpecificationAttributeType.Hyperlink): $('#AttributeValueHyperlinkSection')
+                                }
+
+                                $('#@Html.IdFor(model => model.AttributeTypeId)').on('change',
+                                    function() {
+                                        var attrTypeId = $('#@Html.IdFor(model => model.AttributeTypeId)').val();
+
+                                        var values = Object.values(valueContainers);
+                                        values.forEach(function(value) {
+                                            value.hide();
+                                            value.find("input").prop("disabled", true);
+                                        });
+                                        valueContainers[attrTypeId].show();
+                                        valueContainers[attrTypeId].find("input").prop("disabled", false);
+
+                                        var allowFilteringSection = $('#AllowFilteringSection');
+                                        var allowFilteringField = $('#@Html.IdFor(model => model.AllowFiltering)');
+
+                                        if (attrTypeId == '@((int) SpecificationAttributeType.Option)') {
+                                            allowFilteringSection.show();
+                                        } else {
+                                            allowFilteringField.prop('checked', false);
+                                            allowFilteringSection.hide();
+                                        }
+                                    });
+
+                                $('#@Html.IdFor(model => model.AttributeTypeId)').trigger('change');
+                            })
+                        </script>
+
+                        @if (Model.SpecificationId == 0)
+                        {
+                            <script>
+                                $(document).ready(function() {
+                                    $("#@Html.IdFor(model => model.AttributeId)").change(function() {
+                                        var selectedAttributeId = $(this).val();
+                                        //get options list
+                                        $.ajax({
+                                            cache: false,
+                                            type: "GET",
+                                            url: "@(Url.Action("GetOptionsByAttributeId", "SpecificationAttribute"))",
+                                            data: {
+                                                "attributeId": selectedAttributeId
+                                            },
+                                            success: function(data) {
+                                                var ddlSpecOptions =
+                                                    $("#@Html.IdFor(model => model.SpecificationAttributeOptionId)");
+                                                ddlSpecOptions.html('');
+                                                $.each(data,
+                                                    function(id, option) {
+                                                        ddlSpecOptions.append($('<option></option>').val(option.id)
+                                                            .html(option.name));
+                                                    });
+                                            },
+                                            error: function(xhr, ajaxOptions, thrownError) {
+                                                $("#getOptionsByAttributeIdAlert").click();
+                                            }
+                                        });
+                                    });
+                                    $("#@Html.IdFor(model => model.AttributeId)").trigger('change');
+                                })
+                            </script>
+                        }
+
+                        <div class="form-group" id="AttributeValueOptionSection">
+                            <div class="col-md-3">
+                                <nop-label asp-for="SpecificationAttributeOptionId" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-select asp-for="SpecificationAttributeOptionId" asp-items="Model.AvailableOptions" />
+                                <span asp-validation-for="SpecificationAttributeOptionId"></span>
+                            </div>
+                        </div>
+                        
+                        <div id="AttributeValueCustomHtmlTextSection">
+                            @(Html.LocalizedEditor<AddSpecificationAttributeModel, AddSpecificationAttributeLocalizedModel>("AttributeValueCustomHtmlTextSection-localized",
+                            @<div>
+                                <div class="form-group">
+                                    <div class="col-md-3">
+                                        <nop-label asp-for="@Model.Locales[item].ValueRaw" />
+                                    </div>
+                                    <div class="col-md-9">
+                                        <nop-editor asp-for="@Model.Locales[item].ValueRaw" asp-template="RichEditor" />
+                                        <span asp-validation-for="@Model.Locales[item].ValueRaw"></span>
+                                    </div>
+                                </div>
+                                <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
+                            </div>,
+                            @<div>
+                                <div class="form-group">
+                                    <div class="col-md-3">
+                                        <nop-label asp-for="ValueRaw" />
+                                    </div>
+                                    <div class="col-md-9">
+                                        <nop-editor asp-for="ValueRaw" asp-template="RichEditor" />
+                                        <span asp-validation-for="ValueRaw"></span>
+                                    </div>
+                                </div>
+                            </div>))
+                        </div>
+
+                        <div id="AttributeValueCustomTextSection">
+                            @(Html.LocalizedEditor<AddSpecificationAttributeModel, AddSpecificationAttributeLocalizedModel>("AttributeValueCustomTextSection-localized",
+                            @<div>
+                                <div class="form-group">
+                                    <div class="col-md-3">
+                                        <nop-label asp-for="@Model.Locales[item].Value" />
+                                    </div>
+                                    <div class="col-md-9">
+                                        <nop-editor asp-for="@Model.Locales[item].Value" />
+                                        <span asp-validation-for="@Model.Locales[item].Value"></span>
+                                    </div>
+                                </div>
+                                <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
+                            </div>,
+                            @<div>
+                                <div class="form-group">
+                                    <div class="col-md-3">
+                                        <nop-label asp-for="Value" />
+                                    </div>
+                                    <div class="col-md-9">
+                                        <nop-editor asp-for="Value" />
+                                        <span asp-validation-for="Value"></span>
+                                    </div>
+                                </div>
+                            </div>))
+                        </div>
+                        
+                        <div class="form-group" id="AttributeValueHyperlinkSection">
+                            <div class="col-md-3">
+                                <nop-label asp-for="Value" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="Value" />
+                                <span asp-validation-for="Value"></span>
+                            </div>
+                        </div>
+                        <div class="form-group" id="AllowFilteringSection">
+                            <div class="col-md-3">
+                                <nop-label asp-for="AllowFiltering" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-disabled="@(Model.AttributeTypeId != (int) SpecificationAttributeType.Option)"
+                                            asp-for="AllowFiltering" />
+                                <span asp-validation-for="AllowFiltering"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="ShowOnProductPage" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="ShowOnProductPage" />
+                                <span asp-validation-for="ShowOnProductPage"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="DisplayOrder" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="DisplayOrder" />
+                                <span asp-validation-for="DisplayOrder"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductDetailsSpecificationAttributeDetailsBottom, additionalData = Model })
+            </div>
+        </div>
+    </div>
+    @if (Model.SpecificationId != 0)
+    {
+        <input asp-for="AttributeId" hidden="hidden" />
+        <input asp-for="AttributeTypeId" hidden="hidden" />
+        <input asp-for="SpecificationId" hidden="hidden" />
+    }
+    <input asp-for="ProductId" hidden="hidden" />
+</form>
+<nop-alert asp-alert-id="getOptionsByAttributeIdAlert" asp-alert-message="@T("Admin.Catalog.Products.SpecificationAttributes.Alert.FailedRetrieving")" />

@@ -15,7 +15,7 @@
     <Value>Kontoen'{0}' er ikke tildelt rettigheder for at ændre i mappen '{1}'. Venligst konfigurer tilladelser.</Value>
   </LocaleResource>
   <LocaleResource Name="ConfigureFilePermissions">
-     <Value>Kontoen'{0}' er ikke tildelt rettigheder for at ændre i filen '{1}'. Venligst konfigurer tilladelser.</Value>
+    <Value>Kontoen'{0}' er ikke tildelt rettigheder for at ændre i filen '{1}'. Venligst konfigurer tilladelser.</Value>
   </LocaleResource>
   <LocaleResource Name="ConfirmPassword">
     <Value>Bekræft password</Value>
@@ -46,6 +46,9 @@
   </LocaleResource>
   <LocaleResource Name="DatabaseCreationError">
     <Value>Der opstod en fejl ved oprettelse af database: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Database">
+    <Value>Database</Value>
   </LocaleResource>
   <LocaleResource Name="DatabaseInformation">
     <Value>Database information</Value>

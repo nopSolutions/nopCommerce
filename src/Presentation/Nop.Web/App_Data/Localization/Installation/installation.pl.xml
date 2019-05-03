@@ -47,6 +47,9 @@
   <LocaleResource Name="DatabaseCreationError">
     <Value>Wystąpił błąd podczas tworzenia bazy danych: {0}</Value>
   </LocaleResource>
+  <LocaleResource Name="Database">
+    <Value>Baza danych</Value>
+  </LocaleResource>
   <LocaleResource Name="DatabaseInformation">
     <Value>Informacje o bazie danych</Value>
   </LocaleResource>

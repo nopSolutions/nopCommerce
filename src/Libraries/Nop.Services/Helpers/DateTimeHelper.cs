@@ -13,28 +13,31 @@ namespace Nop.Services.Helpers
     /// </summary>
     public partial class DateTimeHelper : IDateTimeHelper
     {
-        private readonly IWorkContext _workContext;
+        #region Fields
+
+        private readonly DateTimeSettings _dateTimeSettings;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ISettingService _settingService;
-        private readonly DateTimeSettings _dateTimeSettings;
+        private readonly IWorkContext _workContext;
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="workContext">Work context</param>
-        /// <param name="genericAttributeService">Generic attribute service</param>
-        /// <param name="settingService">Setting service</param>
-        /// <param name="dateTimeSettings">Datetime settings</param>
-        public DateTimeHelper(IWorkContext workContext,
+        #endregion
+
+        #region Ctor
+
+        public DateTimeHelper(DateTimeSettings dateTimeSettings,
             IGenericAttributeService genericAttributeService,
-            ISettingService settingService, 
-            DateTimeSettings dateTimeSettings)
+            ISettingService settingService,
+            IWorkContext workContext)
         {
-            this._workContext = workContext;
-            this._genericAttributeService = genericAttributeService;
-            this._settingService = settingService;
-            this._dateTimeSettings = dateTimeSettings;
+            _dateTimeSettings = dateTimeSettings;
+            _genericAttributeService = genericAttributeService;
+            _settingService = settingService;
+            _workContext = workContext;
         }
+
+        #endregion
+
+        #region Methods
 
         /// <summary>
         /// Retrieves a System.TimeZoneInfo object from the registry based on its identifier.
@@ -58,7 +61,7 @@ namespace Nop.Services.Helpers
         /// <summary>
         /// Converts the date and time to current user date and time
         /// </summary>
-        /// <param name="dt">The date and time (respesents local system time or UTC time) to convert.</param>
+        /// <param name="dt">The date and time (represents local system time or UTC time) to convert.</param>
         /// <returns>A DateTime value that represents time that corresponds to the dateTime parameter in customer time zone.</returns>
         public virtual DateTime ConvertToUserTime(DateTime dt)
         {
@@ -68,13 +71,16 @@ namespace Nop.Services.Helpers
         /// <summary>
         /// Converts the date and time to current user date and time
         /// </summary>
-        /// <param name="dt">The date and time (respesents local system time or UTC time) to convert.</param>
+        /// <param name="dt">The date and time (represents local system time or UTC time) to convert.</param>
         /// <param name="sourceDateTimeKind">The source datetimekind</param>
         /// <returns>A DateTime value that represents time that corresponds to the dateTime parameter in customer time zone.</returns>
         public virtual DateTime ConvertToUserTime(DateTime dt, DateTimeKind sourceDateTimeKind)
         {
             dt = DateTime.SpecifyKind(dt, sourceDateTimeKind);
-            var currentUserTimeZoneInfo = this.CurrentTimeZone;
+            if (sourceDateTimeKind == DateTimeKind.Local && TimeZoneInfo.Local.IsInvalidTime(dt))
+                return dt;
+
+            var currentUserTimeZoneInfo = CurrentTimeZone;
             return TimeZoneInfo.ConvertTime(dt, currentUserTimeZoneInfo);
         }
 
@@ -86,7 +92,7 @@ namespace Nop.Services.Helpers
         /// <returns>A DateTime value that represents time that corresponds to the dateTime parameter in customer time zone.</returns>
         public virtual DateTime ConvertToUserTime(DateTime dt, TimeZoneInfo sourceTimeZone)
         {
-            var currentUserTimeZoneInfo = this.CurrentTimeZone;
+            var currentUserTimeZoneInfo = CurrentTimeZone;
             return ConvertToUserTime(dt, sourceTimeZone, currentUserTimeZoneInfo);
         }
 
@@ -99,13 +105,16 @@ namespace Nop.Services.Helpers
         /// <returns>A DateTime value that represents time that corresponds to the dateTime parameter in customer time zone.</returns>
         public virtual DateTime ConvertToUserTime(DateTime dt, TimeZoneInfo sourceTimeZone, TimeZoneInfo destinationTimeZone)
         {
+            if (sourceTimeZone.IsInvalidTime(dt))
+                return dt;
+
             return TimeZoneInfo.ConvertTime(dt, sourceTimeZone, destinationTimeZone);
         }
 
         /// <summary>
         /// Converts the date and time to Coordinated Universal Time (UTC)
         /// </summary>
-        /// <param name="dt">The date and time (respesents local system time or UTC time) to convert.</param>
+        /// <param name="dt">The date and time (represents local system time or UTC time) to convert.</param>
         /// <returns>A DateTime value that represents the Coordinated Universal Time (UTC) that corresponds to the dateTime parameter. The DateTime value's Kind property is always set to DateTimeKind.Utc.</returns>
         public virtual DateTime ConvertToUtcTime(DateTime dt)
         {
@@ -115,12 +124,15 @@ namespace Nop.Services.Helpers
         /// <summary>
         /// Converts the date and time to Coordinated Universal Time (UTC)
         /// </summary>
-        /// <param name="dt">The date and time (respesents local system time or UTC time) to convert.</param>
+        /// <param name="dt">The date and time (represents local system time or UTC time) to convert.</param>
         /// <param name="sourceDateTimeKind">The source datetimekind</param>
         /// <returns>A DateTime value that represents the Coordinated Universal Time (UTC) that corresponds to the dateTime parameter. The DateTime value's Kind property is always set to DateTimeKind.Utc.</returns>
         public virtual DateTime ConvertToUtcTime(DateTime dt, DateTimeKind sourceDateTimeKind)
         {
             dt = DateTime.SpecifyKind(dt, sourceDateTimeKind);
+            if (sourceDateTimeKind == DateTimeKind.Local && TimeZoneInfo.Local.IsInvalidTime(dt))
+                return dt;
+
             return TimeZoneInfo.ConvertTimeToUtc(dt);
         }
 
@@ -137,7 +149,7 @@ namespace Nop.Services.Helpers
                 //could not convert
                 return dt;
             }
-            
+
             return TimeZoneInfo.ConvertTimeToUtc(dt, sourceTimeZone);
         }
 
@@ -148,30 +160,26 @@ namespace Nop.Services.Helpers
         /// <returns>Customer time zone; if customer is null, then default store time zone</returns>
         public virtual TimeZoneInfo GetCustomerTimeZone(Customer customer)
         {
-            //registered user
-            TimeZoneInfo timeZoneInfo = null;
-            if (_dateTimeSettings.AllowCustomersToSetTimeZone)
-            {
-                string timeZoneId = string.Empty;
-                if (customer != null)
-                    timeZoneId = customer.GetAttribute<string>(SystemCustomerAttributeNames.TimeZoneId, _genericAttributeService);
+            if (!_dateTimeSettings.AllowCustomersToSetTimeZone) 
+                return DefaultStoreTimeZone;
 
-                try
-                {
-                    if (!String.IsNullOrEmpty(timeZoneId))
-                        timeZoneInfo = FindTimeZoneById(timeZoneId);
-                }
-                catch (Exception exc)
-                {
-                    Debug.Write(exc.ToString());
-                }
+            TimeZoneInfo timeZoneInfo = null;
+
+            var timeZoneId = string.Empty;
+            if (customer != null)
+                timeZoneId = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.TimeZoneIdAttribute);
+
+            try
+            {
+                if (!string.IsNullOrEmpty(timeZoneId))
+                    timeZoneInfo = FindTimeZoneById(timeZoneId);
+            }
+            catch (Exception exc)
+            {
+                Debug.Write(exc.ToString());
             }
 
-            //default timezone
-            if (timeZoneInfo == null)
-                timeZoneInfo = this.DefaultStoreTimeZone;
-
-            return timeZoneInfo;
+            return timeZoneInfo ?? DefaultStoreTimeZone;
         }
 
         /// <summary>
@@ -184,7 +192,7 @@ namespace Nop.Services.Helpers
                 TimeZoneInfo timeZoneInfo = null;
                 try
                 {
-                    if (!String.IsNullOrEmpty(_dateTimeSettings.DefaultStoreTimeZoneId))
+                    if (!string.IsNullOrEmpty(_dateTimeSettings.DefaultStoreTimeZoneId))
                         timeZoneInfo = FindTimeZoneById(_dateTimeSettings.DefaultStoreTimeZoneId);
                 }
                 catch (Exception exc)
@@ -192,14 +200,12 @@ namespace Nop.Services.Helpers
                     Debug.Write(exc.ToString());
                 }
 
-                if (timeZoneInfo == null)
-                    timeZoneInfo = TimeZoneInfo.Local;
-
-                return timeZoneInfo;
+                return timeZoneInfo ?? TimeZoneInfo.Local;
             }
+
             set
             {
-                string defaultTimeZoneId = string.Empty;
+                var defaultTimeZoneId = string.Empty;
                 if (value != null)
                 {
                     defaultTimeZoneId = value.Id;
@@ -215,24 +221,23 @@ namespace Nop.Services.Helpers
         /// </summary>
         public virtual TimeZoneInfo CurrentTimeZone
         {
-            get
-            {
-                return GetCustomerTimeZone(_workContext.CurrentCustomer);
-            }
+            get => GetCustomerTimeZone(_workContext.CurrentCustomer);
             set
             {
                 if (!_dateTimeSettings.AllowCustomersToSetTimeZone)
                     return;
 
-                string timeZoneId = string.Empty;
+                var timeZoneId = string.Empty;
                 if (value != null)
                 {
                     timeZoneId = value.Id;
                 }
 
                 _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
-                    SystemCustomerAttributeNames.TimeZoneId, timeZoneId);
+                    NopCustomerDefaults.TimeZoneIdAttribute, timeZoneId);
             }
         }
+
+        #endregion
     }
 }

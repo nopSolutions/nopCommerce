@@ -1,0 +1,139 @@
+﻿@model CustomerReportsSearchModel
+
+@{
+    //page title
+    ViewBag.Title = T("Admin.Reports.Customers.BestBy.BestByNumberOfOrders").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Customers by number of orders");
+}
+
+@{
+    const string hideSearchBlockAttributeName = "CustomersBestByNumberOfOrdersPage.HideSearchBlock";
+    var hideSearchBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSearchBlockAttributeName);
+}
+
+<nop-antiforgery-token />
+
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        @T("Admin.Reports.Customers.BestBy.BestByNumberOfOrders")
+    </h1>
+</div>
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default panel-search">
+                <div class="panel-body">
+                    <div class="row search-row @(!hideSearchBlock ? "opened" : "")" data-hideAttribute="@hideSearchBlockAttributeName">
+                        <div class="search-text">@T("Admin.Common.Search")</div>
+                        <div class="icon-search"><i class="fa fa-search" aria-hidden="true"></i></div>
+                        <div class="icon-collapse"><i class="fa fa-angle-down" aria-hidden="true"></i></div>
+                    </div>
+
+                    <div class="search-body @(hideSearchBlock ? "closed" : "")">
+
+                        <div class="row">
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="BestCustomersByNumberOfOrders.StartDate" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-editor asp-for="BestCustomersByNumberOfOrders.StartDate" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="BestCustomersByNumberOfOrders.EndDate" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-editor asp-for="BestCustomersByNumberOfOrders.EndDate" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-7">
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="BestCustomersByNumberOfOrders.OrderStatusId" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-select asp-for="BestCustomersByNumberOfOrders.OrderStatusId" asp-items="Model.BestCustomersByNumberOfOrders.AvailableOrderStatuses" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="BestCustomersByNumberOfOrders.PaymentStatusId" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-select asp-for="BestCustomersByNumberOfOrders.PaymentStatusId" asp-items="Model.BestCustomersByNumberOfOrders.AvailablePaymentStatuses" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="BestCustomersByNumberOfOrders.ShippingStatusId" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-select asp-for="BestCustomersByNumberOfOrders.ShippingStatusId" asp-items="Model.BestCustomersByNumberOfOrders.AvailableShippingStatuses" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-7 col-md-offset-5">
+                                <button type="button" id="search-best-customers-numberoforders-grid" class="btn btn-primary btn-search">
+                                    <i class="fa fa-line-chart"></i>
+                                    @T("Admin.Reports.Customers.RunReport")
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    @await Html.PartialAsync("Table", new DataTablesModel
+                    {
+                        Name = "best-customers-numberoforders-grid",
+                        UrlRead = new DataUrl("ReportBestCustomersByNumberOfOrdersList", "Report", null),
+                        SearchButtonId = "search-best-customers-numberoforders-grid",
+                        Length = Model.BestCustomersByNumberOfOrders.PageSize,
+                        LengthMenu = Model.BestCustomersByNumberOfOrders.AvailablePageSizes,
+                        Filters = new List<FilterParameter>
+                        {
+                            new FilterParameter(nameof(Model.BestCustomersByNumberOfOrders.OrderBy), 2),
+                            new FilterParameter(nameof(Model.BestCustomersByNumberOfOrders.StartDate), nameof(CustomerReportsSearchModel.BestCustomersByNumberOfOrders)),
+                            new FilterParameter(nameof(Model.BestCustomersByNumberOfOrders.EndDate), nameof(CustomerReportsSearchModel.BestCustomersByNumberOfOrders)),
+                            new FilterParameter(nameof(Model.BestCustomersByNumberOfOrders.OrderStatusId), nameof(CustomerReportsSearchModel.BestCustomersByNumberOfOrders)),
+                            new FilterParameter(nameof(Model.BestCustomersByNumberOfOrders.PaymentStatusId), nameof(CustomerReportsSearchModel.BestCustomersByNumberOfOrders)),
+                            new FilterParameter(nameof(Model.BestCustomersByNumberOfOrders.ShippingStatusId), nameof(CustomerReportsSearchModel.BestCustomersByNumberOfOrders))
+                        },
+                        ColumnCollection = new List<ColumnProperty>
+                        {
+                            new ColumnProperty(nameof(BestCustomersReportModel.CustomerName))
+                            {
+                                Title = T("Admin.Reports.Customers.BestBy.Fields.Customer").Text
+                            },
+                            new ColumnProperty(nameof(BestCustomersReportModel.OrderTotal))
+                            {
+                                Title = T("Admin.Reports.Customers.BestBy.Fields.OrderTotal").Text
+                            },
+                            new ColumnProperty(nameof(BestCustomersReportModel.OrderCount))
+                            {
+                                Title = T("Admin.Reports.Customers.BestBy.Fields.OrderCount").Text
+                            },
+                            new ColumnProperty(nameof(BestCustomersReportModel.CustomerId))
+                            {
+                                Title = T("Admin.Common.View").Text,
+                                Width = "100",
+                                ClassName =  StyleColumn.ButtonStyle,
+                                Render = new RenderButtonView(new DataUrl("~/Admin/Customer/Edit/"))
+                            }
+                        }
+                    })
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

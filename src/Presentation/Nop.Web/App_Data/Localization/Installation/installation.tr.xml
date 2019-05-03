@@ -47,6 +47,9 @@
   <LocaleResource Name="DatabaseCreationError">
     <Value>Veritabanı oluşturulurken hata oluştu: {0}</Value>
   </LocaleResource>
+  <LocaleResource Name="Database">
+    <Value>Veri tabanı</Value>
+  </LocaleResource>
   <LocaleResource Name="DatabaseInformation">
     <Value>Veritabanı bilgisi</Value>
   </LocaleResource>

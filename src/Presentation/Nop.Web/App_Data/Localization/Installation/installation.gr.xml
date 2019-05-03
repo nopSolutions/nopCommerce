@@ -47,6 +47,9 @@
   <LocaleResource Name="DatabaseCreationError">
     <Value>Παρουσιάστηκε σφάλμα κατά τη δημιουργία βάσης δεδομένων: {0}</Value>
   </LocaleResource>
+  <LocaleResource Name="Database">
+    <Value>Βάσης δεδομένων</Value>
+  </LocaleResource>
   <LocaleResource Name="DatabaseInformation">
     <Value>Πληροφορίες βάσης δεδομένων</Value>
   </LocaleResource>

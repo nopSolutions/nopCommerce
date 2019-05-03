@@ -1,8 +1,10 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Nop.Core;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Tax;
 
 namespace Nop.Services.Customers
 {
@@ -30,26 +32,17 @@ namespace Nop.Services.Customers
         /// <param name="company">Company; null to load all customers</param>
         /// <param name="phone">Phone; null to load all customers</param>
         /// <param name="zipPostalCode">Phone; null to load all customers</param>
-        /// <param name="loadOnlyWithShoppingCart">Value indicating whether to load customers only with shopping cart</param>
-        /// <param name="sct">Value indicating what shopping cart type to filter; userd when 'loadOnlyWithShoppingCart' param is 'true'</param>
+        /// <param name="ipAddress">IP address; null to load all customers</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
+        /// <param name="getOnlyTotalCount">A value in indicating whether you want to load only total number of records. Set to "true" if you don't want to load data from database</param>
         /// <returns>Customers</returns>
-        IPagedList<Customer> GetAllCustomers(DateTime? createdFromUtc = null,
-            DateTime? createdToUtc = null, int affiliateId = 0, int vendorId = 0,
-            int[] customerRoleIds = null, string email = null, string username = null,
-            string firstName = null, string lastName = null,
+        IPagedList<Customer> GetAllCustomers(DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
+            int affiliateId = 0, int vendorId = 0, int[] customerRoleIds = null,
+            string email = null, string username = null, string firstName = null, string lastName = null,
             int dayOfBirth = 0, int monthOfBirth = 0,
-            string company = null, string phone = null, string zipPostalCode = null,
-            bool loadOnlyWithShoppingCart = false, ShoppingCartType? sct = null,
-            int pageIndex = 0, int pageSize = 2147483647); //Int32.MaxValue
-        
-        /// <summary>
-        /// Gets all customers by customer format (including deleted ones)
-        /// </summary>
-        /// <param name="passwordFormat">Password format</param>
-        /// <returns>Customers</returns>
-        IList<Customer> GetAllCustomersByPasswordFormat(PasswordFormat passwordFormat);
+            string company = null, string phone = null, string zipPostalCode = null, string ipAddress = null,
+            int pageIndex = 0, int pageSize = int.MaxValue, bool getOnlyTotalCount = false);
 
         /// <summary>
         /// Gets online customers
@@ -61,6 +54,23 @@ namespace Nop.Services.Customers
         /// <returns>Customers</returns>
         IPagedList<Customer> GetOnlineCustomers(DateTime lastActivityFromUtc,
             int[] customerRoleIds, int pageIndex = 0, int pageSize = int.MaxValue);
+
+        /// <summary>
+        /// Gets customers with shopping carts
+        /// </summary>
+        /// <param name="shoppingCartType">Shopping cart type; pass null to load all records</param>
+        /// <param name="storeId">Store identifier; pass 0 to load all records</param>
+        /// <param name="productId">Product identifier; pass null to load all records</param>
+        /// <param name="createdFromUtc">Created date from (UTC); pass null to load all records</param>
+        /// <param name="createdToUtc">Created date to (UTC); pass null to load all records</param>
+        /// <param name="countryId">Billing country identifier; pass null to load all records</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <returns>Customers</returns>
+        IPagedList<Customer> GetCustomersWithShoppingCarts(ShoppingCartType? shoppingCartType = null,
+            int storeId = 0, int? productId = null,
+            DateTime? createdFromUtc = null, DateTime? createdToUtc = null, int? countryId = null,
+            int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>
         /// Delete a customer
@@ -95,7 +105,7 @@ namespace Nop.Services.Customers
         /// <param name="email">Email</param>
         /// <returns>Customer</returns>
         Customer GetCustomerByEmail(string email);
-        
+
         /// <summary>
         /// Get customer by system role
         /// </summary>
@@ -127,7 +137,7 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="customer">Customer</param>
         void UpdateCustomer(Customer customer);
-        
+
         /// <summary>
         /// Reset data required for checkout
         /// </summary>
@@ -151,6 +161,82 @@ namespace Nop.Services.Customers
         /// <param name="onlyWithoutShoppingCart">A value indicating whether to delete customers only without shopping cart</param>
         /// <returns>Number of deleted customers</returns>
         int DeleteGuestCustomers(DateTime? createdFromUtc, DateTime? createdToUtc, bool onlyWithoutShoppingCart);
+
+        /// <summary>
+        /// Gets a default tax display type (if configured)
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <returns>Result</returns>
+        TaxDisplayType? GetCustomerDefaultTaxDisplayType(Customer customer);
+
+        /// <summary>
+        /// Remove address
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="address">Address</param>
+        void RemoveCustomerAddress(Customer customer, Address address);
+
+        /// <summary>
+        /// Get full name
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <returns>Customer full name</returns>
+        string GetCustomerFullName(Customer customer);
+
+        /// <summary>
+        /// Formats the customer name
+        /// </summary>
+        /// <param name="customer">Source</param>
+        /// <param name="stripTooLong">Strip too long customer name</param>
+        /// <param name="maxLength">Maximum customer name length</param>
+        /// <returns>Formatted text</returns>
+        string FormatUsername(Customer customer, bool stripTooLong = false, int maxLength = 0);
+
+        /// <summary>
+        /// Gets coupon codes
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <returns>Coupon codes</returns>
+        string[] ParseAppliedDiscountCouponCodes(Customer customer);
+
+        /// <summary>
+        /// Adds a coupon code
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="couponCode">Coupon code</param>
+        /// <returns>New coupon codes document</returns>
+        void ApplyDiscountCouponCode(Customer customer, string couponCode);
+
+        /// <summary>
+        /// Removes a coupon code
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="couponCode">Coupon code to remove</param>
+        /// <returns>New coupon codes document</returns>
+        void RemoveDiscountCouponCode(Customer customer, string couponCode);
+
+        /// <summary>
+        /// Gets coupon codes
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <returns>Coupon codes</returns>
+        string[] ParseAppliedGiftCardCouponCodes(Customer customer);
+
+        /// <summary>
+        /// Adds a coupon code
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="couponCode">Coupon code</param>
+        /// <returns>New coupon codes document</returns>
+        void ApplyGiftCardCouponCode(Customer customer, string couponCode);
+
+        /// <summary>
+        /// Removes a coupon code
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="couponCode">Coupon code to remove</param>
+        /// <returns>New coupon codes document</returns>
+        void RemoveGiftCardCouponCode(Customer customer, string couponCode);
 
         #endregion
 
@@ -194,6 +280,61 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="customerRole">Customer role</param>
         void UpdateCustomerRole(CustomerRole customerRole);
+
+        #endregion
+
+        #region Customer passwords
+
+        /// <summary>
+        /// Gets customer passwords
+        /// </summary>
+        /// <param name="customerId">Customer identifier; pass null to load all records</param>
+        /// <param name="passwordFormat">Password format; pass null to load all records</param>
+        /// <param name="passwordsToReturn">Number of returning passwords; pass null to load all records</param>
+        /// <returns>List of customer passwords</returns>
+        IList<CustomerPassword> GetCustomerPasswords(int? customerId = null,
+            PasswordFormat? passwordFormat = null, int? passwordsToReturn = null);
+
+        /// <summary>
+        /// Get current customer password
+        /// </summary>
+        /// <param name="customerId">Customer identifier</param>
+        /// <returns>Customer password</returns>
+        CustomerPassword GetCurrentPassword(int customerId);
+
+        /// <summary>
+        /// Insert a customer password
+        /// </summary>
+        /// <param name="customerPassword">Customer password</param>
+        void InsertCustomerPassword(CustomerPassword customerPassword);
+
+        /// <summary>
+        /// Update a customer password
+        /// </summary>
+        /// <param name="customerPassword">Customer password</param>
+        void UpdateCustomerPassword(CustomerPassword customerPassword);
+
+        /// <summary>
+        /// Check whether password recovery token is valid
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="token">Token to validate</param>
+        /// <returns>Result</returns>
+        bool IsPasswordRecoveryTokenValid(Customer customer, string token);
+
+        /// <summary>
+        /// Check whether password recovery link is expired
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <returns>Result</returns>
+        bool IsPasswordRecoveryLinkExpired(Customer customer);
+
+        /// <summary>
+        /// Check whether customer password is expired 
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <returns>True if password is expired; otherwise false</returns>
+        bool PasswordIsExpired(Customer customer);
 
         #endregion
     }

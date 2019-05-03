@@ -1,0 +1,70 @@
+﻿@model NopCommerceNewsModel
+@inject IWorkContext workContext
+
+@using Nop.Core
+@inject Nop.Services.Common.IGenericAttributeService genericAttributeService
+
+@{
+    const string panelId = "nopcommerce-news-box";
+    const string hidePanelAttributeName = "HideNopCommerceNewsPanel";
+    var hidePanel = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hidePanelAttributeName);
+}
+
+<div class="box box-info @if(hidePanel){<text>collapsed-box</text>}" id="@panelId">
+    <div class="box-header with-border clearfix">
+        <div class="box-title">
+            <i class="fa fa-newspaper-o"></i>
+            @T("Admin.NopCommerceNews")
+            @if (Model.HasNewItems)
+            {
+                <div class="new-item-notification"><span>+1</span></div>
+            }
+        </div>
+        <div class="box-tools pull-right">
+            <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                @if (hidePanel)
+                {
+                    <text><i class="fa fa-plus"></i></text>
+                }
+                else
+                {
+                    <text><i class="fa fa-minus"></i></text>
+                }
+            </button>
+        </div>
+    </div>
+    <div class="box-body">
+        <div class="row">
+            @foreach (var item in Model.Items)
+            {
+                <div class="col-md-4">
+                    <div class="panel panel-info">
+                        <div class="panel-heading clearfix">
+                            @if (!string.IsNullOrEmpty(item.Url))
+                            {
+                                <a class="pull-left" href='@(item.Url)'>@item.Title</a>
+                            }
+                            else
+                            {
+                                <div class="pull-left">@item.Title</div>
+                            }
+                            @*<div class="pull-right">@item.PublishDate.ToString("d")</div>*@
+                        </div>
+                        <div class="panel-body">
+                            @Html.Raw(item.Summary)
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <script>
+            $(document).ready(function () {
+                $('#@panelId').on('click', 'button[data-widget="collapse"]', function () {
+                    var collapsed = !$('#@panelId').hasClass('collapsed-box');
+                    saveUserPreferences('@(Url.Action("SavePreference", "Preferences"))', '@hidePanelAttributeName', collapsed);
+                });
+            });
+        </script>
+    </div>
+</div>

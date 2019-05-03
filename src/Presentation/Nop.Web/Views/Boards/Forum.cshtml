@@ -1,15 +1,17 @@
 ﻿@model ForumPageModel
-@using Nop.Core.Domain.Forums;
-@using Nop.Web.Models.Boards;
-@using Nop.Web.Models.Common;
+@using Nop.Core.Domain.Forums
 @{
-    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+    Layout = "_ColumnsOne";
 
+    //title
     Html.AddTitleParts(Model.Name);
+    //page class
+    Html.AppendPageCssClassParts("html-forum-page");
 }
 <div class="page forum-page">
-    @Html.Action("ForumBreadcrumb", new { forumId = Model.Id })
-    @Html.Partial("_ForumHeader")
+    @await Component.InvokeAsync("ForumBreadcrumb", new { forumId = Model.Id })
+    @await Html.PartialAsync("_ForumHeader")
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BoardsForumAfterHeader, additionalData = Model })
     <div class="forum-info">
         <div class="forum-name">
             @if (Model.ForumFeedsEnabled)
@@ -24,22 +26,22 @@
     </div>
     <div class="forum-actions">
         <div class="actions">
-            @Html.RouteLink(T("Forum.NewTopic").ToString(), "TopicCreate", new { id = Model.Id }, new { @class = "new-topic" })
+            @Html.RouteLink(T("Forum.NewTopic").ToString(), "TopicCreate", new {id = Model.Id}, new {@class = "new-topic"})
             @if (Model.IsCustomerAllowedToSubscribe)
             {
                 <a class="watch-forum" href="#" id="watch-forum">@Model.WatchForumText</a>
-                <script type="text/javascript">
-                    $(document).ready(function () {
-                        $('#watch-forum').click(function () {
+                <script asp-location="Footer">
+                    $(document).ready(function() {
+                        $('#watch-forum').on('click', function() {
                             $.ajax({
                                 cache: false,
                                 type: 'POST',
-                                url: '@Url.RouteUrl("ForumWatch", new { id = Model.Id })',
+                                url: '@Url.RouteUrl("ForumWatch", new {id = Model.Id})',
                                 dataType: 'json',
-                                success: function (data) {
+                                success: function(data) {
                                     $('#watch-forum').text(data.Text);
                                 },
-                                error: function (xhr, ajaxOptions, thrownError) {
+                                error: function(xhr, ajaxOptions, thrownError) {
                                     alert('Failed to watch');
                                 }
                             });
@@ -48,6 +50,7 @@
                 </script>
             }
         </div>
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BoardsForumTop, additionalData = Model })
         @{
             var pager = Html.Pager(new PagerModel
             {
@@ -60,14 +63,13 @@
                 RouteValues = new RouteValues { id = Model.Id, slug = Model.SeName }
             });
         }
-        @if (!MvcHtmlString.IsNullOrEmpty(pager))
+        @if (!string.IsNullOrEmpty(pager.ToHtmlString()))
         {
             <div class="pager upper">
                 @pager
             </div>
         }
     </div>
-
     <div class="forums-table-section topic-group">
         @if (Model.ForumTopics.Count > 0)
         {
@@ -91,6 +93,12 @@
                             <th class="views">
                                 @T("Forum.Views")
                             </th>
+                            @if (Model.AllowPostVoting)
+                            {
+                                <th class="votes">
+                                    @T("Forum.Votes")
+                                </th>
+                            }
                             <th class="latest-post">
                                 @T("Forum.LatestPost")
                             </th>
@@ -100,7 +108,7 @@
                         @foreach (var topic in @Model.ForumTopics)
                         {
                             var topicType = "post";
-                            var topicText = String.Empty;
+                            var topicText = string.Empty;
                             switch (topic.ForumTopicType)
                             {
                                 case ForumTopicType.Normal:
@@ -108,11 +116,11 @@
                                     break;
                                 case ForumTopicType.Sticky:
                                     topicType = "sticky";
-                                    topicText = string.Format("[{0}]", T("Forum.Sticky"));
+                                    topicText = $"[{T("Forum.Sticky")}]";
                                     break;
                                 case ForumTopicType.Announcement:
                                     topicType = "announcement";
-                                    topicText = string.Format("[{0}]", T("Forum.Announcement"));
+                                    topicText = $"[{T("Forum.Announcement")}]";
                                     break;
                                 default:
                                     topicType = "post";
@@ -125,7 +133,7 @@
                                 <td class="topic-details">
                                     <div class="topic-title">
                                         @Html.RouteLink(topic.Subject, "TopicSlug", new { id = topic.Id, slug = topic.SeName })
-                                        @if (!String.IsNullOrEmpty(topicText))
+                                        @if (!string.IsNullOrEmpty(topicText))
                                         {
                                             <span class="topic-type">@topicText</span>
                                         }
@@ -157,8 +165,14 @@
                                 <td class="views">
                                     @topic.Views
                                 </td>
+                                @if (Model.AllowPostVoting)
+                                {
+                                    <td class="votes">
+                                        @topic.Votes
+                                    </td>
+                                }
                                 <td class="latest-post">
-                                    @Html.Action("LastPost", new { forumPostId = topic.LastPostId, showTopic = false })
+                                    @await Component.InvokeAsync("ForumLastPost", new { forumPostId = topic.LastPostId, showTopic = false })
                                 </td>
                             </tr>
                         }
@@ -167,10 +181,11 @@
             </div>
         }
     </div>
-    @if (!MvcHtmlString.IsNullOrEmpty(pager))
+    @if (!string.IsNullOrEmpty(pager.ToHtmlString()))
     {
         <div class="pager lower">
             @pager
         </div>
     }
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BoardsForumBottom, additionalData = Model })
 </div>

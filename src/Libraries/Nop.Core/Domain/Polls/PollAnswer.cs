@@ -39,8 +39,8 @@ namespace Nop.Core.Domain.Polls
         /// </summary>
         public virtual ICollection<PollVotingRecord> PollVotingRecords
         {
-            get { return _pollVotingRecords ?? (_pollVotingRecords = new List<PollVotingRecord>()); }
-            protected set { _pollVotingRecords = value; }
+            get => _pollVotingRecords ?? (_pollVotingRecords = new List<PollVotingRecord>());
+            protected set => _pollVotingRecords = value;
         }
     }
 }

@@ -46,5 +46,21 @@ namespace Nop.Services.Orders
         /// <param name="cart">Shopping cart items</param>
         /// <returns>Updated attributes in XML format</returns>
         string EnsureOnlyActiveAttributes(string attributesXml, IList<ShoppingCartItem> cart);
+
+        /// <summary>
+        /// Check whether condition of some attribute is met (if specified). Return "null" if not condition is specified
+        /// </summary>
+        /// <param name="attribute">Checkout attribute</param>
+        /// <param name="selectedAttributesXml">Selected attributes (XML format)</param>
+        /// <returns>Result</returns>
+        bool? IsConditionMet(CheckoutAttribute attribute, string selectedAttributesXml);
+
+        /// <summary>
+        /// Remove an attribute
+        /// </summary>
+        /// <param name="attributesXml">Attributes in XML format</param>
+        /// <param name="attribute">Checkout attribute</param>
+        /// <returns>Updated result (XML format)</returns>
+        string RemoveCheckoutAttribute(string attributesXml, CheckoutAttribute attribute);
     }
 }

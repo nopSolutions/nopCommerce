@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
@@ -14,20 +13,32 @@ namespace Nop.Services.ExportImport
     public partial interface IExportManager
     {
         /// <summary>
-        /// Export manufacturer list to xml
+        /// Export manufacturer list to XML
         /// </summary>
         /// <param name="manufacturers">Manufacturers</param>
         /// <returns>Result in XML format</returns>
         string ExportManufacturersToXml(IList<Manufacturer> manufacturers);
 
         /// <summary>
-        /// Export category list to xml
+        /// Export manufacturers to XLSX
+        /// </summary>
+        /// <param name="manufacturers">Manufactures</param>
+        byte[] ExportManufacturersToXlsx(IEnumerable<Manufacturer> manufacturers);
+
+        /// <summary>
+        /// Export category list to XML
         /// </summary>
         /// <returns>Result in XML format</returns>
         string ExportCategoriesToXml();
 
         /// <summary>
-        /// Export product list to xml
+        /// Export categories to XLSX
+        /// </summary>
+        /// <param name="categories">Categories</param>
+        byte[] ExportCategoriesToXlsx(IList<Category> categories);
+
+        /// <summary>
+        /// Export product list to XML
         /// </summary>
         /// <param name="products">Products</param>
         /// <returns>Result in XML format</returns>
@@ -36,12 +47,11 @@ namespace Nop.Services.ExportImport
         /// <summary>
         /// Export products to XLSX
         /// </summary>
-        /// <param name="stream">Stream</param>
         /// <param name="products">Products</param>
-        void ExportProductsToXlsx(Stream stream, IList<Product> products);
+        byte[] ExportProductsToXlsx(IEnumerable<Product> products);
 
         /// <summary>
-        /// Export order list to xml
+        /// Export order list to XML
         /// </summary>
         /// <param name="orders">Orders</param>
         /// <returns>Result in XML format</returns>
@@ -50,19 +60,17 @@ namespace Nop.Services.ExportImport
         /// <summary>
         /// Export orders to XLSX
         /// </summary>
-        /// <param name="stream">Stream</param>
         /// <param name="orders">Orders</param>
-        void ExportOrdersToXlsx(Stream stream, IList<Order> orders);
-        
+        byte[] ExportOrdersToXlsx(IList<Order> orders);
+
         /// <summary>
         /// Export customer list to XLSX
         /// </summary>
-        /// <param name="stream">Stream</param>
         /// <param name="customers">Customers</param>
-        void ExportCustomersToXlsx(Stream stream, IList<Customer> customers);
-        
+        byte[] ExportCustomersToXlsx(IList<Customer> customers);
+
         /// <summary>
-        /// Export customer list to xml
+        /// Export customer list to XML
         /// </summary>
         /// <param name="customers">Customers</param>
         /// <returns>Result in XML format</returns>
@@ -81,5 +89,13 @@ namespace Nop.Services.ExportImport
         /// <param name="states">States</param>
         /// <returns>Result in TXT (string) format</returns>
         string ExportStatesToTxt(IList<StateProvince> states);
+
+        /// <summary>
+        /// Export customer info (GDPR request) to XLSX 
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="storeId">Store identifier</param>
+        /// <returns>Customer GDPR info</returns>
+        byte[] ExportCustomerGdprInfoToXlsx(Customer customer, int storeId);
     }
 }

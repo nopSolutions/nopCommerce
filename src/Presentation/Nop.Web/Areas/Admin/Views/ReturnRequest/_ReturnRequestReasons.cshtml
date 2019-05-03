@@ -1,0 +1,46 @@
+﻿@model ReturnRequestReasonSearchModel
+
+<div class="panel panel-default sub-panel">
+    <div class="panel-heading">
+        @T("Admin.Configuration.Settings.Order.ReturnRequestReasons")
+    </div>
+    <div class="panel-body">
+        <p>
+            <em>@T("Admin.Configuration.Settings.Order.ReturnRequestReasons.Hint")</em>
+        </p>
+        @await Html.PartialAsync("Table", new DataTablesModel
+        {
+            Name = "returnrequestreasons-grid",
+            UrlRead = new DataUrl("ReturnRequestReasonList", "ReturnRequest", null),
+            Length = Model.PageSize,
+            LengthMenu = Model.AvailablePageSizes,
+            ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(ReturnRequestReasonModel.Name))
+                {
+                    Title = T("Admin.Configuration.Settings.Order.ReturnRequestReasons.Name").Text,
+                    Width = "300"
+                },
+                new ColumnProperty(nameof(ReturnRequestReasonModel.DisplayOrder))
+                {
+                    Title = T("Admin.Configuration.Settings.Order.ReturnRequestReasons.DisplayOrder").Text,
+                    Width = "100",
+                    ClassName =  StyleColumn.CenterAll
+                },
+                new ColumnProperty(nameof(ReturnRequestReasonModel.Id))
+                {
+                    Title = T("Admin.Common.Edit").Text,
+                    Width = "100",
+                    ClassName =  StyleColumn.ButtonStyle,
+                    Render = new RenderButtonEdit(new DataUrl("~/Admin/ReturnRequest/ReturnRequestReasonEdit/"))
+                }
+            }
+        })
+    </div>
+    <div class="panel-footer">
+        <a asp-action="ReturnRequestReasonCreate" asp-controller="ReturnRequest" class="btn btn-primary">
+            <i class="fa fa-plus-square"></i>
+            @T("Admin.Common.AddNew")
+        </a>
+    </div>
+</div>

@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
+using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.Boards
 {
-    public partial class ActiveDiscussionsModel
+    public partial class ActiveDiscussionsModel : BaseNopModel
     {
         public ActiveDiscussionsModel()
         {
@@ -20,5 +21,7 @@ namespace Nop.Web.Models.Boards
         public int TopicPageIndex { get; set; }
 
         public int PostsPageSize { get; set; }
+
+        public bool AllowPostVoting { get; set; }
     }
 }

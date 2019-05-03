@@ -1,0 +1,37 @@
+﻿@model ProductReviewReviewTypeMappingSearchModel
+
+@await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductReviewDetailsTop, additionalData = Model })
+<div class="panel panel-default">
+    <div class="panel-heading">
+        @T("Admin.Settings.ReviewType")
+    </div>
+    <div class="panel-body">
+        @await Html.PartialAsync("Table", new DataTablesModel
+   {
+       Name = "reviewext-grid",
+       UrlRead = new DataUrl("ProductReviewReviewTypeMappingList", "ProductReview", new RouteValueDictionary { [nameof(Model.ProductReviewId)] = Model.ProductReviewId }),
+       Length = Model.PageSize,
+       LengthMenu = Model.AvailablePageSizes,
+       ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(ProductReviewReviewTypeMappingModel.Name))
+                {
+                    Title = T("Admin.Catalog.AdditionalProductReviews.Fields.Name").Text,
+                    Width = "300"
+                },
+                new ColumnProperty(nameof(ProductReviewReviewTypeMappingModel.Rating))
+                {
+                    Title = T("Admin.Catalog.AdditionalProductReviews.Fields.Rating").Text,
+                    Width = "100"
+                },
+                new ColumnProperty(nameof(ProductReviewReviewTypeMappingModel.VisibleToAllCustomers))
+                {
+                    Title = T("Admin.Catalog.AdditionalProductReviews.Fields.VisibleToAllCustomers").Text,
+                    Width = "100",
+                    ClassName = StyleColumn.CenterAll,
+                    Render = new RenderBoolean()
+                }
+            }
+   })
+    </div>
+</div>

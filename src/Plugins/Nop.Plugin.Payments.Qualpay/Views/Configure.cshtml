@@ -1,0 +1,160 @@
+﻿@model Nop.Plugin.Payments.Qualpay.Models.ConfigurationModel;
+
+@{
+    Layout = "_ConfigurePlugin";
+}
+
+@await Component.InvokeAsync("StoreScopeConfiguration")
+
+<form asp-controller="Qualpay" asp-action="Configure" method="post">
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <p>
+                    Please enter your email to receive an information about special offers from Qualpay
+                </p>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="MerchantEmail" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="MerchantEmail" />
+                        <span asp-validation-for="MerchantEmail"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-9 col-md-offset-3">
+                        <input type="submit" name="subscribe" class="btn btn-primary" value="@T("Plugins.Payments.Qualpay.Subscribe")" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <p>
+                    For plugin configuration follow these steps:<br />
+                    <br />
+                    1. <a href="http://www.qualpay.com/nopcommerce" target="_blank">Create Qualpay account</a><br />
+                    2. Log in at the <a href="https://app.qualpay.com/" target="_blank">production service</a>
+                    or at the <a href="https://app-test.qualpay.com/" target="_blank"> sandbox service</a><br />
+                    3. Go to the 'Administration' -> 'API Security Keys' and find Security Key<br />
+                    4. Fill in your Qualpay Payment Gateway credentials below<br />
+                    5. Save<br />
+                    6. Ensure you enable access to the appropriate API in your Qualpay account -> 'Administration' -> 'API Security Keys' -> Manage Access<br />
+                    <em>Note: For Recurring Billing feature you need to enable access to Customer Vault API, Recurring Billing API and Webhook API</em><br />
+                    7. Fill in the remaining fields and save to complete the configuration<br />
+                    <br />
+                    <em>Note: Qualpay Payment Gateway supports only USD currency, so ensure that you have configured the USD as your primary store currency.</em><br />
+                </p>
+                <p>
+                    To display Customer Vault info on a customer details page, make sure that the Qualpay widget is activated on the <a href="@Url.Content("~/Admin/Widget/List/")">Widgets page</a>
+                </p>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="MerchantId" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="MerchantId" asp-required="true" />
+                        <span asp-validation-for="MerchantId"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="SecurityKey" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="SecurityKey" asp-required="true" />
+                        <span asp-validation-for="SecurityKey"></span>
+                    </div>
+                </div>
+                @if (Model.IsConfigured)
+                {
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-override-store-checkbox asp-for="UseSandbox_OverrideForStore" asp-input="UseSandbox" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                            <nop-label asp-for="UseSandbox" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="UseSandbox" />
+                            <span asp-validation-for="UseSandbox"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-override-store-checkbox asp-for="UseEmbeddedFields_OverrideForStore" asp-input="UseEmbeddedFields" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                            <nop-label asp-for="UseEmbeddedFields" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="UseEmbeddedFields" />
+                            <span asp-validation-for="UseEmbeddedFields"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-override-store-checkbox asp-for="UseCustomerVault_OverrideForStore" asp-input="UseCustomerVault" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                            <nop-label asp-for="UseCustomerVault" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="UseCustomerVault" />
+                            <span asp-validation-for="UseCustomerVault"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-override-store-checkbox asp-for="UseRecurringBilling_OverrideForStore" asp-input="UseRecurringBilling" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                            <nop-label asp-for="UseRecurringBilling" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="UseRecurringBilling" />
+                            <span asp-validation-for="UseRecurringBilling"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="ProfileId" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="ProfileId" />
+                            <span asp-validation-for="ProfileId"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-override-store-checkbox asp-for="PaymentTransactionTypeId_OverrideForStore" asp-input="PaymentTransactionTypeId" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                            <nop-label asp-for="PaymentTransactionTypeId" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-select asp-for="PaymentTransactionTypeId" asp-items="Model.PaymentTransactionTypes" />
+                            <span asp-validation-for="PaymentTransactionTypeId"></span>
+                        </div>
+                    </div>
+                }
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="AdditionalFee_OverrideForStore" asp-input="AdditionalFee" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="AdditionalFee" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="AdditionalFee" />
+                        <span asp-validation-for="AdditionalFee"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="AdditionalFeePercentage_OverrideForStore" asp-input="AdditionalFeePercentage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="AdditionalFeePercentage" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="AdditionalFeePercentage" />
+                        <span asp-validation-for="AdditionalFeePercentage"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-9 col-md-offset-3">
+                        <input type="submit" name="save" class="btn btn-primary" value="@T("Admin.Common.Save")" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

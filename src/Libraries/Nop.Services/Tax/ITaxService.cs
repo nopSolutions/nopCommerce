@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -13,30 +13,8 @@ namespace Nop.Services.Tax
     /// </summary>
     public partial interface ITaxService
     {
-        /// <summary>
-        /// Load active tax provider
-        /// </summary>
-        /// <returns>Active tax provider</returns>
-        ITaxProvider LoadActiveTaxProvider();
-
-        /// <summary>
-        /// Load tax provider by system name
-        /// </summary>
-        /// <param name="systemName">System name</param>
-        /// <returns>Found tax provider</returns>
-        ITaxProvider LoadTaxProviderBySystemName(string systemName);
-
-        /// <summary>
-        /// Load all tax providers
-        /// </summary>
-        /// <returns>Tax providers</returns>
-        IList<ITaxProvider> LoadAllTaxProviders();
+        #region Product price
         
-
-
-
-
-
         /// <summary>
         /// Gets price
         /// </summary>
@@ -85,8 +63,9 @@ namespace Nop.Services.Tax
             bool includingTax, Customer customer,
             bool priceIncludesTax, out decimal taxRate);
 
+        #endregion
 
-
+        #region Shipping price
 
         /// <summary>
         /// Gets shipping price
@@ -115,9 +94,9 @@ namespace Nop.Services.Tax
         /// <returns>Price</returns>
         decimal GetShippingPrice(decimal price, bool includingTax, Customer customer, out decimal taxRate);
 
+        #endregion
 
-
-
+        #region Payment additional fee
 
         /// <summary>
         /// Gets payment method additional handling fee
@@ -145,12 +124,10 @@ namespace Nop.Services.Tax
         /// <param name="taxRate">Tax rate</param>
         /// <returns>Price</returns>
         decimal GetPaymentMethodAdditionalFee(decimal price, bool includingTax, Customer customer, out decimal taxRate);
+        
+        #endregion
 
-
-
-
-
-
+        #region Checkout attribute price
 
         /// <summary>
         /// Gets checkout attribute value price
@@ -188,10 +165,9 @@ namespace Nop.Services.Tax
         decimal GetCheckoutAttributePrice(CheckoutAttributeValue cav,
             bool includingTax, Customer customer, out decimal taxRate);
 
+        #endregion
 
-
-
-        
+        #region VAT
 
         /// <summary>
         /// Gets VAT Number status
@@ -209,6 +185,7 @@ namespace Nop.Services.Tax
         /// <returns>VAT Number status</returns>
         VatNumberStatus GetVatNumberStatus(string fullVatNumber,
             out string name, out string address);
+
         /// <summary>
         /// Gets VAT Number status
         /// </summary>
@@ -240,9 +217,9 @@ namespace Nop.Services.Tax
         VatNumberStatus DoVatCheck(string twoLetterIsoCode, string vatNumber, 
             out string name, out string address, out Exception exception);
 
+        #endregion
 
-
-
+        #region Exempts
 
         /// <summary>
         /// Gets a value indicating whether a product is tax exempt
@@ -258,6 +235,8 @@ namespace Nop.Services.Tax
         /// <param name="address">Address</param>
         /// <param name="customer">Customer</param>
         /// <returns>Result</returns>
-        bool IsVatExempt(Address address, Customer customer);
+        bool IsVatExempt(CalculateTaxRequest.TaxAddress address, Customer customer);
+
+        #endregion
     }
 }

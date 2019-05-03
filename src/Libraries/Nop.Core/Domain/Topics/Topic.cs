@@ -19,6 +19,7 @@ namespace Nop.Core.Domain.Topics
         /// Gets or sets the value indicating whether this topic should be included in sitemap
         /// </summary>
         public bool IncludeInSitemap { get; set; }
+
         /// <summary>
         /// Gets or sets the value indicating whether this topic should be included in top menu
         /// </summary>
@@ -28,10 +29,12 @@ namespace Nop.Core.Domain.Topics
         /// Gets or sets the value indicating whether this topic should be included in footer (column 1)
         /// </summary>
         public bool IncludeInFooterColumn1 { get; set; }
+
         /// <summary>
         /// Gets or sets the value indicating whether this topic should be included in footer (column 1)
         /// </summary>
         public bool IncludeInFooterColumn2 { get; set; }
+
         /// <summary>
         /// Gets or sets the value indicating whether this topic should be included in footer (column 1)
         /// </summary>
@@ -51,6 +54,7 @@ namespace Nop.Core.Domain.Topics
         /// Gets or sets the value indicating whether this topic is password protected
         /// </summary>
         public bool IsPasswordProtected { get; set; }
+
         /// <summary>
         /// Gets or sets the password
         /// </summary>
@@ -65,6 +69,11 @@ namespace Nop.Core.Domain.Topics
         /// Gets or sets the body
         /// </summary>
         public string Body { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the entity is published
+        /// </summary>
+        public bool Published { get; set; }
 
         /// <summary>
         /// Gets or sets a value of used topic template identifier

@@ -1,6 +1,4 @@
 ﻿@model ActiveDiscussionsModel
-@using Nop.Web.Models.Boards;
-@using Nop.Web.Models.Common;
 <div class="forums-table-section topic-group active-discussions">
     <div class="forums-table-section-title">
         @if (Model.ActiveDiscussionsFeedEnabled)
@@ -21,7 +19,7 @@
                 RouteValues = new ForumActiveDiscussionsRouteValues()
             });
         }
-    @if (!MvcHtmlString.IsNullOrEmpty(pager))
+    @if (!string.IsNullOrEmpty(pager.ToHtmlString()))
     {
         <div class="pager upper">
             @pager
@@ -49,6 +47,12 @@
                             <th class="views">
                                 @T("Forum.Views")
                             </th>
+                            @if (Model.AllowPostVoting)
+                            {
+                                <th class="votes">
+                                    @T("Forum.Votes")
+                                </th>
+                            }
                             <th class="latest-post">
                                 @T("Forum.LatestPost")
                             </th>
@@ -89,8 +93,14 @@
                                 <td class="views">
                                     @topic.Views
                                 </td>
+                                @if (Model.AllowPostVoting)
+                                {
+                                    <td class="votes">
+                                        @topic.Votes
+                                    </td>
+                                }
                                 <td class="latest-post">
-                                    @Html.Action("LastPost", new { forumPostId = topic.LastPostId, showTopic = false })
+                                    @await Component.InvokeAsync("ForumLastPost", new { forumPostId = topic.LastPostId, showTopic = false })
                                 </td>
                             </tr>
                         }
@@ -99,7 +109,7 @@
             </div>
         }
     </div>
-    @if (!MvcHtmlString.IsNullOrEmpty(pager))
+    @if (!string.IsNullOrEmpty(pager.ToHtmlString()))
     {
         <div class="pager lower">
             @pager

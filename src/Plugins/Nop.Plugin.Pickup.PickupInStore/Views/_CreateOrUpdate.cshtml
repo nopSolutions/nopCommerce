@@ -1,0 +1,169 @@
+﻿@model Nop.Plugin.Pickup.PickupInStore.Models.StorePickupPointModel
+
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+
+@if (ViewBag.RefreshPage == true)
+{
+    <script>
+        try {window.opener.document.forms['@(Context.Request.Query["formId"])'].@(Context.Request.Query["btnId"]).click();}
+        catch (e){}
+        window.close();
+    </script>
+}
+
+<div class="panel-group">
+    <div class="panel panel-default panel-popup">
+
+        <script>
+            $(document).ready(function() {
+                $("#@Html.IdFor(model => model.Address.CountryId)").change(function(){
+                    var selectedItem = $(this).val();
+                    var ddlStates = $("#@Html.IdFor(model => model.Address.StateProvinceId)");
+                    $.ajax({
+                        cache: false,
+                        type: "GET",
+                        url: "@(Url.Action("GetStatesByCountryId", "Country"))",
+                        data: { "countryId": selectedItem},
+                        success: function(data) {
+                            ddlStates.html('');
+                            $.each(data, function(id, option) {
+                                ddlStates.append($('<option></option>').val(option.id).html(option.name));
+                            });
+                        },
+                        error: function(xhr, ajaxOptions, thrownError) {
+                            $("#getStatesByCountryIdAlert").click();
+                        }
+                    });
+                });
+            });
+        </script>
+
+        <div class="panel-body">
+            <div class="form-group">
+                <div class="col-sm-3">
+                    <nop-label asp-for="Name" />
+                </div>
+                <div class="col-sm-9">
+                    <nop-editor asp-for="Name" />
+                    <span asp-validation-for="Name"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-3">
+                    <nop-label asp-for="Description" />
+                </div>
+                <div class="col-sm-9">
+                    <nop-textarea asp-for="Description" />
+                    <span asp-validation-for="Description"></span>
+                </div>
+            </div>
+            @if (Model.Address.CountryEnabled)
+            {
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        <nop-label asp-for="Address.CountryId" />
+                    </div>
+                    <div class="col-sm-9">
+                        <nop-select asp-for="Address.CountryId" asp-items="Model.Address.AvailableCountries" />
+                        <span asp-validation-for="Address.CountryId"></span>
+                    </div>
+                </div>
+            }
+            @if (Model.Address.StateProvinceEnabled)
+            {
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        <nop-label asp-for="Address.StateProvinceId" />
+                    </div>
+                    <div class="col-sm-9">
+                        <nop-select asp-for="Address.StateProvinceId" asp-items="Model.Address.AvailableStates" />
+                        <span asp-validation-for="Address.StateProvinceId"></span>
+                    </div>
+                </div>
+            }
+            @if (Model.Address.CountyEnabled)
+            {
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        <nop-label asp-for="Address.County" />
+                    </div>
+                    <div class="col-sm-9">
+                        <nop-editor asp-for="Address.County" />
+                        <span asp-validation-for="Address.County"></span>
+                    </div>
+                </div>
+            }
+            @if (Model.Address.CityEnabled)
+            {
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        <nop-label asp-for="Address.City" />
+                    </div>
+                    <div class="col-sm-9">
+                        <nop-editor asp-for="Address.City" />
+                        <span asp-validation-for="Address.City"></span>
+                    </div>
+                </div>
+            }
+            <div class="form-group">
+                <div class="col-sm-3">
+                    <nop-label asp-for="Address.Address1" />
+                </div>
+                <div class="col-sm-9">
+                    <nop-editor asp-for="Address.Address1" />
+                    <span asp-validation-for="Address.Address1"></span>
+                </div>
+            </div>
+            @if (Model.Address.ZipPostalCodeEnabled)
+            {
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        <nop-label asp-for="Address.ZipPostalCode" />
+                    </div>
+                    <div class="col-sm-9">
+                        <nop-editor asp-for="Address.ZipPostalCode" />
+                        <span asp-validation-for="Address.ZipPostalCode"></span>
+                    </div>
+                </div>
+            }
+            <div class="form-group">
+                <div class="col-sm-3">
+                    <nop-label asp-for="OpeningHours" />
+                </div>
+                <div class="col-sm-9">
+                    <nop-editor asp-for="OpeningHours" />
+                    <span asp-validation-for="OpeningHours"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-3">
+                    <nop-label asp-for="PickupFee" />
+                </div>
+                <div class="col-sm-9">
+                    <nop-editor asp-for="PickupFee" />
+                    <span asp-validation-for="PickupFee"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-3">
+                    <nop-label asp-for="DisplayOrder" />
+                </div>
+                <div class="col-sm-9">
+                    <nop-editor asp-for="DisplayOrder" />
+                    <span asp-validation-for="DisplayOrder"></span>
+                </div>
+            </div>
+            <div class="form-group" @(Model.AvailableStores.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
+                <div class="col-sm-3">
+                    <nop-label asp-for="StoreId" />
+                </div>
+                <div class="col-sm-9">
+                    <nop-select asp-for="StoreId" asp-items="Model.AvailableStores" />
+                    <span asp-validation-for="StoreId"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<nop-alert asp-alert-id="getStatesByCountryIdAlert" asp-alert-message="@T("Admin.Common.Alert.States.Failed")" />

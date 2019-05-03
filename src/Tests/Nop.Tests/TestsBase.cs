@@ -1,6 +1,6 @@
 ﻿using System.Security.Principal;
+using Moq;
 using NUnit.Framework;
-using Rhino.Mocks;
 
 namespace Nop.Tests
 {
@@ -11,17 +11,13 @@ namespace Nop.Tests
         [SetUp]
         public virtual void SetUp()
         {
-            mocks = new MockRepository();
+            mocks = new MockRepository(MockBehavior.Loose);
         }
 
         [TearDown]
         public virtual void TearDown()
         {
-            if (mocks != null)
-            {
-                mocks.ReplayAll();
-                mocks.VerifyAll();
-            }
+            mocks?.VerifyAll();
         }
 
         protected static IPrincipal CreatePrincipal(string name, params string[] roles)

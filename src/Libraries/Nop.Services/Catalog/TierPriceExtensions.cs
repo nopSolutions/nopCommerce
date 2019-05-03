@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Domain.Catalog;
@@ -7,7 +7,7 @@ using Nop.Core.Domain.Customers;
 namespace Nop.Services.Catalog
 {
     /// <summary>
-    /// Extensions
+    /// Tier price extensions
     /// </summary>
     public static class TierPriceExtensions
     {
@@ -17,23 +17,12 @@ namespace Nop.Services.Catalog
         /// <param name="source">Tier prices</param>
         /// <param name="storeId">Store identifier</param>
         /// <returns>Filtered tier prices</returns>
-        public static IList<TierPrice> FilterByStore(this IList<TierPrice> source,
-            int storeId)
+        public static IEnumerable<TierPrice> FilterByStore(this IEnumerable<TierPrice> source, int storeId)
         {
             if (source == null)
-                throw new ArgumentNullException("source");
+                throw new ArgumentNullException(nameof(source));
 
-            var result = new List<TierPrice>();
-            foreach (var tierPrice in source)
-            {
-                //check store requirement
-                if (tierPrice.StoreId > 0 && tierPrice.StoreId != storeId)
-                    continue;
-
-                result.Add(tierPrice);
-            }
-
-            return result;
+            return source.Where(tierPrice => tierPrice.StoreId == 0 || tierPrice.StoreId == storeId);
         }
 
         /// <summary>
@@ -42,66 +31,69 @@ namespace Nop.Services.Catalog
         /// <param name="source">Tier prices</param>
         /// <param name="customer">Customer</param>
         /// <returns>Filtered tier prices</returns>
-        public static IList<TierPrice> FilterForCustomer(this IList<TierPrice> source,
-            Customer customer)
+        public static IEnumerable<TierPrice> FilterForCustomer(this IEnumerable<TierPrice> source, Customer customer)
         {
             if (source == null)
-                throw new ArgumentNullException("source");
+                throw new ArgumentNullException(nameof(source));
 
-            var result = new List<TierPrice>();
-            foreach (var tierPrice in source)
-            {
-                //check customer role requirement
-                if (tierPrice.CustomerRole != null)
-                {
-                    if (customer == null)
-                        continue;
-
-                    var customerRoles = customer.CustomerRoles.Where(cr => cr.Active).ToList();
-                    if (customerRoles.Count == 0)
-                        continue;
-
-                    bool roleIsFound = false;
-                    foreach (var customerRole in customerRoles)
-                        if (customerRole == tierPrice.CustomerRole)
-                            roleIsFound = true;
-
-                    if (!roleIsFound)
-                        continue;
-
-                }
-
-                result.Add(tierPrice);
-            }
-
-            return result;
+            if (customer == null)
+                throw new ArgumentNullException(nameof(customer));
+            
+            return source.Where(tierPrice => 
+               //tier prices without custoemr role specified
+               !tierPrice.CustomerRoleId.HasValue || 
+               tierPrice.CustomerRoleId.Value == 0 ||
+               //validate customer role if specified
+               customer.GetCustomerRoleIds().Contains(tierPrice.CustomerRoleId.Value));
         }
 
         /// <summary>
-        /// Remove duplicated quantities (leave only a tier price with minimum price)
+        /// Remove duplicated quantities (leave only an tier price with minimum price)
         /// </summary>
         /// <param name="source">Tier prices</param>
         /// <returns>Filtered tier prices</returns>
-        public static IList<TierPrice> RemoveDuplicatedQuantities(this IList<TierPrice> source)
+        public static IEnumerable<TierPrice> RemoveDuplicatedQuantities(this IEnumerable<TierPrice> source)
         {
             if (source == null)
-                throw new ArgumentNullException("source");
+                throw new ArgumentNullException(nameof(source));
             
-            //find duplicates
-            var query = from tierPrice in source
-                        group tierPrice by tierPrice.Quantity into g
-                        where g.Count() > 1
-                        select new { Quantity = g.Key, TierPrices = g.ToList() };
-            foreach (var item in query)
-            {
-                //find a tier price record with minimum price (we'll not remove it)
-                var minTierPrice = item.TierPrices.Aggregate((tp1, tp2) => (tp1.Price < tp2.Price ? tp1 : tp2));
-                //remove all other records
-                item.TierPrices.Remove(minTierPrice);
-                item.TierPrices.ForEach(x=> source.Remove(x));
-            }
+            var tierPrices = source.ToList();
 
-            return source;
+            //get group of tier prices with the same quantity
+            var tierPricesWithDuplicates = tierPrices.GroupBy(tierPrice => tierPrice.Quantity).Where(group => group.Count() > 1);
+
+            //get tier prices with higher prices 
+            var duplicatedPrices = tierPricesWithDuplicates.SelectMany(group =>
+            {
+                //find minimal price for quantity
+                var minTierPrice = group.Aggregate((currentMinTierPrice, nextTierPrice) =>
+                    (currentMinTierPrice.Price < nextTierPrice.Price ? currentMinTierPrice : nextTierPrice));
+
+                //and return all other with higher price
+                return group.Where(tierPrice => tierPrice.Id != minTierPrice.Id);
+            });
+
+            //return tier prices without duplicates
+            return tierPrices.Where(tierPrice => duplicatedPrices.All(duplicatedPrice => duplicatedPrice.Id != tierPrice.Id));
+        }
+
+        /// <summary>
+        /// Filter tier prices by date
+        /// </summary>
+        /// <param name="source">Tier prices</param>
+        /// <param name="date">Date in UTC; pass null to filter by current date</param>
+        /// <returns>Filtered tier prices</returns>
+        public static IEnumerable<TierPrice> FilterByDate(this IEnumerable<TierPrice> source, DateTime? date = null)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            if (!date.HasValue)
+                date = DateTime.UtcNow;
+
+            return source.Where(tierPrice =>
+                (!tierPrice.StartDateTimeUtc.HasValue || tierPrice.StartDateTimeUtc.Value < date) &&
+                (!tierPrice.EndDateTimeUtc.HasValue || tierPrice.EndDateTimeUtc.Value > date));
         }
     }
 }

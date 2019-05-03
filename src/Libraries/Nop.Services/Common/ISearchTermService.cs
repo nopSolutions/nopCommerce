@@ -4,7 +4,7 @@ using Nop.Core.Domain.Common;
 namespace Nop.Services.Common
 {
     /// <summary>
-    /// Search term service interafce
+    /// Search term service interface
     /// </summary>
     public partial interface ISearchTermService
     {
@@ -12,7 +12,7 @@ namespace Nop.Services.Common
         /// Deletes a search term record
         /// </summary>
         /// <param name="searchTerm">Search term</param>
-        void DeleteAddress(SearchTerm searchTerm);
+        void DeleteSearchTerm(SearchTerm searchTerm);
 
         /// <summary>
         /// Gets a search term record by identifier

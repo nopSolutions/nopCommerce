@@ -15,7 +15,6 @@ namespace Nop.Services.Orders
         /// Checks order status
         /// </summary>
         /// <param name="order">Order</param>
-        /// <returns>Validated order</returns>
         void CheckOrderStatus(Order order);
 
         /// <summary>
@@ -26,17 +25,24 @@ namespace Nop.Services.Orders
         PlaceOrderResult PlaceOrder(ProcessPaymentRequest processPaymentRequest);
 
         /// <summary>
+        /// Update order totals
+        /// </summary>
+        /// <param name="updateOrderParameters">Parameters for the updating order</param>
+        void UpdateOrderTotals(UpdateOrderParameters updateOrderParameters);
+
+        /// <summary>
         /// Deletes an order
         /// </summary>
         /// <param name="order">The order</param>
         void DeleteOrder(Order order);
 
-
         /// <summary>
-        /// Process next recurring psayment
+        /// Process next recurring payment
         /// </summary>
         /// <param name="recurringPayment">Recurring payment</param>
-        void ProcessNextRecurringPayment(RecurringPayment recurringPayment);
+        /// <param name="paymentResult">Process payment result (info about last payment for automatic recurring payments)</param>
+        /// <returns>Collection of errors</returns>
+        IEnumerable<string> ProcessNextRecurringPayment(RecurringPayment recurringPayment, ProcessPaymentResult paymentResult = null);
 
         /// <summary>
         /// Cancels a recurring payment
@@ -52,9 +58,13 @@ namespace Nop.Services.Orders
         /// <returns>value indicating whether a customer can cancel recurring payment</returns>
         bool CanCancelRecurringPayment(Customer customerToValidate, RecurringPayment recurringPayment);
 
-
-        
-
+        /// <summary>
+        /// Gets a value indicating whether a customer can retry last failed recurring payment
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="recurringPayment">Recurring Payment</param>
+        /// <returns>True if a customer can retry payment; otherwise false</returns>
+        bool CanRetryLastRecurringPayment(Customer customer, RecurringPayment recurringPayment);
 
         /// <summary>
         /// Send a shipment
@@ -70,8 +80,6 @@ namespace Nop.Services.Orders
         /// <param name="notifyCustomer">True to notify customer</param>
         void Deliver(Shipment shipment, bool notifyCustomer);
 
-
-
         /// <summary>
         /// Gets a value indicating whether cancel is allowed
         /// </summary>
@@ -86,8 +94,6 @@ namespace Nop.Services.Orders
         /// <param name="notifyCustomer">True to notify customer</param>
         void CancelOrder(Order order, bool notifyCustomer);
 
-
-
         /// <summary>
         /// Gets a value indicating whether order can be marked as authorized
         /// </summary>
@@ -100,8 +106,6 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="order">Order</param>
         void MarkAsAuthorized(Order order);
-
-
 
         /// <summary>
         /// Gets a value indicating whether capture from admin panel is allowed
@@ -129,8 +133,6 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="order">Order</param>
         void MarkOrderAsPaid(Order order);
-
-
 
         /// <summary>
         /// Gets a value indicating whether refund from admin panel is allowed
@@ -190,8 +192,6 @@ namespace Nop.Services.Orders
         /// <param name="amountToRefund">Amount to refund</param>
         void PartiallyRefundOffline(Order order, decimal amountToRefund);
 
-
-
         /// <summary>
         /// Gets a value indicating whether void from admin panel is allowed
         /// </summary>
@@ -219,9 +219,6 @@ namespace Nop.Services.Orders
         /// <param name="order">Order</param>
         void VoidOffline(Order order);
 
-
-
-
         /// <summary>
         /// Place order items in current user shopping cart.
         /// </summary>
@@ -235,20 +232,26 @@ namespace Nop.Services.Orders
         /// <returns>Result</returns>
         bool IsReturnRequestAllowed(Order order);
 
-
-
         /// <summary>
-        /// Valdiate minimum order sub-total amount
+        /// Validate minimum order sub-total amount
         /// </summary>
         /// <param name="cart">Shopping cart</param>
         /// <returns>true - OK; false - minimum order sub-total amount is not reached</returns>
         bool ValidateMinOrderSubtotalAmount(IList<ShoppingCartItem> cart);
 
         /// <summary>
-        /// Valdiate minimum order total amount
+        /// Validate minimum order total amount
         /// </summary>
         /// <param name="cart">Shopping cart</param>
         /// <returns>true - OK; false - minimum order total amount is not reached</returns>
         bool ValidateMinOrderTotalAmount(IList<ShoppingCartItem> cart);
+
+        /// <summary>
+        /// Gets a value indicating whether payment workflow is required
+        /// </summary>
+        /// <param name="cart">Shopping cart</param>
+        /// <param name="useRewardPoints">A value indicating reward points should be used; null to detect current choice of the customer</param>
+        /// <returns>true - OK; false - minimum order total amount is not reached</returns>
+        bool IsPaymentWorkflowRequired(IList<ShoppingCartItem> cart, bool? useRewardPoints = null);
     }
 }

@@ -2,6 +2,9 @@
 
 namespace Nop.Core.Domain.Forums
 {
+    /// <summary>
+    /// Forum settings
+    /// </summary>
     public class ForumSettings : ISettings
     {
         /// <summary>
@@ -38,6 +41,16 @@ namespace Nop.Core.Domain.Forums
         /// Gets or sets a value indicating whether customers are allowed to delete posts that they created
         /// </summary>
         public bool AllowCustomersToDeletePosts { get; set; }
+
+        /// <summary>
+        /// Gets or sets the whether users can vote for posts
+        /// </summary>
+        public bool AllowPostVoting { get; set; }
+
+        /// <summary>
+        /// Gets or sets the maximum number of votes for user per day
+        /// </summary>
+        public int MaxVotesPerDay { get; set; }
 
         /// <summary>
         /// Gets or sets maximum length of topic subject
@@ -132,7 +145,7 @@ namespace Nop.Core.Domain.Forums
         /// <summary>
         /// Gets or sets the number of items to display for Active Discussions on forums home page
         /// </summary>
-        public int HomePageActiveDiscussionsTopicCount { get; set; }
+        public int HomepageActiveDiscussionsTopicCount { get; set; }
 
         /// <summary>
         /// Gets or sets the number of items to display for Active Discussions RSS Feed

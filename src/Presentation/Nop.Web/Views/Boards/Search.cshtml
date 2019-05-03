@@ -1,16 +1,17 @@
-﻿@model SearchModel
-@using Nop.Core.Domain.Forums;
-@using Nop.Web.Models.Boards;
-@using Nop.Web.Models.Common;
-@{   
-    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+﻿@model Nop.Web.Models.Boards.SearchModel
+@using Nop.Core.Domain.Forums
+@{
+    Layout = "_ColumnsOne";
 
-    Html.AddTitleParts(T("Forum.PageTitle.Search").Text);    
+    //title
+    Html.AddTitleParts(T("Forum.PageTitle.Search").Text);
+    //page class
+    Html.AppendPageCssClassParts("html-forum-search-page");
 }
-<script type="text/javascript">
+<script asp-location="Footer">
     $(document).ready(function () {
         toggleAdvancedSearch();
-        $('#adv').click(function () {
+        $('#adv').on('click', function () {
             toggleAdvancedSearch();
         });
     });
@@ -23,39 +24,39 @@
         }
     }
 </script>
-@Html.Action("ForumBreadcrumb")
+@await Component.InvokeAsync("ForumBreadcrumb")
 <div class="page forum-search-page">
     <div class="page-title">
         <h1>@T("Forum.Search")</h1>
     </div>
     <div class="page-body">
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BoardsSearchBeforeSearchform })
         <div class="search-input">
-            @using (Html.BeginRouteForm("Search", FormMethod.Get))
-            {
+            <form asp-route="Search" method="get">
                 <div class="fieldset">
                     <div class="form-fields">
                         <div class="basic-search">
                             <div class="inputs">
                                 <label>@T("Forum.Search.SearchKeyword")</label>
-                                @Html.TextBox("searchterms", null, new { @class = "forum-search-text" })
+                                <input type="text" name="searchterms" id="searchterms" class="forum-search-text" value="@Model.SearchTerms"/>
                             </div>
                             <div class="inputs reversed">
-                                @Html.CheckBox("adv", Model.ShowAdvancedSearch)
-                                @Html.Label("adv", T("Forum.Search.AdvancedSearch").Text)
+                                <input @(Model.ShowAdvancedSearch ? "checked=\"checked\"" : "") id="adv" name="adv" type="checkbox" value="true">
+                                <label for="adv">@T("Forum.Search.AdvancedSearch")</label>
                             </div>
                         </div>
                         <div class="advanced-search" id="advanced-search" style="display: none;">
                             <div class="inputs">
                                 <label>@T("Forum.Search.SearchInForum")</label>
-                                @Html.DropDownList("forumId", new SelectList(Model.ForumList, "Value", "Text", Model.ForumIdSelected))
+                                <select name="forumId" id="forumId" asp-items="@(new SelectList(Model.ForumList, "Value", "Text", Model.ForumIdSelected))"></select>
                             </div>
                             <div class="inputs">
                                 <label>@T("Forum.Search.SearchWithin")</label>
-                                @Html.DropDownList("within", new SelectList(Model.WithinList, "Value", "Text", Model.WithinSelected))
+                                <select name="within" id="within" asp-items="@(new SelectList(Model.WithinList, "Value", "Text", Model.WithinSelected))"></select>
                             </div>
                             <div class="inputs">
                                 <label>@T("Forum.Search.LimitResultsToPrevious")</label>
-                                @Html.DropDownList("limitDays", new SelectList(Model.LimitList, "Value", "Text", Model.LimitDaysSelected))
+                                <select name="limitDays" id="limitDays" asp-items="@(new SelectList(Model.LimitList, "Value", "Text", Model.LimitDaysSelected))"></select>
                             </div>
                         </div>
                     </div>
@@ -63,8 +64,9 @@
                 <div class="buttons">
                     <input type="submit" class="button-1 forum-search-button" value="@T("Forum.SearchButton")" />
                 </div>
-            }
+            </form>
         </div>
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BoardsSearchAfterSearchform })
         <div class="search-error">
             @Model.Error
         </div>
@@ -94,17 +96,18 @@
                     RouteValues = new ForumSearchRouteValues { adv = adv, searchterms = searchterms, forumId = forumId, within = within, limitDays = limitDays },
                 });
             }
-            @if (!MvcHtmlString.IsNullOrEmpty(pager))
+            @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BoardsSearchBeforeResults })
+            @if (!string.IsNullOrEmpty(pager.ToHtmlString()))
             {
                 <div class="pager upper">
                     @pager
                 </div>
             }
             @if (Model.NoResultsVisisble)
-            {   
+            {
                 <div class="no-result">
                     @T("Forum.SearchNoResultsText")
-                </div>                
+                </div>
             }
             <div class="forums-table-section topic-group">
                 @if (Model.SearchResultsVisible)
@@ -129,6 +132,12 @@
                                     <th class="views">
                                         @T("Forum.Views")
                                     </th>
+                                    @if (Model.AllowPostVoting)
+                                    {
+                                        <th class="votes">
+                                            @T("Forum.Votes")
+                                        </th>
+                                    }
                                     <th class="latest-post">
                                         @T("Forum.LatestPost")
                                     </th>
@@ -138,7 +147,7 @@
                                 @foreach (var topic in @Model.ForumTopics)
                                 {
                                     var topicType = "post";
-                                    var topicText = String.Empty;
+                                    var topicText = string.Empty;
                                     switch (topic.ForumTopicType)
                                     {
                                         case ForumTopicType.Normal:
@@ -146,11 +155,11 @@
                                             break;
                                         case ForumTopicType.Sticky:
                                             topicType = "sticky";
-                                            topicText = string.Format("[{0}]", T("Forum.Sticky"));
+                                            topicText = $"[{T("Forum.Sticky")}]";
                                             break;
                                         case ForumTopicType.Announcement:
                                             topicType = "announcement";
-                                            topicText = string.Format("[{0}]", T("Forum.Announcement"));
+                                            topicText = $"[{T("Forum.Announcement")}]";
                                             break;
                                         default:
                                             topicType = "post";
@@ -163,7 +172,7 @@
                                         <td class="topic-details">
                                             <div class="topic-title">
                                                 @Html.RouteLink(topic.Subject, "TopicSlug", new { id = topic.Id, slug = topic.SeName })
-                                                @if (!String.IsNullOrEmpty(topicText))
+                                                @if (!string.IsNullOrEmpty(topicText))
                                                 {
                                                     <span class="topic-type">@topicText</span>
                                                 }
@@ -180,11 +189,11 @@
                                                     <label>@T("Forum.Author"):</label>
                                                     if (topic.AllowViewingProfiles)
                                                     {
-                                                    @Html.RouteLink(topic.CustomerName, "CustomerProfile", new { Id = topic.CustomerId })
+                                                        @Html.RouteLink(topic.CustomerName, "CustomerProfile", new { Id = topic.CustomerId })
                                                     }
                                                     else
                                                     {
-                                                    @topic.CustomerName
+                                                        @topic.CustomerName
                                                     }
                                                 }
                                             </div>
@@ -195,8 +204,14 @@
                                         <td class="views">
                                             @topic.Views
                                         </td>
+                                        @if (Model.AllowPostVoting)
+                                        {
+                                            <td class="votes">
+                                                @topic.Votes
+                                            </td>
+                                        }
                                         <td class="latest-post">
-                                            @Html.Action("LastPost", new { forumPostId = topic.LastPostId, showTopic = false })
+                                            @await Component.InvokeAsync("ForumLastPost", new { forumPostId = topic.LastPostId, showTopic = false })
                                         </td>
                                     </tr>
                                 }
@@ -205,12 +220,13 @@
                     </div>
                 }
             </div>
-            @if (!MvcHtmlString.IsNullOrEmpty(pager))
+            @if (!string.IsNullOrEmpty(pager.ToHtmlString()))
             {
                 <div class="pager lower">
                     @pager
                 </div>
             }
+            @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BoardsSearchAfterResults })
         </div>
     </div>
 </div>

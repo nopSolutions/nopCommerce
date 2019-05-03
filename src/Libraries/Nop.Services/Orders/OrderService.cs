@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
-using Nop.Core.Domain.Payments;
-using Nop.Core.Domain.Shipping;
+using Nop.Core.Html;
 using Nop.Services.Events;
 
 namespace Nop.Services.Orders
@@ -19,43 +19,33 @@ namespace Nop.Services.Orders
     {
         #region Fields
 
+        private readonly IEventPublisher _eventPublisher;
+        private readonly IRepository<Customer> _customerRepository;
         private readonly IRepository<Order> _orderRepository;
         private readonly IRepository<OrderItem> _orderItemRepository;
         private readonly IRepository<OrderNote> _orderNoteRepository;
         private readonly IRepository<Product> _productRepository;
         private readonly IRepository<RecurringPayment> _recurringPaymentRepository;
-        private readonly IRepository<Customer> _customerRepository;
-        private readonly IEventPublisher _eventPublisher;
 
         #endregion
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="orderRepository">Order repository</param>
-        /// <param name="orderItemRepository">Order item repository</param>
-        /// <param name="orderNoteRepository">Order note repository</param>
-        /// <param name="productRepository">Product repository</param>
-        /// <param name="recurringPaymentRepository">Recurring payment repository</param>
-        /// <param name="customerRepository">Customer repository</param>
-        /// <param name="eventPublisher">Event published</param>
-        public OrderService(IRepository<Order> orderRepository,
+        public OrderService(IEventPublisher eventPublisher,
+            IRepository<Customer> customerRepository,
+            IRepository<Order> orderRepository,
             IRepository<OrderItem> orderItemRepository,
             IRepository<OrderNote> orderNoteRepository,
             IRepository<Product> productRepository,
-            IRepository<RecurringPayment> recurringPaymentRepository,
-            IRepository<Customer> customerRepository, 
-            IEventPublisher eventPublisher)
+            IRepository<RecurringPayment> recurringPaymentRepository)
         {
-            this._orderRepository = orderRepository;
-            this._orderItemRepository = orderItemRepository;
-            this._orderNoteRepository = orderNoteRepository;
-            this._productRepository = productRepository;
-            this._recurringPaymentRepository = recurringPaymentRepository;
-            this._customerRepository = customerRepository;
-            this._eventPublisher = eventPublisher;
+            _eventPublisher = eventPublisher;
+            _customerRepository = customerRepository;
+            _orderRepository = orderRepository;
+            _orderItemRepository = orderItemRepository;
+            _orderNoteRepository = orderNoteRepository;
+            _productRepository = productRepository;
+            _recurringPaymentRepository = recurringPaymentRepository;
         }
 
         #endregion
@@ -78,6 +68,19 @@ namespace Nop.Services.Orders
         }
 
         /// <summary>
+        /// Gets an order
+        /// </summary>
+        /// <param name="customOrderNumber">The custom order number</param>
+        /// <returns>Order</returns>
+        public virtual Order GetOrderByCustomOrderNumber(string customOrderNumber)
+        {
+            if (string.IsNullOrEmpty(customOrderNumber))
+                return null;
+
+            return _orderRepository.Table.FirstOrDefault(o => o.CustomOrderNumber == customOrderNumber);
+        }
+
+        /// <summary>
         /// Get orders by identifiers
         /// </summary>
         /// <param name="orderIds">Order identifiers</param>
@@ -88,17 +91,18 @@ namespace Nop.Services.Orders
                 return new List<Order>();
 
             var query = from o in _orderRepository.Table
-                        where orderIds.Contains(o.Id)
+                        where orderIds.Contains(o.Id) && !o.Deleted
                         select o;
             var orders = query.ToList();
             //sort by passed identifiers
             var sortedOrders = new List<Order>();
-            foreach (int id in orderIds)
+            foreach (var id in orderIds)
             {
                 var order = orders.Find(x => x.Id == id);
                 if (order != null)
                     sortedOrders.Add(order);
             }
+
             return sortedOrders;
         }
 
@@ -126,10 +130,13 @@ namespace Nop.Services.Orders
         public virtual void DeleteOrder(Order order)
         {
             if (order == null)
-                throw new ArgumentNullException("order");
+                throw new ArgumentNullException(nameof(order));
 
             order.Deleted = true;
             UpdateOrder(order);
+
+            //event notification
+            _eventPublisher.EntityDeleted(order);
         }
 
         /// <summary>
@@ -145,55 +152,36 @@ namespace Nop.Services.Orders
         /// <param name="paymentMethodSystemName">Payment method system name; null to load all records</param>
         /// <param name="createdFromUtc">Created date from (UTC); null to load all records</param>
         /// <param name="createdToUtc">Created date to (UTC); null to load all records</param>
-        /// <param name="os">Order status; null to load all orders</param>
-        /// <param name="ps">Order payment status; null to load all orders</param>
-        /// <param name="ss">Order shipment status; null to load all orders</param>
+        /// <param name="osIds">Order status identifiers; null to load all orders</param>
+        /// <param name="psIds">Payment status identifiers; null to load all orders</param>
+        /// <param name="ssIds">Shipping status identifiers; null to load all orders</param>
+        /// <param name="billingPhone">Billing phone. Leave empty to load all records.</param>
         /// <param name="billingEmail">Billing email. Leave empty to load all records.</param>
         /// <param name="billingLastName">Billing last name. Leave empty to load all records.</param>
         /// <param name="orderNotes">Search in order notes. Leave empty to load all records.</param>
-        /// <param name="orderGuid">Search by order GUID (Global unique identifier) or part of GUID. Leave empty to load all orders.</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
+        /// <param name="getOnlyTotalCount">A value in indicating whether you want to load only total number of records. Set to "true" if you don't want to load data from database</param>
         /// <returns>Orders</returns>
         public virtual IPagedList<Order> SearchOrders(int storeId = 0,
             int vendorId = 0, int customerId = 0,
             int productId = 0, int affiliateId = 0, int warehouseId = 0,
             int billingCountryId = 0, string paymentMethodSystemName = null,
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
-            OrderStatus? os = null, PaymentStatus? ps = null, ShippingStatus? ss = null,
-            string billingEmail = null, string billingLastName = "",
-            string orderNotes = null, string orderGuid = null,
-            int pageIndex = 0, int pageSize = int.MaxValue)
+            List<int> osIds = null, List<int> psIds = null, List<int> ssIds = null,
+            string billingPhone = null, string billingEmail = null, string billingLastName = "",
+            string orderNotes = null, int pageIndex = 0, int pageSize = int.MaxValue, bool getOnlyTotalCount = false)
         {
-            int? orderStatusId = null;
-            if (os.HasValue)
-                orderStatusId = (int)os.Value;
-
-            int? paymentStatusId = null;
-            if (ps.HasValue)
-                paymentStatusId = (int)ps.Value;
-
-            int? shippingStatusId = null;
-            if (ss.HasValue)
-                shippingStatusId = (int)ss.Value;
-
             var query = _orderRepository.Table;
             if (storeId > 0)
                 query = query.Where(o => o.StoreId == storeId);
             if (vendorId > 0)
-            {
-                query = query
-                    .Where(o => o.OrderItems
-                    .Any(orderItem => orderItem.Product.VendorId == vendorId));
-            }
+                query = query.Where(o => o.OrderItems.Any(orderItem => orderItem.Product.VendorId == vendorId));
             if (customerId > 0)
                 query = query.Where(o => o.CustomerId == customerId);
             if (productId > 0)
-            {
-                query = query
-                    .Where(o => o.OrderItems
-                    .Any(orderItem => orderItem.Product.Id == productId));
-            }
+                query = query.Where(o => o.OrderItems.Any(orderItem => orderItem.ProductId == productId));
+           
             if (warehouseId > 0)
             {
                 var manageStockInventoryMethodId = (int)ManageInventoryMethod.ManageStock;
@@ -202,7 +190,7 @@ namespace Nop.Services.Orders
                     .Any(orderItem =>
                         //"Use multiple warehouses" enabled
                         //we search in each warehouse
-                        (orderItem.Product.ManageInventoryMethodId == manageStockInventoryMethodId && 
+                        (orderItem.Product.ManageInventoryMethodId == manageStockInventoryMethodId &&
                         orderItem.Product.UseMultipleWarehouses &&
                         orderItem.Product.ProductWarehouseInventory.Any(pwi => pwi.WarehouseId == warehouseId))
                         ||
@@ -210,12 +198,12 @@ namespace Nop.Services.Orders
                         //we use standard "warehouse" property
                         ((orderItem.Product.ManageInventoryMethodId != manageStockInventoryMethodId ||
                         !orderItem.Product.UseMultipleWarehouses) &&
-                        orderItem.Product.WarehouseId == warehouseId))
-                        );
+                        orderItem.Product.WarehouseId == warehouseId)));
             }
+
             if (billingCountryId > 0)
                 query = query.Where(o => o.BillingAddress != null && o.BillingAddress.CountryId == billingCountryId);
-            if (!String.IsNullOrEmpty(paymentMethodSystemName))
+            if (!string.IsNullOrEmpty(paymentMethodSystemName))
                 query = query.Where(o => o.PaymentMethodSystemName == paymentMethodSystemName);
             if (affiliateId > 0)
                 query = query.Where(o => o.AffiliateId == affiliateId);
@@ -223,33 +211,25 @@ namespace Nop.Services.Orders
                 query = query.Where(o => createdFromUtc.Value <= o.CreatedOnUtc);
             if (createdToUtc.HasValue)
                 query = query.Where(o => createdToUtc.Value >= o.CreatedOnUtc);
-            if (orderStatusId.HasValue)
-                query = query.Where(o => orderStatusId.Value == o.OrderStatusId);
-            if (paymentStatusId.HasValue)
-                query = query.Where(o => paymentStatusId.Value == o.PaymentStatusId);
-            if (shippingStatusId.HasValue)
-                query = query.Where(o => shippingStatusId.Value == o.ShippingStatusId);
-            if (!String.IsNullOrEmpty(billingEmail))
-                query = query.Where(o => o.BillingAddress != null && !String.IsNullOrEmpty(o.BillingAddress.Email) && o.BillingAddress.Email.Contains(billingEmail));
-            if (!String.IsNullOrEmpty(billingLastName))
-                query = query.Where(o => o.BillingAddress != null && !String.IsNullOrEmpty(o.BillingAddress.LastName) && o.BillingAddress.LastName.Contains(billingLastName));
-            if (!String.IsNullOrEmpty(orderNotes))
+            if (osIds != null && osIds.Any())
+                query = query.Where(o => osIds.Contains(o.OrderStatusId));
+            if (psIds != null && psIds.Any())
+                query = query.Where(o => psIds.Contains(o.PaymentStatusId));
+            if (ssIds != null && ssIds.Any())
+                query = query.Where(o => ssIds.Contains(o.ShippingStatusId));
+            if (!string.IsNullOrEmpty(billingPhone))
+                query = query.Where(o => o.BillingAddress != null && !string.IsNullOrEmpty(o.BillingAddress.PhoneNumber) && o.BillingAddress.PhoneNumber.Contains(billingPhone));
+            if (!string.IsNullOrEmpty(billingEmail))
+                query = query.Where(o => o.BillingAddress != null && !string.IsNullOrEmpty(o.BillingAddress.Email) && o.BillingAddress.Email.Contains(billingEmail));
+            if (!string.IsNullOrEmpty(billingLastName))
+                query = query.Where(o => o.BillingAddress != null && !string.IsNullOrEmpty(o.BillingAddress.LastName) && o.BillingAddress.LastName.Contains(billingLastName));
+            if (!string.IsNullOrEmpty(orderNotes))
                 query = query.Where(o => o.OrderNotes.Any(on => on.Note.Contains(orderNotes)));
             query = query.Where(o => !o.Deleted);
             query = query.OrderByDescending(o => o.CreatedOnUtc);
 
-            
-           
-            if (!String.IsNullOrEmpty(orderGuid))
-            {
-                //filter by GUID. Filter in BLL because EF doesn't support casting of GUID to string
-                var orders = query.ToList();
-                orders = orders.FindAll(o => o.OrderGuid.ToString().ToLowerInvariant().Contains(orderGuid.ToLowerInvariant()));
-                return new PagedList<Order>(orders, pageIndex, pageSize);
-            }
-            
             //database layer paging
-            return new PagedList<Order>(query, pageIndex, pageSize);
+            return new PagedList<Order>(query, pageIndex, pageSize, getOnlyTotalCount);
         }
 
         /// <summary>
@@ -259,7 +239,7 @@ namespace Nop.Services.Orders
         public virtual void InsertOrder(Order order)
         {
             if (order == null)
-                throw new ArgumentNullException("order");
+                throw new ArgumentNullException(nameof(order));
 
             _orderRepository.Insert(order);
 
@@ -274,7 +254,7 @@ namespace Nop.Services.Orders
         public virtual void UpdateOrder(Order order)
         {
             if (order == null)
-                throw new ArgumentNullException("order");
+                throw new ArgumentNullException(nameof(order));
 
             _orderRepository.Update(order);
 
@@ -288,23 +268,147 @@ namespace Nop.Services.Orders
         /// <param name="authorizationTransactionId">Authorization transaction ID</param>
         /// <param name="paymentMethodSystemName">Payment method system name</param>
         /// <returns>Order</returns>
-        public virtual Order GetOrderByAuthorizationTransactionIdAndPaymentMethod(string authorizationTransactionId, 
+        public virtual Order GetOrderByAuthorizationTransactionIdAndPaymentMethod(string authorizationTransactionId,
             string paymentMethodSystemName)
-        { 
+        {
             var query = _orderRepository.Table;
-            if (!String.IsNullOrWhiteSpace(authorizationTransactionId))
+            if (!string.IsNullOrWhiteSpace(authorizationTransactionId))
                 query = query.Where(o => o.AuthorizationTransactionId == authorizationTransactionId);
-            
-            if (!String.IsNullOrWhiteSpace(paymentMethodSystemName))
+
+            if (!string.IsNullOrWhiteSpace(paymentMethodSystemName))
                 query = query.Where(o => o.PaymentMethodSystemName == paymentMethodSystemName);
-            
+
             query = query.OrderByDescending(o => o.CreatedOnUtc);
             var order = query.FirstOrDefault();
             return order;
         }
-        
+
+        /// <summary>
+        /// Parse tax rates
+        /// </summary>
+        /// <param name="order">Order</param>
+        /// <param name="taxRatesStr"></param>
+        /// <returns>Rates</returns>
+        public virtual SortedDictionary<decimal, decimal> ParseTaxRates(Order order, string taxRatesStr)
+        {
+            var taxRatesDictionary = new SortedDictionary<decimal, decimal>();
+
+            if (string.IsNullOrEmpty(taxRatesStr))
+                return taxRatesDictionary;
+
+            var lines = taxRatesStr.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+            foreach (var line in lines)
+            {
+                if (string.IsNullOrEmpty(line.Trim()))
+                    continue;
+
+                var taxes = line.Split(':');
+                if (taxes.Length != 2)
+                    continue;
+
+                try
+                {
+                    var taxRate = decimal.Parse(taxes[0].Trim(), CultureInfo.InvariantCulture);
+                    var taxValue = decimal.Parse(taxes[1].Trim(), CultureInfo.InvariantCulture);
+                    taxRatesDictionary.Add(taxRate, taxValue);
+                }
+                catch
+                {
+                    // ignored
+                }
+            }
+
+            //add at least one tax rate (0%)
+            if (!taxRatesDictionary.Any())
+                taxRatesDictionary.Add(decimal.Zero, decimal.Zero);
+
+            return taxRatesDictionary;
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether an order has items to be added to a shipment
+        /// </summary>
+        /// <param name="order">Order</param>
+        /// <returns>A value indicating whether an order has items to be added to a shipment</returns>
+        public virtual bool HasItemsToAddToShipment(Order order)
+        {
+            if (order == null)
+                throw new ArgumentNullException(nameof(order));
+
+            foreach (var orderItem in order.OrderItems)
+            {
+                //we can ship only shippable products
+                if (!orderItem.Product.IsShipEnabled)
+                    continue;
+
+                var totalNumberOfItemsCanBeAddedToShipment = GetTotalNumberOfItemsCanBeAddedToShipment(orderItem);
+                if (totalNumberOfItemsCanBeAddedToShipment <= 0)
+                    continue;
+
+                //yes, we have at least one item to create a new shipment
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether an order has items to ship
+        /// </summary>
+        /// <param name="order">Order</param>
+        /// <returns>A value indicating whether an order has items to ship</returns>
+        public virtual bool HasItemsToShip(Order order)
+        {
+            if (order == null)
+                throw new ArgumentNullException(nameof(order));
+
+            foreach (var orderItem in order.OrderItems)
+            {
+                //we can ship only shippable products
+                if (!orderItem.Product.IsShipEnabled)
+                    continue;
+
+                var totalNumberOfNotYetShippedItems = GetTotalNumberOfNotYetShippedItems(orderItem);
+                if (totalNumberOfNotYetShippedItems <= 0)
+                    continue;
+
+                //yes, we have at least one item to ship
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether an order has items to deliver
+        /// </summary>
+        /// <param name="order">Order</param>
+        /// <returns>A value indicating whether an order has items to deliver</returns>
+        public virtual bool HasItemsToDeliver(Order order)
+        {
+            if (order == null)
+                throw new ArgumentNullException(nameof(order));
+
+            foreach (var orderItem in order.OrderItems)
+            {
+                //we can ship only shippable products
+                if (!orderItem.Product.IsShipEnabled)
+                    continue;
+
+                var totalNumberOfShippedItems = GetTotalNumberOfShippedItems(orderItem);
+                var totalNumberOfDeliveredItems = GetTotalNumberOfDeliveredItems(orderItem);
+                if (totalNumberOfShippedItems <= totalNumberOfDeliveredItems)
+                    continue;
+
+                //yes, we have at least one item to deliver
+                return true;
+            }
+
+            return false;
+        }
+
         #endregion
-        
+
         #region Orders items
 
         /// <summary>
@@ -336,48 +440,22 @@ namespace Nop.Services.Orders
             var item = query.FirstOrDefault();
             return item;
         }
-        
+
         /// <summary>
-        /// Gets all order items
+        /// Gets all downloadable order items
         /// </summary>
-        /// <param name="orderId">Order identifier; null to load all records</param>
         /// <param name="customerId">Customer identifier; null to load all records</param>
-        /// <param name="createdFromUtc">Order created date from (UTC); null to load all records</param>
-        /// <param name="createdToUtc">Order created date to (UTC); null to load all records</param>
-        /// <param name="os">Order status; null to load all records</param>
-        /// <param name="ps">Order payment status; null to load all records</param>
-        /// <param name="ss">Order shipment status; null to load all records</param>
-        /// <param name="loadDownloableProductsOnly">Value indicating whether to load downloadable products only</param>
-        /// <returns>Orders</returns>
-        public virtual IList<OrderItem> GetAllOrderItems(int? orderId,
-            int? customerId, DateTime? createdFromUtc, DateTime? createdToUtc, 
-            OrderStatus? os, PaymentStatus? ps, ShippingStatus? ss,
-            bool loadDownloableProductsOnly)
+        /// <returns>Order items</returns>
+        public virtual IList<OrderItem> GetDownloadableOrderItems(int customerId)
         {
-            int? orderStatusId = null;
-            if (os.HasValue)
-                orderStatusId = (int)os.Value;
-
-            int? paymentStatusId = null;
-            if (ps.HasValue)
-                paymentStatusId = (int)ps.Value;
-
-            int? shippingStatusId = null;
-            if (ss.HasValue)
-                shippingStatusId = (int)ss.Value;
-
+            if (customerId == 0)
+                throw new ArgumentOutOfRangeException(nameof(customerId));
 
             var query = from orderItem in _orderItemRepository.Table
                         join o in _orderRepository.Table on orderItem.OrderId equals o.Id
                         join p in _productRepository.Table on orderItem.ProductId equals p.Id
-                        where (!orderId.HasValue || orderId.Value == 0 || orderId == o.Id) &&
-                        (!customerId.HasValue || customerId.Value == 0 || customerId == o.CustomerId) &&
-                        (!createdFromUtc.HasValue || createdFromUtc.Value <= o.CreatedOnUtc) &&
-                        (!createdToUtc.HasValue || createdToUtc.Value >= o.CreatedOnUtc) &&
-                        (!orderStatusId.HasValue || orderStatusId == o.OrderStatusId) &&
-                        (!paymentStatusId.HasValue || paymentStatusId.Value == o.PaymentStatusId) &&
-                        (!shippingStatusId.HasValue || shippingStatusId.Value == o.ShippingStatusId) &&
-                        (!loadDownloableProductsOnly || p.IsDownload) &&
+                        where customerId == o.CustomerId &&
+                        p.IsDownload &&
                         !o.Deleted
                         orderby o.CreatedOnUtc descending, orderItem.Id
                         select orderItem;
@@ -393,12 +471,148 @@ namespace Nop.Services.Orders
         public virtual void DeleteOrderItem(OrderItem orderItem)
         {
             if (orderItem == null)
-                throw new ArgumentNullException("orderItem");
+                throw new ArgumentNullException(nameof(orderItem));
 
             _orderItemRepository.Delete(orderItem);
 
             //event notification
             _eventPublisher.EntityDeleted(orderItem);
+        }
+
+        /// <summary>
+        /// Gets a total number of items in all shipments
+        /// </summary>
+        /// <param name="orderItem">Order item</param>
+        /// <returns>Total number of items in all shipments</returns>
+        public virtual int GetTotalNumberOfItemsInAllShipment(OrderItem orderItem)
+        {
+            if (orderItem == null)
+                throw new ArgumentNullException(nameof(orderItem));
+
+            var totalInShipments = 0;
+            var shipments = orderItem.Order.Shipments.ToList();
+            for (var i = 0; i < shipments.Count; i++)
+            {
+                var shipment = shipments[i];
+                var si = shipment.ShipmentItems
+                    .FirstOrDefault(x => x.OrderItemId == orderItem.Id);
+                if (si != null)
+                {
+                    totalInShipments += si.Quantity;
+                }
+            }
+
+            return totalInShipments;
+        }
+
+        /// <summary>
+        /// Gets a total number of already items which can be added to new shipments
+        /// </summary>
+        /// <param name="orderItem">Order item</param>
+        /// <returns>Total number of already delivered items which can be added to new shipments</returns>
+        public virtual int GetTotalNumberOfItemsCanBeAddedToShipment(OrderItem orderItem)
+        {
+            if (orderItem == null)
+                throw new ArgumentNullException(nameof(orderItem));
+
+            var totalInShipments = GetTotalNumberOfItemsInAllShipment(orderItem);
+
+            var qtyOrdered = orderItem.Quantity;
+            var qtyCanBeAddedToShipmentTotal = qtyOrdered - totalInShipments;
+            if (qtyCanBeAddedToShipmentTotal < 0)
+                qtyCanBeAddedToShipmentTotal = 0;
+
+            return qtyCanBeAddedToShipmentTotal;
+        }
+
+        /// <summary>
+        /// Gets a total number of not yet shipped items (but added to shipments)
+        /// </summary>
+        /// <param name="orderItem">Order item</param>
+        /// <returns>Total number of not yet shipped items (but added to shipments)</returns>
+        public virtual int GetTotalNumberOfNotYetShippedItems(OrderItem orderItem)
+        {
+            if (orderItem == null)
+                throw new ArgumentNullException(nameof(orderItem));
+
+            var result = 0;
+            var shipments = orderItem.Order.Shipments.ToList();
+            for (var i = 0; i < shipments.Count; i++)
+            {
+                var shipment = shipments[i];
+                if (shipment.ShippedDateUtc.HasValue)
+                    //already shipped
+                    continue;
+
+                var si = shipment.ShipmentItems
+                    .FirstOrDefault(x => x.OrderItemId == orderItem.Id);
+                if (si != null)
+                {
+                    result += si.Quantity;
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Gets a total number of already shipped items
+        /// </summary>
+        /// <param name="orderItem">Order item</param>
+        /// <returns>Total number of already shipped items</returns>
+        public virtual int GetTotalNumberOfShippedItems(OrderItem orderItem)
+        {
+            if (orderItem == null)
+                throw new ArgumentNullException(nameof(orderItem));
+
+            var result = 0;
+            var shipments = orderItem.Order.Shipments.ToList();
+            for (var i = 0; i < shipments.Count; i++)
+            {
+                var shipment = shipments[i];
+                if (!shipment.ShippedDateUtc.HasValue)
+                    //not shipped yet
+                    continue;
+
+                var si = shipment.ShipmentItems
+                    .FirstOrDefault(x => x.OrderItemId == orderItem.Id);
+                if (si != null)
+                {
+                    result += si.Quantity;
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Gets a total number of already delivered items
+        /// </summary>
+        /// <param name="orderItem">Order  item</param>
+        /// <returns>Total number of already delivered items</returns>
+        public virtual int GetTotalNumberOfDeliveredItems(OrderItem orderItem)
+        {
+            if (orderItem == null)
+                throw new ArgumentNullException(nameof(orderItem));
+
+            var result = 0;
+            var shipments = orderItem.Order.Shipments.ToList();
+            for (var i = 0; i < shipments.Count; i++)
+            {
+                var shipment = shipments[i];
+                if (!shipment.DeliveryDateUtc.HasValue)
+                    //not delivered yet
+                    continue;
+
+                var si = shipment.ShipmentItems
+                    .FirstOrDefault(x => x.OrderItemId == orderItem.Id);
+                if (si != null)
+                {
+                    result += si.Quantity;
+                }
+            }
+
+            return result;
         }
 
         #endregion
@@ -425,12 +639,32 @@ namespace Nop.Services.Orders
         public virtual void DeleteOrderNote(OrderNote orderNote)
         {
             if (orderNote == null)
-                throw new ArgumentNullException("orderNote");
+                throw new ArgumentNullException(nameof(orderNote));
 
             _orderNoteRepository.Delete(orderNote);
 
             //event notification
             _eventPublisher.EntityDeleted(orderNote);
+        }
+
+        /// <summary>
+        /// Formats the order note text
+        /// </summary>
+        /// <param name="orderNote">Order note</param>
+        /// <returns>Formatted text</returns>
+        public virtual string FormatOrderNoteText(OrderNote orderNote)
+        {
+            if (orderNote == null)
+                throw new ArgumentNullException(nameof(orderNote));
+
+            var text = orderNote.Note;
+
+            if (string.IsNullOrEmpty(text))
+                return string.Empty;
+
+            text = HtmlHelper.FormatText(text, false, true, false, false, false, false);
+
+            return text;
         }
 
         #endregion
@@ -444,10 +678,13 @@ namespace Nop.Services.Orders
         public virtual void DeleteRecurringPayment(RecurringPayment recurringPayment)
         {
             if (recurringPayment == null)
-                throw new ArgumentNullException("recurringPayment");
+                throw new ArgumentNullException(nameof(recurringPayment));
 
             recurringPayment.Deleted = true;
             UpdateRecurringPayment(recurringPayment);
+
+            //event notification
+            _eventPublisher.EntityDeleted(recurringPayment);
         }
 
         /// <summary>
@@ -460,7 +697,7 @@ namespace Nop.Services.Orders
             if (recurringPaymentId == 0)
                 return null;
 
-           return _recurringPaymentRepository.GetById(recurringPaymentId);
+            return _recurringPaymentRepository.GetById(recurringPaymentId);
         }
 
         /// <summary>
@@ -470,7 +707,7 @@ namespace Nop.Services.Orders
         public virtual void InsertRecurringPayment(RecurringPayment recurringPayment)
         {
             if (recurringPayment == null)
-                throw new ArgumentNullException("recurringPayment");
+                throw new ArgumentNullException(nameof(recurringPayment));
 
             _recurringPaymentRepository.Insert(recurringPayment);
 
@@ -485,7 +722,7 @@ namespace Nop.Services.Orders
         public virtual void UpdateRecurringPayment(RecurringPayment recurringPayment)
         {
             if (recurringPayment == null)
-                throw new ArgumentNullException("recurringPayment");
+                throw new ArgumentNullException(nameof(recurringPayment));
 
             _recurringPaymentRepository.Update(recurringPayment);
 
@@ -515,14 +752,15 @@ namespace Nop.Services.Orders
             var query1 = from rp in _recurringPaymentRepository.Table
                          join c in _customerRepository.Table on rp.InitialOrder.CustomerId equals c.Id
                          where
-                         (!rp.Deleted) &&
+                         !rp.Deleted &&
                          (showHidden || !rp.InitialOrder.Deleted) &&
                          (showHidden || !c.Deleted) &&
                          (showHidden || rp.IsActive) &&
                          (customerId == 0 || rp.InitialOrder.CustomerId == customerId) &&
                          (storeId == 0 || rp.InitialOrder.StoreId == storeId) &&
                          (initialOrderId == 0 || rp.InitialOrder.Id == initialOrderId) &&
-                         (!initialOrderStatusId.HasValue || initialOrderStatusId.Value == 0 || rp.InitialOrder.OrderStatusId == initialOrderStatusId.Value)
+                         (!initialOrderStatusId.HasValue || initialOrderStatusId.Value == 0 ||
+                          rp.InitialOrder.OrderStatusId == initialOrderStatusId.Value)
                          select rp.Id;
 
             var query2 = from rp in _recurringPaymentRepository.Table

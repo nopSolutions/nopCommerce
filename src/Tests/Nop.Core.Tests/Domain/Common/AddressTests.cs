@@ -24,6 +24,7 @@ namespace Nop.Core.Tests.Domain.Common
                 StateProvinceId = 4,
                 StateProvince = new StateProvince { Id = 4, Name = "LA" },
                 City = "City 1",
+                County = "County 1",
                 Address1 = "Address1",
                 Address2 = "Address2",
                 ZipPostalCode = "ZipPostalCode 1",
@@ -40,6 +41,7 @@ namespace Nop.Core.Tests.Domain.Common
             newAddress.Email.ShouldEqual("Email 1");
             newAddress.Company.ShouldEqual("Company 1");
             newAddress.City.ShouldEqual("City 1");
+            newAddress.County.ShouldEqual("County 1");
             newAddress.Address1.ShouldEqual("Address1");
             newAddress.Address2.ShouldEqual("Address2");
             newAddress.ZipPostalCode.ShouldEqual("ZipPostalCode 1");

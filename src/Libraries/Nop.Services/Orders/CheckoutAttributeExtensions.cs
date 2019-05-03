@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Orders;
 
@@ -26,22 +23,30 @@ namespace Nop.Services.Orders
                 checkoutAttribute.AttributeControlType == AttributeControlType.Datepicker ||
                 checkoutAttribute.AttributeControlType == AttributeControlType.FileUpload)
                 return false;
-            
-            //other attribute controle types support values
+
+            //other attribute control types support values
             return true;
         }
 
         /// <summary>
-        /// Remove attributes which require shippable products
+        /// A value indicating whether this checkout attribute can be used as condition for some other attribute
         /// </summary>
-        /// <param name="checkoutAttributes">Checkout attributes</param>
+        /// <param name="checkoutAttribute">Checkout attribute</param>
         /// <returns>Result</returns>
-        public static IList<CheckoutAttribute> RemoveShippableAttributes(this IList<CheckoutAttribute> checkoutAttributes)
+        public static bool CanBeUsedAsCondition(this CheckoutAttribute checkoutAttribute)
         {
-            if (checkoutAttributes == null)
-                throw new ArgumentNullException("checkoutAttributes");
+            if (checkoutAttribute == null)
+                return false;
 
-            return checkoutAttributes.Where(x => !x.ShippableProductRequired).ToList();
+            if (checkoutAttribute.AttributeControlType == AttributeControlType.ReadonlyCheckboxes ||
+                checkoutAttribute.AttributeControlType == AttributeControlType.TextBox ||
+                checkoutAttribute.AttributeControlType == AttributeControlType.MultilineTextbox ||
+                checkoutAttribute.AttributeControlType == AttributeControlType.Datepicker ||
+                checkoutAttribute.AttributeControlType == AttributeControlType.FileUpload)
+                return false;
+
+            //other attribute control types support it
+            return true;
         }
     }
 }

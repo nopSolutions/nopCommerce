@@ -19,15 +19,17 @@ namespace Nop.Services.Localization
         /// </summary>
         /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <param name="loadCacheableCopy">A value indicating whether to load a copy that could be cached (workaround until Entity Framework supports 2-level caching)</param>
         /// <returns>Languages</returns>
-        IList<Language> GetAllLanguages(bool showHidden = false, int storeId = 0);
+        IList<Language> GetAllLanguages(bool showHidden = false, int storeId = 0, bool loadCacheableCopy = true);
 
         /// <summary>
         /// Gets a language
         /// </summary>
         /// <param name="languageId">Language identifier</param>
+        /// <param name="loadCacheableCopy">A value indicating whether to load a copy that could be cached (workaround until Entity Framework supports 2-level caching)</param>
         /// <returns>Language</returns>
-        Language GetLanguageById(int languageId);
+        Language GetLanguageById(int languageId, bool loadCacheableCopy = true);
 
         /// <summary>
         /// Inserts a language
@@ -40,5 +42,12 @@ namespace Nop.Services.Localization
         /// </summary>
         /// <param name="language">Language</param>
         void UpdateLanguage(Language language);
+
+        /// <summary>
+        /// Get 2 letter ISO language code
+        /// </summary>
+        /// <param name="language">Language</param>
+        /// <returns>ISO language code</returns>
+        string GetTwoLetterIsoLanguageName(Language language);
     }
 }

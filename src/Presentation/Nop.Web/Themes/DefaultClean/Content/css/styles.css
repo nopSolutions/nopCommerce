@@ -15,7 +15,7 @@
 	box-sizing: border-box;
 }
 html {
-	margin: 0 !important;
+	margin: 0;
 	-webkit-text-size-adjust: none;
 }
 ol, ul {
@@ -40,9 +40,11 @@ input[type="button"],
 input[type="submit"],
 input[type="reset"],
 input[type="text"],
+input[type="email"],
+input[type="tel"],
 input[type="password"],
 textarea {
-	border-radius: 0;
+    border-radius: 0;
 }
 input[type="button"],
 input[type="submit"],
@@ -83,14 +85,16 @@ table {
 	border-collapse: collapse;
 }
 input[type="text"],
+input[type="email"],
+input[type="tel"],
 input[type="password"],
 textarea, select {
-	height: 36px; /*safari padding fix*/
-	border: 1px solid #ddd;
-	padding: 8px;
-	vertical-align: middle;
+    height: 36px; /*safari padding fix*/
+    border: 1px solid #ddd;
+    padding: 8px;
+    vertical-align: middle;
 }
-input, textarea, select {
+input, textarea, select, button {
 	font-size: 14px;
 	font-family: Arial, Helvetica, sans-serif;
 	color: #777;
@@ -104,10 +108,12 @@ select {
 	padding: 6px;
 }
 input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="tel"]:focus,
 input[type="password"]:focus,
 textarea:focus, select:focus {
-	border-color: #ccc;
-	color: #444;
+    border-color: #ccc;
+    color: #444;
 }
 input[type="checkbox"],
 input[type="radio"],
@@ -266,13 +272,14 @@ label, label + * {
 	color: #444;
 }
 .inputs input[type="text"],
+.inputs input[type="email"],
+.inputs input[type="tel"],
 .inputs input[type="password"],
 .inputs select, .inputs textarea {
-	width: 400px;
-	max-width: 100%;
-	background-color: #fff;
+    width: 400px;
+    max-width: 100%;
+    background-color: #fff;
 }
-
 .inputs.custom-attributes {
 	white-space: normal;
 }
@@ -354,6 +361,23 @@ label, label + * {
     white-space: nowrap;
 	font-weight: normal;
 }
+.forum-table th.replies,
+.forum-table th.views,
+.forum-table th.votes,
+.forum-table th.latest-post,
+.forum-table th.topics,
+.forum-table th.posts,
+.forum-table td.replies,
+.forum-table td.views,
+.forum-table td.votes,
+.forum-table td.latest-post,
+.forum-table td.topics,
+.forum-table td.posts{
+    display: none;
+}
+.forum-table td.image {
+    min-width: 0;
+}
 .cart td,
 .data-table td,
 .forum-table td {
@@ -367,6 +391,7 @@ label, label + * {
 }
 .forum-table td {
 	min-width: 90px;
+    padding: 10px;
 }
 .cart a,
 .data-table a,
@@ -383,10 +408,12 @@ label, label + * {
 .data-table .product,
 .data-table .message,
 .data-table .info,
-.data-table .name,
+.data-table .name {
+    min-width: 225px;
+	text-align: left;
+}
 .forum-table .forum-details,
 .forum-table .topic-details {
-	min-width: 225px;
 	text-align: left;
 }
 .cart .product a,
@@ -433,7 +460,7 @@ label, label + * {
 	white-space: nowrap;
     color: #444;
 }
-.cart td.subtotal .discount {
+.cart td.subtotal .discount, .cart td.subtotal .discount-additional-info {
     font-style: italic;
     color: #4ab2f1;
 }
@@ -451,23 +478,29 @@ label, label + * {
 
 
 
-.bar-notification {
-	display: none;
-	position: fixed;
-	top: 0;
-	left: 0;
-	z-index: 1000;
-	width: 100%;
-	padding: 15px 25px 15px 10px;
-	line-height: 16px;
-	color: #fff;
-	opacity: 0.95;
+.bar-notification-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    width: 100%;
+    line-height: 16px;
+    color: #fff;
+    opacity: 0.95;
 }
 .bar-notification.success {
 	background-color: #4bb07a;
 }
 .bar-notification.error {
 	background-color: #e4444c;
+}
+.bar-notification.warning {
+	background-color: #f39c12;
+}
+.bar-notification {
+    position: relative;
+    display: none;
+    padding: 15px 25px 15px 10px;
 }
 .bar-notification .content {
 	margin: 0 10px 0 0;
@@ -485,6 +518,20 @@ label, label + * {
 	margin: 7px;
 	background: #fff url('../images/close.png') center no-repeat;
 	cursor: pointer;
+}
+.popup-notification {
+    border-radius: 5px;
+    padding: 3px;
+    margin: 5px 0;
+}
+.popup-notification.success {
+    border: 2px rgba( 75,176,122,.5) solid;
+}
+.popup-notification.error {
+    border: 2px rgba( 228,68,76,.5) solid;
+}
+.popup-notification.warning {
+    border: 2px rgba( 243,156,18,.5) solid;
 }
 
 .noscript {
@@ -514,7 +561,6 @@ label, label + * {
 }
 
 .ui-dialog {
-	width: 350px !important;
 	max-width: 90%;
 	border: 1px solid #ddd;
 	box-shadow: 0 0 2px rgba(0,0,0,0.15);
@@ -579,13 +625,42 @@ label, label + * {
 	display: none !important;
 }
 .ui-dialog-content {
-	height: auto !important;
 	padding: 15px;
 	line-height: 20px;
 	/*override jQuery UI styles, do not delete doubled properties*/
 	background-color: #fff !important;
-	padding: 15px !important;
+	padding: 15px 15px 20px 15px !important;
 	color: #777;
+}
+.ui-dialog-content .page{
+    min-height: 0;
+}
+.ui-dialog-content .page-title{
+    min-height: 0;
+    margin: 0 0 15px;
+    padding: 0px 10px 10px 10px;
+    text-align: center;
+}
+.ui-dialog-content .page-title h1{
+    font-size: 24px;
+    line-height: 30px;
+}
+.ui-dialog-content .back-in-stock-subscription-page {
+    text-align: center;
+}
+.ui-dialog-content .back-in-stock-subscription-page .tooltip{
+    margin-bottom: 10px;
+}
+.ui-dialog-content .back-in-stock-subscription-page .button-1{
+	border: none;
+	background-color: #4ab2f1;
+    padding: 10px 15px;
+	font-size: 15px;
+	color: #fff;
+	text-transform: uppercase;
+}
+.ui-dialog-content .back-in-stock-subscription-page .button-1:hover {
+	background-color: #248ece;
 }
 
 .eu-cookie-bar-notification {
@@ -934,7 +1009,7 @@ label, label + * {
 	display: inline-block;
 	overflow: hidden; 
 }
-.newsletter-email input[type="text"] {
+.newsletter-email input[type="email"] {
 	float: left;
 	width: 180px;
 	height: 36px;
@@ -1314,6 +1389,16 @@ label, label + * {
 	height: 5px;
 	background-color: #ddd;
 }
+.product-filter .group li.color-item {
+    padding: 0;
+    display: inline-block;
+}
+.product-filter .group li.color-item a {
+    padding: 0;
+}
+.product-filter .group li.color-item:before {
+    display: none;
+}
 
 .filtered-items .title {
 	margin: 0 0 5px;
@@ -1396,6 +1481,9 @@ label, label + * {
 }
 .item-box .product-title a:hover {
 	color: #248ece;
+}
+.item-box .sku {
+    margin: 0 0 15px;
 }
 .item-box .product-rating-box {
     display: inline-block;
@@ -1606,7 +1694,6 @@ label, label + * {
 /********** PRODUCT PAGE **********/
 
 
-
 .product-details-page {
 	padding: 20px 0 0;
 }
@@ -1653,13 +1740,14 @@ label, label + * {
 	overflow: hidden;
 	font-size: 0;
 }
-.gallery .picture-thumbs a {
+.gallery .picture-thumbs .thumb-item {
 	display: inline-block;
 	position: relative;
 	width: 100px;
 	height: 100px;
 	margin: 0 5px 10px;
 	overflow: hidden;
+    cursor: pointer;
 }
 
 .overview {
@@ -1722,7 +1810,7 @@ label, label + * {
 
 .overview .value,
 .variant-overview .value {
-	color: #444;
+    color: #444;
 }
 .overview .value a,
 .variant-overview .value a {
@@ -1794,18 +1882,6 @@ label, label + * {
 .variant-overview .availability .back-in-stock-subscription {
 	display: inline-block;
 }
-.back-in-stock-subscription-page .notify-me-button {
-	margin: 15px 0 0;
-	border: none;
-	background-color: #4ab2f1;
-    padding: 10px 15px;
-	font-size: 15px;
-	color: #fff;
-	text-transform: uppercase;
-}
-.back-in-stock-subscription-page .notify-me-button:hover {
-	background-color: #248ece;
-}
 .overview .additional-details,
 .variant-overview .additional-details {
 	margin: 0 0 20px;
@@ -1816,17 +1892,24 @@ label, label + * {
 }
 .overview .delivery,
 .variant-overview .delivery {
-	margin: 25px 0;
 	overflow: hidden;
 }
-.overview .free-shipping,
+.overview .free-shipping, 
 .variant-overview .free-shipping {
 	display: inline-block;
-	margin: 0 0 10px;
+	margin: 10px 0;
 	background: url('../images/shipping.png') left center no-repeat;
 	padding: 2px 0 2px 28px;
 	font-weight: bold;
 	color: #444;
+}
+.overview .free-shipping.invisible,
+.variant-overview .free-shipping.invisible {
+    display: none;
+}
+.overview .delivery-date,
+.variant-overview .delivery-date {
+    margin: 10px 0;
 }
 .overview .min-qty-notification,
 .variant-overview .min-qty-notification {
@@ -1939,6 +2022,13 @@ label, label + * {
 	text-align: center;
     font-size: 15px;
 	color: #444;
+}
+.overview .qty-dropdown,
+.variant-overview .qty-dropdown {
+    height: 43px;
+    padding: 0 12px;
+    font-size: 15px;
+    color: #444;
 }
 .overview .add-to-cart-button,
 .variant-overview .add-to-cart-button {
@@ -2081,6 +2171,12 @@ label, label + * {
 	color: #444;
 }
 
+.attributes .qty-box input{
+	width: 48px;
+    height: 32px;
+    text-align: center;
+}
+
 .ui-datepicker {
 	width: 280px;
 	box-shadow: 0 0 3px rgba(0, 0, 0, 0.15);
@@ -2178,41 +2274,97 @@ label, label + * {
 	color: #4ab2f1 !important;
 }
 
-.color-squares {
+.attribute-squares {
 	font-size: 0;
 }
-.color-squares li {
+.attribute-squares li {
 	display: inline-block;
 	margin: 0 5px 5px;
 	text-align: center;
 }
-.color-squares .color-container {
+.attribute-squares .attribute-square-container {
     display: block;
     position: relative;
     z-index: 0;
 	padding: 1px;
 }
-.color-squares label {
+.attribute-squares label {
 	display: block;
 	margin: 0 !important;
     overflow: hidden;
 }
-.color-squares .color {
-    display: block !important;
+.attribute-squares .attribute-square {
+    display: table !important;
     width: 32px !important;
     height: 32px !important;
     border: 1px solid #444 !important;
     cursor: pointer;
 }
-.color-squares .selected-value .color-container {
+.attribute-squares .selected-value .attribute-square-container {
 	background-color: #4ab2f1;
 }
-.color-squares li input {
+.attribute-squares li input {
 	position: relative;
 	z-index: -1;
 	margin: -32px 0 0;
 }
-
+.tooltip-container {
+    position: absolute;
+    width: 200px;
+    color: #000000;
+    background: #FFFFFF;
+    border: 1px solid #eeeeee;
+    text-align: center;
+    visibility: hidden;
+    border-radius: 5px;
+}
+.tooltip-container:before {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    margin-left: -7px;
+    width: 0; height: 0;
+    border-bottom: 7px solid #eeeeee;
+    border-right: 7px solid transparent;
+    border-left: 7px solid transparent;
+}
+.tooltip-container:after {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    margin-left: -6px;
+    width: 0; height: 0;
+    border-bottom: 6px solid #FFFFFF;
+    border-right: 6px solid transparent;
+    border-left: 6px solid transparent;
+}
+.attribute-squares li:hover .tooltip-container {
+    visibility: visible;
+    margin-left: -83px;
+    margin-top: 5px;
+    z-index: 999;
+}
+.tooltip-container .tooltip-header {
+    background-color:#F6F6F6;
+    height:25px;
+    border-top-right-radius:4px;
+    border-top-left-radius:4px;
+    padding-left:10px;
+    padding-top:5px;
+    text-align:left;
+    width: 198px;
+    font-size: 15px;
+    border-bottom: 1px #EEEEEE solid;
+}
+.tooltip-container .tooltip-body {
+    margin:5px;
+}
+.tooltip-container .tooltip-body img {
+    border: 0px #FFF;
+    width: 190px;
+}
 .giftcard {
 	margin: 0 0 20px;
 	overflow: hidden;
@@ -2262,36 +2414,60 @@ label, label + * {
 .write-review .fieldset {
 	margin: 0 0 30px;
 }
+
+.tooltip {    
+    position: initial;
+    display: inline-block;
+    border-bottom: 1px dotted black;
+    color: #444;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: auto;
+    background: #f0f0f0 no-repeat 100% 5%;
+    border: #c0c0c0 1px dotted;
+    text-align: Left;    
+    padding: 10px 10px 5px 5px;
+    position: absolute;
+    z-index: 1;    
+    left: 10%;    
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;    
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+    cursor: help;
+}
+
 .write-review .review-rating {
-	text-align: center;
+    text-align: left;
+    padding-top: 10px;
+    padding-bottom: 10px;
 }
 .write-review .review-rating label {
     display: block;
     margin: 0 0 5px;
     font-size: 14px;
+    color: #444;
 }
-.write-review .review-rating ul {
-    font-size: 0;
-    vertical-align: middle;
-}
-.write-review .review-rating li {
-	display: inline-block;
-	margin: 0 5px;
-	cursor: default;
-    vertical-align: middle;
-    font-size: 14px;
-    height: 17px;
-}
-.write-review .review-rating li.first {
+.write-review .review-rating div.first {
 	color: #e4444c;
 }
-.write-review .review-rating li.rating-options {
+.write-review .review-rating div.rating-options {
     padding-top: 2px;
 }
-.write-review .review-rating li.rating-options input {
+.write-review .review-rating div.rating-options input {
 	vertical-align: baseline;
 }
-.write-review .review-rating li.last {
+.write-review .review-rating div.last {
 	color: #4cb17c;
 }
 .write-review .captcha-box {
@@ -2341,6 +2517,17 @@ label, label + * {
 	margin: 0 0 15px;
 	line-height: 22px;
 	color: #444;
+}
+.product-review-item .reply {
+	margin: 15px 0;
+    border-top: 1px solid #ddd;
+}
+.product-review-item .reply-header {
+	margin: 15px 0;
+    font-weight: bold;
+}
+.product-review-item .reply-text {
+	line-height: 22px;
 }
 .product-review-item .review-info {
 	margin: 0 0 5px;
@@ -2645,6 +2832,18 @@ label, label + * {
 	color: #4ab2f1;
 }
 
+.apply-vendor-page .terms-of-service {
+    text-align: center;
+}
+.apply-vendor-page .terms-of-service > * {
+    display: inline-block;
+    line-height: 32px;
+}
+.apply-vendor-page .terms-of-service span,
+.apply-vendor-page .terms-of-service a {
+    color: #4ab2f1;
+    cursor: pointer;
+}
 
 /********** REGISTRATION, LOGIN, ACCOUNT PAGES  **********/
 
@@ -2662,11 +2861,17 @@ label, label + * {
 	margin: 0 5px;
 	line-height: 32px;
 }
+.date-of-birth .date-picker-wrapper {
+    display: inline;
+} 
 .date-of-birth select {
-	width: 31%; /*always single line*/
-	max-width: 126px;
+    width: 31%; /*always single line*/
+    max-width: 126px;
 }
 .date-of-birth select + select {
+	margin: 0 0 0 10px;
+}
+.date-of-birth .select-wrapper + .select-wrapper {
 	margin: 0 0 0 10px;
 }
 #check-availability-button {
@@ -2681,17 +2886,23 @@ label, label + * {
 #check-availability-button:hover {
 	background-color: #999;
 }
-.accept-privacy-policy {
-	margin: 0 0 20px;
-	text-align: center;
+.inputs.accept-consent {
+    text-align: center;
 }
-.accept-privacy-policy > * {
-	display: inline-block;
-	line-height: 32px;
+.inputs.accept-consent > * {
+    display: inline-block;
+    line-height: 32px;
 }
-.accept-privacy-policy span {
-	color: #4ab2f1;
-	cursor: pointer;
+.inputs.accept-consent span, 
+.inputs.accept-consent a {
+    color: #4ab2f1;
+    cursor: pointer;
+    font-size: 14px;
+}
+.inputs.accept-consent label {
+    width: auto;
+    margin-left: 10px;
+    margin-bottom: 0;
 }
 .registration-page .button-1,
 .registration-result-page .button-1,
@@ -2716,6 +2927,15 @@ label, label + * {
 .return-request-page .button-1:hover {
 	background-color: #248ece;
 }
+.return-request-page h1 a {
+    color: #4ab2f1;
+}
+.return-request-page .return-request-file {
+    font-size: 14px;
+}
+.return-request-page .return-request-file .uploadedfileinput {
+    display: inline-block;
+}
 .registration-page .message-error,
 .login-page .message-error,
 .account-page .message-error {
@@ -2728,7 +2948,23 @@ label, label + * {
 	font-size: 16px;
 	color: #4cb17c;
 }
-
+.customer-info-page .email-to-revalidate,
+.customer-info-page .readonly-username,
+.customer-info-page .vat-status {
+    margin: 0 5px;
+    font-size: 14px;
+}
+.customer-info-page .vat-status {
+    display: block;
+}
+.registration-page .vat-note,
+.customer-info-page .vat-note,
+.customer-info-page .email-to-revalidate-note {
+    display: block;
+    font-size: 14px;
+    margin-top: 7px;
+    white-space: normal;
+}
 .login-page .customer-blocks {
 	margin: 0 0 30px;
 }
@@ -2792,6 +3028,11 @@ label, label + * {
 	overflow: hidden;
 	text-align: center;
 }
+.external-authentication .title {
+	margin: 0 0 15px;
+	font-size: 20px;
+	color: #444;
+}
 .external-authentication .buttons {
     margin: 0 0 30px;
     border-top: 1px solid #e6e6e6;
@@ -2840,14 +3081,23 @@ label, label + * {
 	margin: 0 0 30px
 }
 
+.gdpr-tools-page .result {
+    margin: 20px 0;
+    font-size: 13px;
+    color: #e4434b;
+}
+.gdpr-tools-page .buttons {
+    margin-top: 20px;
+}
+
 .address-list-page .info,
 .order-list-page .info {
-	margin: 0 0 10px;
-	border-top: 1px solid #e6e6e6;
-	background-color: #f9f9f9;
+    margin: 0 0 10px;
+    border-top: 1px solid #e6e6e6;
+    background-color: #f9f9f9;
     padding: 20px;
-	line-height: 26px;
-	color: #444;
+    line-height: 26px;
+    color: #444;
 }
 .address-list-page .info .name,
 .order-list-page .info .name {
@@ -2869,6 +3119,9 @@ label, label + * {
 .delete-address-button,
 .cancel-recurring-order-button {
 	background: url('../images/remove.png') left center no-repeat;
+}
+.retry-recurring-order-button {
+	background: url('../images/retry.png') left center no-repeat;
 }
 .return-items-button {
 	background: url('../images/return.png') left center no-repeat;
@@ -2958,7 +3211,7 @@ label, label + * {
 }
 
 .avatar-page .page-title {
-	margin: 0;
+    margin: 0;
 }
 .avatar-page .page-body {
 	margin: 0 0 30px;
@@ -2991,6 +3244,39 @@ label, label + * {
 }
 .avatar-page .info {
 	color: #444;
+}
+
+.vendorinfo-page .button-2 {
+    border: medium none;
+    background-color: #888;
+    padding: 10px 15px;
+    font-size: 14px;
+    color: #fff;
+    text-transform: uppercase;
+}
+.vendorinfo-page .button-2:hover {
+	background-color: #999;
+}
+.vendorinfo-page .vendor-picture {
+    width: 400px;
+    margin: 0 auto;
+}
+.vendorinfo-page .vendor-picture * {
+    display: block;
+    margin-top: 15px;
+}
+
+.check-gift-card-balance-page .page-title {
+    margin: 0 0 -1px;
+}
+
+.check-gift-card-balance-page .result,
+.check-gift-card-balance-page .message-error {
+    margin: 20px 0;
+}
+
+.check-gift-card-balance-page .fieldset {
+    margin: 0 0 30px;
 }
 
 
@@ -3100,7 +3386,7 @@ label, label + * {
 }
 .checkout-attributes input[type="text"],
 .checkout-attributes select {
-	min-width: 200px;
+	min-width: 170px;
 }
 .checkout-attributes ul {
 	font-size: 0;
@@ -3113,7 +3399,7 @@ label, label + * {
 	padding: 8px 10px;
 	font-size: 14px; /*reset zeroing*/
 }
-.checkout-attributes .color-squares li {
+.checkout-attributes .attribute-squares li{
      border: none;
      padding: 0;
      line-height: 0;
@@ -3199,6 +3485,14 @@ label, label + * {
 
 .cart-footer .checkout-buttons {
 	padding: 0 10px;
+}
+.cart-footer .checkout-disabled {
+    font-size: 20px;
+    text-align: center;
+    background: #ffa500;
+    border: 1px solid #c3891e;
+    color: #fff;
+    padding: 15px 50px;
 }
 .cart-footer .checkout-button {
 	display: inline-block;
@@ -3379,14 +3673,34 @@ label, label + * {
     padding: 30px 15px;
 }
 
-.checkout-page .pickup-in-store {
+.checkout-page .ship-to-same-address {
 	padding: 30px 0;
+	text-align: center;
+}
+.checkout-page .ship-to-same-address .selector {
+	margin: 0 0 5px;
+	font-weight: bold;
+	color: #444;
+}
+
+.checkout-page .pickup-in-store {
 	text-align: center;
 }
 .checkout-page .pickup-in-store .selector {
 	margin: 0 0 5px;
 	font-weight: bold;
 	color: #444;
+}
+
+.select-pickup-point {
+    text-align: center;
+}
+.checkout-page .pickup-points-map {
+	min-width: 400px;
+    min-height: 350px;
+    vertical-align: middle;
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 
 .shipping-method .method-list,
@@ -3474,9 +3788,9 @@ label, label + * {
 	font-size: 16px;
 }
 
-.order-review-data ul,
-.order-details-area ul,
-.shipment-details-area ul {
+.order-review-data > div,
+.order-details-area > div,
+.shipment-details-area > div {
 	width: 350px;
 	max-width: 100%;
 	margin: 0 auto 40px;
@@ -3492,15 +3806,21 @@ label, label + * {
 .order-review-data .title,
 .order-details-area .title,
 .shipment-details-area .title {
-	margin: 20px 0 5px;
+	margin: 0 0 5px;
 	padding: 0;
 	font-size: 16px;
 	font-weight: bold;
 }
-.order-review-data .title:first-child,
-.order-details-area .title:first-child,
-.shipment-details-area .title:first-child {
-	margin-top: 0;
+.order-review-data .title strong,
+.order-details-area .title strong,
+.shipment-details-area .title strong {
+    font-weight: 700;
+}
+.order-review-data .payment-method-info,
+.order-review-data .shipping-method-info,
+.order-details-area .payment-method-info,
+.order-details-area .shipping-method-info {
+    margin-top: 20px;
 }
 .order-completed .details {
 	margin: 0 0 30px;
@@ -3592,6 +3912,10 @@ label, label + * {
 	display: block;
 	margin: 10px 0 0;
     background: none;
+}
+.opc .section.ship-to-same-address {
+	margin: 0 0 30px;
+	padding: 0;
 }
 .opc .section.pickup-in-store {
 	margin: 0 0 30px;
@@ -3710,7 +4034,7 @@ label, label + * {
 }
 .order-details-page .actions input {
 	display: inline-block;
-	min-width: 180px;
+	min-width: 165px;
 	margin: 5px;
 	border: none;
 	background-color: #aaa;
@@ -3729,10 +4053,13 @@ label, label + * {
 	background-color: #248ece;
 }
 
+.order-details-page .totals.section {
+    width: 370px;
+    padding: 0 10px;
+    max-width: 100%;
+    margin: 0 auto 50px;
+}
 .order-details-page .total-info {
-	width: 350px;
-	max-width: 100%;
-	margin: 0 auto 50px;
 	background-color: #f9f9f9;
 	padding: 15px 20px;
 	color: #444;
@@ -3815,10 +4142,10 @@ label, label + * {
     padding: 30px 15px;
 	text-align: center;
 }
-.sitemap-page ul {
+.sitemap-page .entity ul {
 	font-size: 0;
 }
-.sitemap-page li {
+.sitemap-page .entity li {
 	display: inline-block;
 	position: relative;
 	margin: 0 8px;
@@ -3826,7 +4153,7 @@ label, label + * {
 	line-height: 50px;
 	font-size: 14px; /*reset zeroing*/
 }
-.sitemap-page li:before {
+.sitemap-page .entity li:before {
 	content: "";
 	position: absolute;
 	top: 23px;
@@ -3835,13 +4162,13 @@ label, label + * {
 	height: 5px;
 	background-color: #ddd;
 }
-.sitemap-page a {
+.sitemap-page .entity a {
 	color: #444;
 }
-.sitemap-page a:hover {
+.sitemap-page .entity a:hover {
 	color: #4ab2f1;
 }
-.sitemap-page a:empty {
+.sitemap-page .entity a:empty {
 	display: none;
 }
 
@@ -4446,11 +4773,18 @@ label, label + * {
 	color: #fff;
 }
 
-.topic-post .post-body {
-	/*topic post-body also gets style from blog post-body*/
+.topic-post .post-text {
+	/*topic post-text also gets style from blog post-body*/
 	padding: 0 10px 20px;
 	line-height: 22px;
 	color: #444;
+    margin-bottom: 0;
+}
+
+.topic-post .post-vote{
+    text-align: center;
+    display: table;
+    margin: 0 auto 20px;
 }
 
 .topic-post .user-posted-image,
@@ -4471,8 +4805,31 @@ label, label + * {
 	padding: 20px;
 	font-size: 13px;
     font-style: italic;
+    clear: both;
 }
 
+.topic-post .post-vote span.vote {
+	cursor: pointer;
+    display: block;
+    width: 40px;
+    height: 24px;
+}
+.topic-post .post-vote span.up{
+    background: url('../images/vote-up.png') no-repeat 50% 50%;
+}
+.topic-post .post-vote span.vote.up.selected{
+    background: url('../images/vote-up-selected.png') no-repeat 50% 50%;
+}
+.topic-post .post-vote span.down{
+    background: url('../images/vote-down.png') no-repeat 50% 50%;
+}
+.topic-post .post-vote span.vote.down.selected{
+    background: url('../images/vote-down-selected.png') no-repeat 50% 50%;
+}
+.topic-post .vote-count-post {
+    display: block;
+    font-size: 160%;
+}
 /* forum edit & send message */
 
 .forum-edit-page .page-title,
@@ -4507,12 +4864,12 @@ label, label + * {
 	font-size: 14px; /*reset zeroing*/
 	white-space: normal;
 }
-.forum-edit-page .toolbar,
-.private-message-send-page .toolbar {
-	max-width: 400px;
-	margin: 20px auto;
-	background-color: #ddd;
-	padding: 10px;
+.forum-edit-page .bb-code-editor-wrapper,
+.private-message-send-page .bb-code-editor-wrapper {
+    max-width: 400px;
+    margin: 20px auto;
+    background-color: #ddd;
+    padding: 10px;
 }
 .forum-edit-page .toolbar .button,
 .private-message-send-page .toolbar .button {
@@ -4568,13 +4925,16 @@ label, label + * {
 /* jQuery tabs */
 
 .ui-tabs {
-	/*override jQuery UI styles, do not delete doubled properties*/
-	border: none;
-	border-radius: 0;
-	background: none;
-	padding: 0;
-	font: normal 14px Arial, Helvetica, sans-serif;
-	color: #777;
+    /*override jQuery UI styles, do not delete doubled properties*/
+    border: none;
+    border-radius: 0;
+    background: none;
+    padding: 0;
+    font: normal 14px Arial, Helvetica, sans-serif;
+    color: #777;
+}
+.ui-widget.ui-widget-content.ui-tabs {
+    border: none;
 }
 .ui-tabs-nav {
 	margin: 0 0 30px;
@@ -4790,6 +5150,23 @@ pre {
 
 
 
+@media all and (max-width: 769px) {
+
+    .review-rating .name-description {
+        text-align: center;
+        width: 100%;
+        display: block;
+    }
+
+    .write-review .review-rating div{
+        text-align: center;
+        padding-bottom: 10px;
+        display: inline-block;
+    }
+}
+
+
+
 
 
 @media all and (max-width: 1000px) {
@@ -4964,6 +5341,15 @@ pre {
 	float: none;
 	margin: auto !important;
 }
+.write-review .review-rating {
+   text-align: center;
+}
+
+.write-review .review-rating div.name-description {
+    width: 100%;
+    margin: 0 5px 0 0;
+    text-align: center;
+}
 
 }
 
@@ -5047,9 +5433,15 @@ pre {
 	float: left;
 	margin: 0 25px 10px 0;
 }
+.product-filter .product-spec-group.product-spec-color {
+    max-width: 190px;
+}
 .product-filter .group li.item {
 	display: block;
 	margin: 0;
+}
+.product-filter .group li.color-item {
+    display: inline-block;
 }
 
 .item-box {
@@ -5063,7 +5455,7 @@ pre {
     margin: 0 0 15px;
 }
 .item-box .prices {
-    height: 40px;
+    min-height: 40px;
 }
 .item-box .product-title {
     min-height: 42px;
@@ -5124,6 +5516,34 @@ pre {
 	margin: 1px;
 }
 
+.topic-post .post-text {
+    float: left;
+    width: 90.5%;
+    text-align: left;
+}
+
+.forum-group .forum-table th.latest-post,
+.forum-group .forum-table th.topics,
+.forum-group .forum-table th.posts,
+.forum-group .forum-table td.latest-post,
+.forum-group .forum-table td.topics,
+.forum-group .forum-table td.posts {
+    display: table-cell;
+}
+
+.topic-group .forum-table th.latest-post,
+.topic-group .forum-table td.latest-post {
+    display: table-cell;
+}
+
+.forum-table td.image {
+    max-width: 40px;
+}
+
+.forum-table td.image div {
+    max-width: 100%;
+    background-size: contain;
+}
 }
 
 
@@ -5333,6 +5753,17 @@ pre {
 	float: right;
 }
 
+.write-review .review-rating div {
+    display: inline-block;
+    margin: 0 0 0 5px;
+    cursor: default;
+    vertical-align: middle;
+    font-size: 14px;
+    height: 17px;
+}
+
+
+
 
 /*** REGISTRATION, LOGIN, ACCOUNT ***/
 
@@ -5452,9 +5883,9 @@ pre {
 .shipment-details-area {
 	overflow: hidden;
 }
-.order-review-data ul,
-.order-details-area ul,
-.shipment-details-area ul {
+.order-review-data > div,
+.order-details-area > div,
+.shipment-details-area > div {
 	float: left;
 	width: 48%;
 	margin: 0 1% 40px;
@@ -5470,12 +5901,12 @@ pre {
 .order-details-page .selected-checkout-attributes {
 	padding: 0 10px;
 }
-.order-details-page .totals {
-	overflow: hidden;
+.order-details-page .tax-shipping-info {
+    text-align: right;
 }
-.order-details-page .total-info {
+.order-details-page .totals {
 	float: right;
-	margin: 0 5px;
+	clear: both;
 }
 .shipment-details-page .tracking-number .tracking-url {
     color: #4ab2f1;
@@ -5660,8 +6091,31 @@ pre {
 	border-left: 1px solid #ddd;
 	text-align: center;
 }
-.topic-post .post-body {
-	padding: 20px;
+
+.topic-post .post-text {
+	padding: 20px 5px;
+}
+
+.topic-post .post-vote{
+    padding: 20px 0 20px 15px;
+}
+
+.forum-table th.replies,
+.forum-table th.views,
+.forum-table th.votes,
+.forum-table td.replies,
+.forum-table td.views,
+.forum-table td.votes {
+    display: table-cell;
+}
+
+.forum-table td.image {
+    max-width: none;
+}
+
+.forum-table td.image div {
+    max-width: none;
+    background-size: initial;
 }
 
 .ui-tabs-nav {
@@ -5726,9 +6180,11 @@ pre {
 	text-align: right;
 }
 .inputs input[type="text"],
+.inputs input[type="email"],
+.inputs input[type="tel"],
 .inputs input[type="password"],
 .inputs select {
-	min-height: 40px;
+    min-height: 40px;
 }
 .inputs .option-list li {
 	margin: 0 10px 0 0;
@@ -5738,6 +6194,9 @@ pre {
 }
 .center-2 .inputs label {
 	width: 136px;
+}
+.inputs.accept-consent label {
+		width: auto;
 }
 .page-title a + h1 {
 	float: left;
@@ -6186,7 +6645,7 @@ pre {
 	width: 160px;
 	text-align: left;
 }
-.color-squares li {
+.attribute-squares li {
 	margin: 0 10px 10px 0;
 }
 .product-details-page .title {
@@ -6199,6 +6658,12 @@ pre {
 
 .product-review-item .review-title {
 	max-width: 850px;
+}
+
+.write-review .review-rating div.name-description {
+    width: 265px;
+    margin: 0 5px 0 0;
+    text-align: right
 }
 
 
@@ -6271,8 +6736,9 @@ pre {
 	width: 110px;
 }
 .login-page .returning-wrapper input[type="text"],
+.login-page .returning-wrapper input[type="email"],
 .login-page .returning-wrapper input[type="password"] {
-	width: 300px;
+    width: 300px;
 }
 
 .address-list-page .section,
@@ -6294,6 +6760,16 @@ pre {
 	text-align: left;
 }
 
+.registration-page .vat-note {
+    margin-left: 275px;
+}
+.customer-info-page .vat-note, 
+.customer-info-page .email-to-revalidate-note {
+    margin-left: 150px;
+}
+.customer-info-page .vat-status {
+    display: inline-block;
+}
 
 /*** SHOPPING CART ***/
 
@@ -6406,7 +6882,6 @@ pre {
 .forum-search-box .advanced a {
 	line-height: normal;
 }
-
 .forums-table-section td {
 	min-width: 150px;
 }
@@ -6416,22 +6891,27 @@ pre {
 .forums-table-section .view-all {
 	text-align: right;
 }
-
 .topic-actions .pager.upper {
 	display: block;
 	max-width: 400px;
 }
-
+.forum-table .forum-details,
+.forum-table .topic-details {
+	min-width: 225px;
+}
+.forum-table td {
+    padding: 20px;
+}
 .forum-edit-page textarea,
 .private-message-send-page textarea {
 	width: 600px;
 	height: 250px;
 }
-.private-message-send-page .toolbar {
-	display: inline-block;
-	width: 400px;
-	margin: 10px 0;
-	vertical-align: middle;
+.private-message-send-page .bb-code-editor-wrapper {
+    display: inline-block;
+    width: 400px;
+    margin: 10px 0;
+    vertical-align: middle;
 }
 
 }
@@ -6454,6 +6934,9 @@ pre {
 }
 .center-2 .inputs label {
 	width: 213px;
+}
+.inputs.accept-consent label {
+	width: auto;
 }
 
 
@@ -6503,15 +6986,28 @@ pre {
 	max-width: 1050px;
 }
 
+.write-review .review-rating div.name-description {
+    margin: 0 5px 0 0;
+    min-width: 375px;
+}
+
 
 /*** REGISTRATION, LOGIN, ACCOUNT ***/
 
 
 .login-page .returning-wrapper input[type="text"],
+.login-page .returning-wrapper input[type="email"],
 .login-page .returning-wrapper input[type="password"] {
-	width: 360px;
+    width: 360px;
 }
 
+.registration-page .vat-note {
+    margin-left: 385px;
+}
+.customer-info-page .vat-note, 
+.customer-info-page .email-to-revalidate-note {
+    margin-left: 225px;
+}
 
 /*** SHOPPING CART ***/
 
@@ -6563,6 +7059,11 @@ pre {
 .forum-actions .pager,
 .topic-actions .pager {
 	max-width: 600px !important;
+}
+
+.topic-post .post-text {
+    width: 930px;
+    max-width: 100%;
 }
 
 }

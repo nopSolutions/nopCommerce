@@ -1,0 +1,55 @@
+﻿@model ReviewTypeSearchModel
+
+<div class="panel-body">
+    <p>
+        <em>@T("Admin.Settings.ReviewType.Description")</em>
+    </p>
+    @await Html.PartialAsync("Table", new DataTablesModel
+    {
+        Name = "reviewtypes-grid",
+        UrlRead = new DataUrl("List", "ReviewType", null),
+        Length = Model.PageSize,
+        LengthMenu = Model.AvailablePageSizes,
+        ColumnCollection = new List<ColumnProperty>
+        {
+            new ColumnProperty(nameof(ReviewTypeModel.Name))
+            {
+                Title = T("Admin.Settings.ReviewType.Fields.Name").Text,
+                Width = "300"
+            },
+            new ColumnProperty(nameof(ReviewTypeModel.IsRequired))
+            {
+                Title = T("Admin.Settings.ReviewType.Fields.IsRequired").Text,
+                Width = "100",
+                ClassName = StyleColumn.CenterAll,
+                Render = new RenderBoolean()
+            },
+            new ColumnProperty(nameof(ReviewTypeModel.VisibleToAllCustomers))
+            {
+                Title = T("Admin.Settings.ReviewType.Fields.VisibleToAllCustomers").Text,
+                Width = "100",
+                ClassName = StyleColumn.CenterAll,
+                Render = new RenderBoolean()
+            },
+            new ColumnProperty(nameof(ReviewTypeModel.DisplayOrder))
+            {
+                Title = T("Admin.Settings.ReviewType.Fields.DisplayOrder").Text,
+                Width = "100",
+                ClassName = StyleColumn.CenterAll
+            },
+            new ColumnProperty(nameof(ReviewTypeModel.Id))
+            {
+                Title = T("Admin.Common.Edit").Text,
+                Width = "100",
+                ClassName =  StyleColumn.ButtonStyle,
+                Render = new RenderButtonEdit(new DataUrl("~/Admin/ReviewType/Edit/"))
+            }
+        }
+    })
+</div>    
+<div class="panel-footer">
+    <a class="btn btn-primary" href="@Url.Action("Create", "ReviewType")">
+        <i class="fa fa-plus-square"></i>
+        @T("Admin.Common.AddNew")
+    </a>
+</div>

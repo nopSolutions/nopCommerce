@@ -1,14 +1,14 @@
 ﻿using System.Collections.Generic;
-using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Models;
 using Nop.Web.Models.Common;
 
 namespace Nop.Web.Models.Boards
 {
-    public partial class CustomerForumSubscriptionsModel
+    public partial class CustomerForumSubscriptionsModel : BaseNopModel
     {
         public CustomerForumSubscriptionsModel()
         {
-            this.ForumSubscriptions = new List<ForumSubscriptionModel>();
+            ForumSubscriptions = new List<ForumSubscriptionModel>();
         }
 
         public IList<ForumSubscriptionModel> ForumSubscriptions { get; set; }

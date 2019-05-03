@@ -12,43 +12,37 @@ namespace Nop.Core
     public class PagedList<T> : List<T>, IPagedList<T> 
     {
         /// <summary>
-        /// Ctor (paging in performed inside)
+        /// Ctor
         /// </summary>
         /// <param name="source">source</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
-        public PagedList(IEnumerable<T> source, int pageIndex, int pageSize)
+        /// <param name="getOnlyTotalCount">A value in indicating whether you want to load only total number of records. Set to "true" if you don't want to load data from database</param>
+        public PagedList(IQueryable<T> source, int pageIndex, int pageSize, bool getOnlyTotalCount = false)
         {
-            Init(source, pageIndex, pageSize);
+            var total = source.Count();
+            TotalCount = total;
+            TotalPages = total / pageSize;
+
+            if (total % pageSize > 0)
+                TotalPages++;
+
+            PageSize = pageSize;
+            PageIndex = pageIndex;
+            if (getOnlyTotalCount)
+                return;
+            AddRange(source.Skip(pageIndex * pageSize).Take(pageSize).ToList());
         }
 
         /// <summary>
-        /// Ctor (already paged soure is passed)
+        /// Ctor
         /// </summary>
         /// <param name="source">source</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
-        /// <param name="totalCount">Total count</param>
-        public PagedList(IEnumerable<T> source, int pageIndex, int pageSize, int totalCount)
+        public PagedList(IList<T> source, int pageIndex, int pageSize)
         {
-            Init(source, pageIndex, pageSize, totalCount);
-        }
-
-        /// <summary>
-        /// Initialize
-        /// </summary>
-        /// <param name="source">source</param>
-        /// <param name="pageIndex">Page index</param>
-        /// <param name="pageSize">Page size</param>
-        /// <param name="totalCount">Total count</param>
-        private void Init(IEnumerable<T> source, int pageIndex, int pageSize, int? totalCount = null)
-        {
-            if (source == null)
-                throw new ArgumentNullException("source");
-            if (pageSize <= 0)
-                throw new ArgumentException("pageSize must be greater than zero");
-
-            TotalCount = totalCount ?? source.Count();
+            TotalCount = source.Count;
             TotalPages = TotalCount / pageSize;
 
             if (TotalCount % pageSize > 0)
@@ -56,22 +50,57 @@ namespace Nop.Core
 
             PageSize = pageSize;
             PageIndex = pageIndex;
-            source = totalCount == null ? source.Skip(pageIndex * pageSize).Take(pageSize) : source;
+            AddRange(source.Skip(pageIndex * pageSize).Take(pageSize).ToList());
+        }
+
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="source">source</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <param name="totalCount">Total count</param>
+        public PagedList(IEnumerable<T> source, int pageIndex, int pageSize, int totalCount)
+        {
+            TotalCount = totalCount;
+            TotalPages = TotalCount / pageSize;
+
+            if (TotalCount % pageSize > 0)
+                TotalPages++;
+
+            PageSize = pageSize;
+            PageIndex = pageIndex;
             AddRange(source);
         }
 
-        public int PageIndex { get; private set; }
-        public int PageSize { get; private set; }
-        public int TotalCount { get; private set; }
-        public int TotalPages { get; private set; }
+        /// <summary>
+        /// Page index
+        /// </summary>
+        public int PageIndex { get; }
 
-        public bool HasPreviousPage
-        {
-            get { return (PageIndex > 0); }
-        }
-        public bool HasNextPage
-        {
-            get { return (PageIndex + 1 < TotalPages); }
-        }
+        /// <summary>
+        /// Page size
+        /// </summary>
+        public int PageSize { get; }
+
+        /// <summary>
+        /// Total count
+        /// </summary>
+        public int TotalCount { get; }
+
+        /// <summary>
+        /// Total pages
+        /// </summary>
+        public int TotalPages { get; }
+
+        /// <summary>
+        /// Has previous page
+        /// </summary>
+        public bool HasPreviousPage => PageIndex > 0;
+
+        /// <summary>
+        /// Has next page
+        /// </summary>
+        public bool HasNextPage => PageIndex + 1 < TotalPages;
     }
 }

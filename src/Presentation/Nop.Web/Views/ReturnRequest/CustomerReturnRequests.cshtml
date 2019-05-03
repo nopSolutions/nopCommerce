@@ -1,15 +1,16 @@
 ﻿@model CustomerReturnRequestsModel
-@using Nop.Web.Models.Customer
-@using Nop.Web.Models.Order
 @{
-    Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
+    Layout = "_ColumnsTwo";
 
     //title
     Html.AddTitleParts(T("PageTitle.Account").Text);
+    //page class
+    Html.AppendPageCssClassParts("html-account-page");
+    Html.AppendPageCssClassParts("html-return-request-list-page");
 }
 @section left
 {
-    @Html.Action("CustomerNavigation", "Customer", new { selectedTabId = CustomerNavigationEnum.ReturnRequests })
+    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.ReturnRequests })
 }
 <div class="page account-page return-request-list-page">
     <div class="page-title">
@@ -20,7 +21,7 @@
         {
             <div class="section request-item">
                 <div class="title">
-                    <strong>@string.Format(T("Account.CustomerReturnRequests.Title").Text, item.Id, item.ReturnRequestStatus)</strong>
+                    <strong>@string.Format(T("Account.CustomerReturnRequests.Title").Text, item.CustomNumber, item.ReturnRequestStatus)</strong>
                 </div>
                 <ul class="details">
                     <li class="product">
@@ -40,7 +41,18 @@
                         <label>@T("Account.CustomerReturnRequests.Date")</label>
                         <span>@item.CreatedOn.ToString()</span>
                     </li>
-                    @if (!String.IsNullOrEmpty(item.Comments))
+                    @if (item.UploadedFileGuid != Guid.Empty)
+                    {
+                        <li class="uploaded-file">
+                            <label>@T("Account.CustomerReturnRequests.UploadedFile")</label>
+                            <span>
+                                <a href="@Url.Action("GetFileUpload", "Download", new {downloadId = item.UploadedFileGuid.ToString()})">
+                                    @T("Account.CustomerReturnRequests.UploadedFile.Download")
+                                </a>
+                            </span>
+                        </li>
+                    }
+                    @if (!string.IsNullOrEmpty(item.Comments))
                     {
                         <li class="comments">
                             <label>@T("Account.CustomerReturnRequests.Comments")</label>

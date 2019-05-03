@@ -26,7 +26,7 @@ namespace Nop.Core.Domain.Customers
         /// <summary>
         /// Gets or sets the points balance
         /// </summary>
-        public int PointsBalance { get; set; }
+        public int? PointsBalance { get; set; }
 
         /// <summary>
         /// Gets or sets the used amount
@@ -42,6 +42,16 @@ namespace Nop.Core.Domain.Customers
         /// Gets or sets the date and time of instance creation
         /// </summary>
         public DateTime CreatedOnUtc { get; set; }
+
+        /// <summary>
+        /// Gets or sets the date and time when the points will no longer be valid
+        /// </summary>
+        public DateTime? EndDateUtc { get; set; }
+
+        /// <summary>
+        /// Gets or sets the number of valid points that have not yet spent (only for positive amount of points)
+        /// </summary>
+        public int? ValidPoints { get; set; }
 
         /// <summary>
         /// Gets or sets the order for which points were redeemed as a payment (spent by a customer when placing this order)

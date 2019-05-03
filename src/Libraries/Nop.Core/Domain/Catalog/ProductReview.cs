@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Stores;
 
 namespace Nop.Core.Domain.Catalog
 {
@@ -10,6 +11,7 @@ namespace Nop.Core.Domain.Catalog
     public partial class ProductReview : BaseEntity
     {
         private ICollection<ProductReviewHelpfulness> _productReviewHelpfulnessEntries;
+        private ICollection<ProductReviewReviewTypeMapping> _productReviewReviewTypeMappingEntries;
 
         /// <summary>
         /// Gets or sets the customer identifier
@@ -20,6 +22,11 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets the product identifier
         /// </summary>
         public int ProductId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the store identifier
+        /// </summary>
+        public int StoreId { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the content is approved
@@ -35,6 +42,16 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets the review text
         /// </summary>
         public string ReviewText { get; set; }
+
+        /// <summary>
+        /// Gets or sets the reply text
+        /// </summary>
+        public string ReplyText { get; set; }
+
+        /// <summary>
+        /// Gets or sets the value indicating whether the customer is already notified of the reply to review
+        /// </summary>
+        public bool CustomerNotifiedOfReply { get; set; }
 
         /// <summary>
         /// Review rating
@@ -57,7 +74,7 @@ namespace Nop.Core.Domain.Catalog
         public DateTime CreatedOnUtc { get; set; }
 
         /// <summary>
-        /// Gets or sets the product
+        /// Gets or sets the customer
         /// </summary>
         public virtual Customer Customer { get; set; }
 
@@ -67,12 +84,26 @@ namespace Nop.Core.Domain.Catalog
         public virtual Product Product { get; set; }
 
         /// <summary>
+        /// Gets or sets the store
+        /// </summary>
+        public virtual Store Store { get; set; }
+
+        /// <summary>
         /// Gets the entries of product review helpfulness
         /// </summary>
         public virtual ICollection<ProductReviewHelpfulness> ProductReviewHelpfulnessEntries
         {
-            get { return _productReviewHelpfulnessEntries ?? (_productReviewHelpfulnessEntries = new List<ProductReviewHelpfulness>()); }
-            protected set { _productReviewHelpfulnessEntries = value; }
+            get => _productReviewHelpfulnessEntries ?? (_productReviewHelpfulnessEntries = new List<ProductReviewHelpfulness>());
+            protected set => _productReviewHelpfulnessEntries = value;
+        }
+
+        /// <summary>
+        /// Gets the entries of product reviews
+        /// </summary>
+        public virtual ICollection<ProductReviewReviewTypeMapping> ProductReviewReviewTypeMappingEntries
+        {
+            get { return _productReviewReviewTypeMappingEntries ?? (_productReviewReviewTypeMappingEntries = new List<ProductReviewReviewTypeMapping>()); }
+            protected set { _productReviewReviewTypeMappingEntries = value; }
         }
     }
 }

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Caching;
@@ -14,47 +14,26 @@ namespace Nop.Services.Directory
     /// </summary>
     public partial class StateProvinceService : IStateProvinceService
     {
-        #region Constants
-
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : country ID
-        /// {1} : language ID
-        /// {2} : show hidden records?
-        /// </remarks>
-        private const string STATEPROVINCES_ALL_KEY = "Nop.stateprovince.all-{0}-{1}-{2}";
-        /// <summary>
-        /// Key pattern to clear cache
-        /// </summary>
-        private const string STATEPROVINCES_PATTERN_KEY = "Nop.stateprovince.";
-
-        #endregion
-
         #region Fields
 
-        private readonly IRepository<StateProvince> _stateProvinceRepository;
-        private readonly IEventPublisher _eventPublisher;
         private readonly ICacheManager _cacheManager;
+        private readonly IEventPublisher _eventPublisher;
+        private readonly ILocalizationService _localizationService;
+        private readonly IRepository<StateProvince> _stateProvinceRepository;
 
         #endregion
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="cacheManager">Cache manager</param>
-        /// <param name="stateProvinceRepository">State/province repository</param>
-        /// <param name="eventPublisher">Event published</param>
         public StateProvinceService(ICacheManager cacheManager,
-            IRepository<StateProvince> stateProvinceRepository,
-            IEventPublisher eventPublisher)
+            IEventPublisher eventPublisher,
+            ILocalizationService localizationService,
+            IRepository<StateProvince> stateProvinceRepository)
         {
             _cacheManager = cacheManager;
-            _stateProvinceRepository = stateProvinceRepository;
             _eventPublisher = eventPublisher;
+            _localizationService = localizationService;
+            _stateProvinceRepository = stateProvinceRepository;
         }
 
         #endregion
@@ -67,11 +46,11 @@ namespace Nop.Services.Directory
         public virtual void DeleteStateProvince(StateProvince stateProvince)
         {
             if (stateProvince == null)
-                throw new ArgumentNullException("stateProvince");
-            
+                throw new ArgumentNullException(nameof(stateProvince));
+
             _stateProvinceRepository.Delete(stateProvince);
 
-            _cacheManager.RemoveByPattern(STATEPROVINCES_PATTERN_KEY);
+            _cacheManager.RemoveByPrefix(NopDirectoryDefaults.StateProvincesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(stateProvince);
@@ -91,19 +70,29 @@ namespace Nop.Services.Directory
         }
 
         /// <summary>
-        /// Gets a state/province 
+        /// Gets a state/province by abbreviation
         /// </summary>
         /// <param name="abbreviation">The state/province abbreviation</param>
+        /// <param name="countryId">Country identifier; pass null to load the state regardless of a country</param>
         /// <returns>State/province</returns>
-        public virtual StateProvince GetStateProvinceByAbbreviation(string abbreviation)
+        public virtual StateProvince GetStateProvinceByAbbreviation(string abbreviation, int? countryId = null)
         {
-            var query = from sp in _stateProvinceRepository.Table
-                        where sp.Abbreviation == abbreviation
-                        select sp;
-            var stateProvince = query.FirstOrDefault();
-            return stateProvince;
+            if (string.IsNullOrEmpty(abbreviation))
+                return null;
+
+            var key = string.Format(NopDirectoryDefaults.StateProvincesByAbbreviationCacheKey, abbreviation, countryId.HasValue ? countryId.Value : 0);
+            return _cacheManager.Get(key, () =>
+            {
+                var query = _stateProvinceRepository.Table.Where(state => state.Abbreviation == abbreviation);
+
+                //filter by country
+                if (countryId.HasValue)
+                    query = query.Where(state => state.CountryId == countryId);
+
+                return query.FirstOrDefault();
+            });
         }
-        
+
         /// <summary>
         /// Gets a state/province collection by country identifier
         /// </summary>
@@ -113,7 +102,7 @@ namespace Nop.Services.Directory
         /// <returns>States</returns>
         public virtual IList<StateProvince> GetStateProvincesByCountryId(int countryId, int languageId = 0, bool showHidden = false)
         {
-            string key = string.Format(STATEPROVINCES_ALL_KEY, countryId, languageId, showHidden);
+            var key = string.Format(NopDirectoryDefaults.StateProvincesAllCacheKey, countryId, languageId, showHidden);
             return _cacheManager.Get(key, () =>
             {
                 var query = from sp in _stateProvinceRepository.Table
@@ -128,9 +117,10 @@ namespace Nop.Services.Directory
                     //we should sort states by localized names when they have the same display order
                     stateProvinces = stateProvinces
                         .OrderBy(c => c.DisplayOrder)
-                        .ThenBy(c => c.GetLocalized(x => x.Name, languageId))
+                        .ThenBy(c => _localizationService.GetLocalized(c, x => x.Name, languageId))
                         .ToList();
                 }
+
                 return stateProvinces;
             });
         }
@@ -144,8 +134,8 @@ namespace Nop.Services.Directory
         {
             var query = from sp in _stateProvinceRepository.Table
                         orderby sp.CountryId, sp.DisplayOrder, sp.Name
-                where showHidden || sp.Published
-                select sp;
+                        where showHidden || sp.Published
+                        select sp;
             var stateProvinces = query.ToList();
             return stateProvinces;
         }
@@ -157,11 +147,11 @@ namespace Nop.Services.Directory
         public virtual void InsertStateProvince(StateProvince stateProvince)
         {
             if (stateProvince == null)
-                throw new ArgumentNullException("stateProvince");
+                throw new ArgumentNullException(nameof(stateProvince));
 
             _stateProvinceRepository.Insert(stateProvince);
 
-            _cacheManager.RemoveByPattern(STATEPROVINCES_PATTERN_KEY);
+            _cacheManager.RemoveByPrefix(NopDirectoryDefaults.StateProvincesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(stateProvince);
@@ -174,11 +164,11 @@ namespace Nop.Services.Directory
         public virtual void UpdateStateProvince(StateProvince stateProvince)
         {
             if (stateProvince == null)
-                throw new ArgumentNullException("stateProvince");
+                throw new ArgumentNullException(nameof(stateProvince));
 
             _stateProvinceRepository.Update(stateProvince);
 
-            _cacheManager.RemoveByPattern(STATEPROVINCES_PATTERN_KEY);
+            _cacheManager.RemoveByPrefix(NopDirectoryDefaults.StateProvincesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(stateProvince);

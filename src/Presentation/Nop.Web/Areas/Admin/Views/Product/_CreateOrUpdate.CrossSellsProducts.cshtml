@@ -1,0 +1,68 @@
+﻿@model ProductModel
+<div class="panel-body">
+    <p>
+        @T("Admin.Catalog.Products.CrossSells.Hint")
+    </p>
+    @if (Model.Id > 0)
+    {
+    <div class="panel panel-default">
+
+        <div class="panel-body">
+            @await Html.PartialAsync("Table", new DataTablesModel
+            {
+                Name = "crosssellproducts-grid",
+                UrlRead = new DataUrl("CrossSellProductList", "Product", new RouteValueDictionary { [nameof(Model.CrossSellProductSearchModel.ProductId)] = Model.CrossSellProductSearchModel.ProductId }),
+                UrlDelete = new DataUrl("CrossSellProductDelete", "Product", null),
+                Length = Model.CrossSellProductSearchModel.PageSize,
+                LengthMenu = Model.CrossSellProductSearchModel.AvailablePageSizes,
+                ColumnCollection = new List<ColumnProperty>
+                {
+                    new ColumnProperty(nameof(CrossSellProductModel.Product2Name))
+                    {
+                        Title = T("Admin.Catalog.Products.CrossSells.Fields.Product").Text,
+                        Render = new RenderCustom("renderColumnCrossSellProductName")
+                    },
+                    new ColumnProperty(nameof(CrossSellProductModel.Id))
+                    {
+                        Title = T("Admin.Common.Delete").Text,
+                        Width = "100",
+                        Render = new RenderButtonRemove(T("Admin.Common.Delete").Text){ Style = StyleButton.Default },
+                        ClassName = StyleColumn.ButtonStyle
+                    }
+                }
+            })
+            <script>
+                function renderColumnCrossSellProductName(data, type, row, meta) {
+                    var textRenderer = $.fn.dataTable.render.text().display;
+                    return '<a href="@Url.Content("~/Admin/Product/Edit/")' + row.ProductId2 + '">' + textRenderer(row.Product2Name) + '</a>';
+                }
+            </script>
+        </div>
+        <div class="panel-footer">
+            <button type="submit" id="btnAddNewCrossSellProduct" onclick="javascript:OpenWindow('@(Url.Action("CrossSellProductAddPopup", "Product", new {productId = Model.Id, btnId = "btnRefreshCrossSellProducts", formId = "product-form"}))', 800, 800, true); return false;" class="btn btn-primary">
+                @T("Admin.Catalog.Products.CrossSells.AddNew")
+            </button>
+            <input type="submit" id="btnRefreshCrossSellProducts" style="display: none" />
+            <script>
+                $(document).ready(function () {
+                    $('#btnRefreshCrossSellProducts').click(function () {
+                        //refresh grid
+                        $('#crosssellproducts-grid').DataTable().ajax.reload();
+
+                        //return false to don't reload a page
+                        return false;
+                    });
+                });
+            </script>
+        </div>
+    </div>
+    }
+    else
+    {
+        <div class="panel panel-default">
+            <div class="panel-body">
+                @T("Admin.Catalog.Products.CrossSells.SaveBeforeEdit")
+            </div>
+        </div>
+    }
+</div>

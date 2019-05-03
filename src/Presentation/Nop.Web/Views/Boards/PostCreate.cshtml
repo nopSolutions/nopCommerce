@@ -1,8 +1,11 @@
 ﻿@model EditForumPostModel
-@using Nop.Web.Models.Boards;
 @{   
-    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+    Layout = "_ColumnsOne";
 
     Html.AddTitleParts(T("Forum.PageTitle.PostNew").Text);
 }
-@Html.Partial("_CreateUpdatePost", Model)
+@await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BoardsPostCreateBefore, additionalData = Model })
+<form asp-route="PostCreate" method="post">
+    @await Html.PartialAsync("_CreateUpdatePost", Model)
+</form>
+@await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BoardsPostCreateAfter, additionalData = Model })

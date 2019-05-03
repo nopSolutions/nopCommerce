@@ -1,9 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Web.Mvc;
-using FluentValidation.Attributes;
-using Nop.Web.Framework;
-using Nop.Web.Framework.Mvc;
-using Nop.Web.Validators.Catalog;
+using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Models.Catalog
 {
@@ -18,14 +15,16 @@ namespace Nop.Web.Models.Catalog
         public bool AllowCustomerReviews { get; set; }
     }
 
-    [Validator(typeof(ProductReviewsValidator))]
     public partial class ProductReviewsModel : BaseNopModel
     {
         public ProductReviewsModel()
         {
             Items = new List<ProductReviewModel>();
             AddProductReview = new AddProductReviewModel();
+            ReviewTypeList = new List<ReviewTypeModel>();
+            AddAdditionalProductReviewList = new List<AddProductReviewReviewTypeMappingModel>();
         }
+
         public int ProductId { get; set; }
 
         public string ProductName { get; set; }
@@ -33,11 +32,36 @@ namespace Nop.Web.Models.Catalog
         public string ProductSeName { get; set; }
 
         public IList<ProductReviewModel> Items { get; set; }
+
         public AddProductReviewModel AddProductReview { get; set; }
+
+        public IList<ReviewTypeModel> ReviewTypeList { get; set; }
+
+        public IList<AddProductReviewReviewTypeMappingModel> AddAdditionalProductReviewList { get; set; }        
+    }
+
+    public partial class ReviewTypeModel : BaseNopEntityModel
+    {
+        public string Name { get; set; }
+
+        public string Description { get; set; }
+
+        public int DisplayOrder { get; set; }
+
+        public bool IsRequired { get; set; }
+
+        public bool VisibleToAllCustomers { get; set; }
+
+        public double AverageRating { get; set; }
     }
 
     public partial class ProductReviewModel : BaseNopEntityModel
     {
+        public ProductReviewModel()
+        {
+            AdditionalProductReviewList = new List<ProductReviewReviewTypeMappingModel>();
+        }
+
         public int CustomerId { get; set; }
 
         public string CustomerName { get; set; }
@@ -48,13 +72,16 @@ namespace Nop.Web.Models.Catalog
 
         public string ReviewText { get; set; }
 
+        public string ReplyText { get; set; }
+
         public int Rating { get; set; }
+
+        public string WrittenOnStr { get; set; }
 
         public ProductReviewHelpfulnessModel Helpfulness { get; set; }
 
-        public string WrittenOnStr { get; set; }
+        public IList<ProductReviewReviewTypeMappingModel> AdditionalProductReviewList { get; set; }
     }
-
 
     public partial class ProductReviewHelpfulnessModel : BaseNopModel
     {
@@ -67,11 +94,9 @@ namespace Nop.Web.Models.Catalog
 
     public partial class AddProductReviewModel : BaseNopModel
     {
-        [AllowHtml]
         [NopResourceDisplayName("Reviews.Fields.Title")]
         public string Title { get; set; }
-
-        [AllowHtml]
+        
         [NopResourceDisplayName("Reviews.Fields.ReviewText")]
         public string ReviewText { get; set; }
 
@@ -81,7 +106,39 @@ namespace Nop.Web.Models.Catalog
         public bool DisplayCaptcha { get; set; }
 
         public bool CanCurrentCustomerLeaveReview { get; set; }
+
         public bool SuccessfullyAdded { get; set; }
+
         public string Result { get; set; }
+    }
+
+    public partial class AddProductReviewReviewTypeMappingModel : BaseNopEntityModel
+    {
+        public int ProductReviewId { get; set; }
+
+        public int ReviewTypeId { get; set; }
+
+        public int Rating { get; set; }
+        
+        public string Name { get; set; }
+
+        public string Description { get; set; }
+
+        public int DisplayOrder { get; set; }
+
+        public bool IsRequired { get; set; }
+    }
+
+    public partial class ProductReviewReviewTypeMappingModel : BaseNopEntityModel
+    {
+        public int ProductReviewId { get; set; }
+
+        public int ReviewTypeId { get; set; }
+
+        public int Rating { get; set; }
+
+        public string Name { get; set; }
+
+        public bool VisibleToAllCustomers { get; set; }
     }
 }

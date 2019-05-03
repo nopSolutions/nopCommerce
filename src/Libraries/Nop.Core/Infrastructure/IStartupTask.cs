@@ -11,7 +11,7 @@
         void Execute();
 
         /// <summary>
-        /// Order
+        /// Gets order of this startup task implementation
         /// </summary>
         int Order { get; }
     }

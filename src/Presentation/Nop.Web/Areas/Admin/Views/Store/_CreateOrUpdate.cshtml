@@ -1,0 +1,125 @@
+@model StoreModel
+
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.StoreDetailsTop, additionalData = Model })
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    @(Html.LocalizedEditor<StoreModel, StoreLocalizedModel>("store-localized",
+                    @<div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="@Model.Locales[item].Name" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="@Model.Locales[item].Name" />
+                                <span asp-validation-for="@Model.Locales[item].Name"></span>
+                            </div>
+                        </div>
+                        <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
+                    </div>
+                    ,
+                    @<div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="Name" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="Name" asp-required="true" />
+                                <span asp-validation-for="Name"></span>
+                            </div>
+                        </div>
+                    </div>
+                    ))
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="Url" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="Url" asp-required="true" />
+                            <span asp-validation-for="Url"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="SslEnabled" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="SslEnabled" />
+                            <div><em>@T("Admin.Configuration.Stores.Fields.SslEnabled.Hint2")</em></div>
+                            <span asp-validation-for="SslEnabled"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="Hosts" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="Hosts" />
+                            <span asp-validation-for="Hosts"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="DefaultLanguageId" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-select asp-for="DefaultLanguageId" asp-items="Model.AvailableLanguages" />
+                            <span asp-validation-for="DefaultLanguageId"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="DisplayOrder" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="DisplayOrder" />
+                            <span asp-validation-for="DisplayOrder"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="CompanyName" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="CompanyName" />
+                            <span asp-validation-for="CompanyName"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="CompanyAddress" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="CompanyAddress" />
+                            <span asp-validation-for="CompanyAddress"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="CompanyPhoneNumber" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="CompanyPhoneNumber" />
+                            <span asp-validation-for="CompanyPhoneNumber"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="CompanyVat" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="CompanyVat" />
+                            <span asp-validation-for="CompanyVat"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.StoreDetailsBottom, additionalData = Model })
+        </div>
+    </div>
+</div>

@@ -14,6 +14,16 @@ namespace Nop.Core.Domain.Logging
         public int ActivityLogTypeId { get; set; }
 
         /// <summary>
+        /// Gets or sets the entity identifier
+        /// </summary>
+        public int? EntityId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the entity name
+        /// </summary>
+        public string EntityName { get; set; }
+
+        /// <summary>
         /// Gets or sets the customer identifier
         /// </summary>
         public int CustomerId { get; set; }
@@ -37,5 +47,10 @@ namespace Nop.Core.Domain.Logging
         /// Gets the customer
         /// </summary>
         public virtual Customer Customer { get; set; }
+
+        /// <summary>
+        /// Gets or sets the IP address
+        /// </summary>
+        public virtual string IpAddress { get; set; }
     }
 }

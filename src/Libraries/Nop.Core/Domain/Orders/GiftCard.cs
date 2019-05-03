@@ -76,14 +76,8 @@ namespace Nop.Core.Domain.Orders
         /// </summary>
         public GiftCardType GiftCardType
         {
-            get
-            {
-                return (GiftCardType)this.GiftCardTypeId;
-            }
-            set
-            {
-                this.GiftCardTypeId = (int)value;
-            }
+            get => (GiftCardType)GiftCardTypeId;
+            set => GiftCardTypeId = (int)value;
         }
         
         /// <summary>
@@ -91,8 +85,8 @@ namespace Nop.Core.Domain.Orders
         /// </summary>
         public virtual ICollection<GiftCardUsageHistory> GiftCardUsageHistory
         {
-            get { return _giftCardUsageHistory ?? (_giftCardUsageHistory = new List<GiftCardUsageHistory>()); }
-            protected set { _giftCardUsageHistory = value; }
+            get => _giftCardUsageHistory ?? (_giftCardUsageHistory = new List<GiftCardUsageHistory>());
+            protected set => _giftCardUsageHistory = value;
         }
         
         /// <summary>

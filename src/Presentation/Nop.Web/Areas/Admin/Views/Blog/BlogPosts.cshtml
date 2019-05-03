@@ -1,0 +1,139 @@
+@model BlogContentModel
+
+@{
+    //page title
+    ViewBag.Title = T("Admin.ContentManagement.Blog.BlogPosts").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Blog posts");
+}
+
+@{
+    const string hideSearchBlockAttributeName = "BlogPostsPage.HideSearchBlock";
+    var hideSearchBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSearchBlockAttributeName);
+}
+
+<nop-antiforgery-token />
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        @T("Admin.ContentManagement.Blog.BlogPosts")
+    </h1>
+    <div class="pull-right">
+        <a asp-action="BlogPostCreate" class="btn bg-blue">
+            <i class="fa fa-plus-square"></i>
+            @T("Admin.Common.AddNew")
+        </a>
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.BlogListButtons })
+    </div>
+</div>
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+
+            @*hide the entire search block if no elements are displayed*@
+            <div class="panel panel-default panel-search" @(Model.BlogPosts.HideStoresList ? Html.Raw("style=\"display:none\"") : null)>
+                <div class="panel-body">
+                    <div class="row search-row @(!hideSearchBlock ? "opened" : "")" data-hideAttribute="@hideSearchBlockAttributeName">
+                        <div class="search-text">@T("Admin.Common.Search")</div>
+                        <div class="icon-search"><i class="fa fa-search" aria-hidden="true"></i></div>
+                        <div class="icon-collapse"><i class="fa fa-angle-down" aria-hidden="true"></i></div>
+                    </div>
+
+                    <div class="search-body @(hideSearchBlock ? "closed" : "")">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="BlogPosts.SearchStoreId" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-select asp-for="BlogPosts.SearchStoreId" asp-items="Model.BlogPosts.AvailableStores" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-8 col-md-offset-4">
+                                        <button type="button" id="search-blogpost" class="btn btn-primary btn-search">
+                                            <i class="fa fa-search"></i>
+                                            @T("Admin.Common.Search")
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    @await Html.PartialAsync("Table", new DataTablesModel
+                    {
+                        Name = "blogpost-grid",
+                        UrlRead = new DataUrl("List", "Blog", null),
+                        SearchButtonId = "search-blogpost",
+                        Length = Model.BlogPosts.PageSize,
+                        LengthMenu = Model.BlogPosts.AvailablePageSizes,
+                        Filters = new List<FilterParameter>
+                        {
+                            new FilterParameter(nameof(Model.BlogPosts.SearchStoreId))
+                        },
+                        ColumnCollection = new List<ColumnProperty>
+                        {
+                            new ColumnProperty(nameof(BlogPostModel.Title))
+                            {
+                                Title = T("Admin.ContentManagement.Blog.BlogPosts.Fields.Title").Text,
+                                Width = "400"
+                            },
+                            new ColumnProperty(nameof(BlogPostModel.LanguageName))
+                            {
+                                Title = T("Admin.ContentManagement.Blog.BlogPosts.Fields.Language").Text,
+                                Width = "150"
+                            },
+                            new ColumnProperty(nameof(BlogPostModel.Id))
+                            {
+                                Title = T("Admin.ContentManagement.Blog.BlogPosts.Fields.Comments").Text,
+                                Width = "200",
+                                ClassName = StyleColumn.ButtonStyle,
+                                Render = new RenderCustom("renderColumnComments")
+                            },
+                            new ColumnProperty(nameof(BlogPostModel.StartDateUtc))
+                            {
+                                Title = T("Admin.ContentManagement.Blog.BlogPosts.Fields.StartDate").Text,
+                                Width = "200",
+                                Render = new RenderDate()
+                            },
+                            new ColumnProperty(nameof(BlogPostModel.EndDateUtc))
+                            {
+                                Title = T("Admin.ContentManagement.Blog.BlogPosts.Fields.EndDate").Text,
+                                Width = "200",
+                                Render = new RenderDate()
+                            },
+                            new ColumnProperty(nameof(BlogPostModel.CreatedOn))
+                            {
+                                Title = T("Admin.ContentManagement.Blog.BlogPosts.Fields.CreatedOn").Text,
+                                Width = "200",
+                                Render = new RenderDate()
+                            },
+                            new ColumnProperty(nameof(BlogPostModel.Id))
+                            {
+                                Title = T("Admin.Common.Edit").Text,
+                                Width = "100",
+                                ClassName = StyleColumn.ButtonStyle,
+                                Render = new RenderButtonEdit(new DataUrl("BlogPostEdit"))
+                            }
+                        }
+                    })
+
+                    <script>
+                        function renderColumnComments(data, type, row, meta) {
+                            var link = "BlogComments?filterByBlogPostId=" + data;
+                            var title = '@T("Admin.ContentManagement.Blog.BlogPosts.Fields.Comments")';
+                            var countComments = row.ApprovedComments + row.NotApprovedComments;
+                            return '<a class="btn btn-default" href="' + link + '">' + title + ' - ' + countComments + ' (' + row.NotApprovedComments + ')' + '</a>';
+                            }
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

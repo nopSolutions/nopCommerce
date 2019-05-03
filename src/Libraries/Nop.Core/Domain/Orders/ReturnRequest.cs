@@ -9,6 +9,11 @@ namespace Nop.Core.Domain.Orders
     public partial class ReturnRequest : BaseEntity
     {
         /// <summary>
+        /// Custom number of return request
+        /// </summary>
+        public string CustomNumber { get; set; }
+
+        /// <summary>
         /// Gets or sets the store identifier
         /// </summary>
         public int StoreId { get; set; }
@@ -44,6 +49,11 @@ namespace Nop.Core.Domain.Orders
         public string CustomerComments { get; set; }
 
         /// <summary>
+        /// Gets or sets identifier of the file (Download) uploaded by the customer
+        /// </summary>
+        public int UploadedFileId { get; set; }
+
+        /// <summary>
         /// Gets or sets the staff notes
         /// </summary>
         public string StaffNotes { get; set; }
@@ -68,14 +78,8 @@ namespace Nop.Core.Domain.Orders
         /// </summary>
         public ReturnRequestStatus ReturnRequestStatus
         {
-            get
-            {
-                return (ReturnRequestStatus)this.ReturnRequestStatusId;
-            }
-            set
-            {
-                this.ReturnRequestStatusId = (int)value;
-            }
+            get => (ReturnRequestStatus)ReturnRequestStatusId;
+            set => ReturnRequestStatusId = (int)value;
         }
 
         /// <summary>

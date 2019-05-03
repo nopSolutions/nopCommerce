@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Nop.Core.Domain.Payments;
 
 namespace Nop.Services.Payments
@@ -8,31 +9,23 @@ namespace Nop.Services.Payments
     /// </summary>
     public partial class VoidPaymentResult
     {
-        private PaymentStatus _newPaymentStatus = PaymentStatus.Pending;
-
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        public VoidPaymentResult() 
+        public VoidPaymentResult()
         {
-            this.Errors = new List<string>();
+            Errors = new List<string>();
         }
 
         /// <summary>
         /// Gets a value indicating whether request has been completed successfully
         /// </summary>
-        public bool Success
-        {
-            get { return (this.Errors.Count == 0); }
-        }
+        public bool Success => !Errors.Any();
 
         /// <summary>
         /// Add error
         /// </summary>
         /// <param name="error">Error</param>
-        public void AddError(string error) 
+        public void AddError(string error)
         {
-            this.Errors.Add(error);
+            Errors.Add(error);
         }
 
         /// <summary>
@@ -43,16 +36,6 @@ namespace Nop.Services.Payments
         /// <summary>
         /// Gets or sets a payment status after processing
         /// </summary>
-        public PaymentStatus NewPaymentStatus
-        {
-            get
-            {
-                return _newPaymentStatus;
-            }
-            set
-            {
-                _newPaymentStatus = value;
-            }
-        }
+        public PaymentStatus NewPaymentStatus { get; set; } = PaymentStatus.Pending;
     }
 }

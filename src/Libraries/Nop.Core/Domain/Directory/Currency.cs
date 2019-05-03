@@ -58,6 +58,19 @@ namespace Nop.Core.Domain.Directory
         /// Gets or sets the date and time of instance update
         /// </summary>
         public DateTime UpdatedOnUtc { get; set; }
-    }
 
+        /// <summary>
+        /// Gets or sets the rounding type identifier
+        /// </summary>
+        public int RoundingTypeId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the rounding type
+        /// </summary>
+        public RoundingType RoundingType
+        {
+            get => (RoundingType)RoundingTypeId;
+            set => RoundingTypeId = (int)value;
+        }
+    }
 }

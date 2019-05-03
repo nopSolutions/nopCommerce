@@ -7,19 +7,30 @@ namespace Nop.Services.Messages
     /// <summary>
     /// Represents a task for sending queued message 
     /// </summary>
-    public partial class QueuedMessagesSendTask : ITask
+    public partial class QueuedMessagesSendTask : IScheduleTask
     {
-        private readonly IQueuedEmailService _queuedEmailService;
+        #region Fields
+
         private readonly IEmailSender _emailSender;
         private readonly ILogger _logger;
+        private readonly IQueuedEmailService _queuedEmailService;
 
-        public QueuedMessagesSendTask(IQueuedEmailService queuedEmailService,
-            IEmailSender emailSender, ILogger logger)
+        #endregion
+
+        #region Ctor
+
+        public QueuedMessagesSendTask(IEmailSender emailSender,
+            ILogger logger,
+            IQueuedEmailService queuedEmailService)
         {
-            this._queuedEmailService = queuedEmailService;
-            this._emailSender = emailSender;
-            this._logger = logger;
+            _emailSender = emailSender;
+            _logger = logger;
+            _queuedEmailService = queuedEmailService;
         }
+
+        #endregion
+
+        #region Methods
 
         /// <summary>
         /// Executes a task
@@ -28,29 +39,29 @@ namespace Nop.Services.Messages
         {
             var maxTries = 3;
             var queuedEmails = _queuedEmailService.SearchEmails(null, null, null, null,
-                true, maxTries, false, 0, 500);
+                true, true, maxTries, false, 0, 500);
             foreach (var queuedEmail in queuedEmails)
             {
-                var bcc = String.IsNullOrWhiteSpace(queuedEmail.Bcc) 
-                            ? null 
-                            : queuedEmail.Bcc.Split(new [] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-                var cc = String.IsNullOrWhiteSpace(queuedEmail.CC) 
-                            ? null 
-                            : queuedEmail.CC.Split(new [] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+                var bcc = string.IsNullOrWhiteSpace(queuedEmail.Bcc)
+                            ? null
+                            : queuedEmail.Bcc.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+                var cc = string.IsNullOrWhiteSpace(queuedEmail.CC)
+                            ? null
+                            : queuedEmail.CC.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
 
                 try
                 {
-                    _emailSender.SendEmail(queuedEmail.EmailAccount, 
-                        queuedEmail.Subject, 
+                    _emailSender.SendEmail(queuedEmail.EmailAccount,
+                        queuedEmail.Subject,
                         queuedEmail.Body,
-                       queuedEmail.From, 
-                       queuedEmail.FromName, 
-                       queuedEmail.To, 
+                       queuedEmail.From,
+                       queuedEmail.FromName,
+                       queuedEmail.To,
                        queuedEmail.ToName,
                        queuedEmail.ReplyTo,
                        queuedEmail.ReplyToName,
-                       bcc, 
-                       cc, 
+                       bcc,
+                       cc,
                        queuedEmail.AttachmentFilePath,
                        queuedEmail.AttachmentFileName,
                        queuedEmail.AttachedDownloadId);
@@ -59,7 +70,7 @@ namespace Nop.Services.Messages
                 }
                 catch (Exception exc)
                 {
-                    _logger.Error(string.Format("Error sending e-mail. {0}", exc.Message), exc);
+                    _logger.Error($"Error sending e-mail. {exc.Message}", exc);
                 }
                 finally
                 {
@@ -68,5 +79,7 @@ namespace Nop.Services.Messages
                 }
             }
         }
+
+        #endregion
     }
 }

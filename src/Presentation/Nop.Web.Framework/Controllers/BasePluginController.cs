@@ -1,4 +1,5 @@
-﻿namespace Nop.Web.Framework.Controllers
+﻿
+namespace Nop.Web.Framework.Controllers
 {
     /// <summary>
     /// Base controller for plugins

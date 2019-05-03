@@ -11,8 +11,7 @@ namespace Nop.Core.Domain.Directory
     public partial class Country : BaseEntity, ILocalizedEntity, IStoreMappingSupported
     {
         private ICollection<StateProvince> _stateProvinces;
-        private ICollection<ShippingMethod> _restrictedShippingMethods;
-
+        private ICollection<ShippingMethodCountryMapping> _shippingMethodCountryMappings;
 
         /// <summary>
         /// Gets or sets the name
@@ -63,24 +62,23 @@ namespace Nop.Core.Domain.Directory
         /// Gets or sets a value indicating whether the entity is limited/restricted to certain stores
         /// </summary>
         public bool LimitedToStores { get; set; }
-       
+
         /// <summary>
         /// Gets or sets the state/provinces
         /// </summary>
         public virtual ICollection<StateProvince> StateProvinces
         {
-            get { return _stateProvinces ?? (_stateProvinces = new List<StateProvince>()); }
-            protected set { _stateProvinces = value; }
+            get => _stateProvinces ?? (_stateProvinces = new List<StateProvince>());
+            protected set => _stateProvinces = value;
         }
-
+        
         /// <summary>
-        /// Gets or sets the restricted shipping methods
+        /// Gets or sets the shipping method-country mappings
         /// </summary>
-        public virtual ICollection<ShippingMethod> RestrictedShippingMethods
+        public virtual ICollection<ShippingMethodCountryMapping> ShippingMethodCountryMappings
         {
-            get { return _restrictedShippingMethods ?? (_restrictedShippingMethods = new List<ShippingMethod>()); }
-            protected set { _restrictedShippingMethods = value; }
+            get => _shippingMethodCountryMappings ?? (_shippingMethodCountryMappings = new List<ShippingMethodCountryMapping>());
+            protected set => _shippingMethodCountryMappings = value;
         }
     }
-
 }

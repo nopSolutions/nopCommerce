@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Nop.Core.Domain.Messages
+﻿namespace Nop.Core.Domain.Messages
 {
     /// <summary>
     /// Represents an email account
@@ -54,9 +52,10 @@ namespace Nop.Core.Domain.Messages
         {
             get
             {
-                if (!String.IsNullOrWhiteSpace(this.DisplayName))
-                    return this.Email + " (" + this.DisplayName + ")";
-                return this.Email;
+                if (!string.IsNullOrWhiteSpace(DisplayName))
+                    return Email + " (" + DisplayName + ")";
+
+                return Email;
             }
         }
     }

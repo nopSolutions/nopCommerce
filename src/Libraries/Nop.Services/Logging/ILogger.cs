@@ -25,6 +25,12 @@ namespace Nop.Services.Logging
         void DeleteLog(Log log);
 
         /// <summary>
+        /// Deletes a log items
+        /// </summary>
+        /// <param name="logs">Log items</param>
+        void DeleteLogs(IList<Log> logs);
+
+        /// <summary>
         /// Clears a log
         /// </summary>
         void ClearLog();
@@ -66,5 +72,29 @@ namespace Nop.Services.Logging
         /// <param name="customer">The customer to associate log record with</param>
         /// <returns>A log item</returns>
         Log InsertLog(LogLevel logLevel, string shortMessage, string fullMessage = "", Customer customer = null);
+
+        /// <summary>
+        /// Information
+        /// </summary>
+        /// <param name="message">Message</param>
+        /// <param name="exception">Exception</param>
+        /// <param name="customer">Customer</param>
+        void Information(string message, Exception exception = null, Customer customer = null);
+
+        /// <summary>
+        /// Warning
+        /// </summary>
+        /// <param name="message">Message</param>
+        /// <param name="exception">Exception</param>
+        /// <param name="customer">Customer</param>
+        void Warning(string message, Exception exception = null, Customer customer = null);
+
+        /// <summary>
+        /// Error
+        /// </summary>
+        /// <param name="message">Message</param>
+        /// <param name="exception">Exception</param>
+        /// <param name="customer">Customer</param>
+        void Error(string message, Exception exception = null, Customer customer = null);
     }
 }
