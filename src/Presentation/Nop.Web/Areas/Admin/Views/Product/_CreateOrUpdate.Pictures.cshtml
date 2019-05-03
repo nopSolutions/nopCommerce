@@ -18,7 +18,7 @@
                     new ColumnProperty(nameof(ProductPictureModel.PictureUrl))
                     {
                         Title = T("Admin.Catalog.Products.Pictures.Fields.Picture").Text,
-                        Render = new RenderCustom("renderColumnProductPictureUrl")
+                        Render = new RenderCustom("renderPicturesColumnProductPictureUrl")
                     },
                     new ColumnProperty(nameof(ProductPictureModel.DisplayOrder))
                     {
@@ -60,7 +60,7 @@
         })
         
         <script>
-            function renderColumnProductPictureUrl(data, type, row, meta) {
+            function renderPicturesColumnProductPictureUrl(data, type, row, meta) {
                 return '<a href="' + row.PictureUrl + '" target="_blank"><img alt="' + row.PictureId + '" src="' + row.PictureUrl + '" width="150" /></a>';
             }
         </script>
