@@ -5933,7 +5933,7 @@ namespace Nop.Services.Installation
                     IsPasswordProtected = false,
                     DisplayOrder = 1,
                     Published = true,
-                    Title = "Apply vendor instructions",
+                    Title = string.Empty,
                     Body = "<p>Put your apply vendor instructions here. You can edit this in the admin site.</p>",
                     TopicTemplateId = defaultTopicTemplate.Id
                 },
