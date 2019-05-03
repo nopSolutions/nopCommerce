@@ -5,7 +5,6 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Routing;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
@@ -539,7 +538,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             return searchModel;
         }
-        
+
         /// <summary>
         /// Prepare product attribute value search model
         /// </summary>
@@ -608,7 +607,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             return searchModel;
         }
-        
+
         #endregion
 
         #region Methods
@@ -820,8 +819,12 @@ namespace Nop.Web.Areas.Admin.Factories
             model.BaseWeightIn = _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId).Name;
             model.BaseDimensionIn = _measureService.GetMeasureDimensionById(_measureSettings.BaseDimensionId).Name;
             model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
-            model.HasAvailableSpecificationAttributes = _cacheManager.Get(NopModelCacheDefaults.SpecAttributesModelKey,
-                    () => _specificationAttributeService.GetSpecificationAttributesWithOptions()).Any();
+            model.HasAvailableSpecificationAttributes = _cacheManager.Get(NopModelCacheDefaults.SpecAttributesModelKey, () =>
+            {
+                return _specificationAttributeService.GetSpecificationAttributesWithOptions()
+                    .Select(attributeWithOption => new SelectListItem(attributeWithOption.Name, attributeWithOption.Id.ToString()))
+                    .ToList();
+            }).Any();
 
             //prepare localized models
             if (!excludeProperties)
@@ -936,7 +939,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetPopupGridPageSize();
-            
+
             return searchModel;
         }
 
@@ -1423,10 +1426,12 @@ namespace Nop.Web.Areas.Admin.Factories
             {
                 return new AddSpecificationAttributeModel
                 {
-                    AvailableAttributes = _cacheManager.Get(NopModelCacheDefaults.SpecAttributesModelKey,
-                            () => _specificationAttributeService.GetSpecificationAttributesWithOptions())
-                        .Select(sa => new SelectListItem { Text = sa.Name, Value = sa.Id.ToString() })
-                        .ToList(),
+                    AvailableAttributes = _cacheManager.Get(NopModelCacheDefaults.SpecAttributesModelKey, () =>
+                    {
+                        return _specificationAttributeService.GetSpecificationAttributesWithOptions()
+                            .Select(attributeWithOption => new SelectListItem(attributeWithOption.Name, attributeWithOption.Id.ToString()))
+                            .ToList();
+                    }),
                     ProductId = productId,
                     Locales = _localizedModelFactory.PrepareLocalizedModels(localizedModelConfiguration)
                 };
@@ -1434,7 +1439,7 @@ namespace Nop.Web.Areas.Admin.Factories
             }
 
             var attribute = _specificationAttributeService.GetProductSpecificationAttributeById(specificationId.Value);
-            
+
             if (attribute == null)
             {
                 throw new ArgumentException("No specification attribute found with the specified id");
@@ -1450,10 +1455,12 @@ namespace Nop.Web.Areas.Admin.Factories
             model.AttributeTypeName = _localizationService.GetLocalizedEnum(attribute.AttributeType);
             model.AttributeName = attribute.SpecificationAttributeOption.SpecificationAttribute.Name;
 
-            model.AvailableAttributes = _cacheManager.Get(NopModelCacheDefaults.SpecAttributesModelKey,
-                    () => _specificationAttributeService.GetSpecificationAttributesWithOptions())
-                .Select(sa => new SelectListItem { Text = sa.Name, Value = sa.Id.ToString() })
-                .ToList();
+            model.AvailableAttributes = _cacheManager.Get(NopModelCacheDefaults.SpecAttributesModelKey, () =>
+            {
+                return _specificationAttributeService.GetSpecificationAttributesWithOptions()
+                    .Select(attributeWithOption => new SelectListItem(attributeWithOption.Name, attributeWithOption.Id.ToString()))
+                    .ToList();
+            });
 
             model.AvailableOptions = _specificationAttributeService
                 .GetSpecificationAttributeOptionsBySpecificationAttribute(model.AttributeId)
@@ -1570,7 +1577,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     model = productTag.ToModel<ProductTagModel>();
                 }
-               
+
                 model.ProductCount = _productTagService.GetProductCount(productTag.Id, storeId: 0, showHidden: true);
 
                 //define localized model configuration action

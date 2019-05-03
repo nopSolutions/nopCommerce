@@ -296,7 +296,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //load settings for a chosen store scope
             var storeId = _storeContext.ActiveStoreScopeConfiguration;
             var storeInformationSettings = _settingService.LoadSetting<StoreInformationSettings>(storeId);
-            var commonSettings = _settingService.LoadSetting<CommonSettings>(storeId);            
+            var commonSettings = _settingService.LoadSetting<CommonSettings>(storeId);
 
             //fill in model values from the entity
             var model = new StoreInformationSettingsModel
@@ -311,7 +311,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 YoutubeLink = storeInformationSettings.YoutubeLink,
                 SubjectFieldOnContactUsForm = commonSettings.SubjectFieldOnContactUsForm,
                 UseSystemEmailForContactUsForm = commonSettings.UseSystemEmailForContactUsForm,
-                PopupForTermsOfServiceLinks = commonSettings.PopupForTermsOfServiceLinks                                
+                PopupForTermsOfServiceLinks = commonSettings.PopupForTermsOfServiceLinks
             };
 
             //prepare available themes
@@ -432,7 +432,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 CanonicalUrlsEnabled = seoSettings.CanonicalUrlsEnabled,
                 WwwRequirement = (int)seoSettings.WwwRequirement,
                 WwwRequirementValues = seoSettings.WwwRequirement.ToSelectList(),
-                
+
                 TwitterMetaTags = seoSettings.TwitterMetaTags,
                 OpenGraphMetaTags = seoSettings.OpenGraphMetaTags,
                 CustomHeadTags = seoSettings.CustomHeadTags
@@ -450,7 +450,7 @@ namespace Nop.Web.Areas.Admin.Factories
             model.GenerateProductMetaDescription_OverrideForStore = _settingService.SettingExists(seoSettings, x => x.GenerateProductMetaDescription, storeId);
             model.ConvertNonWesternChars_OverrideForStore = _settingService.SettingExists(seoSettings, x => x.ConvertNonWesternChars, storeId);
             model.CanonicalUrlsEnabled_OverrideForStore = _settingService.SettingExists(seoSettings, x => x.CanonicalUrlsEnabled, storeId);
-            model.WwwRequirement_OverrideForStore = _settingService.SettingExists(seoSettings, x => x.WwwRequirement, storeId);           
+            model.WwwRequirement_OverrideForStore = _settingService.SettingExists(seoSettings, x => x.WwwRequirement, storeId);
             model.TwitterMetaTags_OverrideForStore = _settingService.SettingExists(seoSettings, x => x.TwitterMetaTags, storeId);
             model.OpenGraphMetaTags_OverrideForStore = _settingService.SettingExists(seoSettings, x => x.OpenGraphMetaTags, storeId);
             model.CustomHeadTags_OverrideForStore = _settingService.SettingExists(seoSettings, x => x.CustomHeadTags, storeId);
@@ -695,6 +695,19 @@ namespace Nop.Web.Areas.Admin.Factories
             model.DisplayApplyVendorAccountFooterItem_OverrideForStore = _settingService.SettingExists(displayDefaultFooterItemSettings, x => x.DisplayApplyVendorAccountFooterItem, storeId);
 
             return model;
+        }
+
+        /// <summary>
+        /// Prepare setting model to add
+        /// </summary>
+        /// <param name="model">Setting model to add</param>
+        protected virtual void PrepareAddSettingModel(SettingModel model)
+        {
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
+
+            //prepare available stores
+            _baseAdminModelFactory.PrepareStores(model.AvailableStores);
         }
 
         #endregion
@@ -1482,6 +1495,9 @@ namespace Nop.Web.Areas.Admin.Factories
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
+
+            //prepare model to add
+            PrepareAddSettingModel(searchModel.AddSetting);
 
             //prepare page parameters
             searchModel.SetGridPageSize();

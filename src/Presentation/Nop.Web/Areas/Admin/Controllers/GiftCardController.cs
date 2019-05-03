@@ -191,7 +191,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 if (!continueEditing)
                     return RedirectToAction("List");
-                
+
                 return RedirectToAction("Edit", new { id = giftCard.Id });
             }
 
@@ -219,14 +219,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             var giftCard = _giftCardService.GetGiftCardById(model.Id);
             if (giftCard == null)
                 return RedirectToAction("List");
-
-            model = giftCard.ToModel(model);
-            model.PurchasedWithOrderId = giftCard.PurchasedWithOrderItem != null ? (int?)giftCard.PurchasedWithOrderItem.OrderId : null;
-            model.RemainingAmountStr = _priceFormatter.FormatPrice(_giftCardService.GetGiftCardRemainingAmount(giftCard), true, false);
-            model.AmountStr = _priceFormatter.FormatPrice(giftCard.Amount, true, false);
-            model.CreatedOn = _dateTimeHelper.ConvertToUserTime(giftCard.CreatedOnUtc, DateTimeKind.Utc);
-            model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
-            model.PurchasedWithOrderNumber = giftCard.PurchasedWithOrderItem?.Order.CustomOrderNumber;
 
             try
             {
@@ -263,6 +255,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 _notificationService.ErrorNotification(exc);
             }
+
+            //prepare model
+            model = _giftCardModelFactory.PrepareGiftCardModel(model, giftCard);
 
             return View(model);
         }

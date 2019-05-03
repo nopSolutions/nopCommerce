@@ -512,7 +512,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
             CreateMap<ProductAttributeMapping, ProductAttributeMappingModel>()
                 .ForMember(model => model.ValidationRulesString, options => options.Ignore())
                 .ForMember(model => model.AttributeControlType, options => options.Ignore())
-                .ForMember(model => model.ConditionString, options => options.Ignore())                
+                .ForMember(model => model.ConditionString, options => options.Ignore())
                 .ForMember(model => model.ProductAttribute, options => options.Ignore())
                 .ForMember(model => model.AvailableProductAttributes, options => options.Ignore())
                 .ForMember(model => model.ConditionAllowed, options => options.Ignore())
@@ -682,6 +682,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(settings => settings.PreselectCountryIfOnlyOne, options => options.Ignore());
 
             CreateMap<Setting, SettingModel>()
+                .ForMember(setting => setting.AvailableStores, options => options.Ignore())
                 .ForMember(setting => setting.Store, options => options.Ignore());
         }
 
@@ -1013,8 +1014,6 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
         {
             CreateMap<Language, LanguageModel>()
                 .ForMember(model => model.AvailableCurrencies, options => options.Ignore())
-                .ForMember(model => model.AddResourceName, options => options.Ignore())
-                .ForMember(model => model.AddResourceValue, options => options.Ignore())
                 .ForMember(model => model.LocaleResourceSearchModel, options => options.Ignore());
             CreateMap<LanguageModel, Language>();
 
@@ -1399,9 +1398,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
 
             CreateMap<Poll, PollModel>()
                 .ForMember(model => model.AvailableLanguages, options => options.Ignore())
-                .ForMember(model => model.PollAnswerSearchModel, options => options.Ignore())
-                .ForMember(model => model.AddName, options => options.Ignore())
-                .ForMember(model => model.AddDisplayOrder, options => options.Ignore());
+                .ForMember(model => model.PollAnswerSearchModel, options => options.Ignore());
             CreateMap<PollModel, Poll>()
                 .ForMember(entity => entity.EndDateUtc, options => options.Ignore())
                 .ForMember(entity => entity.Language, options => options.Ignore())
@@ -1607,7 +1604,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
 
             CreateMap<VendorNote, VendorNoteModel>()
                .ForMember(model => model.CreatedOn, options => options.Ignore())
-               .ForMember(model => model.Note, options => options.Ignore());               
+               .ForMember(model => model.Note, options => options.Ignore());
 
             CreateMap<VendorAttribute, VendorAttributeModel>()
                 .ForMember(model => model.AttributeControlTypeName, options => options.Ignore())

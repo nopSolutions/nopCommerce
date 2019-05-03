@@ -7,7 +7,7 @@ set @resources='
 <Language>
   <LocaleResource Name="Admin.ContentManagement.Topics.Fields.Title.Required">
     <Value></Value>
-  </LocaleResource>  
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.DisableBillingAddressCheckoutStep.Hint">
     <Value>Check to disable "Billing address" step during checkout. Billing address will be pre-filled and saved using the default registration data (this option cannot be used with guest checkout enabled). Also ensure that appropriate address fields that cannot be pre-filled are not required (or disabled). If a customer doesn''t have a billing address, then the billing address step will be displayed.</Value>
   </LocaleResource>
@@ -22,16 +22,16 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.UseResponseCompression">
     <Value>Use response compression</Value>
-  </LocaleResource>  
-   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.UseResponseCompression.Hint">
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.UseResponseCompression.Hint">
     <Value>Enable to compress response (gzip by default). You can disable it if you have an active IIS Dynamic Compression Module configured at the server level.</Value>
-  </LocaleResource>   
+  </LocaleResource>
   <LocaleResource Name="Admin.System.Warnings.URL.Reserved">
     <Value>The entered text will be replaced by ''{0}'', since it is already used as a SEO-friendly name for another page or contains invalid characters</Value>
   </LocaleResource>
   <LocaleResource Name="Plugins.Payments.PayPalStandard.Instructions">
     <Value>
-		<![CDATA[
+      <![CDATA[
 		<p>
 			<b>If you''re using this gateway ensure that your primary store currency is supported by PayPal.</b>
 			<br />
@@ -48,8 +48,8 @@ set @resources='
 			<br />
 		</p>
 		]]>
-	</Value>
-  </LocaleResource>  
+    </Value>
+  </LocaleResource>
   <LocaleResource Name="Plugins.ExternalAuth.Facebook.Instructions">
     <Value><![CDATA[<p>To configure authentication with Facebook, please follow these steps:<br/><br/><ol><li>Navigate to the <a href="https://developers.facebook.com/apps" target ="_blank" > Facebook for Developers</a> page and sign in. If you don''t already have a Facebook account, use the <b>Sign up for Facebook</b> link on the login page to create one.</li><li>Tap the <b>+ Add a New App button</b> in the upper right corner to create a new App ID. (If this is your first app with Facebook, the text of the button will be <b>Create a New App</b>.)</li><li>Fill out the form and tap the <b>Create App ID button</b>.</li><li>The <b>Product Setup</b> page is displayed, letting you select the features for your new app. Click <b>Get Started</b> on <b>Facebook Login</b>.</li><li>Click the <b>Settings</b> link in the menu at the left, you are presented with the <b>Client OAuth Settings</b> page with some defaults already set.</li><li>Enter "{0:s}signin-facebook" into the <b>Valid OAuth Redirect URIs</b> field.</li><li>Click <b>Save Changes</b>.</li><li>Click the <b>Dashboard</b> link in the left navigation.</li><li>Copy your App ID and App secret below.</li></ol><br/><br/></p>]]></Value>
   </LocaleResource>
@@ -58,7 +58,7 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.Common.Alert">
     <Value>Information</Value>
-  </LocaleResource>  
+  </LocaleResource>
   <LocaleResource Name="Admin.Common.Ok">
     <Value>Ok</Value>
   </LocaleResource>
@@ -74,7 +74,7 @@ set @resources='
   <LocaleResource Name="Admin.Customers.Customers.RewardPoints.Alert.HistoryAdd">
     <Value>Failed to add reward points.</Value>
   </LocaleResource>
-    <LocaleResource Name="Admin.Promotions.Discounts.Requirements.Alert.FailedToSave">
+  <LocaleResource Name="Admin.Promotions.Discounts.Requirements.Alert.FailedToSave">
     <Value>Failed to save requirement</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.GiftCards.Fields.GiftCardCouponCode.Alert.FailedGenerate">
@@ -124,10 +124,10 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.Requirements.FailedToSave">
     <Value></Value>
-  </LocaleResource> 
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.SpecificationAttributes.SelectOption">
     <Value></Value>
-  </LocaleResource> 
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.SpecificationAttributes.NoAttributeOptions">
     <Value></Value>
   </LocaleResource>
@@ -145,11 +145,11 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.DiscountCouponCode.Activated">
     <Value>Coupon code ({0}) is activated! The discount will be applied to your order.</Value>
-  </LocaleResource>  
+  </LocaleResource>
   <LocaleResource Name="ShoppingCart.DiscountCouponCode.Invalid">
     <Value>This coupon code ({0}) is invalid or no longer available.</Value>
   </LocaleResource>
-   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PasswordRequireDigit">
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PasswordRequireDigit">
     <Value>Password must have at least one digit</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PasswordRequireDigit.Hint">
@@ -205,7 +205,7 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Account.Fields.Password.LengthValidation">
     <Value></Value>
-  </LocaleResource>  
+  </LocaleResource>
   <LocaleResource Name="Account.PasswordRecovery.NewPassword.Required">
     <Value></Value>
   </LocaleResource>
@@ -229,7 +229,7 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Import.StoresDontExist">
     <Value>Stores with the following names and/or IDs don''t exist: {0}</Value>
-  </LocaleResource> 
+  </LocaleResource>
   <LocaleResource Name="Admin.DT.Aria.SortAscending">
     <Value>: activate to sort column ascending</Value>
   </LocaleResource>
@@ -238,7 +238,7 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.DT.EmptyTable">
     <Value>No data available in table</Value>
-  </LocaleResource>  
+  </LocaleResource>
   <LocaleResource Name="Admin.DT.Info">
     <Value>_START_-_END_ of _TOTAL_ items</Value>
   </LocaleResource>
@@ -292,7 +292,7 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Checkout.Addresses.Invalid">
     <Value>You have {0} invalid address(es)</Value>
-  </LocaleResource>  
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.LowStockActivity.Hint">
     <Value>Action to be taken when your current stock quantity falls below (reaches) the ''Minimum stock quantity''. Activation of the action will occur only after an order is placed.</Value>
   </LocaleResource>
@@ -310,10 +310,10 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Plugins">
     <Value></Value>
-  </LocaleResource>  
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Tax">
     <Value></Value>
-  </LocaleResource>  
+  </LocaleResource>
   <LocaleResource Name="Admin.Vendors.Display">
     <Value>Display</Value>
   </LocaleResource>
@@ -481,7 +481,7 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.Sitemap.Instructions">
     <Value><![CDATA[<p>These settings do not apply to sitemap.xml, only for your site map. You can configure generation for sitemap.xml on <a href="{0}">all settings page</a></p>]]></Value>
-  </LocaleResource> 
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.GooglePlusLink">
     <Value></Value>
   </LocaleResource>
@@ -502,11 +502,11 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="ScheduleTasks.Error">
     <Value>The "{0}" scheduled task failed with the "{1}" error (Task type: "{2}". Store name: "{3}". Task run address: "{4}").</Value>
-  </LocaleResource>    
+  </LocaleResource>
   <LocaleResource Name="ScheduleTasks.TimeoutError">
     <Value>A scheduled task canceled. Timeout expired.</Value>
   </LocaleResource>
-   <LocaleResource Name="Admin.Catalog.Categories.Fields.ShowOnHomePage">
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.ShowOnHomePage">
     <Value></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Fields.ShowOnHomePage.Hint">
@@ -539,7 +539,7 @@ set @resources='
   <LocaleResource Name="HomePage.Products">
     <Value></Value>
   </LocaleResource>
-   <LocaleResource Name="Admin.Catalog.Categories.Fields.ShowOnHomepage">
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.ShowOnHomepage">
     <Value>Show on home page</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Fields.ShowOnHomepage.Hint">
@@ -596,7 +596,7 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EnableHtmlMinification.Hint">
     <Value>Allows you to minify HTML pages as well as compress them, thereby increasing the download speed. Please note that after applying this setting, you need to restart the application.</Value>
   </LocaleResource>
-    <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.BlockTitle.Minification">
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.BlockTitle.Minification">
     <Value>Minification</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.Warnings.ProxyConnection.Failed">
@@ -659,13 +659,13 @@ set @resources='
   <LocaleResource Name="Account.Login.Fields.Username">
     <Value>Username</Value>
   </LocaleResource>
- <LocaleResource Name="Admin.Configuration.Settings.Shipping.AllowPickUpInStore">
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.AllowPickUpInStore">
     <Value></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.AllowPickUpInStore.Hint">
     <Value></Value>
   </LocaleResource>
-   <LocaleResource Name="Admin.Configuration.Settings.Shipping.AllowPickupInStore">
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.AllowPickupInStore">
     <Value>"Pick Up in Store" enabled</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.AllowPickupInStore.Hint">
@@ -682,7 +682,7 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.IgnoreAdditionalShippingChargeForPickupInStore.Hint">
     <Value>Check if you want ignore additional shipping charge for pick up in store.</Value>
-  </LocaleResource> 
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.BulkEdit">
     <Value></Value>
   </LocaleResource>
@@ -768,7 +768,100 @@ set @resources='
     <Value></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Vendors.VendorNotes.Fields.Note.Validation">
-      <Value>Vendor note can not be empty.</Value>
+    <Value>Vendor note can not be empty.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.AllSettings.Fields.Store">
+    <Value>Store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.AllSettings.Fields.Store.Hint">
+    <Value>A store name in which this setting is applied.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Languages.Resources.Fields.Name.Hint">
+    <Value>Enter the locale resource name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Languages.Resources.Fields.Value.Hint">
+    <Value>Enter the locale resource value.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Dimensions.Fields.Name.Hint">
+    <Value>Enter the dimension name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Dimensions.Fields.SystemKeyword.Hint">
+    <Value>Enter the dimension system keyword.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Dimensions.Fields.Ratio.Hint">
+    <Value>Specify the dimension ratio.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Dimensions.Fields.DisplayOrder.Hint">
+    <Value>The display order of this dimension. 1 represents the top of the list.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Weights.Fields.Name.Hint">
+    <Value>Enter the weight name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Weights.Fields.SystemKeyword.Hint">
+    <Value>Enter the weight system keyword.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Weights.Fields.Ratio.Hint">
+    <Value>Specify the weight ratio.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Weights.Fields.DisplayOrder.Hint">
+    <Value>The display order of this weight. 1 represents the top of the list.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Polls.Answers.Fields.Name.Hint">
+    <Value>Enter the poll answer name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Polls.Answers.Fields.DisplayOrder.Hint">
+    <Value>The display order of this poll answer. 1 represents the top of the list.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.AllSettings.Fields.Name.Hint">
+    <Value>Enter the setting name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.AllSettings.Fields.Value.Hint">
+    <Value>Enter the setting value.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Tax.Categories.Fields.Name.Hint">
+    <Value>Enter the tax category name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Tax.Categories.Fields.DisplayOrder.Hint">
+    <Value>The display order of this tax category. 1 represents the top of the list.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Category.Name.Hint">
+    <Value>Enter the template name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Category.DisplayOrder.Hint">
+    <Value>The display order of this template. 1 represents the top of the list.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Category.ViewPath.Hint">
+    <Value>Enter the template view path.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Manufacturer.Name.Hint">
+    <Value>Enter the template name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Manufacturer.DisplayOrder.Hint">
+    <Value>The display order of this template. 1 represents the top of the list.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Manufacturer.ViewPath.Hint">
+    <Value>Enter the template view path.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Product.Name.Hint">
+    <Value>Enter the template name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Product.DisplayOrder.Hint">
+    <Value>The display order of this template. 1 represents the top of the list.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Product.ViewPath.Hint">
+    <Value>Enter the template view path.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Product.IgnoredProductTypes.Hint">
+    <Value>Specify ignored product types for this template.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Topic.Name.Hint">
+    <Value>Enter the template name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Topic.DisplayOrder.Hint">
+    <Value>The display order of this template. 1 represents the top of the list.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Topic.ViewPath.Hint">
+    <Value>Enter the template view path.</Value>
   </LocaleResource>
 </Language>'
 

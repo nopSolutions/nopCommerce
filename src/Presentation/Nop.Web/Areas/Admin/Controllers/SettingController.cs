@@ -1732,7 +1732,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!ModelState.IsValid)
                 return ErrorJson(ModelState.SerializeErrors());
 
-            var storeId = 0;
+            var storeId = model.StoreId;
             _settingService.SetSetting(model.Name, model.Value, storeId);
 
             //activity log
