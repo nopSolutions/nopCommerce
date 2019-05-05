@@ -4,13 +4,9 @@
     @await Html.PartialAsync("Table", new DataTablesModel
     {
         Name = "activitylog-grid",
-        UrlRead = new DataUrl("ListActivityLog", "Customer", null),
+        UrlRead = new DataUrl("ListActivityLog", "Customer", new RouteValueDictionary { [nameof(Model.CustomerActivityLogSearchModel.CustomerId)] = Model.CustomerActivityLogSearchModel.CustomerId }),
         Length = Model.CustomerActivityLogSearchModel.PageSize,
         LengthMenu = Model.CustomerActivityLogSearchModel.AvailablePageSizes,
-        Filters = new List<FilterParameter>
-        {
-            new FilterParameter(nameof(Model.CustomerActivityLogSearchModel.CustomerId), Model.CustomerActivityLogSearchModel.CustomerId)
-        },
         ColumnCollection = new List<ColumnProperty>
         {
             new ColumnProperty(nameof(CustomerActivityLogModel.ActivityLogTypeName))

@@ -1,5 +1,4 @@
 ﻿using System;
-using Microsoft.AspNetCore.Http;
 
 namespace Nop.Services.Messages
 {
@@ -8,6 +7,14 @@ namespace Nop.Services.Messages
     /// </summary>
     public partial interface INotificationService
     {
+        /// <summary>
+        /// Display notification
+        /// </summary>
+        /// <param name="type">Notification type</param>
+        /// <param name="message">Message</param>
+        /// <param name="encode">A value indicating whether the message should not be encoded</param>
+        void Notification(NotifyType type, string message, bool encode = true);
+
         /// <summary>
         /// Display success notification
         /// </summary>

@@ -1,6 +1,4 @@
-﻿using FluentValidation.Attributes;
-using Nop.Web.Areas.Admin.Validators.Settings;
-using Nop.Web.Framework.Mvc.ModelBinding;
+﻿using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Models;
 using System.Collections.Generic;
 
@@ -9,7 +7,6 @@ namespace Nop.Web.Areas.Admin.Models.Settings
     /// <summary>
     /// Represents a GDPR consent model
     /// </summary>
-    [Validator(typeof(GdprConsentValidator))]
     public partial class GdprConsentModel : BaseNopEntityModel, ILocalizedModel<GdprConsentLocalizedModel>
     {
         #region Ctor

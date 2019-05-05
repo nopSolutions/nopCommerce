@@ -931,7 +931,7 @@ namespace Nop.Services.Common
                 //cell.Border = Rectangle.NO_BORDER;
                 const string indent = "   ";
 
-                if (!order.PickUpInStore)
+                if (!order.PickupInStore)
                 {
                     if (order.ShippingAddress == null)
                         throw new NopException($"Shipping is required, but address is not available. Order ID = {order.Id}");
@@ -1312,7 +1312,7 @@ namespace Nop.Services.Common
                 addressTable.AddCell(GetParagraph("PDFPackagingSlip.Shipment", lang, titleFont, shipment.Id));
                 addressTable.AddCell(GetParagraph("PDFPackagingSlip.Order", lang, titleFont, order.CustomOrderNumber));
 
-                if (!order.PickUpInStore)
+                if (!order.PickupInStore)
                 {
                     if (order.ShippingAddress == null)
                         throw new NopException($"Shipping is required, but address is not available. Order ID = {order.Id}");

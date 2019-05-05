@@ -73,10 +73,6 @@
                         @T("Admin.Common.Import")
                     </button>
                 }
-                <a asp-action="BulkEdit" class="btn bg-yellow">
-                    <i class="fa fa-edit"></i>
-                    @T("Admin.Common.BulkEdit")
-                </a>
                 <button type="button" id="delete-selected" class="btn bg-red">
                     <i class="fa fa-trash-o"></i>
                     @T("Admin.Common.Delete.Selected")
@@ -269,6 +265,7 @@
                                 {
                                     Title = T("Admin.Catalog.Products.Fields.Published").Text,
                                     Width = "100",
+                                    ClassName = StyleColumn.CenterAll,
                                     Render = new RenderBoolean()
                                 },
                                 new ColumnProperty(nameof(ProductModel.Id))
@@ -298,7 +295,8 @@
                                         url: "@(Url.Action("DeleteSelected", "Product"))",
                                         data: postData,
                                         complete: function (data) {
-                                            $('#search-products').DataTable().ajax.reload();
+                                            $('#products-grid').DataTable().ajax.reload();
+                                            selectedIds = [];
                                         },
                                         error: function (xhr, ajaxOptions, thrownError) {
                                             $('#deleteSelectedFailed-info').text(thrownError);

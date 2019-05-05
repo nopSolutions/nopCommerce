@@ -14,13 +14,9 @@
                     @await Html.PartialAsync("Table", new DataTablesModel
                     {
                         Name = "specificationattributes-grid",
-                        UrlRead = new DataUrl("ProductSpecAttrList", "Product", null),
+                        UrlRead = new DataUrl("ProductSpecAttrList", "Product", new RouteValueDictionary { [nameof(Model.ProductSpecificationAttributeSearchModel.ProductId)] = Model.ProductSpecificationAttributeSearchModel.ProductId }),
                         Length = Model.ProductPictureSearchModel.PageSize,
                         LengthMenu = Model.ProductPictureSearchModel.AvailablePageSizes,
-                        Filters = new List<FilterParameter>
-                        {
-                            new FilterParameter(nameof(Model.ProductSpecificationAttributeSearchModel.ProductId), Model.ProductSpecificationAttributeSearchModel.ProductId)
-                        },
                         ColumnCollection = new List<ColumnProperty>
                         {
                             new ColumnProperty(nameof(ProductSpecificationAttributeModel.AttributeTypeName))
@@ -43,20 +39,21 @@
                             {
                                 Title = T("Admin.Catalog.Products.SpecificationAttributes.Fields.AllowFiltering").Text,
                                 Width = "150",
-                                Render = new RenderBoolean(),
-                                ClassName = StyleColumn.CenterAll
+                                ClassName = StyleColumn.CenterAll,
+                                Render = new RenderBoolean()
                             },
                             new ColumnProperty(nameof(ProductSpecificationAttributeModel.ShowOnProductPage))
                             {
                                 Title = T("Admin.Catalog.Products.SpecificationAttributes.Fields.ShowOnProductPage").Text,
                                 Width = "150",
-                                Render = new RenderBoolean(),
-                                ClassName = StyleColumn.CenterAll
+                                ClassName = StyleColumn.CenterAll,
+                                Render = new RenderBoolean()
                             },
                             new ColumnProperty(nameof(ProductSpecificationAttributeModel.DisplayOrder))
                             {
                                 Title = T("Admin.Catalog.Products.SpecificationAttributes.Fields.DisplayOrder").Text,
-                                Width = "150"
+                                Width = "150",
+                                ClassName =  StyleColumn.CenterAll
                             },
                             new ColumnProperty(nameof(ProductSpecificationAttributeModel.Id))
                             {

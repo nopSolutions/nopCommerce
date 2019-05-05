@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using FluentValidation.Attributes;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Plugin.Payments.Qualpay.Validators;
 using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
@@ -11,7 +9,6 @@ namespace Nop.Plugin.Payments.Qualpay.Models
     /// <summary>
     /// Represents configuration model
     /// </summary>
-    [Validator(typeof(ConfigurationValidator))]
     public class ConfigurationModel : BaseNopModel
     {
         #region Ctor

@@ -173,18 +173,17 @@ namespace Nop.Web.Areas.Admin.Factories
                 searchModel.Page - 1, searchModel.PageSize);
 
             //prepare list model
-            var model = new LocaleResourceListModel
+            var model = new LocaleResourceListModel().PrepareToGrid(searchModel, pagedLocaleResources, () =>
             {
                 //fill in model values from the entity
-                Data = pagedLocaleResources.Select(localeResource => new LocaleResourceModel
+                return pagedLocaleResources.Select(localeResource => new LocaleResourceModel
                 {
                     LanguageId = language.Id,
                     Id = localeResource.Value.Key,
                     ResourceName = localeResource.Key,
                     ResourceValue = localeResource.Value.Value
-                }),
-                Total = pagedLocaleResources.TotalCount
-            };
+                });
+            });
 
             return model;
         }

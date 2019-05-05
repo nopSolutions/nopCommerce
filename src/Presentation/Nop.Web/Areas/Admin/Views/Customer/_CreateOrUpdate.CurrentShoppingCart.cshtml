@@ -16,12 +16,11 @@
     @await Html.PartialAsync("Table", new DataTablesModel
     {
         Name = "currentshoppingcart-grid",
-        UrlRead = new DataUrl("GetCartList", "Customer", null),
+        UrlRead = new DataUrl("GetCartList", "Customer", new RouteValueDictionary { [nameof(Model.CustomerShoppingCartSearchModel.CustomerId)] = Model.CustomerShoppingCartSearchModel.CustomerId }),
         Length = Model.CustomerShoppingCartSearchModel.PageSize,
         LengthMenu = Model.CustomerShoppingCartSearchModel.AvailablePageSizes,
         Filters = new List<FilterParameter>
         {
-            new FilterParameter(nameof(Model.CustomerShoppingCartSearchModel.CustomerId), Model.CustomerShoppingCartSearchModel.CustomerId),
             new FilterParameter(nameof(CustomerShoppingCartSearchModel.ShoppingCartTypeId), nameof(CustomerShoppingCartSearchModel))
         },
         ColumnCollection = new List<ColumnProperty>

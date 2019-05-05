@@ -6,14 +6,10 @@
         @await Html.PartialAsync("Table", new DataTablesModel
         {
             Name = "states-grid",
-            UrlRead = new DataUrl("States", "Country", null),
+            UrlRead = new DataUrl("States", "Country", new RouteValueDictionary { [nameof(StateProvinceSearchModel.CountryId)] = Model.StateProvinceSearchModel.CountryId }),
             UrlDelete = new DataUrl("StateDelete", "Country", null),
             Length = Model.StateProvinceSearchModel.PageSize,
             LengthMenu = Model.StateProvinceSearchModel.AvailablePageSizes,
-            Filters = new List<FilterParameter>
-            {
-                new FilterParameter(nameof(StateProvinceSearchModel.CountryId), Model.StateProvinceSearchModel.CountryId)
-            },
             ColumnCollection = new List<ColumnProperty>
             {
                 new ColumnProperty(nameof(StateProvinceModel.Name))
@@ -36,7 +32,8 @@
                 new ColumnProperty(nameof(StateProvinceModel.DisplayOrder))
                 {
                     Title = T("Admin.Configuration.Countries.States.Fields.DisplayOrder").Text,
-                    Width = "100"
+                    Width = "100",
+                    ClassName =  StyleColumn.CenterAll
                 },
                 new ColumnProperty(nameof(StateProvinceModel.Id))
                 {

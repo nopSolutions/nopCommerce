@@ -65,7 +65,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult LogList(LogSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSystemLog))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _logModelFactory.PrepareLogListModel(searchModel);

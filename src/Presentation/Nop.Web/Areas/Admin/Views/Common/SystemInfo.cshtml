@@ -159,8 +159,8 @@
                                             </div>
                                             @if (!string.IsNullOrEmpty(assembly.Location))
                                             {
-                                                <div style="white-space: nowrap;">
-                                                    <em>@assembly.Location</em>
+                                                <div style="white-space:nowrap;overflow:auto;">
+                                                    @assembly.Location
                                                 </div>
                                             }
                                             @if (assembly.BuildDate.HasValue)

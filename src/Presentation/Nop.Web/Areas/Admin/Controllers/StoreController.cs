@@ -86,7 +86,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult List(StoreSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageStores))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _storeModelFactory.PrepareStoreListModel(searchModel);

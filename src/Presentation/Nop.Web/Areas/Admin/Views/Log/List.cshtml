@@ -127,7 +127,8 @@
                                 },
                                 new ColumnProperty(nameof(LogModel.ShortMessage))
                                 {
-                                    Title = T("Admin.System.Log.Fields.ShortMessage").Text
+                                    Title = T("Admin.System.Log.Fields.ShortMessage").Text,
+                                    Encode = false
                                 },
                                 new ColumnProperty(nameof(LogModel.CreatedOn))
                                 {
@@ -161,8 +162,6 @@
                                         complete: function (data) {
                                             //reload grid
                                             $('#log-grid').DataTable().ajax.reload();
-                                            //clear selected checkboxes
-                                            $('.checkboxGroups').attr('checked', false).change();
                                             selectedIds = [];
                                         },
                                         error: function (xhr, ajaxOptions, thrownError) {

@@ -77,30 +77,29 @@ function bindBootstrapTabSelectEvent(tabsId, inputId) {
     });
 }
 
-function display_kendoui_grid_error(e) {
-    if (e.errors) {
-        if ((typeof e.errors) == 'string') {
-            //single error
-            //display the message
-            alert(e.errors);
-        } else {
-            //array of errors
-            //source: http://docs.kendoui.com/getting-started/using-kendo-with/aspnet-mvc/helpers/grid/faq#how-do-i-display-model-state-errors?
-            var message = "The following errors have occurred:";
-            //create a message containing all errors.
-            $.each(e.errors, function (key, value) {
-                if (value.errors) {
-                    message += "\n";
-                    message += value.errors.join("\n");
-                }
-            });
-            //display the message
-            alert(message);
+function display_nop_error(e) {
+  if (e.error) {
+    if ((typeof e.error) == 'string') {
+      //single error
+      //display the message
+      alert(e.error);
+    } else {
+      //array of errors
+      var message = "The following errors have occurred:";
+      //create a message containing all errors.
+      $.each(e.error, function (key, value) {
+        if (value.errors) {
+          message += "\n";
+          message += value.errors.join("\n");
         }
-      //ignore empty error
-    } else if (e.errorThrown) {
-        alert('Error happened');
+      });
+      //display the message
+      alert(message);
     }
+    //ignore empty error
+  } else if (e.errorThrown) {
+    alert('Error happened');
+  }
 }
 
 // CSRF (XSRF) security
@@ -275,3 +274,21 @@ function ToggleSearchBlockAndSavePreferences() {
 
     $(this).toggleClass("opened");
 }
+
+function ensureDataTablesRendered() {
+  $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
+}
+
+//scrolling and hidden DataTables issue workaround
+//More info - https://datatables.net/examples/api/tabs_and_scrolling.html
+$(document).ready(function () {
+  $('ul li a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+    ensureDataTablesRendered();
+  });
+  $(".panel.collapsible-panel >.panel-heading").click(function () {
+    ensureDataTablesRendered();
+  });
+  $('#advanced-settings-mode').on('click', function (e) {
+    ensureDataTablesRendered();
+  });
+});

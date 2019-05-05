@@ -420,22 +420,6 @@ namespace Nop.Services.Localization
             if (string.IsNullOrEmpty(xml))
                 return;
 
-            //SQL 2005 insists that your XML schema encoding be in UTF-16.
-            //Otherwise, you'll get "XML parsing: line 1, character XXX, unable to switch the encoding"
-            //so let's remove XML declaration
-            var inDoc = new XmlDocument();
-            inDoc.LoadXml(xml);
-            var sb = new StringBuilder();
-            using (var xWriter = XmlWriter.Create(sb, new XmlWriterSettings { OmitXmlDeclaration = true }))
-            {
-                inDoc.Save(xWriter);
-                xWriter.Close();
-            }
-
-            var outDoc = new XmlDocument();
-            outDoc.LoadXml(sb.ToString());
-            xml = outDoc.OuterXml;
-
             //stored procedures are enabled and supported by the database.
             var pLanguageId = _dataProvider.GetParameter();
             pLanguageId.ParameterName = "LanguageId";

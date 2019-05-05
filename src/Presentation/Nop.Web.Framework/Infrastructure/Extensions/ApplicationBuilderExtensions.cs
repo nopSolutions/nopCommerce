@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Globalization;
 using System.Linq;
 using System.Runtime.ExceptionServices;
 using System.Threading.Tasks;
@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Net.Http.Headers;
@@ -18,7 +19,9 @@ using Nop.Core.Infrastructure;
 using Nop.Services.Authentication;
 using Nop.Services.Common;
 using Nop.Services.Installation;
+using Nop.Services.Localization;
 using Nop.Services.Logging;
+using Nop.Services.Media.RoxyFileman;
 using Nop.Web.Framework.Globalization;
 using Nop.Web.Framework.Mvc.Routing;
 using WebMarkupMin.AspNetCore2;
@@ -110,11 +113,11 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                         var originalQueryString = context.HttpContext.Request.QueryString;
 
                         //store the original paths in special feature, so we can use it later
-                        context.HttpContext.Features.Set<IStatusCodeReExecuteFeature>(new StatusCodeReExecuteFeature()
+                        context.HttpContext.Features.Set<IStatusCodeReExecuteFeature>(new StatusCodeReExecuteFeature
                         {
                             OriginalPathBase = context.HttpContext.Request.PathBase.Value,
                             OriginalPath = originalPath.Value,
-                            OriginalQueryString = originalQueryString.HasValue ? originalQueryString.Value : null,
+                            OriginalQueryString = originalQueryString.HasValue ? originalQueryString.Value : null
                         });
 
                         //get new path
@@ -175,17 +178,17 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public static void UseNopStaticFiles(this IApplicationBuilder application)
         {
-            var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
-
-            Action<StaticFileResponseContext> staticFileResponse = (context) =>
+            void staticFileResponse(StaticFileResponseContext context)
             {
-                if (DataSettingsManager.DatabaseIsInstalled)
-                {
-                    var commonSettings = EngineContext.Current.Resolve<CommonSettings>();
-                    if (!string.IsNullOrEmpty(commonSettings.StaticFilesCacheControl))
-                        context.Context.Response.Headers.Append(HeaderNames.CacheControl, commonSettings.StaticFilesCacheControl);
-                }
-            };
+                if (!DataSettingsManager.DatabaseIsInstalled)
+                    return;
+
+                var commonSettings = EngineContext.Current.Resolve<CommonSettings>();
+                if (!string.IsNullOrEmpty(commonSettings.StaticFilesCacheControl))
+                    context.Context.Response.Headers.Append(HeaderNames.CacheControl, commonSettings.StaticFilesCacheControl);
+            }
+
+            var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
 
             //common static files
             application.UseStaticFiles(new StaticFileOptions { OnPrepareResponse = staticFileResponse });
@@ -225,6 +228,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                     staticFileOptions.ContentTypeProvider = fileExtensionContentTypeProvider;
                 }
             }
+
             application.UseStaticFiles(staticFileOptions);
 
             //add support for backups
@@ -249,6 +253,16 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 RequestPath = "/icons",
                 ContentTypeProvider = provider
             });
+
+            if (DataSettingsManager.DatabaseIsInstalled)
+            {
+                application.UseStaticFiles(new StaticFileOptions
+                {
+                    FileProvider = new RoxyFilemanProvider(fileProvider.GetAbsolutePath(NopRoxyFilemanDefaults.DefaultRootDirectory.TrimStart('/').Split('/'))),
+                    RequestPath = new PathString(NopRoxyFilemanDefaults.DefaultRootDirectory),
+                    OnPrepareResponse = staticFileResponse
+                });
+            }
         }
 
         /// <summary>
@@ -280,6 +294,26 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 return;
 
             application.UseMiddleware<AuthenticationMiddleware>();
+        }
+
+        /// <summary>
+        /// Configure the request localization feature
+        /// </summary>
+        /// <param name="application">Builder for configuring an application's request pipeline</param>
+        public static void UseNopRequestLocalization(this IApplicationBuilder application)
+        {
+            application.UseRequestLocalization(options =>
+            {
+                if (!DataSettingsManager.DatabaseIsInstalled)
+                    return;
+
+                //prepare supported cultures
+                var cultures = EngineContext.Current.Resolve<ILanguageService>().GetAllLanguages()
+                    .OrderBy(language => language.DisplayOrder)
+                    .Select(language => new CultureInfo(language.LanguageCulture)).ToList();
+                options.SupportedCultures = cultures;
+                options.DefaultRequestCulture = new RequestCulture(cultures.FirstOrDefault());
+            });
         }
 
         /// <summary>

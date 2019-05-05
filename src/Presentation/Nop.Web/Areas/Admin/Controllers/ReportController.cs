@@ -45,7 +45,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult LowStockList(LowStockProductSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _reportModelFactory.PrepareLowStockProductListModel(searchModel);
@@ -72,7 +72,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult BestsellersList(BestsellerSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _reportModelFactory.PrepareBestsellerListModel(searchModel);
@@ -99,7 +99,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult NeverSoldList(NeverSoldReportSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _reportModelFactory.PrepareNeverSoldListModel(searchModel);
@@ -126,7 +126,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult CountrySalesList(CountryReportSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.OrderCountryReport))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _reportModelFactory.PrepareCountrySalesListModel(searchModel);
@@ -175,7 +175,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult ReportBestCustomersByOrderTotalList(BestCustomersReportSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _reportModelFactory.PrepareBestCustomersReportListModel(searchModel);
@@ -187,7 +187,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult ReportBestCustomersByNumberOfOrdersList(BestCustomersReportSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _reportModelFactory.PrepareBestCustomersReportListModel(searchModel);
@@ -199,7 +199,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult ReportRegisteredCustomersList(RegisteredCustomersReportSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _reportModelFactory.PrepareRegisteredCustomersReportListModel(searchModel);

@@ -1,7 +1,6 @@
 ﻿@model DataTablesModel
 @using System.Net;
 @using System.Runtime.Serialization;
-@using System.Text.Encodings.Web
 
 @{
     //the locale which MomentJS should use - the default is en (English).
@@ -127,6 +126,8 @@ else
     },
     </text>
 }
+scrollX: true,
+info: @Model.Info.ToString().ToLower(),
 paging: @Model.Paging.ToString().ToLower(),
 pagingType: '@Model.PagingType',
 language: @await Html.PartialAsync("_GridLocalization"),
@@ -146,16 +147,17 @@ else
 ordering: @Model.Ordering.ToString().ToLower(),
 fixedHeader: @Model.FixedHeader.ToString().ToLower(),
 dom: '<"row"<"col-md-12"t>>' +
-     '<"row"' +
-        '<"col-md-8"<"row"' +
-            '<"col-md-6"<"pull-left"p>>' +
-            '<"col-md-6"<"pull-left data-tables-length"l>>' +
+     '<"row margin-t-5"' +
+        '<"col-md-11"<"row"' +
+            '<"col-md-9"<"pull-left"p>>' +
+            '<"col-md-2"<"pull-left data-tables-length"l>>' +
         '>>' +
-        '<"col-md-4"<"pull-right"i>>' +
+        '<"col-md-1"<"pull-right"i>>' +
      '>',
 columns: [
-    @foreach (var column in Model.ColumnCollection)
+    @for (int i = 0; i < Model.ColumnCollection.Count; i++)
     {
+        var column = Model.ColumnCollection[i];
         <text>
         {            
             @if (!string.IsNullOrEmpty(column.Title) && !column.IsMasterCheckBox)
@@ -197,6 +199,14 @@ columns: [
                 className: '@GetEnumValue(typeof(StyleColumn), column.ClassName.Value)',
                 </text>
             }
+            @if ((Model.UrlUpdate != null) || (Model.ChildTable?.UrlUpdate != null))
+            {
+                <text>
+                createdCell: function (td, cellData, rowData, row, col) {
+                   $(td).attr('data-columnname', '@column.Data');
+                },
+                </text>
+            }
             @if (column.Encode && column.Render == null)
             {
                 <text>
@@ -208,16 +218,17 @@ columns: [
                 case RenderLink link:
                     <text>
                     render: function (data, type, row, meta) {
+                        var textRenderer = $.fn.dataTable.render.text().display;
                         @if (!string.IsNullOrEmpty(link.Title))
                         {
                             <text>
-                            return '<a href="@GetUrl(link.Url)' + row.@link.Url.DataId + '">@JavaScriptEncoder.Default.Encode(link.Title)</a>';
+                            return '<a href="@GetUrl(link.Url)' + textRenderer(row.@link.Url.DataId) + '">@JavaScriptEncoder.Default.Encode(link.Title)</a>';
                             </text>
                         }
                         else
                         {
                             <text>
-                                return '<a href="@GetUrl(link.Url)' + row.@link.Url.DataId + '">' + data + '</a>';
+                            return '<a href="@GetUrl(link.Url)' + textRenderer(row.@link.Url.DataId) + '">' + textRenderer(data) + '</a>';
                             </text>
                         }
                     },
@@ -233,8 +244,22 @@ columns: [
                 case RenderButtonRemove button:
                     <text>
                     render: function (data, type, row, meta) {
-                        return '<a href="#" class="@GetEnumValue(typeof(StyleButton), button.Style)" onclick="DeleteData_@(model_name)(\'' + data + '\')"><i class="fa fa-remove"></i>@button.Title</a>';
+                        return '<a href="#" class="@GetEnumValue(typeof(StyleButton), button.Style)" onclick="table_deletedata_@(model_name)(\'' + data + '\');return false;"><i class="fa fa-remove"></i>@button.Title</a>';
                     },
+                    </text>
+                    break;
+                    case RenderButtonsInlineEdit button:
+                    <text>
+                        render: function (data, type, row, meta) {
+                            var origData = data;
+                            var modData = data;
+                            if (typeof data == 'string'){
+                                modData = data.replace(/[.*+?^${}()|[\]\\]/g, "_");
+                            }
+                            return '<a href="#" class="@GetEnumValue(typeof(StyleButton), StyleButton.Default)" id="buttonEdit_@(model_name)'+ modData + '" onclick="editData_@(model_name)($(this).parent().parent(), \'' + origData + '\');return false;"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>' +
+                            '<a href="#" class="@GetEnumValue(typeof(StyleButton), StyleButton.Default)" id="buttonConfirm_@(model_name)'+ modData + '" style="display:none" onclick="confirmEditData_@(model_name)($(this).parent().parent(), \'' + origData + '\', \'@column.Data\');return false;"><i class="fa fa-check"></i>@T("Admin.Common.Update")</a>' +
+                            '<a href="#" class="@GetEnumValue(typeof(StyleButton), StyleButton.Default)" id="buttonCancel_@(model_name)'+ modData + '" style="display:none" onclick="cancelEditData_@(model_name)(\'' + row + '\', \'' + origData + '\');return false;"><i class="fa fa-ban"></i>@T("Admin.Common.Cancel")</a>';
+                        },                         
                     </text>
                     break;
                 case RenderButtonEdit buttonEdit:
@@ -256,7 +281,7 @@ columns: [
                     {
                         <text>
                         render: function (data, type, row, meta) {
-                            return '<a class="@GetEnumValue(typeof(StyleButton), buttonCustom.Style)" href="@buttonCustom.Url' + data + '">@buttonCustom.Title</a>';
+                            return '<a class="@GetEnumValue(typeof(StyleButton), buttonCustom.Style)" href="@buttonCustom.Url' + data + '">@JavaScriptEncoder.Default.Encode(buttonCustom.Title)</a>';
                         },
                         </text>
                     }
@@ -264,7 +289,7 @@ columns: [
                     {
                         <text>
                         render: function (data, type, row, meta) {
-                            return '<a class="@GetEnumValue(typeof(StyleButton), buttonCustom.Style)" onclick="@buttonCustom.OnClickFunctionName' + '(' + data + ')">@JavaScriptEncoder.Default.Encode(buttonCustom.Title)</a>';
+                            return '<a class="@GetEnumValue(typeof(StyleButton), buttonCustom.Style)" onclick="@buttonCustom.OnClickFunctionName' + '(' + data + ');">@JavaScriptEncoder.Default.Encode(buttonCustom.Title)</a>';
                         },
                         </text>
                     }
@@ -300,8 +325,8 @@ columns: [
                     <text>
                     render: function (data, type, row) {
                         return (data == true)
-                            ? '<i class="fa fa-check true-icon"></i>'
-                            : '<i class="fa fa-close false-icon"></i>';
+                            ? '<i class="fa fa-check true-icon" nop-value="true"></i>'
+                            : '<i class="fa fa-close false-icon" nop-value="false"></i>';
                     },
                     </text>
                     break;
@@ -320,8 +345,9 @@ columns: [
                     </text>
                     break;
             }
-            data: '@column.Data'
-        },
+            data: '@column.Data'            
+        }
+        @if (i != Model.ColumnCollection.Count - 1) {<text>,</text>}
         </text>
     }
 ]

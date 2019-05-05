@@ -1,13 +1,10 @@
 ﻿using System.Collections.Generic;
-using FluentValidation.Attributes;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Domain.Forums;
 using Nop.Web.Framework.Models;
-using Nop.Web.Validators.Boards;
 
 namespace Nop.Web.Models.Boards
 {
-    [Validator(typeof(EditForumTopicValidator))]
     public partial class EditForumTopicModel : BaseNopModel
     {
         public EditForumTopicModel()

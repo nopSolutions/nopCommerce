@@ -63,13 +63,12 @@
             @await Html.PartialAsync("Table", new DataTablesModel
             {
                 Name = "orders-grid",
-                UrlRead = new DataUrl("AffiliatedOrderListGrid", "Affiliate", null),
+                UrlRead = new DataUrl("AffiliatedOrderListGrid", "Affiliate", new RouteValueDictionary { [nameof(Model.AffiliatedOrderSearchModel.AffliateId)] = Model.AffiliatedOrderSearchModel.AffliateId }),
                 SearchButtonId = "search-orders",
                 Length = Model.AffiliatedOrderSearchModel.PageSize,
                 LengthMenu = Model.AffiliatedOrderSearchModel.AvailablePageSizes,
                 Filters = new List<FilterParameter>
                 {
-                    new FilterParameter(nameof(Model.AffiliatedOrderSearchModel.AffliateId), Model.AffiliatedOrderSearchModel.AffliateId),
                     new FilterParameter(nameof(Model.AffiliatedOrderSearchModel.StartDate), nameof(AffiliatedOrderSearchModel)),
                     new FilterParameter(nameof(Model.AffiliatedOrderSearchModel.EndDate), nameof(AffiliatedOrderSearchModel)),
                     new FilterParameter(nameof(Model.AffiliatedOrderSearchModel.OrderStatusId), nameof(AffiliatedOrderSearchModel)),
@@ -131,16 +130,6 @@
 
                     return '<span class="grid-report-item ' + color + '">' + data + '</span >';
                 }
-
-                $(document).ready(function() {
-                    //search button
-                    $('#search-orders').click(function() {
-                        //search
-                        $('#orders-grid').DataTable().ajax.reload();
-                        //grid.dataSource.read(); we already loaded the grid above using "page" function
-                        return false;
-                    });
-                });
             </script>
         </div>
     </div>

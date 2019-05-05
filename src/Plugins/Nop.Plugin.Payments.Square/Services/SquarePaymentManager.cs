@@ -21,7 +21,7 @@ namespace Nop.Plugin.Payments.Square.Services
 
         private readonly ILogger _logger;
         private readonly IWorkContext _workContext;
-        private readonly SquareHttpClient _squareHttpClient;
+        private readonly SquareAuthorizationHttpClient _squareAuthorizationHttpClient;
         private readonly SquarePaymentSettings _squarePaymentSettings;
 
         #endregion
@@ -30,12 +30,12 @@ namespace Nop.Plugin.Payments.Square.Services
 
         public SquarePaymentManager(ILogger logger,
             IWorkContext workContext,
-            SquareHttpClient squareHttpClient,
+            SquareAuthorizationHttpClient squareAuthorizationHttpClient,
             SquarePaymentSettings squarePaymentSettings)
         {
             _logger = logger;
             _workContext = workContext;
-            _squareHttpClient = squareHttpClient;
+            _squareAuthorizationHttpClient = squareAuthorizationHttpClient;
             _squarePaymentSettings = squarePaymentSettings;
         }
 
@@ -489,11 +489,10 @@ namespace Nop.Plugin.Payments.Square.Services
         /// <summary>
         /// Generate URL for the authorization permissions page
         /// </summary>
-        /// <param name="verificationString">String to help protect against cross-site request forgery</param>
         /// <returns>URL</returns>
-        public string GenerateAuthorizeUrl(string verificationString)
+        public string GenerateAuthorizeUrl()
         {
-            var serviceUrl = $"{_squareHttpClient.BaseAddress}authorize";
+            var serviceUrl = $"{_squareAuthorizationHttpClient.BaseAddress}authorize";
 
             //list of all available permission scopes
             var permissionScopes = new List<string>
@@ -566,7 +565,7 @@ namespace Nop.Plugin.Payments.Square.Services
                 ["session"] = "false",
 
                 //Include this parameter and verify its value to help protect against cross-site request forgery.
-                ["state"] = verificationString,
+                ["state"] = _squarePaymentSettings.AccessTokenVerificationString,
 
                 //The ID of the subscription plan to direct the merchant to sign up for, if any.
                 //You can provide this parameter with no value to give a merchant the option to cancel an active subscription.
@@ -580,31 +579,29 @@ namespace Nop.Plugin.Payments.Square.Services
         /// <summary>
         /// Exchange the authorization code for an access token
         /// </summary>
-        /// <param name="accessTokenRequest">Request parameters to obtain access token</param>
-        /// <returns>Access token</returns>
-        public string ObtainAccessToken(ObtainAccessTokenRequest accessTokenRequest)
+        /// <param name="authorizationCode">Authorization code</param>
+        /// <returns>Access and refresh tokens</returns>
+        public (string AccessToken, string RefreshToken) ObtainAccessToken(string authorizationCode)
         {
-            return _squareHttpClient.ObtainAccessTokenAsync(accessTokenRequest).Result;
+            return _squareAuthorizationHttpClient.ObtainAccessTokenAsync(authorizationCode).Result;
         }
 
         /// <summary>
         /// Renew the expired access token
         /// </summary>
-        /// <param name="accessTokenRequest">Request parameters to renew access token</param>
-        /// <returns>Access token</returns>
-        public string RenewAccessToken(RenewAccessTokenRequest accessTokenRequest)
+        /// <returns>Access and refresh tokens</returns>
+        public (string AccessToken, string RefreshToken) RenewAccessToken()
         {
-            return _squareHttpClient.RenewAccessTokenAsync(accessTokenRequest).Result;
+            return _squareAuthorizationHttpClient.RenewAccessTokenAsync().Result;
         }
 
         /// <summary>
         /// Revoke all access tokens
         /// </summary>
-        /// <param name="revokeTokenRequest">Request parameters to revoke access token</param>
         /// <returns>True if tokens were successfully revoked; otherwise false</returns>
-        public bool RevokeAccessTokens(RevokeAccessTokenRequest revokeTokenRequest)
+        public bool RevokeAccessTokens()
         {
-            return _squareHttpClient.RevokeAccessTokensAsync(revokeTokenRequest).Result;
+            return _squareAuthorizationHttpClient.RevokeAccessTokensAsync().Result;
         }
 
         #endregion

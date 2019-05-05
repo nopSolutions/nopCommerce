@@ -118,12 +118,14 @@
                             {
                                 Title = T("Admin.Catalog.Categories.Fields.Published").Text,
                                 Width = "100",
+                                ClassName = StyleColumn.CenterAll,
                                 Render = new RenderBoolean()
                             },
                             new ColumnProperty(nameof(CategoryModel.DisplayOrder))
                             {
                                 Title = T("Admin.Catalog.Categories.Fields.DisplayOrder").Text,
-                                Width = "150"
+                                Width = "150",
+                                ClassName =  StyleColumn.CenterAll
                             },
                             new ColumnProperty(nameof(CategoryModel.Id))
                             {

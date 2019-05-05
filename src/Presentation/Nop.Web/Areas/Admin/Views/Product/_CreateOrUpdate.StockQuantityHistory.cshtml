@@ -30,14 +30,13 @@
         @await Html.PartialAsync("Table", new DataTablesModel
    {
        Name = "stock-quantity-history-grid",
-       UrlRead = new DataUrl("StockQuantityHistory", "Product", null),
+       UrlRead = new DataUrl("StockQuantityHistory", "Product", new RouteValueDictionary { [nameof(Model.StockQuantityHistorySearchModel.ProductId)] = Model.StockQuantityHistorySearchModel.ProductId }),
        SearchButtonId = "search-stock-quantity-history",
        Length = Model.StockQuantityHistorySearchModel.PageSize,
        LengthMenu = Model.StockQuantityHistorySearchModel.AvailablePageSizes,
        Filters = new List<FilterParameter>
             {
-                new FilterParameter(nameof(StockQuantityHistorySearchModel.WarehouseId), nameof(StockQuantityHistorySearchModel)),
-                new FilterParameter(nameof(StockQuantityHistorySearchModel.ProductId), Model.Id)
+                new FilterParameter(nameof(StockQuantityHistorySearchModel.WarehouseId), nameof(StockQuantityHistorySearchModel))
             },
        ColumnCollection = new List<ColumnProperty>
             {
@@ -67,7 +66,7 @@
                 {
                     Title = T("Admin.Catalog.Products.StockQuantityHistory.Fields.Message").Text
                 },
-                new ColumnProperty(nameof(StockQuantityHistoryModel.StockQuantity))
+                new ColumnProperty(nameof(StockQuantityHistoryModel.CreatedOn))
                 {
                     Title = T("Admin.Catalog.Products.StockQuantityHistory.Fields.CreatedOn").Text,
                     Width = "170",
@@ -79,15 +78,6 @@
             function renderQuantityAdjustment(data, type, row, meta) {
                 return (data > 0 ? '+' : '') + data;
             }
-        </script>
-
-        <script>
-            $(document).ready(function () {
-                $('#search-stock-quantity-history').click(function () {
-                    $('#stock-quantity-history-grid').DataTable().ajax.reload();
-                    return false;
-                });
-            });
         </script>
     </div>
     @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductDetailsStockQuantityHistoryBottom, additionalData = Model })

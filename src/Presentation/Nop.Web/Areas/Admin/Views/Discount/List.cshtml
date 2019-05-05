@@ -101,13 +101,13 @@
             <div class="panel panel-default">
                 <div class="panel-body">
                     @await Html.PartialAsync("Table", new DataTablesModel
-                    {
-                        Name = "discounts-grid",
-                        UrlRead = new DataUrl("List", "Discount", null),
-                        SearchButtonId = "search-discounts",
-                        Length = Model.PageSize,
-                        LengthMenu = Model.AvailablePageSizes,
-                        Filters = new List<FilterParameter>
+               {
+                   Name = "discounts-grid",
+                   UrlRead = new DataUrl("List", "Discount", null),
+                   SearchButtonId = "search-discounts",
+                   Length = Model.PageSize,
+                   LengthMenu = Model.AvailablePageSizes,
+                   Filters = new List<FilterParameter>
                         {
                             new FilterParameter(nameof(Model.SearchDiscountTypeId)),
                             new FilterParameter(nameof(Model.SearchDiscountCouponCode)),
@@ -115,7 +115,7 @@
                             new FilterParameter(nameof(Model.SearchStartDate)),
                             new FilterParameter(nameof(Model.SearchEndDate))
                         },
-                        ColumnCollection = new List<ColumnProperty>
+                   ColumnCollection = new List<ColumnProperty>
                         {
                             new ColumnProperty(nameof(DiscountModel.Name))
                             {
@@ -148,7 +148,8 @@
                             new ColumnProperty(nameof(DiscountModel.TimesUsed))
                             {
                                 Title = T("Admin.Promotions.Discounts.Fields.TimesUsed").Text,
-                                Width = "200"
+                                Width = "200",
+                                ClassName =  StyleColumn.CenterAll
                             },
                             new ColumnProperty(nameof(DiscountModel.Id))
                             {
@@ -158,7 +159,7 @@
                                 Render = new RenderButtonEdit(new DataUrl("Edit"))
                             }
                         }
-                    })
+               })
                     <script>
                         function renderColumnDiscount(data, type, row, meta) {
                             return (row.UsePercentage) ? row.DiscountPercentage + '%' : row.DiscountAmount + ' ' + row.PrimaryStoreCurrencyCode;

@@ -82,6 +82,17 @@ namespace Nop.Services.Messages
         #region Methods
 
         /// <summary>
+        /// Display notification
+        /// </summary>
+        /// <param name="type">Notification type</param>
+        /// <param name="message">Message</param>
+        /// <param name="encode">A value indicating whether the message should not be encoded</param>
+        public virtual void Notification(NotifyType type, string message, bool encode = true)
+        {
+            PrepareTempData(type, message, encode);
+        }
+
+        /// <summary>
         /// Display success notification
         /// </summary>
         /// <param name="message">Message</param>

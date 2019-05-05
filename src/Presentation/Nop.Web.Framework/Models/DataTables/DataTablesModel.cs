@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Nop.Web.Framework.Models.DataTables
 {
@@ -22,6 +21,7 @@ namespace Nop.Web.Framework.Models.DataTables
         public DataTablesModel()
         {
             //set default values
+            Info = true;
             ServerSide = true;
             Processing = true;
             Paging = true;
@@ -46,9 +46,14 @@ namespace Nop.Web.Framework.Models.DataTables
         public DataUrl UrlRead { get; set; }
 
         /// <summary>
-        /// Gets or sets URL for custom action
+        /// Gets or sets URL for delete action (ajax)
         /// </summary>
         public DataUrl UrlDelete { get; set; }
+
+        /// <summary>
+        /// Gets or sets URL for update action (ajax)
+        /// </summary>
+        public DataUrl UrlUpdate { get; set; }
 
         /// <summary>
         /// Gets or sets search button Id
@@ -81,6 +86,11 @@ namespace Nop.Web.Framework.Models.DataTables
         public bool Paging { get; set; }
 
         /// <summary>
+        /// Enable or disable information ("1 to n of n entries")
+        /// </summary>
+        public bool Info { get; set; }
+
+        /// <summary>
         /// Pagination button display options.
         /// </summary>
         public string PagingType { get; set; }
@@ -110,6 +120,11 @@ namespace Nop.Web.Framework.Models.DataTables
         /// See also https://datatables.net/reference/option/headerCallback
         /// </summary>
         public string HeaderCallback { get; set; }
+
+        /// <summary>
+        /// Gets or sets a number of columns to generate in a footer. Set 0 to disable footer
+        /// </summary>
+        public int FooterColumns { get; set; }
 
         /// <summary>
         /// Gets or sets custom render footer function name(js)

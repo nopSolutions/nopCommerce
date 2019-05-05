@@ -25,5 +25,10 @@
         /// Uninstall plugin
         /// </summary>
         void Uninstall();
+
+        /// <summary>
+        /// Prepare plugin to the uninstallation
+        /// </summary>
+        void PreparePluginToUninstall();
     }
 }

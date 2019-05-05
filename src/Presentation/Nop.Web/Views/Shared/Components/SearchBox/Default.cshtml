@@ -1,5 +1,4 @@
 ﻿@model SearchBoxModel
-@using System.Text.Encodings.Web
 <form asp-route="ProductSearch" method="get" id="small-search-box-form">
     <input type="text" class="search-box-text" id="small-searchterms" autocomplete="off" name="q" placeholder="@T("Search.SearchBox.Tooltip")" aria-label="@T("Search.SearchBox.Text.Label")" />
     @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.SearchBoxBeforeSearchButton })

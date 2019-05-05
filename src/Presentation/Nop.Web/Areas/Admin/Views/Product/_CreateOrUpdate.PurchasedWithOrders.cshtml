@@ -9,13 +9,9 @@
             var table = new DataTablesModel
             {
                 Name = "purchased-with-orders-grid",
-                UrlRead = new DataUrl("PurchasedWithOrders", "Product", null),
+                UrlRead = new DataUrl("PurchasedWithOrders", "Product", new RouteValueDictionary { [nameof(Model.ProductOrderSearchModel.ProductId)] = Model.ProductOrderSearchModel.ProductId }),
                 Length = Model.ProductPictureSearchModel.PageSize,
-                LengthMenu = Model.ProductPictureSearchModel.AvailablePageSizes,
-                Filters = new List<FilterParameter>
-                {
-                    new FilterParameter(nameof(Model.ProductOrderSearchModel.ProductId), Model.Id)
-                }
+                LengthMenu = Model.ProductPictureSearchModel.AvailablePageSizes
             };
 
             var columns = new List<ColumnProperty>();

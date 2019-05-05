@@ -233,7 +233,7 @@ namespace Nop.Services.Messages
                     "%Order.Product(s)%",
                     "%Order.CreatedOn%",
                     "%Order.OrderURLForCustomer%",
-                    "%Order.PickUpInStore%",
+                    "%Order.PickupInStore%",
                     "%Order.OrderId%"
                 });
 
@@ -914,7 +914,7 @@ namespace Nop.Services.Messages
         public virtual void AddOrderTokens(IList<Token> tokens, Order order, int languageId, int vendorId = 0)
         {
             //lambda expression for choosing correct order address
-            Address orderAddress(Order o) => o.PickUpInStore ? o.PickupAddress : o.ShippingAddress;
+            Address orderAddress(Order o) => o.PickupInStore ? o.PickupAddress : o.ShippingAddress;
 
             tokens.Add(new Token("Order.OrderId", order.Id));
             tokens.Add(new Token("Order.OrderNumber", order.CustomOrderNumber));
@@ -939,7 +939,7 @@ namespace Nop.Services.Messages
 
             tokens.Add(new Token("Order.Shippable", !string.IsNullOrEmpty(order.ShippingMethod)));
             tokens.Add(new Token("Order.ShippingMethod", order.ShippingMethod));
-            tokens.Add(new Token("Order.PickUpInStore", order.PickUpInStore));
+            tokens.Add(new Token("Order.PickupInStore", order.PickupInStore));
             tokens.Add(new Token("Order.ShippingFirstName", orderAddress(order)?.FirstName ?? string.Empty));
             tokens.Add(new Token("Order.ShippingLastName", orderAddress(order)?.LastName ?? string.Empty));
             tokens.Add(new Token("Order.ShippingPhoneNumber", orderAddress(order)?.PhoneNumber ?? string.Empty));
@@ -1311,7 +1311,7 @@ namespace Nop.Services.Messages
         public virtual void AddForumPostTokens(IList<Token> tokens, ForumPost forumPost)
         {
             var forumService = EngineContext.Current.Resolve<IForumService>();
-            tokens.Add(new Token("Forums.PostAuthor", _customerService.FormatUserName(forumPost.Customer)));
+            tokens.Add(new Token("Forums.PostAuthor", _customerService.FormatUsername(forumPost.Customer)));
             tokens.Add(new Token("Forums.PostBody", forumService.FormatPostText(forumPost), true));
 
             //event notification

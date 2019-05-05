@@ -201,8 +201,8 @@ namespace Nop.Web.Factories
             if (order.ShippingStatus != ShippingStatus.ShippingNotRequired)
             {
                 model.IsShippable = true;
-                model.PickUpInStore = order.PickUpInStore;
-                if (!order.PickUpInStore)
+                model.PickupInStore = order.PickupInStore;
+                if (!order.PickupInStore)
                 {
                     _addressModelFactory.PrepareAddressModel(model.ShippingAddress,
                         address: order.ShippingAddress,

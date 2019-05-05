@@ -142,7 +142,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
             var storeLocation = _webHelper.GetStoreLocation();
 
             //choosing correct order address
-            var orderAddress = postProcessPaymentRequest.Order.PickUpInStore
+            var orderAddress = postProcessPaymentRequest.Order.PickupInStore
                     ? postProcessPaymentRequest.Order.PickupAddress
                     : postProcessPaymentRequest.Order.ShippingAddress;
 
@@ -223,16 +223,16 @@ namespace Nop.Plugin.Payments.PayPalStandard
                 var roundedAttributePrice = Math.Round(attributePrice, 2);
 
                 //add query parameters
-                if (attributeValue.CheckoutAttribute != null)
-                {
-                    parameters.Add($"item_name_{itemCount}", attributeValue.CheckoutAttribute.Name);
-                    parameters.Add($"amount_{itemCount}", roundedAttributePrice.ToString("0.00", CultureInfo.InvariantCulture));
-                    parameters.Add($"quantity_{itemCount}", "1");
+                if (attributeValue.CheckoutAttribute == null) 
+                    continue;
 
-                    cartTotal += attributePrice;
-                    roundedCartTotal += roundedAttributePrice;
-                    itemCount++;
-                }
+                parameters.Add($"item_name_{itemCount}", attributeValue.CheckoutAttribute.Name);
+                parameters.Add($"amount_{itemCount}", roundedAttributePrice.ToString("0.00", CultureInfo.InvariantCulture));
+                parameters.Add($"quantity_{itemCount}", "1");
+
+                cartTotal += attributePrice;
+                roundedCartTotal += roundedAttributePrice;
+                itemCount++;
             }
 
             //add shipping fee as a separate order item, if it has price
@@ -271,7 +271,6 @@ namespace Nop.Plugin.Payments.PayPalStandard
 
                 cartTotal += postProcessPaymentRequest.Order.OrderTax;
                 roundedCartTotal += roundedTaxAmount;
-                itemCount++;
             }
 
             if (cartTotal > postProcessPaymentRequest.Order.OrderTotal)

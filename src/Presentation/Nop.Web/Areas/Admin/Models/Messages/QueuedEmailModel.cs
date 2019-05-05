@@ -1,7 +1,5 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using FluentValidation.Attributes;
-using Nop.Web.Areas.Admin.Validators.Messages;
 using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Models;
 
@@ -10,7 +8,6 @@ namespace Nop.Web.Areas.Admin.Models.Messages
     /// <summary>
     /// Represents a queued email model
     /// </summary>
-    [Validator(typeof(QueuedEmailValidator))]
     public partial class QueuedEmailModel: BaseNopEntityModel
     {
         #region Properties

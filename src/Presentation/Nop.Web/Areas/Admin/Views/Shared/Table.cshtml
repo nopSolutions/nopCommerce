@@ -1,10 +1,5 @@
 ﻿@model DataTablesModel
-
 @using System.Net;
-@using System.Runtime.Serialization;
-@using Nop.Web.Framework.Models.DataTables;
-
-
 @functions
 {
     string GetUrl(DataUrl dataUrl)
@@ -15,27 +10,32 @@
             ? $"{(dataUrl.Url.StartsWith("~/", StringComparison.Ordinal) ? Url.Content(dataUrl.Url) : dataUrl.Url).TrimEnd('/')}" + (!dataUrl.TrimEnd ? "/" : "")
             : string.Empty;
     }
-
-    string GetEnumValue(Type type, object value)
-    {
-        return type.GetMember(value.ToString())?[0]
-            ?.GetCustomAttributes(false).OfType<EnumMemberAttribute>().FirstOrDefault()
-            ?.Value;
-    }
 }
-
-<table class="table table-bordered table-hover dataTable" width="100%" id="@Model.Name"></table>
+<table class="table table-bordered table-hover table-striped dataTable" width="100%" id="@Model.Name">
+    @if (Model.FooterColumns > 0)
+    {
+        //You need to add the footer before you create the table
+        //as DataTables doesn't provide a method for creating a footer at the moment
+        <tfoot>
+            <tr>
+                @for (int i = 0; i < Model.FooterColumns; i++)
+                {
+                    <td></td>
+                }
+            </tr>
+        </tfoot>
+    }
+</table>
 
 @{ 
     //check using MasterCheckBox
-    var isUsedMasterCheckBox = Model.ColumnCollection.Any(x => x.IsMasterCheckBox == true);
-
+    var isMasterCheckBoxUsed = Model.ColumnCollection.Any(x => x.IsMasterCheckBox);
     //Model name for js function names
     var model_name = Model.Name.Replace("-", "_");
 }
 
 <script>
-    @if (isUsedMasterCheckBox)
+    @if (isMasterCheckBoxUsed)
     {
         //selectedIds - This variable will be used on views. It can not be renamed
         <text>
@@ -49,7 +49,7 @@
         </text>
     }
     $(document).ready(function () {
-        var table = $('#@Model.Name').DataTable({
+        $('#@Model.Name').DataTable({
              @await Html.PartialAsync("_Table.Definition", Model)
         });
 
@@ -64,7 +64,7 @@
             });
             </text>
         }
-        @if (isUsedMasterCheckBox)
+        @if (isMasterCheckBoxUsed)
         {
             <text>
             $('#mastercheckbox').click(function () {
@@ -93,42 +93,213 @@
 {
     <text>
     <script>
-        function DeleteData_@(model_name)(DataId) {
+        function table_deletedata_@(model_name)(dataId) {
             if (confirm('@T("Admin.Common.DeleteConfirmation")')) {
-                ActionDelete_@(model_name)(DataId);
-            }
-            else {
-                return false;
-            }
-        }
-
-        function ActionDelete_@(model_name)(DataId) {
-            var postData = {
+                var postData = {
                 @if (!string.IsNullOrEmpty(Model.BindColumnNameActionDelete))
                 {
                     <text>
-                    @Model.BindColumnNameActionDelete: DataId
+                    @Model.BindColumnNameActionDelete: dataId
                     </text>
                 }
                 else
                 {
                     <text>
-                    id: DataId
+                    id: dataId
                     </text>
                 }
-            };
+                };
+                addAntiForgeryToken(postData);
+
+                $.ajax({
+                    url: '@Html.Raw(GetUrl((Model.ChildTable?.UrlDelete != null) ? Model.ChildTable?.UrlDelete : Model.UrlDelete))',
+                    type: '@WebRequestMethods.Http.Post',
+                    dataType: 'json',
+                    data: postData,
+                    success: function (result) {
+                        //display error if returned
+                        if (result) {
+                            display_nop_error(result);
+                        }
+                        //refresh grid
+                        $('#@Model.Name').DataTable().draw(false);
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        alert(thrownError);
+                    }
+                });
+            }
+            else {
+                return false;
+            }
+        }
+    </script>
+    </text>
+}
+
+@if (Model.UrlUpdate != null || Model.ChildTable?.UrlUpdate != null)
+{
+    <text>
+    <script>
+        var editIndexTable_@(model_name) = -1;
+        var editRowData_@(model_name) = [];
+        var columnData_@(model_name) = [];
+        @foreach(var column in Model.ColumnCollection.Where(x => x.Editable))
+        {
+            <text>
+                var obj = { 'Data': '@column.Data', 'Editable': @column.Editable.ToString().ToLower(), 'Type': '@column.EditType.ToString().ToLower()' }
+                columnData_@(model_name).push(obj);
+            </text>
+        }
+
+        function editData_@(model_name)(dataId, data) {
+            var modData = data;
+            if (typeof data == 'string') {
+                modData = data.replace(/[.*+?^${}()|[\]\\]/g, "_");
+            }
+            $('#buttonEdit_@(model_name)' + modData).hide();
+            $('#buttonConfirm_@(model_name)' + modData).show();
+            $('#buttonCancel_@(model_name)' + modData).show();
+            rowEditMode_@(model_name)(dataId);
+        }
+
+        function rowEditMode_@(model_name)(rowid) {
+            var prevRow;
+            var rowIndexVlaue = parseInt(rowid[0].rowIndex);
+            if (editIndexTable_@(model_name) == -1) {
+                saveRowIntoArray_@(model_name)(rowid);
+                rowid.attr("editState", "editState");
+                editIndexTable_@(model_name) = rowid.rowIndex;
+                setEditStateValue_@(model_name)(rowid);
+            }
+            else {
+                prevRow = $("[editState=editState]");
+                prevRow.attr("editState", "");
+                rowid.attr("editState", "editState");
+                editIndexTable_@(model_name) = rowIndexVlaue;
+                saveArrayIntoRow_@(model_name)(prevRow);
+                saveRowIntoArray_@(model_name)(rowid);
+                setEditStateValue_@(model_name)(rowid);
+            }
+        }
+
+        function setEditStateValue_@(model_name)(curRow) {
+            for (var cellName in editRowData_@(model_name)) {
+                var columnType = 'string';
+
+                $.each(columnData_@(model_name), function (index, element) {
+                    if (element.Data == cellName) {
+                        columnType = element.Type;
+                    }
+                });
+
+                if (columnType == 'number') {
+                    $($(curRow).children("[data-columnname='" + cellName + "']")[0]).html('<input value="' + editRowData_@(model_name)[cellName] + '" class="userinput" type="number" min="0" max="100"/>');
+                }
+                if (columnType == 'checkbox') {
+                    var cellValue = editRowData_@(model_name)[cellName];
+                    if ($(cellValue).attr('nop-value') === 'true') {
+                        $($(curRow).children("[data-columnname='" + cellName + "']")[0]).html('<input value="true" checked class="userinput" type="checkbox" onclick="checkBoxClick_@(model_name)(this)"/>');
+                    }
+                    else {
+                        $($(curRow).children("[data-columnname='" + cellName + "']")[0]).html('<input value="false" class="userinput" type="checkbox" onclick="checkBoxClick_@(model_name)(this)"/>');
+                    }
+                }
+                if (columnType == 'string') {
+                    $($(curRow).children("[data-columnname='" + cellName + "']")[0]).html('<input value="' + editRowData_@(model_name)[cellName] + '" class="userinput"  style="width: 99% " />');
+                }
+            }
+        }
+
+        function checkBoxClick_@(model_name)(checkBox) {
+            var input = $(checkBox);
+            if ($(input).val() === 'true') {
+                $(input).val('false');
+                $(input).removeAttr('checked');
+            } else {
+                $(input).val('true');
+                $(input).attr('checked', 'checked');
+            }
+        }
+
+        function confirmEditData_@(model_name)(dataId, data, nameData) {
+            var origData = data;
+            var modData = data;
+            if (typeof data == 'string') {
+                modData = data.replace(/[.*+?^${}()|[\]\\]/g, "_");
+            }
+            $('#buttonEdit_@(model_name)' + modData).show();
+            $('#buttonConfirm_@(model_name)' + modData).hide();
+            $('#buttonCancel_@(model_name)' + modData).hide();
+
+            updateRowData_@(model_name)(dataId, origData, nameData);
+        }
+
+        function updateRowData_@(model_name)(currentCells, data, nameData) {
+            var updateRowData = [];
+            updateRowData.push({ 'pname': nameData, 'pvalue': data });
+            $.each(columnData_@(model_name), function (index, element) {
+                if (element.Editable == true) {
+                    updateRowData.push({
+                        'pname': element.Data, 'pvalue': $($($(currentCells).children("[data-columnname='" + element.Data + "']")).children('input')[0]).val()
+                    });
+                }
+            });
+            var postData = {};
+            for (i = 0; i < updateRowData.length; i++) {
+                postData[updateRowData[i].pname] = updateRowData[i].pvalue;
+            }
+            var tokenInput = $('input[name=__RequestVerificationToken]').val();
+            postData['__RequestVerificationToken'] = tokenInput;
             addAntiForgeryToken(postData);
 
             $.ajax({
-                url: '@Html.Raw(GetUrl((Model.ChildTable?.UrlDelete != null) ? Model.ChildTable?.UrlDelete : Model.UrlDelete))',
-                type: '@WebRequestMethods.Http.Post',
+                url: '@Html.Raw(GetUrl((Model.ChildTable?.UrlUpdate != null) ? Model.ChildTable?.UrlUpdate : Model.UrlUpdate))',
+                type: 'POST',
                 dataType: 'json',
                 data: postData,
-                success: function () {
-                    $('#@Model.Name').DataTable().draw(false);
+                success: function (result) {
+                    //display error if returned
+                    if (result) {
+                        display_nop_error(result);
+                    }
+                    //refresh grid
+                     $('#@Model.Name').DataTable().draw(false);
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
                     alert(thrownError);
+                }
+            });
+        }
+
+        function cancelEditData_@(model_name)(dataId, data) {
+            var modData = data;
+            if (typeof data == 'string') {
+                modData = data.replace(/[.*+?^${}()|[\]\\]/g, "_");
+            }
+            $('#buttonEdit_@(model_name)' + modData).show();
+            $('#buttonConfirm_@(model_name)' + modData).hide();
+            $('#buttonCancel_@(model_name)' + modData).hide();
+
+            var prevRow = $("[editState=editState]");
+            prevRow.attr("editState", "");
+            if (prevRow.length > 0) {
+                saveArrayIntoRow_@(model_name)($(prevRow));
+            }
+            editIndexTable_@(model_name) = -1;
+        }
+        
+        function saveArrayIntoRow_@(model_name)(cureentCells) {
+            for (var cellName in editRowData_@(model_name)) {
+                $($(cureentCells).children("[data-columnname='" + cellName + "']")[0]).html(editRowData_@(model_name)[cellName]);
+            }
+        }
+
+        function saveRowIntoArray_@(model_name)(cureentCells) {
+            $.each(columnData_@(model_name), function (index, element) {
+                if (element.Editable == true) {
+                    var htmlVal = $($(cureentCells).children("[data-columnname='" + element.Data + "']")[0]).html();
+                    editRowData_@(model_name)[element.Data] = htmlVal;
                 }
             });
         }

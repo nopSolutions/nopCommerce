@@ -254,7 +254,7 @@ namespace Nop.Services.Orders
             /// <summary>
             /// Is pickup in store selected?
             /// </summary>
-            public bool PickUpInStore { get; set; }
+            public bool PickupInStore { get; set; }
 
             /// <summary>
             /// Selected pickup address
@@ -509,12 +509,12 @@ namespace Nop.Services.Orders
             {
                 var pickupPoint = _genericAttributeService.GetAttribute<PickupPoint>(details.Customer,
                     NopCustomerDefaults.SelectedPickupPointAttribute, processPaymentRequest.StoreId);
-                if (_shippingSettings.AllowPickUpInStore && pickupPoint != null)
+                if (_shippingSettings.AllowPickupInStore && pickupPoint != null)
                 {
                     var country = _countryService.GetCountryByTwoLetterIsoCode(pickupPoint.CountryCode);
                     var state = _stateProvinceService.GetStateProvinceByAbbreviation(pickupPoint.StateAbbreviation, country?.Id);
 
-                    details.PickUpInStore = true;
+                    details.PickupInStore = true;
                     details.PickupAddress = new Address
                     {
                         Address1 = pickupPoint.Address,
@@ -687,8 +687,8 @@ namespace Nop.Services.Orders
             //shipping info
             if (details.InitialOrder.ShippingStatus != ShippingStatus.ShippingNotRequired)
             {
-                details.PickUpInStore = details.InitialOrder.PickUpInStore;
-                if (!details.PickUpInStore)
+                details.PickupInStore = details.InitialOrder.PickupInStore;
+                if (!details.PickupInStore)
                 {
                     if (details.InitialOrder.ShippingAddress == null)
                         throw new NopException("Shipping address is not available");
@@ -799,7 +799,7 @@ namespace Nop.Services.Orders
                 ShippingAddress = details.ShippingAddress,
                 ShippingStatus = details.ShippingStatus,
                 ShippingMethod = details.ShippingMethodName,
-                PickUpInStore = details.PickUpInStore,
+                PickupInStore = details.PickupInStore,
                 PickupAddress = details.PickupAddress,
                 ShippingRateComputationMethodSystemName = details.ShippingRateComputationMethodSystemName,
                 CustomValuesXml = _paymentService.SerializeCustomValues(processPaymentRequest),
@@ -1646,7 +1646,7 @@ namespace Nop.Services.Orders
 
             if (updateOrderParameters.PickupPoint != null)
             {
-                updatedOrder.PickUpInStore = true;
+                updatedOrder.PickupInStore = true;
                 updatedOrder.PickupAddress = new Address
                 {
                     Address1 = updateOrderParameters.PickupPoint.Address,

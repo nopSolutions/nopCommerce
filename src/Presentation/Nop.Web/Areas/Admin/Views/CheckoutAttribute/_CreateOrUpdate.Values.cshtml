@@ -7,14 +7,10 @@
         @await Html.PartialAsync("Table", new DataTablesModel
         {
             Name = "checkoutattributevalues-grid",
-            UrlRead = new DataUrl("ValueList", "CheckoutAttribute", null),
+            UrlRead = new DataUrl("ValueList", "CheckoutAttribute", new RouteValueDictionary { [nameof(CheckoutAttributeValueSearchModel.CheckoutAttributeId)] = Model.CheckoutAttributeValueSearchModel.CheckoutAttributeId }),
             UrlDelete = new DataUrl("ValueDelete", "CheckoutAttribute", null),
             Length = Model.CheckoutAttributeValueSearchModel.PageSize,
             LengthMenu = Model.CheckoutAttributeValueSearchModel.AvailablePageSizes,
-            Filters = new List<FilterParameter>
-            {
-                new FilterParameter(nameof(CheckoutAttributeValueSearchModel.CheckoutAttributeId), Model.CheckoutAttributeValueSearchModel.CheckoutAttributeId)
-            },
             ColumnCollection = new List<ColumnProperty>
             {
                 new ColumnProperty(nameof(CheckoutAttributeValueModel.Name))
@@ -41,7 +37,8 @@
                 new ColumnProperty(nameof(CheckoutAttributeValueModel.DisplayOrder))
                 {
                     Title = T("Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.DisplayOrder").Text,
-                    Width = "100"
+                    Width = "100",
+                    ClassName = StyleColumn.CenterAll
                 },
                 new ColumnProperty(nameof(CheckoutAttributeValueModel.Id))
                 {

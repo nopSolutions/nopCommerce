@@ -95,19 +95,19 @@ namespace Nop.Services.Shipping
                 query = query.Where(s => s.TrackingNumber.Contains(trackingNumber));
 
             if (shippingCountryId > 0)
-                query = query.Where(s => s.Order.PickUpInStore ? s.Order.PickupAddress.CountryId == shippingCountryId
+                query = query.Where(s => s.Order.PickupInStore ? s.Order.PickupAddress.CountryId == shippingCountryId
                                                                : s.Order.ShippingAddress.CountryId == shippingCountryId);
 
             if (shippingStateId > 0)
-                query = query.Where(s => s.Order.PickUpInStore ? s.Order.PickupAddress.StateProvinceId == shippingStateId
+                query = query.Where(s => s.Order.PickupInStore ? s.Order.PickupAddress.StateProvinceId == shippingStateId
                                                                : s.Order.ShippingAddress.StateProvinceId == shippingStateId);
 
             if (!string.IsNullOrWhiteSpace(shippingCounty))
-                query = query.Where(s => s.Order.PickUpInStore ? s.Order.PickupAddress.County.Contains(shippingCounty)
+                query = query.Where(s => s.Order.PickupInStore ? s.Order.PickupAddress.County.Contains(shippingCounty)
                                                                : s.Order.ShippingAddress.County.Contains(shippingCounty));
 
             if (!string.IsNullOrWhiteSpace(shippingCity))
-                query = query.Where(s => s.Order.PickUpInStore ? s.Order.PickupAddress.City.Contains(shippingCity)
+                query = query.Where(s => s.Order.PickupInStore ? s.Order.PickupAddress.City.Contains(shippingCity)
                                                                : s.Order.ShippingAddress.City.Contains(shippingCity));
 
             if (loadNotShipped)
@@ -319,7 +319,7 @@ namespace Nop.Services.Shipping
         /// <returns>Shipment tracker</returns>
         public virtual IShipmentTracker GetShipmentTracker(Shipment shipment)
         {
-            if (!shipment.Order.PickUpInStore)
+            if (!shipment.Order.PickupInStore)
             {
                 var shippingRateComputationMethod = _shippingPluginManager
                     .LoadPluginBySystemName(shipment.Order.ShippingRateComputationMethodSystemName);

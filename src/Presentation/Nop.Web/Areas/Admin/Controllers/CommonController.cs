@@ -193,7 +193,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult BackupFiles(BackupFileSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _commonModelFactory.PrepareBackupFileListModel(searchModel);
@@ -356,7 +356,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult SeNames(UrlRecordSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _commonModelFactory.PrepareUrlRecordListModel(searchModel);
@@ -380,7 +380,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult PopularSearchTermsReport(PopularSearchTermSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _commonModelFactory.PreparePopularSearchTermListModel(searchModel);

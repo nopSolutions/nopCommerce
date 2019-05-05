@@ -4,14 +4,10 @@
     @await Html.PartialAsync("Table", new DataTablesModel
     {
         Name = "used-by-products-grid",
-        UrlRead = new DataUrl("UsedByProducts", "SpecificationAttribute", null),
+        UrlRead = new DataUrl("UsedByProducts", "SpecificationAttribute", new RouteValueDictionary { [nameof(Model.SpecificationAttributeProductSearchModel.SpecificationAttributeId)] = Model.SpecificationAttributeProductSearchModel.SpecificationAttributeId }),
         SearchButtonId = "search-categories",
         Length = Model.SpecificationAttributeProductSearchModel.PageSize,
         LengthMenu = Model.SpecificationAttributeProductSearchModel.AvailablePageSizes,
-        Filters = new List<FilterParameter>
-        {
-            new FilterParameter(nameof(Model.SpecificationAttributeProductSearchModel.SpecificationAttributeId), Model.SpecificationAttributeProductSearchModel.SpecificationAttributeId)
-        },
         ColumnCollection = new List<ColumnProperty>
         {
             new ColumnProperty(nameof(SpecificationAttributeProductModel.ProductName))

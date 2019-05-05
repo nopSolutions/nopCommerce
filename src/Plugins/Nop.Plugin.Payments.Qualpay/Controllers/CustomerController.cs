@@ -60,7 +60,7 @@ namespace Nop.Plugin.Payments.Qualpay.Controllers
         public IActionResult QualpayCustomerCardList(QualpayCustomerCardSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //try to get a customer with the specified id
             var customer = _customerService.GetCustomerById(searchModel.CustomerId)

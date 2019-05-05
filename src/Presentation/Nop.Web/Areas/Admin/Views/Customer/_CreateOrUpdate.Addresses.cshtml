@@ -8,10 +8,6 @@
         UrlDelete = new DataUrl("AddressDelete", "Customer", new RouteValueDictionary { [nameof(Model.CustomerAddressSearchModel.CustomerId)] = Model.CustomerAddressSearchModel.CustomerId }),
         Length = Model.CustomerAddressSearchModel.PageSize,
         LengthMenu = Model.CustomerAddressSearchModel.AvailablePageSizes,
-        Filters = new List<FilterParameter>
-        {
-            new FilterParameter(nameof(Model.CustomerAddressSearchModel.CustomerId), Model.CustomerAddressSearchModel.CustomerId)
-        },
         ColumnCollection = new List<ColumnProperty>
         {
             new ColumnProperty(nameof(AddressModel.FirstName))

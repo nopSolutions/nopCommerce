@@ -1,10 +1,14 @@
-﻿@model Nop.Plugin.Payments.Square.Models.PaymentInfoModel
+﻿@model PaymentInfoModel
+
+@using Nop.Plugin.Payments.Square
+@using Nop.Plugin.Payments.Square.Models
+@inject SquarePaymentSettings squarePaymentSettings
+@inject Nop.Core.Domain.Orders.OrderSettings orderSettings
+
 @{
     Layout = "";
     Html.AddScriptParts(ResourceLocation.Footer, SquarePaymentDefaults.PaymentFormScriptPath, excludeFromBundle: true);
 }
-@inject SquarePaymentSettings squarePaymentSettings
-@inject Nop.Core.Domain.Orders.OrderSettings orderSettings
 
 <style type="text/css">
     .square-input {
@@ -29,7 +33,7 @@
     }
 </style>
 
-<script>
+<script asp-location="Footer">
     $(document).ready(function () {
         $('#@Html.IdFor(model => model.StoredCardId)').on('change', toggleStoredCard);
         toggleStoredCard();
@@ -106,7 +110,7 @@
 
         $('input.payment-info-next-step-button').on('click', function (data) {
             var selectedStoredCardId = $('#@Html.IdFor(model => model.StoredCardId)').val()
-            if (!submitForm && (!selectedStoredCardId || selectedStoredCardId == '0')) {
+            if (!submitForm && (!selectedStoredCardId || selectedStoredCardId == '@(Guid.Empty.ToString())')) {
                 if (paymentForm) {
                     paymentForm.requestCardNonce();
                 }
@@ -127,7 +131,7 @@
 
     function toggleStoredCard() {
         var selectedStoredCardId = $('#@Html.IdFor(model => model.StoredCardId)').val();
-        if (!selectedStoredCardId || selectedStoredCardId == '0') {
+        if (!selectedStoredCardId || selectedStoredCardId == '@(Guid.Empty.ToString())') {
             $('#square-card-details').show();
         } else {
             $('#square-card-details').hide();
@@ -198,3 +202,5 @@
         </tr>
     }
 </table>
+
+@Html.NopInlineScripts(ResourceLocation.Footer)
