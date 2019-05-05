@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Security.AccessControl;
 using System.Security.Principal;
 using Nop.Core.Data;
@@ -210,6 +211,46 @@ namespace Nop.Web.Framework.Security
             }
         }
 
+        private static bool CheckPermissionsInOSX(string path, bool checkRead, bool checkWrite, bool checkModify, bool checkDelete)
+        {
+            try
+            {
+                //create bash command like
+                //sh -c "stat -c '%a %u %g' <file>"
+                var process = new Process
+                {
+                    StartInfo = new ProcessStartInfo
+                    {
+                        RedirectStandardInput = true,
+                        RedirectStandardOutput = true,
+                        UseShellExecute = false,
+                        FileName = "sh",
+                        Arguments = $"-c \"stat -f '%A %u %g' {path}\""
+
+                    }
+                };
+                process.Start();
+                process.WaitForExit();
+
+                //result look like: 555 1111 2222
+                //where 555 - file permissions, 1111 - file owner ID, 2222 - file group ID
+                var result = process.StandardOutput.ReadToEnd().Trim('\n').Split(' ');
+
+                var filePermissions = result[0].Select(p => (int)char.GetNumericValue(p)).ToList();
+                var isOwner = CurrentOSUser.UserId == result[1];
+                var isInGroup = CurrentOSUser.Groups.Contains(result[2]);
+
+                var filePermission =
+                    isOwner ? filePermissions[0] : (isInGroup ? filePermissions[1] : filePermissions[2]);
+
+                return CheckUserFilePermissions(filePermission, checkRead, checkWrite, checkModify, checkDelete);
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         #endregion
 
         #region Methods
@@ -233,7 +274,16 @@ namespace Nop.Web.Framework.Security
                     result = CheckPermissionsInWindows(path, checkRead, checkWrite, checkModify, checkDelete);
                     break;
                 case PlatformID.Unix:
-                    result = CheckPermissionsInUnix(path, checkRead, checkWrite, checkModify, checkDelete);
+                    //MacOSX also returns Unix PatformID
+                    //MacOSX file permission check differs slightly from linux
+                    if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                    {
+                        result = CheckPermissionsInOSX(path, checkRead, checkWrite, checkModify, checkDelete);
+                    }
+                    else
+                    {
+                        result = CheckPermissionsInUnix(path, checkRead, checkWrite, checkModify, checkDelete);
+                    }
                     break;
             }
 
