@@ -324,7 +324,7 @@
                                 Title = T("Admin.Common.Edit").Text,
                                 Width = "100",
                                 ClassName =  StyleColumn.ButtonStyle,
-                                Render = new RenderCustom("renderColumnEdit")
+                                Render = new RenderCustom("renderPriceColumnEdit")
                             },
                             new ColumnProperty(nameof(TierPriceModel.Id))
                             {
@@ -337,7 +337,7 @@
                     })
 
                     <script>
-                        function renderColumnEdit(data, type, row, meta) {
+                        function renderPriceColumnEdit(data, type, row, meta) {
                             return '<button onclick=\"javascript:OpenWindow(\'@Url.Content("~/Admin/Product/TierPriceEditPopup/")' + data + '?btnId=btnRefresh&formId=product-form\', 800, 600, true); return false;\" class="btn btn-default"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</button>';
                         }
                     </script>

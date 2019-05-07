@@ -20,7 +20,7 @@
                     {
                         Title = T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Attributes").Text,
                         Width = "400",
-                        Render = new RenderCustom("renderColumnAttributesXml")
+                        Render = new RenderCustom("renderProductAttributesCombinationsColumnAttributesXml")
                     },
                     new ColumnProperty(nameof(ProductAttributeCombinationModel.StockQuantity))
                     {
@@ -53,7 +53,7 @@
                     {
                         Title = T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.OverriddenPrice").Text,
                         Width = "200",
-                        Render = new RenderCustom("renderColumnPrice")
+                        Render = new RenderCustom("renderProductAttributesCombinationsColumnPrice")
                     },
                     new ColumnProperty(nameof(ProductAttributeCombinationModel.NotifyAdminForQuantityBelow))
                     {
@@ -71,7 +71,7 @@
                         Title = T("Admin.Common.Edit").Text,
                         Width = "100",
                         ClassName =  StyleColumn.ButtonStyle,
-                        Render = new RenderCustom("renderColumnEdit")
+                        Render = new RenderCustom("renderProductAttributesCombinationsColumnEdit")
                     },
                     new ColumnProperty(nameof(ProductAttributeCombinationModel.Id))
                     {
@@ -84,16 +84,16 @@
        })
 
             <script>
-                function renderColumnPrice(data, type, row, meta) {
+                function renderProductAttributesCombinationsColumnPrice(data, type, row, meta) {
                     return (data) ? Number.parseFloat(data).toFixed(2) : '';
                 }
 
-                function renderColumnAttributesXml(data, type, row, meta) {
+                function renderProductAttributesCombinationsColumnAttributesXml(data, type, row, meta) {
                     var warnings = (row.Warnings != null) ? '<div><span style="color: red">' + row.Warnings + '</span></div>' : '';
                     return row.AttributesXml + warnings;
                 }
 
-                function renderColumnEdit(data, type, row, meta) {
+                function renderProductAttributesCombinationsColumnEdit(data, type, row, meta) {
                     return '<button onclick=\"javascript:OpenWindow(\'@Url.Content("~/Admin/Product/ProductAttributeCombinationEditPopup/")' + data + '?btnId=btnRefreshCombinations&formId=product-form\', 800, 700, true); return false;\" class="btn btn-default"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</button>';
                 }
             </script>
