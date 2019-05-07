@@ -187,7 +187,7 @@ namespace Nop.Web.Controllers
                 TotalRecords = list.TotalCount,
                 PageIndex = list.PageIndex,
                 ShowTotalSummary = false,
-                RouteActionName = "CustomerBackInStockSubscriptionsPaged",
+                RouteActionName = "CustomerBackInStockSubscriptions",
                 UseRouteLinks = true,
                 RouteValues = new BackInStockSubscriptionsRouteValues { pageNumber = pageIndex }
             };
