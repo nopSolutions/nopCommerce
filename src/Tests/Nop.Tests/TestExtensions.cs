@@ -25,11 +25,6 @@ namespace Nop.Tests
             Assert.AreEqual(expected, actual);
         }
 
-        public static void ShouldBe<T>(this object actual)
-        {
-            Assert.IsInstanceOf<T>(actual);
-        }
-
         public static void ShouldBeTheSameAs(this object actual, object expected)
         {
             Assert.AreSame(expected, actual);
