@@ -13,18 +13,6 @@ namespace Nop.Tests
             return actual;
         }
 
-        ///<summary>
-        /// Asserts that two objects are equal.
-        ///</summary>
-        ///<param name="actual"></param>
-        ///<param name="expected"></param>
-        ///<param name="message"></param>
-        ///<exception cref="AssertionException"></exception>
-        public static void ShouldEqual(this object actual, object expected, string message)
-        {
-            Assert.AreEqual(expected, actual);
-        }
-
         public static T PropertiesShouldEqual<T>(this T actual, T expected, params string[] filters)
         {
             var properties = typeof (T).GetProperties().ToList();
