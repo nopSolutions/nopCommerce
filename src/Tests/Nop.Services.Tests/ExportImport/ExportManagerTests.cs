@@ -222,7 +222,7 @@ namespace Nop.Services.Tests.ExportImport
                     objectPropertyValue = ((DateTime?)objectPropertyValue).Value.ToOADate();
                 }
 
-                Assert.AreEqual(objectPropertyValue, property.PropertyValue, $"The property \"{typeof(T).Name}.{property.PropertyName}\" of these objects is not equal");
+                property.PropertyValue.Should().Be(objectPropertyValue, $"The property \"{typeof(T).Name}.{property.PropertyName}\" of these objects is not equal");
             }
 
             return actual;

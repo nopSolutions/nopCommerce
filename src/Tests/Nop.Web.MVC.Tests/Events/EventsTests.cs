@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using FluentAssertions;
 using Microsoft.AspNetCore.Hosting;
 using Moq;
 using Nop.Core;
@@ -39,7 +40,7 @@ namespace Nop.Web.MVC.Tests.Events
 
             var newDateTime = DateTime.Now.Subtract(TimeSpan.FromDays(5));
             _eventPublisher.Publish(newDateTime);
-            Assert.AreEqual(DateTimeConsumer.DateTime, newDateTime);
+            newDateTime.Should().Be(DateTimeConsumer.DateTime);
         }
     }
 }

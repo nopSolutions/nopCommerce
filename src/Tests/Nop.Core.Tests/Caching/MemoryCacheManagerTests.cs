@@ -70,8 +70,7 @@ namespace Nop.Core.Tests.Caching
                 .Should().BeTrue();
             actionCount.Should().Be(1);
 
-            Assert.Throws<ApplicationException>(() =>
-                _cacheManager.PerformActionWithLock(key, expiration, action));
+            _cacheManager.Invoking(a => a.PerformActionWithLock(key, expiration, action)).Should().Throw<ApplicationException>();
             actionCount.Should().Be(2);
 
             _cacheManager.PerformActionWithLock(key, expiration, action)
