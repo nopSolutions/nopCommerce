@@ -199,7 +199,7 @@ namespace Nop.Core.Tests.Domain.Customers
             customer.AddAddresses(address);
             customer.BillingAddress  = address;
 
-            customer.BillingAddress.ShouldBeTheSameAs(customer.Addresses.First());
+            customer.BillingAddress.Should().BeSameAs(customer.Addresses.First());
 
             _customerService.RemoveCustomerAddress(customer, address);
             customer.Addresses.Count.ShouldEqual(0);

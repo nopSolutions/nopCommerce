@@ -25,11 +25,6 @@ namespace Nop.Tests
             Assert.AreEqual(expected, actual);
         }
 
-        public static void ShouldBeTheSameAs(this object actual, object expected)
-        {
-            Assert.AreSame(expected, actual);
-        }
-
         public static T PropertiesShouldEqual<T>(this T actual, T expected, params string[] filters)
         {
             var properties = typeof (T).GetProperties().ToList();
