@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using FluentAssertions;
 using Moq;
 using Nop.Core;
 using Nop.Core.Data;
@@ -110,7 +111,7 @@ namespace Nop.Services.Tests.Directory
         public void Can_load_exchangeRateProviders()
         {
             var providers = _exchangeRatePluginManager.LoadAllPlugins();
-            providers.ShouldNotBeNull();
+            providers.Should().NotBeNull();
             providers.Any().ShouldBeTrue();
         }
 
@@ -118,14 +119,14 @@ namespace Nop.Services.Tests.Directory
         public void Can_load_exchangeRateProvider_by_systemKeyword()
         {
             var provider = _exchangeRatePluginManager.LoadPluginBySystemName("CurrencyExchange.TestProvider");
-            provider.ShouldNotBeNull();
+            provider.Should().NotBeNull();
         }
 
         [Test]
         public void Can_load_active_exchangeRateProvider()
         {
             var provider = _exchangeRatePluginManager.LoadPrimaryPlugin();
-            provider.ShouldNotBeNull();
+            provider.Should().NotBeNull();
         }
 
         [Test]

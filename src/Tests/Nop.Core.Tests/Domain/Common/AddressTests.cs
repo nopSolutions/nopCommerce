@@ -1,4 +1,5 @@
 ﻿using System;
+using FluentAssertions;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Directory;
 using Nop.Tests;
@@ -34,7 +35,7 @@ namespace Nop.Core.Tests.Domain.Common
             };
 
             var newAddress = address.Clone() as Address;
-            newAddress.ShouldNotBeNull();
+            newAddress.Should().NotBeNull();
             newAddress.Id.ShouldEqual(0);
             newAddress.FirstName.ShouldEqual("FirstName 1");
             newAddress.LastName.ShouldEqual("LastName 1");
@@ -49,11 +50,11 @@ namespace Nop.Core.Tests.Domain.Common
             newAddress.FaxNumber.ShouldEqual("FaxNumber 1");
             newAddress.CreatedOnUtc.ShouldEqual(new DateTime(2010, 01, 01));
 
-            newAddress.Country.ShouldNotBeNull();
+            newAddress.Country.Should().NotBeNull();
             newAddress.CountryId.ShouldEqual(3);
             newAddress.Country.Name.ShouldEqual("United States");
 
-            newAddress.StateProvince.ShouldNotBeNull();
+            newAddress.StateProvince.Should().NotBeNull();
             newAddress.StateProvinceId.ShouldEqual(4);
             newAddress.StateProvince.Name.ShouldEqual("LA");
         }

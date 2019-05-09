@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using FluentAssertions;
 using Moq;
 using Nop.Core;
 using Nop.Core.Data;
@@ -678,7 +679,7 @@ namespace Nop.Services.Tests.Orders
             var shippingRateComputationMethods = _shippingPluginManager.LoadActivePlugins(_shippingSettings.ActiveShippingRateComputationMethodSystemNames, _workContext.Object.CurrentCustomer, _storeContext.Object.CurrentStore.Id);
 
             var shipping = _orderTotalCalcService.GetShoppingCartShippingTotal(cart, false, shippingRateComputationMethods, out var taxRate, out var appliedDiscounts);
-            shipping.ShouldNotBeNull();
+            shipping.Should().NotBeNull();
             //10 - default fixed shipping rate, 42.5 - additional shipping change
             shipping.ShouldEqual(52.5);
             appliedDiscounts.Count.ShouldEqual(0);
@@ -748,7 +749,7 @@ namespace Nop.Services.Tests.Orders
             var shippingRateComputationMethods = _shippingPluginManager.LoadActivePlugins(_shippingSettings.ActiveShippingRateComputationMethodSystemNames, _workContext.Object.CurrentCustomer, _storeContext.Object.CurrentStore.Id);
 
             var shipping = _orderTotalCalcService.GetShoppingCartShippingTotal(cart, true, shippingRateComputationMethods, out var taxRate, out var appliedDiscounts);
-            shipping.ShouldNotBeNull();
+            shipping.Should().NotBeNull();
             //10 - default fixed shipping rate, 42.5 - additional shipping change
             shipping.ShouldEqual(57.75);
             appliedDiscounts.Count.ShouldEqual(0);
@@ -822,7 +823,7 @@ namespace Nop.Services.Tests.Orders
             var shipping = _orderTotalCalcService.GetShoppingCartShippingTotal(cart, false, shippingRateComputationMethods, out var taxRate, out var appliedDiscounts);
             appliedDiscounts.Count.ShouldEqual(1);
             appliedDiscounts.First().Name.ShouldEqual("Discount 1");
-            shipping.ShouldNotBeNull();
+            shipping.Should().NotBeNull();
             //10 - default fixed shipping rate, 42.5 - additional shipping change, -3 - discount
             shipping.ShouldEqual(49.5);
             //10 - default fixed tax rate
@@ -895,7 +896,7 @@ namespace Nop.Services.Tests.Orders
             var shipping = _orderTotalCalcService.GetShoppingCartShippingTotal(cart, true, shippingRateComputationMethods, out var taxRate, out var appliedDiscounts);
             appliedDiscounts.Count.ShouldEqual(1);
             appliedDiscounts.First().Name.ShouldEqual("Discount 1");
-            shipping.ShouldNotBeNull();
+            shipping.Should().NotBeNull();
             //10 - default fixed shipping rate, 42.5 - additional shipping change, -3 - discount
             shipping.ShouldEqual(54.45);
             //10 - default fixed tax rate
@@ -960,7 +961,7 @@ namespace Nop.Services.Tests.Orders
             _taxSettings.ShippingIsTaxable = true;
             _taxSettings.PaymentMethodAdditionalFeeIsTaxable = true;
             _orderTotalCalcService.GetTaxTotal(cart, shippingRateComputationMethods, out var taxRates).ShouldEqual(8.6);
-            taxRates.ShouldNotBeNull();
+            taxRates.Should().NotBeNull();
             taxRates.Count.ShouldEqual(1);
             taxRates.ContainsKey(10).ShouldBeTrue();
             taxRates[10].ShouldEqual(8.6);
@@ -969,7 +970,7 @@ namespace Nop.Services.Tests.Orders
             _taxSettings.ShippingIsTaxable = true;
             _taxSettings.PaymentMethodAdditionalFeeIsTaxable = false;
             _orderTotalCalcService.GetTaxTotal(cart, shippingRateComputationMethods, out taxRates).ShouldEqual(6.6);
-            taxRates.ShouldNotBeNull();
+            taxRates.Should().NotBeNull();
             taxRates.Count.ShouldEqual(1);
             taxRates.ContainsKey(10).ShouldBeTrue();
             taxRates[10].ShouldEqual(6.6);
@@ -978,7 +979,7 @@ namespace Nop.Services.Tests.Orders
             _taxSettings.ShippingIsTaxable = false;
             _taxSettings.PaymentMethodAdditionalFeeIsTaxable = true;
             _orderTotalCalcService.GetTaxTotal(cart, shippingRateComputationMethods, out taxRates).ShouldEqual(7.6);
-            taxRates.ShouldNotBeNull();
+            taxRates.Should().NotBeNull();
             taxRates.Count.ShouldEqual(1);
             taxRates.ContainsKey(10).ShouldBeTrue();
             taxRates[10].ShouldEqual(7.6);
@@ -987,7 +988,7 @@ namespace Nop.Services.Tests.Orders
             _taxSettings.ShippingIsTaxable = false;
             _taxSettings.PaymentMethodAdditionalFeeIsTaxable = false;
             _orderTotalCalcService.GetTaxTotal(cart, shippingRateComputationMethods, out taxRates).ShouldEqual(5.6);
-            taxRates.ShouldNotBeNull();
+            taxRates.Should().NotBeNull();
             taxRates.Count.ShouldEqual(1);
             taxRates.ContainsKey(10).ShouldBeTrue();
             taxRates[10].ShouldEqual(5.6);

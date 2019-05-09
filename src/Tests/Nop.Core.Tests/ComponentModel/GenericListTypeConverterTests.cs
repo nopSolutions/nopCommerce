@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
+using FluentAssertions;
 using Nop.Core.ComponentModel;
 using Nop.Tests;
 using NUnit.Framework;
@@ -38,7 +39,7 @@ namespace Nop.Core.Tests.ComponentModel
             var items = "10,20,30,40,50";
             var converter = TypeDescriptor.GetConverter(typeof(List<int>));
             var result = converter.ConvertFrom(items) as IList<int>;
-            result.ShouldNotBeNull();
+            result.Should().NotBeNull();
             result.Count.ShouldEqual(5);
         }
 
@@ -48,7 +49,7 @@ namespace Nop.Core.Tests.ComponentModel
             var items = "foo, bar, day";
             var converter = TypeDescriptor.GetConverter(typeof(List<string>));
             var result = converter.ConvertFrom(items) as List<string>;
-            result.ShouldNotBeNull();
+            result.Should().NotBeNull();
             result.Count.ShouldEqual(3);
         }
 
@@ -59,7 +60,7 @@ namespace Nop.Core.Tests.ComponentModel
             var converter = TypeDescriptor.GetConverter(items.GetType());
             var result = converter.ConvertTo(items, typeof(string)) as string;
 
-            result.ShouldNotBeNull();
+            result.Should().NotBeNull();
             result.ShouldEqual("10,20,30,40,50");
         }
 
@@ -69,7 +70,7 @@ namespace Nop.Core.Tests.ComponentModel
             var items = new List<string> { "foo", "bar", "day" };
             var converter = TypeDescriptor.GetConverter(items.GetType());
             var result = converter.ConvertTo(items, typeof(string)) as string;
-            result.ShouldNotBeNull();
+            result.Should().NotBeNull();
             result.ShouldEqual("foo,bar,day");
         }
     }

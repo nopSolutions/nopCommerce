@@ -1,4 +1,5 @@
-﻿using Nop.Tests;
+﻿using FluentAssertions;
+using Nop.Tests;
 using Nop.Web.Models.Polls;
 using NUnit.Framework;
 
@@ -32,7 +33,7 @@ namespace Nop.Web.MVC.Tests.Public.Models.Polls
             model2.Name.ShouldEqual("Name 1");
             model2.AlreadyVoted.ShouldEqual(true);
             model2.TotalVotes.ShouldEqual(2);
-            model2.Answers.ShouldNotBeNull();
+            model2.Answers.Should().NotBeNull();
             model2.Answers.Count.ShouldEqual(1);
             model2.Answers[0].Id.ShouldEqual(3);
             model2.Answers[0].Name.ShouldEqual("answer 1");

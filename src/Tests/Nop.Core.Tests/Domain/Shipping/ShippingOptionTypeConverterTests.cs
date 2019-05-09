@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using FluentAssertions;
 using Nop.Core.Domain.Shipping;
 using Nop.Tests;
 using NUnit.Framework;
@@ -36,7 +37,7 @@ namespace Nop.Core.Tests.Domain.Shipping
             var result = converter.ConvertTo(shippingOptionInput, typeof(string)) as string;
 
             var shippingOptionOutput = converter.ConvertFrom(result) as ShippingOption;
-            shippingOptionOutput.ShouldNotBeNull();
+            shippingOptionOutput.Should().NotBeNull();
             shippingOptionOutput.Name.ShouldEqual("1");
             shippingOptionOutput.Description.ShouldEqual("2");
             shippingOptionOutput.Rate.ShouldEqual(3.57M);

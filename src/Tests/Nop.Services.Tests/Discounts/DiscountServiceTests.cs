@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using FluentAssertions;
 using Moq;
 using Nop.Core;
 using Nop.Core.Data;
@@ -114,7 +115,7 @@ namespace Nop.Services.Tests.Discounts
         public void Can_get_all_discount()
         {
             var discounts = _discountService.GetAllDiscounts();
-            discounts.ShouldNotBeNull();
+            discounts.Should().NotBeNull();
             discounts.Any().ShouldBeTrue();
         }
 
@@ -122,7 +123,7 @@ namespace Nop.Services.Tests.Discounts
         public void Can_load_discountRequirementRules()
         {
             var rules = _discountPluginManager.LoadAllPlugins();
-            rules.ShouldNotBeNull();
+            rules.Should().NotBeNull();
             rules.Any().ShouldBeTrue();
         }
 
@@ -130,7 +131,7 @@ namespace Nop.Services.Tests.Discounts
         public void Can_load_discountRequirementRuleBySystemKeyword()
         {
             var rule = _discountPluginManager.LoadPluginBySystemName("TestDiscountRequirementRule");
-            rule.ShouldNotBeNull();
+            rule.Should().NotBeNull();
         }
 
         [Test]

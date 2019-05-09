@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using FluentAssertions;
 using Nop.Services.Configuration;
 using Nop.Tests;
 using NUnit.Framework;
@@ -26,7 +27,7 @@ namespace Nop.Services.Tests.Configuration
         public void Can_get_all_settings()
         {
             var settings = config.GetAllSettings();
-            settings.ShouldNotBeNull();
+            settings.Should().NotBeNull();
             (settings.Any()).ShouldBeTrue();
         }
 

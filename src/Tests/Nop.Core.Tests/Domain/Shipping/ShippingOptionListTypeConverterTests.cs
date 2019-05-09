@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
+using FluentAssertions;
 using Nop.Core.Domain.Shipping;
 using Nop.Tests;
 using NUnit.Framework;
@@ -46,7 +47,7 @@ namespace Nop.Core.Tests.Domain.Shipping
             var result = converter.ConvertTo(shippingOptionsInput, typeof(string)) as string;
 
             var shippingOptionsOutput = converter.ConvertFrom(result) as List<ShippingOption>;
-            shippingOptionsOutput.ShouldNotBeNull();
+            shippingOptionsOutput.Should().NotBeNull();
             shippingOptionsOutput.Count.ShouldEqual(2);
             shippingOptionsOutput[0].Name.ShouldEqual("a1");
             shippingOptionsOutput[0].Description.ShouldEqual("a2");

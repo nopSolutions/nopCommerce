@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using FluentAssertions;
 using Moq;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
@@ -98,7 +99,7 @@ namespace Nop.Services.Tests.Tax
         public void Can_load_taxProviders()
         {
             var providers = _taxPluginManager.LoadAllPlugins();
-            providers.ShouldNotBeNull();
+            providers.Should().NotBeNull();
             providers.Any().ShouldBeTrue();
         }
 
@@ -106,14 +107,14 @@ namespace Nop.Services.Tests.Tax
         public void Can_load_taxProvider_by_systemKeyword()
         {
             var provider = _taxPluginManager.LoadPluginBySystemName("FixedTaxRateTest");
-            provider.ShouldNotBeNull();
+            provider.Should().NotBeNull();
         }
 
         [Test]
         public void Can_load_active_taxProvider()
         {
             var provider = _taxPluginManager.LoadPrimaryPlugin();
-            provider.ShouldNotBeNull();
+            provider.Should().NotBeNull();
         }
 
         [Test]

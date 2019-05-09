@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using FluentAssertions;
 using Moq;
 using Nop.Core.Data;
 using Nop.Core.Domain.Localization;
@@ -62,7 +63,7 @@ namespace Nop.Services.Tests.Localization
         public void Can_get_all_languages()
         {
             var languages = _languageService.GetAllLanguages();
-            languages.ShouldNotBeNull();
+            languages.Should().NotBeNull();
             languages.Any().ShouldBeTrue();
         }
     }

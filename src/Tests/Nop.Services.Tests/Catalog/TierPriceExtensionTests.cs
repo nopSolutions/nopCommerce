@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using FluentAssertions;
 using Nop.Core.Domain.Catalog;
 using Nop.Services.Catalog;
 using Nop.Tests;
@@ -66,11 +67,11 @@ namespace Nop.Services.Tests.Catalog
             tierPrices = tierPrices.RemoveDuplicatedQuantities().ToList();
 
             tierPrices.FirstOrDefault(x => x.Id == 1).ShouldBeNull();
-            tierPrices.FirstOrDefault(x => x.Id == 2).ShouldNotBeNull();
-            tierPrices.FirstOrDefault(x => x.Id == 3).ShouldNotBeNull();
-            tierPrices.FirstOrDefault(x => x.Id == 4).ShouldNotBeNull();
+            tierPrices.FirstOrDefault(x => x.Id == 2).Should().NotBeNull();
+            tierPrices.FirstOrDefault(x => x.Id == 3).Should().NotBeNull();
+            tierPrices.FirstOrDefault(x => x.Id == 4).Should().NotBeNull();
             tierPrices.FirstOrDefault(x => x.Id == 5).ShouldBeNull();
-            tierPrices.FirstOrDefault(x => x.Id == 6).ShouldNotBeNull();
+            tierPrices.FirstOrDefault(x => x.Id == 6).Should().NotBeNull();
         }
     }
 }
