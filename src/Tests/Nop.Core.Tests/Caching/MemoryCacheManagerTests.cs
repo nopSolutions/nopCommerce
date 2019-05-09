@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using EasyCaching.InMemory;
+using FluentAssertions;
 using Nop.Core.Caching;
 using Nop.Tests;
 using NUnit.Framework;
@@ -56,7 +57,7 @@ namespace Nop.Core.Tests.Caching
             var actionCount = 0;
             var action = new Action(() =>
             {
-                _cacheManager.IsSet(key).ShouldBeTrue();
+                _cacheManager.IsSet(key).Should().BeTrue();
 
                 _cacheManager.PerformActionWithLock(key, expiration,
                     () => Assert.Fail("Action in progress"))
@@ -67,7 +68,7 @@ namespace Nop.Core.Tests.Caching
             });
 
             _cacheManager.PerformActionWithLock(key, expiration, action)
-                .ShouldBeTrue();
+                .Should().BeTrue();
             actionCount.ShouldEqual(1);
 
             Assert.Throws<ApplicationException>(() =>
@@ -75,7 +76,7 @@ namespace Nop.Core.Tests.Caching
             actionCount.ShouldEqual(2);
 
             _cacheManager.PerformActionWithLock(key, expiration, action)
-                .ShouldBeTrue();
+                .Should().BeTrue();
             actionCount.ShouldEqual(3);
         }
     }

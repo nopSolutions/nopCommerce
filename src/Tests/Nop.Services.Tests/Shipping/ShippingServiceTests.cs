@@ -111,7 +111,7 @@ namespace Nop.Services.Tests.Shipping
         {
             var srcm = _shippingPluginManager.LoadAllPlugins();
             srcm.Should().NotBeNull();
-            srcm.Any().ShouldBeTrue();
+            srcm.Any().Should().BeTrue();
         }
 
         [Test]
@@ -126,7 +126,7 @@ namespace Nop.Services.Tests.Shipping
         {
             var srcm = _shippingPluginManager.LoadActivePlugins(_shippingSettings.ActiveShippingRateComputationMethodSystemNames);
             srcm.Should().NotBeNull();
-            srcm.Any().ShouldBeTrue();
+            srcm.Any().Should().BeTrue();
         }
 
         [Test]

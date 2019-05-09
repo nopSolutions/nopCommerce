@@ -265,7 +265,7 @@ namespace Nop.Services.Tests.Orders
             subTotalWithoutDiscount.ShouldEqual(89.39);
             subTotalWithDiscount.ShouldEqual(89.39);
             taxRates.Count.ShouldEqual(1);
-            taxRates.ContainsKey(10).ShouldBeTrue();
+            taxRates.ContainsKey(10).Should().BeTrue();
             taxRates[10].ShouldEqual(8.939);
         }
 
@@ -317,7 +317,7 @@ namespace Nop.Services.Tests.Orders
             subTotalWithoutDiscount.ShouldEqual(98.329);
             subTotalWithDiscount.ShouldEqual(98.329);
             taxRates.Count.ShouldEqual(1);
-            taxRates.ContainsKey(10).ShouldBeTrue();
+            taxRates.ContainsKey(10).Should().BeTrue();
             taxRates[10].ShouldEqual(8.939);
         }
 
@@ -373,7 +373,7 @@ namespace Nop.Services.Tests.Orders
             subTotalWithoutDiscount.ShouldEqual(89.39);
             subTotalWithDiscount.ShouldEqual(86.39);
             taxRates.Count.ShouldEqual(1);
-            taxRates.ContainsKey(10).ShouldBeTrue();
+            taxRates.ContainsKey(10).Should().BeTrue();
             taxRates[10].ShouldEqual(8.639);
         }
 
@@ -426,13 +426,13 @@ namespace Nop.Services.Tests.Orders
 
             //The comparison test failed before, because of a very tiny number difference.
             //discountAmount.ShouldEqual(3.3);
-            (System.Math.Round(discountAmount, 10) == 3.3M).ShouldBeTrue();
+            (System.Math.Round(discountAmount, 10) == 3.3M).Should().BeTrue();
             appliedDiscounts.Count.ShouldEqual(1);
             appliedDiscounts.First().Name.ShouldEqual("Discount 1");
             subTotalWithoutDiscount.ShouldEqual(98.329);
             subTotalWithDiscount.ShouldEqual(95.029);
             taxRates.Count.ShouldEqual(1);
-            taxRates.ContainsKey(10).ShouldBeTrue();
+            taxRates.ContainsKey(10).Should().BeTrue();
             taxRates[10].ShouldEqual(8.639);
         }
 
@@ -963,7 +963,7 @@ namespace Nop.Services.Tests.Orders
             _orderTotalCalcService.GetTaxTotal(cart, shippingRateComputationMethods, out var taxRates).ShouldEqual(8.6);
             taxRates.Should().NotBeNull();
             taxRates.Count.ShouldEqual(1);
-            taxRates.ContainsKey(10).ShouldBeTrue();
+            taxRates.ContainsKey(10).Should().BeTrue();
             taxRates[10].ShouldEqual(8.6);
 
             //2. shipping is taxable, payment fee is not taxable
@@ -972,7 +972,7 @@ namespace Nop.Services.Tests.Orders
             _orderTotalCalcService.GetTaxTotal(cart, shippingRateComputationMethods, out taxRates).ShouldEqual(6.6);
             taxRates.Should().NotBeNull();
             taxRates.Count.ShouldEqual(1);
-            taxRates.ContainsKey(10).ShouldBeTrue();
+            taxRates.ContainsKey(10).Should().BeTrue();
             taxRates[10].ShouldEqual(6.6);
 
             //3. shipping is not taxable, payment fee is taxable
@@ -981,7 +981,7 @@ namespace Nop.Services.Tests.Orders
             _orderTotalCalcService.GetTaxTotal(cart, shippingRateComputationMethods, out taxRates).ShouldEqual(7.6);
             taxRates.Should().NotBeNull();
             taxRates.Count.ShouldEqual(1);
-            taxRates.ContainsKey(10).ShouldBeTrue();
+            taxRates.ContainsKey(10).Should().BeTrue();
             taxRates[10].ShouldEqual(7.6);
 
             //3. shipping is not taxable, payment fee is not taxable
@@ -990,7 +990,7 @@ namespace Nop.Services.Tests.Orders
             _orderTotalCalcService.GetTaxTotal(cart, shippingRateComputationMethods, out taxRates).ShouldEqual(5.6);
             taxRates.Should().NotBeNull();
             taxRates.Count.ShouldEqual(1);
-            taxRates.ContainsKey(10).ShouldBeTrue();
+            taxRates.ContainsKey(10).Should().BeTrue();
             taxRates[10].ShouldEqual(5.6);
         }
 

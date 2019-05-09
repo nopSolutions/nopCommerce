@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using System.Threading;
+using FluentAssertions;
 using Nop.Tests;
 using Nop.Web.Framework.Validators;
 using NUnit.Framework;
@@ -28,21 +29,21 @@ namespace Nop.Web.MVC.Tests.Public.Validators
             _validator.Validate(new Person { CreditCard = null }).IsValid.ShouldBeFalse();
 
             // Simplest valid value
-            _validator.Validate(new Person { CreditCard = "0000000000000000" }).IsValid.ShouldBeTrue();
+            _validator.Validate(new Person { CreditCard = "0000000000000000" }).IsValid.Should().BeTrue();
 
             // Good checksum
-            _validator.Validate(new Person { CreditCard = "1234567890123452" }).IsValid.ShouldBeTrue();
+            _validator.Validate(new Person { CreditCard = "1234567890123452" }).IsValid.Should().BeTrue();
 
             // Good checksum, with dashes
-            _validator.Validate(new Person { CreditCard = "1234-5678-9012-3452" }).IsValid.ShouldBeTrue();
+            _validator.Validate(new Person { CreditCard = "1234-5678-9012-3452" }).IsValid.Should().BeTrue();
 
             // Good checksum, with spaces
-            _validator.Validate(new Person { CreditCard = "1234 5678 9012 3452" }).IsValid.ShouldBeTrue();
+            _validator.Validate(new Person { CreditCard = "1234 5678 9012 3452" }).IsValid.Should().BeTrue();
 
             // Bad checksum
             _validator.Validate(new Person { CreditCard = "0000000000000001" }).IsValid.ShouldBeFalse();
 
-            _validator.Validate(new Person { CreditCard = "0000000000000000" }).IsValid.ShouldBeTrue();
+            _validator.Validate(new Person { CreditCard = "0000000000000000" }).IsValid.Should().BeTrue();
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Nop.Core.Domain.Customers;
+﻿using FluentAssertions;
+using Nop.Core.Domain.Customers;
 using Nop.Tests;
 using Nop.Web.Framework.Validators;
 using NUnit.Framework;
@@ -33,14 +34,14 @@ namespace Nop.Web.MVC.Tests.Public.Validators
 
             //validation without regex
             _validator.Validate(new Person { Username = "test_user" }).IsValid.ShouldBeFalse();
-            _validator.Validate(new Person { Username = "a*1^" }).IsValid.ShouldBeTrue();
+            _validator.Validate(new Person { Username = "a*1^" }).IsValid.Should().BeTrue();
 
             //validation with regex
             _customerSettings.UsernameValidationUseRegex = true;
             _validator.Validate(new Person { Username = "test_user" }).IsValid.ShouldBeFalse();
             _validator.Validate(new Person { Username = "a*1^" }).IsValid.ShouldBeFalse();
-            _validator.Validate(new Person { Username = "a1" }).IsValid.ShouldBeTrue();
-            _validator.Validate(new Person { Username = "a_test_user_name_1" }).IsValid.ShouldBeTrue();
+            _validator.Validate(new Person { Username = "a1" }).IsValid.Should().BeTrue();
+            _validator.Validate(new Person { Username = "a_test_user_name_1" }).IsValid.Should().BeTrue();
             _validator.Validate(new Person { Username = "b_test_user_name_1" }).IsValid.ShouldBeFalse();
         }
     }

@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using FluentAssertions;
 using Microsoft.AspNetCore.Hosting;
 using Moq;
 using Nop.Core.Infrastructure;
@@ -20,7 +21,7 @@ namespace Nop.Core.Tests.Infrastructure
             var finder = new AppDomainTypeFinder();
             var type = finder.FindClassesOfType<ISomeInterface>().ToList();
             type.Count.ShouldEqual(1);
-            typeof(ISomeInterface).IsAssignableFrom(type.FirstOrDefault()).ShouldBeTrue();
+            typeof(ISomeInterface).IsAssignableFrom(type.FirstOrDefault()).Should().BeTrue();
         }
 
         public interface ISomeInterface

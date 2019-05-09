@@ -112,7 +112,7 @@ namespace Nop.Services.Tests.Directory
         {
             var providers = _exchangeRatePluginManager.LoadAllPlugins();
             providers.Should().NotBeNull();
-            providers.Any().ShouldBeTrue();
+            providers.Any().Should().BeTrue();
         }
 
         [Test]

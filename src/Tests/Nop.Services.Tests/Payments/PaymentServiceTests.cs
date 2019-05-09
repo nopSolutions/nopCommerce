@@ -55,7 +55,7 @@ namespace Nop.Services.Tests.Payments
         {
             var srcm = _paymentPluginManager.LoadAllPlugins();
             srcm.Should().NotBeNull();
-            srcm.Any().ShouldBeTrue();
+            srcm.Any().Should().BeTrue();
         }
 
         [Test]
@@ -70,7 +70,7 @@ namespace Nop.Services.Tests.Payments
         {
             var srcm = _paymentPluginManager.LoadActivePlugins();
             srcm.Should().NotBeNull();
-            srcm.Any().ShouldBeTrue();
+            srcm.Any().Should().BeTrue();
         }
 
         [Test]

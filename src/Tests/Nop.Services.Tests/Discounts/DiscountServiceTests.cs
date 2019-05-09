@@ -116,7 +116,7 @@ namespace Nop.Services.Tests.Discounts
         {
             var discounts = _discountService.GetAllDiscounts();
             discounts.Should().NotBeNull();
-            discounts.Any().ShouldBeTrue();
+            discounts.Any().Should().BeTrue();
         }
 
         [Test]
@@ -124,7 +124,7 @@ namespace Nop.Services.Tests.Discounts
         {
             var rules = _discountPluginManager.LoadAllPlugins();
             rules.Should().NotBeNull();
-            rules.Any().ShouldBeTrue();
+            rules.Any().Should().BeTrue();
         }
 
         [Test]

@@ -100,7 +100,7 @@ namespace Nop.Services.Tests.Tax
         {
             var providers = _taxPluginManager.LoadAllPlugins();
             providers.Should().NotBeNull();
-            providers.Any().ShouldBeTrue();
+            providers.Any().Should().BeTrue();
         }
 
         [Test]

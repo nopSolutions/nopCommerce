@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using FluentAssertions;
 using Moq;
 using Nop.Core.Data;
 using Nop.Core.Domain.Common;
@@ -64,10 +65,10 @@ namespace Nop.Core.Tests.Domain.Customers
                 new CustomerCustomerRoleMapping { CustomerRole = customerRole2 }
             );
 
-            customer.IsInCustomerRole("Test system name 1", false).ShouldBeTrue();
-            customer.IsInCustomerRole("Test system name 1").ShouldBeTrue();
+            customer.IsInCustomerRole("Test system name 1", false).Should().BeTrue();
+            customer.IsInCustomerRole("Test system name 1").Should().BeTrue();
 
-            customer.IsInCustomerRole("Test system name 2", false).ShouldBeTrue();
+            customer.IsInCustomerRole("Test system name 2", false).Should().BeTrue();
             customer.IsInCustomerRole("Test system name 2").ShouldBeFalse();
 
             customer.IsInCustomerRole("Test system name 3", false).ShouldBeFalse();
@@ -92,7 +93,7 @@ namespace Nop.Core.Tests.Domain.Customers
                 new CustomerCustomerRoleMapping { CustomerRole = customerRoleAdmin }
             );
 
-            customer.IsAdmin().ShouldBeTrue();
+            customer.IsAdmin().Should().BeTrue();
         }
         [Test]
         public void Can_check_whether_customer_is_forum_moderator()
@@ -120,7 +121,7 @@ namespace Nop.Core.Tests.Domain.Customers
                 new CustomerCustomerRoleMapping { CustomerRole = customerRoleForumModerators }
             );
 
-            customer.IsForumModerator().ShouldBeTrue();
+            customer.IsForumModerator().Should().BeTrue();
         }
         [Test]
         public void Can_check_whether_customer_is_guest()
@@ -141,7 +142,7 @@ namespace Nop.Core.Tests.Domain.Customers
                 new CustomerCustomerRoleMapping { CustomerRole = customerRoleGuests }
             );
 
-            customer.IsGuest().ShouldBeTrue();
+            customer.IsGuest().Should().BeTrue();
         }
         [Test]
         public void Can_check_whether_customer_is_registered()
@@ -162,7 +163,7 @@ namespace Nop.Core.Tests.Domain.Customers
                 new CustomerCustomerRoleMapping { CustomerRole = customerRoleRegistered }
             );
 
-            customer.IsRegistered().ShouldBeTrue();
+            customer.IsRegistered().Should().BeTrue();
         }
 
         [Test]

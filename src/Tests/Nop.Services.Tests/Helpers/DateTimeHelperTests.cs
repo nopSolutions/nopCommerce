@@ -87,7 +87,7 @@ namespace Nop.Services.Tests.Helpers
         {
             var systemTimeZones = _dateTimeHelper.GetSystemTimeZones();
             systemTimeZones.Should().NotBeNull();
-            systemTimeZones.Any().ShouldBeTrue();
+            systemTimeZones.Any().Should().BeTrue();
         }
 
         [Test]

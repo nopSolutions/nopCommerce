@@ -40,11 +40,6 @@ namespace Nop.Tests
             Assert.AreSame(expected, actual);
         }
 
-        public static void ShouldBeTrue(this bool source)
-        {
-            Assert.IsTrue(source);
-        }
-
         public static void ShouldBeFalse(this bool source)
         {
             Assert.IsFalse(source);
