@@ -214,8 +214,8 @@ namespace Nop.Core.Tests.Domain.Customers
             //var customer = new Customer();
             //customer.AddRewardPointsHistoryEntry(1, 0, "Points for registration");
 
-            //customer.RewardPointsHistory.Count.ShouldEqual(1);
-            //customer.RewardPointsHistory.First().Points.ShouldEqual(1);
+            //customer.RewardPointsHistory.Count.Should().Be(1);
+            //customer.RewardPointsHistory.First().Points.Should().Be(1);
         }
 
         [Test]
@@ -226,7 +226,7 @@ namespace Nop.Core.Tests.Domain.Customers
             //var customer = new Customer();
             //customer.AddRewardPointsHistoryEntry(1, 0, "Points for registration");
 
-            //customer.GetRewardPointsBalance(0).ShouldEqual(1);
+            //customer.GetRewardPointsBalance(0).Should().Be(1);
         }
 
         class TestCustomer : Customer

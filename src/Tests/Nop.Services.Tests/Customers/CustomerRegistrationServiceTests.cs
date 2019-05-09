@@ -203,7 +203,7 @@ namespace Nop.Services.Tests.Customers
         //    var registrationRequest = CreateCustomerRegistrationRequest();
         //    var result = _customerService.RegisterCustomer(registrationRequest);
 
-        //    result.Success.ShouldBeTrue();
+        //    result.Success.Should().BeTrue();
         //}
 
         //[Test]
@@ -216,8 +216,8 @@ namespace Nop.Services.Tests.Customers
         //    var userService = new UserService(_encryptionService, _userRepo, _userSettings);
         //    var result = userService.RegisterUser(registrationRequest);
 
-        //    result.Success.ShouldBeFalse();
-        //    result.Errors.Count.ShouldEqual(1);
+        //    result.Success.Should().BeFalse();
+        //    result.Errors.Count.Should().Be(1);
         //}
 
         [Test]

@@ -1200,7 +1200,7 @@ namespace Nop.Services.Tests.Orders
             //56 - items, 10 - shipping (fixed), 20 - payment fee, 8.6 - tax, -30 (reward points)
              _orderTotalCalcService.GetShoppingCartTotal(cart, out discountAmount, out appliedDiscount,
                 out appliedGiftCards, out redeemedRewardPoints, out redeemedRewardPointsAmount)
-                .ShouldEqual(64.6M);
+                .Should().Be(64.6M);
         }*/
 
         [Test]
