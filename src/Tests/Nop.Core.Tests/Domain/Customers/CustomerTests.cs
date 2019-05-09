@@ -203,7 +203,7 @@ namespace Nop.Core.Tests.Domain.Customers
 
             _customerService.RemoveCustomerAddress(customer, address);
             customer.Addresses.Count.ShouldEqual(0);
-            customer.BillingAddress.ShouldBeNull();
+            customer.BillingAddress.Should().BeNull();
         }
 
         [Test]
