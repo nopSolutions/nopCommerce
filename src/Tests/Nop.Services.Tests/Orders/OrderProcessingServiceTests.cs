@@ -319,7 +319,7 @@ namespace Nop.Services.Tests.Orders
                         if (os != OrderStatus.Cancelled)
                             _orderProcessingService.CanCancelOrder(order).Should().BeTrue();
                         else
-                            _orderProcessingService.CanCancelOrder(order).ShouldBeFalse();
+                            _orderProcessingService.CanCancelOrder(order).Should().BeFalse();
                     }
         }
 
@@ -337,7 +337,7 @@ namespace Nop.Services.Tests.Orders
                         if (os != OrderStatus.Cancelled && ps == PaymentStatus.Pending)
                             _orderProcessingService.CanMarkOrderAsAuthorized(order).Should().BeTrue();
                         else
-                            _orderProcessingService.CanMarkOrderAsAuthorized(order).ShouldBeFalse();
+                            _orderProcessingService.CanMarkOrderAsAuthorized(order).Should().BeFalse();
                     }
         }
 
@@ -362,7 +362,7 @@ namespace Nop.Services.Tests.Orders
                             && ps == PaymentStatus.Authorized)
                             _orderProcessingService.CanCapture(order).Should().BeTrue();
                         else
-                            _orderProcessingService.CanCapture(order).ShouldBeFalse();
+                            _orderProcessingService.CanCapture(order).Should().BeFalse();
                     }
 
 
@@ -375,7 +375,7 @@ namespace Nop.Services.Tests.Orders
                         order.PaymentStatus = ps;
                         order.ShippingStatus = ss;
 
-                        _orderProcessingService.CanCapture(order).ShouldBeFalse();
+                        _orderProcessingService.CanCapture(order).Should().BeFalse();
                     }
         }
 
@@ -391,7 +391,7 @@ namespace Nop.Services.Tests.Orders
                         order.PaymentStatus = ps;
                         order.ShippingStatus = ss;
                         if (os == OrderStatus.Cancelled || ps == PaymentStatus.Paid || ps == PaymentStatus.Refunded || ps == PaymentStatus.Voided)
-                            _orderProcessingService.CanMarkOrderAsPaid(order).ShouldBeFalse();
+                            _orderProcessingService.CanMarkOrderAsPaid(order).Should().BeFalse();
                         else
                             _orderProcessingService.CanMarkOrderAsPaid(order).Should().BeTrue();
                     }
@@ -419,7 +419,7 @@ namespace Nop.Services.Tests.Orders
                         if (ps == PaymentStatus.Paid)
                             _orderProcessingService.CanRefund(order).Should().BeTrue();
                         else
-                            _orderProcessingService.CanRefund(order).ShouldBeFalse();
+                            _orderProcessingService.CanRefund(order).Should().BeFalse();
                     }
 
 
@@ -433,7 +433,7 @@ namespace Nop.Services.Tests.Orders
                         order.PaymentStatus = ps;
                         order.ShippingStatus = ss;
 
-                        _orderProcessingService.CanRefund(order).ShouldBeFalse();
+                        _orderProcessingService.CanRefund(order).Should().BeFalse();
                     }
         }
 
@@ -454,7 +454,7 @@ namespace Nop.Services.Tests.Orders
                         order.PaymentStatus = ps;
                         order.ShippingStatus = ss;
 
-                        _orderProcessingService.CanRefund(order).ShouldBeFalse();
+                        _orderProcessingService.CanRefund(order).Should().BeFalse();
                     }
         }
 
@@ -476,7 +476,7 @@ namespace Nop.Services.Tests.Orders
                         if (ps == PaymentStatus.Paid)
                             _orderProcessingService.CanRefundOffline(order).Should().BeTrue();
                         else
-                            _orderProcessingService.CanRefundOffline(order).ShouldBeFalse();
+                            _orderProcessingService.CanRefundOffline(order).Should().BeFalse();
                     }
         }
 
@@ -493,7 +493,7 @@ namespace Nop.Services.Tests.Orders
                         order.PaymentStatus = ps;
                         order.ShippingStatus = ss;
 
-                        _orderProcessingService.CanRefundOffline(order).ShouldBeFalse();
+                        _orderProcessingService.CanRefundOffline(order).Should().BeFalse();
                     }
         }
 
@@ -519,7 +519,7 @@ namespace Nop.Services.Tests.Orders
                         if (ps == PaymentStatus.Authorized)
                             _orderProcessingService.CanVoid(order).Should().BeTrue();
                         else
-                            _orderProcessingService.CanVoid(order).ShouldBeFalse();
+                            _orderProcessingService.CanVoid(order).Should().BeFalse();
                     }
 
 
@@ -533,7 +533,7 @@ namespace Nop.Services.Tests.Orders
                         order.PaymentStatus = ps;
                         order.ShippingStatus = ss;
 
-                        _orderProcessingService.CanVoid(order).ShouldBeFalse();
+                        _orderProcessingService.CanVoid(order).Should().BeFalse();
                     }
         }
 
@@ -554,7 +554,7 @@ namespace Nop.Services.Tests.Orders
                         order.PaymentStatus = ps;
                         order.ShippingStatus = ss;
 
-                        _orderProcessingService.CanVoid(order).ShouldBeFalse();
+                        _orderProcessingService.CanVoid(order).Should().BeFalse();
                     }
         }
 
@@ -576,7 +576,7 @@ namespace Nop.Services.Tests.Orders
                         if (ps == PaymentStatus.Authorized)
                             _orderProcessingService.CanVoidOffline(order).Should().BeTrue();
                         else
-                            _orderProcessingService.CanVoidOffline(order).ShouldBeFalse();
+                            _orderProcessingService.CanVoidOffline(order).Should().BeFalse();
                     }
         }
 
@@ -593,7 +593,7 @@ namespace Nop.Services.Tests.Orders
                         order.PaymentStatus = ps;
                         order.ShippingStatus = ss;
 
-                        _orderProcessingService.CanVoidOffline(order).ShouldBeFalse();
+                        _orderProcessingService.CanVoidOffline(order).Should().BeFalse();
                     }
         }
 
@@ -619,7 +619,7 @@ namespace Nop.Services.Tests.Orders
                         if (ps == PaymentStatus.Paid || order.PaymentStatus == PaymentStatus.PartiallyRefunded)
                             _orderProcessingService.CanPartiallyRefund(order, 10).Should().BeTrue();
                         else
-                            _orderProcessingService.CanPartiallyRefund(order, 10).ShouldBeFalse();
+                            _orderProcessingService.CanPartiallyRefund(order, 10).Should().BeFalse();
                     }
 
 
@@ -633,7 +633,7 @@ namespace Nop.Services.Tests.Orders
                         order.PaymentStatus = ps;
                         order.ShippingStatus = ss;
 
-                        _orderProcessingService.CanPartiallyRefund(order, 10).ShouldBeFalse();
+                        _orderProcessingService.CanPartiallyRefund(order, 10).Should().BeFalse();
                     }
         }
 
@@ -657,7 +657,7 @@ namespace Nop.Services.Tests.Orders
                         order.PaymentStatus = ps;
                         order.ShippingStatus = ss;
 
-                        _orderProcessingService.CanPartiallyRefund(order, 80).ShouldBeFalse();
+                        _orderProcessingService.CanPartiallyRefund(order, 80).Should().BeFalse();
                     }
         }
 
@@ -685,7 +685,7 @@ namespace Nop.Services.Tests.Orders
                             if (ps == PaymentStatus.Paid || order.PaymentStatus == PaymentStatus.PartiallyRefunded)
                                 _orderProcessingService.CanPartiallyRefundOffline(order, 10).Should().BeTrue();
                             else
-                                _orderProcessingService.CanPartiallyRefundOffline(order, 10).ShouldBeFalse();
+                                _orderProcessingService.CanPartiallyRefundOffline(order, 10).Should().BeFalse();
                         }
                     }
         }
@@ -707,7 +707,7 @@ namespace Nop.Services.Tests.Orders
                         order.PaymentStatus = ps;
                         order.ShippingStatus = ss;
 
-                        _orderProcessingService.CanPartiallyRefundOffline(order, 80).ShouldBeFalse();
+                        _orderProcessingService.CanPartiallyRefundOffline(order, 80).Should().BeFalse();
                     }
         }
 

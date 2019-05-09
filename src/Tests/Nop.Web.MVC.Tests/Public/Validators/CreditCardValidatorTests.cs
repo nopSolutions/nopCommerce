@@ -1,7 +1,6 @@
 ﻿using System.Globalization;
 using System.Threading;
 using FluentAssertions;
-using Nop.Tests;
 using Nop.Web.Framework.Validators;
 using NUnit.Framework;
 
@@ -26,7 +25,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators
         public void IsValidTests()
         {
             // Optional value is not valid
-            _validator.Validate(new Person { CreditCard = null }).IsValid.ShouldBeFalse();
+            _validator.Validate(new Person { CreditCard = null }).IsValid.Should().BeFalse();
 
             // Simplest valid value
             _validator.Validate(new Person { CreditCard = "0000000000000000" }).IsValid.Should().BeTrue();
@@ -41,7 +40,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators
             _validator.Validate(new Person { CreditCard = "1234 5678 9012 3452" }).IsValid.Should().BeTrue();
 
             // Bad checksum
-            _validator.Validate(new Person { CreditCard = "0000000000000001" }).IsValid.ShouldBeFalse();
+            _validator.Validate(new Person { CreditCard = "0000000000000001" }).IsValid.Should().BeFalse();
 
             _validator.Validate(new Person { CreditCard = "0000000000000000" }).IsValid.Should().BeTrue();
         }

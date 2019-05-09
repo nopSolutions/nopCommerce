@@ -69,10 +69,10 @@ namespace Nop.Core.Tests.Domain.Customers
             customer.IsInCustomerRole("Test system name 1").Should().BeTrue();
 
             customer.IsInCustomerRole("Test system name 2", false).Should().BeTrue();
-            customer.IsInCustomerRole("Test system name 2").ShouldBeFalse();
+            customer.IsInCustomerRole("Test system name 2").Should().BeFalse();
 
-            customer.IsInCustomerRole("Test system name 3", false).ShouldBeFalse();
-            customer.IsInCustomerRole("Test system name 3").ShouldBeFalse();
+            customer.IsInCustomerRole("Test system name 3", false).Should().BeFalse();
+            customer.IsInCustomerRole("Test system name 3").Should().BeFalse();
         }
         [Test]
         public void Can_check_whether_customer_is_admin()
@@ -87,7 +87,7 @@ namespace Nop.Core.Tests.Domain.Customers
                 new CustomerCustomerRoleMapping { CustomerRole = customerRoleGuests }
             );
 
-            customer.IsAdmin().ShouldBeFalse();
+            customer.IsAdmin().Should().BeFalse();
 
             customer.AddCustomerRoleMapping(
                 new CustomerCustomerRoleMapping { CustomerRole = customerRoleAdmin }
@@ -108,7 +108,7 @@ namespace Nop.Core.Tests.Domain.Customers
                 new CustomerCustomerRoleMapping { CustomerRole = customerRoleGuests }
             );
 
-            customer.IsForumModerator().ShouldBeFalse();
+            customer.IsForumModerator().Should().BeFalse();
 
             var customerRoleForumModerators = new CustomerRole
             {
@@ -136,7 +136,7 @@ namespace Nop.Core.Tests.Domain.Customers
                 new CustomerCustomerRoleMapping { CustomerRole = customerRoleAdmin }
             );
 
-            customer.IsGuest().ShouldBeFalse();
+            customer.IsGuest().Should().BeFalse();
 
             customer.AddCustomerRoleMapping(
                 new CustomerCustomerRoleMapping { CustomerRole = customerRoleGuests }
@@ -157,7 +157,7 @@ namespace Nop.Core.Tests.Domain.Customers
                 new CustomerCustomerRoleMapping { CustomerRole = customerRoleGuests }
             );
 
-            customer.IsRegistered().ShouldBeFalse();
+            customer.IsRegistered().Should().BeFalse();
 
             customer.AddCustomerRoleMapping(
                 new CustomerCustomerRoleMapping { CustomerRole = customerRoleRegistered }

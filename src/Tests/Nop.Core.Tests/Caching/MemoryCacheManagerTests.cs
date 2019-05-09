@@ -61,7 +61,7 @@ namespace Nop.Core.Tests.Caching
 
                 _cacheManager.PerformActionWithLock(key, expiration,
                     () => Assert.Fail("Action in progress"))
-                    .ShouldBeFalse();
+                    .Should().BeFalse();
 
                 if (++actionCount % 2 == 0)
                     throw new ApplicationException("Alternating actions fail");

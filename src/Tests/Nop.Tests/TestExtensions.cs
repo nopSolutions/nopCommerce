@@ -40,11 +40,6 @@ namespace Nop.Tests
             Assert.AreSame(expected, actual);
         }
 
-        public static void ShouldBeFalse(this bool source)
-        {
-            Assert.IsFalse(source);
-        }
-
         public static T PropertiesShouldEqual<T>(this T actual, T expected, params string[] filters)
         {
             var properties = typeof (T).GetProperties().ToList();
