@@ -58,25 +58,6 @@ namespace Nop.Tests
             Assert.Fail("Expected exception '" + typeof(T).FullName + "' wasn't thrown.");
             return null;
         }
-
-        /// <summary>Executes a method and asserts that the specified exception is thrown.</summary>
-        /// <typeparam name="T">The type of exception to expect.</typeparam>
-        /// <param name="method">The method to execute.</param>
-        /// <returns>The thrown exception.</returns>
-        public static void InnerException<T>(ExceptionDelegate method)
-            where T : Exception
-        {
-            try
-            {
-                method.Invoke();
-            }
-            catch (Exception ex)
-            {
-                TypeAssert.AreEqual(typeof(T), ex.InnerException);
-                return;
-            }
-            Assert.Fail("Expected exception '" + typeof(T).FullName + "' wasn't thrown.");
-        }
     }
 
     [TestFixture]
