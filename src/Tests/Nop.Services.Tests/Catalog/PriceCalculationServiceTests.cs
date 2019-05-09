@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Caching.Memory;
+using FluentAssertions;
 using Moq;
 using Nop.Core;
 using Nop.Core.Caching;
@@ -98,8 +98,8 @@ namespace Nop.Services.Tests.Catalog
             //customer
             var customer = new Customer();
 
-            _priceCalcService.GetFinalPrice(product, customer, 0, false).ShouldEqual(12.34M);
-            _priceCalcService.GetFinalPrice(product, customer, 0, false, 2).ShouldEqual(12.34M);
+            _priceCalcService.GetFinalPrice(product, customer, 0, false).Should().Be(12.34M);
+            _priceCalcService.GetFinalPrice(product, customer, 0, false, 2).Should().Be(12.34M);
         }
 
         [Test]
@@ -149,11 +149,11 @@ namespace Nop.Services.Tests.Catalog
             //customer
             var customer = new Customer();
 
-            _priceCalcService.GetFinalPrice(product, customer, 0, false).ShouldEqual(12.34M);
-            _priceCalcService.GetFinalPrice(product, customer, 0, false, 2).ShouldEqual(10);
-            _priceCalcService.GetFinalPrice(product, customer, 0, false, 3).ShouldEqual(10);
-            _priceCalcService.GetFinalPrice(product, customer, 0, false, 5).ShouldEqual(9);
-            _priceCalcService.GetFinalPrice(product, customer, 0, false, 10).ShouldEqual(9);
+            _priceCalcService.GetFinalPrice(product, customer, 0, false).Should().Be(12.34M);
+            _priceCalcService.GetFinalPrice(product, customer, 0, false, 2).Should().Be(10);
+            _priceCalcService.GetFinalPrice(product, customer, 0, false, 3).Should().Be(10);
+            _priceCalcService.GetFinalPrice(product, customer, 0, false, 5).Should().Be(9);
+            _priceCalcService.GetFinalPrice(product, customer, 0, false, 10).Should().Be(9);
         }
 
         [Test]
@@ -222,11 +222,11 @@ namespace Nop.Services.Tests.Catalog
             var customer = new Customer();
             customer.CustomerRoles.Add(customerRole1);
 
-            _priceCalcService.GetFinalPrice(product, customer, 0, false).ShouldEqual(12.34M);
-            _priceCalcService.GetFinalPrice(product, customer, 0, false, 2).ShouldEqual(10);
-            _priceCalcService.GetFinalPrice(product, customer, 0, false, 3).ShouldEqual(10);
-            _priceCalcService.GetFinalPrice(product, customer, 0, false, 5).ShouldEqual(8);
-            _priceCalcService.GetFinalPrice(product, customer, 0, false, 10).ShouldEqual(8);
+            _priceCalcService.GetFinalPrice(product, customer, 0, false).Should().Be(12.34M);
+            _priceCalcService.GetFinalPrice(product, customer, 0, false, 2).Should().Be(10);
+            _priceCalcService.GetFinalPrice(product, customer, 0, false, 3).Should().Be(10);
+            _priceCalcService.GetFinalPrice(product, customer, 0, false, 5).Should().Be(8);
+            _priceCalcService.GetFinalPrice(product, customer, 0, false, 10).Should().Be(8);
         }
 
         [Test]
@@ -244,7 +244,7 @@ namespace Nop.Services.Tests.Catalog
             //customer
             var customer = new Customer();
 
-            _priceCalcService.GetFinalPrice(product, customer, 5, false).ShouldEqual(17.34M);
+            _priceCalcService.GetFinalPrice(product, customer, 5, false).Should().Be(17.34M);
         }
 
         [Test]
@@ -276,7 +276,7 @@ namespace Nop.Services.Tests.Catalog
             //set HasDiscountsApplied property
             product.HasDiscountsApplied = true;
            
-            _priceCalcService.GetFinalPrice(product, customer).ShouldEqual(9.34M);
+            _priceCalcService.GetFinalPrice(product, customer).Should().Be(9.34M);
         }
 
         [Test]
@@ -303,7 +303,7 @@ namespace Nop.Services.Tests.Catalog
                 Quantity = 2
             };
 
-            _priceCalcService.GetUnitPrice(sci1).ShouldEqual(12.34);
+            _priceCalcService.GetUnitPrice(sci1).Should().Be(12.34M);
         }
 
         [Test]
@@ -330,7 +330,7 @@ namespace Nop.Services.Tests.Catalog
                 Quantity = 2
             };
 
-            _priceCalcService.GetSubTotal(sci1).ShouldEqual(24.68);
+            _priceCalcService.GetSubTotal(sci1).Should().Be(24.68M);
         }
 
         [Test]
@@ -348,7 +348,7 @@ namespace Nop.Services.Tests.Catalog
             var resultPrice = _priceCalcService.GetUnitPrice(shoppingCartItem);
 
             // assert
-            resultPrice.ShouldEqual(expectedPrice);
+            resultPrice.Should().Be(expectedPrice);
         }
 
         [Test]
@@ -366,7 +366,7 @@ namespace Nop.Services.Tests.Catalog
             var resultPrice = _priceCalcService.GetUnitPrice(shoppingCartItem);
 
             // assert
-            resultPrice.ShouldEqual(expectedPrice);
+            resultPrice.Should().Be(expectedPrice);
         }
 
         [TestCase(12.366, 12.37, RoundingType.Rounding001)]
@@ -407,7 +407,7 @@ namespace Nop.Services.Tests.Catalog
         [TestCase(12.00, 12.00, RoundingType.Rounding1Up)]
         public void can_round(decimal valueToRoundig, decimal roundedValue, RoundingType roundingType)
         {
-            _priceCalcService.Round(valueToRoundig, roundingType).ShouldEqual(roundedValue);
+            _priceCalcService.Round(valueToRoundig, roundingType).Should().Be(roundedValue);
         }
 
         private ShoppingCartItem CreateTestShopCartItem(decimal productPrice, int quantity = 1)

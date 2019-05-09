@@ -166,7 +166,7 @@ namespace Nop.Services.Tests.Discounts
             //we cannot inject it because DiscountService already has "per-request" cache manager injected 
             //EngineContext.Initialize(false);
 
-            _discountService.ValidateDiscount(discount, customer, new[] { "CouponCode 1" }).IsValid.ShouldEqual(true);
+            _discountService.ValidateDiscount(discount, customer, new[] { "CouponCode 1" }).IsValid.Should().Be(true);
         }
 
 
@@ -194,7 +194,7 @@ namespace Nop.Services.Tests.Discounts
                 CreatedOnUtc = new DateTime(2010, 01, 01),
                 LastActivityDateUtc = new DateTime(2010, 01, 02)
             };
-            _discountService.ValidateDiscount(discount, customer, new[] { "CouponCode 2" }).IsValid.ShouldEqual(false);
+            _discountService.ValidateDiscount(discount, customer, new[] { "CouponCode 2" }).IsValid.Should().Be(false);
         }
 
         [Test]
@@ -222,10 +222,10 @@ namespace Nop.Services.Tests.Discounts
                 CreatedOnUtc = new DateTime(2010, 01, 01),
                 LastActivityDateUtc = new DateTime(2010, 01, 02)
             };
-            _discountService.ValidateDiscount(discount, customer, null).IsValid.ShouldEqual(true);
+            _discountService.ValidateDiscount(discount, customer, null).IsValid.Should().Be(true);
 
             discount.StartDateUtc = DateTime.UtcNow.AddDays(1);
-            _discountService.ValidateDiscount(discount, customer, null).IsValid.ShouldEqual(false);
+            _discountService.ValidateDiscount(discount, customer, null).IsValid.Should().Be(false);
         }
 
         [Test]
@@ -237,10 +237,10 @@ namespace Nop.Services.Tests.Discounts
                 DiscountPercentage = 30
             };
 
-            discount.GetDiscountAmount(100).ShouldEqual(30);
+            discount.GetDiscountAmount(100).Should().Be(30);
 
             discount.DiscountPercentage = 60;
-            discount.GetDiscountAmount(200).ShouldEqual(120);
+            discount.GetDiscountAmount(200).Should().Be(120);
         }
 
         [Test]
@@ -252,10 +252,10 @@ namespace Nop.Services.Tests.Discounts
                 DiscountAmount = 10
             };
 
-            discount.GetDiscountAmount(100).ShouldEqual(10);
+            discount.GetDiscountAmount(100).Should().Be(10);
 
             discount.DiscountAmount = 20;
-            discount.GetDiscountAmount(200).ShouldEqual(20);
+            discount.GetDiscountAmount(200).Should().Be(20);
         }
 
         [Test]
@@ -268,14 +268,14 @@ namespace Nop.Services.Tests.Discounts
                 MaximumDiscountAmount = 3.4M
             };
 
-            discount.GetDiscountAmount(100).ShouldEqual(3.4M);
+            discount.GetDiscountAmount(100).Should().Be(3.4M);
 
             discount.DiscountPercentage = 60;
-            discount.GetDiscountAmount(200).ShouldEqual(3.4M);
-            discount.GetDiscountAmount(100).ShouldEqual(3.4M);
+            discount.GetDiscountAmount(200).Should().Be(3.4M);
+            discount.GetDiscountAmount(100).Should().Be(3.4M);
 
             discount.DiscountPercentage = 1;
-            discount.GetDiscountAmount(200).ShouldEqual(2);
+            discount.GetDiscountAmount(200).Should().Be(2);
         }
     }
 

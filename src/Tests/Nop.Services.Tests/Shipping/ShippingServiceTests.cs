@@ -162,7 +162,7 @@ namespace Nop.Services.Tests.Shipping
                     })
                 }
             };
-            _shippingService.GetTotalWeight(request).ShouldEqual(50.5M);
+            _shippingService.GetTotalWeight(request).Should().Be(50.5M);
         }
     }
 }

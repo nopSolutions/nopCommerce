@@ -10,7 +10,6 @@ using Nop.Core.Domain.Stores;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Helpers;
-using Nop.Tests;
 using NUnit.Framework;
 
 namespace Nop.Services.Tests.Helpers
@@ -79,7 +78,7 @@ namespace Nop.Services.Tests.Helpers
         {
             var timeZones = _dateTimeHelper.FindTimeZoneById(_gmtPlus2MinskTimeZoneId);  //(GMT+02:00) Minsk
             timeZones.Should().NotBeNull();
-            timeZones.Id.ShouldEqual(_gmtPlus2MinskTimeZoneId);
+            timeZones.Id.Should().Be(_gmtPlus2MinskTimeZoneId);
         }
 
         [Test]
@@ -106,7 +105,7 @@ namespace Nop.Services.Tests.Helpers
 
             var timeZone = _dateTimeHelper.GetCustomerTimeZone(customer);
             timeZone.Should().NotBeNull();
-            timeZone.Id.ShouldEqual(_gmtPlus3MoscowTimeZoneId);
+            timeZone.Id.Should().Be(_gmtPlus3MoscowTimeZoneId);
         }
 
         [Test]
@@ -135,7 +134,7 @@ namespace Nop.Services.Tests.Helpers
 
             var timeZone = _dateTimeHelper.GetCustomerTimeZone(customer);
             timeZone.Should().NotBeNull();
-            timeZone.Id.ShouldEqual(_gmtPlus2MinskTimeZoneId);  //(GMT+02:00) Minsk
+            timeZone.Id.Should().Be(_gmtPlus2MinskTimeZoneId);  //(GMT+02:00) Minsk
         }
 
         [Test]
@@ -149,11 +148,11 @@ namespace Nop.Services.Tests.Helpers
 
             //summer time
             _dateTimeHelper.ConvertToUserTime(new DateTime(2010, 06, 01, 0, 0, 0), sourceDateTime, destinationDateTime)
-                .ShouldEqual(new DateTime(2010, 06, 01, 5, 0, 0));
+                .Should().Be(new DateTime(2010, 06, 01, 5, 0, 0));
 
             //winter time
             _dateTimeHelper.ConvertToUserTime(new DateTime(2010, 01, 01, 0, 0, 0), sourceDateTime, destinationDateTime)
-                .ShouldEqual(new DateTime(2010, 01, 01, 5, 0, 0));
+                .Should().Be(new DateTime(2010, 01, 01, 5, 0, 0));
         }
 
         [Test]
@@ -165,12 +164,12 @@ namespace Nop.Services.Tests.Helpers
             //summer time
             var dateTime1 = new DateTime(2010, 06, 01, 0, 0, 0);
             var convertedDateTime1 = _dateTimeHelper.ConvertToUtcTime(dateTime1, sourceDateTime);
-            convertedDateTime1.ShouldEqual(new DateTime(2010, 05, 31, 21, 0, 0));
+            convertedDateTime1.Should().Be(new DateTime(2010, 05, 31, 21, 0, 0));
 
             //winter time
             var dateTime2 = new DateTime(2010, 01, 01, 0, 0, 0);
             var convertedDateTime2 = _dateTimeHelper.ConvertToUtcTime(dateTime2, sourceDateTime);
-            convertedDateTime2.ShouldEqual(new DateTime(2009, 12, 31, 22, 0, 0));
+            convertedDateTime2.Should().Be(new DateTime(2009, 12, 31, 22, 0, 0));
         }
     }
 }

@@ -132,20 +132,20 @@ namespace Nop.Services.Tests.Directory
         [Test]
         public void Can_convert_currency_1()
         {
-            _currencyService.ConvertCurrency(10.1M, 1.5M).ShouldEqual(15.15M);
-            _currencyService.ConvertCurrency(10.1M, 1).ShouldEqual(10.1M);
-            _currencyService.ConvertCurrency(10.1M, 0).ShouldEqual(0);
-            _currencyService.ConvertCurrency(0, 5).ShouldEqual(0);
+            _currencyService.ConvertCurrency(10.1M, 1.5M).Should().Be(15.15M);
+            _currencyService.ConvertCurrency(10.1M, 1).Should().Be(10.1M);
+            _currencyService.ConvertCurrency(10.1M, 0).Should().Be(0);
+            _currencyService.ConvertCurrency(0, 5).Should().Be(0);
         }
 
         [Test]
         public void Can_convert_currency_2()
         {
-            _currencyService.ConvertCurrency(10M, currencyEUR, currencyRUR).ShouldEqual(345M);
-            _currencyService.ConvertCurrency(10.1M, currencyEUR, currencyEUR).ShouldEqual(10.1M);
-            _currencyService.ConvertCurrency(10.1M, currencyRUR, currencyRUR).ShouldEqual(10.1M);
-            _currencyService.ConvertCurrency(12M, currencyUSD, currencyRUR).ShouldEqual(345M);
-            _currencyService.ConvertCurrency(345M, currencyRUR, currencyUSD).ShouldEqual(12M);
+            _currencyService.ConvertCurrency(10M, currencyEUR, currencyRUR).Should().Be(345M);
+            _currencyService.ConvertCurrency(10.1M, currencyEUR, currencyEUR).Should().Be(10.1M);
+            _currencyService.ConvertCurrency(10.1M, currencyRUR, currencyRUR).Should().Be(10.1M);
+            _currencyService.ConvertCurrency(12M, currencyUSD, currencyRUR).Should().Be(345M);
+            _currencyService.ConvertCurrency(345M, currencyRUR, currencyUSD).Should().Be(12M);
         }
     }
 }

@@ -11,7 +11,6 @@ using Nop.Services.Events;
 using Nop.Services.Logging;
 using Nop.Services.Payments;
 using Nop.Services.Plugins;
-using Nop.Tests;
 using NUnit.Framework;
 
 namespace Nop.Services.Tests.Payments
@@ -76,9 +75,9 @@ namespace Nop.Services.Tests.Payments
         [Test]
         public void Can_get_masked_credit_card_number()
         {
-            _paymentService.GetMaskedCreditCardNumber("").ShouldEqual("");
-            _paymentService.GetMaskedCreditCardNumber("123").ShouldEqual("123");
-            _paymentService.GetMaskedCreditCardNumber("1234567890123456").ShouldEqual("************3456");
+            _paymentService.GetMaskedCreditCardNumber("").Should().Be("");
+            _paymentService.GetMaskedCreditCardNumber("123").Should().Be("123");
+            _paymentService.GetMaskedCreditCardNumber("1234567890123456").Should().Be("************3456");
         }
 
         [Test]
@@ -87,7 +86,7 @@ namespace Nop.Services.Tests.Payments
             var deserialized = _paymentService.DeserializeCustomValues(new Order { CustomValuesXml = string.Empty });
 
             deserialized.Should().NotBeNull();
-            deserialized.Count.ShouldEqual(0);
+            deserialized.Count.Should().Be(0);
         }
 
         [Test]
@@ -96,7 +95,7 @@ namespace Nop.Services.Tests.Payments
             var deserialized = _paymentService.DeserializeCustomValues(new Order { CustomValuesXml = null });
 
             deserialized.Should().NotBeNull();
-            deserialized.Count.ShouldEqual(0);
+            deserialized.Count.Should().Be(0);
         }
 
         [Test]
@@ -107,7 +106,7 @@ namespace Nop.Services.Tests.Payments
             var deserialized = _paymentService.DeserializeCustomValues(new Order { CustomValuesXml = serializedXml });
 
             deserialized.Should().NotBeNull();
-            deserialized.Count.ShouldEqual(0);
+            deserialized.Count.Should().Be(0);
         }
 
         [Test]
@@ -122,20 +121,20 @@ namespace Nop.Services.Tests.Payments
             var deserialized = _paymentService.DeserializeCustomValues(new Order { CustomValuesXml = serializedXml });
 
             deserialized.Should().NotBeNull();
-            deserialized.Count.ShouldEqual(4);
+            deserialized.Count.Should().Be(4);
 
-            deserialized.ContainsKey("key1").ShouldEqual(true);
-            deserialized["key1"].ShouldEqual("value1");
+            deserialized.ContainsKey("key1").Should().Be(true);
+            deserialized["key1"].Should().Be("value1");
 
-            deserialized.ContainsKey("key2").ShouldEqual(true);
-            //deserialized["key2"].ShouldEqual(null);
-            deserialized["key2"].ShouldEqual("");
+            deserialized.ContainsKey("key2").Should().Be(true);
+            //deserialized["key2"].Should().Be(null);
+            deserialized["key2"].Should().Be("");
 
-            deserialized.ContainsKey("key3").ShouldEqual(true);
-            deserialized["key3"].ShouldEqual("3");
+            deserialized.ContainsKey("key3").Should().Be(true);
+            deserialized["key3"].Should().Be("3");
 
-            deserialized.ContainsKey("<test key4>").ShouldEqual(true);
-            deserialized["<test key4>"].ShouldEqual("<test value 4>");
+            deserialized.ContainsKey("<test key4>").Should().Be(true);
+            deserialized["<test key4>"].Should().Be("<test value 4>");
         }
     }
 }

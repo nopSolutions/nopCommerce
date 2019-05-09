@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using FluentAssertions;
 using Moq;
 using Nop.Core;
 using Nop.Core.Data;
@@ -254,16 +255,16 @@ namespace Nop.Services.Tests.Catalog
             attributes = _productAttributeParser.AddProductAttribute(attributes, pam3_1, "Some custom text goes here");
 
             var parsed_attributeValues = _productAttributeParser.ParseProductAttributeValues(attributes);
-            parsed_attributeValues.Contains(pav1_1).ShouldEqual(true);
-            parsed_attributeValues.Contains(pav1_2).ShouldEqual(false);
-            parsed_attributeValues.Contains(pav2_1).ShouldEqual(true);
-            parsed_attributeValues.Contains(pav2_2).ShouldEqual(true);
-            parsed_attributeValues.Contains(pav2_2).ShouldEqual(true);
+            parsed_attributeValues.Contains(pav1_1).Should().Be(true);
+            parsed_attributeValues.Contains(pav1_2).Should().Be(false);
+            parsed_attributeValues.Contains(pav2_1).Should().Be(true);
+            parsed_attributeValues.Contains(pav2_2).Should().Be(true);
+            parsed_attributeValues.Contains(pav2_2).Should().Be(true);
 
             var parsedValues = _productAttributeParser.ParseValues(attributes, pam3_1.Id);
-            parsedValues.Count.ShouldEqual(1);
-            parsedValues.Contains("Some custom text goes here").ShouldEqual(true);
-            parsedValues.Contains("Some other custom text").ShouldEqual(false);
+            parsedValues.Count.Should().Be(1);
+            parsedValues.Contains("Some custom text goes here").Should().Be(true);
+            parsedValues.Contains("Some other custom text").Should().Be(false);
         }
 
         [Test]
@@ -282,14 +283,14 @@ namespace Nop.Services.Tests.Catalog
             attributes = _productAttributeParser.RemoveProductAttribute(attributes, pam3_1);
 
             var parsed_attributeValues = _productAttributeParser.ParseProductAttributeValues(attributes);
-            parsed_attributeValues.Contains(pav1_1).ShouldEqual(true);
-            parsed_attributeValues.Contains(pav1_2).ShouldEqual(false);
-            parsed_attributeValues.Contains(pav2_1).ShouldEqual(false);
-            parsed_attributeValues.Contains(pav2_2).ShouldEqual(false);
-            parsed_attributeValues.Contains(pav2_2).ShouldEqual(false);
+            parsed_attributeValues.Contains(pav1_1).Should().Be(true);
+            parsed_attributeValues.Contains(pav1_2).Should().Be(false);
+            parsed_attributeValues.Contains(pav2_1).Should().Be(false);
+            parsed_attributeValues.Contains(pav2_2).Should().Be(false);
+            parsed_attributeValues.Contains(pav2_2).Should().Be(false);
 
             var parsedValues = _productAttributeParser.ParseValues(attributes, pam3_1.Id);
-            parsedValues.Count.ShouldEqual(0);
+            parsedValues.Count.Should().Be(0);
         }
 
         [Test]
@@ -306,11 +307,11 @@ namespace Nop.Services.Tests.Catalog
                 out var senderName,
                 out var senderEmail,
                 out var giftCardMessage);
-            recipientName.ShouldEqual("recipientName 1");
-            recipientEmail.ShouldEqual("recipientEmail@gmail.com");
-            senderName.ShouldEqual("senderName 1");
-            senderEmail.ShouldEqual("senderEmail@gmail.com");
-            giftCardMessage.ShouldEqual("custom message");
+            recipientName.Should().Be("recipientName 1");
+            recipientEmail.Should().Be("recipientEmail@gmail.com");
+            senderName.Should().Be("senderName 1");
+            senderEmail.Should().Be("senderEmail@gmail.com");
+            giftCardMessage.Should().Be("custom message");
         }
 
         [Test]
@@ -328,7 +329,7 @@ namespace Nop.Services.Tests.Catalog
             var customer = new Customer();
             var formattedAttributes = _productAttributeFormatter.FormatAttributes(product,
                 attributes, customer, "<br />", false, false);
-            formattedAttributes.ShouldEqual("From: senderName 1 <senderEmail@gmail.com><br />For: recipientName 1 <recipientEmail@gmail.com>");
+            formattedAttributes.Should().Be("From: senderName 1 <senderEmail@gmail.com><br />For: recipientName 1 <recipientEmail@gmail.com>");
         }
 
         [Test]
@@ -346,7 +347,7 @@ namespace Nop.Services.Tests.Catalog
             var customer = new Customer();
             var formattedAttributes = _productAttributeFormatter.FormatAttributes(product,
                 attributes, customer, "<br />", false, false);
-            formattedAttributes.ShouldEqual("From: senderName 1<br />For: recipientName 1");
+            formattedAttributes.Should().Be("From: senderName 1<br />For: recipientName 1");
         }
 
         [Test]
@@ -374,7 +375,7 @@ namespace Nop.Services.Tests.Catalog
             var customer = new Customer();
             var formattedAttributes = _productAttributeFormatter.FormatAttributes(product,
                 attributes, customer, "<br />", false, false);
-            formattedAttributes.ShouldEqual("Color: Green<br />Some custom option: Option 1<br />Some custom option: Option 2<br />Color: Some custom text goes here<br />From: senderName 1 <senderEmail@gmail.com><br />For: recipientName 1 <recipientEmail@gmail.com>");
+            formattedAttributes.Should().Be("Color: Green<br />Some custom option: Option 1<br />Some custom option: Option 2<br />Color: Some custom text goes here<br />From: senderName 1 <senderEmail@gmail.com><br />For: recipientName 1 <recipientEmail@gmail.com>");
         }
     }
 }

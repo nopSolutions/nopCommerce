@@ -2,7 +2,6 @@
 using FluentAssertions;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Orders;
-using Nop.Tests;
 using NUnit.Framework;
 
 namespace Nop.Core.Tests.Domain.Orders
@@ -23,14 +22,14 @@ namespace Nop.Core.Tests.Domain.Orders
                 IsActive = true,
             };
 
-            rp.NextPaymentDate.ShouldEqual(new DateTime(2010, 3, 1));
+            rp.NextPaymentDate.Should().Be(new DateTime(2010, 3, 1));
 
             //add one history record
             rp.RecurringPaymentHistory.Add(new RecurringPaymentHistory());
-            rp.NextPaymentDate.ShouldEqual(new DateTime(2010, 3, 8));
+            rp.NextPaymentDate.Should().Be(new DateTime(2010, 3, 8));
             //add one more history record
             rp.RecurringPaymentHistory.Add(new RecurringPaymentHistory());
-            rp.NextPaymentDate.ShouldEqual(new DateTime(2010, 3, 15));
+            rp.NextPaymentDate.Should().Be(new DateTime(2010, 3, 15));
             //add one more history record
             rp.RecurringPaymentHistory.Add(new RecurringPaymentHistory());
             rp.NextPaymentDate.Should().BeNull();
@@ -49,14 +48,14 @@ namespace Nop.Core.Tests.Domain.Orders
                 IsActive = true,
             };
 
-            rp.NextPaymentDate.ShouldEqual(new DateTime(2010, 3, 1));
+            rp.NextPaymentDate.Should().Be(new DateTime(2010, 3, 1));
 
             //add one history record
             rp.RecurringPaymentHistory.Add(new RecurringPaymentHistory());
-            rp.NextPaymentDate.ShouldEqual(new DateTime(2010, 3, 15));
+            rp.NextPaymentDate.Should().Be(new DateTime(2010, 3, 15));
             //add one more history record
             rp.RecurringPaymentHistory.Add(new RecurringPaymentHistory());
-            rp.NextPaymentDate.ShouldEqual(new DateTime(2010, 3, 29));
+            rp.NextPaymentDate.Should().Be(new DateTime(2010, 3, 29));
             //add one more history record
             rp.RecurringPaymentHistory.Add(new RecurringPaymentHistory());
             rp.NextPaymentDate.Should().BeNull();
@@ -75,14 +74,14 @@ namespace Nop.Core.Tests.Domain.Orders
                 IsActive = true,
             };
 
-            rp.NextPaymentDate.ShouldEqual(new DateTime(2010, 3, 1));
+            rp.NextPaymentDate.Should().Be(new DateTime(2010, 3, 1));
 
             //add one history record
             rp.RecurringPaymentHistory.Add(new RecurringPaymentHistory());
-            rp.NextPaymentDate.ShouldEqual(new DateTime(2010, 5, 1));
+            rp.NextPaymentDate.Should().Be(new DateTime(2010, 5, 1));
             //add one more history record
             rp.RecurringPaymentHistory.Add(new RecurringPaymentHistory());
-            rp.NextPaymentDate.ShouldEqual(new DateTime(2010, 7, 1));
+            rp.NextPaymentDate.Should().Be(new DateTime(2010, 7, 1));
             //add one more history record
             rp.RecurringPaymentHistory.Add(new RecurringPaymentHistory());
             rp.NextPaymentDate.Should().BeNull();
@@ -101,14 +100,14 @@ namespace Nop.Core.Tests.Domain.Orders
                 IsActive = true,
             };
 
-            rp.NextPaymentDate.ShouldEqual(new DateTime(2010, 3, 1));
+            rp.NextPaymentDate.Should().Be(new DateTime(2010, 3, 1));
 
             //add one history record
             rp.RecurringPaymentHistory.Add(new RecurringPaymentHistory());
-            rp.NextPaymentDate.ShouldEqual(new DateTime(2012, 3, 1));
+            rp.NextPaymentDate.Should().Be(new DateTime(2012, 3, 1));
             //add one more history record
             rp.RecurringPaymentHistory.Add(new RecurringPaymentHistory());
-            rp.NextPaymentDate.ShouldEqual(new DateTime(2014, 3, 1));
+            rp.NextPaymentDate.Should().Be(new DateTime(2014, 3, 1));
             //add one more history record
             rp.RecurringPaymentHistory.Add(new RecurringPaymentHistory());
             rp.NextPaymentDate.Should().BeNull();
@@ -153,20 +152,20 @@ namespace Nop.Core.Tests.Domain.Orders
                 IsActive = true,
             };
 
-            rp.CyclesRemaining.ShouldEqual(3);
+            rp.CyclesRemaining.Should().Be(3);
 
             //add one history record
             rp.RecurringPaymentHistory.Add(new RecurringPaymentHistory());
-            rp.CyclesRemaining.ShouldEqual(2);
+            rp.CyclesRemaining.Should().Be(2);
             //add one more history record
             rp.RecurringPaymentHistory.Add(new RecurringPaymentHistory());
-            rp.CyclesRemaining.ShouldEqual(1);
+            rp.CyclesRemaining.Should().Be(1);
             //add one more history record
             rp.RecurringPaymentHistory.Add(new RecurringPaymentHistory());
-            rp.CyclesRemaining.ShouldEqual(0);
+            rp.CyclesRemaining.Should().Be(0);
             //add one more history record
             rp.RecurringPaymentHistory.Add(new RecurringPaymentHistory());
-            rp.CyclesRemaining.ShouldEqual(0);
+            rp.CyclesRemaining.Should().Be(0);
         }
 
     }

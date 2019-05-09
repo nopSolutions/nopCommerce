@@ -7,12 +7,6 @@ namespace Nop.Tests
 {
     public static class TestExtensions
     {
-        public static T ShouldEqual<T>(this T actual, object expected)
-        {
-            Assert.AreEqual(expected, actual);
-            return actual;
-        }
-
         public static T PropertiesShouldEqual<T>(this T actual, T expected, params string[] filters)
         {
             var properties = typeof (T).GetProperties().ToList();

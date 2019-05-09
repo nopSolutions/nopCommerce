@@ -3,7 +3,6 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Hosting;
 using Moq;
 using Nop.Core.Infrastructure;
-using Nop.Tests;
 using NUnit.Framework;
 
 namespace Nop.Core.Tests.Infrastructure
@@ -20,7 +19,7 @@ namespace Nop.Core.Tests.Infrastructure
             CommonHelper.DefaultFileProvider = new NopFileProvider(hostingEnvironment.Object);
             var finder = new AppDomainTypeFinder();
             var type = finder.FindClassesOfType<ISomeInterface>().ToList();
-            type.Count.ShouldEqual(1);
+            type.Count.Should().Be(1);
             typeof(ISomeInterface).IsAssignableFrom(type.FirstOrDefault()).Should().BeTrue();
         }
 
