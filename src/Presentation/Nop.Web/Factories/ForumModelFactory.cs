@@ -971,7 +971,7 @@ namespace Nop.Web.Factories
                 TotalRecords = list.TotalCount,
                 PageIndex = list.PageIndex,
                 ShowTotalSummary = false,
-                RouteActionName = "CustomerForumSubscriptionsPaged",
+                RouteActionName = "CustomerForumSubscriptions",
                 UseRouteLinks = true,
                 RouteValues = new ForumSubscriptionsRouteValues { pageNumber = pageIndex }
             };

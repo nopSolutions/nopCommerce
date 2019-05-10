@@ -1,4 +1,4 @@
-using Nop.Core.Configuration;
+﻿using Nop.Core.Configuration;
 
 namespace Nop.Plugin.ExternalAuth.Facebook
 {

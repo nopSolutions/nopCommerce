@@ -327,10 +327,8 @@ namespace Nop.Web.Controllers
 
             //ship to the same address?
             //by default Shipping is available if the country is not specified
-            var isAllowsShipping = (address.Country != null) && address.Country.AllowsShipping;
-            isAllowsShipping = _addressSettings.CountryEnabled ? isAllowsShipping : true;
-
-            if (_shippingSettings.ShipToSameAddress && shipToSameAddress && _shoppingCartService.ShoppingCartRequiresShipping(cart) && isAllowsShipping)
+            var shippingAllowed = _addressSettings.CountryEnabled ? address.Country?.AllowsShipping ?? false : true;
+            if (_shippingSettings.ShipToSameAddress && shipToSameAddress && _shoppingCartService.ShoppingCartRequiresShipping(cart) && shippingAllowed)
             {
                 _workContext.CurrentCustomer.ShippingAddress = _workContext.CurrentCustomer.BillingAddress;
                 _customerService.UpdateCustomer(_workContext.CurrentCustomer);
@@ -1235,10 +1233,8 @@ namespace Nop.Web.Controllers
                     var address = _workContext.CurrentCustomer.BillingAddress;
 
                     //by default Shipping is available if the country is not specified
-                    var isAllowsShipping = (address.Country != null) && address.Country.AllowsShipping;
-                    isAllowsShipping = _addressSettings.CountryEnabled ? isAllowsShipping : true;
-
-                    if (_shippingSettings.ShipToSameAddress && model.ShipToSameAddress && isAllowsShipping)
+                    var shippingAllowed = _addressSettings.CountryEnabled ? address.Country?.AllowsShipping ?? false : true;
+                    if (_shippingSettings.ShipToSameAddress && model.ShipToSameAddress && shippingAllowed)
                     {
                         //ship to the same address
                         _workContext.CurrentCustomer.ShippingAddress = address;

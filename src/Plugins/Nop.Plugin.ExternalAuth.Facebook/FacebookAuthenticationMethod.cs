@@ -48,7 +48,7 @@ namespace Nop.Plugin.ExternalAuth.Facebook
         /// <returns>View component name</returns>
         public string GetPublicViewComponentName()
         {
-            return FacebookAuthenticationDefaults.ViewComponentName;
+            return FacebookAuthenticationDefaults.VIEW_COMPONENT_NAME;
         }
 
         /// <summary>

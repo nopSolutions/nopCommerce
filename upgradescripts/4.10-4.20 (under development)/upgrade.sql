@@ -863,6 +863,15 @@ set @resources='
   <LocaleResource Name="Admin.System.Templates.Topic.ViewPath.Hint">
     <Value>Enter the template view path.</Value>
   </LocaleResource>
+  <LocaleResource Name="Reviews.Fields.Rating.Good">
+    <Value>Good</Value>
+  </LocaleResource>
+  <LocaleResource Name="Reviews.Fields.Rating.NotBadNotExcellent">
+    <Value>Not bad but also not excellent</Value>
+  </LocaleResource>
+  <LocaleResource Name="Reviews.Fields.Rating.NotGood">
+    <Value>Not good</Value>
+  </LocaleResource>
 </Language>'
 
 CREATE TABLE #LocaleStringResourceTmp

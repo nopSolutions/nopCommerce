@@ -5,7 +5,7 @@ using Nop.Services.Authentication.External;
 using Nop.Services.Common;
 using Nop.Services.Events;
 
-namespace Nop.Plugin.ExternalAuth.Facebook.Infrastructure.Cache
+namespace Nop.Plugin.ExternalAuth.Facebook.Infrastructure
 {
     /// <summary>
     /// Facebook authentication event consumer (used for saving customer fields on registration)
@@ -13,7 +13,7 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Infrastructure.Cache
     public partial class FacebookAuthenticationEventConsumer : IConsumer<CustomerAutoRegisteredByExternalMethodEvent>
     {
         #region Fields
-        
+
         private readonly IGenericAttributeService _genericAttributeService;
 
         #endregion
@@ -29,13 +29,17 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Infrastructure.Cache
 
         #region Methods
 
+        /// <summary>
+        /// Handle event
+        /// </summary>
+        /// <param name="eventMessage">Event message</param>
         public void HandleEvent(CustomerAutoRegisteredByExternalMethodEvent eventMessage)
         {
             if (eventMessage?.Customer == null || eventMessage.AuthenticationParameters == null)
                 return;
 
             //handle event only for this authentication method
-            if (!eventMessage.AuthenticationParameters.ProviderSystemName.Equals(FacebookAuthenticationDefaults.ProviderSystemName))
+            if (!eventMessage.AuthenticationParameters.ProviderSystemName.Equals(FacebookAuthenticationDefaults.SystemName))
                 return;
 
             //store some of the customer fields
