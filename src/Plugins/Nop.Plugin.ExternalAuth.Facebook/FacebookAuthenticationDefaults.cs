@@ -1,19 +1,23 @@
-﻿
-namespace Nop.Plugin.ExternalAuth.Facebook
+﻿namespace Nop.Plugin.ExternalAuth.Facebook
 {
     /// <summary>
-    /// Default values used by the Facebook authentication middleware
+    /// Represents plugin constants
     /// </summary>
     public class FacebookAuthenticationDefaults
     {
         /// <summary>
-        /// System name of the external authentication method
+        /// Gets a name of the view component to display login button
         /// </summary>
-        public const string ProviderSystemName = "ExternalAuth.Facebook";
+        public const string VIEW_COMPONENT_NAME = "FacebookAuthentication";
 
         /// <summary>
-        /// Name of the view component to display plugin in public store
+        /// Gets a plugin system name
         /// </summary>
-        public const string ViewComponentName = "FacebookAuthentication";
+        public static string SystemName = "ExternalAuth.Facebook";
+
+        /// <summary>
+        /// Gets a name of error callback method
+        /// </summary>
+        public static string ErrorCallback = "ErrorCallback";
     }
 }

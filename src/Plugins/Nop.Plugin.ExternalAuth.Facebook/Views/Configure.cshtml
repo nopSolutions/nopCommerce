@@ -1,8 +1,10 @@
 ﻿@model Nop.Plugin.ExternalAuth.Facebook.Models.ConfigurationModel
+
+@inject Nop.Core.IWebHelper webHelper
+
 @{
     Layout = "_ConfigurePlugin";
 }
-@inject Nop.Core.IWebHelper webHelper
 
 <form asp-controller="FacebookAuthentication" asp-action="Configure" method="post">
     <div class="panel-group">
@@ -34,5 +36,5 @@
                 </div>
             </div>
         </div>
-    </div> 
+    </div>
 </form>

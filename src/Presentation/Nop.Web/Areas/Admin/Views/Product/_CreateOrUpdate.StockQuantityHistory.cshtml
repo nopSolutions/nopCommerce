@@ -55,7 +55,7 @@
                 {
                     Title = T("Admin.Catalog.Products.StockQuantityHistory.Fields.QuantityAdjustment").Text,
                     Width = "150",
-                    Render = new RenderCustom("renderQuantityAdjustment")
+                    Render = new RenderCustom("renderStockQuantityHistoryQuantityAdjustment")
                 },
                 new ColumnProperty(nameof(StockQuantityHistoryModel.StockQuantity))
                 {
@@ -75,7 +75,7 @@
             }
    })
         <script>
-            function renderQuantityAdjustment(data, type, row, meta) {
+            function renderStockQuantityHistoryQuantityAdjustment(data, type, row, meta) {
                 return (data > 0 ? '+' : '') + data;
             }
         </script>
