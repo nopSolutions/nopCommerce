@@ -873,34 +873,34 @@ set @resources='
     <Value>Not good</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.SystemInfo.RedisEnabled">
-    <Value>Redis Enabled</Value>
+    <Value>Redis enabled</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.SystemInfo.UseRedisToStoreDataProtectionKeys">
-    <Value>Use Redis To Store Data Protection Keys</Value>
+    <Value>Use Redis to store Data Protection Keys</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.SystemInfo.UseRedisForCaching">
-    <Value>Use Redis For Caching</Value>
+    <Value>Use Redis for Caching</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.SystemInfo.UseRedisToStorePluginsInfo">
-    <Value>Use Redis To Store Plugins Info</Value>
+    <Value>Use Redis to store Plugins Info</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.SystemInfo.AzureBlobStorageEnabled">
-    <Value>Azure Blob Storage Enabled</Value>
+    <Value>Azure Blob Storage enabled</Value>
   </LocaleResource>
    <LocaleResource Name="Admin.System.SystemInfo.RedisEnabled.Hint">
-    <Value>Indicates whether Redis is Enabled</Value>
+    <Value>Indicates whether Redis is enabled</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.SystemInfo.UseRedisToStoreDataProtectionKeys.Hint">
-    <Value>Indicates whether Redis is used To Store Data Protection Keys</Value>
+    <Value>Indicates whether Redis is used to store Data Protection Keys</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.SystemInfo.UseRedisForCaching.Hint">
-    <Value>Indicates whether Redis is used For Caching</Value>
+    <Value>Indicates whether Redis is used for Caching</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.SystemInfo.UseRedisToStorePluginsInfo.Hint">
-    <Value>Indicates whether Redis is used To Store Plugins Info</Value>
+    <Value>Indicates whether Redis is used to store Plugins Info</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.SystemInfo.AzureBlobStorageEnabled.Hint">
-    <Value>Indicates whether Azure Blob Storage is Enabled</Value>
+    <Value>Indicates whether Azure Blob Storage is enabled</Value>
   </LocaleResource>
 </Language>'
 
