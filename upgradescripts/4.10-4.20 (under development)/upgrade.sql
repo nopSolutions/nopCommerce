@@ -872,6 +872,12 @@ set @resources='
   <LocaleResource Name="Reviews.Fields.Rating.NotGood">
     <Value>Not good</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.SystemInfo.RedisEnabled">
+    <Value>Redis Enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SystemInfo.AzureBlobStorageEnabled">
+    <Value>Azure Blob Storage Enabled</Value>
+  </LocaleResource>
 </Language>'
 
 CREATE TABLE #LocaleStringResourceTmp

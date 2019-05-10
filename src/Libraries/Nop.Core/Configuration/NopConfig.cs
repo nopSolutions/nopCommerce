@@ -11,6 +11,7 @@
         /// </summary>
         public bool DisplayFullErrorStack { get; set; }
 
+        public bool AzureBlobStorageEnabled => (!string.IsNullOrEmpty(this.AzureBlobStorageConnectionString));
         /// <summary>
         /// Gets or sets connection string for Azure BLOB storage
         /// </summary>

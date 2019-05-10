@@ -250,7 +250,7 @@ namespace Nop.Web.Framework.Infrastructure
             builder.RegisterSource(new SettingsSource());
 
             //picture service
-            if (!string.IsNullOrEmpty(config.AzureBlobStorageConnectionString))
+            if (config.AzureBlobStorageEnabled)
                 builder.RegisterType<AzurePictureService>().As<IPictureService>().InstancePerLifetimeScope();
             else
                 builder.RegisterType<PictureService>().As<IPictureService>().InstancePerLifetimeScope();
