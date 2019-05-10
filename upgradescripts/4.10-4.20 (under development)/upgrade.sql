@@ -875,8 +875,32 @@ set @resources='
   <LocaleResource Name="Admin.System.SystemInfo.RedisEnabled">
     <Value>Redis Enabled</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.SystemInfo.UseRedisToStoreDataProtectionKeys">
+    <Value>Use Redis To Store Data Protection Keys</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SystemInfo.UseRedisForCaching">
+    <Value>Use Redis For Caching</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SystemInfo.UseRedisToStorePluginsInfo">
+    <Value>Use Redis To Store Plugins Info</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.System.SystemInfo.AzureBlobStorageEnabled">
     <Value>Azure Blob Storage Enabled</Value>
+  </LocaleResource>
+   <LocaleResource Name="Admin.System.SystemInfo.RedisEnabled.Hint">
+    <Value>Indicates whether Redis is Enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SystemInfo.UseRedisToStoreDataProtectionKeys.Hint">
+    <Value>Indicates whether Redis is used To Store Data Protection Keys</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SystemInfo.UseRedisForCaching.Hint">
+    <Value>Indicates whether Redis is used For Caching</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SystemInfo.UseRedisToStorePluginsInfo.Hint">
+    <Value>Indicates whether Redis is used To Store Plugins Info</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SystemInfo.AzureBlobStorageEnabled.Hint">
+    <Value>Indicates whether Azure Blob Storage is Enabled</Value>
   </LocaleResource>
 </Language>'
 
