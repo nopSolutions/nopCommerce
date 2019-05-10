@@ -663,6 +663,10 @@ namespace Nop.Web.Areas.Admin.Factories
             var nopConfig = EngineContext.Current.Resolve<NopConfig>();
 
             model.RedisEnabled = nopConfig.RedisEnabled;
+            model.UseRedisToStoreDataProtectionKeys = nopConfig.UseRedisToStoreDataProtectionKeys;
+            model.UseRedisForCaching = nopConfig.UseRedisForCaching;
+            model.UseRedisToStorePluginsInfo = nopConfig.UseRedisToStorePluginsInfo;
+
             model.AzureBlobStorageEnabled = nopConfig.AzureBlobStorageEnabled;
 
             return model;
