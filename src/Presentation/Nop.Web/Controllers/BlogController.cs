@@ -130,7 +130,7 @@ namespace Nop.Web.Controllers
             var blogPosts = _blogService.GetAllBlogPosts(_storeContext.CurrentStore.Id, languageId);
             foreach (var blogPost in blogPosts)
             {
-                var blogPostUrl = Url.RouteUrl("BlogPost", new { SeName = _urlRecordService.GetSeName(blogPost, blogPost.LanguageId, ensureTwoPublishedLanguages: false) }, _webHelper.CurrentRequestProtocol);
+                var blogPostUrl = Url.RouteUrl("GenericUrl", new { SeName = _urlRecordService.GetSeName(blogPost, blogPost.LanguageId, ensureTwoPublishedLanguages: false) }, _webHelper.CurrentRequestProtocol);
                 items.Add(new RssItem(blogPost.Title, blogPost.Body, new Uri(blogPostUrl),
                     $"urn:store:{_storeContext.CurrentStore.Id}:blog:post:{blogPost.Id}", blogPost.CreatedOnUtc));
             }
@@ -223,7 +223,7 @@ namespace Nop.Web.Controllers
                 TempData["nop.blog.addcomment.result"] = comment.IsApproved
                     ? _localizationService.GetResource("Blog.Comments.SuccessfullyAdded")
                     : _localizationService.GetResource("Blog.Comments.SeeAfterApproving");
-                return RedirectToRoute("BlogPost", new { SeName = _urlRecordService.GetSeName(blogPost, blogPost.LanguageId, ensureTwoPublishedLanguages: false) });
+                return RedirectToRoute("GenericUrl", new { SeName = _urlRecordService.GetSeName(blogPost, blogPost.LanguageId, ensureTwoPublishedLanguages: false) });
             }
 
             //If we got this far, something failed, redisplay form

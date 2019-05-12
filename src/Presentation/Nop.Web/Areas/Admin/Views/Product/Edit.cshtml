@@ -17,7 +17,7 @@
             </small>
         </h1>
         <div class="pull-right">
-            <button type="button" onclick="javascript:OpenWindow('@Url.RouteUrl("Product", new {SeName = Model.SeName})', 800, 600, true); return false;" class="btn bg-purple">
+            <button type="button" onclick="javascript:OpenWindow('@Url.RouteUrl("GenericUrl", new { SeName = Model.SeName })', 800, 600, true); return false;" class="btn bg-purple">
                 <i class="fa fa-eye"></i>
                 @T("Admin.Common.Preview")
             </button>

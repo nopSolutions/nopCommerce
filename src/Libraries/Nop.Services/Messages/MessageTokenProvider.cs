@@ -1245,7 +1245,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Product.SKU", product.Sku));
             tokens.Add(new Token("Product.StockQuantity", productService.GetTotalStockQuantity(product)));
 
-            var productUrl = RouteUrl(routeName: "Product", routeValues: new { SeName = _urlRecordService.GetSeName(product) });
+            var productUrl = RouteUrl(routeName: "GenericUrl", routeValues: new { SeName = _urlRecordService.GetSeName(product) });
             tokens.Add(new Token("Product.ProductURLForCustomer", productUrl, true));
 
             //event notification
@@ -1357,7 +1357,7 @@ namespace Nop.Services.Messages
         public virtual void AddBackInStockTokens(IList<Token> tokens, BackInStockSubscription subscription)
         {
             tokens.Add(new Token("BackInStockSubscription.ProductName", subscription.Product.Name));
-            var productUrl = RouteUrl(subscription.StoreId, "Product", new { SeName = _urlRecordService.GetSeName(subscription.Product) });
+            var productUrl = RouteUrl(subscription.StoreId, "GenericUrl", new { SeName = _urlRecordService.GetSeName(subscription.Product) });
             tokens.Add(new Token("BackInStockSubscription.ProductUrl", productUrl, true));
 
             //event notification

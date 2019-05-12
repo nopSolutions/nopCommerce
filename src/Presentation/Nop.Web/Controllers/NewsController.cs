@@ -112,7 +112,7 @@ namespace Nop.Web.Controllers
             var newsItems = _newsService.GetAllNews(languageId, _storeContext.CurrentStore.Id);
             foreach (var n in newsItems)
             {
-                var newsUrl = Url.RouteUrl("NewsItem", new { SeName = _urlRecordService.GetSeName(n, n.LanguageId, ensureTwoPublishedLanguages: false) }, _webHelper.CurrentRequestProtocol);
+                var newsUrl = Url.RouteUrl("GenericUrl", new { SeName = _urlRecordService.GetSeName(n, n.LanguageId, ensureTwoPublishedLanguages: false) }, _webHelper.CurrentRequestProtocol);
                 items.Add(new RssItem(n.Title, n.Short, new Uri(newsUrl), $"urn:store:{_storeContext.CurrentStore.Id}:news:blog:{n.Id}", n.CreatedOnUtc));
             }
             feed.Items = items;
@@ -208,7 +208,7 @@ namespace Nop.Web.Controllers
                     ? _localizationService.GetResource("News.Comments.SuccessfullyAdded")
                     : _localizationService.GetResource("News.Comments.SeeAfterApproving");
 
-                return RedirectToRoute("NewsItem", new { SeName = _urlRecordService.GetSeName(newsItem, newsItem.LanguageId, ensureTwoPublishedLanguages: false) });
+                return RedirectToRoute("GenericUrl", new { SeName = _urlRecordService.GetSeName(newsItem, newsItem.LanguageId, ensureTwoPublishedLanguages: false) });
             }
 
             //If we got this far, something failed, redisplay form

@@ -138,7 +138,7 @@ namespace Nop.Web.Controllers
                 if (parentGroupedProduct == null)
                     return RedirectToRoute("Homepage");
 
-                return RedirectToRoute("Product", new { SeName = _urlRecordService.GetSeName(parentGroupedProduct) });
+                return RedirectToRoute("GenericUrl", new { SeName = _urlRecordService.GetSeName(parentGroupedProduct) });
             }
 
             //update existing shopping cart or wishlist  item?
@@ -150,12 +150,12 @@ namespace Nop.Web.Controllers
                 //not found?
                 if (updatecartitem == null)
                 {
-                    return RedirectToRoute("Product", new { SeName = _urlRecordService.GetSeName(product) });
+                    return RedirectToRoute("GenericUrl", new { SeName = _urlRecordService.GetSeName(product) });
                 }
                 //is it this product?
                 if (product.Id != updatecartitem.ProductId)
                 {
-                    return RedirectToRoute("Product", new { SeName = _urlRecordService.GetSeName(product) });
+                    return RedirectToRoute("GenericUrl", new { SeName = _urlRecordService.GetSeName(product) });
                 }
             }
 
@@ -247,7 +247,7 @@ namespace Nop.Web.Controllers
                 pageSize: _catalogSettings.NewProductsNumber);
             foreach (var product in products)
             {
-                var productUrl = Url.RouteUrl("Product", new { SeName = _urlRecordService.GetSeName(product) }, _webHelper.CurrentRequestProtocol);
+                var productUrl = Url.RouteUrl("GenericUrl", new { SeName = _urlRecordService.GetSeName(product) }, _webHelper.CurrentRequestProtocol);
                 var productName = _localizationService.GetLocalized(product, x => x.Name);
                 var productDescription = _localizationService.GetLocalized(product, x => x.ShortDescription);
                 var item = new RssItem(productName, productDescription, new Uri(productUrl), $"urn:store:{_storeContext.CurrentStore.Id}:newProducts:product:{product.Id}", product.CreatedOnUtc);

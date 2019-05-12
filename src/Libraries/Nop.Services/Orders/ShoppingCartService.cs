@@ -343,7 +343,7 @@ namespace Nop.Services.Orders
                 //prepare warning message
                 var requiredProductName = WebUtility.HtmlEncode(_localizationService.GetLocalized(requiredProduct, x => x.Name));
                 var requiredProductWarning = _catalogSettings.UseLinksInRequiredProductWarnings
-                    ? string.Format(warningLocale, $"<a href=\"{urlHelper.RouteUrl(nameof(Product), new { SeName = _urlRecordService.GetSeName(requiredProduct) })}\">{requiredProductName}</a>", requiredProductRequiredQuantity)
+                    ? string.Format(warningLocale, $"<a href=\"{urlHelper.RouteUrl("GenericUrl", new { SeName = _urlRecordService.GetSeName(requiredProduct) })}\">{requiredProductName}</a>", requiredProductRequiredQuantity)
                     : string.Format(warningLocale, requiredProductName, requiredProductRequiredQuantity);
 
                 //add to cart (if possible)

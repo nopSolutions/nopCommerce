@@ -21,7 +21,7 @@
                 @foreach (var category in Model.CategoryBreadcrumb)
                 {
                     <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
-                        <a href="@Url.RouteUrl("Category", new { SeName = category.SeName })" itemprop="item">
+                        <a href="@Url.RouteUrl("GenericUrl", new { SeName = category.SeName })" itemprop="item">
                             <span itemprop="name">@category.Name</span>
                         </a>
                         <span class="delimiter">@breadcrumbDelimiter</span>
@@ -33,7 +33,7 @@
                 <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
                     <strong class="current-item" itemprop="name">@Model.ProductName</strong>
                     <span itemprop="item" itemscope itemtype="http://schema.org/Thing" 
-                          id="@Url.RouteUrl("Product", new { SeName = Model.ProductSeName })">
+                          id="@Url.RouteUrl("GenericUrl", new { SeName = Model.ProductSeName })">
                     </span>
                     <meta itemprop="position" content="@position" />
                     @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductBreadcrumbAfter, additionalData = Model })

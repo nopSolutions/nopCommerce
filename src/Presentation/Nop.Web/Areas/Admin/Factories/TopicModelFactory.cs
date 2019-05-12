@@ -158,7 +158,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 }
 
                 model.Url = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext)
-                    .RouteUrl("Topic", new { SeName = _urlRecordService.GetSeName(topic) }, _webHelper.CurrentRequestProtocol);
+                    .RouteUrl("GenericUrl", new { SeName = _urlRecordService.GetSeName(topic) }, _webHelper.CurrentRequestProtocol);
 
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>

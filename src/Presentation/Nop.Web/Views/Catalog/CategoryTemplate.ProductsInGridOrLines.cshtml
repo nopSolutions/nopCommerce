@@ -17,7 +17,7 @@
 
     if (seoSettings.CanonicalUrlsEnabled)
     {
-        var categoryUrl = Url.RouteUrl("Category", new { SeName = Model.SeName }, webHelper.CurrentRequestProtocol).ToLowerInvariant();
+        var categoryUrl = Url.RouteUrl("GenericUrl", new { SeName = Model.SeName }, webHelper.CurrentRequestProtocol).ToLowerInvariant();
         Html.AddCanonicalUrlParts(categoryUrl, seoSettings.QueryStringInCanonicalUrlsEnabled);
     }
 
@@ -43,12 +43,12 @@
                         {
                             <strong class="current-item" itemprop="name">@cat.Name</strong>
                             <span itemprop="item" itemscope itemtype="http://schema.org/Thing"
-                                  id="@Url.RouteUrl("Category", new {SeName = cat.SeName})">
+                                  id="@Url.RouteUrl("GenericUrl", new { SeName = cat.SeName })">
                             </span>
                         }
                         else
                         {
-                            <a href="@Url.RouteUrl("Category", new { SeName = cat.SeName })" title="@cat.Name" itemprop="item">
+                            <a href="@Url.RouteUrl("GenericUrl", new { SeName = cat.SeName })" title="@cat.Name" itemprop="item">
                                 <span itemprop="name">@cat.Name</span>
                             </a>
                             <span class="delimiter">@breadcrumbDelimiter</span>
@@ -86,12 +86,12 @@
                         <div class="item-box">
                             <div class="sub-category-item">
                                 <h2 class="title">
-                                    <a href="@Url.RouteUrl("Category", new { SeName = item.SeName })" title="@item.PictureModel.Title">
+                                    <a href="@Url.RouteUrl("GenericUrl", new { SeName = item.SeName })" title="@item.PictureModel.Title">
                                         @item.Name
                                     </a>
                                 </h2>
                                 <div class="picture">
-                                    <a href="@Url.RouteUrl("Category", new { SeName = item.SeName })" title="@item.PictureModel.Title">
+                                    <a href="@Url.RouteUrl("GenericUrl", new { SeName = item.SeName })" title="@item.PictureModel.Title">
                                         <img alt="@item.PictureModel.AlternateText" src="@item.PictureModel.ImageUrl" title="@item.PictureModel.Title" />
                                     </a>
                                 </div>
