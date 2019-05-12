@@ -23,29 +23,29 @@ namespace Nop.Web.Infrastructure
             routeBuilder.MapRoute("Default", "{controller}/{action}/{id?}");
 
             //generic URLs
-            routeBuilder.MapGenericPathRoute("GenericUrl", "{GenericSeName}",
+            routeBuilder.MapGenericPathRoute("GenericUrl", "{SeName}",
                 new { controller = "Common", action = "GenericUrl" });
 
             //define this routes to use in UI views (in case if you want to customize some of them later)
-            routeBuilder.MapLocalizedRoute("Product", "{SeName}", 
+            routeBuilder.MapLocalizedRoute("Product", "{SeName}",
                 new { controller = "Product", action = "ProductDetails" });
 
-            routeBuilder.MapLocalizedRoute("Category", "{SeName}", 
+            routeBuilder.MapLocalizedRoute("Category", "{SeName}",
                 new { controller = "Catalog", action = "Category" });
 
-            routeBuilder.MapLocalizedRoute("Manufacturer", "{SeName}", 
+            routeBuilder.MapLocalizedRoute("Manufacturer", "{SeName}",
                 new { controller = "Catalog", action = "Manufacturer" });
 
-            routeBuilder.MapLocalizedRoute("Vendor", "{SeName}", 
+            routeBuilder.MapLocalizedRoute("Vendor", "{SeName}",
                 new { controller = "Catalog", action = "Vendor" });
-            
-            routeBuilder.MapLocalizedRoute("NewsItem", "{SeName}", 
+
+            routeBuilder.MapLocalizedRoute("NewsItem", "{SeName}",
                 new { controller = "News", action = "NewsItem" });
 
-            routeBuilder.MapLocalizedRoute("BlogPost", "{SeName}", 
+            routeBuilder.MapLocalizedRoute("BlogPost", "{SeName}",
                 new { controller = "Blog", action = "BlogPost" });
 
-            routeBuilder.MapLocalizedRoute("Topic", "{SeName}", 
+            routeBuilder.MapLocalizedRoute("Topic", "{SeName}",
                 new { controller = "Topic", action = "TopicDetails" });
 
             //product tags

@@ -87,7 +87,7 @@ namespace Nop.Web.Framework.Seo
 
             //try to get slug from the route data
             var routeValues = GetRouteValues(context);
-            if (!routeValues.TryGetValue("GenericSeName", out object slugValue) || string.IsNullOrEmpty(slugValue as string))
+            if (!routeValues.TryGetValue("SeName", out object slugValue) || string.IsNullOrEmpty(slugValue as string))
                 return Task.CompletedTask;
 
             var slug = slugValue as string;
