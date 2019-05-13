@@ -201,7 +201,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 services.AddDataProtection().PersistKeysToRedis(() =>
                 {
                     var redisConnectionWrapper = EngineContext.Current.Resolve<IRedisConnectionWrapper>();
-                    return redisConnectionWrapper.GetDatabase(RedisDatabaseNumber.DataProtectionKeys);
+                    return redisConnectionWrapper.GetDatabase(nopConfig.RedisDatabaseId ?? (int)RedisDatabaseNumber.DataProtectionKeys);
                 }, NopCachingDefaults.RedisDataProtectionKey);
             }
             else
