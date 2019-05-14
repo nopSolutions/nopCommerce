@@ -12,6 +12,7 @@ using Microsoft.Net.Http.Headers;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
+using Nop.Core.Configuration;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
@@ -658,6 +659,15 @@ namespace Nop.Web.Areas.Admin.Factories
                 catch { }
                 model.LoadedAssemblies.Add(loadedAssemblyModel);
             }
+
+            var nopConfig = EngineContext.Current.Resolve<NopConfig>();
+
+            model.RedisEnabled = nopConfig.RedisEnabled;
+            model.UseRedisToStoreDataProtectionKeys = nopConfig.UseRedisToStoreDataProtectionKeys;
+            model.UseRedisForCaching = nopConfig.UseRedisForCaching;
+            model.UseRedisToStorePluginsInfo = nopConfig.UseRedisToStorePluginsInfo;
+
+            model.AzureBlobStorageEnabled = nopConfig.AzureBlobStorageEnabled;
 
             return model;
         }
