@@ -827,7 +827,7 @@ namespace Nop.Web.Factories
                     "/boards/topiccreate",
                     "/boards/topicmove",
                     "/boards/topicwatch",
-                    "/cart",
+                    "/cart$",
                     "/changecurrency",
                     "/changelanguage",
                     "/changetaxtype",
