@@ -474,7 +474,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return ErrorJson("Vendor cannot be loaded");
 
             if (string.IsNullOrEmpty(message))
-                return ErrorJson(_localizationService.GetResource("Admin.Orders.OrderNotes.Fields.Note.Validation"));
+                return ErrorJson(_localizationService.GetResource("Admin.Vendors.VendorNotes.Fields.Note.Validation"));
 
             var vendorNote = new VendorNote
             {
