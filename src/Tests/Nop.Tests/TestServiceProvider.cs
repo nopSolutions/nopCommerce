@@ -66,6 +66,9 @@ namespace Nop.Tests
             if (serviceType == typeof(CurrencySettings))
                 return new CurrencySettings {PrimaryStoreCurrencyId = 1};
 
+            if (serviceType == typeof(CatalogSettings))
+                return new CatalogSettings();
+
             if (serviceType == typeof(ICurrencyService))
                 return CurrencyService.Object;
 

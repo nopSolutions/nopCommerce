@@ -4,6 +4,7 @@ using System.Linq;
 using Moq;
 using Nop.Core;
 using Nop.Core.Data;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Directory;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
@@ -25,6 +26,7 @@ namespace Nop.Services.Tests.Directory
         private Mock<IEventPublisher> _eventPublisher;
         private ICurrencyService _currencyService;
         private IExchangeRatePluginManager _exchangeRatePluginManager;
+        private CatalogSettings _catalogSettings;
 
         private Currency currencyUSD, currencyRUR, currencyEUR;
 
@@ -96,7 +98,8 @@ namespace Nop.Services.Tests.Directory
             var loger = new Mock<ILogger>();
             var webHelper = new Mock<IWebHelper>();
 
-            var pluginService = new PluginService(customerService.Object, loger.Object, CommonHelper.DefaultFileProvider, webHelper.Object);
+            _catalogSettings = new CatalogSettings();
+            var pluginService = new PluginService(_catalogSettings, customerService.Object, loger.Object, CommonHelper.DefaultFileProvider, webHelper.Object);
             _exchangeRatePluginManager = new ExchangeRatePluginManager(_currencySettings, pluginService);
             _currencyService = new CurrencyService(_currencySettings,
                 _eventPublisher.Object,

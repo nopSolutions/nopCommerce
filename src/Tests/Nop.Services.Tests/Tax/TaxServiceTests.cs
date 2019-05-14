@@ -38,6 +38,7 @@ namespace Nop.Services.Tests.Tax
         private ShippingSettings _shippingSettings;
         private AddressSettings _addressSettings;
         private Mock<IGenericAttributeService> _genericAttributeService;
+        private CatalogSettings _catalogSettings;
 
         [SetUp]
         public new void SetUp()
@@ -72,7 +73,8 @@ namespace Nop.Services.Tests.Tax
             var customerService = new Mock<ICustomerService>();
             var loger = new Mock<ILogger>();
 
-            var pluginService = new PluginService(customerService.Object, loger.Object, CommonHelper.DefaultFileProvider, _webHelper.Object);
+            _catalogSettings = new CatalogSettings();
+            var pluginService = new PluginService(_catalogSettings, customerService.Object, loger.Object, CommonHelper.DefaultFileProvider, _webHelper.Object);
             _taxPluginManager = new TaxPluginManager(pluginService, _taxSettings);
 
             var cacheManager = new TestCacheManager();
