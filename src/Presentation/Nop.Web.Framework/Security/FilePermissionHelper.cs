@@ -174,6 +174,11 @@ namespace Nop.Web.Framework.Security
         /// <returns>Result</returns>
         private static bool CheckPermissionsInUnix(string path, bool checkRead, bool checkWrite, bool checkModify, bool checkDelete)
         {
+            //MacOSX file permission check differs slightly from linux
+            var arguments = RuntimeInformation.IsOSPlatform(OSPlatform.OSX)
+                ? $"-c \"stat -f '%A %u %g' {path}\""
+                : $"-c \"stat -c '%a %u %g' {path}\"";
+
             try
             {
                 //create bash command like
@@ -186,7 +191,7 @@ namespace Nop.Web.Framework.Security
                         RedirectStandardOutput = true,
                         UseShellExecute = false,
                         FileName = "sh",
-                        Arguments = $"-c \"stat -c '%a %u %g' {path}\""
+                        Arguments = arguments
                     }
                 };
                 process.Start();
@@ -274,16 +279,7 @@ namespace Nop.Web.Framework.Security
                     result = CheckPermissionsInWindows(path, checkRead, checkWrite, checkModify, checkDelete);
                     break;
                 case PlatformID.Unix:
-                    //MacOSX also returns Unix PatformID
-                    //MacOSX file permission check differs slightly from linux
-                    if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                    {
-                        result = CheckPermissionsInOSX(path, checkRead, checkWrite, checkModify, checkDelete);
-                    }
-                    else
-                    {
-                        result = CheckPermissionsInUnix(path, checkRead, checkWrite, checkModify, checkDelete);
-                    }
+                    result = CheckPermissionsInUnix(path, checkRead, checkWrite, checkModify, checkDelete);
                     break;
             }
 
