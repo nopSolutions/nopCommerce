@@ -141,6 +141,7 @@
                         Name = "carts-grid",
                         UrlRead = new DataUrl("CurrentCarts", "ShoppingCart", null),
                         SearchButtonId = "search-shopping-carts",
+                        PrimaryKeyColumn = nameof(ShoppingCartModel.CustomerId),
                         Length = Model.PageSize,
                         LengthMenu = Model.AvailablePageSizes,
                         Filters = new List<FilterParameter>
