@@ -1,4 +1,6 @@
-﻿namespace Nop.Core.Configuration
+﻿using Newtonsoft.Json;
+
+namespace Nop.Core.Configuration
 {
     /// <summary>
     /// Represents startup Nop configuration parameters
@@ -10,8 +12,7 @@
         /// It's ignored (always enabled) in development environment
         /// </summary>
         public bool DisplayFullErrorStack { get; set; }
-
-        public bool AzureBlobStorageEnabled => (!string.IsNullOrEmpty(this.AzureBlobStorageConnectionString));
+        
         /// <summary>
         /// Gets or sets connection string for Azure BLOB storage
         /// </summary>
@@ -104,5 +105,11 @@
         /// By default the cookie-based TempData provider is used to store TempData in cookies.
         /// </summary>
         public bool UseSessionStateTempDataProvider { get; set; }
+        
+        /// <summary>
+        /// Gets a value indicating whether we should use Azure blob storage
+        /// </summary>
+        [JsonIgnore]
+        public bool AzureBlobStorageEnabled => !string.IsNullOrEmpty(AzureBlobStorageConnectionString);
     }
 }

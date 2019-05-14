@@ -37,6 +37,9 @@ namespace Nop.Web.Areas.Admin.Models.Common
         [NopResourceDisplayName("Admin.System.SystemInfo.CurrentUserTime")]
         public DateTime CurrentUserTime { get; set; }
 
+        [NopResourceDisplayName("Admin.System.SystemInfo.CurrentStaticCacheManager")]
+        public string CurrentStaticCacheManager { get; set; }
+
         [NopResourceDisplayName("Admin.System.SystemInfo.HTTPHOST")]
         public string HttpHost { get; set; }
 

@@ -888,20 +888,26 @@ set @resources='
     <Value>Azure Blob Storage enabled</Value>
   </LocaleResource>
    <LocaleResource Name="Admin.System.SystemInfo.RedisEnabled.Hint">
-    <Value>Indicates whether Redis is enabled</Value>
+    <Value>Indicates whether Redis is enabled.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.SystemInfo.UseRedisToStoreDataProtectionKeys.Hint">
-    <Value>Indicates whether Redis is used to store Data Protection Keys</Value>
+    <Value>Indicates whether Redis is used to store Data Protection Keys.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.SystemInfo.UseRedisForCaching.Hint">
-    <Value>Indicates whether Redis is used for Caching</Value>
+    <Value>Indicates whether Redis is used for Caching.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.SystemInfo.UseRedisToStorePluginsInfo.Hint">
-    <Value>Indicates whether Redis is used to store Plugins Info</Value>
+    <Value>Indicates whether Redis is used to store Plugins Info.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.SystemInfo.AzureBlobStorageEnabled.Hint">
-    <Value>Indicates whether Azure Blob Storage is enabled</Value>
+    <Value>Indicates whether Azure Blob Storage is enabled.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.SystemInfo.CurrentStaticCacheManager">
+	<Value>Static cache manager name</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.System.SystemInfo.CurrentStaticCacheManager.Hint">
+	<Value>Indicating the current static cache manager name.</Value>
+  </LocaleResource>  
 </Language>'
 
 CREATE TABLE #LocaleStringResourceTmp
