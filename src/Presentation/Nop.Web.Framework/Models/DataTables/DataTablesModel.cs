@@ -143,6 +143,11 @@ namespace Nop.Web.Framework.Models.DataTables
         public DataTablesModel ChildTable { get; set; }
 
         /// <summary>
+        /// Gets or sets primary key column name for parent table
+        /// </summary>
+        public string PrimaryKeyColumn { get; set; }
+
+        /// <summary>
         /// Gets or sets bind column name for delete action. If this field is not specified, the default will be the alias "id" for the delete action
         /// </summary>
         public string BindColumnNameActionDelete { get; set; }

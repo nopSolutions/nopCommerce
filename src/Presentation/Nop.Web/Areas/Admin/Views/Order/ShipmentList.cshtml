@@ -161,6 +161,7 @@
                         Name = "shipments-grid",
                         UrlRead = new DataUrl("ShipmentListSelect", "Order", null),
                         SearchButtonId = "search-shipments",
+                        PrimaryKeyColumn = nameof(ShipmentModel.Id),
                         Length = Model.PageSize,
                         LengthMenu = Model.AvailablePageSizes,
                         Filters = new List<FilterParameter>

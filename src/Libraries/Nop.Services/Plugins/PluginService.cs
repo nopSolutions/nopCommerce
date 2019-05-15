@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Infrastructure;
 using Nop.Services.Customers;
@@ -17,6 +18,7 @@ namespace Nop.Services.Plugins
     {
         #region Fields
 
+        private readonly CatalogSettings _catalogSettings;
         private readonly ICustomerService _customerService;
         private readonly ILogger _logger;
         private readonly INopFileProvider _fileProvider;
@@ -27,11 +29,13 @@ namespace Nop.Services.Plugins
 
         #region Ctor
 
-        public PluginService(ICustomerService customerService,
+        public PluginService(CatalogSettings catalogSettings,
+            ICustomerService customerService,
             ILogger logger,
             INopFileProvider fileProvider,
             IWebHelper webHelper)
         {
+            _catalogSettings = catalogSettings;
             _customerService = customerService;
             _logger = logger;
             _fileProvider = fileProvider;
@@ -101,9 +105,10 @@ namespace Nop.Services.Plugins
             if (customer == null || !pluginDescriptor.LimitedToCustomerRoles.Any())
                 return true;
 
-            var customerRoleIds = customer.CustomerRoles.Where(role => role.Active).Select(role => role.Id);
+            if (_catalogSettings.IgnoreAcl)
+                return true;
 
-            return pluginDescriptor.LimitedToCustomerRoles.Intersect(customerRoleIds).Any();
+            return pluginDescriptor.LimitedToCustomerRoles.Intersect(customer.GetCustomerRoleIds()).Any();
         }
 
         /// <summary>
