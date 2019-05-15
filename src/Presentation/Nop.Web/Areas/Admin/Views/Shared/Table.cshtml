@@ -312,7 +312,7 @@
     <text>
     <script>
         function getchild_@(model_name)(d) {
-            return '<table id="child' + d.Id + '" class="table table-bordered table-hover dataTable" width="100%" style="padding-left:2%;"></table>';
+            return '<table id="child' + d.@(Model.PrimaryKeyColumn) + '" class="table table-bordered table-hover dataTable" width="100%" style="padding-left:2%;"></table>';
         }
         $(document).ready(function () {
             // Add event listener for opening and closing childs
@@ -331,9 +331,9 @@
                 else {
                     // Open this row
                     row.child(getchild_@(model_name)(row.data())).show();
-                    var classid = '#child' + row.data().Id;
+                    var classid = '#child' + row.data().@(Model.PrimaryKeyColumn);
                     $(classid).DataTable({
-                    @await Html.PartialAsync("_Table.Definition", Model.ChildTable)
+                        @await Html.PartialAsync("_Table.Definition", Model.ChildTable)
                     }).draw;
                     tr.addClass('shown');
                     tdi.first().removeClass('fa-caret-right');
