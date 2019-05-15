@@ -194,7 +194,7 @@
                 });
 
                 if (columnType == 'number') {
-                    $($(curRow).children("[data-columnname='" + cellName + "']")[0]).html('<input value="' + editRowData_@(model_name)[cellName] + '" class="userinput" type="number" min="0" max="100"/>');
+                    $($(curRow).children("[data-columnname='" + cellName + "']")[0]).html('<input value="' + editRowData_@(model_name)[cellName] + '" class="userinput" type="number" min="@int.MinValue" max="@int.MaxValue"/>');
                 }
                 if (columnType == 'checkbox') {
                     var cellValue = editRowData_@(model_name)[cellName];
