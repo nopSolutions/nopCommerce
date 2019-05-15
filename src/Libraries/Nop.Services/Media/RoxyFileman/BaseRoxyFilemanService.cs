@@ -114,9 +114,8 @@ namespace Nop.Services.Media.RoxyFileman
             if (!virtualPath.StartsWith("/"))
                 virtualPath = "/" + virtualPath;
             virtualPath = virtualPath.TrimEnd('/');
-            virtualPath = virtualPath.Replace('/', '\\');
 
-            return _hostingEnvironment.WebRootPath + virtualPath;
+            return _fileProvider.Combine(_hostingEnvironment.WebRootPath, virtualPath);
         }
 
         /// <summary>
