@@ -1658,6 +1658,11 @@ span.grid-report-item.red {
   border-left: 1px solid #e3e3e3;
 }
 
+table.table-bordered.dataTable th:last-child, 
+table.table-bordered.dataTable td:last-child{
+  border-right-width: 1px;
+}
+
 @media (max-width: 1200px) {
     /* HEADER */
     .main-header .navbar-custom-menu {
