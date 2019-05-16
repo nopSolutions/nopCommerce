@@ -2158,3 +2158,9 @@ BEGIN
 	VirtualPath nvarchar(MAX) NULL
 END
 GO
+
+--update setting
+UPDATE [Setting]
+SET [Value] = '100'
+WHERE [Name] = 'mediasettings.defaultimagequality'
+GO

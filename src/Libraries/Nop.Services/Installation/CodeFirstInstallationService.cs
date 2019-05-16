@@ -6325,7 +6325,7 @@ namespace Nop.Services.Installation
                 ImageSquarePictureSize = 32,
                 MaximumImageSize = 1980,
                 DefaultPictureZoomEnabled = false,
-                DefaultImageQuality = 80,
+                DefaultImageQuality = 100,
                 MultipleThumbDirectories = false,
                 ImportProductImagesUsingHash = true,
                 AzureCacheControlHeader = string.Empty,
