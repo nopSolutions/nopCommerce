@@ -1716,6 +1716,13 @@ span.grid-report-item.red {
     .panel-search .form-control {
         max-width: 100%;
     }
+    .data-tables-length {
+      text-align: right;
+      margin-right: 0;
+    }
+    div.dataTables_wrapper div.dataTables_length{
+      text-align: right;
+    }
 }
 
 @media (max-width: 767px) {

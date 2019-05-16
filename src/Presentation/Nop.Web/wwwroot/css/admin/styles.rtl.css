@@ -1781,6 +1781,13 @@ table.table-bordered.dataTable td:last-child{
     .panel-search .form-control {
         max-width: 100%;
     }
+    .data-tables-length {
+      text-align: left;
+      margin-left: 0;
+    }
+    div.dataTables_wrapper div.dataTables_length{
+      text-align: left;
+    }
 }
 
 @media (max-width: 767px) {
