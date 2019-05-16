@@ -23,6 +23,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
         private const string TemplateAttributeName = "asp-template";
         private const string PostfixAttributeName = "asp-postfix";
         private const string ValueAttributeName = "asp-value";
+        private const string PlaceholderAttributeName = "placeholder";
 
         private readonly IHtmlHelper _htmlHelper;
 
@@ -43,6 +44,12 @@ namespace Nop.Web.Framework.TagHelpers.Admin
         /// </summary>
         [HtmlAttributeName(RequiredAttributeName)]
         public string IsRequired { set; get; }
+
+        /// <summary>
+        /// Placeholder for the field
+        /// </summary>
+        [HtmlAttributeName(PlaceholderAttributeName)]
+        public string Placeholder { set; get; }
 
         /// <summary>
         /// Indicates whether the "form-control" class shold be added to the input
@@ -106,6 +113,10 @@ namespace Nop.Web.Framework.TagHelpers.Admin
 
             //container for additional attributes
             var htmlAttributes = new Dictionary<string, object>();
+
+            //set placeholder if exists
+            if (!string.IsNullOrEmpty(Placeholder))
+                htmlAttributes.Add("placeholder", Placeholder);
 
             //set value if exists
             if (!string.IsNullOrEmpty(Value))

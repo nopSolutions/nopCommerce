@@ -63,7 +63,8 @@ namespace Nop.Core.Infrastructure
         {
             var path = Path.Combine(paths.SelectMany(p => p.Split('\\', '/')).ToArray());
 
-            if (path.Contains('/'))
+            if (Environment.OSVersion.Platform == PlatformID.Unix)
+                //add leading slash to correctly form path in the UNIX system
                 path = "/" + path;
 
             return path;
@@ -464,7 +465,11 @@ namespace Nop.Core.Infrastructure
         public virtual string MapPath(string path)
         {
             path = path.Replace("~/", string.Empty).TrimStart('/');
-            return Combine(BaseDirectory ?? string.Empty, path);
+
+            //if virtual path has slash on the end, it should be after transform the virtual path to physical path too
+            var pathEnd = path.EndsWith('/') ? Path.DirectorySeparatorChar.ToString() : string.Empty;
+            
+            return Combine(BaseDirectory ?? string.Empty, path) + pathEnd;
         }
 
         /// <summary>

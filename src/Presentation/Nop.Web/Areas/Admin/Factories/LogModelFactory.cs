@@ -132,7 +132,6 @@ namespace Nop.Web.Areas.Admin.Factories
                     model.ShortMessage = HtmlHelper.FormatText(log.ShortMessage, false, true, false, false, false, false);
                     model.FullMessage = HtmlHelper.FormatText(log.FullMessage, false, true, false, false, false, false);
                     model.CreatedOn = _dateTimeHelper.ConvertToUserTime(log.CreatedOnUtc, DateTimeKind.Utc);
-                    model.FullMessage = string.Empty;
                     model.CustomerEmail = log.Customer?.Email ?? string.Empty;
                 }
             }

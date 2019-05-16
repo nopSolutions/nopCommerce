@@ -3,15 +3,16 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Security.Principal;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Net.Http.Headers;
 using Nop.Core;
+using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
+using Nop.Core.Configuration;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
@@ -71,6 +72,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IReturnRequestService _returnRequestService;
         private readonly ISearchTermService _searchTermService;
         private readonly IShippingPluginManager _shippingPluginManager;
+        private readonly IStaticCacheManager _cacheManager;
         private readonly IStoreContext _storeContext;
         private readonly IStoreService _storeService;
         private readonly ITaxPluginManager _taxPluginManager;
@@ -80,6 +82,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IWidgetPluginManager _widgetPluginManager;
         private readonly IWorkContext _workContext;
         private readonly MeasureSettings _measureSettings;
+        private readonly NopConfig _nopConfig;
         private readonly NopHttpClient _nopHttpClient;
         private readonly ProxySettings _proxySettings;
 
@@ -110,6 +113,7 @@ namespace Nop.Web.Areas.Admin.Factories
             IReturnRequestService returnRequestService,
             ISearchTermService searchTermService,
             IShippingPluginManager shippingPluginManager,
+            IStaticCacheManager cacheManager,
             IStoreContext storeContext,
             IStoreService storeService,
             ITaxPluginManager taxPluginManager,
@@ -119,6 +123,7 @@ namespace Nop.Web.Areas.Admin.Factories
             IWidgetPluginManager widgetPluginManager,
             IWorkContext workContext,
             MeasureSettings measureSettings,
+            NopConfig nopConfig,
             NopHttpClient nopHttpClient,
             ProxySettings proxySettings)
         {
@@ -145,6 +150,7 @@ namespace Nop.Web.Areas.Admin.Factories
             _returnRequestService = returnRequestService;
             _searchTermService = searchTermService;
             _shippingPluginManager = shippingPluginManager;
+            _cacheManager = cacheManager;
             _storeContext = storeContext;
             _storeService = storeService;
             _taxPluginManager = taxPluginManager;
@@ -154,6 +160,7 @@ namespace Nop.Web.Areas.Admin.Factories
             _widgetPluginManager = widgetPluginManager;
             _workContext = workContext;
             _measureSettings = measureSettings;
+            _nopConfig = nopConfig;
             _nopHttpClient = nopHttpClient;
             _proxySettings = proxySettings;
         }
@@ -658,6 +665,15 @@ namespace Nop.Web.Areas.Admin.Factories
                 catch { }
                 model.LoadedAssemblies.Add(loadedAssemblyModel);
             }
+            
+            model.CurrentStaticCacheManager = _cacheManager.GetType().Name;
+
+            model.RedisEnabled = _nopConfig.RedisEnabled;
+            model.UseRedisToStoreDataProtectionKeys = _nopConfig.UseRedisToStoreDataProtectionKeys;
+            model.UseRedisForCaching = _nopConfig.UseRedisForCaching;
+            model.UseRedisToStorePluginsInfo = _nopConfig.UseRedisToStorePluginsInfo;
+
+            model.AzureBlobStorageEnabled = _nopConfig.AzureBlobStorageEnabled;
 
             return model;
         }

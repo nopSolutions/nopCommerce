@@ -6,6 +6,7 @@ using System.Threading;
 using Moq;
 using Nop.Core;
 using Nop.Core.Data;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Tax;
@@ -37,6 +38,7 @@ namespace Nop.Services.Tests.Catalog
         private Mock<ILocalizationService> _localizationService;
         private TaxSettings _taxSettings;
         private IPriceFormatter _priceFormatter;
+        private CatalogSettings _catalogSettings;
 
         [SetUp]
         public new void SetUp()
@@ -84,7 +86,8 @@ namespace Nop.Services.Tests.Catalog
             var loger = new Mock<ILogger>();
             var webHelper = new Mock<IWebHelper>();
 
-            var pluginService = new PluginService(customerService.Object, loger.Object, CommonHelper.DefaultFileProvider, webHelper.Object);
+            _catalogSettings = new CatalogSettings();
+            var pluginService = new PluginService(_catalogSettings, customerService.Object, loger.Object, CommonHelper.DefaultFileProvider, webHelper.Object);
             _exchangeRatePluginManager = new ExchangeRatePluginManager(_currencySettings, pluginService);
             _currencyService = new CurrencyService(_currencySettings,
                 null,

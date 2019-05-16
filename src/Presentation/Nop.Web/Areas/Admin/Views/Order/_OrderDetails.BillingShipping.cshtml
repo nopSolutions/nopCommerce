@@ -509,6 +509,7 @@
                 {
                     Name = "shipments-grid",
                     UrlRead = new DataUrl("ShipmentsByOrder", "Order", new RouteValueDictionary { [nameof(OrderShipmentSearchModel.OrderId)] = Model.Id }),
+                    PrimaryKeyColumn = nameof(ShipmentModel.Id),
                     Length = Model.OrderShipmentSearchModel.PageSize,
                     LengthMenu = Model.OrderShipmentSearchModel.AvailablePageSizes,
                     ColumnCollection = new List<ColumnProperty>

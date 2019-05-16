@@ -35,6 +35,7 @@ namespace Nop.Services.Tests.Discounts
         private Mock<IRepository<Category>> _categoryRepo;
         private Mock<IRepository<Manufacturer>> _manufacturerRepo;
         private Mock<IRepository<Product>> _productRepo;
+        private CatalogSettings _catalogSettings;
 
         [SetUp]
         public new void SetUp()
@@ -89,7 +90,8 @@ namespace Nop.Services.Tests.Discounts
             var loger = new Mock<ILogger>();
             var webHelper = new Mock<IWebHelper>();
 
-            var pluginService = new PluginService(_customerService.Object, loger.Object, CommonHelper.DefaultFileProvider, webHelper.Object);
+            _catalogSettings = new CatalogSettings();
+            var pluginService = new PluginService(_catalogSettings, _customerService.Object, loger.Object, CommonHelper.DefaultFileProvider, webHelper.Object);
 
             _localizationService = new Mock<ILocalizationService>();
             _categoryService = new Mock<ICategoryService>();
