@@ -354,28 +354,9 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         /// <param name="config"></param>
         private static void LoadPluginsInfo(NopConfig config)
         {
-            var useRedisToStorePluginsInfo = config.RedisEnabled && config.UseRedisToStorePluginsInfo;
-
-            //we use the main IRedisConnectionWrapper implementation since the DI isn't initialized yet
-            PluginsInfo = useRedisToStorePluginsInfo
-                ? new RedisPluginsInfo(_fileProvider, new RedisConnectionWrapper(config))
-                : new PluginsInfo(_fileProvider);
-
-            if (PluginsInfo.LoadPluginInfo() || useRedisToStorePluginsInfo || !config.RedisEnabled) 
-                return;
-
-            var redisPluginsInfo = new RedisPluginsInfo(_fileProvider, new RedisConnectionWrapper(config));
-
-            if (!redisPluginsInfo.LoadPluginInfo()) 
-                return;
+            PluginsInfo = new DbPluginsInfo(_fileProvider);
             
-            //copy plugins info data from redis 
-            PluginsInfo.CopyFrom(redisPluginsInfo);
-            PluginsInfo.Save();
-                    
-            //clear redis plugins info data
-            redisPluginsInfo = new RedisPluginsInfo(_fileProvider, new RedisConnectionWrapper(config));
-            redisPluginsInfo.Save();
+            PluginsInfo.LoadPluginInfo();
         }
 
         #endregion
