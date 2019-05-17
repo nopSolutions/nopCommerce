@@ -907,7 +907,13 @@ set @resources='
   </LocaleResource>  
   <LocaleResource Name="Admin.System.SystemInfo.CurrentStaticCacheManager.Hint">
 	<Value>Indicating the current static cache manager name.</Value>
-  </LocaleResource>  
+  </LocaleResource>
+  <LocaleResource Name="Languages.Selector.Label">
+    <Value>Languages selector</Value>
+  </LocaleResource>
+  <LocaleResource Name="Tax.Selector.Label">
+    <Value>Tax selector</Value>
+  </LocaleResource>
 </Language>'
 
 CREATE TABLE #LocaleStringResourceTmp
@@ -2157,4 +2163,10 @@ BEGIN
 	ALTER TABLE [Picture] ADD
 	VirtualPath nvarchar(MAX) NULL
 END
+GO
+
+--update setting
+UPDATE [Setting]
+SET [Value] = '100'
+WHERE [Name] = 'mediasettings.defaultimagequality'
 GO
