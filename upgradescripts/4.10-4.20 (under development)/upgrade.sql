@@ -2164,3 +2164,459 @@ BEGIN
 	VirtualPath nvarchar(MAX) NULL
 END
 GO
+
+--update datetime fields to change type
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'ActivityLog' AND COLUMN_NAME = 'CreatedOnUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	DROP INDEX [IX_ActivityLog_CreatedOnUtc] ON [ActivityLog]
+	ALTER TABLE [ActivityLog] ALTER column [CreatedOnUtc] [datetime2](7) NOT NULL
+	CREATE NONCLUSTERED INDEX [IX_ActivityLog_CreatedOnUtc] ON [ActivityLog] ([CreatedOnUtc] DESC)
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Address' AND COLUMN_NAME = 'CreatedOnUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	DROP INDEX [IX_ActivityLog_CreatedOnUtc] ON [ActivityLog]
+	ALTER TABLE [Address] ALTER column [CreatedOnUtc] [datetime2](7) NOT NULL
+	CREATE NONCLUSTERED INDEX [IX_ActivityLog_CreatedOnUtc] ON [ActivityLog] ([CreatedOnUtc] DESC)
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Address' AND COLUMN_NAME = 'CreatedOnUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	ALTER TABLE [Address] ALTER column [CreatedOnUtc] [datetime2](7) NOT NULL
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'BackInStockSubscription' AND COLUMN_NAME = 'CreatedOnUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	ALTER TABLE [BackInStockSubscription] ALTER column [CreatedOnUtc] [datetime2](7) NOT NULL
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'BlogComment' AND COLUMN_NAME = 'CreatedOnUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	ALTER TABLE [BlogComment] ALTER column [CreatedOnUtc] [datetime2](7) NOT NULL
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'BlogPost' AND COLUMN_NAME = 'CreatedOnUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	ALTER TABLE [BlogPost] ALTER column [CreatedOnUtc] [datetime2](7) NOT NULL
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Campaign' AND COLUMN_NAME = 'CreatedOnUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	ALTER TABLE [Campaign] ALTER column [CreatedOnUtc] [datetime2](7) NOT NULL
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Category' AND COLUMN_NAME = 'CreatedOnUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	ALTER TABLE [Category] ALTER column [CreatedOnUtc] [datetime2](7) NOT NULL
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Currency' AND COLUMN_NAME = 'CreatedOnUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	ALTER TABLE [Currency] ALTER column [CreatedOnUtc] [datetime2](7) NOT NULL
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Customer' AND COLUMN_NAME = 'CreatedOnUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	DROP INDEX [IX_Customer_CreatedOnUtc] ON [Customer]
+	ALTER TABLE [Customer] ALTER column [CreatedOnUtc] [datetime2](7) NOT NULL
+	CREATE NONCLUSTERED INDEX [IX_Customer_CreatedOnUtc] ON [Customer] ([CreatedOnUtc] DESC)
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'CustomerPassword' AND COLUMN_NAME = 'CreatedOnUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	ALTER TABLE [CustomerPassword] ALTER column [CreatedOnUtc] [datetime2](7) NOT NULL
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'DiscountUsageHistory' AND COLUMN_NAME = 'CreatedOnUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	ALTER TABLE [DiscountUsageHistory] ALTER column [CreatedOnUtc] [datetime2](7) NOT NULL
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Forums_Forum' AND COLUMN_NAME = 'CreatedOnUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	ALTER TABLE [Forums_Forum] ALTER column [CreatedOnUtc] [datetime2](7) NOT NULL
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Forums_Group' AND COLUMN_NAME = 'CreatedOnUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	ALTER TABLE [Forums_Group] ALTER column [CreatedOnUtc] [datetime2](7) NOT NULL
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Forums_Post' AND COLUMN_NAME = 'CreatedOnUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	ALTER TABLE [Forums_Post] ALTER column [CreatedOnUtc] [datetime2](7) NOT NULL
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Forums_PostVote' AND COLUMN_NAME = 'CreatedOnUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	ALTER TABLE [Forums_PostVote] ALTER column [CreatedOnUtc] [datetime2](7) NOT NULL
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Forums_PrivateMessage' AND COLUMN_NAME = 'CreatedOnUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	ALTER TABLE [Forums_PrivateMessage] ALTER column [CreatedOnUtc] [datetime2](7) NOT NULL
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Forums_Subscription' AND COLUMN_NAME = 'CreatedOnUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	ALTER TABLE [Forums_Subscription] ALTER column [CreatedOnUtc] [datetime2](7) NOT NULL
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Forums_Topic' AND COLUMN_NAME = 'CreatedOnUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	ALTER TABLE [Forums_Topic] ALTER column [CreatedOnUtc] [datetime2](7) NOT NULL
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'GdprLog' AND COLUMN_NAME = 'CreatedOnUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	ALTER TABLE [GdprLog] ALTER column [CreatedOnUtc] [datetime2](7) NOT NULL
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'GiftCard' AND COLUMN_NAME = 'CreatedOnUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	ALTER TABLE [GiftCard] ALTER column [CreatedOnUtc] [datetime2](7) NOT NULL
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'GiftCardUsageHistory' AND COLUMN_NAME = 'CreatedOnUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	ALTER TABLE [GiftCardUsageHistory] ALTER column [CreatedOnUtc] [datetime2](7) NOT NULL
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Log' AND COLUMN_NAME = 'CreatedOnUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	DROP INDEX [IX_Log_CreatedOnUtc] ON [Log]
+	ALTER TABLE [Log] ALTER column [CreatedOnUtc] [datetime2](7) NOT NULL
+	CREATE NONCLUSTERED INDEX [IX_Log_CreatedOnUtc] ON [Log] ([CreatedOnUtc] DESC)
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Manufacturer' AND COLUMN_NAME = 'CreatedOnUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	ALTER TABLE [Manufacturer] ALTER column [CreatedOnUtc] [datetime2](7) NOT NULL
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'News' AND COLUMN_NAME = 'CreatedOnUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	ALTER TABLE [News] ALTER column [CreatedOnUtc] [datetime2](7) NOT NULL
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'NewsComment' AND COLUMN_NAME = 'CreatedOnUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	ALTER TABLE [NewsComment] ALTER column [CreatedOnUtc] [datetime2](7) NOT NULL
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'NewsLetterSubscription' AND COLUMN_NAME = 'CreatedOnUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	ALTER TABLE [NewsLetterSubscription] ALTER column [CreatedOnUtc] [datetime2](7) NOT NULL
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Order' AND COLUMN_NAME = 'CreatedOnUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	DROP INDEX [IX_Order_CreatedOnUtc] ON [Order]
+	ALTER TABLE [Order] ALTER column [CreatedOnUtc] [datetime2](7) NOT NULL
+	CREATE NONCLUSTERED INDEX [IX_Order_CreatedOnUtc] ON [Order] ([CreatedOnUtc] DESC)
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'OrderNote' AND COLUMN_NAME = 'CreatedOnUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	ALTER TABLE [OrderNote] ALTER column [CreatedOnUtc] [datetime2](7) NOT NULL
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'PollVotingRecord' AND COLUMN_NAME = 'CreatedOnUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	ALTER TABLE [PollVotingRecord] ALTER column [CreatedOnUtc] [datetime2](7) NOT NULL
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Product' AND COLUMN_NAME = 'CreatedOnUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	ALTER TABLE [Product] ALTER column [CreatedOnUtc] [datetime2](7) NOT NULL
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'ProductReview' AND COLUMN_NAME = 'CreatedOnUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	ALTER TABLE [ProductReview] ALTER column [CreatedOnUtc] [datetime2](7) NOT NULL
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'QueuedEmail' AND COLUMN_NAME = 'CreatedOnUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	DROP INDEX [IX_QueuedEmail_CreatedOnUtc] ON [QueuedEmail]
+	ALTER TABLE [QueuedEmail] ALTER column [CreatedOnUtc] [datetime2](7) NOT NULL
+	CREATE NONCLUSTERED INDEX [IX_QueuedEmail_CreatedOnUtc] ON [QueuedEmail] ([CreatedOnUtc] DESC)
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'RecurringPayment' AND COLUMN_NAME = 'CreatedOnUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	ALTER TABLE [RecurringPayment] ALTER column [CreatedOnUtc] [datetime2](7) NOT NULL
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'RecurringPaymentHistory' AND COLUMN_NAME = 'CreatedOnUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	ALTER TABLE [RecurringPaymentHistory] ALTER column [CreatedOnUtc] [datetime2](7) NOT NULL
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'ReturnRequest' AND COLUMN_NAME = 'CreatedOnUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	ALTER TABLE [ReturnRequest] ALTER column [CreatedOnUtc] [datetime2](7) NOT NULL
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'RewardPointsHistory' AND COLUMN_NAME = 'CreatedOnUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	ALTER TABLE [RewardPointsHistory] ALTER column [CreatedOnUtc] [datetime2](7) NOT NULL
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Shipment' AND COLUMN_NAME = 'CreatedOnUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	ALTER TABLE [Shipment] ALTER column [CreatedOnUtc] [datetime2](7) NOT NULL
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'ShoppingCartItem' AND COLUMN_NAME = 'CreatedOnUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	ALTER TABLE [ShoppingCartItem] ALTER column [CreatedOnUtc] [datetime2](7) NOT NULL
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'StockQuantityHistory' AND COLUMN_NAME = 'CreatedOnUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	ALTER TABLE [StockQuantityHistory] ALTER column [CreatedOnUtc] [datetime2](7) NOT NULL
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'VendorNote' AND COLUMN_NAME = 'CreatedOnUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	ALTER TABLE [VendorNote] ALTER column [CreatedOnUtc] [datetime2](7) NOT NULL
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'BlogPost' AND COLUMN_NAME = 'StartDateUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	ALTER TABLE [BlogPost] ALTER column [StartDateUtc] [datetime2](7) NULL
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'BlogPost' AND COLUMN_NAME = 'EndDateUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	ALTER TABLE [BlogPost] ALTER column [EndDateUtc] [datetime2](7) NULL
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Campaign' AND COLUMN_NAME = 'DontSendBeforeDateUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	ALTER TABLE [Campaign] ALTER column [DontSendBeforeDateUtc] [datetime2](7) NULL
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Category' AND COLUMN_NAME = 'UpdatedOnUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	ALTER TABLE [Category] ALTER column [UpdatedOnUtc] [datetime2](7) NOT NULL
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Currency' AND COLUMN_NAME = 'UpdatedOnUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	ALTER TABLE [Currency] ALTER column [UpdatedOnUtc] [datetime2](7) NOT NULL
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Forums_Forum' AND COLUMN_NAME = 'UpdatedOnUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	ALTER TABLE [Forums_Forum] ALTER column [UpdatedOnUtc] [datetime2](7) NOT NULL
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Forums_Group' AND COLUMN_NAME = 'UpdatedOnUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	ALTER TABLE [Forums_Group] ALTER column [UpdatedOnUtc] [datetime2](7) NOT NULL
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Forums_Post' AND COLUMN_NAME = 'UpdatedOnUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	ALTER TABLE [Forums_Post] ALTER column [UpdatedOnUtc] [datetime2](7) NOT NULL
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Forums_Topic' AND COLUMN_NAME = 'UpdatedOnUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	ALTER TABLE [Forums_Topic] ALTER column [UpdatedOnUtc] [datetime2](7) NOT NULL
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Manufacturer' AND COLUMN_NAME = 'UpdatedOnUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	ALTER TABLE [Manufacturer] ALTER column [UpdatedOnUtc] [datetime2](7) NOT NULL
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Product' AND COLUMN_NAME = 'UpdatedOnUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	ALTER TABLE [Product] ALTER column [UpdatedOnUtc] [datetime2](7) NOT NULL
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'ReturnRequest' AND COLUMN_NAME = 'UpdatedOnUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	ALTER TABLE [ReturnRequest] ALTER column [UpdatedOnUtc] [datetime2](7) NOT NULL
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'ShoppingCartItem' AND COLUMN_NAME = 'UpdatedOnUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	ALTER TABLE [ShoppingCartItem] ALTER column [UpdatedOnUtc] [datetime2](7) NOT NULL
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Customer' AND COLUMN_NAME = 'CannotLoginUntilDateUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	ALTER TABLE [Customer] ALTER column [CannotLoginUntilDateUtc] [datetime2](7) NULL
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Customer' AND COLUMN_NAME = 'LastLoginDateUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	ALTER TABLE [Customer] ALTER column [LastLoginDateUtc] [datetime2](7) NULL
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Customer' AND COLUMN_NAME = 'LastActivityDateUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	ALTER TABLE [Customer] ALTER column [LastActivityDateUtc] [datetime2](7) NOT NULL
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Discount' AND COLUMN_NAME = 'StartDateUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	ALTER TABLE [Discount] ALTER column [StartDateUtc] [datetime2](7) NULL
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Discount' AND COLUMN_NAME = 'EndDateUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	ALTER TABLE [Discount] ALTER column [EndDateUtc] [datetime2](7) NULL
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Forums_Forum' AND COLUMN_NAME = 'LastPostTime' and DATA_TYPE = 'datetime')
+BEGIN
+	ALTER TABLE [Forums_Forum] ALTER column [LastPostTime] [datetime2](7) NULL
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Forums_Topic' AND COLUMN_NAME = 'LastPostTime' and DATA_TYPE = 'datetime')
+BEGIN
+	ALTER TABLE [Forums_Topic] ALTER column [LastPostTime] [datetime2](7) NULL
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'News' AND COLUMN_NAME = 'StartDateUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	ALTER TABLE [News] ALTER column [StartDateUtc] [datetime2](7) NULL
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'News' AND COLUMN_NAME = 'EndDateUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	ALTER TABLE [News] ALTER column [EndDateUtc] [datetime2](7) NULL
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Order' AND COLUMN_NAME = 'PaidDateUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	ALTER TABLE [Order] ALTER column [PaidDateUtc] [datetime2](7) NULL
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'OrderItem' AND COLUMN_NAME = 'RentalStartDateUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	ALTER TABLE [OrderItem] ALTER column [RentalStartDateUtc] [datetime2](7) NULL
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'OrderItem' AND COLUMN_NAME = 'RentalEndDateUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	ALTER TABLE [OrderItem] ALTER column [RentalEndDateUtc] [datetime2](7) NULL
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Poll' AND COLUMN_NAME = 'StartDateUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	ALTER TABLE [Poll] ALTER column [StartDateUtc] [datetime2](7) NULL
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Poll' AND COLUMN_NAME = 'EndDateUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	ALTER TABLE [Poll] ALTER column [EndDateUtc] [datetime2](7) NULL
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Product' AND COLUMN_NAME = 'PreOrderAvailabilityStartDateTimeUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	ALTER TABLE [Product] ALTER column [PreOrderAvailabilityStartDateTimeUtc] [datetime2](7) NULL
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Product' AND COLUMN_NAME = 'MarkAsNewStartDateTimeUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	ALTER TABLE [Product] ALTER column [MarkAsNewStartDateTimeUtc] [datetime2](7) NULL
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Product' AND COLUMN_NAME = 'MarkAsNewEndDateTimeUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	ALTER TABLE [Product] ALTER column [MarkAsNewEndDateTimeUtc] [datetime2](7) NULL
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Product' AND COLUMN_NAME = 'AvailableStartDateTimeUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	DROP INDEX [IX_Product_PriceDatesEtc] ON [Product]
+	DROP INDEX [IX_Product_VisibleIndividually_Published_Deleted_Extended] ON [Product]
+	ALTER TABLE [Product] ALTER column [AvailableStartDateTimeUtc] [datetime2](7) NULL
+	CREATE NONCLUSTERED INDEX [IX_Product_PriceDatesEtc] ON [Product]  ([Price] ASC, [AvailableStartDateTimeUtc] ASC, [AvailableEndDateTimeUtc] ASC, [Published] ASC, [Deleted] ASC)
+	CREATE NONCLUSTERED INDEX [IX_Product_VisibleIndividually_Published_Deleted_Extended] ON [Product] ([VisibleIndividually],[Published],[Deleted]) INCLUDE ([Id],[AvailableStartDateTimeUtc],[AvailableEndDateTimeUtc])
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Product' AND COLUMN_NAME = 'AvailableEndDateTimeUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	DROP INDEX [IX_Product_PriceDatesEtc] ON [Product]
+	DROP INDEX [IX_Product_VisibleIndividually_Published_Deleted_Extended] ON [Product]
+	ALTER TABLE [Product] ALTER column [AvailableEndDateTimeUtc] [datetime2](7) NULL
+	CREATE NONCLUSTERED INDEX [IX_Product_PriceDatesEtc] ON [Product]  ([Price] ASC, [AvailableStartDateTimeUtc] ASC, [AvailableEndDateTimeUtc] ASC, [Published] ASC, [Deleted] ASC)
+	CREATE NONCLUSTERED INDEX [IX_Product_VisibleIndividually_Published_Deleted_Extended] ON [Product] ([VisibleIndividually],[Published],[Deleted]) INCLUDE ([Id],[AvailableStartDateTimeUtc],[AvailableEndDateTimeUtc])
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'QueuedEmail' AND COLUMN_NAME = 'DontSendBeforeDateUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	DROP INDEX [IX_QueuedEmail_SentOnUtc_DontSendBeforeDateUtc_Extended] ON [QueuedEmail]
+	ALTER TABLE [QueuedEmail] ALTER column [DontSendBeforeDateUtc] [datetime2](7) NULL
+	CREATE NONCLUSTERED INDEX [IX_QueuedEmail_SentOnUtc_DontSendBeforeDateUtc_Extended] ON [QueuedEmail] ([SentOnUtc], [DontSendBeforeDateUtc]) INCLUDE ([SentTries])
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'QueuedEmail' AND COLUMN_NAME = 'SentOnUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	DROP INDEX [IX_QueuedEmail_SentOnUtc_DontSendBeforeDateUtc_Extended] ON [QueuedEmail]
+	ALTER TABLE [QueuedEmail] ALTER column [SentOnUtc] [datetime2](7) NULL
+	CREATE NONCLUSTERED INDEX [IX_QueuedEmail_SentOnUtc_DontSendBeforeDateUtc_Extended] ON [QueuedEmail] ([SentOnUtc], [DontSendBeforeDateUtc]) INCLUDE ([SentTries])
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'RecurringPayment' AND COLUMN_NAME = 'StartDateUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	ALTER TABLE [RecurringPayment] ALTER column [StartDateUtc] [datetime2](7) NOT NULL
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'RewardPointsHistory' AND COLUMN_NAME = 'EndDateUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	ALTER TABLE [RewardPointsHistory] ALTER column [EndDateUtc] [datetime2](7) NULL
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'ScheduleTask' AND COLUMN_NAME = 'LastStartUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	ALTER TABLE [ScheduleTask] ALTER column [LastStartUtc] [datetime2](7) NULL
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'ScheduleTask' AND COLUMN_NAME = 'LastEndUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	ALTER TABLE [ScheduleTask] ALTER column [LastEndUtc] [datetime2](7) NULL
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'ScheduleTask' AND COLUMN_NAME = 'LastSuccessUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	ALTER TABLE [ScheduleTask] ALTER column [LastSuccessUtc] [datetime2](7) NULL
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Shipment' AND COLUMN_NAME = 'ShippedDateUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	ALTER TABLE [Shipment] ALTER column [ShippedDateUtc] [datetime2](7) NULL
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Shipment' AND COLUMN_NAME = 'DeliveryDateUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	ALTER TABLE [Shipment] ALTER column [DeliveryDateUtc] [datetime2](7) NULL
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'ShoppingCartItem' AND COLUMN_NAME = 'RentalStartDateUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	ALTER TABLE [ShoppingCartItem] ALTER column [RentalStartDateUtc] [datetime2](7) NULL
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'ShoppingCartItem' AND COLUMN_NAME = 'RentalEndDateUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	ALTER TABLE [ShoppingCartItem] ALTER column [RentalEndDateUtc] [datetime2](7) NULL
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'TierPrice' AND COLUMN_NAME = 'StartDateTimeUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	ALTER TABLE [TierPrice] ALTER column [StartDateTimeUtc] [datetime2](7) NULL
+END
+GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'TierPrice' AND COLUMN_NAME = 'EndDateTimeUtc' and DATA_TYPE = 'datetime')
+BEGIN
+	ALTER TABLE [TierPrice] ALTER column [EndDateTimeUtc] [datetime2](7) NULL
+END
+GO	
