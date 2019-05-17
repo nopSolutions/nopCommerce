@@ -24,14 +24,17 @@
                 cache: false,
                 type: "GET",
                 url: "@(Url.Action("GetStatesByCountryId", "Country"))",
-                data: { "countryId": selectedItem, "addAsterisk": "true" },
-                success: function (data) {
+                data: {
+                    "countryId": selectedItem,
+                    "addAsterisk": "true"
+                },
+                success: function (data, textStatus, jqXHR) {
                     ddlStates.html('');
                     $.each(data, function (id, option) {
                         ddlStates.append($('<option></option>').val(option.id).html(option.name));
                     });
                 },
-                error: function (xhr, ajaxOptions, thrownError) {
+                error: function (jqXHR, textStatus, errorThrown) {
                     $("#getStatesByCountryIdAlert").click();
                 }
             });
@@ -234,14 +237,14 @@
 
                                         $.ajax({
                                             cache: false,
-                                            type: 'POST',
-                                            url: '@Url.Action("Configure", "FixedByWeightByTotal")',
+                                            type: "POST",
+                                            url: "@Url.Action("Configure", "FixedByWeightByTotal")",
                                             data: postData,
-                                            dataType: 'json',
-                                            success: function(data) {
+                                            dataType: "json",
+                                            success: function (data, textStatus, jqXHR) {
                                                 $("#savegeneralsettingsOk").click();
                                             },
-                                            error: function(xhr, ajaxOptions, thrownError) {
+                                            error: function (jqXHR, textStatus, errorThrown) {
                                                 $("#savegeneralsettingsError").click();
                                             }
                                         });

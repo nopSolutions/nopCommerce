@@ -29,7 +29,7 @@
                                     type: "POST",
                                     url: "@(Url.Action("CreateQualpayCustomer"))",
                                     data: postData,
-                                    success: function (data) {
+                                    success: function (data, textStatus, jqXHR) {
                                         location.reload();
                                     },
                                     error: function (jqXHR, textStatus, errorThrown) {

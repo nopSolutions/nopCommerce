@@ -414,16 +414,16 @@
             function @(attributeChangeHandlerFuncName)() {
                 $.ajax({
                     cache: false,
-                    url: '@Html.Raw(Url.Action("productdetails_attributechange", "shoppingcart", new {productId = productId, validateAttributeConditions = attributesHaveConditions, loadPicture = attributesHaveAssociatedPictures }))',
+                    url: "@Html.Raw(Url.Action("productdetails_attributechange", "shoppingcart", new {productId = productId, validateAttributeConditions = attributesHaveConditions, loadPicture = attributesHaveAssociatedPictures }))",
                     data: $('#product-details-form').serialize(),
-                    type: 'post',
-                    success: function(data) {
+                    type: "POST",
+                    success: function (data, textStatus, jqXHR) {
                         if (data.price) {
                             $('.price-value-@productId').text(data.price);
                         }
                         if (data.basepricepangv) {
                             $('#base-price-pangv-@productId').text(data.basepricepangv);
-                        }else {
+                        } else {
                             $('#base-price-pangv-@productId').hide();
                         }
                         if (data.sku) {

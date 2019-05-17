@@ -103,23 +103,20 @@
                         addAntiForgeryToken(postData);
 
                         $.ajax({
-                            cache:false,
+                            cache: false,
                             type: "POST",
                             url: "@Html.Raw(Url.Action("TopicTemplateAdd", "Template", null))",
                             data: postData,
-                            success: function (data) {
+                            success: function (data, textStatus, jqXHR) {
                                 if (data.Result) {
                                     //reload grid
                                     $('#templates-topic-grid').DataTable().ajax.reload();
-
                                 } else {
                                     //display errors if returned
                                     display_nop_error(data);
                                 }
-
-                                $('#addTopicTemplate').attr('disabled', false);
                             },
-                            error:function (xhr, ajaxOptions, thrownError){
+                            complete: function (jqXHR, textStatus) {
                                 $('#addTopicTemplate').attr('disabled', false);
                             }
                         });

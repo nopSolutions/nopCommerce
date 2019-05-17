@@ -103,23 +103,20 @@
                         addAntiForgeryToken(postData);
 
                         $.ajax({
-                            cache:false,
+                            cache: false,
                             type: "POST",
                             url: "@Html.Raw(Url.Action("ManufacturerTemplateAdd", "Template", null))",
                             data: postData,
-                            success: function (data) {
+                            success: function (data, textStatus, jqXHR) {
                                 if (data.Result) {
                                     //reload grid
                                     $('#templates-manufacturer-grid').DataTable().ajax.reload();
-
                                 } else {
                                     //display errors if returned
                                     display_nop_error(data);
                                 }
-
-                                $('#addManufacturerTemplate').attr('disabled', false);
                             },
-                            error:function (xhr, ajaxOptions, thrownError){
+                            complete: function (jqXHR, textStatus) {
                                 $('#addManufacturerTemplate').attr('disabled', false);
                             }
                         });

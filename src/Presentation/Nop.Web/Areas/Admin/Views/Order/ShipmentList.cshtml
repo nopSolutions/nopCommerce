@@ -284,14 +284,17 @@
                                 cache: false,
                                 type: "GET",
                                 url: "@(Url.Action("GetStatesByCountryId", "Country"))",
-                                data: { "countryId": selectedItem, "addAsterisk": "true" },
-                                success: function(data) {
+                                data: {
+                                    "countryId": selectedItem,
+                                    "addAsterisk": "true"
+                                },
+                                success: function (data, textStatus, jqXHR) {
                                     ddlStates.html('');
                                     $.each(data, function(id, option) {
                                         ddlStates.append($('<option></option>').val(option.id).html(option.name));
                                     });
                                 },
-                                error: function(xhr, ajaxOptions, thrownError) {
+                                error: function (jqXHR, textStatus, errorThrown) {
                                     $("#statesAlert").click();
                                 }
                             });
@@ -311,16 +314,15 @@
                                 type: "POST",
                                 url: "@(Url.Action("SetAsShippedSelected", "Order"))",
                                 data: postData,
-                                complete: function(data) {
-                                    //reload grid
-                                    $('#shipments-grid').DataTable().draw(false);
-                                    selectedIds = [];
-                                },
-                                error: function(xhr, ajaxOptions, thrownError) {
-                                    $('#setAsShippedSelectedFailed-info').text(thrownError);
+                                traditional: true,
+                                error: function (jqXHR, textStatus, errorThrown) {
+                                    $('#setAsShippedSelectedFailed-info').text(errorThrown);
                                     $("#setAsShippedSelectedFailed").click();
                                 },
-                                traditional: true
+                                complete: function (jqXHR, textStatus) {
+                                    $('#shipments-grid').DataTable().draw(false);
+                                    selectedIds = [];
+                                }
                             });
                             return false;
                         });
@@ -339,20 +341,18 @@
                                 type: "POST",
                                 url: "@(Url.Action("SetAsDeliveredSelected", "Order"))",
                                 data: postData,
-                                complete: function(data) {
-                                    //reload grid
-                                    $('#shipments-grid').DataTable().draw(false);
-                                    selectedIds = [];
-                                },
-                                error: function(xhr, ajaxOptions, thrownError) {
-                                    $('#setAsDeliveredSelectedFailed-info').text(thrownError);
+                                traditional: true,
+                                error: function (jqXHR, textStatus, errorThrown) {
+                                    $('#setAsDeliveredSelectedFailed-info').text(errorThrown);
                                     $("#setAsDeliveredSelectedFailed").click();
                                 },
-                                traditional: true
+                                complete: function (jqXHR, textStatus) {
+                                    $('#shipments-grid').DataTable().draw(false);
+                                    selectedIds = [];
+                                }
                             });
                             return false;
                         });
-                        
                     });
                                        
                 </script>

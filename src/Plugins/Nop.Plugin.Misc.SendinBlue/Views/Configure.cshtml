@@ -463,19 +463,18 @@
                                                 };
                                                 addAntiForgeryToken(postData);
                                                 $.ajax({
-                                                    cache:false,
+                                                    cache: false,
                                                     type: "POST",
                                                     url: "@Html.Raw(Url.Action("SMSAdd", "SendinBlue"))",
                                                     data: postData,
-                                                    success: function (data) {
+                                                    success: function (data, textStatus, jqXHR) {
                                                         if (data.Result) {
                                                             $('#sms-grid').DataTable().ajax.reload();
                                                         } else {
                                                             display_nop_error(data);
                                                         }
-                                                        $('#addSms').attr('disabled', false);
                                                     },
-                                                    error:function (xhr, ajaxOptions, thrownError){
+                                                    complete: function (jqXHR, textStatus) {
                                                         $('#addSms').attr('disabled', false);
                                                     }
                                                 });

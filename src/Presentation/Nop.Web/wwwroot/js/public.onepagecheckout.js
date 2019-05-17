@@ -143,7 +143,7 @@ var Billing = {
             cache: false,
             url: this.saveUrl,
             data: $(this.form).serialize(),
-            type: 'post',
+            type: "POST",
             success: this.nextStep,
             complete: this.resetLoadWaiting,
             error: Checkout.ajaxFailure
@@ -240,7 +240,7 @@ var Shipping = {
             cache: false,
             url: this.saveUrl,
             data: $(this.form).serialize(),
-            type: 'post',
+            type: "POST",
             success: this.nextStep,
             complete: this.resetLoadWaiting,
             error: Checkout.ajaxFailure
@@ -309,7 +309,7 @@ var ShippingMethod = {
                 cache: false,
                 url: this.saveUrl,
                 data: $(this.form).serialize(),
-                type: 'post',
+                type: "POST",
                 success: this.nextStep,
                 complete: this.resetLoadWaiting,
                 error: Checkout.ajaxFailure
@@ -381,7 +381,7 @@ var PaymentMethod = {
                 cache: false,
                 url: this.saveUrl,
                 data: $(this.form).serialize(),
-                type: 'post',
+                type: "POST",
                 success: this.nextStep,
                 complete: this.resetLoadWaiting,
                 error: Checkout.ajaxFailure
@@ -427,7 +427,7 @@ var PaymentInfo = {
             cache: false,
             url: this.saveUrl,
             data: $(this.form).serialize(),
-            type: 'post',
+            type: "POST",
             success: this.nextStep,
             complete: this.resetLoadWaiting,
             error: Checkout.ajaxFailure
@@ -484,7 +484,7 @@ var ConfirmOrder = {
             $.ajax({
                 cache: false,
                 url: this.saveUrl,
-                type: 'post',
+                type: "POST",
                 success: this.nextStep,
                 complete: this.resetLoadWaiting,
                 error: Checkout.ajaxFailure

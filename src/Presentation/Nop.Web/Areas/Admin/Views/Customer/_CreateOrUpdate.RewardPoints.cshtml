@@ -135,11 +135,11 @@
                 addAntiForgeryToken(postData);
 
                 $.ajax({
-                    cache:false,
+                    cache: false,
                     type: "POST",
                     url: "@(Url.Action("RewardPointsHistoryAdd", "Customer"))",
                     data: postData,
-                    success: function (data) {
+                    success: function (data, textStatus, jqXHR) {
                         if (data.Result) {
                             //reload grid
                             $('#customer-rewardpoints-grid').DataTable().ajax.reload();
@@ -157,10 +157,8 @@
                             //display errors if returned
                             display_nop_error(data);
                         }
-
-                        $('#addRewardPoints').attr('disabled', false);
                     },
-                    error:function (xhr, ajaxOptions, thrownError){
+                    complete: function (jqXHR, textStatus) {
                         $('#addRewardPoints').attr('disabled', false);
                     }
                 });

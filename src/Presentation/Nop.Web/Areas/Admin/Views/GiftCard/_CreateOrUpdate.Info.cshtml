@@ -74,11 +74,11 @@
                                     type: "POST",
                                     url: "@(Url.Action("GenerateCouponCode", "GiftCard"))",
                                     data: postData,
-                                    success: function(data) {
+                                    success: function (data, textStatus, jqXHR) {
                                         $('#@Html.IdFor(model => model.GiftCardCouponCode)').val(data.CouponCode);
                                     },
-                                    error: function (xhr, ajaxOptions, thrownError) {
-                                        $('#generateCouponCodeFailed-info').text(thrownError);
+                                    error: function (jqXHR, textStatus, errorThrown) {
+                                        $('#generateCouponCodeFailed-info').text(errorThrown);
                                         $("#generateCouponCodeFailed").click();                                                
                                     }
                                 });

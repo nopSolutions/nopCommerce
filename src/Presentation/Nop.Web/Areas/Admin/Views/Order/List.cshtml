@@ -442,7 +442,7 @@
                                     type: "POST",
                                     url: "@(Url.Action("ReportAggregates", "Order"))",
                                     data: postData,
-                                    success: function(data) {
+                                    success: function (data, textStatus, jqXHR) {
                                         if (data) {
                                             for (var key in data) {
                                                 var reportSummary = '<div><strong>@T("Admin.Orders.Report.Summary")</strong></div>' +

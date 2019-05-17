@@ -126,23 +126,20 @@
                                         addAntiForgeryToken(postData);
 
                                         $.ajax({
-                                            cache:false,
+                                            cache: false,
                                             type: "POST",
                                             url: "@Html.Raw(Url.Action("TaxCategoryAdd", "OverriddenTax", null))",
                                             data: postData,
-                                            success: function (data) {
+                                            success: function (data, textStatus, jqXHR) {
                                                 if (data.Result) {
-                                                    //reload grid
                                                     $('#tax-categories-grid').DataTable().ajax.reload();
 
                                                 } else {
                                                     //display errors if returned
                                                     display_nop_error(data);
                                                 }
-
-                                                $('#addTaxCategory').attr('disabled', false);
                                             },
-                                            error:function (xhr, ajaxOptions, thrownError){
+                                            complete: function (jqXHR, textStatus) {
                                                 $('#addTaxCategory').attr('disabled', false);
                                             }
                                         });

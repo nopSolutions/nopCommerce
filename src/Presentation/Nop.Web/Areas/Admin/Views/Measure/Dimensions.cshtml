@@ -94,10 +94,10 @@
                         type: "POST",
                         url: "@(Url.Action("MarkAsPrimaryDimension", "Measure"))",
                         data: postData,
-                        success: function (data) {
+                        success: function (data, textStatus, jqXHR) {
                             $('#measuredimension-grid').DataTable().ajax.reload();
                         },
-                        error: function (xhr, ajaxOptions, thrownError) {
+                        error: function (jqXHR, textStatus, errorThrown) {
                             $("#markAsPrimaryDimensionAlert").click();
                         }
                     });
@@ -166,23 +166,20 @@
                         addAntiForgeryToken(postData);
 
                         $.ajax({
-                            cache:false,
+                            cache: false,
                             type: "POST",
                             url: "@Html.Raw(Url.Action("DimensionAdd", "Measure", null))",
                             data: postData,
-                            success: function (data) {
+                            success: function (data, textStatus, jqXHR) {
                                 if (data.Result) {
                                     //reload grid
                                     $('#measuredimension-grid').DataTable().ajax.reload();
-
                                 } else {
                                     //display errors if returned
                                     display_nop_error(data);
                                 }
-
-                                $('#addMeasureDimension').attr('disabled', false);
                             },
-                            error:function (xhr, ajaxOptions, thrownError){
+                            complete: function (jqXHR, textStatus) {
                                 $('#addMeasureDimension').attr('disabled', false);
                             }
                         });

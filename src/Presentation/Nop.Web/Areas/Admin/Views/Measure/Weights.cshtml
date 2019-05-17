@@ -92,10 +92,10 @@
                         type: "POST",
                         url: "@(Url.Action("MarkAsPrimaryWeight", "Measure"))",
                         data: postData,
-                        success: function (data) {
+                        success: function (data, textStatus, jqXHR) {
                             $('#measureweight-grid').DataTable().ajax.reload();
                         },
-                        error: function (xhr, ajaxOptions, thrownError) {
+                        error: function (jqXHR, textStatus, errorThrown) {
                             $("#markAsPrimaryWeightAlert").click();
                         }
                     });
@@ -164,23 +164,20 @@
                         addAntiForgeryToken(postData);
 
                         $.ajax({
-                            cache:false,
+                            cache: false,
                             type: "POST",
                             url: "@Html.Raw(Url.Action("WeightAdd", "Measure", null))",
                             data: postData,
-                            success: function (data) {
+                            success: function (data, textStatus, jqXHR) {
                                 if (data.Result) {
                                     //reload grid
                                     $('#measureweight-grid').DataTable().ajax.reload();
-
                                 } else {
                                     //display errors if returned
                                     display_nop_error(data);
                                 }
-
-                                $('#addMeasureWeight').attr('disabled', false);
                             },
-                            error:function (xhr, ajaxOptions, thrownError){
+                            complete: function (jqXHR, textStatus) {
                                 $('#addMeasureWeight').attr('disabled', false);
                             }
                         });

@@ -154,15 +154,15 @@
                 type: "POST",
                 url: "@(Url.Action("DeleteSelectedSeNames", "Common"))",
                 data: postData,
-                complete: function (data) {
-                    $('#sename-grid').DataTable().ajax.reload();
-                    selectedIds = [];
-                },
-                error: function (xhr, ajaxOptions, thrownError) {
-                    $('#deleteSelectedSeNamesFailed-info').text(thrownError);
+                traditional: true,
+                error: function (jqXHR, textStatus, errorThrown) {
+                    $('#deleteSelectedSeNamesFailed-info').text(errorThrown);
                     $("#deleteSelectedSeNamesFailed").click();
                 },
-                traditional: true
+                complete: function (jqXHR, textStatus) {
+                    $('#sename-grid').DataTable().ajax.reload();
+                    selectedIds = [];
+                }
             });
             $('#delete-selected-action-confirmation').modal('toggle');
             return false;

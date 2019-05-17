@@ -291,16 +291,16 @@
                                     addAntiForgeryToken(postData);
                                     $.ajax({
                                         cache: false,
-                                        type: 'POST',
+                                        type: "POST",
                                         url: "@(Url.Action("DeleteSelected", "Product"))",
                                         data: postData,
-                                        complete: function (data) {
+                                        error: function (jqXHR, textStatus, errorThrown) {
+                                            $('#deleteSelectedFailed-info').text(errorThrown);
+                                            $('#deleteSelectedFailed').click();
+                                        },
+                                        complete: function (jqXHR, textStatus) {
                                             $('#products-grid').DataTable().ajax.reload();
                                             selectedIds = [];
-                                        },
-                                        error: function (xhr, ajaxOptions, thrownError) {
-                                            $('#deleteSelectedFailed-info').text(thrownError);
-                                            $('#deleteSelectedFailed').click();
                                         }
                                     });
                                     $('#delete-selected-action-confirmation').modal('toggle');

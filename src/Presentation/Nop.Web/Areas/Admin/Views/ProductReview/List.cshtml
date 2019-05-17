@@ -257,16 +257,15 @@
                                     type: "POST",
                                     url: "@(Url.Action("ApproveSelected", "ProductReview"))",
                                     data: postData,
-                                    complete: function(data) {
-                                        //reload grid
-                                        $('#productreviews-grid').DataTable().ajax.reload();
-                                        selectedIds = [];
-                                    },
-                                    error: function(xhr, ajaxOptions, thrownError) {
-                                        $('#approveSelectedFailed-info').text(thrownError);
+                                    traditional: true,
+                                    error: function (jqXHR, textStatus, errorThrown) {
+                                        $('#approveSelectedFailed-info').text(errorThrown);
                                         $("#approveSelectedFailed").click();
                                     },
-                                    traditional: true
+                                    complete: function (jqXHR, textStatus) {
+                                        $('#productreviews-grid').DataTable().ajax.reload();
+                                        selectedIds = [];
+                                    }
                                 });
                                 return false;
                             });
@@ -285,16 +284,15 @@
                                     type: "POST",
                                     url: "@(Url.Action("DisapproveSelected", "ProductReview"))",
                                     data: postData,
-                                    complete: function(data) {
-                                        //reload grid
-                                        $('#productreviews-grid').DataTable().ajax.reload();
-                                        selectedIds = [];
-                                    },
-                                    error: function(xhr, ajaxOptions, thrownError) {
-                                        $('#disapproveSelectedFailed-info').text(thrownError);
+                                    traditional: true,
+                                    error: function (jqXHR, textStatus, errorThrown) {
+                                        $('#disapproveSelectedFailed-info').text(errorThrown);
                                         $("#disapproveSelectedFailed").click();
                                     },
-                                    traditional: true
+                                    complete: function (jqXHR, textStatus) {
+                                        $('#productreviews-grid').DataTable().ajax.reload();
+                                        selectedIds = [];
+                                    }
                                 });
                                 return false;
                             });
@@ -310,14 +308,13 @@
                                     type: "POST",
                                     url: "@(Url.Action("DeleteSelected", "ProductReview"))",
                                     data: postData,
-                                    complete: function (data) {
-                                        //reload grid
+                                    error: function (jqXHR, textStatus, errorThrown) {
+                                        $('#deleteSelectedFailed-info').text(errorThrown);
+                                        $("#deleteSelectedFailed").click();
+                                    },
+                                    complete: function (jqXHR, textStatus) {
                                         $('#productreviews-grid').DataTable().ajax.reload();
                                         selectedIds = [];
-                                    },
-                                    error: function (xhr, ajaxOptions, thrownError) {
-                                        $('#deleteSelectedFailed-info').text(thrownError);
-                                        $("#deleteSelectedFailed").click();
                                     }
                                 });
                                 $('#delete-selected-action-confirmation').modal('toggle');
