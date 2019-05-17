@@ -99,11 +99,10 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
                 return AccessDeniedView();
 
             //prepare model
-            var model = new Models.Tax.TaxCategorySearchModel
-            {
-                AvailableTypes = _cacheManager.Get(AvalaraTaxDefaults.TaxCodeTypesCacheKey, () => _avalaraTaxManager.GetTaxCodeTypes())
-                    .Select(type => new SelectListItem(type.Value, type.Key)).ToList()
-            };
+            var model = new Models.Tax.TaxCategorySearchModel();
+            var taxCodeTypes = _cacheManager.Get(AvalaraTaxDefaults.TaxCodeTypesCacheKey, () => _avalaraTaxManager.GetTaxCodeTypes());
+            if (taxCodeTypes != null)
+                model.AvailableTypes = taxCodeTypes.Select(type => new SelectListItem(type.Value, type.Key)).ToList();
             model.SetGridPageSize();
 
             //use overridden view
