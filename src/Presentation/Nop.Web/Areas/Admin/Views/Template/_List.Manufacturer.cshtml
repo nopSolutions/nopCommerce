@@ -112,6 +112,11 @@
                                     //reload grid
                                     $('#templates-manufacturer-grid').DataTable().ajax.reload();
 
+                                    //clear input value
+                                    $("#@Html.IdFor(model => model.AddManufacturerTemplate.Name)").val('');
+                                    $("#@Html.IdFor(model => model.AddManufacturerTemplate.ViewPath)").val('');
+                                    $("#@Html.IdFor(model => model.AddManufacturerTemplate.DisplayOrder)").val('');
+
                                 } else {
                                     //display errors if returned
                                     display_nop_error(data);

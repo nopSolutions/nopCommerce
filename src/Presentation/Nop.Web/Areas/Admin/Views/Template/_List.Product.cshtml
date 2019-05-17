@@ -129,6 +129,12 @@
                                     //reload grid
                                     $('#templates-product-grid').DataTable().ajax.reload();
 
+                                    //clear input value
+                                    $("#@Html.IdFor(model => model.AddProductTemplate.Name)").val('');
+                                    $("#@Html.IdFor(model => model.AddProductTemplate.ViewPath)").val('');
+                                    $("#@Html.IdFor(model => model.AddProductTemplate.DisplayOrder)").val('');
+                                    $("#@Html.IdFor(model => model.AddProductTemplate.IgnoredProductTypes)").val('');
+
                                 } else {
                                     //display errors if returned
                                     display_nop_error(data);

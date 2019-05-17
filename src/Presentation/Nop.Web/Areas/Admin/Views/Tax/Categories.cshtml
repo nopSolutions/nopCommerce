@@ -112,6 +112,10 @@
                                             //reload grid
                                             $('#tax-categories-grid').DataTable().ajax.reload();
 
+                                            //clear input value
+                                            $("#@Html.IdFor(model => model.AddTaxCategory.Name)").val('');
+                                            $("#@Html.IdFor(model => model.AddTaxCategory.DisplayOrder)").val('');
+
                                         } else {
                                             //display errors if returned
                                             display_nop_error(data);

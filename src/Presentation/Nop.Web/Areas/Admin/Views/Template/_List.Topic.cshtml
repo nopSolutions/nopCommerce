@@ -112,6 +112,11 @@
                                     //reload grid
                                     $('#templates-topic-grid').DataTable().ajax.reload();
 
+                                    //clear input value
+                                    $("#@Html.IdFor(model => model.AddTopicTemplate.Name)").val('');
+                                    $("#@Html.IdFor(model => model.AddTopicTemplate.ViewPath)").val('');
+                                    $("#@Html.IdFor(model => model.AddTopicTemplate.DisplayOrder)").val('');
+
                                 } else {
                                     //display errors if returned
                                     display_nop_error(data);

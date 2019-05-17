@@ -144,6 +144,9 @@
                                         //reload grid
                                         $('#resources-grid').DataTable().ajax.reload();
 
+                                        //clear input value
+                                        $("#@Html.IdFor(model => model.LocaleResourceSearchModel.AddResourceString.ResourceName)").val('');
+                                        $("#@Html.IdFor(model => model.LocaleResourceSearchModel.AddResourceString.ResourceValue)").val('');
                                     } else {
                                         //display errors if returned
                                         display_nop_error(data);

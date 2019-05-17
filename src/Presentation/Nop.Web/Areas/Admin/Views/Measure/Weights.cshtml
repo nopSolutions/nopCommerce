@@ -173,6 +173,12 @@
                                     //reload grid
                                     $('#measureweight-grid').DataTable().ajax.reload();
 
+                                    //clear input value
+                                    $("#@Html.IdFor(model => model.AddMeasureWeight.Name)").val('');
+                                    $("#@Html.IdFor(model => model.AddMeasureWeight.SystemKeyword)").val('');
+                                    $("#@Html.IdFor(model => model.AddMeasureWeight.Ratio)").val('');
+                                    $("#@Html.IdFor(model => model.AddMeasureWeight.DisplayOrder)").val('');
+
                                 } else {
                                     //display errors if returned
                                     display_nop_error(data);

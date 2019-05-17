@@ -175,6 +175,12 @@
                                     //reload grid
                                     $('#measuredimension-grid').DataTable().ajax.reload();
 
+                                    //clear input value
+                                    $("#@Html.IdFor(model => model.AddMeasureDimension.Name)").val('');
+                                    $("#@Html.IdFor(model => model.AddMeasureDimension.SystemKeyword)").val('');
+                                    $("#@Html.IdFor(model => model.AddMeasureDimension.Ratio)").val('');
+                                    $("#@Html.IdFor(model => model.AddMeasureDimension.DisplayOrder)").val('');
+
                                 } else {
                                     //display errors if returned
                                     display_nop_error(data);

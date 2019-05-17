@@ -98,6 +98,10 @@
                                 //reload grid
                                 $('#answers-grid').DataTable().ajax.reload();
 
+                                //clear input value
+                                $("#@Html.IdFor(model => model.PollAnswerSearchModel.AddPollAnswer.Name)").val('');
+                                $("#@Html.IdFor(model => model.PollAnswerSearchModel.AddPollAnswer.DisplayOrder)").val('');
+
                             } else {
                                 //display errors if returned
                                 display_nop_error(data);
