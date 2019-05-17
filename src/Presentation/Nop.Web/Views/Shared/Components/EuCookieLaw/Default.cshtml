@@ -5,13 +5,13 @@
         $('#eu-cookie-ok').on('click', function () {
             $.ajax({
                 cache: false,
-                type: 'POST',
-                url: '@Url.RouteUrl("EuCookieLawAccept")',
-                dataType: 'json',
-                success: function (data) {
+                type: "POST",
+                url: "@Url.RouteUrl("EuCookieLawAccept")",
+                dataType: "json",
+                success: function (data, textStatus, jqXHR) {
                     $('#eu-cookie-bar-notification').hide();
                 },
-                failure: function () {
+                error: function (jqXHR, textStatus, errorThrown) {
                     alert('Cannot store value');
                 }
             });

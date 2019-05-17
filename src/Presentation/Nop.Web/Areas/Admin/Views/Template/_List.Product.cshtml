@@ -120,11 +120,11 @@
                         addAntiForgeryToken(postData);
 
                         $.ajax({
-                            cache:false,
+                            cache: false,
                             type: "POST",
                             url: "@Html.Raw(Url.Action("ProductTemplateAdd", "Template", null))",
                             data: postData,
-                            success: function (data) {
+                            success: function (data, textStatus, jqXHR) {
                                 if (data.Result) {
                                     //reload grid
                                     $('#templates-product-grid').DataTable().ajax.reload();
@@ -139,10 +139,8 @@
                                     //display errors if returned
                                     display_nop_error(data);
                                 }
-
-                                $('#addProductTemplate').attr('disabled', false);
                             },
-                            error:function (xhr, ajaxOptions, thrownError){
+                            complete: function (jqXHR, textStatus) {
                                 $('#addProductTemplate').attr('disabled', false);
                             }
                         });

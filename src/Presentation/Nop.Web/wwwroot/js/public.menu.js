@@ -21,12 +21,12 @@
         $.ajax({
             cache: false,
             url: this.rootRoute,
-            type: 'post',
-            success: function (result) {
-                let lis = self.categoryList(result, true);
+            type: "POST",
+            success: function (data, textStatus, jqXHR) {
+                let lis = self.categoryList(data, true);
                 $(self.topMenuRootSelector).append(lis);
 
-                lis = self.categoryList(result, false);
+                lis = self.categoryList(data, false);
                 $(self.mobileMenuRootSelector).append(lis);
             },
             error: this.ajaxFailure
@@ -55,15 +55,14 @@
                 "id": id
             },
             url: this.subCatRoute,
-            type: 'post',
-            success: function (result) {
-                let listItems = selfTop.categoryList(result, true);
-                if (listItems.length === 0) { $(catSel).addClass("loaded"); return; }
-
+            type: "POST",
+            success: function (data, textStatus, jqXHR) {
+                let listItems = selfTop.categoryList(data, true);
+                if (listItems.length === 0) { 
+                  $(catSel).addClass("loaded"); return;
+                }
                 $('<ul/>', { class: 'sublist' }).appendTo($(catSel));
-
                 $(catSel).addClass("loaded");
-
                 $(catSel + ' > ul').append(listItems);
             },
             error: this.ajaxFailure
@@ -82,15 +81,13 @@
                 "id": id
             },
             url: this.subCatRoute,
-            type: 'post',
-            success: function (result) {
-                let listItems = selfMobile.categoryList(result, false);
-
+            type: "POST",
+            success: function (data, textStatus, jqXHR) {
+                let listItems = selfMobile.categoryList(data, false);
                 let ul = $('<ul/>', { 'class': 'sublist' });
 
                 $(catSel).addClass("loaded");
                 $(catSel).append(ul);
-
                 $(catSel + ' > ul').append(listItems);
 
                 $('.top-menu.mobile .sublist-toggle').unbind().on('click', function () {

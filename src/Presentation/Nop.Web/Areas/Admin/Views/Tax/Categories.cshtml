@@ -93,42 +93,39 @@
                             </div>
                         </div>
                         <script>
-                        $(document).ready(function () {
-                            $('#addTaxCategory').click(function () {
-                                $('#addTaxCategory').attr('disabled', true);
-                                var postData = {
-                                    Name: $("#@Html.IdFor(model => model.AddTaxCategory.Name)").val(),
-                                    DisplayOrder: $("#@Html.IdFor(model => model.AddTaxCategory.DisplayOrder)").val()
-                                };
-                                addAntiForgeryToken(postData);
+                            $(document).ready(function () {
+                                $('#addTaxCategory').click(function () {
+                                    $('#addTaxCategory').attr('disabled', true);
+                                    var postData = {
+                                        Name: $("#@Html.IdFor(model => model.AddTaxCategory.Name)").val(),
+                                        DisplayOrder: $("#@Html.IdFor(model => model.AddTaxCategory.DisplayOrder)").val()
+                                    };
+                                    addAntiForgeryToken(postData);
 
-                                $.ajax({
-                                    cache:false,
-                                    type: "POST",
-                                    url: "@Html.Raw(Url.Action("CategoryAdd", "Tax", null))",
-                                    data: postData,
-                                    success: function (data) {
-                                        if (data.Result) {
-                                            //reload grid
-                                            $('#tax-categories-grid').DataTable().ajax.reload();
-
-                                            //clear input value
-                                            $("#@Html.IdFor(model => model.AddTaxCategory.Name)").val('');
-                                            $("#@Html.IdFor(model => model.AddTaxCategory.DisplayOrder)").val('');
-
-                                        } else {
-                                            //display errors if returned
-                                            display_nop_error(data);
+                                    $.ajax({
+                                        cache: false,
+                                        type: "POST",
+                                        url: "@Html.Raw(Url.Action("CategoryAdd", "Tax", null))",
+                                        data: postData,
+                                        success: function (data, textStatus, jqXHR) {
+                                            if (data.Result) {
+                                                //reload grid
+                                                $('#tax-categories-grid').DataTable().ajax.reload();
+                            
+                                                //clear input value
+                                                $("#@Html.IdFor(model => model.AddTaxCategory.Name)").val('');
+                                                $("#@Html.IdFor(model => model.AddTaxCategory.DisplayOrder)").val('');
+                                            } else {
+                                                //display errors if returned
+                                                display_nop_error(data);
+                                            }
+                                        },
+                                        complete: function (jqXHR, textStatus) {
+                                            $('#addTaxCategory').attr('disabled', false);
                                         }
-
-                                        $('#addTaxCategory').attr('disabled', false);
-                                    },
-                                    error:function (xhr, ajaxOptions, thrownError){
-                                        $('#addTaxCategory').attr('disabled', false);
-                                    }
+                                    });
                                 });
                             });
-                        });
                         </script>
                     </div>
                 </div>

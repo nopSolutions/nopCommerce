@@ -99,16 +99,15 @@
                             type: "POST",
                             url: "@(Url.Action("DeleteSelected", "TaxTransactionLog"))",
                             data: postData,
-                            complete: function (data) {
-                                //reload grid
-                                $('#log-grid').DataTable().ajax.reload();
-                                selectedIds = [];
-                            },
-                            error: function (xhr, ajaxOptions, thrownError) {
-                                $('#deleteSelectedFailed-info').text(thrownError);
+                            traditional: true,                            
+                            error: function (jqXHR, textStatus, errorThrown) {
+                                $('#deleteSelectedFailed-info').text(errorThrown);
                                 $("#deleteSelectedFailed").click();
                             },
-                            traditional: true
+                            complete: function (jqXHR, textStatus) {
+                                $('#log-grid').DataTable().ajax.reload();
+                                selectedIds = [];
+                            }
                         });
                         $('#delete-selected-action-confirmation').modal('toggle');
                         return false;

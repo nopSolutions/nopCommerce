@@ -167,44 +167,41 @@
                         </div>
                     </div>
                     <script>
-                $(document).ready(function () {
-                    $('#addSetting').click(function () {
-                        $('#addSetting').attr('disabled', true);
-                        var postData = {
-                            Name: $("#@Html.IdFor(model => model.AddSetting.Name)").val(),
-                            Value: $("#@Html.IdFor(model => model.AddSetting.Value)").val(),
-                            StoreId: $("#@Html.IdFor(model => model.AddSetting.StoreId)").val()
-                        };
-                        addAntiForgeryToken(postData);
+                        $(document).ready(function () {
+                            $('#addSetting').click(function () {
+                                $('#addSetting').attr('disabled', true);
+                                var postData = {
+                                    Name: $("#@Html.IdFor(model => model.AddSetting.Name)").val(),
+                                    Value: $("#@Html.IdFor(model => model.AddSetting.Value)").val(),
+                                    StoreId: $("#@Html.IdFor(model => model.AddSetting.StoreId)").val()
+                                };
+                                addAntiForgeryToken(postData);
 
-                        $.ajax({
-                            cache:false,
-                            type: "POST",
-                            url: "@Html.Raw(Url.Action("SettingAdd", "Setting", null))",
-                            data: postData,
-                            success: function (data) {
-                                if (data.Result) {
-                                    //reload grid
-                                    $('#settings-grid').DataTable().ajax.reload();
+                                $.ajax({
+                                    cache: false,
+                                    type: "POST",
+                                    url: "@Html.Raw(Url.Action("SettingAdd", "Setting", null))",
+                                    data: postData,
+                                    success: function (data, textStatus, jqXHR) {
+                                        if (data.Result) {
+                                            //reload grid
+                                            $('#settings-grid').DataTable().ajax.reload();
 
-                                    //clear input value
-                                    $("#@Html.IdFor(model => model.AddSetting.Name)").val('');
-                                    $("#@Html.IdFor(model => model.AddSetting.Value)").val('');
-                                    $("#@Html.IdFor(model => model.AddSetting.StoreId)").val('');
-
-                                } else {
-                                    //display errors if returned
-                                    display_nop_error(data);
-                                }
-
-                                $('#addSetting').attr('disabled', false);
-                            },
-                            error:function (xhr, ajaxOptions, thrownError){
-                                $('#addSetting').attr('disabled', false);
-                            }
+                                            //clear input value
+                                            $("#@Html.IdFor(model => model.AddSetting.Name)").val('');
+                                            $("#@Html.IdFor(model => model.AddSetting.Value)").val('');
+                                            $("#@Html.IdFor(model => model.AddSetting.StoreId)").val('');
+                                        } else {
+                                            //display errors if returned
+                                            display_nop_error(data);
+                                        }
+                                    },
+                                    complete: function (jqXHR, textStatus) {
+                                        $('#addSetting').attr('disabled', false);
+                                    }
+                                });
+                            });
                         });
-                    });
-                });
                     </script>
                 </div>
             </div>

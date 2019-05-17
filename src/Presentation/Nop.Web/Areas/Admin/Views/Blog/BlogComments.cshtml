@@ -196,14 +196,13 @@
                                     type: "POST",
                                     url: "@(Url.Action("DeleteSelectedComments", "Blog"))",
                                     data: postData,
-                                    complete: function (data) {
-                                        //reload grid
+                                    error: function (jqXHR, textStatus, errorThrown) {
+                                        $('#deleteSelectedCommentsFailed-info').text(errorThrown);
+                                        $("#deleteSelectedCommentsFailed").click();
+                                    },
+                                    complete: function (jqXHR, textStatus) {
                                         $('#comments-grid').DataTable().ajax.reload();
                                         selectedIds = [];
-                                    },
-                                    error: function (xhr, ajaxOptions, thrownError) {
-                                        $('#deleteSelectedCommentsFailed-info').text(thrownError);
-                                        $("#deleteSelectedCommentsFailed").click();
                                     }
                                 });
                                 $('#delete-selected-action-confirmation').modal('toggle');
@@ -224,16 +223,15 @@
                                         type: "POST",
                                         url: "@(Url.Action("ApproveSelected", "Blog"))",
                                         data: postData,
-                                        complete: function(data) {
-                                            //reload grid
-                                            $('#comments-grid').DataTable().ajax.reload();
-                                            selectedIds = [];
-                                        },
-                                        error: function(xhr, ajaxOptions, thrownError) {
-                                            $('#approveSelectedFailed-info').text(thrownError);
+                                        traditional: true,
+                                        error: function (jqXHR, textStatus, errorThrown) {
+                                            $('#approveSelectedFailed-info').text(errorThrown);
                                             $("#approveSelectedFailed").click();
                                         },
-                                        traditional: true
+                                        complete: function (jqXHR, textStatus) {
+                                            $('#comments-grid').DataTable().ajax.reload();
+                                            selectedIds = [];
+                                        }
                                     });
                                     return false;
                                 });
@@ -252,16 +250,15 @@
                                         type: "POST",
                                         url: "@(Url.Action("DisapproveSelected", "Blog"))",
                                         data: postData,
-                                        complete: function(data) {
-                                            //reload grid
-                                            $('#comments-grid').DataTable().ajax.reload();
-                                            selectedIds = [];
-                                        },
-                                        error: function(xhr, ajaxOptions, thrownError) {
-                                            $('#disapproveSelectedFailed-info').text(thrownError);
+                                        traditional: true,
+                                        error: function (jqXHR, textStatus, errorThrown) {
+                                            $('#disapproveSelectedFailed-info').text(errorThrown);
                                             $("#disapproveSelectedFailed").click();
                                         },
-                                        traditional: true
+                                        complete: function (jqXHR, textStatus) {
+                                            $('#comments-grid').DataTable().ajax.reload();
+                                            selectedIds = [];
+                                        }
                                     });
                                     return false;
                                 });

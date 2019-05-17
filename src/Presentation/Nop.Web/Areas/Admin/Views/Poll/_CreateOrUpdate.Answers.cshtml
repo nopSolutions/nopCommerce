@@ -89,11 +89,11 @@
                     addAntiForgeryToken(postData);
 
                     $.ajax({
-                        cache:false,
+                        cache: false,
                         type: "POST",
                         url: "@Html.Raw(Url.Action("PollAnswerAdd", "Poll", new { pollId = Model.Id }))",
                         data: postData,
-                        success: function (data) {
+                        success: function (data, textStatus, jqXHR) {
                             if (data.Result) {
                                 //reload grid
                                 $('#answers-grid').DataTable().ajax.reload();
@@ -106,10 +106,8 @@
                                 //display errors if returned
                                 display_nop_error(data);
                             }
-
-                            $('#addPollAnswer').attr('disabled', false);
                         },
-                        error:function (xhr, ajaxOptions, thrownError){
+                        complete: function (jqXHR, textStatus) {
                             $('#addPollAnswer').attr('disabled', false);
                         }
                     });

@@ -145,16 +145,16 @@
                                     type: "POST",
                                     url: "@(Url.Action("PublishSelected", "Country"))",
                                     data: postData,
-                                    complete: function (data) {
+                                    traditional: true,
+                                    complete: function (jqXHR, textStatus) {
                                         //reload grid
                                         $('#countries-grid').DataTable().ajax.reload();
                                         selectedIds = [];
                                     },
-                                    error: function (xhr, ajaxOptions, thrownError) {
-                                        $('#publishSelectedFailed-info').text(thrownError);
+                                    error: function (jqXHR, textStatus, errorThrown) {
+                                        $('#publishSelectedFailed-info').text(errorThrown);
                                         $("#publishSelectedFailed").click();
-                                    },
-                                    traditional: true
+                                    }                                    
                                 });
                                 return false;
                             });
@@ -173,16 +173,15 @@
                                     type: "POST",
                                     url: "@(Url.Action("UnpublishSelected", "Country"))",
                                     data: postData,
-                                    complete: function (data) {
-                                        //reload grid
-                                        $('#countries-grid').DataTable().ajax.reload();
-                                        selectedIds = [];
-                                    },
-                                    error: function (xhr, ajaxOptions, thrownError) {
-                                        $('#unpublishSelectedFailed-info').text(thrownError);
+                                    traditional: true,
+                                    error: function (jqXHR, textStatus, errorThrown) {
+                                        $('#unpublishSelectedFailed-info').text(errorThrown);
                                         $("#unpublishSelectedFailed").click();
                                     },
-                                    traditional: true
+                                    complete: function (jqXHR, textStatus) {
+                                        $('#countries-grid').DataTable().ajax.reload();
+                                        selectedIds = [];
+                                    }
                                 });
                                 return false;
                             });

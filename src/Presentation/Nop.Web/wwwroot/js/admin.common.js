@@ -125,16 +125,15 @@ function saveUserPreferences(url, name, value) {
     $.ajax({
         cache: false,
         url: url,
-        type: 'post',
+        type: "POST",
         data: postData,
-        dataType: 'json',
-        success: function() {
-          $("#ajaxBusy span").removeClass("no-ajax-loader");
-        },
-        error: function(xhr, ajaxOptions, thrownError) {
+        dataType: "json",
+        error: function (jqXHR, textStatus, errorThrown) {
           alert('Failed to save preferences.');
+        },
+        complete: function (jqXHR, textStatus) {
           $("#ajaxBusy span").removeClass("no-ajax-loader");
-        }
+        }        
   });
 
 };
@@ -153,10 +152,10 @@ function warningValidation(validationUrl, warningElementName, passedParameters) 
     $.ajax({
         cache: false,
         url: validationUrl,
-        type: 'post',
+        type: "POST",
         dataType: "json",
         data: passedParameters,
-        success: function (data) {
+        success: function (data, textStatus, jqXHR) {
             if (data.Result) {
                 messageElement.addClass("warning");
                 messageElement.html(data.Result);
@@ -165,7 +164,7 @@ function warningValidation(validationUrl, warningElementName, passedParameters) 
                 messageElement.html('');
             }
         },
-        error: function () {
+        error: function (jqXHR, textStatus, errorThrown) {
             messageElement.removeClass("warning");
             messageElement.html('');
         }

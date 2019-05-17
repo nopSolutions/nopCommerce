@@ -100,15 +100,16 @@
                                 type: "POST",
                                 url: "@(Url.Action("ProductPictureAdd", "Product"))",
                                 data: postData,
-                                success: function (data) {
-                                    $('#addProductPicture').attr('disabled', false);
-                                    if (!data.Result)
+                                success: function (data, textStatus, jqXHR) {
+                                    if (!data.Result) {
                                         return;
-                                    
+                                    }                                        
                                     $('#productpictures-grid').DataTable().ajax.reload();
                                 },
-                                error: function(xhr, ajaxOptions, thrownError) {
+                                error: function (jqXHR, textStatus, errorThrown) {
                                     $("#productPictureAddAlert").click();
+                                },
+                                complete: function (jqXHR, textStatus) {
                                     $('#addProductPicture').attr('disabled', false);
                                 }
                             });

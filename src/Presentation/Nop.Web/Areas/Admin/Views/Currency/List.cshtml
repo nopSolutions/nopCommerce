@@ -149,10 +149,10 @@
                                     type: "POST",
                                     url: "@(Url.Action("MarkAsPrimaryStoreCurrency", "Currency"))",
                                     data: postData,
-                                    success: function (data) {
+                                    success: function (data, textStatus, jqXHR) {
                                         $('#currencies-grid').DataTable().ajax.reload();
                                     },
-                                    error: function (xhr, ajaxOptions, thrownError) {
+                                    error: function (jqXHR, textStatus, errorThrown) {
                                         $("#currencyAlert").click();
                                     }
                                 });
@@ -169,10 +169,10 @@
                                     type: "POST",
                                     url: "@(Url.Action("MarkAsPrimaryExchangeRateCurrency", "Currency"))",
                                     data: postData,
-                                    success: function (data) {
+                                    success: function (data, textStatus, jqXHR) {
                                         $('#currencies-grid').DataTable().ajax.reload();
                                     },
-                                    error: function (xhr, ajaxOptions, thrownError) {
+                                    error: function (jqXHR, textStatus, errorThrown) {
                                         $("#currencyAlert").click();
                                     }
                                 });
@@ -248,12 +248,12 @@
                                     $.ajax({
                                         cache: false,
                                         type: "POST",
-                                        url: '@(Url.Action("ApplyRates"))',
+                                        url: "@(Url.Action("ApplyRates"))",
                                         data: postData,
-                                        success: function(data) {
+                                        success: function (data, textStatus, jqXHR) {
                                             $('#currencies-grid').DataTable().ajax.reload();
                                         },
-                                        error: function(xhr, ajaxOptions, thrownError) {
+                                        error: function (jqXHR, textStatus, errorThrown) {
                                             $("#currencyAlert").click();
                                         }
                                     });
