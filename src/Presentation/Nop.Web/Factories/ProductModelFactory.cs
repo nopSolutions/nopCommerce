@@ -1179,7 +1179,8 @@ namespace Nop.Web.Factories
                 ManageInventoryMethod = product.ManageInventoryMethod,
                 StockAvailability = _productService.FormatStockMessage(product, ""),
                 HasSampleDownload = product.IsDownload && product.HasSampleDownload,
-                DisplayDiscontinuedMessage = !product.Published && _catalogSettings.DisplayDiscontinuedMessageForUnpublishedProducts
+                DisplayDiscontinuedMessage = !product.Published && _catalogSettings.DisplayDiscontinuedMessageForUnpublishedProducts,
+                DisallowRobotIndex = !product.Published && _catalogSettings.NoindexUnpublishedProductPage
             };
 
             //automatically generate product description?

@@ -106,6 +106,9 @@ namespace Nop.Web.Models.Catalog
 
         public string CurrentStoreName { get; set; }
 
+        //gets or sets a value indicated whether the unpublished product needs to be indexed or not
+        public bool DisallowRobotIndex { get; set; }
+
         #region Nested Classes
 
         public partial class ProductBreadcrumbModel : BaseNopModel

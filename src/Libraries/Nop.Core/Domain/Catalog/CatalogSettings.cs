@@ -464,5 +464,8 @@ namespace Nop.Core.Domain.Catalog
         /// Get or set a value indicating whether use standart menu in public store or use Ajax to load menu
         /// </summary>
         public bool UseAjaxLoadMenu { get; set; }
+
+        //gets or sets a value indicated whether the unpublished product needs to be indexed or not
+        public bool NoindexUnpublishedProductPage { get; set; }
     }
 }

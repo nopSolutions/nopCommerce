@@ -5,6 +5,12 @@
 @{
     Layout = "_ColumnsOne";
 
+    //tell robots to not index if unpublished
+    if (Model.DisallowRobotIndex)
+    {
+        Html.AddHeadCustomParts("<meta name=\"robots\" content=\"noindex\" />");
+    }
+
     //title
     Html.AddTitleParts(!string.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Name);
     //meta
