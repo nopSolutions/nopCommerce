@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using Nop.Core;
@@ -40,13 +41,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             ISecurityModelFactory securityModelFactory,
             IWorkContext workContext)
         {
-            this._customerService = customerService;
-            this._localizationService = localizationService;
-            this._logger = logger;
-            this._notificationService = notificationService;
-            this._permissionService = permissionService;
-            this._securityModelFactory = securityModelFactory;
-            this._workContext = workContext;
+            _customerService = customerService;
+            _localizationService = localizationService;
+            _logger = logger;
+            _notificationService = notificationService;
+            _permissionService = permissionService;
+            _securityModelFactory = securityModelFactory;
+            _workContext = workContext;
         }
 
         #endregion
@@ -79,7 +80,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost, ActionName("Permissions")]
-        public virtual IActionResult PermissionsSave(PermissionMappingModel model)
+        public virtual IActionResult PermissionsSave(PermissionMappingModel model, IFormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAcl))
                 return AccessDeniedView();
@@ -90,8 +91,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             foreach (var cr in customerRoles)
             {
                 var formKey = "allow_" + cr.Id;
-                var permissionRecordSystemNamesToRestrict = !StringValues.IsNullOrEmpty(model.Form[formKey])
-                    ? model.Form[formKey].ToString().Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList()
+                var permissionRecordSystemNamesToRestrict = !StringValues.IsNullOrEmpty(form[formKey])
+                    ? form[formKey].ToString().Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList()
                     : new List<string>();
 
                 foreach (var pr in permissionRecords)

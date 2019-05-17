@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
@@ -57,20 +58,20 @@ namespace Nop.Web.Controllers
             LocalizationSettings localizationSettings,
             OrderSettings orderSettings)
         {
-            this._customerService = customerService;
-            this._customNumberFormatter = customNumberFormatter;
-            this._downloadService = downloadService;
-            this._localizationService = localizationService;
-            this._fileProvider = fileProvider;
-            this._orderProcessingService = orderProcessingService;
-            this._orderService = orderService;
-            this._returnRequestModelFactory = returnRequestModelFactory;
-            this._returnRequestService = returnRequestService;
-            this._storeContext = storeContext;
-            this._workContext = workContext;
-            this._workflowMessageService = workflowMessageService;
-            this._localizationSettings = localizationSettings;
-            this._orderSettings = orderSettings;
+            _customerService = customerService;
+            _customNumberFormatter = customNumberFormatter;
+            _downloadService = downloadService;
+            _localizationService = localizationService;
+            _fileProvider = fileProvider;
+            _orderProcessingService = orderProcessingService;
+            _orderService = orderService;
+            _returnRequestModelFactory = returnRequestModelFactory;
+            _returnRequestService = returnRequestService;
+            _storeContext = storeContext;
+            _workContext = workContext;
+            _workflowMessageService = workflowMessageService;
+            _localizationSettings = localizationSettings;
+            _orderSettings = orderSettings;
         }
 
         #endregion
@@ -95,7 +96,7 @@ namespace Nop.Web.Controllers
                 return Challenge();
 
             if (!_orderProcessingService.IsReturnRequestAllowed(order))
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             var model = new SubmitReturnRequestModel();
             model = _returnRequestModelFactory.PrepareSubmitReturnRequestModel(model, order);
@@ -104,14 +105,14 @@ namespace Nop.Web.Controllers
 
         [HttpPost, ActionName("ReturnRequest")]
         [PublicAntiForgery]
-        public virtual IActionResult ReturnRequestSubmit(int orderId, SubmitReturnRequestModel model)
+        public virtual IActionResult ReturnRequestSubmit(int orderId, SubmitReturnRequestModel model, IFormCollection form)
         {
             var order = _orderService.GetOrderById(orderId);
             if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
                 return Challenge();
 
             if (!_orderProcessingService.IsReturnRequestAllowed(order))
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             var count = 0;
 
@@ -124,7 +125,6 @@ namespace Nop.Web.Controllers
             }
 
             //returnable products
-            var form = model.Form;
             var orderItems = order.OrderItems.Where(oi => !oi.Product.NotReturnable);
             foreach (var orderItem in orderItems)
             {

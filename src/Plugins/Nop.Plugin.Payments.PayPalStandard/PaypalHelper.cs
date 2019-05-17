@@ -1,4 +1,4 @@
-using Nop.Core.Domain.Payments;
+﻿using Nop.Core.Domain.Payments;
 
 namespace Nop.Plugin.Payments.PayPalStandard
 {
@@ -51,6 +51,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
                             result = PaymentStatus.Pending;
                             break;
                     }
+
                     break;
                 case "processed":
                 case "completed":
@@ -70,6 +71,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
                 default:
                     break;
             }
+
             return result;
         }
 

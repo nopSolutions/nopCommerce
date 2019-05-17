@@ -6,8 +6,8 @@ declare @resources xml
 set @resources='
 <Language>
   <LocaleResource Name="Admin.ContentManagement.Topics.Fields.Title.Required">
-    <Value>Title is required</Value>
-  </LocaleResource>  
+    <Value></Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.DisableBillingAddressCheckoutStep.Hint">
     <Value>Check to disable "Billing address" step during checkout. Billing address will be pre-filled and saved using the default registration data (this option cannot be used with guest checkout enabled). Also ensure that appropriate address fields that cannot be pre-filled are not required (or disabled). If a customer doesn''t have a billing address, then the billing address step will be displayed.</Value>
   </LocaleResource>
@@ -22,16 +22,16 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.UseResponseCompression">
     <Value>Use response compression</Value>
-  </LocaleResource>  
-   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.UseResponseCompression.Hint">
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.UseResponseCompression.Hint">
     <Value>Enable to compress response (gzip by default). You can disable it if you have an active IIS Dynamic Compression Module configured at the server level.</Value>
-  </LocaleResource>   
+  </LocaleResource>
   <LocaleResource Name="Admin.System.Warnings.URL.Reserved">
     <Value>The entered text will be replaced by ''{0}'', since it is already used as a SEO-friendly name for another page or contains invalid characters</Value>
   </LocaleResource>
   <LocaleResource Name="Plugins.Payments.PayPalStandard.Instructions">
     <Value>
-		<![CDATA[
+      <![CDATA[
 		<p>
 			<b>If you''re using this gateway ensure that your primary store currency is supported by PayPal.</b>
 			<br />
@@ -48,8 +48,8 @@ set @resources='
 			<br />
 		</p>
 		]]>
-	</Value>
-  </LocaleResource>  
+    </Value>
+  </LocaleResource>
   <LocaleResource Name="Plugins.ExternalAuth.Facebook.Instructions">
     <Value><![CDATA[<p>To configure authentication with Facebook, please follow these steps:<br/><br/><ol><li>Navigate to the <a href="https://developers.facebook.com/apps" target ="_blank" > Facebook for Developers</a> page and sign in. If you don''t already have a Facebook account, use the <b>Sign up for Facebook</b> link on the login page to create one.</li><li>Tap the <b>+ Add a New App button</b> in the upper right corner to create a new App ID. (If this is your first app with Facebook, the text of the button will be <b>Create a New App</b>.)</li><li>Fill out the form and tap the <b>Create App ID button</b>.</li><li>The <b>Product Setup</b> page is displayed, letting you select the features for your new app. Click <b>Get Started</b> on <b>Facebook Login</b>.</li><li>Click the <b>Settings</b> link in the menu at the left, you are presented with the <b>Client OAuth Settings</b> page with some defaults already set.</li><li>Enter "{0:s}signin-facebook" into the <b>Valid OAuth Redirect URIs</b> field.</li><li>Click <b>Save Changes</b>.</li><li>Click the <b>Dashboard</b> link in the left navigation.</li><li>Copy your App ID and App secret below.</li></ol><br/><br/></p>]]></Value>
   </LocaleResource>
@@ -58,7 +58,7 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.Common.Alert">
     <Value>Information</Value>
-  </LocaleResource>  
+  </LocaleResource>
   <LocaleResource Name="Admin.Common.Ok">
     <Value>Ok</Value>
   </LocaleResource>
@@ -74,7 +74,7 @@ set @resources='
   <LocaleResource Name="Admin.Customers.Customers.RewardPoints.Alert.HistoryAdd">
     <Value>Failed to add reward points.</Value>
   </LocaleResource>
-    <LocaleResource Name="Admin.Promotions.Discounts.Requirements.Alert.FailedToSave">
+  <LocaleResource Name="Admin.Promotions.Discounts.Requirements.Alert.FailedToSave">
     <Value>Failed to save requirement</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.GiftCards.Fields.GiftCardCouponCode.Alert.FailedGenerate">
@@ -108,7 +108,7 @@ set @resources='
     <Value>Failed to save download object.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Vendors.VendorNotes.AddTitle.Alert.FailedAddNote">
-    <Value>Failed to add vendor note.</Value>
+    <Value></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.SpecificationAttributes.Alert.FailedAdd">
     <Value></Value>
@@ -124,10 +124,10 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.Requirements.FailedToSave">
     <Value></Value>
-  </LocaleResource> 
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.SpecificationAttributes.SelectOption">
     <Value></Value>
-  </LocaleResource> 
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.SpecificationAttributes.NoAttributeOptions">
     <Value></Value>
   </LocaleResource>
@@ -145,11 +145,11 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.DiscountCouponCode.Activated">
     <Value>Coupon code ({0}) is activated! The discount will be applied to your order.</Value>
-  </LocaleResource>  
+  </LocaleResource>
   <LocaleResource Name="ShoppingCart.DiscountCouponCode.Invalid">
     <Value>This coupon code ({0}) is invalid or no longer available.</Value>
   </LocaleResource>
-   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PasswordRequireDigit">
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PasswordRequireDigit">
     <Value>Password must have at least one digit</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PasswordRequireDigit.Hint">
@@ -205,7 +205,7 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Account.Fields.Password.LengthValidation">
     <Value></Value>
-  </LocaleResource>  
+  </LocaleResource>
   <LocaleResource Name="Account.PasswordRecovery.NewPassword.Required">
     <Value></Value>
   </LocaleResource>
@@ -230,6 +230,57 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.Import.StoresDontExist">
     <Value>Stores with the following names and/or IDs don''t exist: {0}</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.DT.Aria.SortAscending">
+    <Value>: activate to sort column ascending</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.DT.Aria.SortDescending">
+    <Value>: activate to sort column descending</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.DT.EmptyTable">
+    <Value>No data available in table</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.DT.Info">
+    <Value>_START_-_END_ of _TOTAL_ items</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.DT.InfoEmpty">
+    <Value>No records</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.DT.InfoFiltered">
+    <Value>(filtered from _MAX_ total entries)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.DT.Thousands">
+    <Value>,</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.DT.lengthMenu">
+    <Value>Show _MENU_ items</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.DT.LoadingRecords">
+    <Value>Loading...</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.DT.Paginate.First">
+    <Value>First</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.DT.Paginate.Last">
+    <Value>Last</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.DT.Paginate.Next">
+    <Value>Next</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.DT.Paginate.Previous">
+    <Value>Previous</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.DT.Processing">
+    <Value>Processing...</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.DT.Search">
+    <Value>Search:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.DT.ZeroRecords">
+    <Value>No matching records found</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.DT.LoaderIcon">
+    <Value><![CDATA[<i class=''fa fa-refresh fa-spin''></i>]]></Value>
+  </LocaleResource>
   <LocaleResource Name="Plugins.Payments.Square.Fields.Location.Select">
     <Value>Select location</Value>
   </LocaleResource>
@@ -241,7 +292,7 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Checkout.Addresses.Invalid">
     <Value>You have {0} invalid address(es)</Value>
-  </LocaleResource>  
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.LowStockActivity.Hint">
     <Value>Action to be taken when your current stock quantity falls below (reaches) the ''Minimum stock quantity''. Activation of the action will occur only after an order is placed.</Value>
   </LocaleResource>
@@ -259,10 +310,10 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Plugins">
     <Value></Value>
-  </LocaleResource>  
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Tax">
     <Value></Value>
-  </LocaleResource>  
+  </LocaleResource>
   <LocaleResource Name="Admin.Vendors.Display">
     <Value>Display</Value>
   </LocaleResource>
@@ -283,6 +334,585 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.AssociatedProducts.TryToAddSelfGroupedProduct">
     <Value>You cannot add current group product to related ones. This group product was ignored while adding.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnForgotPasswordPage">
+    <Value>Show on forgot password page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnForgotPasswordPage.Hint">
+    <Value>Check to show CAPTCHA on forgot password page when restore password.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.OneColumnProductPage">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.BlockTitle.OneColumnProductPage">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.CommonInfo">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Mappings">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Security">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.RequireOtherProducts">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.CreatedOn">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.CreatedOn.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.UpdatedOn">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.UpdatedOn.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.CreatedOn">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.UpdatedOn">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.ID">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.ID.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.Id">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.BlockTitle.Mappings">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Prices">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Price">
+    <Value>Price</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.BlockTitle.LinkedProducts">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.BlockTitle.AdvancedProductTypes">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.BlockTitle.Security">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ShoppingCartType.EndDate">
+    <Value>End date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ShoppingCartType.EndDate.Hint">
+    <Value>The end date for the search.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ShoppingCartType.StartDate">
+    <Value>Start date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ShoppingCartType.StartDate.Hint">
+    <Value>The start date for the search.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ShoppingCartType.Product">
+    <Value>Product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ShoppingCartType.Product.Hint">
+    <Value>Search by a specific product.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ShoppingCartType.BillingCountry">
+    <Value>Billing country</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ShoppingCartType.BillingCountry.Hint">
+    <Value>Filter by billing country.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ShoppingCartType.Store">
+    <Value>Store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ShoppingCartType.Store.Hint">
+    <Value>Search by a specific store.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.PageSizeOptions">
+    <Value>Page size options</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.PageSizeOptions">
+    <Value>Page size options</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductsByTagPageSizeOptions">
+    <Value>''Products by tag'' page size options</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.SearchPagePageSizeOptions">
+    <Value>Search page. Page size options</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.PageSizeOptions">
+    <Value>Page size options</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.IncludeInSitemap">
+    <Value>Include in sitemap</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.IncludeInSitemap.Hint">
+    <Value>Check to include this blog post in the sitemap.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SitemapIncludeBlogPosts">
+    <Value>Sitemap includes blog posts</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SitemapIncludeBlogPosts.Hint">
+    <Value>Check if you want to include blog posts in sitemap.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SitemapIncludeTopics">
+    <Value>Sitemap includes topics</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SitemapIncludeTopics.Hint">
+    <Value>Check if you want to include topics in sitemap.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Sitemap.BlogPosts">
+    <Value>Blog posts</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SitemapIncludeNews">
+    <Value>Sitemap includes news items</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SitemapIncludeNews.Hint">
+    <Value>Check if you want to include news items in sitemap.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Sitemap.News">
+    <Value>News</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.Sitemap.Instructions">
+    <Value><![CDATA[<p>These settings do not apply to sitemap.xml, only for your site map. You can configure generation for sitemap.xml on <a href="{0}">all settings page</a></p>]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.GooglePlusLink">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.GooglePlusLink.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Footer.FollowUs.GooglePlus">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.LogUserProfileChanges">
+    <Value>Log user profile changes</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.LogUserProfileChanges.Hint">
+    <Value>Check to log user profile changes (if this feature is enabled in your store).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Gdpr.GdprRequestType.ProfileChanged">
+    <Value>User changed profile</Value>
+  </LocaleResource>
+  <LocaleResource Name="ScheduleTasks.Error">
+    <Value>The "{0}" scheduled task failed with the "{1}" error (Task type: "{2}". Store name: "{3}". Task run address: "{4}").</Value>
+  </LocaleResource>
+  <LocaleResource Name="ScheduleTasks.TimeoutError">
+    <Value>A scheduled task canceled. Timeout expired.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.ShowOnHomePage">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.ShowOnHomePage.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.ShowOnHomePage">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.ShowOnHomePage.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultMenuItemSettings.DisplayHomePageMenuItem">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultMenuItemSettings.DisplayHomePageMenuItem.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.ShowOnHomePage">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Polls.Fields.ShowOnHomePage">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Polls.Fields.ShowOnHomePage.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="HomePage">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="HomePage.Products">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.ShowOnHomepage">
+    <Value>Show on home page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.ShowOnHomepage.Hint">
+    <Value>Check if you want to show a category on home page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.ShowOnHomepage">
+    <Value>Show on home page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.ShowOnHomepage.Hint">
+    <Value>Check to display this product on your store''s home page. Recommended for your most popular products.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultMenuItemSettings.DisplayHomepageMenuItem">
+    <Value>Display "Home page"</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultMenuItemSettings.DisplayHomepageMenuItem.Hint">
+    <Value>Check if "Home page" menu item should be displayed in the top menu.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.ShowOnHomepage">
+    <Value>Show on home page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Polls.Fields.ShowOnHomepage">
+    <Value>Show on home page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Polls.Fields.ShowOnHomepage.Hint">
+    <Value>Check if you want to show poll on the home page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Homepage">
+    <Value>Home page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Homepage.Products">
+    <Value>Featured products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Plugins.LoadPluginsMode.All">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Plugins.LoadPluginsMode.InstalledOnly">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Plugins.LoadPluginsMode.NotInstalledOnly">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Services.Plugins.LoadPluginsMode.All">
+    <Value>All</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Services.Plugins.LoadPluginsMode.InstalledOnly">
+    <Value>Installed</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Services.Plugins.LoadPluginsMode.NotInstalledOnly">
+    <Value>Not installed</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EnableHtmlMinification">
+    <Value>Html minification</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EnableHtmlMinification.Hint">
+    <Value>Allows you to minify HTML pages as well as compress them, thereby increasing the download speed. Please note that after applying this setting, you need to restart the application.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.BlockTitle.Minification">
+    <Value>Minification</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Warnings.ProxyConnection.Failed">
+    <Value>Proxy connection failed</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Warnings.ProxyConnection.OK">
+    <Value>Proxy connection is OK</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.List.SearchIncludeSubCategories">
+    <Value>Search subcategories</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.List.SearchIncludeSubCategories.Hint">
+    <Value>Check to search in subcategories.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.PageSizeOptions.ShouldHaveUniqueItems">
+    <Value>Page size options should not have duplicate items.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.PageSizeOptions.ShouldHaveUniqueItems">
+    <Value>Page size options should have unique items.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.PageSizeOptions.ShouldHaveUniqueItems">
+    <Value>Page size options should have unique items.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Manage">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Restrictions.Manage">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Forums.Manage">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Display">
+    <Value>Display</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.UPS.Fields.Url">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.UPS.Fields.Url.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.UPS.Fields.UseSandbox">
+    <Value>Use sandbox</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.UPS.Fields.UseSandbox.Hint">
+    <Value>Check to use sandbox (testing environment).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.UPS.Fields.SaturdayDeliveryEnabled">
+    <Value>Saturday Delivery enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.UPS.Fields.SaturdayDeliveryEnabled.Hint">
+    <Value>Check to get rates for Saturday Delivery options.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Warnings.Errors">
+    <Value><![CDATA[The store has some error(s) or warning(s). Please find more information on the <a href="{0}">Warnings</a> page]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Login.Fields.UserName">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Login.Fields.Username">
+    <Value>Username</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.AllowPickUpInStore">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.AllowPickUpInStore.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.AllowPickupInStore">
+    <Value>"Pick Up in Store" enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.AllowPickupInStore.Hint">
+    <Value>A value indicating whether "Pick Up in Store" option is enabled during checkout. Please ensure that you have at least one active pickup point provider.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.IgnoreAdditionalShippingChargeForPickUpInStore">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.IgnoreAdditionalShippingChargeForPickUpInStore.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.IgnoreAdditionalShippingChargeForPickupInStore">
+    <Value>Ignore additional shipping charge for pick up in store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.IgnoreAdditionalShippingChargeForPickupInStore.Hint">
+    <Value>Check if you want ignore additional shipping charge for pick up in store.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.BulkEdit">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.BulkEdit.Fields.ManageInventoryMethod">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.BulkEdit.Fields.ManageInventoryMethod.MultipleWarehouse">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.BulkEdit.Fields.Name">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.BulkEdit.Fields.OldPrice">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.BulkEdit.Fields.Price">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.BulkEdit.Fields.Published">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.BulkEdit.Fields.SKU">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.BulkEdit.Fields.StockQuantity">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.BulkEdit.List.SearchCategory">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.BulkEdit.List.SearchCategory.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.BulkEdit.List.SearchManufacturer">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.BulkEdit.List.SearchManufacturer.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.BulkEdit.List.SearchProductName">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.BulkEdit.List.SearchProductName.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Common.BulkEdit">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Pager.All">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Pager.Display">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Pager.Empty">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Pager.First">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Pager.ItemsPerPage">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Pager.Last">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Pager.MorePages">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Pager.Next">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Pager.Of">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Pager.Page">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Pager.Previous">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Pager.Refresh">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.VendorNotes.Fields.Note.Validation">
+    <Value>Vendor note can not be empty.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.AllSettings.Fields.Store">
+    <Value>Store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.AllSettings.Fields.Store.Hint">
+    <Value>A store name in which this setting is applied.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Languages.Resources.Fields.Name.Hint">
+    <Value>Enter the locale resource name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Languages.Resources.Fields.Value.Hint">
+    <Value>Enter the locale resource value.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Dimensions.Fields.Name.Hint">
+    <Value>Enter the dimension name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Dimensions.Fields.SystemKeyword.Hint">
+    <Value>Enter the dimension system keyword.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Dimensions.Fields.Ratio.Hint">
+    <Value>Specify the dimension ratio.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Dimensions.Fields.DisplayOrder.Hint">
+    <Value>The display order of this dimension. 1 represents the top of the list.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Weights.Fields.Name.Hint">
+    <Value>Enter the weight name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Weights.Fields.SystemKeyword.Hint">
+    <Value>Enter the weight system keyword.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Weights.Fields.Ratio.Hint">
+    <Value>Specify the weight ratio.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Weights.Fields.DisplayOrder.Hint">
+    <Value>The display order of this weight. 1 represents the top of the list.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Polls.Answers.Fields.Name.Hint">
+    <Value>Enter the poll answer name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Polls.Answers.Fields.DisplayOrder.Hint">
+    <Value>The display order of this poll answer. 1 represents the top of the list.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.AllSettings.Fields.Name.Hint">
+    <Value>Enter the setting name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.AllSettings.Fields.Value.Hint">
+    <Value>Enter the setting value.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Tax.Categories.Fields.Name.Hint">
+    <Value>Enter the tax category name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Tax.Categories.Fields.DisplayOrder.Hint">
+    <Value>The display order of this tax category. 1 represents the top of the list.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Category.Name.Hint">
+    <Value>Enter the template name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Category.DisplayOrder.Hint">
+    <Value>The display order of this template. 1 represents the top of the list.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Category.ViewPath.Hint">
+    <Value>Enter the template view path.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Manufacturer.Name.Hint">
+    <Value>Enter the template name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Manufacturer.DisplayOrder.Hint">
+    <Value>The display order of this template. 1 represents the top of the list.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Manufacturer.ViewPath.Hint">
+    <Value>Enter the template view path.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Product.Name.Hint">
+    <Value>Enter the template name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Product.DisplayOrder.Hint">
+    <Value>The display order of this template. 1 represents the top of the list.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Product.ViewPath.Hint">
+    <Value>Enter the template view path.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Product.IgnoredProductTypes.Hint">
+    <Value>Specify ignored product types for this template.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Topic.Name.Hint">
+    <Value>Enter the template name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Topic.DisplayOrder.Hint">
+    <Value>The display order of this template. 1 represents the top of the list.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Topic.ViewPath.Hint">
+    <Value>Enter the template view path.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Reviews.Fields.Rating.Good">
+    <Value>Good</Value>
+  </LocaleResource>
+  <LocaleResource Name="Reviews.Fields.Rating.NotBadNotExcellent">
+    <Value>Not bad but also not excellent</Value>
+  </LocaleResource>
+  <LocaleResource Name="Reviews.Fields.Rating.NotGood">
+    <Value>Not good</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SystemInfo.RedisEnabled">
+    <Value>Redis enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SystemInfo.UseRedisToStoreDataProtectionKeys">
+    <Value>Use Redis to store Data Protection Keys</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SystemInfo.UseRedisForCaching">
+    <Value>Use Redis for Caching</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SystemInfo.UseRedisToStorePluginsInfo">
+    <Value>Use Redis to store Plugins Info</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SystemInfo.AzureBlobStorageEnabled">
+    <Value>Azure Blob Storage enabled</Value>
+  </LocaleResource>
+   <LocaleResource Name="Admin.System.SystemInfo.RedisEnabled.Hint">
+    <Value>Indicates whether Redis is enabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SystemInfo.UseRedisToStoreDataProtectionKeys.Hint">
+    <Value>Indicates whether Redis is used to store Data Protection Keys.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SystemInfo.UseRedisForCaching.Hint">
+    <Value>Indicates whether Redis is used for Caching.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SystemInfo.UseRedisToStorePluginsInfo.Hint">
+    <Value>Indicates whether Redis is used to store Plugins Info.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SystemInfo.AzureBlobStorageEnabled.Hint">
+    <Value>Indicates whether Azure Blob Storage is enabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SystemInfo.CurrentStaticCacheManager">
+	<Value>Static cache manager name</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.System.SystemInfo.CurrentStaticCacheManager.Hint">
+	<Value>Indicating the current static cache manager name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Languages.Selector.Label">
+    <Value>Languages selector</Value>
+  </LocaleResource>
+  <LocaleResource Name="Tax.Selector.Label">
+    <Value>Tax selector</Value>
   </LocaleResource>
 </Language>'
 
@@ -362,12 +992,24 @@ SET [IncludeInFooterColumn1] = 0
 WHERE [SystemName] = 'VendorTermsOfService'
 GO
 
-UPDATE [Topic]
-SET [Title] = ISNULL([SystemName], '')
-WHERE [Title] IS NULL OR [Title] = ''
+ALTER TABLE [Topic] ALTER COLUMN [Title] nvarchar(max) NULL
 GO
 
-ALTER TABLE [Topic] ALTER COLUMN [Title] nvarchar(max) NOT NULL
+-- #3236
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[BlogPost]') and NAME='IncludeInSitemap')
+BEGIN
+	ALTER TABLE [BlogPost]
+	ADD [IncludeInSitemap] bit NULL
+END
+GO
+
+UPDATE [BlogPost]
+SET [IncludeInSitemap] = 0
+WHERE [IncludeInSitemap] IS NULL
+GO
+
+ALTER TABLE [BlogPost]
+ALTER COLUMN [IncludeInSitemap] bit NOT NULL
 GO
 
 -- update the "ProductLoadAllPaged" stored procedure
@@ -395,7 +1037,7 @@ ALTER PROCEDURE [ProductLoadAllPaged]
 	@FilteredSpecs		nvarchar(MAX) = null,	--filter by specification attribute options (comma-separated list of IDs). e.g. 14,15,16
 	@LanguageId			int = 0,
 	@OrderBy			int = 0, --0 - position, 5 - Name: A to Z, 6 - Name: Z to A, 10 - Price: Low to High, 11 - Price: High to Low, 15 - creation date
-	@AllowedCustomerRoleIds	nvarchar(MAX) = null,	--a list of customer role IDs (comma-separated list) for which a product should be shown (if a subjet to ACL)
+	@AllowedCustomerRoleIds	nvarchar(MAX) = null,	--a list of customer role IDs (comma-separated list) for which a product should be shown (if a subject to ACL)
 	@PageIndex			int = 0, 
 	@PageSize			int = 2147483644,
 	@ShowHidden			bit = 0,
@@ -1069,6 +1711,462 @@ BEGIN
 END
 GO
 
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'catalogsettings.useajaxloadmenu')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'catalogsettings.useajaxloadmenu', N'False', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'sitemapsettings.sitemapincludetopics')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'sitemapsettings.sitemapincludetopics', N'True', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'sitemapsettings.sitemapincludeblogposts')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'sitemapsettings.sitemapincludeblogposts', N'True', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'sitemapsettings.sitemapincludenews')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'sitemapsettings.sitemapincludenews', N'false', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'sitemapxmlsettings.sitemapxmlenabled')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'sitemapxmlsettings.sitemapxmlenabled', N'True', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'sitemapxmlsettings.sitemapxmlincludeblogposts')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'sitemapxmlsettings.sitemapxmlincludeblogposts', N'True', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'sitemapxmlsettings.sitemapxmlincludecategories')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'sitemapxmlsettings.sitemapxmlincludecategories', N'True', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'sitemapxmlsettings.sitemapxmlincludecustomurls')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'sitemapxmlsettings.sitemapxmlincludecustomurls', N'True', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'sitemapxmlsettings.sitemapxmlincludemanufacturers')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'sitemapxmlsettings.sitemapxmlincludemanufacturers', N'True', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'sitemapxmlsettings.sitemapxmlincludeproducts')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'sitemapxmlsettings.sitemapxmlincludeproducts', N'True', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'sitemapxmlsettings.sitemapxmlincludeproducttags')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'sitemapxmlsettings.sitemapxmlincludeproducttags', N'True', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'sitemapxmlsettings.sitemapxmlincludetopics')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'sitemapxmlsettings.sitemapxmlincludetopics', N'True', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'sitemapxmlsettings.sitemapxmlincludenews')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'sitemapxmlsettings.sitemapxmlincludenews', N'True', 0)
+END
+GO
+
+--update old settings (#3236)
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'sitemapsettings.sitemapenabled')
+BEGIN
+	UPDATE [Setting] 
+	SET [Name] = 'sitemapsettings.sitemapenabled'
+	WHERE [Name] = 'commonsettings.sitemapenabled'
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'sitemapsettings.sitemapincludecategories')
+BEGIN
+	UPDATE [Setting]
+	SET [Name] = 'sitemapsettings.sitemapincludecategories'
+	WHERE [Name] = 'commonsettings.sitemapincludecategories'
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'sitemapsettings.sitemapincludemanufacturers')
+BEGIN
+	UPDATE [Setting]
+	SET [Name] = 'sitemapsettings.sitemapincludemanufacturers'
+	WHERE [Name] = 'commonsettings.sitemapincludemanufacturers'
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'sitemapsettings.sitemapincludeproducts')
+BEGIN
+	UPDATE [Setting]
+	SET [Name] = 'sitemapsettings.sitemapincludeproducts'
+	WHERE [Name] = 'commonsettings.sitemapincludeproducts'
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'sitemapsettings.sitemapincludeproducttags')
+BEGIN
+	UPDATE [Setting]
+	SET [Name] = 'sitemapsettings.sitemapincludeproducttags'
+	WHERE [Name] = 'commonsettings.sitemapincludeproducttags'
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'sitemapsettings.sitemappagesize')
+BEGIN
+	UPDATE [Setting]
+	SET [Name] = 'sitemapsettings.sitemappagesize'
+	WHERE [Name] = 'commonsettings.sitemappagesize'
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'sitemapxmlsettings.sitemapcustomurls')
+BEGIN
+	UPDATE [Setting]
+	SET [Name] = 'sitemapxmlsettings.sitemapcustomurls'
+	WHERE [Name] = 'commonsettings.sitemapcustomurls'
+END
+GO
+
 --updating of indexes in the Picture table for reduced table size after upgrade nopCommerce from 4.00 to 4.10 version
 ALTER INDEX ALL ON [Picture] REBUILD
+GO
+
+--new activity log type
+IF NOT EXISTS (SELECT 1 FROM [ActivityLogType] WHERE [Name] = N'Upload a favicon and app icons archive')
+BEGIN
+	INSERT [ActivityLogType] ( [SystemKeyword], [Name], [Enabled]) VALUES ( N'UploadIconsArchive', N'Upload a favicon and app icons archive', 1)
+END
+GO
+
+--new ground shipping description
+UPDATE [ShippingMethod] 
+SET [Description] = 'Shipping by land transport'
+WHERE [Name] = 'Ground'
+GO
+
+--delete setting
+DELETE FROM [Setting]
+WHERE [Name] = N'producteditorsettings.onecolumnproductpage'
+GO
+
+--delete setting
+DELETE FROM [Setting]
+WHERE [Name] = N'producteditorsettings.createdon'
+GO
+
+--delete setting
+DELETE FROM [Setting]
+WHERE [Name] = N'producteditorsettings.updatedon'
+GO
+
+--delete setting
+DELETE FROM [Setting]
+WHERE [Name] = N'producteditorsettings.id'
+GO
+
+--delete setting
+DELETE FROM [Setting]
+WHERE [Name] = N'adminareasettings.usenestedsetting'
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'commonsettings.minificationenabled')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'commonsettings.minificationenabled', N'True', 0)
+END
+GO
+
+--update setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'commonsettings.enablehtmlminification')
+BEGIN
+	UPDATE [Setting]
+	SET [Name] = 'commonsettings.enablehtmlminification'
+	WHERE [Name] = 'commonsettings.minificationenabled'
+END
+GO
+
+--update the "ProductTagCountLoadAll" stored procedure
+ALTER PROCEDURE [ProductTagCountLoadAll]
+(
+	@StoreId int,
+	@AllowedCustomerRoleIds	nvarchar(MAX) = null	--a list of customer role IDs (comma-separated list) for which a product should be shown (if a subject to ACL)
+)
+AS
+BEGIN
+	SET NOCOUNT ON
+		
+	--filter by customer role IDs (access control list)
+	SET @AllowedCustomerRoleIds = isnull(@AllowedCustomerRoleIds, '')	
+	CREATE TABLE #FilteredCustomerRoleIds
+	(
+		CustomerRoleId int not null
+	)
+		
+	INSERT INTO #FilteredCustomerRoleIds (CustomerRoleId)
+	SELECT CAST(data as int) FROM [nop_splitstring_to_table](@AllowedCustomerRoleIds, ',')
+	DECLARE @FilteredCustomerRoleIdsCount int	
+	SET @FilteredCustomerRoleIdsCount = (SELECT COUNT(1) FROM #FilteredCustomerRoleIds)
+	
+	SELECT pt.Id as [ProductTagId], COUNT(p.Id) as [ProductCount]
+	FROM ProductTag pt with (NOLOCK)
+	LEFT JOIN Product_ProductTag_Mapping pptm with (NOLOCK) ON pt.[Id] = pptm.[ProductTag_Id]
+	LEFT JOIN Product p with (NOLOCK) ON pptm.[Product_Id] = p.[Id]
+	WHERE
+		p.[Deleted] = 0
+		AND p.Published = 1
+		AND (@StoreId = 0 or (p.LimitedToStores = 0 OR EXISTS (
+			SELECT 1 FROM [StoreMapping] sm with (NOLOCK)
+			WHERE [sm].EntityId = p.Id AND [sm].EntityName = 'Product' and [sm].StoreId=@StoreId
+			)))
+		AND (@FilteredCustomerRoleIdsCount = 0 or (p.SubjectToAcl = 0 OR EXISTS (
+			SELECT 1 FROM #FilteredCustomerRoleIds [fcr]
+			WHERE
+				[fcr].CustomerRoleId IN (
+					SELECT [acl].CustomerRoleId
+					FROM [AclRecord] acl with (NOLOCK)
+					WHERE [acl].EntityId = p.Id AND [acl].EntityName = 'Product'
+				))
+			))
+	GROUP BY pt.Id
+	ORDER BY pt.Id
+END
+GO
+
+
+--delete setting
+DELETE FROM [Setting]
+WHERE [Name] = N'storeinformationsettings.googlepluslink'
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'gdprsettings.loguserprofilechanges')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'gdprsettings.loguserprofilechanges', N'True', 0)
+END
+GO
+
+--alter column
+ALTER TABLE [Setting] ALTER COLUMN [Value] [nvarchar](max) NOT NULL
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'mediasettings.useabsoluteimagepath')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'mediasettings.useabsoluteimagepath', N'True', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'commonsettings.scheduletaskruntimeout')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'commonsettings.scheduletaskruntimeout', N'', 0)
+END
+GO
+
+--rename columns
+EXEC sp_RENAME 'Category.ShowOnHomePage' , 'ShowOnHomepage', 'COLUMN'
+GO
+
+EXEC sp_RENAME 'Poll.ShowOnHomePage' , 'ShowOnHomepage', 'COLUMN'
+GO
+
+EXEC sp_RENAME 'Product.ShowOnHomePage' , 'ShowOnHomepage', 'COLUMN'
+GO
+
+--update setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'commonsettings.enablejsbundling')
+BEGIN
+	UPDATE [Setting]
+	SET [Name] = 'commonsettings.enablejsbundling'
+	WHERE [Name] = 'seosettings.enablejsbundling'
+END
+GO
+
+--update setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'commonsettings.enablecssbundling')
+BEGIN
+	UPDATE [Setting]
+	SET [Name] = 'commonsettings.enablecssbundling'
+	WHERE [Name] = 'seosettings.enablecssbundling'
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'paymentsettings.regenerateorderguidinterval')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'paymentsettings.regenerateorderguidinterval', N'180', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'proxysettings.enabled')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'proxysettings.enabled', N'False', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'proxysettings.address')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'proxysettings.address', N'', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'proxysettings.port')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'proxysettings.port', N'', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'proxysettings.username')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'proxysettings.username', N'', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'proxysettings.password')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'proxysettings.password', N'', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'proxysettings.bypassonlocal')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'proxysettings.bypassonlocal', N'True', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'proxysettings.preauthenticate')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'proxysettings.preauthenticate', N'True', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'upssettings.usesandbox')
+BEGIN
+    IF EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'upssettings.url' AND [Value] LIKE '%wwwcie.ups.com%')
+        INSERT [Setting] ([Name], [Value], [StoreId]) VALUES (N'upssettings.usesandbox', N'True', 0)
+    ELSE
+        INSERT [Setting] ([Name], [Value], [StoreId]) VALUES (N'upssettings.usesandbox', N'False', 0)    
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'upssettings.saturdaydeliveryenabled')
+BEGIN
+    IF EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'upssettings.carrierservicesoffered' AND [Value] LIKE '%[sa]%')
+        INSERT [Setting] ([Name], [Value], [StoreId]) VALUES (N'upssettings.saturdaydeliveryenabled', N'True', 0)
+    ELSE
+        INSERT [Setting] ([Name], [Value], [StoreId]) VALUES (N'upssettings.saturdaydeliveryenabled', N'False', 0)
+END
+GO
+
+--delete setting
+DELETE FROM [Setting]
+WHERE [Name] = N'upssettings.url'
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'squarepaymentsettings.refreshtoken')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'squarepaymentsettings.refreshtoken', N'00000000-0000-0000-0000-000000000000', 0)
+END
+GO
+
+--rename column
+IF EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[Order]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
+AND EXISTS (SELECT 1 FROM sys.columns WHERE object_id = OBJECT_ID(N'[Order]') and NAME='PickUpInStore')
+BEGIN
+    EXEC sp_RENAME '[Order].[PickUpInStore]', 'PickupInStore', 'COLUMN'
+END
+GO
+
+--update setting
+UPDATE [Setting]
+SET [Value] = '7'
+WHERE [Name] = 'adminareasettings.popupgridpagesize'
+GO
+
+--update setting
+UPDATE [Setting]
+SET [Value] = '7, 15, 20, 50, 100'
+WHERE [Name] = 'adminareasettings.gridpagesizes'
+GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id = object_id('[Picture]') AND NAME = 'VirtualPath')
+BEGIN
+	ALTER TABLE [Picture] ADD
+	VirtualPath nvarchar(MAX) NULL
+END
+GO
+
+--update setting
+UPDATE [Setting]
+SET [Value] = '100'
+WHERE [Name] = 'mediasettings.defaultimagequality'
 GO

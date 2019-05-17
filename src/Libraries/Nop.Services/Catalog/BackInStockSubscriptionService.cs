@@ -31,10 +31,10 @@ namespace Nop.Services.Catalog
             IRepository<BackInStockSubscription> backInStockSubscriptionRepository,
             IWorkflowMessageService workflowMessageService)
         {
-            this._eventPublisher = eventPublisher;
-            this._genericAttributeService = genericAttributeService;
-            this._backInStockSubscriptionRepository = backInStockSubscriptionRepository;
-            this._workflowMessageService = workflowMessageService;
+            _eventPublisher = eventPublisher;
+            _genericAttributeService = genericAttributeService;
+            _backInStockSubscriptionRepository = backInStockSubscriptionRepository;
+            _workflowMessageService = workflowMessageService;
         }
 
         #endregion

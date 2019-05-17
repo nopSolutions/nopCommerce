@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Extensions.Caching.Memory;
 using Moq;
 using Nop.Core.Data;
 using Nop.Core.Domain.Localization;
@@ -48,7 +47,7 @@ namespace Nop.Services.Tests.Localization
 
             _storeMappingService = new Mock<IStoreMappingService>();
 
-            var cacheManager = new TestMemoryCacheManager(new Mock<IMemoryCache>().Object);
+            var cacheManager = new TestCacheManager();
 
             _settingService = new Mock<ISettingService>();
 

@@ -175,7 +175,7 @@ namespace Nop.Web.Areas.Admin.Models.Orders
 
         //shipping info
         public bool IsShippable { get; set; }
-        public bool PickUpInStore { get; set; }
+        public bool PickupInStore { get; set; }
         [NopResourceDisplayName("Admin.Orders.Fields.PickupAddress")]
         public AddressModel PickupAddress { get; set; }
         public string PickupAddressGoogleMapsUrl { get; set; }

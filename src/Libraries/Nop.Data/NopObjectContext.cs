@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
@@ -89,7 +89,7 @@ namespace Nop.Data
         /// <returns>A SQL script</returns>
         public virtual string GenerateCreateScript()
         {
-            return this.Database.GenerateCreateScript();
+            return Database.GenerateCreateScript();
         }
 
         /// <summary>
@@ -97,10 +97,11 @@ namespace Nop.Data
         /// </summary>
         /// <typeparam name="TQuery">Query type</typeparam>
         /// <param name="sql">The raw SQL query</param>
+        /// <param name="parameters">The values to be assigned to parameters</param>
         /// <returns>An IQueryable representing the raw SQL query</returns>
-        public virtual IQueryable<TQuery> QueryFromSql<TQuery>(string sql) where TQuery : class
+        public virtual IQueryable<TQuery> QueryFromSql<TQuery>(string sql, params object[] parameters) where TQuery : class
         {
-            return this.Query<TQuery>().FromSql(sql);
+            return Query<TQuery>().FromSql(CreateSqlWithParameters(sql, parameters), parameters);
         }
         
         /// <summary>
@@ -112,7 +113,7 @@ namespace Nop.Data
         /// <returns>An IQueryable representing the raw SQL query</returns>
         public virtual IQueryable<TEntity> EntityFromSql<TEntity>(string sql, params object[] parameters) where TEntity : BaseEntity
         {
-            return this.Set<TEntity>().FromSql(CreateSqlWithParameters(sql, parameters), parameters);
+            return Set<TEntity>().FromSql(CreateSqlWithParameters(sql, parameters), parameters);
         }
 
         /// <summary>
@@ -126,24 +127,24 @@ namespace Nop.Data
         public virtual int ExecuteSqlCommand(RawSqlString sql, bool doNotEnsureTransaction = false, int? timeout = null, params object[] parameters)
         {
             //set specific command timeout
-            var previousTimeout = this.Database.GetCommandTimeout();
-            this.Database.SetCommandTimeout(timeout);
+            var previousTimeout = Database.GetCommandTimeout();
+            Database.SetCommandTimeout(timeout);
 
             var result = 0;
             if (!doNotEnsureTransaction)
             {
                 //use with transaction
-                using (var transaction = this.Database.BeginTransaction())
+                using (var transaction = Database.BeginTransaction())
                 {
-                    result = this.Database.ExecuteSqlCommand(sql, parameters);
+                    result = Database.ExecuteSqlCommand(sql, parameters);
                     transaction.Commit();
                 }
             }
             else
-                result = this.Database.ExecuteSqlCommand(sql, parameters);
+                result = Database.ExecuteSqlCommand(sql, parameters);
             
             //return previous timeout back
-            this.Database.SetCommandTimeout(previousTimeout);
+            Database.SetCommandTimeout(previousTimeout);
             
             return result;
         }
@@ -158,7 +159,7 @@ namespace Nop.Data
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
-            var entityEntry = this.Entry(entity);
+            var entityEntry = Entry(entity);
             if (entityEntry == null)
                 return;
             

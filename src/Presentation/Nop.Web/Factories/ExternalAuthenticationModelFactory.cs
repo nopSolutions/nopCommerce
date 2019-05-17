@@ -13,7 +13,7 @@ namespace Nop.Web.Factories
     {
         #region Fields
 
-        private readonly IExternalAuthenticationService _externalAuthenticationService;
+        private readonly IAuthenticationPluginManager _authenticationPluginManager;
         private readonly IStoreContext _storeContext;
         private readonly IWorkContext _workContext;
 
@@ -21,13 +21,13 @@ namespace Nop.Web.Factories
 
         #region Ctor
 
-        public ExternalAuthenticationModelFactory(IExternalAuthenticationService externalAuthenticationService,
+        public ExternalAuthenticationModelFactory(IAuthenticationPluginManager authenticationPluginManager,
             IStoreContext storeContext,
             IWorkContext workContext)
         {
-            this._externalAuthenticationService = externalAuthenticationService;
-            this._storeContext = storeContext;
-            this._workContext = workContext;
+            _authenticationPluginManager = authenticationPluginManager;
+            _storeContext = storeContext;
+            _workContext = workContext;
         }
 
         #endregion
@@ -40,12 +40,13 @@ namespace Nop.Web.Factories
         /// <returns>List of the external authentication method model</returns>
         public virtual List<ExternalAuthenticationMethodModel> PrepareExternalMethodsModel()
         {
-            return _externalAuthenticationService
-                .LoadActiveExternalAuthenticationMethods(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id)
+            return _authenticationPluginManager
+                .LoadActivePlugins(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id)
                 .Select(authenticationMethod => new ExternalAuthenticationMethodModel
                 {
                     ViewComponentName = authenticationMethod.GetPublicViewComponentName()
-                }).ToList();
+                })
+                .ToList();
         }
 
         #endregion

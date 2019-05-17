@@ -46,16 +46,16 @@ namespace Nop.Services.Catalog
             IWorkContext workContext,
             ShoppingCartSettings shoppingCartSettings)
         {
-            this._currencyService = currencyService;
-            this._downloadService = downloadService;
-            this._localizationService = localizationService;
-            this._priceCalculationService = priceCalculationService;
-            this._priceFormatter = priceFormatter;
-            this._productAttributeParser = productAttributeParser;
-            this._taxService = taxService;
-            this._webHelper = webHelper;
-            this._workContext = workContext;
-            this._shoppingCartSettings = shoppingCartSettings;
+            _currencyService = currencyService;
+            _downloadService = downloadService;
+            _localizationService = localizationService;
+            _priceCalculationService = priceCalculationService;
+            _priceFormatter = priceFormatter;
+            _productAttributeParser = productAttributeParser;
+            _taxService = taxService;
+            _webHelper = webHelper;
+            _workContext = workContext;
+            _shoppingCartSettings = shoppingCartSettings;
         }
 
         #endregion

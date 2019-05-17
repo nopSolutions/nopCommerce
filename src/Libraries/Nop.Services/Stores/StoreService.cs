@@ -27,9 +27,9 @@ namespace Nop.Services.Stores
             IRepository<Store> storeRepository,
             IStaticCacheManager cacheManager)
         {
-            this._eventPublisher = eventPublisher;
-            this._storeRepository = storeRepository;
-            this._cacheManager = cacheManager;
+            _eventPublisher = eventPublisher;
+            _storeRepository = storeRepository;
+            _cacheManager = cacheManager;
         }
 
         #endregion
@@ -54,7 +54,7 @@ namespace Nop.Services.Stores
 
             _storeRepository.Delete(store);
 
-            _cacheManager.RemoveByPattern(NopStoreDefaults.StoresPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopStoreDefaults.StoresPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(store);
@@ -132,7 +132,7 @@ namespace Nop.Services.Stores
 
             _storeRepository.Insert(store);
 
-            _cacheManager.RemoveByPattern(NopStoreDefaults.StoresPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopStoreDefaults.StoresPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(store);
@@ -152,7 +152,7 @@ namespace Nop.Services.Stores
 
             _storeRepository.Update(store);
 
-            _cacheManager.RemoveByPattern(NopStoreDefaults.StoresPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopStoreDefaults.StoresPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(store);
@@ -197,7 +197,7 @@ namespace Nop.Services.Stores
             if (string.IsNullOrEmpty(host))
                 return false;
 
-            var contains = this.ParseHostValues(store).Any(x => x.Equals(host, StringComparison.InvariantCultureIgnoreCase));
+            var contains = ParseHostValues(store).Any(x => x.Equals(host, StringComparison.InvariantCultureIgnoreCase));
 
             return contains;
         }

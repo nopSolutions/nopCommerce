@@ -12,8 +12,8 @@ namespace Nop.Web.Components
 
         public NewsletterBoxViewComponent(CustomerSettings customerSettings, INewsletterModelFactory newsletterModelFactory)
         {
-            this._customerSettings = customerSettings;
-            this._newsletterModelFactory = newsletterModelFactory;
+            _customerSettings = customerSettings;
+            _newsletterModelFactory = newsletterModelFactory;
         }
 
         public IViewComponentResult Invoke()

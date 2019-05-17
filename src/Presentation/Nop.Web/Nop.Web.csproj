@@ -5,7 +5,7 @@
     <Copyright>Copyright © Nop Solutions, Ltd</Copyright>
     <Company>Nop Solutions, Ltd</Company>
     <Authors>Nop Solutions, Ltd</Authors>
-    <Version>4.1.0.0</Version>
+    <Version>4.2.0.0</Version>
     <Description>Nop.Web is also an MVC web application project, a presentation layer for public store and admin area.</Description>
     <PackageLicenseUrl>http://www.nopcommerce.com/licensev3.aspx</PackageLicenseUrl>
     <PackageProjectUrl>http://www.nopcommerce.com/</PackageProjectUrl>
@@ -55,7 +55,7 @@
   <Target Name="NopTarget" AfterTargets="Build">
     <ItemGroup>
       <!-- Get plugin description files to get plugin paths -->
-      <PluginsDescription Include="$(MSBuildProjectDirectory)\Plugins\**\plugin.json;" />      
+      <PluginsDescription Include="$(MSBuildProjectDirectory)\Plugins\**\plugin.json;" />
       <!-- Get paths for all plugins -->
       <PluginsFolders Include="@(PluginsDescription->'%(relativedir)')" />
 
@@ -63,10 +63,10 @@
         because depending on the settings, this may not happen when the application is starting,
         but this can lead to unpredictable results during debugging of the project. -->
       <ShadowCopiesLibraries Include="$(MSBuildProjectDirectory)\Plugins\bin\*.*" Exclude="$(MSBuildProjectDirectory)\Plugins\bin\placeholder.txt" />
-    
+
       <!-- Get paths for ClearPluginAssemblies project -->
-      <ClearPluginAssemblies Include="$(MSBuildProjectDirectory)\..\..\Build\ClearPluginAssemblies.proj" />      
-    
+      <ClearPluginAssemblies Include="$(MSBuildProjectDirectory)\..\..\Build\ClearPluginAssemblies.proj" />
+
     </ItemGroup>
     <PropertyGroup>
       <PluginsFolders>@(PluginsFolders)</PluginsFolders>
@@ -78,8 +78,8 @@
       At the moment you can't disable this behavior. That's why we have to manually delete all unnecessary libraries from plugin output directories. -->
     <MSBuild Projects="@(ClearPluginAssemblies)" Properties="PluginPath=$(PluginsFolders)" Targets="NopClear" />
   </Target>
-  
-  <PropertyGroup> 
+
+  <PropertyGroup>
     <!--The common language runtime (CLR) supports two types of garbage collection:
       workstation garbage collection, which is available on all systems, and server garbage collection,
       which is available on multiprocessor systems.

@@ -1,0 +1,88 @@
+@model TaxSettingsModel
+
+<div class="panel-body">
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="EuVatEnabled_OverrideForStore" asp-input="EuVatEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="EuVatEnabled" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="EuVatEnabled" />
+            <span asp-validation-for="EuVatEnabled"></span>
+        </div>
+    </div>
+    <nop-nested-setting asp-for="EuVatEnabled">
+        <div class="form-group" id="pnlEuVatShopCountry">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="EuVatShopCountryId_OverrideForStore" asp-input="EuVatShopCountryId" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="EuVatShopCountryId" />
+            </div>
+            <div class="col-md-9">
+                <nop-select asp-for="EuVatShopCountryId" asp-items="Model.EuVatShopCountries" />
+                <span asp-validation-for="EuVatShopCountryId"></span>
+            </div>
+        </div>
+        <div class="form-group" id="pnlEuVatAllowVATExemption">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="EuVatAllowVatExemption_OverrideForStore" asp-input="EuVatAllowVatExemption" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="EuVatAllowVatExemption" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="EuVatAllowVatExemption" />
+                <span asp-validation-for="EuVatAllowVatExemption"></span>
+            </div>
+        </div>
+        <div class="form-group" id="pnlEuVatAssumeValid">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="EuVatAssumeValid_OverrideForStore" asp-input="EuVatAssumeValid" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="EuVatAssumeValid" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="EuVatAssumeValid" />
+                <span asp-validation-for="EuVatAssumeValid"></span>
+            </div>
+        </div>
+        <div class="form-group" id="pnlEuVatUseWebService">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="EuVatUseWebService_OverrideForStore" asp-input="EuVatUseWebService" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="EuVatUseWebService" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="EuVatUseWebService" />
+                <span asp-validation-for="EuVatUseWebService"></span>
+            </div>
+        </div>
+        <div class="form-group" id="pnlEuVatEmailAdminWhenNewVATSubmitted">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="EuVatEmailAdminWhenNewVatSubmitted_OverrideForStore" asp-input="EuVatEmailAdminWhenNewVatSubmitted" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="EuVatEmailAdminWhenNewVatSubmitted" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="EuVatEmailAdminWhenNewVatSubmitted" />
+                <span asp-validation-for="EuVatEmailAdminWhenNewVatSubmitted"></span>
+            </div>
+        </div>
+    </nop-nested-setting>
+    <script>
+        $(document).ready(function () {
+            $("#@Html.IdFor(model => model.EuVatEnabled)").click(toggleEUVAT);
+
+            toggleEUVAT();
+        });
+        function toggleEUVAT() {
+            if ($('#@Html.IdFor(model => model.EuVatEnabled)').is(':checked')) {
+                $('#pnlEuVatShopCountry').show();
+                $('#pnlEuVatAllowVATExemption').show();
+                $('#pnlEuVatAssumeValid').show();
+                $('#pnlEuVatUseWebService').show();
+                $('#pnlEuVatEmailAdminWhenNewVATSubmitted').show();
+            } else {
+                $('#pnlEuVatShopCountry').hide();
+                $('#pnlEuVatAllowVATExemption').hide();
+                $('#pnlEuVatAssumeValid').hide();
+                $('#pnlEuVatUseWebService').hide();
+                $('#pnlEuVatEmailAdminWhenNewVATSubmitted').hide();
+            }
+        }
+    </script>
+</div>

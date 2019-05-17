@@ -1,0 +1,44 @@
+@model BlogSettingsModel
+
+<div class="panel-body">
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="Enabled_OverrideForStore" asp-input="Enabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="Enabled"/>
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="Enabled" />
+            <span asp-validation-for="Enabled"></span>
+        </div>
+    </div>
+    <div class="form-group advanced-setting">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="PostsPageSize_OverrideForStore" asp-input="PostsPageSize" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="PostsPageSize" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="PostsPageSize" />
+            <span asp-validation-for="PostsPageSize"></span>
+        </div>
+    </div>
+    <div class="form-group advanced-setting">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="NumberOfTags_OverrideForStore" asp-input="NumberOfTags" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="NumberOfTags" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="NumberOfTags" />
+            <span asp-validation-for="NumberOfTags"></span>
+        </div>
+    </div>
+    <div class="form-group advanced-setting">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ShowHeaderRssUrl_OverrideForStore" asp-input="ShowHeaderRssUrl" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ShowHeaderRssUrl" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ShowHeaderRssUrl" />
+            <span asp-validation-for="ShowHeaderRssUrl"></span>
+        </div>
+    </div>
+</div>

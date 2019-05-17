@@ -1,6 +1,4 @@
-using Nop.Core.Plugins;
-
-namespace Nop.Services.Plugins
+﻿namespace Nop.Services.Plugins
 {
     /// <summary>
     /// Represents the plugin updated event
@@ -15,7 +13,7 @@ namespace Nop.Services.Plugins
         /// <param name="plugin">Updated plugin</param>
         public PluginUpdatedEvent(PluginDescriptor plugin)
         {
-            this.Plugin = plugin;
+            Plugin = plugin;
         }
 
         #endregion

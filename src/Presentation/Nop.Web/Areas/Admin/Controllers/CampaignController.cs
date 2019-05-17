@@ -51,18 +51,18 @@ namespace Nop.Web.Areas.Admin.Controllers
             IStoreContext storeContext,
             IStoreService storeService)
         {
-            this._emailAccountSettings = emailAccountSettings;
-            this._campaignModelFactory = campaignModelFactory;
-            this._campaignService = campaignService;
-            this._customerActivityService = customerActivityService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._emailAccountService = emailAccountService;
-            this._localizationService = localizationService;
-            this._notificationService = notificationService;
-            this._newsLetterSubscriptionService = newsLetterSubscriptionService;
-            this._permissionService = permissionService;
-            this._storeContext = storeContext;
-            this._storeService = storeService;
+            _emailAccountSettings = emailAccountSettings;
+            _campaignModelFactory = campaignModelFactory;
+            _campaignService = campaignService;
+            _customerActivityService = customerActivityService;
+            _dateTimeHelper = dateTimeHelper;
+            _emailAccountService = emailAccountService;
+            _localizationService = localizationService;
+            _notificationService = notificationService;
+            _newsLetterSubscriptionService = newsLetterSubscriptionService;
+            _permissionService = permissionService;
+            _storeContext = storeContext;
+            _storeService = storeService;
         }
 
         #endregion
@@ -100,7 +100,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult List(CampaignSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _campaignModelFactory.PrepareCampaignListModel(searchModel);

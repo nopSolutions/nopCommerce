@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Xml.Linq;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Vendors;
 using Nop.Web.Models.Catalog;
@@ -87,6 +88,25 @@ namespace Nop.Web.Factories
         /// <param name="loadSubCategories">A value indicating whether subcategories should be loaded</param>
         /// <returns>List of category (simple) models</returns>
         List<CategorySimpleModel> PrepareCategorySimpleModels(int rootCategoryId, bool loadSubCategories = true);
+
+        /// <summary>
+        /// Prepare category (simple) xml document
+        /// </summary>
+        /// <returns>Xml document of category (simple) models</returns>
+        XDocument PrepareCategoryXmlDocument();
+
+        /// <summary>
+        /// Prepare root categories for menu
+        /// </summary>
+        /// <returns>List of category (simple) models</returns>
+        List<CategorySimpleModel> PrepareRootCategories();
+
+        /// <summary>
+        /// Prepare subcategories for menu
+        /// </summary>
+        /// <param name="id">Id of category to get subcategory</param>
+        /// <returns></returns>
+        List<CategorySimpleModel> PrepareSubCategories(int id);
 
         #endregion
 

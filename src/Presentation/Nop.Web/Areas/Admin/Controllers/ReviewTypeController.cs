@@ -40,13 +40,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             IReviewTypeModelFactory reviewTypeModelFactory,
             IReviewTypeService reviewTypeService)
         {
-            this._reviewTypeModelFactory = reviewTypeModelFactory;
-            this._reviewTypeService = reviewTypeService;
-            this._customerActivityService = customerActivityService;
-            this._localizedEntityService = localizedEntityService;
-            this._localizationService = localizationService;
-            this._notificationService = notificationService;
-            this._permissionService = permissionService;
+            _reviewTypeModelFactory = reviewTypeModelFactory;
+            _reviewTypeService = reviewTypeService;
+            _customerActivityService = customerActivityService;
+            _localizedEntityService = localizedEntityService;
+            _localizationService = localizationService;
+            _notificationService = notificationService;
+            _permissionService = permissionService;
         }
 
         #endregion
@@ -83,6 +83,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
+            //select an appropriate panel
+            SaveSelectedPanelName("catalogsettings-review-types");
+
             //we just redirect a user to the catalog settings page
             return RedirectToAction("Catalog", "Setting");
         }
@@ -91,7 +94,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult List(ReviewTypeSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _reviewTypeModelFactory.PrepareReviewTypeListModel(searchModel);

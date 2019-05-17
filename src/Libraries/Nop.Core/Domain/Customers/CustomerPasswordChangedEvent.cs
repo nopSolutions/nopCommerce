@@ -11,7 +11,7 @@ namespace Nop.Core.Domain.Customers
         /// <param name="password">Password</param>
         public CustomerPasswordChangedEvent(CustomerPassword password)
         {
-            this.Password = password;
+            Password = password;
         }
 
         /// <summary>

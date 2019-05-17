@@ -1,20 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using FluentValidation.Attributes;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Data;
 using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
-using Nop.Web.Validators.Install;
 
 namespace Nop.Web.Models.Install
 {
-    [Validator(typeof(InstallValidator))]
     public partial class InstallModel : BaseNopModel
     {
         public InstallModel()
         {
-            this.AvailableLanguages = new List<SelectListItem>();
+            AvailableLanguages = new List<SelectListItem>();
         }
 
         public string AdminEmail { get; set; }

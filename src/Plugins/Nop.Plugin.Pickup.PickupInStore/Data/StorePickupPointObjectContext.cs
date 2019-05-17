@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Nop.Core;
@@ -26,7 +26,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Data
         /// <summary>
         /// Further configuration the model
         /// </summary>
-        /// <param name="modelBuilder">Model muilder</param>
+        /// <param name="modelBuilder">Model builder</param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new StorePickupPointMap());
@@ -42,7 +42,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Data
         /// </summary>
         /// <typeparam name="TEntity">Entity type</typeparam>
         /// <returns>A set for the given entity type</returns>
-        public virtual new DbSet<TEntity> Set<TEntity>() where TEntity : BaseEntity
+        public new virtual DbSet<TEntity> Set<TEntity>() where TEntity : BaseEntity
         {
             return base.Set<TEntity>();
         }
@@ -53,7 +53,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Data
         /// <returns>A SQL script</returns>
         public virtual string GenerateCreateScript()
         {
-            return this.Database.GenerateCreateScript();
+            return Database.GenerateCreateScript();
         }
 
         /// <summary>
@@ -61,8 +61,9 @@ namespace Nop.Plugin.Pickup.PickupInStore.Data
         /// </summary>
         /// <typeparam name="TQuery">Query type</typeparam>
         /// <param name="sql">The raw SQL query</param>
+        /// <param name="parameters">The values to be assigned to parameters</param>
         /// <returns>An IQueryable representing the raw SQL query</returns>
-        public virtual IQueryable<TQuery> QueryFromSql<TQuery>(string sql) where TQuery : class
+        public virtual IQueryable<TQuery> QueryFromSql<TQuery>(string sql, params object[] parameters) where TQuery : class
         {
             throw new NotImplementedException();
         }
@@ -89,9 +90,9 @@ namespace Nop.Plugin.Pickup.PickupInStore.Data
         /// <returns>The number of rows affected</returns>
         public virtual int ExecuteSqlCommand(RawSqlString sql, bool doNotEnsureTransaction = false, int? timeout = null, params object[] parameters)
         {
-            using (var transaction = this.Database.BeginTransaction())
+            using (var transaction = Database.BeginTransaction())
             {
-                var result = this.Database.ExecuteSqlCommand(sql, parameters);
+                var result = Database.ExecuteSqlCommand(sql, parameters);
                 transaction.Commit();
 
                 return result;
@@ -114,7 +115,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Data
         public void Install()
         {
             //create tables
-            this.ExecuteSqlScript(this.GenerateCreateScript());
+            this.ExecuteSqlScript(GenerateCreateScript());
         }
 
         /// <summary>

@@ -27,12 +27,12 @@ namespace Nop.Web.Components
             IStoreContext storeContext,
             IStoreMappingService storeMappingService)
         {
-            this._aclService = aclService;
-            this._productModelFactory = productModelFactory;
-            this._productService = productService;
-            this._cacheManager = cacheManager;
-            this._storeContext = storeContext;
-            this._storeMappingService = storeMappingService;
+            _aclService = aclService;
+            _productModelFactory = productModelFactory;
+            _productService = productService;
+            _cacheManager = cacheManager;
+            _storeContext = storeContext;
+            _storeMappingService = storeMappingService;
         }
 
         public IViewComponentResult Invoke(int productId, int? productThumbPictureSize)

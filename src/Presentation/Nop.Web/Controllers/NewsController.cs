@@ -6,6 +6,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.News;
 using Nop.Core.Domain.Security;
+using Nop.Core.Rss;
 using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
@@ -13,12 +14,12 @@ using Nop.Services.Messages;
 using Nop.Services.News;
 using Nop.Services.Security;
 using Nop.Services.Seo;
+using Nop.Services.Stores;
 using Nop.Web.Factories;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
-using Nop.Web.Framework.Mvc.Rss;
 using Nop.Web.Framework.Security;
 using Nop.Web.Framework.Security.Captcha;
 using Nop.Web.Models.News;
@@ -38,6 +39,7 @@ namespace Nop.Web.Controllers
         private readonly INewsService _newsService;
         private readonly IPermissionService _permissionService;
         private readonly IStoreContext _storeContext;
+        private readonly IStoreMappingService _storeMappingService;
         private readonly IUrlRecordService _urlRecordService;
         private readonly IWebHelper _webHelper;
         private readonly IWorkContext _workContext;
@@ -57,6 +59,7 @@ namespace Nop.Web.Controllers
             INewsService newsService,
             IPermissionService permissionService,
             IStoreContext storeContext,
+            IStoreMappingService storeMappingService,
             IUrlRecordService urlRecordService,
             IWebHelper webHelper,
             IWorkContext workContext,
@@ -64,20 +67,21 @@ namespace Nop.Web.Controllers
             LocalizationSettings localizationSettings,
             NewsSettings newsSettings)
         {
-            this._captchaSettings = captchaSettings;
-            this._customerActivityService = customerActivityService;
-            this._eventPublisher = eventPublisher;
-            this._localizationService = localizationService;
-            this._newsModelFactory = newsModelFactory;
-            this._newsService = newsService;
-            this._permissionService = permissionService;
-            this._storeContext = storeContext;
-            this._urlRecordService = urlRecordService;
-            this._webHelper = webHelper;
-            this._workContext = workContext;
-            this._workflowMessageService = workflowMessageService;
-            this._localizationSettings = localizationSettings;
-            this._newsSettings = newsSettings;
+            _captchaSettings = captchaSettings;
+            _customerActivityService = customerActivityService;
+            _eventPublisher = eventPublisher;
+            _localizationService = localizationService;
+            _newsModelFactory = newsModelFactory;
+            _newsService = newsService;
+            _permissionService = permissionService;
+            _storeContext = storeContext;
+            _storeMappingService = storeMappingService;
+            _urlRecordService = urlRecordService;
+            _webHelper = webHelper;
+            _workContext = workContext;
+            _workflowMessageService = workflowMessageService;
+            _localizationSettings = localizationSettings;
+            _newsSettings = newsSettings;
         }
 
         #endregion
@@ -87,7 +91,7 @@ namespace Nop.Web.Controllers
         public virtual IActionResult List(NewsPagingFilteringModel command)
         {
             if (!_newsSettings.Enabled)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             var model = _newsModelFactory.PrepareNewsItemListModel(command);
             return View(model);
@@ -118,16 +122,24 @@ namespace Nop.Web.Controllers
         public virtual IActionResult NewsItem(int newsItemId)
         {
             if (!_newsSettings.Enabled)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             var newsItem = _newsService.GetNewsById(newsItemId);
             if (newsItem == null)
-                return RedirectToRoute("HomePage");
+                return InvokeHttp404();
 
+            var notAvailable =
+                //published?
+                !newsItem.Published ||
+                //availability dates
+                !_newsService.IsNewsAvailable(newsItem) ||
+                //Store mapping
+                !_storeMappingService.Authorize(newsItem);
+            //Check whether the current user has a "Manage news" permission (usually a store owner)
+            //We should allows him (her) to use "Preview" functionality
             var hasAdminAccess = _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && _permissionService.Authorize(StandardPermissionProvider.ManageNews);
-            //access to News preview
-            if ((!newsItem.Published || !_newsService.IsNewsAvailable(newsItem)) && !hasAdminAccess)
-                return RedirectToRoute("HomePage");
+            if (notAvailable && !hasAdminAccess)
+                return InvokeHttp404();
 
             var model = new NewsItemModel();
             model = _newsModelFactory.PrepareNewsItemModel(model, newsItem, true);
@@ -146,16 +158,16 @@ namespace Nop.Web.Controllers
         public virtual IActionResult NewsCommentAdd(int newsItemId, NewsItemModel model, bool captchaValid)
         {
             if (!_newsSettings.Enabled)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             var newsItem = _newsService.GetNewsById(newsItemId);
             if (newsItem == null || !newsItem.Published || !newsItem.AllowComments)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             //validate CAPTCHA
             if (_captchaSettings.Enabled && _captchaSettings.ShowOnNewsCommentPage && !captchaValid)
             {
-                ModelState.AddModelError("", _captchaSettings.GetWrongCaptchaMessage(_localizationService));
+                ModelState.AddModelError("", _localizationService.GetResource("Common.WrongCaptchaMessage"));
             }
 
             if (_workContext.CurrentCustomer.IsGuest() && !_newsSettings.AllowNotRegisteredUsersToLeaveComments)

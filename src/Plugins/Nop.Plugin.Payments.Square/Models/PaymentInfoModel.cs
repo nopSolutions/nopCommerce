@@ -1,10 +1,13 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Plugin.Payments.Square.Models
 {
+    /// <summary>
+    /// Represents payment model
+    /// </summary>
     public class PaymentInfoModel : BaseNopModel
     {
         #region Ctor
@@ -21,6 +24,7 @@ namespace Nop.Plugin.Payments.Square.Models
         public bool IsGuest { get; set; }
 
         public string CardNonce { get; set; }
+
         public string Errors { get; set; }
 
         [NopResourceDisplayName("Plugins.Payments.Square.Fields.PostalCode")]

@@ -26,8 +26,8 @@ namespace Nop.Services.Catalog
         public ProductAttributeParser(IDbContext context,
             IProductAttributeService productAttributeService)
         {
-            this._context = context;
-            this._productAttributeService = productAttributeService;
+            _context = context;
+            _productAttributeService = productAttributeService;
         }
 
         #endregion
@@ -543,6 +543,10 @@ namespace Nop.Services.Catalog
         {
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
+
+            //anyway combination cannot contains non combinable attributes
+            if (String.IsNullOrEmpty(attributesXml))
+                return null;
 
             var combinations = _productAttributeService.GetAllProductAttributeCombinations(product.Id);
             return combinations.FirstOrDefault(x =>

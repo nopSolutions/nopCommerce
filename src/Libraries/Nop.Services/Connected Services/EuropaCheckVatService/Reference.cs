@@ -280,29 +280,29 @@ namespace Nop.Services.EuropaCheckVatService
         public checkVatPortTypeClient() : 
                 base(checkVatPortTypeClient.GetDefaultBinding(), checkVatPortTypeClient.GetDefaultEndpointAddress())
         {
-            this.Endpoint.Name = EndpointConfiguration.checkVatPort.ToString();
-            ConfigureEndpoint(this.Endpoint, this.ClientCredentials);
+            Endpoint.Name = EndpointConfiguration.checkVatPort.ToString();
+            ConfigureEndpoint(Endpoint, ClientCredentials);
         }
         
         public checkVatPortTypeClient(EndpointConfiguration endpointConfiguration) : 
                 base(checkVatPortTypeClient.GetBindingForEndpoint(endpointConfiguration), checkVatPortTypeClient.GetEndpointAddress(endpointConfiguration))
         {
-            this.Endpoint.Name = endpointConfiguration.ToString();
-            ConfigureEndpoint(this.Endpoint, this.ClientCredentials);
+            Endpoint.Name = endpointConfiguration.ToString();
+            ConfigureEndpoint(Endpoint, ClientCredentials);
         }
         
         public checkVatPortTypeClient(EndpointConfiguration endpointConfiguration, string remoteAddress) : 
                 base(checkVatPortTypeClient.GetBindingForEndpoint(endpointConfiguration), new System.ServiceModel.EndpointAddress(remoteAddress))
         {
-            this.Endpoint.Name = endpointConfiguration.ToString();
-            ConfigureEndpoint(this.Endpoint, this.ClientCredentials);
+            Endpoint.Name = endpointConfiguration.ToString();
+            ConfigureEndpoint(Endpoint, ClientCredentials);
         }
         
         public checkVatPortTypeClient(EndpointConfiguration endpointConfiguration, System.ServiceModel.EndpointAddress remoteAddress) : 
                 base(checkVatPortTypeClient.GetBindingForEndpoint(endpointConfiguration), remoteAddress)
         {
-            this.Endpoint.Name = endpointConfiguration.ToString();
-            ConfigureEndpoint(this.Endpoint, this.ClientCredentials);
+            Endpoint.Name = endpointConfiguration.ToString();
+            ConfigureEndpoint(Endpoint, ClientCredentials);
         }
         
         public checkVatPortTypeClient(System.ServiceModel.Channels.Binding binding, System.ServiceModel.EndpointAddress remoteAddress) : 

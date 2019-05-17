@@ -29,9 +29,9 @@ namespace Nop.Services.Helpers
             INopFileProvider fileProvider,
             NopConfig nopConfig)
         {
-            this._httpContextAccessor = httpContextAccessor;
-            this._fileProvider = fileProvider;
-            this._nopConfig = nopConfig;
+            _httpContextAccessor = httpContextAccessor;
+            _fileProvider = fileProvider;
+            _nopConfig = nopConfig;
         }
 
         #endregion

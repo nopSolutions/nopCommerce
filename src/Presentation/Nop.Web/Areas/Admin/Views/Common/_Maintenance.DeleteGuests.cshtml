@@ -1,0 +1,47 @@
+﻿@model MaintenanceModel
+
+<div class="panel-body">
+    <div class="form-group">
+        <div class="col-md-6">
+            <nop-label asp-for="DeleteGuests.StartDate" />
+        </div>
+        <div class="col-md-6">
+            <nop-editor asp-for="DeleteGuests.StartDate" />
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-6">
+            <nop-label asp-for="DeleteGuests.EndDate" />
+        </div>
+        <div class="col-md-6">
+            <nop-editor asp-for="DeleteGuests.EndDate" />
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-6">
+            <nop-label asp-for="DeleteGuests.OnlyWithoutShoppingCart" />
+        </div>
+        <div class="col-md-6">
+            <nop-editor asp-for="DeleteGuests.OnlyWithoutShoppingCart" />
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-6 col-md-offset-6">
+            <button type="submit" name="delete-guests" class="btn btn-default">
+                <i class="fa fa-trash"></i>
+                @T("Admin.Common.Delete")
+            </button>
+        </div>
+    </div>
+    @if (Model.DeleteGuests.NumberOfDeletedCustomers.HasValue)
+    {
+        <div class="form-group">
+            <div class="col-md-12">
+                <div class="alert alert-success alert-dismissible no-margin">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    @string.Format(T("Admin.System.Maintenance.DeleteGuests.TotalDeleted").Text, Model.DeleteGuests.NumberOfDeletedCustomers.Value)
+                </div>
+            </div>
+        </div>
+    }
+</div>

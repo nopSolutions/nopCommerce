@@ -22,17 +22,17 @@ namespace Nop.Web.Controllers
             IPermissionService permissionService,
             IProfileModelFactory profileModelFactory)
         {
-            this._customerSettings = customerSettings;
-            this._customerService = customerService;
-            this._permissionService = permissionService;
-            this._profileModelFactory = profileModelFactory;
+            _customerSettings = customerSettings;
+            _customerService = customerService;
+            _permissionService = permissionService;
+            _profileModelFactory = profileModelFactory;
         }
 
         public virtual IActionResult Index(int? id, int? pageNumber)
         {
             if (!_customerSettings.AllowViewingProfiles)
             {
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
             }
 
             var customerId = 0;
@@ -44,7 +44,7 @@ namespace Nop.Web.Controllers
             var customer = _customerService.GetCustomerById(customerId);
             if (customer == null || customer.IsGuest())
             {
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
             }
 
             //display "edit" (manage) link

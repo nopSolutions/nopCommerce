@@ -14,7 +14,7 @@ namespace Nop.Services.Helpers
     /// </summary>
     public class BrowscapXmlHelper
     {
-        private readonly List<string> _crawlerUserAgentsRegexp;
+        private Regex _crawlerUserAgentsRegexp;
         private readonly INopFileProvider _fileProvider;
 
         /// <summary>
@@ -25,8 +25,7 @@ namespace Nop.Services.Helpers
         /// <param name="fileProvider">File provider</param>
         public BrowscapXmlHelper(string userAgentStringsPath, string crawlerOnlyUserAgentStringsPath, INopFileProvider fileProvider)
         {
-            this._crawlerUserAgentsRegexp = new List<string>();
-            this._fileProvider = fileProvider;
+            _fileProvider = fileProvider;
 
             Initialize(userAgentStringsPath, crawlerOnlyUserAgentStringsPath);
         }
@@ -74,12 +73,15 @@ namespace Nop.Services.Helpers
             if (crawlerItems == null || !crawlerItems.Any())
                 throw new Exception("Incorrect file format");
 
-            _crawlerUserAgentsRegexp.AddRange(crawlerItems
+            var crawlerRegexpPattern = string.Join("|",
+                crawlerItems
                 //get only user agent names
                 .Select(e => e.Attribute("name"))
                 .Where(e => !string.IsNullOrEmpty(e?.Value))
                 .Select(e => e.Value)
                 .Select(ToRegexp));
+
+            _crawlerUserAgentsRegexp = new Regex(crawlerRegexpPattern);
 
             if ((string.IsNullOrEmpty(crawlerOnlyUserAgentStringsPath) || _fileProvider.FileExists(crawlerOnlyUserAgentStringsPath)) && !needSaveCrawlerOnly)
                 return;
@@ -112,7 +114,7 @@ namespace Nop.Services.Helpers
         /// <returns>True if user agent is a crawler, otherwise - false</returns>
         public bool IsCrawler(string userAgent)
         {
-            return _crawlerUserAgentsRegexp.Any(p => Regex.IsMatch(userAgent, p));
+            return _crawlerUserAgentsRegexp.IsMatch(userAgent);
         }
     }
 }

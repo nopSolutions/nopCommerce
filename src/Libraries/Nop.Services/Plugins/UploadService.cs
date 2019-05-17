@@ -9,7 +9,6 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Nop.Core;
 using Nop.Core.Infrastructure;
-using Nop.Core.Plugins;
 using Nop.Services.Common;
 using Nop.Services.Themes;
 
@@ -34,9 +33,9 @@ namespace Nop.Services.Plugins
             IStoreContext storeContext,
             IThemeProvider themeProvider)
         {
-            this._fileProvider = fileProvider;
-            this._storeContext = storeContext;
-            this._themeProvider = themeProvider;
+            _fileProvider = fileProvider;
+            _storeContext = storeContext;
+            _themeProvider = themeProvider;
         }
 
         #endregion

@@ -7,6 +7,18 @@
     Html.SetActiveMenuItemSystemName("Vendor settings");
 }
 
+
+@{
+    const string hideCommonBlockAttributeName = "VendorSettingsPage.HideCommonBlock";
+    var hideCommonBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideCommonBlockAttributeName);
+
+    const string hideCatalogBlockAttributeName = "VendorSettingsPage.HideCatalogBlock";
+    var hideCatalogBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideCatalogBlockAttributeName);
+
+    const string hideVendorAttributeBlockAttributeName = "VendorSettingsPage.HideVendorAttributeBlock";
+    var hideVendorAttributeBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideVendorAttributeBlockAttributeName);
+}
+
 <form asp-controller="Setting" asp-action="Vendor" method="post">
     <div class="content-header clearfix">
         <h1 class="pull-left">
@@ -27,165 +39,13 @@
             @await Component.InvokeAsync("SettingMode")
             <div asp-validation-summary="All"></div>
 
-            <div class="panel-group">
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.VendorSettingsTop })
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        @T("Admin.Configuration.Settings.Vendor.BlockTitle.Common")
-                    </div>
-                    <div class="panel-body">
-                        <script>
-                            $(document).ready(function () {
-                                $("#@Html.IdFor(model => model.AllowVendorsToEditInfo)").click(toggleAllowVendorsToEditInfo);
-                                $("#@Html.IdFor(model => model.AllowCustomersToApplyForVendorAccount)").click(toggleAllowCustomersToApplyForVendorAccount);
+            <nop-panels id="vendorsettings-panels">
+                <nop-panel asp-name="vendorsettings-common" asp-icon="fa fa-info" asp-title="@T("Admin.Configuration.Settings.Vendor.BlockTitle.Common")" asp-hide-block-attribute-name="@hideCommonBlockAttributeName" asp-hide="@hideCommonBlock" asp-advanced="false">@await Html.PartialAsync("_Vendor.Common", Model)</nop-panel>
+                <nop-panel asp-name="vendorsettings-catalog" asp-icon="fa fa-list" asp-title="@T("Admin.Configuration.Settings.Vendor.BlockTitle.Catalog")" asp-hide-block-attribute-name="@hideCatalogBlockAttributeName" asp-hide="@hideCatalogBlock" asp-advanced="false">@await Html.PartialAsync("_Vendor.Catalog", Model)</nop-panel>
+                <nop-panel asp-name="vendorsettings-vendor-attributes" asp-icon="fa fa-paperclip" asp-title="@T("Admin.Vendors.VendorAttributes")" asp-hide-block-attribute-name="@hideVendorAttributeBlockAttributeName" asp-hide="@hideVendorAttributeBlock" asp-advanced="true">@await Html.PartialAsync("../VendorAttribute/ListBlock.cshtml", Model.VendorAttributeSearchModel)</nop-panel>
 
-                                toggleAllowVendorsToEditInfo();
-                                toggleAllowCustomersToApplyForVendorAccount();
-                            });
-
-                            function toggleAllowVendorsToEditInfo() {
-                                if ($('#@Html.IdFor(model => model.AllowVendorsToEditInfo)').is(':checked')) {
-                                    $('#pnlNotifyStoreOwnerAboutVendorInformationChange').show();
-                                } else {
-                                    $('#pnlNotifyStoreOwnerAboutVendorInformationChange').hide();
-                                }
-                            }
-
-                            function toggleAllowCustomersToApplyForVendorAccount() {
-                                if ($('#@Html.IdFor(model => model.AllowCustomersToApplyForVendorAccount)').is(':checked')) {
-                                    $('#pnlTermsOfServiceEnabled').show();
-                                } else {
-                                    $('#pnlTermsOfServiceEnabled').hide();
-                                }
-                            }
-                        </script>
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="AllowCustomersToApplyForVendorAccount_OverrideForStore" asp-input="AllowCustomersToApplyForVendorAccount" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="AllowCustomersToApplyForVendorAccount" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="AllowCustomersToApplyForVendorAccount" />
-                                <span asp-validation-for="AllowCustomersToApplyForVendorAccount"></span>
-                            </div>
-                        </div>
-                        <nop-nested-setting asp-for="AllowCustomersToApplyForVendorAccount">
-                            <div class="form-group" id="pnlTermsOfServiceEnabled">
-                                <div class="col-md-3">
-                                    <nop-override-store-checkbox asp-for="TermsOfServiceEnabled_OverrideForStore" asp-input="TermsOfServiceEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                    <nop-label asp-for="TermsOfServiceEnabled" />
-                                </div>
-                                <div class="col-md-9">
-                                    <nop-editor asp-for="TermsOfServiceEnabled" />
-                                    <span asp-validation-for="TermsOfServiceEnabled"></span>
-                                </div>
-                            </div>
-                        </nop-nested-setting>
-                        <div class="form-group advanced-setting">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="AllowVendorsToEditInfo_OverrideForStore" asp-input="AllowVendorsToEditInfo" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="AllowVendorsToEditInfo" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="AllowVendorsToEditInfo" />
-                                <span asp-validation-for="AllowVendorsToEditInfo"></span>
-                            </div>
-                        </div>
-                        <nop-nested-setting asp-for="AllowVendorsToEditInfo">
-                            <div class="form-group advanced-setting" id="pnlNotifyStoreOwnerAboutVendorInformationChange">
-                                <div class="col-md-3">
-                                    <nop-override-store-checkbox asp-for="NotifyStoreOwnerAboutVendorInformationChange_OverrideForStore" asp-input="NotifyStoreOwnerAboutVendorInformationChange" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                    <nop-label asp-for="NotifyStoreOwnerAboutVendorInformationChange" />
-                                </div>
-                                <div class="col-md-9">
-                                    <nop-editor asp-for="NotifyStoreOwnerAboutVendorInformationChange" />
-                                    <span asp-validation-for="NotifyStoreOwnerAboutVendorInformationChange"></span>
-                                </div>
-                            </div>
-                        </nop-nested-setting>
-                        <div class="form-group advanced-setting">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="MaximumProductNumber_OverrideForStore" asp-input="MaximumProductNumber" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="MaximumProductNumber" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="MaximumProductNumber" />
-                                <span asp-validation-for="MaximumProductNumber"></span>
-                            </div>
-                        </div>
-                        <div class="form-group advanced-setting">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="AllowVendorsToImportProducts_OverrideForStore" asp-input="AllowVendorsToImportProducts" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="AllowVendorsToImportProducts" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="AllowVendorsToImportProducts" />
-                                <span asp-validation-for="AllowVendorsToImportProducts"></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        @T("Admin.Configuration.Settings.Vendor.BlockTitle.Catalog")
-                    </div>
-                    <div class="panel-body">
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="AllowCustomersToContactVendors_OverrideForStore" asp-input="AllowCustomersToContactVendors" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="AllowCustomersToContactVendors" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="AllowCustomersToContactVendors" />
-                                <span asp-validation-for="AllowCustomersToContactVendors"></span>
-                            </div>
-                        </div>
-                        <div class="form-group advanced-setting">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="AllowSearchByVendor_OverrideForStore" asp-input="AllowSearchByVendor" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="AllowSearchByVendor" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="AllowSearchByVendor" />
-                                <span asp-validation-for="AllowSearchByVendor"></span>
-                            </div>
-                        </div>
-                        <div class="form-group advanced-setting">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="ShowVendorOnProductDetailsPage_OverrideForStore" asp-input="ShowVendorOnProductDetailsPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="ShowVendorOnProductDetailsPage" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="ShowVendorOnProductDetailsPage" />
-                                <span asp-validation-for="ShowVendorOnProductDetailsPage"></span>
-                            </div>
-                        </div>
-                        <div class="form-group advanced-setting">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="ShowVendorOnOrderDetailsPage_OverrideForStore" asp-input="ShowVendorOnOrderDetailsPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="ShowVendorOnOrderDetailsPage" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="ShowVendorOnOrderDetailsPage" />
-                                <span asp-validation-for="ShowVendorOnOrderDetailsPage"></span>
-                            </div>
-                        </div>
-                        <div class="form-group advanced-setting">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="VendorsBlockItemsToDisplay_OverrideForStore" asp-input="VendorsBlockItemsToDisplay" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="VendorsBlockItemsToDisplay" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="VendorsBlockItemsToDisplay" />
-                                <span asp-validation-for="VendorsBlockItemsToDisplay"></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                @*render vendor attributes*@
-                @await Html.PartialAsync("../VendorAttribute/ListBlock.cshtml", Model.VendorAttributeSearchModel)
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.VendorSettingsBottom })
-            </div>
+                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.VendorSettingsDetailsBlock, additionalData = Model })
+            </nop-panels>
         </div>
     </div>
 </form>

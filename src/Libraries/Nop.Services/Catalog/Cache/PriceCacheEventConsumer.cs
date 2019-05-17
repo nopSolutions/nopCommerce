@@ -52,7 +52,7 @@ namespace Nop.Services.Catalog.Cache
 
         public PriceCacheEventConsumer(IStaticCacheManager cacheManager)
         {
-            this._cacheManager = cacheManager;
+            _cacheManager = cacheManager;
         }
 
         #endregion
@@ -61,26 +61,26 @@ namespace Nop.Services.Catalog.Cache
 
         public void HandleEvent(EntityUpdatedEvent<Setting> eventMessage)
         {
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductPricePatternCacheKey);
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductCategoryIdsPatternCacheKey);
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductManufacturerIdsPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductPricePrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductCategoryIdsPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductManufacturerIdsPrefixCacheKey);
         }
 
         #region Categories
 
         public void HandleEvent(EntityInsertedEvent<Category> eventMessage)
         {
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductCategoryIdsPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductCategoryIdsPrefixCacheKey);
         }
 
         public void HandleEvent(EntityUpdatedEvent<Category> eventMessage)
         {
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductCategoryIdsPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductCategoryIdsPrefixCacheKey);
         }
 
         public void HandleEvent(EntityDeletedEvent<Category> eventMessage)
         {
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductCategoryIdsPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductCategoryIdsPrefixCacheKey);
         }
         
         #endregion
@@ -89,17 +89,17 @@ namespace Nop.Services.Catalog.Cache
 
         public void HandleEvent(EntityInsertedEvent<Manufacturer> eventMessage)
         {
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductManufacturerIdsPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductManufacturerIdsPrefixCacheKey);
         }
 
         public void HandleEvent(EntityUpdatedEvent<Manufacturer> eventMessage)
         {
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductManufacturerIdsPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductManufacturerIdsPrefixCacheKey);
         }
 
         public void HandleEvent(EntityDeletedEvent<Manufacturer> eventMessage)
         {
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductManufacturerIdsPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductManufacturerIdsPrefixCacheKey);
         }
 
         #endregion
@@ -108,20 +108,20 @@ namespace Nop.Services.Catalog.Cache
 
         public void HandleEvent(EntityInsertedEvent<ProductCategory> eventMessage)
         {
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductPricePatternCacheKey);
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductCategoryIdsPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductPricePrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductCategoryIdsPrefixCacheKey);
         }
 
         public void HandleEvent(EntityUpdatedEvent<ProductCategory> eventMessage)
         {
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductPricePatternCacheKey);
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductCategoryIdsPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductPricePrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductCategoryIdsPrefixCacheKey);
         }
 
         public void HandleEvent(EntityDeletedEvent<ProductCategory> eventMessage)
         {
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductPricePatternCacheKey);
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductCategoryIdsPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductPricePrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductCategoryIdsPrefixCacheKey);
         }
 
         #endregion
@@ -130,20 +130,20 @@ namespace Nop.Services.Catalog.Cache
 
         public void HandleEvent(EntityInsertedEvent<ProductManufacturer> eventMessage)
         {
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductPricePatternCacheKey);
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductManufacturerIdsPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductPricePrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductManufacturerIdsPrefixCacheKey);
         }
 
         public void HandleEvent(EntityUpdatedEvent<ProductManufacturer> eventMessage)
         {
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductPricePatternCacheKey);
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductManufacturerIdsPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductPricePrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductManufacturerIdsPrefixCacheKey);
         }
 
         public void HandleEvent(EntityDeletedEvent<ProductManufacturer> eventMessage)
         {
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductPricePatternCacheKey);
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductManufacturerIdsPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductPricePrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductManufacturerIdsPrefixCacheKey);
         }
 
         #endregion
@@ -152,17 +152,17 @@ namespace Nop.Services.Catalog.Cache
 
         public void HandleEvent(EntityInsertedEvent<Product> eventMessage)
         {
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductPricePatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductPricePrefixCacheKey);
         }
 
         public void HandleEvent(EntityUpdatedEvent<Product> eventMessage)
         {
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductPricePatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductPricePrefixCacheKey);
         }
 
         public void HandleEvent(EntityDeletedEvent<Product> eventMessage)
         {
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductPricePatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductPricePrefixCacheKey);
         }
 
         #endregion
@@ -171,17 +171,17 @@ namespace Nop.Services.Catalog.Cache
 
         public void HandleEvent(EntityInsertedEvent<TierPrice> eventMessage)
         {
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductPricePatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductPricePrefixCacheKey);
         }
 
         public void HandleEvent(EntityUpdatedEvent<TierPrice> eventMessage)
         {
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductPricePatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductPricePrefixCacheKey);
         }
 
         public void HandleEvent(EntityDeletedEvent<TierPrice> eventMessage)
         {
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductPricePatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductPricePrefixCacheKey);
         }
 
         #endregion
@@ -190,17 +190,17 @@ namespace Nop.Services.Catalog.Cache
 
         public void HandleEvent(EntityInsertedEvent<Order> eventMessage)
         {
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductPricePatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductPricePrefixCacheKey);
         }
 
         public void HandleEvent(EntityUpdatedEvent<Order> eventMessage)
         {
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductPricePatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductPricePrefixCacheKey);
         }
 
         public void HandleEvent(EntityDeletedEvent<Order> eventMessage)
         {
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductPricePatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductPricePrefixCacheKey);
         }
 
         #endregion

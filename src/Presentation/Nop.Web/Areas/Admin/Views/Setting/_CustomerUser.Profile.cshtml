@@ -1,0 +1,72 @@
+﻿@model CustomerUserSettingsModel
+
+<div class="panel-body">
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-label asp-for="CustomerSettings.AllowViewingProfiles" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="CustomerSettings.AllowViewingProfiles" />
+            <span asp-validation-for="CustomerSettings.AllowViewingProfiles"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-label asp-for="CustomerSettings.ShowCustomersLocation" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="CustomerSettings.ShowCustomersLocation" />
+            <span asp-validation-for="CustomerSettings.ShowCustomersLocation"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-label asp-for="CustomerSettings.ShowCustomersJoinDate" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="CustomerSettings.ShowCustomersJoinDate" />
+            <span asp-validation-for="CustomerSettings.ShowCustomersJoinDate"></span>
+        </div>
+    </div>
+</div>
+<script>
+$(document).ready(function () {
+    $("#@Html.IdFor(model => model.CustomerSettings.AllowCustomersToUploadAvatars)").click(toggleAvatar);
+    $("#@Html.IdFor(model => model.CustomerSettings.UsernamesEnabled)").click(toggleUsername);
+    $("#@Html.IdFor(model => model.CustomerSettings.UsernameValidationEnabled)").click(toggleUsernameValidation);
+
+    toggleAvatar();
+    toggleUsername();
+    toggleUsernameValidation();
+});
+
+function toggleAvatar() {
+    if ($('#@Html.IdFor(model => model.CustomerSettings.AllowCustomersToUploadAvatars)').is(':checked')) {
+        $('#pnlDefaultAvatarEnabled').show();
+    } else {
+        $('#pnlDefaultAvatarEnabled').hide();
+    }
+}
+
+function toggleUsername() {
+    if ($('#@Html.IdFor(model => model.CustomerSettings.UsernamesEnabled)').is(':checked')) {
+        $('#pnlAllowUsersToChangeUsernames').show();
+        $('#pnlCheckUsernameAvailability').show();
+        $('#pnlUsernameValidationEnabled').show();
+    } else {
+        $('#pnlAllowUsersToChangeUsernames').hide();
+        $('#pnlCheckUsernameAvailability').hide();
+        $('#pnlUsernameValidationEnabled').hide();
+    }
+}
+
+    function toggleUsernameValidation() {
+    if ($('#@Html.IdFor(model => model.CustomerSettings.UsernameValidationEnabled)').is(':checked')) {
+        $('#pnlUsernameValidationRule').show();
+        $('#pnlUsernameValidationUseRegex').show();
+    } else {
+        $('#pnlUsernameValidationRule').hide();
+        $('#pnlUsernameValidationUseRegex').hide();
+    }
+}
+</script>

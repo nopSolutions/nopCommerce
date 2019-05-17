@@ -38,8 +38,8 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Services
         public ShippingByWeightByTotalService(IRepository<ShippingByWeightByTotalRecord> sbwtRepository,
             ICacheManager cacheManager)
         {
-            this._sbwtRepository = sbwtRepository;
-            this._cacheManager = cacheManager;
+            _sbwtRepository = sbwtRepository;
+            _cacheManager = cacheManager;
         }
 
         #endregion
@@ -172,7 +172,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Services
 
             _sbwtRepository.Insert(shippingByWeightRecord);
 
-            _cacheManager.RemoveByPattern(SHIPPINGBYWEIGHTBYTOTAL_PATTERN_KEY);
+            _cacheManager.RemoveByPrefix(SHIPPINGBYWEIGHTBYTOTAL_PATTERN_KEY);
         }
 
         /// <summary>
@@ -186,7 +186,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Services
 
             _sbwtRepository.Update(shippingByWeightRecord);
 
-            _cacheManager.RemoveByPattern(SHIPPINGBYWEIGHTBYTOTAL_PATTERN_KEY);
+            _cacheManager.RemoveByPrefix(SHIPPINGBYWEIGHTBYTOTAL_PATTERN_KEY);
         }
 
         /// <summary>
@@ -200,7 +200,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Services
 
             _sbwtRepository.Delete(shippingByWeightRecord);
 
-            _cacheManager.RemoveByPattern(SHIPPINGBYWEIGHTBYTOTAL_PATTERN_KEY);
+            _cacheManager.RemoveByPrefix(SHIPPINGBYWEIGHTBYTOTAL_PATTERN_KEY);
         }
 
         #endregion

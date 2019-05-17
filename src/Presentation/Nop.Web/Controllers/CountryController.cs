@@ -16,7 +16,7 @@ namespace Nop.Web.Controllers
 
         public CountryController(ICountryModelFactory countryModelFactory)
 		{
-            this._countryModelFactory = countryModelFactory;
+            _countryModelFactory = countryModelFactory;
 		}
         
         #endregion

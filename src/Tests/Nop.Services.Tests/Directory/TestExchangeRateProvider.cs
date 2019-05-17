@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Nop.Core.Domain.Directory;
-using Nop.Core.Plugins;
 using Nop.Services.Directory;
+using Nop.Services.Plugins;
 
 namespace Nop.Services.Tests.Directory
 {

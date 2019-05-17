@@ -45,9 +45,9 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Infrastructure.Cache
             ISettingService settingService,
             IStaticCacheManager cacheManager)
         {
-            this._taxRateService = taxRateService;
-            this._settingService = settingService;
-            this._cacheManager = cacheManager;
+            _taxRateService = taxRateService;
+            _settingService = settingService;
+            _cacheManager = cacheManager;
         }
 
         #endregion
@@ -61,7 +61,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Infrastructure.Cache
         public void HandleEvent(EntityInsertedEvent<TaxRate> eventMessage)
         {
             //clear cache
-            _cacheManager.RemoveByPattern(TAXRATE_PATTERN_KEY);
+            _cacheManager.RemoveByPrefix(TAXRATE_PATTERN_KEY);
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Infrastructure.Cache
         public void HandleEvent(EntityUpdatedEvent<TaxRate> eventMessage)
         {
             //clear cache
-            _cacheManager.RemoveByPattern(TAXRATE_PATTERN_KEY);
+            _cacheManager.RemoveByPrefix(TAXRATE_PATTERN_KEY);
         }
 
         /// <summary>
@@ -81,7 +81,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Infrastructure.Cache
         public void HandleEvent(EntityDeletedEvent<TaxRate> eventMessage)
         {
             //clear cache
-            _cacheManager.RemoveByPattern(TAXRATE_PATTERN_KEY);
+            _cacheManager.RemoveByPrefix(TAXRATE_PATTERN_KEY);
         }
 
         /// <summary>

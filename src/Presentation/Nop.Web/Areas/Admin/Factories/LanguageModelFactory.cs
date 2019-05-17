@@ -1,11 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using Nop.Core;
 using Nop.Core.Domain.Localization;
 using Nop.Services.Localization;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Localization;
-using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -15,7 +17,7 @@ namespace Nop.Web.Areas.Admin.Factories
     public partial class LanguageModelFactory : ILanguageModelFactory
     {
         #region Fields
-
+        
         private readonly IBaseAdminModelFactory _baseAdminModelFactory;
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
@@ -30,10 +32,10 @@ namespace Nop.Web.Areas.Admin.Factories
             ILocalizationService localizationService,
             IStoreMappingSupportedModelFactory storeMappingSupportedModelFactory)
         {
-            this._baseAdminModelFactory = baseAdminModelFactory;
-            this._languageService = languageService;
-            this._localizationService = localizationService;
-            this._storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
+            _baseAdminModelFactory = baseAdminModelFactory;
+            _languageService = languageService;
+            _localizationService = localizationService;
+            _storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
         }
 
         #endregion
@@ -61,7 +63,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             return searchModel;
         }
-
+        
         #endregion
 
         #region Methods
@@ -93,15 +95,16 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get languages
-            var languages = _languageService.GetAllLanguages(showHidden: true, loadCacheableCopy: false);
+            var languages = _languageService.GetAllLanguages(showHidden: true, loadCacheableCopy: false).ToPagedList(searchModel);
 
             //prepare list model
-            var model = new LanguageListModel
+            var model = new LanguageListModel().PrepareToGrid(searchModel, languages, () =>
             {
-                //fill in model values from the entity
-                Data = languages.PaginationByRequestModel(searchModel).Select(language => language.ToModel<LanguageModel>()),
-                Total = languages.Count
-            };
+                return languages.Select(language =>
+                {
+                    return language.ToModel<LanguageModel>();
+                });
+            });
 
             return model;
         }
@@ -166,19 +169,21 @@ namespace Nop.Web.Areas.Admin.Factories
             if (!string.IsNullOrEmpty(searchModel.SearchResourceValue))
                 localeResources = localeResources.Where(l => l.Value.Value.ToLowerInvariant().Contains(searchModel.SearchResourceValue.ToLowerInvariant()));
 
+            var pagedLocaleResources = new PagedList<KeyValuePair<string, KeyValuePair<int, string>>>(localeResources,
+                searchModel.Page - 1, searchModel.PageSize);
+
             //prepare list model
-            var model = new LocaleResourceListModel
+            var model = new LocaleResourceListModel().PrepareToGrid(searchModel, pagedLocaleResources, () =>
             {
                 //fill in model values from the entity
-                Data = localeResources.PaginationByRequestModel(searchModel).Select(localeResource => new LocaleResourceModel
+                return pagedLocaleResources.Select(localeResource => new LocaleResourceModel
                 {
                     LanguageId = language.Id,
                     Id = localeResource.Value.Key,
                     ResourceName = localeResource.Key,
                     ResourceValue = localeResource.Value.Value
-                }),
-                Total = localeResources.Count()
-            };
+                });
+            });
 
             return model;
         }

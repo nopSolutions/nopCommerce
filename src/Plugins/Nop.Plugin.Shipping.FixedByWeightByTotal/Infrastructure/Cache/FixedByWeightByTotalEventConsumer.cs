@@ -20,7 +20,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Infrastructure.Cache
 
         public FixedByWeightByTotalEventConsumer(ISettingService settingService)
         {
-            this._settingService = settingService;
+            _settingService = settingService;
         }
 
         #endregion

@@ -32,7 +32,7 @@ namespace Nop.Core.Domain.Shipping
         /// <summary>
         /// Gets or sets a value indicating whether customers can choose "Pick Up in Store" option during checkout (displayed on the "billing address" checkout step)
         /// </summary>
-        public bool AllowPickUpInStore { get; set; }
+        public bool AllowPickupInStore { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether display a pickup points in the map
@@ -42,7 +42,7 @@ namespace Nop.Core.Domain.Shipping
         /// <summary>
         /// Gets or sets a value indicating whether ignore additional shipping charge for pick up in store
         /// </summary>
-        public bool IgnoreAdditionalShippingChargeForPickUpInStore { get; set; }
+        public bool IgnoreAdditionalShippingChargeForPickupInStore { get; set; }
 
         /// <summary>
         /// Gets or sets Google map API key

@@ -1,0 +1,54 @@
+@model CatalogSettingsModel
+
+<div class="panel-body">
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="AllowProductSorting_OverrideForStore" asp-input="AllowProductSorting" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="AllowProductSorting" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="AllowProductSorting" />
+            <span asp-validation-for="AllowProductSorting"></span>
+        </div>
+    </div>
+
+    @await Html.PartialAsync("Table", new DataTablesModel
+    {
+        Name = "sortoptions-grid",
+        UrlRead = new DataUrl("SortOptionsList", "Setting",  null),
+        UrlUpdate = new DataUrl("SortOptionUpdate", "Setting", null),
+        Length = Model.SortOptionSearchModel.PageSize,
+        LengthMenu = Model.SortOptionSearchModel.AvailablePageSizes,
+        ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(SortOptionModel.Name))
+                {
+                    Title = T("Admin.Configuration.Settings.Catalog.SortOptions.Name").Text
+                },
+                new ColumnProperty(nameof(SortOptionModel.DisplayOrder))
+                {
+                    Title = T("Admin.Configuration.Settings.Catalog.SortOptions.DisplayOrder").Text,
+                    Width = "100",
+                    ClassName = StyleColumn.CenterAll,
+                    Editable = true,
+                    EditType = EditType.Number
+                },
+                new ColumnProperty(nameof(SortOptionModel.IsActive))
+                {
+                    Title = T("Admin.Configuration.Settings.Catalog.SortOptions.IsActive").Text,
+                    Width = "100",
+                    ClassName = StyleColumn.CenterAll,
+                    Render = new RenderBoolean(),
+                    Editable = true,
+                    EditType = EditType.Checkbox
+                },
+                new ColumnProperty(nameof(SortOptionModel.Id))
+                {
+                    Title = T("Admin.Common.Edit").Text,
+                    Width = "200",
+                    ClassName =  StyleColumn.ButtonStyle,
+                    Render = new RenderButtonsInlineEdit()
+                }
+            }
+    })
+</div>

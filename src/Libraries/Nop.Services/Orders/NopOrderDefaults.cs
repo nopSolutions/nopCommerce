@@ -43,12 +43,12 @@
         /// <summary>
         /// Gets a key pattern to clear cache
         /// </summary>
-        public static string CheckoutAttributesPatternCacheKey => "Nop.checkoutattribute.";
+        public static string CheckoutAttributesPrefixCacheKey => "Nop.checkoutattribute.";
 
         /// <summary>
         /// Gets a key pattern to clear cache
         /// </summary>
-        public static string CheckoutAttributeValuesPatternCacheKey => "Nop.checkoutattributevalue.";
+        public static string CheckoutAttributeValuesPrefixCacheKey => "Nop.checkoutattributevalue.";
 
         #endregion
     }

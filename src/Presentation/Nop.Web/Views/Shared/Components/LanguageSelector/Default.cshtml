@@ -31,7 +31,7 @@
                 Selected = lang.Id.Equals(Model.CurrentLanguageId)
             });
 
-            <select id="customerlanguage" name="customerlanguage" asp-items="@languages" onchange="setLocation(this.value);"></select>
+            <select id="customerlanguage" name="customerlanguage" asp-items="@languages" onchange="setLocation(this.value);" aria-label="@T("Languages.Selector.Label")"></select>
         }
     }
     </div>

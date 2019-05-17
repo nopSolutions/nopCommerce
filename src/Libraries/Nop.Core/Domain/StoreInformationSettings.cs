@@ -62,10 +62,5 @@ namespace Nop.Core.Domain
         /// Gets or sets a value of YouTube channel URL of the site
         /// </summary>
         public string YoutubeLink { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value of Google+ page URL of the site
-        /// </summary>
-        public string GooglePlusLink { get; set; }
     }
 }

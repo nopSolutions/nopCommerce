@@ -37,12 +37,12 @@ namespace Nop.Web.Areas.Admin.Controllers
             IQueuedEmailModelFactory queuedEmailModelFactory,
             IQueuedEmailService queuedEmailService)
         {
-            this._dateTimeHelper = dateTimeHelper;
-            this._localizationService = localizationService;
-            this._notificationService = notificationService;
-            this._permissionService = permissionService;
-            this._queuedEmailModelFactory = queuedEmailModelFactory;
-            this._queuedEmailService = queuedEmailService;
+            _dateTimeHelper = dateTimeHelper;
+            _localizationService = localizationService;
+            _notificationService = notificationService;
+            _permissionService = permissionService;
+            _queuedEmailModelFactory = queuedEmailModelFactory;
+            _queuedEmailService = queuedEmailService;
         }
 
         #endregion
@@ -69,7 +69,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult QueuedEmailList(QueuedEmailSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMessageQueue))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _queuedEmailModelFactory.PrepareQueuedEmailListModel(searchModel);

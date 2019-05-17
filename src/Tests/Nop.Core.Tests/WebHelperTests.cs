@@ -1,4 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Abstractions;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Net.Http.Headers;
 using Moq;
 using Nop.Core.Configuration;
@@ -12,7 +18,10 @@ namespace Nop.Core.Tests
     public class WebHelperTests
     {
         private DefaultHttpContext _httpContext;
+        private Mock<IActionContextAccessor> _actionContextAccessor;
+        private Mock<IApplicationLifetime> _applicationLifetime;
         private Mock<INopFileProvider> _fileProvider;
+        private Mock<IUrlHelperFactory> _urlHelperFactory;
         private IWebHelper _webHelper;
 
         [SetUp]
@@ -25,9 +34,15 @@ namespace Nop.Core.Tests
             _httpContext.Request.QueryString = queryString;
             _httpContext.Request.Headers.Add(HeaderNames.Host, "www.Example.com");
 
+            _actionContextAccessor = new Mock<IActionContextAccessor>();
+            _applicationLifetime = new Mock<IApplicationLifetime>();
             _fileProvider = new Mock<INopFileProvider>();
+            _urlHelperFactory = new Mock<IUrlHelperFactory>();
+            _actionContextAccessor.Setup(x => x.ActionContext).Returns(new ActionContext(_httpContext, new RouteData(), new ActionDescriptor()));
+            _urlHelperFactory.Setup(x => x.GetUrlHelper(_actionContextAccessor.Object.ActionContext))
+                .Returns(new UrlHelper(_actionContextAccessor.Object.ActionContext));
 
-            _webHelper = new WebHelper(new HostingConfig(), new FakeHttpContextAccessor(_httpContext), _fileProvider.Object);
+            _webHelper = new WebHelper(new HostingConfig(), _actionContextAccessor.Object, _applicationLifetime.Object, new FakeHttpContextAccessor(_httpContext), _fileProvider.Object, _urlHelperFactory.Object);
         }
 
         [Test]

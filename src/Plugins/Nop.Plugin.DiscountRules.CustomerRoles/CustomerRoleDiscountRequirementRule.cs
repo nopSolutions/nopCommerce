@@ -1,13 +1,13 @@
-using System;
+﻿using System;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Nop.Core;
-using Nop.Core.Plugins;
 using Nop.Services.Configuration;
 using Nop.Services.Discounts;
 using Nop.Services.Localization;
+using Nop.Services.Plugins;
 
 namespace Nop.Plugin.DiscountRules.CustomerRoles
 {
@@ -33,12 +33,12 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles
             IUrlHelperFactory urlHelperFactory,
             IWebHelper webHelper)
         {
-            this._actionContextAccessor = actionContextAccessor;
-            this._discountService = discountService;
-            this._localizationService = localizationService;
-            this._settingService = settingService;
-            this._urlHelperFactory = urlHelperFactory;
-            this._webHelper = webHelper;
+            _actionContextAccessor = actionContextAccessor;
+            _discountService = discountService;
+            _localizationService = localizationService;
+            _settingService = settingService;
+            _urlHelperFactory = urlHelperFactory;
+            _webHelper = webHelper;
         }
 
         #endregion

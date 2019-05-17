@@ -415,7 +415,7 @@ namespace Nop.Services.Tests.ExportImport
                     { "OrderStatusId", "OrderStatus" },
                     { "PaymentStatusId", "PaymentStatus" },
                     { "ShippingStatusId", "ShippingStatus" },
-                    { "ShippingPickUpInStore", "PickUpInStore" }
+                    { "ShippingPickupInStore", "PickupInStore" }
                 };
 
             var order = orders.First();
@@ -570,7 +570,7 @@ namespace Nop.Services.Tests.ExportImport
                     AllowCustomersToSelectPageSize = true,
                     PageSizeOptions = "10;20;30",
                     PriceRanges = "100;200;300",
-                    ShowOnHomePage = true,
+                    ShowOnHomepage = true,
                     IncludeInTopMenu = true,
                     Published = true,
                     DisplayOrder = 1
@@ -629,7 +629,7 @@ namespace Nop.Services.Tests.ExportImport
                     FullDescription = "TestFullDescription",
                     VendorId = 1,
                     ProductTemplateId = 1,
-                    ShowOnHomePage = true,
+                    ShowOnHomepage = true,
                     MetaKeywords = "TestMetaKeywords",
                     MetaDescription = "TestMetaDescription",
                     MetaTitle = "TestMetaTitle",

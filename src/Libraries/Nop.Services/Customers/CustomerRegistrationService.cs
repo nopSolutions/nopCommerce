@@ -49,18 +49,18 @@ namespace Nop.Services.Customers
             IWorkflowMessageService workflowMessageService,
             RewardPointsSettings rewardPointsSettings)
         {
-            this._customerSettings = customerSettings;
-            this._customerService = customerService;
-            this._encryptionService = encryptionService;
-            this._eventPublisher = eventPublisher;
-            this._genericAttributeService = genericAttributeService;
-            this._localizationService = localizationService;
-            this._newsLetterSubscriptionService = newsLetterSubscriptionService;
-            this._rewardPointService = rewardPointService;
-            this._storeService = storeService;
-            this._workContext = workContext;
-            this._workflowMessageService = workflowMessageService;
-            this._rewardPointsSettings = rewardPointsSettings;
+            _customerSettings = customerSettings;
+            _customerService = customerService;
+            _encryptionService = encryptionService;
+            _eventPublisher = eventPublisher;
+            _genericAttributeService = genericAttributeService;
+            _localizationService = localizationService;
+            _newsLetterSubscriptionService = newsLetterSubscriptionService;
+            _rewardPointService = rewardPointService;
+            _storeService = storeService;
+            _workContext = workContext;
+            _workflowMessageService = workflowMessageService;
+            _rewardPointsSettings = rewardPointsSettings;
         }
 
         #endregion

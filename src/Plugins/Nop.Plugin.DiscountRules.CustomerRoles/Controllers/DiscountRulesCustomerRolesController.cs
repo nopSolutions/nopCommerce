@@ -37,11 +37,11 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles.Controllers
             IPermissionService permissionService,
             ISettingService settingService)
         {
-            this._customerService = customerService;
-            this._discountService = discountService;
-            this._localizationService = localizationService;
-            this._permissionService = permissionService;
-            this._settingService = settingService;
+            _customerService = customerService;
+            _discountService = discountService;
+            _localizationService = localizationService;
+            _permissionService = permissionService;
+            _settingService = settingService;
         }
 
         #endregion

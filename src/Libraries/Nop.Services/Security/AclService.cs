@@ -35,11 +35,11 @@ namespace Nop.Services.Security
             IStaticCacheManager cacheManager,
             IWorkContext workContext)
         {
-            this._catalogSettings = catalogSettings;
-            this._eventPublisher = eventPublisher;
-            this._aclRecordRepository = aclRecordRepository;
-            this._cacheManager = cacheManager;
-            this._workContext = workContext;
+            _catalogSettings = catalogSettings;
+            _eventPublisher = eventPublisher;
+            _aclRecordRepository = aclRecordRepository;
+            _cacheManager = cacheManager;
+            _workContext = workContext;
         }
 
         #endregion
@@ -58,7 +58,7 @@ namespace Nop.Services.Security
             _aclRecordRepository.Delete(aclRecord);
 
             //cache
-            _cacheManager.RemoveByPattern(NopSecurityDefaults.AclRecordPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopSecurityDefaults.AclRecordPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(aclRecord);
@@ -111,7 +111,7 @@ namespace Nop.Services.Security
             _aclRecordRepository.Insert(aclRecord);
 
             //cache
-            _cacheManager.RemoveByPattern(NopSecurityDefaults.AclRecordPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopSecurityDefaults.AclRecordPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(aclRecord);
@@ -156,7 +156,7 @@ namespace Nop.Services.Security
             _aclRecordRepository.Update(aclRecord);
 
             //cache
-            _cacheManager.RemoveByPattern(NopSecurityDefaults.AclRecordPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopSecurityDefaults.AclRecordPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(aclRecord);

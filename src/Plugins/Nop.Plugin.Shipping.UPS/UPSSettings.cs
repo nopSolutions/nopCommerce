@@ -9,11 +9,6 @@ namespace Nop.Plugin.Shipping.UPS
     public class UPSSettings : ISettings
     {
         /// <summary>
-        /// Gets or sets UPS service URL
-        /// </summary>
-        public string Url { get; set; }
-
-        /// <summary>
         /// Gets or sets the account number
         /// </summary>
         public string AccountNumber { get; set; }
@@ -34,6 +29,11 @@ namespace Nop.Plugin.Shipping.UPS
         public string Password { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether to use sandbox environment
+        /// </summary>
+        public bool UseSandbox { get; set; }
+
+        /// <summary>
         /// Gets or sets an amount of the additional handling charge
         /// </summary>
         public decimal AdditionalHandlingCharge { get; set; }
@@ -41,22 +41,27 @@ namespace Nop.Plugin.Shipping.UPS
         /// <summary>
         /// Gets or sets UPS customer classification
         /// </summary>
-        public UPSCustomerClassification CustomerClassification { get; set; }
+        public CustomerClassification CustomerClassification { get; set; }
 
         /// <summary>
         /// Gets or sets a pickup type
         /// </summary>
-        public UPSPickupType PickupType { get; set; }
+        public PickupType PickupType { get; set; }
 
         /// <summary>
         /// Gets or sets packaging type
         /// </summary>
-        public UPSPackagingType PackagingType { get; set; }
+        public PackagingType PackagingType { get; set; }
 
         /// <summary>
         /// Gets or sets offered carrier services
         /// </summary>
         public string CarrierServicesOffered { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether Saturday Delivery enabled
+        /// </summary>
+        public bool SaturdayDeliveryEnabled { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to insure packages

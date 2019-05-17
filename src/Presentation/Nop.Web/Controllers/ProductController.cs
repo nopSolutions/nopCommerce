@@ -8,6 +8,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
+using Nop.Core.Rss;
 using Nop.Services.Catalog;
 using Nop.Services.Events;
 using Nop.Services.Localization;
@@ -22,7 +23,6 @@ using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
-using Nop.Web.Framework.Mvc.Rss;
 using Nop.Web.Framework.Security;
 using Nop.Web.Framework.Security.Captcha;
 using Nop.Web.Models.Catalog;
@@ -45,6 +45,7 @@ namespace Nop.Web.Controllers
         private readonly IProductModelFactory _productModelFactory;
         private readonly IProductService _productService;
         private readonly IRecentlyViewedProductsService _recentlyViewedProductsService;
+        private readonly IShoppingCartService _shoppingCartService;
         private readonly IStoreContext _storeContext;
         private readonly IStoreMappingService _storeMappingService;
         private readonly IUrlRecordService _urlRecordService;
@@ -70,6 +71,7 @@ namespace Nop.Web.Controllers
             IProductModelFactory productModelFactory,
             IProductService productService,
             IRecentlyViewedProductsService recentlyViewedProductsService,
+            IShoppingCartService shoppingCartService,
             IStoreContext storeContext,
             IStoreMappingService storeMappingService,
             IUrlRecordService urlRecordService,
@@ -79,26 +81,27 @@ namespace Nop.Web.Controllers
             LocalizationSettings localizationSettings,
             ShoppingCartSettings shoppingCartSettings)
         {
-            this._captchaSettings = captchaSettings;
-            this._catalogSettings = catalogSettings;
-            this._aclService = aclService;
-            this._compareProductsService = compareProductsService;
-            this._customerActivityService = customerActivityService;
-            this._eventPublisher = eventPublisher;
-            this._localizationService = localizationService;
-            this._orderService = orderService;
-            this._permissionService = permissionService;
-            this._productModelFactory = productModelFactory;
-            this._productService = productService;
-            this._recentlyViewedProductsService = recentlyViewedProductsService;
-            this._storeContext = storeContext;
-            this._storeMappingService = storeMappingService;
-            this._urlRecordService = urlRecordService;
-            this._webHelper = webHelper;
-            this._workContext = workContext;
-            this._workflowMessageService = workflowMessageService;
-            this._localizationSettings = localizationSettings;
-            this._shoppingCartSettings = shoppingCartSettings;
+            _captchaSettings = captchaSettings;
+            _catalogSettings = catalogSettings;
+            _aclService = aclService;
+            _compareProductsService = compareProductsService;
+            _customerActivityService = customerActivityService;
+            _eventPublisher = eventPublisher;
+            _localizationService = localizationService;
+            _orderService = orderService;
+            _permissionService = permissionService;
+            _productModelFactory = productModelFactory;
+            _productService = productService;
+            _recentlyViewedProductsService = recentlyViewedProductsService;
+            _shoppingCartService = shoppingCartService;
+            _storeContext = storeContext;
+            _storeMappingService = storeMappingService;
+            _urlRecordService = urlRecordService;
+            _webHelper = webHelper;
+            _workContext = workContext;
+            _workflowMessageService = workflowMessageService;
+            _localizationSettings = localizationSettings;
+            _shoppingCartSettings = shoppingCartSettings;
         }
 
         #endregion
@@ -123,7 +126,8 @@ namespace Nop.Web.Controllers
                 !_productService.ProductIsAvailable(product);
             //Check whether the current user has a "Manage products" permission (usually a store owner)
             //We should allows him (her) to use "Preview" functionality
-            if (notAvailable && !_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
+            var hasAdminAccess = _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && _permissionService.Authorize(StandardPermissionProvider.ManageProducts);
+            if (notAvailable && !hasAdminAccess)
                 return InvokeHttp404();
 
             //visible individually?
@@ -132,7 +136,7 @@ namespace Nop.Web.Controllers
                 //is this one an associated products?
                 var parentGroupedProduct = _productService.GetProductById(product.ParentGroupedProductId);
                 if (parentGroupedProduct == null)
-                    return RedirectToRoute("HomePage");
+                    return RedirectToRoute("Homepage");
 
                 return RedirectToRoute("Product", new { SeName = _urlRecordService.GetSeName(parentGroupedProduct) });
             }
@@ -141,9 +145,7 @@ namespace Nop.Web.Controllers
             ShoppingCartItem updatecartitem = null;
             if (_shoppingCartSettings.AllowCartItemEditing && updatecartitemid > 0)
             {
-                var cart = _workContext.CurrentCustomer.ShoppingCartItems
-                    .LimitPerStore(_storeContext.CurrentStore.Id)
-                    .ToList();
+                var cart = _shoppingCartService.GetShoppingCart(_workContext.CurrentCustomer, storeId: _storeContext.CurrentStore.Id);
                 updatecartitem = cart.FirstOrDefault(x => x.Id == updatecartitemid);
                 //not found?
                 if (updatecartitem == null)
@@ -272,7 +274,7 @@ namespace Nop.Web.Controllers
         {
             var product = _productService.GetProductById(productId);
             if (product == null || product.Deleted || !product.Published || !product.AllowCustomerReviews)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             var model = new ProductReviewsModel();
             model = _productModelFactory.PrepareProductReviewsModel(model, product);
@@ -311,12 +313,12 @@ namespace Nop.Web.Controllers
         {
             var product = _productService.GetProductById(productId);
             if (product == null || product.Deleted || !product.Published || !product.AllowCustomerReviews)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             //validate CAPTCHA
             if (_captchaSettings.Enabled && _captchaSettings.ShowOnProductReviewPage && !captchaValid)
             {
-                ModelState.AddModelError("", _captchaSettings.GetWrongCaptchaMessage(_localizationService));
+                ModelState.AddModelError("", _localizationService.GetResource("Common.WrongCaptchaMessage"));
             }
 
             if (_workContext.CurrentCustomer.IsGuest() && !_catalogSettings.AllowAnonymousUsersToReviewProduct)
@@ -488,7 +490,7 @@ namespace Nop.Web.Controllers
         {
             var product = _productService.GetProductById(productId);
             if (product == null || product.Deleted || !product.Published || !_catalogSettings.EmailAFriendEnabled)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             var model = new ProductEmailAFriendModel();
             model = _productModelFactory.PrepareProductEmailAFriendModel(model, product, false);
@@ -503,12 +505,12 @@ namespace Nop.Web.Controllers
         {
             var product = _productService.GetProductById(model.ProductId);
             if (product == null || product.Deleted || !product.Published || !_catalogSettings.EmailAFriendEnabled)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             //validate CAPTCHA
             if (_captchaSettings.Enabled && _captchaSettings.ShowOnEmailProductToFriendPage && !captchaValid)
             {
-                ModelState.AddModelError("", _captchaSettings.GetWrongCaptchaMessage(_localizationService));
+                ModelState.AddModelError("", _localizationService.GetResource("Common.WrongCaptchaMessage"));
             }
 
             //check whether the current customer is guest and ia allowed to email a friend
@@ -578,10 +580,10 @@ namespace Nop.Web.Controllers
         {
             var product = _productService.GetProductById(productId);
             if (product == null)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             if (!_catalogSettings.CompareProductsEnabled)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             _compareProductsService.RemoveProductFromCompareList(productId);
 
@@ -592,7 +594,7 @@ namespace Nop.Web.Controllers
         public virtual IActionResult CompareProducts()
         {
             if (!_catalogSettings.CompareProductsEnabled)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             var model = new CompareProductsModel
             {
@@ -617,7 +619,7 @@ namespace Nop.Web.Controllers
         public virtual IActionResult ClearCompareList()
         {
             if (!_catalogSettings.CompareProductsEnabled)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             _compareProductsService.ClearCompareProducts();
 

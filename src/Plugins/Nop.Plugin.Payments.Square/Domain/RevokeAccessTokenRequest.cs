@@ -14,12 +14,6 @@ namespace Nop.Plugin.Payments.Square.Domain
         public string ApplicationId { get; set; }
 
         /// <summary>
-        /// Gets or sets application secret
-        /// </summary>
-        [JsonIgnore]
-        public string ApplicationSecret { get; set; }
-
-        /// <summary>
         /// Gets or sets the ID of the merchant whose token you want to revoke
         /// </summary>
         [JsonProperty(PropertyName = "merchant_id")]

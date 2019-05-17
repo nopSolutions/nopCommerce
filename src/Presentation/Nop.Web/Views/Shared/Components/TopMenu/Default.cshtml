@@ -1,20 +1,23 @@
 ﻿@model TopMenuModel
-<ul class="top-menu">
+<ul class="top-menu notmobile">
     @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HeaderMenuBefore })
-    @if (Model.DisplayHomePageMenuItem)
+    @if (Model.DisplayHomepageMenuItem)
     {
-        <li><a href="@Url.RouteUrl("HomePage")">@T("HomePage")</a></li>
+        <li><a href="@Url.RouteUrl("Homepage")">@T("Homepage")</a></li>
     }
-    @{
+    @if (!Model.UseAjaxMenu)
+    {
         var rootCategories = Model.Categories.Where(x => x.IncludeInTopMenu).ToList();
-    }
-    @foreach (var category in rootCategories)
-    {
-        var categoryLineModel = new TopMenuModel.CategoryLineModel
+        @foreach (var category in rootCategories)
         {
-            Category = category
-        };
-        @await Html.PartialAsync("_CategoryLine.TopMenu", categoryLineModel)
+            var categoryLineModel = new TopMenuModel.CategoryLineModel
+            {
+                Category = category
+            };
+            @await Html.PartialAsync("_CategoryLine.TopMenu", categoryLineModel)
+        }
+
+
     }
     @foreach (var topic in Model.Topics)
     {
@@ -53,18 +56,22 @@
     <div class="menu-toggle">@responsiveMenuTitle</div>
     <ul class="top-menu mobile">
         @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.MobHeaderMenuBefore })
-        @if (Model.DisplayHomePageMenuItem)
+        @if (Model.DisplayHomepageMenuItem)
         {
-            <li><a href="@Url.RouteUrl("HomePage")">@T("HomePage")</a></li>
+            <li><a href="@Url.RouteUrl("Homepage")">@T("Homepage")</a></li>
         }
-        @foreach (var category in rootCategoriesResponsive)
+        @if (!Model.UseAjaxMenu)
         {
-            var categoryLineModel = new TopMenuModel.CategoryLineModel
+            @foreach (var category in rootCategoriesResponsive)
             {
-                Category = category,
-                ResponsiveMobileMenu = true
-            };
-            @await Html.PartialAsync("_CategoryLine.TopMenu", categoryLineModel)
+                var categoryLineModel = new TopMenuModel.CategoryLineModel
+                {
+                    Category = category,
+                    ResponsiveMobileMenu = true
+                };
+                @await Html.PartialAsync("_CategoryLine.TopMenu", categoryLineModel)
+            }
+
         }
         @foreach (var topic in Model.Topics)
         {
@@ -96,14 +103,37 @@
         }
         @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.MobHeaderMenuAfter })
     </ul>
-    <script asp-location="Footer">
+
+
+
+    @if (Model.UseAjaxMenu)
+    {
+        <script asp-location="Footer">
         $(document).ready(function () {
             $('.menu-toggle').on('click', function () {
                 $(this).siblings('.top-menu.mobile').slideToggle('slow');
             });
-            $('.top-menu.mobile .sublist-toggle').on('click', function () {
-                $(this).siblings('.sublist').slideToggle('slow');
-            });
+
+            mainMenu.init('@Url.Action("GetCatalogRoot", "Catalog")', '@Url.Action("GetCatalogSubCategories", "Catalog")', 'ul.top-menu.notmobile', 'ul.top-menu.mobile');
         });
-    </script>
+        </script>
+
+        Html.AppendScriptParts(ResourceLocation.Footer, "~/js/public.menu.js");
+
+    }
+    else
+    {
+        <script asp-location="Footer">
+            $(document).ready(function () {
+                $('.menu-toggle').on('click', function () {
+                    $(this).siblings('.top-menu.mobile').slideToggle('slow');
+                });
+                $('.top-menu.mobile .sublist-toggle').on('click', function () {
+                    $(this).siblings('.sublist').slideToggle('slow');
+                });
+            });
+        </script>
+
+    }
+
 }

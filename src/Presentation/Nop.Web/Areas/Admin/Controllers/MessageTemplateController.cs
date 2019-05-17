@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Messages;
 using Nop.Services.Localization;
@@ -46,16 +47,16 @@ namespace Nop.Web.Areas.Admin.Controllers
             IStoreService storeService,
             IWorkflowMessageService workflowMessageService)
         {
-            this._customerActivityService = customerActivityService;
-            this._localizationService = localizationService;
-            this._localizedEntityService = localizedEntityService;
-            this._messageTemplateModelFactory = messageTemplateModelFactory;
-            this._messageTemplateService = messageTemplateService;
-            this._notificationService = notificationService;
-            this._permissionService = permissionService;
-            this._storeMappingService = storeMappingService;
-            this._storeService = storeService;
-            this._workflowMessageService = workflowMessageService;
+            _customerActivityService = customerActivityService;
+            _localizationService = localizationService;
+            _localizedEntityService = localizedEntityService;
+            _messageTemplateModelFactory = messageTemplateModelFactory;
+            _messageTemplateService = messageTemplateService;
+            _notificationService = notificationService;
+            _permissionService = permissionService;
+            _storeMappingService = storeMappingService;
+            _storeService = storeService;
+            _workflowMessageService = workflowMessageService;
         }
 
         #endregion
@@ -136,7 +137,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult List(MessageTemplateSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMessageTemplates))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _messageTemplateModelFactory.PrepareMessageTemplateListModel(searchModel);
@@ -276,7 +277,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         [HttpPost, ActionName("TestTemplate")]
         [FormValueRequired("send-test")]
-        public virtual IActionResult TestTemplate(TestMessageTemplateModel model)
+        public virtual IActionResult TestTemplate(TestMessageTemplateModel model, IFormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMessageTemplates))
                 return AccessDeniedView();
@@ -287,7 +288,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             var tokens = new List<Token>();
-            var form = model.Form;
             foreach (var formKey in form.Keys)
                 if (formKey.StartsWith("token_", StringComparison.InvariantCultureIgnoreCase))
                 {

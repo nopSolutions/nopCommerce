@@ -30,9 +30,9 @@ namespace Nop.Services.Localization
             IStaticCacheManager cacheManager,
             LocalizationSettings localizationSettings)
         {
-            this._localizedPropertyRepository = localizedPropertyRepository;
-            this._cacheManager = cacheManager;
-            this._localizationSettings = localizationSettings;
+            _localizedPropertyRepository = localizedPropertyRepository;
+            _cacheManager = cacheManager;
+            _localizationSettings = localizationSettings;
         }
 
         #endregion
@@ -68,7 +68,7 @@ namespace Nop.Services.Localization
             //cache
             return _cacheManager.Get(NopLocalizationDefaults.LocalizedPropertyAllCacheKey, () =>
             {
-                var query = from lp in _localizedPropertyRepository.Table
+                var query = from lp in _localizedPropertyRepository.TableNoTracking
                             select lp;
                 var localizedProperties = query.ToList();
                 var list = new List<LocalizedPropertyForCaching>();
@@ -129,7 +129,7 @@ namespace Nop.Services.Localization
             _localizedPropertyRepository.Delete(localizedProperty);
 
             //cache
-            _cacheManager.RemoveByPattern(NopLocalizationDefaults.LocalizedPropertyPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopLocalizationDefaults.LocalizedPropertyPrefixCacheKey);
         }
 
         /// <summary>
@@ -181,7 +181,7 @@ namespace Nop.Services.Localization
                 var key = string.Format(NopLocalizationDefaults.LocalizedPropertyCacheKey, languageId, entityId, localeKeyGroup, localeKey);
                 return _cacheManager.Get(key, () =>
                 {
-                    var source = _localizedPropertyRepository.Table;
+                    var source = _localizedPropertyRepository.TableNoTracking;
                     var query = from lp in source
                                 where lp.LanguageId == languageId &&
                                 lp.EntityId == entityId &&
@@ -208,7 +208,7 @@ namespace Nop.Services.Localization
             _localizedPropertyRepository.Insert(localizedProperty);
 
             //cache
-            _cacheManager.RemoveByPattern(NopLocalizationDefaults.LocalizedPropertyPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopLocalizationDefaults.LocalizedPropertyPrefixCacheKey);
         }
 
         /// <summary>
@@ -223,7 +223,7 @@ namespace Nop.Services.Localization
             _localizedPropertyRepository.Update(localizedProperty);
 
             //cache
-            _cacheManager.RemoveByPattern(NopLocalizationDefaults.LocalizedPropertyPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopLocalizationDefaults.LocalizedPropertyPrefixCacheKey);
         }
 
         /// <summary>

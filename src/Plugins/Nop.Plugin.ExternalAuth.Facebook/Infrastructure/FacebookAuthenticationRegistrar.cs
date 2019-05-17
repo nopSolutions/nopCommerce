@@ -9,7 +9,7 @@ using Nop.Services.Authentication.External;
 namespace Nop.Plugin.ExternalAuth.Facebook.Infrastructure
 {
     /// <summary>
-    /// Registration of Facebook authentication service (plugin)
+    /// Represents registrar of Facebook authentication service
     /// </summary>
     public class FacebookAuthenticationRegistrar : IExternalAuthenticationRegistrar
     {
@@ -21,18 +21,25 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Infrastructure
         {
             builder.AddFacebook(FacebookDefaults.AuthenticationScheme, options =>
             {
+                //set credentials
                 var settings = EngineContext.Current.Resolve<FacebookExternalAuthSettings>();
-
                 options.AppId = settings.ClientKeyIdentifier;
                 options.AppSecret = settings.ClientSecret;
+
+                //store access and refresh tokens for the further usage
                 options.SaveTokens = true;
 
+                //set custom events handlers
                 options.Events = new OAuthEvents
                 {
-                    OnRemoteFailure = ctx =>
+                    //in case of error, redirect the user to the specified URL
+                    OnRemoteFailure = context =>
                     {
-                        ctx.HandleResponse();
-                        ctx.Response.Redirect(ctx.Properties.GetString("ErrorCallback"));
+                        context.HandleResponse();
+
+                        var errorUrl = context.Properties.GetString(FacebookAuthenticationDefaults.ErrorCallback);
+                        context.Response.Redirect(errorUrl);
+
                         return Task.FromResult(0);
                     }
                 };

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
@@ -22,7 +22,6 @@ namespace Nop.Services.Blogs
         private readonly IRepository<BlogComment> _blogCommentRepository;
         private readonly IRepository<BlogPost> _blogPostRepository;
         private readonly IRepository<StoreMapping> _storeMappingRepository;
-        private readonly string _entityName;
 
         #endregion
 
@@ -34,12 +33,11 @@ namespace Nop.Services.Blogs
             IRepository<BlogPost> blogPostRepository,
             IRepository<StoreMapping> storeMappingRepository)
         {
-            this._catalogSettings = catalogSettings;
-            this._eventPublisher = eventPublisher;
-            this._blogCommentRepository = blogCommentRepository;
-            this._blogPostRepository = blogPostRepository;
-            this._storeMappingRepository = storeMappingRepository;
-            this._entityName = typeof(BlogPost).Name;
+            _catalogSettings = catalogSettings;
+            _eventPublisher = eventPublisher;
+            _blogCommentRepository = blogCommentRepository;
+            _blogPostRepository = blogPostRepository;
+            _storeMappingRepository = storeMappingRepository;
         }
 
         #endregion
@@ -120,7 +118,7 @@ namespace Nop.Services.Blogs
                 //Store mapping
                 query = from bp in query
                         join sm in _storeMappingRepository.Table
-                        on new { c1 = bp.Id, c2 = _entityName } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into bp_sm
+                        on new { c1 = bp.Id, c2 = nameof(BlogPost) } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into bp_sm
                         from sm in bp_sm.DefaultIfEmpty()
                         where !bp.LimitedToStores || storeId == sm.StoreId
                         select bp;
@@ -155,7 +153,7 @@ namespace Nop.Services.Blogs
             var taggedBlogPosts = new List<BlogPost>();
             foreach (var blogPost in blogPostsAll)
             {
-                var tags = this.ParseTags(blogPost);
+                var tags = ParseTags(blogPost);
                 if (!string.IsNullOrEmpty(tags.FirstOrDefault(t => t.Equals(tag, StringComparison.InvariantCultureIgnoreCase))))
                     taggedBlogPosts.Add(blogPost);
             }
@@ -179,7 +177,7 @@ namespace Nop.Services.Blogs
             var blogPosts = GetAllBlogPosts(storeId: storeId, languageId: languageId, showHidden: showHidden);
             foreach (var blogPost in blogPosts)
             {
-                var tags = this.ParseTags(blogPost);
+                var tags = ParseTags(blogPost);
                 foreach (var tag in tags)
                 {
                     var foundBlogPostTag = blogPostTags.Find(bpt => bpt.Name.Equals(tag, StringComparison.InvariantCultureIgnoreCase));
@@ -201,7 +199,7 @@ namespace Nop.Services.Blogs
         }
 
         /// <summary>
-        /// Inserts an blog post
+        /// Inserts a blog post
         /// </summary>
         /// <param name="blogPost">Blog post</param>
         public virtual void InsertBlogPost(BlogPost blogPost)

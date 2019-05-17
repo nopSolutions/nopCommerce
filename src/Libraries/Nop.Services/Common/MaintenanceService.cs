@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
@@ -32,9 +32,9 @@ namespace Nop.Services.Common
             IDbContext dbContext,
             INopFileProvider fileProvider)
         {
-            this._dataProvider = dataProvider;
-            this._dbContext = dbContext;
-            this._fileProvider = fileProvider;
+            _dataProvider = dataProvider;
+            _dbContext = dbContext;
+            _fileProvider = fileProvider;
         }
 
         #endregion
@@ -119,7 +119,7 @@ namespace Nop.Services.Common
         public virtual void BackupDatabase()
         {
             CheckBackupSupported();
-            var fileName = $"{GetBackupDirectoryPath()}database_{DateTime.Now:yyyy-MM-dd-HH-mm-ss}_{CommonHelper.GenerateRandomDigitCode(10)}.{NopCommonDefaults.DbBackupFileExtension}";
+            var fileName = _fileProvider.Combine(GetBackupDirectoryPath(), $"database_{DateTime.Now:yyyy-MM-dd-HH-mm-ss}_{CommonHelper.GenerateRandomDigitCode(10)}.{NopCommonDefaults.DbBackupFileExtension}");
 
             var commandText = $"BACKUP DATABASE [{_dbContext.DbName()}] TO DISK = '{fileName}' WITH FORMAT";
 

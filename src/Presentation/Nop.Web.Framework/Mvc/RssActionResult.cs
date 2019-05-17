@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 using Microsoft.AspNetCore.Mvc;
-using Nop.Web.Framework.Mvc.Rss;
+using Nop.Core.Rss;
 
 namespace Nop.Web.Framework.Mvc
 {
@@ -20,14 +20,14 @@ namespace Nop.Web.Framework.Mvc
         /// <param name="feedPageUrl">Feed page url for atom self link</param>
         public RssActionResult(RssFeed feed, string feedPageUrl)
         {
-            this.ContentType = "application/atom+xml";
-            this.Feed = feed;
+            ContentType = "application/atom+xml";
+            Feed = feed;
 
             //add atom namespace
             XNamespace atom = "http://www.w3.org/2005/Atom";
-            this.Feed.AttributeExtension = new KeyValuePair<XmlQualifiedName, string>(new XmlQualifiedName("atom", XNamespace.Xmlns.NamespaceName), atom.NamespaceName);
+            Feed.AttributeExtension = new KeyValuePair<XmlQualifiedName, string>(new XmlQualifiedName("atom", XNamespace.Xmlns.NamespaceName), atom.NamespaceName);
             //add atom:link with rel='self' 
-            this.Feed.ElementExtensions.Add(new XElement(atom + "link", new XAttribute("href", new Uri(feedPageUrl)), new XAttribute("rel", "self"), new XAttribute("type", "application/rss+xml")));
+            Feed.ElementExtensions.Add(new XElement(atom + "link", new XAttribute("href", new Uri(feedPageUrl)), new XAttribute("rel", "self"), new XAttribute("type", "application/rss+xml")));
         }
 
         /// <summary>

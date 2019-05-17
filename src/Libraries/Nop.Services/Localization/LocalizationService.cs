@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
@@ -13,12 +13,12 @@ using Nop.Core.Configuration;
 using Nop.Core.Data;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Security;
-using Nop.Core.Plugins;
 using Nop.Data;
 using Nop.Data.Extensions;
 using Nop.Services.Configuration;
 using Nop.Services.Events;
 using Nop.Services.Logging;
+using Nop.Services.Plugins;
 
 namespace Nop.Services.Localization
 {
@@ -57,17 +57,17 @@ namespace Nop.Services.Localization
             IWorkContext workContext,
             LocalizationSettings localizationSettings)
         {
-            this._dataProvider = dataProvider;
-            this._dbContext = dbContext;
-            this._eventPublisher = eventPublisher;
-            this._languageService = languageService;
-            this._localizedEntityService = localizedEntityService;
-            this._logger = logger;
-            this._lsrRepository = lsrRepository;
-            this._settingService = settingService;
-            this._cacheManager = cacheManager;
-            this._workContext = workContext;
-            this._localizationSettings = localizationSettings;
+            _dataProvider = dataProvider;
+            _dbContext = dbContext;
+            _eventPublisher = eventPublisher;
+            _languageService = languageService;
+            _localizedEntityService = localizedEntityService;
+            _logger = logger;
+            _lsrRepository = lsrRepository;
+            _settingService = settingService;
+            _cacheManager = cacheManager;
+            _workContext = workContext;
+            _localizationSettings = localizationSettings;
         }
 
         #endregion
@@ -87,7 +87,7 @@ namespace Nop.Services.Localization
             _lsrRepository.Insert(resources);
 
             //cache
-            _cacheManager.RemoveByPattern(NopLocalizationDefaults.LocaleStringResourcesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopLocalizationDefaults.LocaleStringResourcesPrefixCacheKey);
 
             //event notification
             foreach (var resource in resources)
@@ -109,7 +109,7 @@ namespace Nop.Services.Localization
             _lsrRepository.Update(resources);
 
             //cache
-            _cacheManager.RemoveByPattern(NopLocalizationDefaults.LocaleStringResourcesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopLocalizationDefaults.LocaleStringResourcesPrefixCacheKey);
 
             //event notification
             foreach (var resource in resources)
@@ -148,7 +148,7 @@ namespace Nop.Services.Localization
             _lsrRepository.Delete(localeStringResource);
 
             //cache
-            _cacheManager.RemoveByPattern(NopLocalizationDefaults.LocaleStringResourcesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopLocalizationDefaults.LocaleStringResourcesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(localeStringResource);
@@ -228,7 +228,7 @@ namespace Nop.Services.Localization
             _lsrRepository.Insert(localeStringResource);
 
             //cache
-            _cacheManager.RemoveByPattern(NopLocalizationDefaults.LocaleStringResourcesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopLocalizationDefaults.LocaleStringResourcesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(localeStringResource);
@@ -246,7 +246,7 @@ namespace Nop.Services.Localization
             _lsrRepository.Update(localeStringResource);
 
             //cache
-            _cacheManager.RemoveByPattern(NopLocalizationDefaults.LocaleStringResourcesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopLocalizationDefaults.LocaleStringResourcesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(localeStringResource);
@@ -420,22 +420,6 @@ namespace Nop.Services.Localization
             if (string.IsNullOrEmpty(xml))
                 return;
 
-            //SQL 2005 insists that your XML schema encoding be in UTF-16.
-            //Otherwise, you'll get "XML parsing: line 1, character XXX, unable to switch the encoding"
-            //so let's remove XML declaration
-            var inDoc = new XmlDocument();
-            inDoc.LoadXml(xml);
-            var sb = new StringBuilder();
-            using (var xWriter = XmlWriter.Create(sb, new XmlWriterSettings { OmitXmlDeclaration = true }))
-            {
-                inDoc.Save(xWriter);
-                xWriter.Close();
-            }
-
-            var outDoc = new XmlDocument();
-            outDoc.LoadXml(sb.ToString());
-            xml = outDoc.OuterXml;
-
             //stored procedures are enabled and supported by the database.
             var pLanguageId = _dataProvider.GetParameter();
             pLanguageId.ParameterName = "LanguageId";
@@ -457,7 +441,7 @@ namespace Nop.Services.Localization
                 false, 600, pLanguageId, pXmlPackage, pUpdateExistingResources);
 
             //clear cache
-            _cacheManager.RemoveByPattern(NopLocalizationDefaults.LocaleStringResourcesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopLocalizationDefaults.LocaleStringResourcesPrefixCacheKey);
         }
 
         /// <summary>

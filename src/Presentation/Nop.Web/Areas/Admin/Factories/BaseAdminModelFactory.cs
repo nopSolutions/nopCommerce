@@ -11,7 +11,6 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
-using Nop.Core.Plugins;
 using Nop.Services;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
@@ -88,28 +87,28 @@ namespace Nop.Web.Areas.Admin.Factories
             ITopicTemplateService topicTemplateService,
             IVendorService vendorService)
         {
-            this._categoryService = categoryService;
-            this._categoryTemplateService = categoryTemplateService;
-            this._countryService = countryService;
-            this._currencyService = currencyService;
-            this._customerActivityService = customerActivityService;
-            this._customerService = customerService;
-            this._dateRangeService = dateRangeService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._emailAccountService = emailAccountService;
-            this._languageService = languageService;
-            this._localizationService = localizationService;
-            this._manufacturerService = manufacturerService;
-            this._manufacturerTemplateService = manufacturerTemplateService;
-            this._pluginService = pluginService;
-            this._productTemplateService = productTemplateService;
-            this._shippingService = shippingService;
-            this._stateProvinceService = stateProvinceService;
-            this._cacheManager = cacheManager;
-            this._storeService = storeService;
-            this._taxCategoryService = taxCategoryService;
-            this._topicTemplateService = topicTemplateService;
-            this._vendorService = vendorService;
+            _categoryService = categoryService;
+            _categoryTemplateService = categoryTemplateService;
+            _countryService = countryService;
+            _currencyService = currencyService;
+            _customerActivityService = customerActivityService;
+            _customerService = customerService;
+            _dateRangeService = dateRangeService;
+            _dateTimeHelper = dateTimeHelper;
+            _emailAccountService = emailAccountService;
+            _languageService = languageService;
+            _localizationService = localizationService;
+            _manufacturerService = manufacturerService;
+            _manufacturerTemplateService = manufacturerTemplateService;
+            _pluginService = pluginService;
+            _productTemplateService = productTemplateService;
+            _shippingService = shippingService;
+            _stateProvinceService = stateProvinceService;
+            _cacheManager = cacheManager;
+            _storeService = storeService;
+            _taxCategoryService = taxCategoryService;
+            _topicTemplateService = topicTemplateService;
+            _vendorService = vendorService;
         }
 
         #endregion

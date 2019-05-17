@@ -36,12 +36,12 @@ namespace Nop.Services.Localization
             IStoreMappingService storeMappingService,
             LocalizationSettings localizationSettings)
         {
-            this._eventPublisher = eventPublisher;
-            this._languageRepository = languageRepository;
-            this._settingService = settingService;
-            this._cacheManager = cacheManager;
-            this._storeMappingService = storeMappingService;
-            this._localizationSettings = localizationSettings;
+            _eventPublisher = eventPublisher;
+            _languageRepository = languageRepository;
+            _settingService = settingService;
+            _cacheManager = cacheManager;
+            _storeMappingService = storeMappingService;
+            _localizationSettings = localizationSettings;
         }
 
         #endregion
@@ -77,7 +77,7 @@ namespace Nop.Services.Localization
             _languageRepository.Delete(language);
 
             //cache
-            _cacheManager.RemoveByPattern(NopLocalizationDefaults.LanguagesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopLocalizationDefaults.LanguagesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(language);
@@ -172,7 +172,7 @@ namespace Nop.Services.Localization
             _languageRepository.Insert(language);
 
             //cache
-            _cacheManager.RemoveByPattern(NopLocalizationDefaults.LanguagesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopLocalizationDefaults.LanguagesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(language);
@@ -194,7 +194,7 @@ namespace Nop.Services.Localization
             _languageRepository.Update(language);
 
             //cache
-            _cacheManager.RemoveByPattern(NopLocalizationDefaults.LanguagesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopLocalizationDefaults.LanguagesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(language);

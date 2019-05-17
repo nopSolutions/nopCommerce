@@ -17,7 +17,7 @@ namespace Nop.Services.Logging
 
         public ClearLogTask(ILogger logger)
         {
-            this._logger = logger;
+            _logger = logger;
         }
 
         #endregion

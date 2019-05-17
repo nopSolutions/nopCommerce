@@ -36,12 +36,12 @@ namespace Nop.Services.Logging
             IWebHelper webHelper,
             IWorkContext workContext)
         {
-            this._dbContext = dbContext;
-            this._activityLogRepository = activityLogRepository;
-            this._activityLogTypeRepository = activityLogTypeRepository;
-            this._cacheManager = cacheManager;
-            this._webHelper = webHelper;
-            this._workContext = workContext;
+            _dbContext = dbContext;
+            _activityLogRepository = activityLogRepository;
+            _activityLogTypeRepository = activityLogTypeRepository;
+            _cacheManager = cacheManager;
+            _webHelper = webHelper;
+            _workContext = workContext;
         }
 
         #endregion
@@ -120,7 +120,7 @@ namespace Nop.Services.Logging
                 throw new ArgumentNullException(nameof(activityLogType));
 
             _activityLogTypeRepository.Insert(activityLogType);
-            _cacheManager.RemoveByPattern(NopLoggingDefaults.ActivityTypePatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopLoggingDefaults.ActivityTypePrefixCacheKey);
         }
 
         /// <summary>
@@ -133,7 +133,7 @@ namespace Nop.Services.Logging
                 throw new ArgumentNullException(nameof(activityLogType));
 
             _activityLogTypeRepository.Update(activityLogType);
-            _cacheManager.RemoveByPattern(NopLoggingDefaults.ActivityTypePatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopLoggingDefaults.ActivityTypePrefixCacheKey);
         }
 
         /// <summary>
@@ -146,7 +146,7 @@ namespace Nop.Services.Logging
                 throw new ArgumentNullException(nameof(activityLogType));
 
             _activityLogTypeRepository.Delete(activityLogType);
-            _cacheManager.RemoveByPattern(NopLoggingDefaults.ActivityTypePatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopLoggingDefaults.ActivityTypePrefixCacheKey);
         }
 
         /// <summary>

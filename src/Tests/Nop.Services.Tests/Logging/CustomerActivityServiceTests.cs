@@ -4,7 +4,6 @@ using Moq;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
-using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Logging;
 using Nop.Services.Logging;
@@ -71,7 +70,7 @@ namespace Nop.Services.Tests.Logging
                 CustomerId = _customer2.Id,
                 Customer = _customer2
             };
-            _cacheManager = new NopNullCache();
+            _cacheManager = new TestCacheManager();
             _workContext = new Mock<IWorkContext>();
             _webHelper = new Mock<IWebHelper>();
             _activityLogRepository = new Mock<IRepository<ActivityLog>>();

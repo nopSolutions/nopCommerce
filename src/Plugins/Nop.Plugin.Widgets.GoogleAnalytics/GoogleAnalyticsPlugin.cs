@@ -1,9 +1,9 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Nop.Core;
-using Nop.Core.Plugins;
 using Nop.Services.Cms;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
+using Nop.Services.Plugins;
 using Nop.Web.Framework.Infrastructure;
 
 namespace Nop.Plugin.Widgets.GoogleAnalytics
@@ -27,9 +27,9 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
             IWebHelper webHelper,
             ISettingService settingService)
         {
-            this._localizationService = localizationService;
-            this._webHelper = webHelper;
-            this._settingService = settingService;
+            _localizationService = localizationService;
+            _webHelper = webHelper;
+            _settingService = settingService;
         }
 
         #endregion

@@ -49,16 +49,16 @@ namespace Nop.Web.Areas.Admin.Controllers
             IStoreService storeService,
             IUrlRecordService urlRecordService)
         {
-            this._customerActivityService = customerActivityService;
-            this._eventPublisher = eventPublisher;
-            this._localizationService = localizationService;
-            this._newsModelFactory = newsModelFactory;
-            this._newsService = newsService;
-            this._notificationService = notificationService;
-            this._permissionService = permissionService;
-            this._storeMappingService = storeMappingService;
-            this._storeService = storeService;
-            this._urlRecordService = urlRecordService;
+            _customerActivityService = customerActivityService;
+            _eventPublisher = eventPublisher;
+            _localizationService = localizationService;
+            _newsModelFactory = newsModelFactory;
+            _newsService = newsService;
+            _notificationService = notificationService;
+            _permissionService = permissionService;
+            _storeMappingService = storeMappingService;
+            _storeService = storeService;
+            _urlRecordService = urlRecordService;
         }
 
         #endregion
@@ -115,7 +115,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult List(NewsItemSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageNews))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _newsModelFactory.PrepareNewsItemListModel(searchModel);
@@ -161,10 +161,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 if (!continueEditing)
                     return RedirectToAction("NewsItems");
-
-                //selected tab
-                SaveSelectedTabName();
-
+                
                 return RedirectToAction("NewsItemEdit", new { id = newsItem.Id });
             }
 
@@ -223,9 +220,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (!continueEditing)
                     return RedirectToAction("NewsItems");
 
-                //selected tab
-                SaveSelectedTabName();
-
                 return RedirectToAction("NewsItemEdit", new { id = newsItem.Id });
             }
 
@@ -282,7 +276,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult Comments(NewsCommentSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageNews))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _newsModelFactory.PrepareNewsCommentListModel(searchModel, searchModel.NewsItemId);

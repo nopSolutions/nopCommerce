@@ -8,6 +8,15 @@ namespace Nop.Web.Areas.Admin.Models.Settings
     /// </summary>
     public partial class SettingSearchModel : BaseSearchModel
     {
+        #region Ctor
+
+        public SettingSearchModel()
+        {
+            AddSetting = new SettingModel();
+        }
+
+        #endregion
+
         #region Properties
 
         [NopResourceDisplayName("Admin.Configuration.Settings.AllSettings.SearchSettingName")]
@@ -15,6 +24,8 @@ namespace Nop.Web.Areas.Admin.Models.Settings
 
         [NopResourceDisplayName("Admin.Configuration.Settings.AllSettings.SearchSettingValue")]
         public string SearchSettingValue { get; set; }
+
+        public SettingModel AddSetting { get; set; }
 
         #endregion
     }

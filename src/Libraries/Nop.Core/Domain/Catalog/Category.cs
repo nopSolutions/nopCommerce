@@ -79,7 +79,7 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets a value indicating whether to show the category on home page
         /// </summary>
-        public bool ShowOnHomePage { get; set; }
+        public bool ShowOnHomepage { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to include this category in the top menu

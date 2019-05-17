@@ -8,7 +8,7 @@ namespace Nop.Web.Models.Boards
     {
         public CustomerForumSubscriptionsModel()
         {
-            this.ForumSubscriptions = new List<ForumSubscriptionModel>();
+            ForumSubscriptions = new List<ForumSubscriptionModel>();
         }
 
         public IList<ForumSubscriptionModel> ForumSubscriptions { get; set; }

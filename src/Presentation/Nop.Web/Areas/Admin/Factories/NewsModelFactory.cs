@@ -14,6 +14,7 @@ using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.News;
 using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -48,19 +49,19 @@ namespace Nop.Web.Areas.Admin.Factories
             IStoreService storeService,
             IUrlRecordService urlRecordService)
         {
-            this._catalogSettings = catalogSettings;
-            this._baseAdminModelFactory = baseAdminModelFactory;
-            this._dateTimeHelper = dateTimeHelper;
-            this._languageService = languageService;
-            this._localizationService = localizationService;
-            this._newsService = newsService;
-            this._storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
-            this._storeService = storeService;
-            this._urlRecordService = urlRecordService;
+            _catalogSettings = catalogSettings;
+            _baseAdminModelFactory = baseAdminModelFactory;
+            _dateTimeHelper = dateTimeHelper;
+            _languageService = languageService;
+            _localizationService = localizationService;
+            _newsService = newsService;
+            _storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
+            _storeService = storeService;
+            _urlRecordService = urlRecordService;
         }
 
         #endregion
-
+        
         #region Methods
 
         /// <summary>
@@ -78,8 +79,6 @@ namespace Nop.Web.Areas.Admin.Factories
             PrepareNewsItemSearchModel(newsContentModel.NewsItems);
             var newsItem = _newsService.GetNewsById(filterByNewsItemId ?? 0);
             PrepareNewsCommentSearchModel(newsContentModel.NewsComments, newsItem);
-
-            
 
             return newsContentModel;
         }
@@ -121,9 +120,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new NewsItemListModel
+            var model = new NewsItemListModel().PrepareToGrid(searchModel, newsItems, () =>
             {
-                Data = newsItems.Select(newsItem =>
+                return newsItems.Select(newsItem =>
                 {
                     //fill in model values from the entity
                     var newsItemModel = newsItem.ToModel<NewsItemModel>();
@@ -145,9 +144,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     newsItemModel.NotApprovedComments = _newsService.GetNewsCommentsCount(newsItem, isApproved: false);
 
                     return newsItemModel;
-                }),
-                Total = newsItems.TotalCount
-            };
+                });
+            });
 
             return model;
         }
@@ -249,18 +247,18 @@ namespace Nop.Web.Areas.Admin.Factories
                 approved: isApprovedOnly,
                 fromUtc: createdOnFromValue,
                 toUtc: createdOnToValue,
-                commentText: searchModel.SearchText);
+                commentText: searchModel.SearchText).ToPagedList(searchModel);
 
             //prepare store names (to avoid loading for each comment)
             var storeNames = _storeService.GetAllStores().ToDictionary(store => store.Id, store => store.Name);
 
             //prepare list model
-            var model = new NewsCommentListModel
+            var model = new NewsCommentListModel().PrepareToGrid(searchModel, comments, () =>
             {
-                Data = comments.PaginationByRequestModel(searchModel).Select(newsComment =>
+                return comments.Select(newsComment =>
                 {
                     //fill in model values from the entity
-                    var commentModel = newsComment.ToModel<NewsCommentModel>();                        
+                    var commentModel = newsComment.ToModel<NewsCommentModel>();
 
                     //convert dates to the user time
                     commentModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(newsComment.CreatedOnUtc, DateTimeKind.Utc);
@@ -273,9 +271,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     commentModel.StoreName = storeNames.ContainsKey(newsComment.StoreId) ? storeNames[newsComment.StoreId] : "Deleted";
 
                     return commentModel;
-                }),
-                Total = comments.Count
-            };
+                });
+            });
 
             return model;
         }

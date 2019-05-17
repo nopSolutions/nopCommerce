@@ -182,7 +182,7 @@ var Billing = {
         Checkout.setStepResponse(response);
         Billing.initializeCountrySelect();
     },
-
+    
     initializeCountrySelect: function () {
         if ($('#opc-billing').has('select[data-trigger="country-select"]')) {
             $('#opc-billing select[data-trigger="country-select"]').countrySelect();
@@ -209,9 +209,10 @@ var Shipping = {
             $('#shipping-new-address-form').hide();
         }
         $(document).trigger({ type: "onepagecheckout_shipping_address_new" });
+        Shipping.initializeCountrySelect();
     },
 
-    togglePickUpInStore: function (pickupInStoreInput) {
+    togglePickupInStore: function (pickupInStoreInput) {
         if (pickupInStoreInput.checked) {
             $('#pickup-points-form').show();
             $('#shipping-addresses-form').hide();
@@ -262,7 +263,6 @@ var Shipping = {
         }
 
         Checkout.setStepResponse(response);
-        Shipping.initializeCountrySelect();
     },
 
     initializeCountrySelect: function () {

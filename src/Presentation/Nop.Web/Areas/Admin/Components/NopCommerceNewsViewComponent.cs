@@ -19,7 +19,7 @@ namespace Nop.Web.Areas.Admin.Components
 
         public NopCommerceNewsViewComponent(IHomeModelFactory homeModelFactory)
         {
-            this._homeModelFactory = homeModelFactory;
+            _homeModelFactory = homeModelFactory;
         }
 
         #endregion

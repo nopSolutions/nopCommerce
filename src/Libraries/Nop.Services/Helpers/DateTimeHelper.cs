@@ -29,10 +29,10 @@ namespace Nop.Services.Helpers
             ISettingService settingService,
             IWorkContext workContext)
         {
-            this._dateTimeSettings = dateTimeSettings;
-            this._genericAttributeService = genericAttributeService;
-            this._settingService = settingService;
-            this._workContext = workContext;
+            _dateTimeSettings = dateTimeSettings;
+            _genericAttributeService = genericAttributeService;
+            _settingService = settingService;
+            _workContext = workContext;
         }
 
         #endregion

@@ -65,6 +65,7 @@ namespace Nop.Web.Factories
         private readonly ILocalizationService _localizationService;
         private readonly IOrderProcessingService _orderProcessingService;
         private readonly IOrderTotalCalculationService _orderTotalCalculationService;
+        private readonly IPaymentPluginManager _paymentPluginManager;
         private readonly IPaymentService _paymentService;
         private readonly IPermissionService _permissionService;
         private readonly IPictureService _pictureService;
@@ -72,6 +73,7 @@ namespace Nop.Web.Factories
         private readonly IPriceFormatter _priceFormatter;
         private readonly IProductAttributeFormatter _productAttributeFormatter;
         private readonly IProductService _productService;
+        private readonly IShippingPluginManager _shippingPluginManager;
         private readonly IShippingService _shippingService;
         private readonly IShoppingCartService _shoppingCartService;
         private readonly IStateProvinceService _stateProvinceService;
@@ -114,6 +116,7 @@ namespace Nop.Web.Factories
             ILocalizationService localizationService,
             IOrderProcessingService orderProcessingService,
             IOrderTotalCalculationService orderTotalCalculationService,
+            IPaymentPluginManager paymentPluginManager,
             IPaymentService paymentService,
             IPermissionService permissionService,
             IPictureService pictureService,
@@ -121,6 +124,7 @@ namespace Nop.Web.Factories
             IPriceFormatter priceFormatter,
             IProductAttributeFormatter productAttributeFormatter,
             IProductService productService,
+            IShippingPluginManager shippingPluginManager,
             IShippingService shippingService,
             IShoppingCartService shoppingCartService,
             IStateProvinceService stateProvinceService,
@@ -139,50 +143,52 @@ namespace Nop.Web.Factories
             TaxSettings taxSettings,
             VendorSettings vendorSettings)
         {
-            this._addressSettings = addressSettings;
-            this._captchaSettings = captchaSettings;
-            this._catalogSettings = catalogSettings;
-            this._commonSettings = commonSettings;
-            this._customerSettings = customerSettings;
-            this._addressModelFactory = addressModelFactory;
-            this._checkoutAttributeFormatter = checkoutAttributeFormatter;
-            this._checkoutAttributeParser = checkoutAttributeParser;
-            this._checkoutAttributeService = checkoutAttributeService;
-            this._countryService = countryService;
-            this._currencyService = currencyService;
-            this._customerService = customerService;
-            this._discountService = discountService;
-            this._downloadService = downloadService;
-            this._genericAttributeService = genericAttributeService;
-            this._giftCardService = giftCardService;
-            this._httpContextAccessor = httpContextAccessor;
-            this._localizationService = localizationService;
-            this._orderProcessingService = orderProcessingService;
-            this._orderTotalCalculationService = orderTotalCalculationService;
-            this._paymentService = paymentService;
-            this._permissionService = permissionService;
-            this._pictureService = pictureService;
-            this._priceCalculationService = priceCalculationService;
-            this._priceFormatter = priceFormatter;
-            this._productAttributeFormatter = productAttributeFormatter;
-            this._productService = productService;
-            this._shippingService = shippingService;
-            this._shoppingCartService = shoppingCartService;
-            this._stateProvinceService = stateProvinceService;
-            this._cacheManager = cacheManager;
-            this._storeContext = storeContext;
-            this._taxService = taxService;
-            this._urlRecordService = urlRecordService;
-            this._vendorService = vendorService;
-            this._webHelper = webHelper;
-            this._workContext = workContext;
-            this._mediaSettings = mediaSettings;
-            this._orderSettings = orderSettings;
-            this._rewardPointsSettings = rewardPointsSettings;
-            this._shippingSettings = shippingSettings;
-            this._shoppingCartSettings = shoppingCartSettings;
-            this._taxSettings = taxSettings;
-            this._vendorSettings = vendorSettings;
+            _addressSettings = addressSettings;
+            _captchaSettings = captchaSettings;
+            _catalogSettings = catalogSettings;
+            _commonSettings = commonSettings;
+            _customerSettings = customerSettings;
+            _addressModelFactory = addressModelFactory;
+            _checkoutAttributeFormatter = checkoutAttributeFormatter;
+            _checkoutAttributeParser = checkoutAttributeParser;
+            _checkoutAttributeService = checkoutAttributeService;
+            _countryService = countryService;
+            _currencyService = currencyService;
+            _customerService = customerService;
+            _discountService = discountService;
+            _downloadService = downloadService;
+            _genericAttributeService = genericAttributeService;
+            _giftCardService = giftCardService;
+            _httpContextAccessor = httpContextAccessor;
+            _localizationService = localizationService;
+            _orderProcessingService = orderProcessingService;
+            _orderTotalCalculationService = orderTotalCalculationService;
+            _paymentPluginManager = paymentPluginManager;
+            _paymentService = paymentService;
+            _permissionService = permissionService;
+            _pictureService = pictureService;
+            _priceCalculationService = priceCalculationService;
+            _priceFormatter = priceFormatter;
+            _productAttributeFormatter = productAttributeFormatter;
+            _productService = productService;
+            _shippingPluginManager = shippingPluginManager;
+            _shippingService = shippingService;
+            _shoppingCartService = shoppingCartService;
+            _stateProvinceService = stateProvinceService;
+            _cacheManager = cacheManager;
+            _storeContext = storeContext;
+            _taxService = taxService;
+            _urlRecordService = urlRecordService;
+            _vendorService = vendorService;
+            _webHelper = webHelper;
+            _workContext = workContext;
+            _mediaSettings = mediaSettings;
+            _orderSettings = orderSettings;
+            _rewardPointsSettings = rewardPointsSettings;
+            _shippingSettings = shippingSettings;
+            _shoppingCartSettings = shoppingCartSettings;
+            _taxSettings = taxSettings;
+            _vendorSettings = vendorSettings;
         }
 
         #endregion
@@ -412,7 +418,7 @@ namespace Nop.Web.Factories
             }
             else
             {
-                var shoppingCartUnitPriceWithDiscountBase = _taxService.GetProductPrice(sci.Product, _priceCalculationService.GetUnitPrice(sci), out decimal _);
+                var shoppingCartUnitPriceWithDiscountBase = _taxService.GetProductPrice(sci.Product, _priceCalculationService.GetUnitPrice(sci), out var _);
                 var shoppingCartUnitPriceWithDiscount = _currencyService.ConvertFromPrimaryStoreCurrency(shoppingCartUnitPriceWithDiscountBase, _workContext.WorkingCurrency);
                 cartItemModel.UnitPrice = _priceFormatter.FormatPrice(shoppingCartUnitPriceWithDiscount);
             }
@@ -426,7 +432,7 @@ namespace Nop.Web.Factories
             else
             {
                 //sub total
-                var shoppingCartItemSubTotalWithDiscountBase = _taxService.GetProductPrice(sci.Product, _priceCalculationService.GetSubTotal(sci, true, out decimal shoppingCartItemDiscountBase, out List<DiscountForCaching> _, out int? maximumDiscountQty), out decimal taxRate);
+                var shoppingCartItemSubTotalWithDiscountBase = _taxService.GetProductPrice(sci.Product, _priceCalculationService.GetSubTotal(sci, true, out var shoppingCartItemDiscountBase, out var _, out var maximumDiscountQty), out var taxRate);
                 var shoppingCartItemSubTotalWithDiscount = _currencyService.ConvertFromPrimaryStoreCurrency(shoppingCartItemSubTotalWithDiscountBase, _workContext.WorkingCurrency);
                 cartItemModel.SubTotal = _priceFormatter.FormatPrice(shoppingCartItemSubTotalWithDiscount);
                 cartItemModel.MaximumDiscountedQty = maximumDiscountQty;
@@ -545,7 +551,7 @@ namespace Nop.Web.Factories
             }
             else
             {
-                var shoppingCartUnitPriceWithDiscountBase = _taxService.GetProductPrice(sci.Product, _priceCalculationService.GetUnitPrice(sci), out decimal _);
+                var shoppingCartUnitPriceWithDiscountBase = _taxService.GetProductPrice(sci.Product, _priceCalculationService.GetUnitPrice(sci), out var _);
                 var shoppingCartUnitPriceWithDiscount = _currencyService.ConvertFromPrimaryStoreCurrency(shoppingCartUnitPriceWithDiscountBase, _workContext.WorkingCurrency);
                 cartItemModel.UnitPrice = _priceFormatter.FormatPrice(shoppingCartUnitPriceWithDiscount);
             }
@@ -559,7 +565,7 @@ namespace Nop.Web.Factories
             else
             {
                 //sub total
-                var shoppingCartItemSubTotalWithDiscountBase = _taxService.GetProductPrice(sci.Product, _priceCalculationService.GetSubTotal(sci, true, out decimal shoppingCartItemDiscountBase, out List<DiscountForCaching> _, out int? maximumDiscountQty), out decimal taxRate);
+                var shoppingCartItemSubTotalWithDiscountBase = _taxService.GetProductPrice(sci.Product, _priceCalculationService.GetSubTotal(sci, true, out var shoppingCartItemDiscountBase, out var _, out var maximumDiscountQty), out var taxRate);
                 var shoppingCartItemSubTotalWithDiscount = _currencyService.ConvertFromPrimaryStoreCurrency(shoppingCartItemSubTotalWithDiscountBase, _workContext.WorkingCurrency);
                 cartItemModel.SubTotal = _priceFormatter.FormatPrice(shoppingCartItemSubTotalWithDiscount);
                 cartItemModel.MaximumDiscountedQty = maximumDiscountQty;
@@ -634,8 +640,8 @@ namespace Nop.Web.Factories
 
                 var pickupPoint = _genericAttributeService.GetAttribute<PickupPoint>(_workContext.CurrentCustomer,
                     NopCustomerDefaults.SelectedPickupPointAttribute, _storeContext.CurrentStore.Id);
-                model.SelectedPickUpInStore = _shippingSettings.AllowPickUpInStore && pickupPoint != null;
-                if (!model.SelectedPickUpInStore)
+                model.SelectedPickupInStore = _shippingSettings.AllowPickupInStore && pickupPoint != null;
+                if (!model.SelectedPickupInStore)
                 {
                     if (_workContext.CurrentCustomer.ShippingAddress != null)
                     {
@@ -670,7 +676,7 @@ namespace Nop.Web.Factories
 
             //payment info
             var selectedPaymentMethodSystemName = _genericAttributeService.GetAttribute<string>(_workContext.CurrentCustomer, NopCustomerDefaults.SelectedPaymentMethodAttribute, _storeContext.CurrentStore.Id);
-            var paymentMethod = _paymentService.LoadPaymentMethodBySystemName(selectedPaymentMethodSystemName);
+            var paymentMethod = _paymentPluginManager.LoadPluginBySystemName(selectedPaymentMethodSystemName);
             model.PaymentMethod = paymentMethod != null
                 ? _localizationService.GetLocalizedFriendlyName(paymentMethod, _workContext.WorkingLanguage.Id)
                 : "";
@@ -809,6 +815,12 @@ namespace Nop.Web.Factories
             model.OnePageCheckoutEnabled = _orderSettings.OnePageCheckoutEnabled;
             if (!cart.Any())
                 return model;
+
+            //performance optimization workaround (for Entity Framework)
+            //load all products at once (one SQL command)
+            //if not loaded right now, then anyway the code below will load each product separately (multiple SQL commands)
+            _productService.GetProductsByIds(cart.Select(sci => sci.ProductId).ToArray());
+
             model.IsEditable = isEditable;
             model.ShowProductImages = _shoppingCartSettings.ShowProductImagesOnShoppingCart;
             model.ShowSku = _catalogSettings.ShowSkuOnProductDetailsPage;
@@ -864,10 +876,9 @@ namespace Nop.Web.Factories
 
             //payment methods
             //all payment methods (do not filter by country here as it could be not specified yet)
-            var paymentMethods = _paymentService
-                .LoadActivePaymentMethods(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id)
-                .Where(pm => !pm.HidePaymentMethod(cart))
-                .ToList();
+            var paymentMethods = _paymentPluginManager
+                .LoadActivePlugins(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id)
+                .Where(pm => !pm.HidePaymentMethod(cart)).ToList();
             //payment methods displayed during checkout (not with "Button" type)
             var nonButtonPaymentMethods = paymentMethods
                 .Where(pm => pm.PaymentMethodType != PaymentMethodType.Button)
@@ -919,6 +930,11 @@ namespace Nop.Web.Factories
             if (!cart.Any())
                 return model;
 
+            //performance optimization workaround (for Entity Framework)
+            //load all products at once (one SQL command)
+            //if not loaded right now, then anyway the code below will load each product separately (multiple SQL commands)
+            _productService.GetProductsByIds(cart.Select(sci => sci.ProductId).ToArray());
+
             //simple properties
             var customer = cart.FirstOrDefault(item => item.Customer != null)?.Customer;
             model.CustomerGuid = customer.CustomerGuid;
@@ -961,12 +977,17 @@ namespace Nop.Web.Factories
             {
                 var cart = _shoppingCartService.GetShoppingCart(_workContext.CurrentCustomer, ShoppingCartType.ShoppingCart, _storeContext.CurrentStore.Id);
 
+                //one more performance optimization workaround (for Entity Framework)
+                //load all products at once (one SQL command)
+                //if not loaded right now, then anyway the code below will load each product separately (multiple SQL commands)
+                _productService.GetProductsByIds(cart.Select(sci => sci.ProductId).ToArray());
+
                 model.TotalProducts = cart.Sum(item => item.Quantity);
                 if (cart.Any())
                 {
                     //subtotal
                     var subTotalIncludingTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax && !_taxSettings.ForceTaxExclusionFromOrderSubtotal;
-                    _orderTotalCalculationService.GetShoppingCartSubTotal(cart, subTotalIncludingTax, out decimal _, out List<DiscountForCaching> _, out decimal subTotalWithoutDiscountBase, out decimal _);
+                    _orderTotalCalculationService.GetShoppingCartSubTotal(cart, subTotalIncludingTax, out var _, out var _, out var subTotalWithoutDiscountBase, out var _);
                     var subtotalBase = subTotalWithoutDiscountBase;
                     var subtotal = _currencyService.ConvertFromPrimaryStoreCurrency(subtotalBase, _workContext.WorkingCurrency);
                     model.SubTotal = _priceFormatter.FormatPrice(subtotal, false, _workContext.WorkingCurrency, _workContext.WorkingLanguage, subTotalIncludingTax);
@@ -1020,7 +1041,7 @@ namespace Nop.Web.Factories
                         }
                         else
                         {
-                            var shoppingCartUnitPriceWithDiscountBase = _taxService.GetProductPrice(sci.Product, _priceCalculationService.GetUnitPrice(sci), out decimal _);
+                            var shoppingCartUnitPriceWithDiscountBase = _taxService.GetProductPrice(sci.Product, _priceCalculationService.GetUnitPrice(sci), out var _);
                             var shoppingCartUnitPriceWithDiscount = _currencyService.ConvertFromPrimaryStoreCurrency(shoppingCartUnitPriceWithDiscountBase, _workContext.WorkingCurrency);
                             cartItemModel.UnitPrice = _priceFormatter.FormatPrice(shoppingCartUnitPriceWithDiscount);
                         }
@@ -1068,7 +1089,7 @@ namespace Nop.Web.Factories
             {
                 //subtotal
                 var subTotalIncludingTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax && !_taxSettings.ForceTaxExclusionFromOrderSubtotal;
-                _orderTotalCalculationService.GetShoppingCartSubTotal(cart, subTotalIncludingTax, out decimal orderSubTotalDiscountAmountBase, out List<DiscountForCaching> _, out decimal subTotalWithoutDiscountBase, out decimal _);
+                _orderTotalCalculationService.GetShoppingCartSubTotal(cart, subTotalIncludingTax, out var orderSubTotalDiscountAmountBase, out var _, out var subTotalWithoutDiscountBase, out var _);
                 var subtotalBase = subTotalWithoutDiscountBase;
                 var subtotal = _currencyService.ConvertFromPrimaryStoreCurrency(subtotalBase, _workContext.WorkingCurrency);
                 model.SubTotal = _priceFormatter.FormatPrice(subtotal, true, _workContext.WorkingCurrency, _workContext.WorkingLanguage, subTotalIncludingTax);
@@ -1080,7 +1101,7 @@ namespace Nop.Web.Factories
                 }
 
                 //LoadAllShippingRateComputationMethods
-                var shippingRateComputationMethods = _shippingService.LoadActiveShippingRateComputationMethods(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id);
+                var shippingRateComputationMethods = _shippingPluginManager.LoadActivePlugins(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id);
 
                 //shipping info
                 model.RequiresShipping = _shoppingCartService.ShoppingCartRequiresShipping(cart);
@@ -1124,7 +1145,7 @@ namespace Nop.Web.Factories
                 }
                 else
                 {
-                    var shoppingCartTaxBase = _orderTotalCalculationService.GetTaxTotal(cart, shippingRateComputationMethods, out SortedDictionary<decimal, decimal> taxRates);
+                    var shoppingCartTaxBase = _orderTotalCalculationService.GetTaxTotal(cart, shippingRateComputationMethods, out var taxRates);
                     var shoppingCartTax = _currencyService.ConvertFromPrimaryStoreCurrency(shoppingCartTaxBase, _workContext.WorkingCurrency);
 
                     if (shoppingCartTaxBase == 0 && _taxSettings.HideZeroTax)
@@ -1152,7 +1173,7 @@ namespace Nop.Web.Factories
                 model.DisplayTax = displayTax;
 
                 //total
-                var shoppingCartTotalBase = _orderTotalCalculationService.GetShoppingCartTotal(cart, out decimal orderTotalDiscountAmountBase, out List<DiscountForCaching> _, out List<AppliedGiftCard> appliedGiftCards, out int redeemedRewardPoints, out decimal redeemedRewardPointsAmount);
+                var shoppingCartTotalBase = _orderTotalCalculationService.GetShoppingCartTotal(cart, out var orderTotalDiscountAmountBase, out var _, out var appliedGiftCards, out var redeemedRewardPoints, out var redeemedRewardPointsAmount);
                 if (shoppingCartTotalBase.HasValue)
                 {
                     var shoppingCartTotal = _currencyService.ConvertFromPrimaryStoreCurrency(shoppingCartTotalBase.Value, _workContext.WorkingCurrency);
@@ -1244,7 +1265,7 @@ namespace Nop.Web.Factories
                         foreach (var shippingOption in getShippingOptionResponse.ShippingOptions)
                         {
                             //calculate discounted and taxed rate
-                            var shippingRate = _orderTotalCalculationService.AdjustShippingRate(shippingOption.Rate, cart, out List<DiscountForCaching> _);
+                            var shippingRate = _orderTotalCalculationService.AdjustShippingRate(shippingOption.Rate, cart, out var _);
                             shippingRate = _taxService.GetShippingPrice(shippingRate, _workContext.CurrentCustomer);
                             shippingRate = _currencyService.ConvertFromPrimaryStoreCurrency(shippingRate, _workContext.WorkingCurrency);
                             var shippingRateString = _priceFormatter.FormatShippingPrice(shippingRate, true);
@@ -1262,7 +1283,7 @@ namespace Nop.Web.Factories
                     foreach (var error in getShippingOptionResponse.Errors)
                         model.Warnings.Add(error);
 
-                if (_shippingSettings.AllowPickUpInStore)
+                if (_shippingSettings.AllowPickupInStore)
                 {
                     var pickupPointsResponse = _shippingService.GetPickupPoints(address, _workContext.CurrentCustomer, storeId: _storeContext.CurrentStore.Id);
                     if (pickupPointsResponse.Success)

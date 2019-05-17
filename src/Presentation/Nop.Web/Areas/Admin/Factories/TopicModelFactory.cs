@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -13,6 +14,8 @@ using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Topics;
 using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;
+using Nop.Web.Framework.Models.DataTables;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -51,17 +54,17 @@ namespace Nop.Web.Areas.Admin.Factories
             IUrlRecordService urlRecordService,
             IWebHelper webHelper)
         {
-            this._catalogSettings = catalogSettings;
-            this._aclSupportedModelFactory = aclSupportedModelFactory;
-            this._actionContextAccessor = actionContextAccessor;
-            this._baseAdminModelFactory = baseAdminModelFactory;
-            this._localizationService = localizationService;
-            this._localizedModelFactory = localizedModelFactory;
-            this._storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
-            this._topicService = topicService;
-            this._urlHelperFactory = urlHelperFactory;
-            this._urlRecordService = urlRecordService;
-            this._webHelper = webHelper;
+            _catalogSettings = catalogSettings;
+            _aclSupportedModelFactory = aclSupportedModelFactory;
+            _actionContextAccessor = actionContextAccessor;
+            _baseAdminModelFactory = baseAdminModelFactory;
+            _localizationService = localizationService;
+            _localizedModelFactory = localizedModelFactory;
+            _storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
+            _topicService = topicService;
+            _urlHelperFactory = urlHelperFactory;
+            _urlRecordService = urlRecordService;
+            _webHelper = webHelper;
         }
 
         #endregion
@@ -112,10 +115,12 @@ namespace Nop.Web.Areas.Admin.Factories
                                                (topic.Body?.Contains(searchModel.SearchKeywords) ?? false)).ToList();
             }
 
+            var pagedTopics = topics.ToList().ToPagedList(searchModel);
+
             //prepare grid model
-            var model = new TopicListModel
+            var model = new TopicListModel().PrepareToGrid(searchModel, pagedTopics, () =>
             {
-                Data = topics.PaginationByRequestModel(searchModel).Select(topic =>
+                return pagedTopics.Select(topic =>
                 {
                     //fill in model values from the entity
                     var topicModel = topic.ToModel<TopicModel>();
@@ -126,9 +131,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     topicModel.SeName = _urlRecordService.GetSeName(topic, 0, true, false);
 
                     return topicModel;
-                }),
-                Total = topics.Count
-            };
+                });
+            });
 
             return model;
         }

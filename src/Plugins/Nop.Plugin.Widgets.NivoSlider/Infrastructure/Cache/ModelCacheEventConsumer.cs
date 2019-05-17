@@ -27,20 +27,20 @@ namespace Nop.Plugin.Widgets.NivoSlider.Infrastructure.Cache
 
         public ModelCacheEventConsumer(IStaticCacheManager cacheManager)
         {
-            this._cacheManager = cacheManager;
+            _cacheManager = cacheManager;
         }
 
         public void HandleEvent(EntityInsertedEvent<Setting> eventMessage)
         {
-            _cacheManager.RemoveByPattern(PICTURE_URL_PATTERN_KEY);
+            _cacheManager.RemoveByPrefix(PICTURE_URL_PATTERN_KEY);
         }
         public void HandleEvent(EntityUpdatedEvent<Setting> eventMessage)
         {
-            _cacheManager.RemoveByPattern(PICTURE_URL_PATTERN_KEY);
+            _cacheManager.RemoveByPrefix(PICTURE_URL_PATTERN_KEY);
         }
         public void HandleEvent(EntityDeletedEvent<Setting> eventMessage)
         {
-            _cacheManager.RemoveByPattern(PICTURE_URL_PATTERN_KEY);
+            _cacheManager.RemoveByPrefix(PICTURE_URL_PATTERN_KEY);
         }
     }
 }

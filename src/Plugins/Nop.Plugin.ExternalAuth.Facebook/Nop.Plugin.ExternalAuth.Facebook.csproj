@@ -2,24 +2,22 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
-    <Copyright>Copyright © Nop Solutions, Ltd</Copyright> 
-    <Company>Nop Solutions, Ltd</Company> 
+    <Copyright>Copyright © Nop Solutions, Ltd</Copyright>
+    <Company>Nop Solutions, Ltd</Company>
     <Authors>Nop Solutions, Ltd</Authors>
-    <PackageLicenseUrl></PackageLicenseUrl> 
-    <PackageProjectUrl>http://www.nopcommerce.com/</PackageProjectUrl> 
-    <RepositoryUrl>https://github.com/nopSolutions/nopCommerce</RepositoryUrl> 
+    <PackageLicenseUrl></PackageLicenseUrl>
+    <PackageProjectUrl>http://www.nopcommerce.com/</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/nopSolutions/nopCommerce</RepositoryUrl>
     <RepositoryType>Git</RepositoryType>
     <OutputPath>..\..\Presentation\Nop.Web\Plugins\ExternalAuth.Facebook</OutputPath>
     <OutDir>$(OutputPath)</OutDir>
-    <!--Set this parameter to true to get the dlls copied from the NuGet cache to the output of your project.
-    You need to set this parameter to true if your plugin has a nuget package 
-    to ensure that the dlls copied from the NuGet cache to the output of your project-->
+    <!--Set this parameter to true to get the dlls copied from the NuGet cache to the output of your project. You need to set this parameter to true if your plugin has a nuget package  to ensure that the dlls copied from the NuGet cache to the output of your project-->
     <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
   </PropertyGroup>
-  
+
   <ItemGroup>
     <None Remove="Content\facebookstyles.css" />
-    <None Remove="Content\Images\facebook-signing.png" />
+    <None Remove="Content\Images\facebook_logo.png" />
     <None Remove="logo.jpg" />
     <None Remove="plugin.json" />
     <None Remove="Views\Configure.cshtml" />
@@ -31,7 +29,7 @@
     <Content Include="Content\facebookstyles.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Images\facebook-signing.png">
+    <Content Include="Content\Images\facebook_logo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="logo.jpg">

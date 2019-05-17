@@ -9,6 +9,7 @@ using Nop.Services.Stores;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Messages;
 using Nop.Web.Framework.Extensions;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -37,12 +38,12 @@ namespace Nop.Web.Areas.Admin.Factories
             INewsLetterSubscriptionService newsLetterSubscriptionService,
             IStoreService storeService)
         {
-            this._catalogSettings = catalogSettings;
-            this._baseAdminModelFactory = baseAdminModelFactory;
-            this._dateTimeHelper = dateTimeHelper;
-            this._localizationService = localizationService;
-            this._newsLetterSubscriptionService = newsLetterSubscriptionService;
-            this._storeService = storeService;
+            _catalogSettings = catalogSettings;
+            _baseAdminModelFactory = baseAdminModelFactory;
+            _dateTimeHelper = dateTimeHelper;
+            _localizationService = localizationService;
+            _newsLetterSubscriptionService = newsLetterSubscriptionService;
+            _storeService = storeService;
         }
 
         #endregion
@@ -117,9 +118,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new NewsletterSubscriptionListModel
+            var model = new NewsletterSubscriptionListModel().PrepareToGrid(searchModel, newsletterSubscriptions, () =>
             {
-                Data = newsletterSubscriptions.Select(subscription =>
+                return newsletterSubscriptions.Select(subscription =>
                 {
                     //fill in model values from the entity
                     var subscriptionModel = subscription.ToModel<NewsletterSubscriptionModel>();
@@ -131,9 +132,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     subscriptionModel.StoreName = _storeService.GetStoreById(subscription.StoreId)?.Name ?? "Deleted";
 
                     return subscriptionModel;
-                }),
-                Total = newsletterSubscriptions.TotalCount
-            };
+                });
+            });
 
             return model;
         }

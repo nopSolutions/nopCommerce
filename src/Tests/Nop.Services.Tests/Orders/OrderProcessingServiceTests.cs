@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Moq;
 using Nop.Core;
-using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -29,6 +28,7 @@ using Nop.Services.Payments;
 using Nop.Services.Plugins;
 using Nop.Services.Security;
 using Nop.Services.Shipping;
+using Nop.Services.Shipping.Pickup;
 using Nop.Services.Tax;
 using Nop.Services.Vendors;
 using Nop.Tests;
@@ -94,10 +94,14 @@ namespace Nop.Services.Tests.Orders
         private Mock<IPdfService> _pdfService;
         private Mock<ICustomNumberFormatter> _customNumberFormatter;
         private OrderProcessingService _orderProcessingService;
+        private PaymentPluginManager _paymentPluginManager;
+        private IPickupPluginManager _pickupPluginManager;
+        private IShippingPluginManager _shippingPluginManager;
+        private ITaxPluginManager _taxPluginManager;
 
         [SetUp]
         public new void SetUp()
-        {   
+        {
             _productService = new Mock<IProductService>();
             _storeContext = new Mock<IStoreContext>();
             _discountService = new Mock<IDiscountService>();
@@ -122,11 +126,11 @@ namespace Nop.Services.Tests.Orders
             _orderService = new Mock<IOrderService>();
             _webHelper = new Mock<IWebHelper>();
             _languageService = new Mock<ILanguageService>();
-            _priceFormatter= new Mock<IPriceFormatter>();
-            _productAttributeFormatter= new Mock<IProductAttributeFormatter>();
-            _shoppingCartService= new Mock<IShoppingCartService>();
-            _checkoutAttributeFormatter= new Mock<ICheckoutAttributeFormatter>();
-            _customerService= new Mock<ICustomerService>();
+            _priceFormatter = new Mock<IPriceFormatter>();
+            _productAttributeFormatter = new Mock<IProductAttributeFormatter>();
+            _shoppingCartService = new Mock<IShoppingCartService>();
+            _checkoutAttributeFormatter = new Mock<ICheckoutAttributeFormatter>();
+            _customerService = new Mock<ICustomerService>();
             _encryptionService = new Mock<IEncryptionService>();
             _workflowMessageService = new Mock<IWorkflowMessageService>();
             _customerActivityService = new Mock<ICustomerActivityService>();
@@ -140,27 +144,30 @@ namespace Nop.Services.Tests.Orders
             _workContext = null;
 
             _store = new Store { Id = 1 };
-            
+
             _storeContext.Setup(x => x.CurrentStore).Returns(_store);
 
             _shoppingCartSettings = new ShoppingCartSettings();
             _catalogSettings = new CatalogSettings();
-            
-            var cacheManager = new NopNullCache();
+
+            var cacheManager = new TestCacheManager();
 
             _currencySettings = new CurrencySettings();
-          
+
             //price calculation service
             _priceCalcService = new PriceCalculationService(_catalogSettings, _currencySettings, _categoryService.Object,
                 _currencyService.Object, _discountService.Object, _manufacturerService.Object, _productAttributeParser.Object,
                 _productService.Object, cacheManager, _storeContext.Object, _workContext, _shoppingCartSettings);
-            
+
             _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
 
             var loger = new Mock<ILogger>();
-           
-            var pluginService = new PluginService(_customerService.Object, loger.Object , CommonHelper.DefaultFileProvider, _webHelper.Object);
 
+            var pluginService = new PluginService(_catalogSettings, _customerService.Object, loger.Object, CommonHelper.DefaultFileProvider, _webHelper.Object);
+            _paymentPluginManager = new PaymentPluginManager(pluginService, null, _paymentSettings);
+            _pickupPluginManager = new PickupPluginManager(pluginService, _shippingSettings);
+            _shippingPluginManager = new ShippingPluginManager(pluginService, _shippingSettings);
+            _taxPluginManager = new TaxPluginManager(pluginService, _taxSettings);
 
             //shipping
             _shippingSettings = new ShippingSettings
@@ -168,7 +175,7 @@ namespace Nop.Services.Tests.Orders
                 ActiveShippingRateComputationMethodSystemNames = new List<string>()
             };
             _shippingSettings.ActiveShippingRateComputationMethodSystemNames.Add("FixedRateTestShippingRateComputationMethod");
-            
+
             _logger = new NullLogger();
             _customerSettings = new CustomerSettings();
             _addressSettings = new AddressSettings();
@@ -180,12 +187,13 @@ namespace Nop.Services.Tests.Orders
                 _genericAttributeService.Object,
                 _localizationService.Object,
                 _logger,
-                pluginService,
+                _pickupPluginManager,
                 _priceCalcService,
                 _productAttributeParser.Object,
                 _productService.Object,
                 _shippingMethodRepository.Object,
                 _warehouseRepository.Object,
+                _shippingPluginManager,
                 _storeContext.Object,
                 _shippingSettings,
                 _shoppingCartSettings);
@@ -197,9 +205,9 @@ namespace Nop.Services.Tests.Orders
                 PaymentMethodAdditionalFeeIsTaxable = true,
                 DefaultTaxAddressId = 10
             };
-          
+
             _addressService.Setup(x => x.GetAddressById(_taxSettings.DefaultTaxAddressId)).Returns(new Address { Id = _taxSettings.DefaultTaxAddressId });
-            
+
             _taxService = new TaxService(_addressSettings,
                 _customerSettings,
                 _addressService.Object,
@@ -207,14 +215,15 @@ namespace Nop.Services.Tests.Orders
                 _genericAttributeService.Object,
                 _geoLookupService.Object,
                 _logger,
-                pluginService,
                 _stateProvinceService.Object,
+                cacheManager,
                 _storeContext.Object,
+                _taxPluginManager,
                 _webHelper.Object,
                 _workContext,
                 _shippingSettings,
                 _taxSettings);
-           
+
             _rewardPointsSettings = new RewardPointsSettings();
 
             _orderTotalCalcService = new OrderTotalCalculationService(_catalogSettings,
@@ -225,6 +234,7 @@ namespace Nop.Services.Tests.Orders
                 _paymentService.Object,
                 _priceCalcService,
                 _rewardPointService.Object,
+                _shippingPluginManager,
                 _shippingService,
                 _shoppingCartService.Object,
                 _storeContext.Object,
@@ -245,7 +255,7 @@ namespace Nop.Services.Tests.Orders
             _orderSettings = new OrderSettings();
 
             _localizationSettings = new LocalizationSettings();
-            
+
             _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
 
             _orderProcessingService = new OrderProcessingService(_currencySettings,
@@ -266,6 +276,7 @@ namespace Nop.Services.Tests.Orders
                 _logger,
                 _orderService.Object,
                 _orderTotalCalcService,
+                _paymentPluginManager,
                 _paymentService.Object,
                 _pdfService.Object,
                 _priceCalcService,
@@ -275,6 +286,7 @@ namespace Nop.Services.Tests.Orders
                 _productService.Object,
                 _rewardPointService.Object,
                 _shipmentService.Object,
+                _shippingPluginManager,
                 _shippingService,
                 _shoppingCartService.Object,
                 _stateProvinceService.Object,
@@ -291,7 +303,7 @@ namespace Nop.Services.Tests.Orders
                 _shippingSettings,
                 _taxSettings);
         }
-        
+
         [Test]
         public void Ensure_order_can_only_be_cancelled_when_orderStatus_is_not_cancelled_yet()
         {
@@ -365,7 +377,7 @@ namespace Nop.Services.Tests.Orders
                         _orderProcessingService.CanCapture(order).ShouldBeFalse();
                     }
         }
-        
+
         [Test]
         public void Ensure_order_cannot_be_marked_as_paid_when_orderStatus_is_cancelled_or_paymentStatus_is_paid_or_refunded_or_voided()
         {
@@ -444,7 +456,7 @@ namespace Nop.Services.Tests.Orders
                         _orderProcessingService.CanRefund(order).ShouldBeFalse();
                     }
         }
-        
+
         [Test]
         public void Ensure_order_can_only_be_refunded_offline_when_paymentstatus_is_paid()
         {
@@ -697,7 +709,7 @@ namespace Nop.Services.Tests.Orders
                         _orderProcessingService.CanPartiallyRefundOffline(order, 80).ShouldBeFalse();
                     }
         }
-        
+
         //TODO write unit tests for the following methods:
         //PlaceOrder
         //CanCancelRecurringPayment, ProcessNextRecurringPayment, CancelRecurringPayment

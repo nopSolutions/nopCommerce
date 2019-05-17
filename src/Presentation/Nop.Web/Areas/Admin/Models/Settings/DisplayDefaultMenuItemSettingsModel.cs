@@ -12,9 +12,9 @@ namespace Nop.Web.Areas.Admin.Models.Settings
 
         public int ActiveStoreScopeConfiguration { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.DisplayDefaultMenuItemSettings.DisplayHomePageMenuItem")]
-        public bool DisplayHomePageMenuItem { get; set; }
-        public bool DisplayHomePageMenuItem_OverrideForStore { get; set; }
+        [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.DisplayDefaultMenuItemSettings.DisplayHomepageMenuItem")]
+        public bool DisplayHomepageMenuItem { get; set; }
+        public bool DisplayHomepageMenuItem_OverrideForStore { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.DisplayDefaultMenuItemSettings.DisplayNewProductsMenuItem")]
         public bool DisplayNewProductsMenuItem { get; set; }

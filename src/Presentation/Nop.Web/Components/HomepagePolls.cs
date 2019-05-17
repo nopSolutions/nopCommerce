@@ -11,12 +11,12 @@ namespace Nop.Web.Components
 
         public HomepagePollsViewComponent(IPollModelFactory pollModelFactory)
         {
-            this._pollModelFactory = pollModelFactory;
+            _pollModelFactory = pollModelFactory;
         }
 
         public IViewComponentResult Invoke()
         {
-            var model = _pollModelFactory.PrepareHomePagePollModels();
+            var model = _pollModelFactory.PrepareHomepagePollModels();
             if (!model.Any())
                 return Content("");
 

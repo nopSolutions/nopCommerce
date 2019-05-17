@@ -11,7 +11,7 @@ namespace Nop.Web.Components
 
         public WidgetViewComponent(IWidgetModelFactory widgetModelFactory)
         {
-            this._widgetModelFactory = widgetModelFactory;
+            _widgetModelFactory = widgetModelFactory;
         }
 
         public IViewComponentResult Invoke(string widgetZone, object additionalData = null)

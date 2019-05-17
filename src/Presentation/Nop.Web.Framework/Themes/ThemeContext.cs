@@ -41,11 +41,11 @@ namespace Nop.Web.Framework.Themes
             IWorkContext workContext,
             StoreInformationSettings storeInformationSettings)
         {
-            this._genericAttributeService = genericAttributeService;
-            this._storeContext = storeContext;
-            this._themeProvider = themeProvider;
-            this._workContext = workContext;
-            this._storeInformationSettings = storeInformationSettings;
+            _genericAttributeService = genericAttributeService;
+            _storeContext = storeContext;
+            _themeProvider = themeProvider;
+            _workContext = workContext;
+            _storeInformationSettings = storeInformationSettings;
         }
 
         #endregion
@@ -84,7 +84,7 @@ namespace Nop.Web.Framework.Themes
                 }
 
                 //cache theme system name
-                this._cachedThemeName = themeName;
+                _cachedThemeName = themeName;
 
                 return themeName;
             }
@@ -99,7 +99,7 @@ namespace Nop.Web.Framework.Themes
                     NopCustomerDefaults.WorkingThemeNameAttribute, value, _storeContext.CurrentStore.Id);
 
                 //clear cache
-                this._cachedThemeName = null;
+                _cachedThemeName = null;
             }
         }
 

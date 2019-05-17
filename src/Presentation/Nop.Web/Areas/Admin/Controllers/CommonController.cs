@@ -64,20 +64,20 @@ namespace Nop.Web.Areas.Admin.Controllers
             IWebHelper webHelper,
             IWorkContext workContext)
         {
-            this._commonModelFactory = commonModelFactory;
-            this._customerService = customerService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._languageService = languageService;
-            this._localizationService = localizationService;
-            this._maintenanceService = maintenanceService;
-            this._fileProvider = fileProvider;
-            this._notificationService = notificationService;
-            this._permissionService = permissionService;
-            this._shoppingCartService = shoppingCartService;
-            this._cacheManager = cacheManager;
-            this._urlRecordService = urlRecordService;
-            this._webHelper = webHelper;
-            this._workContext = workContext;
+            _commonModelFactory = commonModelFactory;
+            _customerService = customerService;
+            _dateTimeHelper = dateTimeHelper;
+            _languageService = languageService;
+            _localizationService = localizationService;
+            _maintenanceService = maintenanceService;
+            _fileProvider = fileProvider;
+            _notificationService = notificationService;
+            _permissionService = permissionService;
+            _shoppingCartService = shoppingCartService;
+            _cacheManager = cacheManager;
+            _urlRecordService = urlRecordService;
+            _webHelper = webHelper;
+            _workContext = workContext;
         }
 
         #endregion
@@ -193,7 +193,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult BackupFiles(BackupFileSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _commonModelFactory.PrepareBackupFileListModel(searchModel);
@@ -217,6 +217,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 _notificationService.ErrorNotification(exc);
             }
+
+            //prepare model
+            model = _commonModelFactory.PrepareMaintenanceModel(new MaintenanceModel());
 
             return View(model);
         }
@@ -275,6 +278,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 _notificationService.ErrorNotification(exc);
             }
+
+            //prepare model
+            model = _commonModelFactory.PrepareMaintenanceModel(model);
 
             return View(model);
         }
@@ -350,7 +356,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult SeNames(UrlRecordSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _commonModelFactory.PrepareUrlRecordListModel(searchModel);
@@ -374,7 +380,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult PopularSearchTermsReport(PopularSearchTermSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _commonModelFactory.PreparePopularSearchTermListModel(searchModel);

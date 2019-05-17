@@ -58,14 +58,14 @@ namespace Nop.Web.Framework.Seo
         {
             //remove language code from the path if it's localized URL
             var path = context.HttpContext.Request.Path.Value;
-            if (this.SeoFriendlyUrlsForLanguagesEnabled && path.IsLocalizedUrl(context.HttpContext.Request.PathBase, false, out Language _))
+            if (SeoFriendlyUrlsForLanguagesEnabled && path.IsLocalizedUrl(context.HttpContext.Request.PathBase, false, out Language _))
                 path = path.RemoveLanguageSeoCodeFromUrl(context.HttpContext.Request.PathBase, false);
 
             //parse route data
-            var routeValues = new RouteValueDictionary(this.ParsedTemplate.Parameters
+            var routeValues = new RouteValueDictionary(ParsedTemplate.Parameters
                 .Where(parameter => parameter.DefaultValue != null)
                 .ToDictionary(parameter => parameter.Name, parameter => parameter.DefaultValue));
-            var matcher = new TemplateMatcher(this.ParsedTemplate, routeValues);
+            var matcher = new TemplateMatcher(ParsedTemplate, routeValues);
             matcher.TryMatch(path, routeValues);
 
             return routeValues;

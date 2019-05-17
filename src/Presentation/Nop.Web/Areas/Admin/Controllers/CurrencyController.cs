@@ -52,17 +52,17 @@ namespace Nop.Web.Areas.Admin.Controllers
             IStoreMappingService storeMappingService,
             IStoreService storeService)
         {
-            this._currencySettings = currencySettings;
-            this._currencyModelFactory = currencyModelFactory;
-            this._currencyService = currencyService;
-            this._customerActivityService = customerActivityService;
-            this._localizationService = localizationService;
-            this._localizedEntityService = localizedEntityService;
-            this._notificationService = notificationService;
-            this._permissionService = permissionService;
-            this._settingService = settingService;
-            this._storeMappingService = storeMappingService;
-            this._storeService = storeService;
+            _currencySettings = currencySettings;
+            _currencyModelFactory = currencyModelFactory;
+            _currencyService = currencyService;
+            _customerActivityService = customerActivityService;
+            _localizationService = localizationService;
+            _localizedEntityService = localizedEntityService;
+            _notificationService = notificationService;
+            _permissionService = permissionService;
+            _settingService = settingService;
+            _storeMappingService = storeMappingService;
+            _storeService = storeService;
         }
 
         #endregion
@@ -148,7 +148,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult ListGrid(CurrencySearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _currencyModelFactory.PrepareCurrencyListModel(searchModel);

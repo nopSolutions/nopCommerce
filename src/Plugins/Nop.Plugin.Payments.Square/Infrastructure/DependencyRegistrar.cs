@@ -1,4 +1,4 @@
-using Autofac;
+﻿using Autofac;
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
 using Nop.Core.Infrastructure.DependencyManagement;
@@ -7,7 +7,7 @@ using Nop.Plugin.Payments.Square.Services;
 namespace Nop.Plugin.Payments.Square.Infrastructure
 {
     /// <summary>
-    /// Dependency registrar
+    /// Represents a plugin dependency registrar
     /// </summary>
     public class DependencyRegistrar : IDependencyRegistrar
     {
@@ -19,16 +19,13 @@ namespace Nop.Plugin.Payments.Square.Infrastructure
         /// <param name="config">Config</param>
         public virtual void Register(ContainerBuilder builder, ITypeFinder typeFinder, NopConfig config)
         {
-            //register SquarePaymentManager
+            //register service manager
             builder.RegisterType<SquarePaymentManager>().AsSelf().InstancePerLifetimeScope();
         }
 
         /// <summary>
         /// Order of this dependency registrar implementation
         /// </summary>
-        public int Order
-        {
-            get { return 1; }
-        }
+        public int Order => 1;
     }
 }

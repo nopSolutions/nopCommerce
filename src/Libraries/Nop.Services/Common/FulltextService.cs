@@ -19,7 +19,7 @@ namespace Nop.Services.Common
 
         public FulltextService(IDbContext dbContext)
         {
-            this._dbContext = dbContext;
+            _dbContext = dbContext;
         }
 
         #endregion

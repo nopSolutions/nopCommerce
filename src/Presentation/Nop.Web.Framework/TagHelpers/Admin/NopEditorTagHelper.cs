@@ -22,6 +22,8 @@ namespace Nop.Web.Framework.TagHelpers.Admin
         private const string RenderFormControlClassAttributeName = "asp-render-form-control-class";
         private const string TemplateAttributeName = "asp-template";
         private const string PostfixAttributeName = "asp-postfix";
+        private const string ValueAttributeName = "asp-value";
+        private const string PlaceholderAttributeName = "placeholder";
 
         private readonly IHtmlHelper _htmlHelper;
 
@@ -44,6 +46,12 @@ namespace Nop.Web.Framework.TagHelpers.Admin
         public string IsRequired { set; get; }
 
         /// <summary>
+        /// Placeholder for the field
+        /// </summary>
+        [HtmlAttributeName(PlaceholderAttributeName)]
+        public string Placeholder { set; get; }
+
+        /// <summary>
         /// Indicates whether the "form-control" class shold be added to the input
         /// </summary>
         [HtmlAttributeName(RenderFormControlClassAttributeName)]
@@ -60,6 +68,12 @@ namespace Nop.Web.Framework.TagHelpers.Admin
         /// </summary>
         [HtmlAttributeName(PostfixAttributeName)]
         public string Postfix { set; get; }
+
+        /// <summary>
+        /// The value of the element
+        /// </summary>
+        [HtmlAttributeName(ValueAttributeName)]
+        public string Value { set; get; }
 
         /// <summary>
         /// ViewContext
@@ -99,6 +113,14 @@ namespace Nop.Web.Framework.TagHelpers.Admin
 
             //container for additional attributes
             var htmlAttributes = new Dictionary<string, object>();
+
+            //set placeholder if exists
+            if (!string.IsNullOrEmpty(Placeholder))
+                htmlAttributes.Add("placeholder", Placeholder);
+
+            //set value if exists
+            if (!string.IsNullOrEmpty(Value))
+                htmlAttributes.Add("value", Value);
 
             //disabled attribute
             bool.TryParse(IsDisabled, out bool disabled);
@@ -146,7 +168,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
                 For.Name,
                 Template,
                 readOnly: false,
-                additionalViewData: new { htmlAttributes, postfix = this.Postfix });
+                additionalViewData: new { htmlAttributes, postfix = Postfix });
 
             var htmlOutput = templateBuilder.Build();
             output.Content.SetHtmlContent(htmlOutput.RenderHtmlContent());

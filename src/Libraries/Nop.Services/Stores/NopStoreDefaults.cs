@@ -19,7 +19,7 @@
         /// <summary>
         /// Gets a key pattern to clear cache
         /// </summary>
-        public static string StoreMappingPatternCacheKey => "Nop.storemapping.";
+        public static string StoreMappingPrefixCacheKey => "Nop.storemapping.";
 
         #endregion
 
@@ -41,7 +41,7 @@
         /// <summary>
         /// Gets a key pattern to clear cache
         /// </summary>
-        public static string StoresPatternCacheKey => "Nop.stores.";
+        public static string StoresPrefixCacheKey => "Nop.stores.";
 
         #endregion
     }

@@ -25,8 +25,8 @@ namespace Nop.Services.Customers
         public CustomerAttributeParser(ICustomerAttributeService customerAttributeService,
             ILocalizationService localizationService)
         {
-            this._customerAttributeService = customerAttributeService;
-            this._localizationService = localizationService;
+            _customerAttributeService = customerAttributeService;
+            _localizationService = localizationService;
         }
 
         #endregion

@@ -42,14 +42,14 @@ namespace Nop.Web.Areas.Admin.Controllers
             IStoreModelFactory storeModelFactory,
             IStoreService storeService)
         {
-            this._customerActivityService = customerActivityService;
-            this._localizationService = localizationService;
-            this._localizedEntityService = localizedEntityService;
-            this._notificationService = notificationService;
-            this._permissionService = permissionService;
-            this._settingService = settingService;
-            this._storeModelFactory = storeModelFactory;
-            this._storeService = storeService;
+            _customerActivityService = customerActivityService;
+            _localizationService = localizationService;
+            _localizedEntityService = localizedEntityService;
+            _notificationService = notificationService;
+            _permissionService = permissionService;
+            _settingService = settingService;
+            _storeModelFactory = storeModelFactory;
+            _storeService = storeService;
         }
 
         #endregion
@@ -86,7 +86,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult List(StoreSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageStores))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _storeModelFactory.PrepareStoreListModel(searchModel);

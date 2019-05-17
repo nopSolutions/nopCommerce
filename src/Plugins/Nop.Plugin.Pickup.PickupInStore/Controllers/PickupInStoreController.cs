@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Directory;
 using Nop.Plugin.Pickup.PickupInStore.Domain;
+using Nop.Plugin.Pickup.PickupInStore.Factories;
 using Nop.Plugin.Pickup.PickupInStore.Models;
 using Nop.Plugin.Pickup.PickupInStore.Services;
 using Nop.Services.Common;
@@ -15,7 +16,6 @@ using Nop.Services.Security;
 using Nop.Services.Stores;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
-using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
 
@@ -32,6 +32,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly IPermissionService _permissionService;
         private readonly IStateProvinceService _stateProvinceService;
+        private readonly IStorePickupPointModelFactory _storePickupPointModelFactory;
         private readonly IStorePickupPointService _storePickupPointService;
         private readonly IStoreService _storeService;
         private readonly AddressSettings _addressSettings;
@@ -45,18 +46,20 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
             ILocalizationService localizationService,
             IPermissionService permissionService,
             IStateProvinceService stateProvinceService,
+            IStorePickupPointModelFactory storePickupPointModelFactory,
             IStorePickupPointService storePickupPointService,
             IStoreService storeService,
             AddressSettings customerSettings)
         {
-            this._addressService = addressService;
-            this._countryService = countryService;
-            this._localizationService = localizationService;
-            this._permissionService = permissionService;
-            this._stateProvinceService = stateProvinceService;
-            this._storePickupPointService = storePickupPointService;
-            this._storeService = storeService;
-            this._addressSettings = customerSettings;
+            _addressService = addressService;
+            _countryService = countryService;
+            _localizationService = localizationService;
+            _permissionService = permissionService;
+            _stateProvinceService = stateProvinceService;
+            _storePickupPointModelFactory = storePickupPointModelFactory;
+            _storePickupPointService = storePickupPointService;
+            _storeService = storeService;
+            _addressSettings = customerSettings;
         }
 
         #endregion
@@ -68,36 +71,23 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
-            return View("~/Plugins/Pickup.PickupInStore/Views/Configure.cshtml");
+            //prepare model
+            var model = _storePickupPointModelFactory.PrepareStorePickupPointSearchModel(new StorePickupPointSearchModel());
+
+            return View("~/Plugins/Pickup.PickupInStore/Views/Configure.cshtml", model);
         }
 
         [HttpPost]
         [AdminAntiForgery]
-        public IActionResult List(DataSourceRequest command)
+        public IActionResult List(StorePickupPointSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
-            var pickupPoints = _storePickupPointService.GetAllStorePickupPoints(pageIndex: command.Page - 1, pageSize: command.PageSize);
-            var model = pickupPoints.Select(point =>
-            {
-                var store = _storeService.GetStoreById(point.StoreId);
-                return new StorePickupPointModel
-                {
-                    Id = point.Id,
-                    Name = point.Name,
-                    OpeningHours = point.OpeningHours,
-                    PickupFee = point.PickupFee,
-                    DisplayOrder = point.DisplayOrder,
-                    StoreName = store?.Name ?? (point.StoreId == 0 ? _localizationService.GetResource("Admin.Configuration.Settings.StoreScope.AllStores") : string.Empty)
-                };
-            }).ToList();
+            //prepare model
+            var model = _storePickupPointModelFactory.PrepareStorePickupPointListModel(searchModel);
 
-            return Json(new DataSourceResult
-            {
-                Data = model,
-                Total = pickupPoints.TotalCount
-            });
+            return Json(model);
         }
 
         public IActionResult Create()
@@ -105,13 +95,17 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
-            var model = new StorePickupPointModel();
-
-            model.Address.CountryEnabled = _addressSettings.CountryEnabled;
-            model.Address.StateProvinceEnabled = _addressSettings.StateProvinceEnabled;
-            model.Address.ZipPostalCodeEnabled = _addressSettings.ZipPostalCodeEnabled;
-            model.Address.CityEnabled = _addressSettings.CityEnabled;
-            model.Address.CountyEnabled = _addressSettings.CountyEnabled;
+            var model = new StorePickupPointModel
+            {
+                Address =
+                {
+                    CountryEnabled = _addressSettings.CountryEnabled,
+                    StateProvinceEnabled = _addressSettings.StateProvinceEnabled,
+                    ZipPostalCodeEnabled = _addressSettings.ZipPostalCodeEnabled,
+                    CityEnabled = _addressSettings.CityEnabled,
+                    CountyEnabled = _addressSettings.CountyEnabled
+                }
+            };
 
             model.Address.AvailableCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "0" });
             foreach (var country in _countryService.GetAllCountries(showHidden: true))

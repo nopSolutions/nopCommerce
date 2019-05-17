@@ -74,12 +74,12 @@
         /// <summary>
         /// Gets a key pattern to clear cache
         /// </summary>
-        public static string CategoriesPatternCacheKey => "Nop.category.";
+        public static string CategoriesPrefixCacheKey => "Nop.category.";
 
         /// <summary>
         /// Gets a key pattern to clear cache
         /// </summary>
-        public static string ProductCategoriesPatternCacheKey => "Nop.productcategory.";
+        public static string ProductCategoriesPrefixCacheKey => "Nop.productcategory.";
 
         #endregion
 
@@ -120,12 +120,12 @@
         /// <summary>
         /// Gets a key pattern to clear cache
         /// </summary>
-        public static string ManufacturersPatternCacheKey => "Nop.manufacturer.";
+        public static string ManufacturersPrefixCacheKey => "Nop.manufacturer.";
 
         /// <summary>
         /// Gets a key pattern to clear cache
         /// </summary>
-        public static string ProductManufacturersPatternCacheKey => "Nop.productmanufacturer.";
+        public static string ProductManufacturersPrefixCacheKey => "Nop.productmanufacturer.";
 
         #endregion
 
@@ -142,7 +142,7 @@
         /// <summary>
         /// Gets a key pattern to clear cache
         /// </summary>
-        public static string ProductsPatternCacheKey => "Nop.product.";
+        public static string ProductsPrefixCacheKey => "Nop.product.";
 
         /// <summary>
         /// Gets a key for product prices
@@ -161,7 +161,7 @@
         /// <summary>
         /// Gets a key pattern to clear cache
         /// </summary>
-        public static string ProductPricePatternCacheKey => "Nop.totals.productprice";
+        public static string ProductPricePrefixCacheKey => "Nop.totals.productprice";
 
         /// <summary>
         /// Gets a key for category IDs of a product
@@ -176,7 +176,7 @@
         /// <summary>
         /// Gets a key pattern to clear cache
         /// </summary>
-        public static string ProductCategoryIdsPatternCacheKey => "Nop.totals.product.categoryids";
+        public static string ProductCategoryIdsPrefixCacheKey => "Nop.totals.product.categoryids";
 
         /// <summary>
         /// Gets a key for manufacturer IDs of a product
@@ -191,7 +191,7 @@
         /// <summary>
         /// Gets a key pattern to clear cache
         /// </summary>
-        public static string ProductManufacturerIdsPatternCacheKey => "Nop.totals.product.manufacturerids";
+        public static string ProductManufacturerIdsPrefixCacheKey => "Nop.totals.product.manufacturerids";
 
         /// <summary>
         /// Gets a template of product name on copying
@@ -263,24 +263,32 @@
         public static string ProductAttributeCombinationsAllCacheKey => "Nop.productattributecombination.all-{0}";
 
         /// <summary>
-        /// Gets a key pattern to clear cache
+        /// Key for caching of a value indicating whether a product has product attributes
         /// </summary>
-        public static string ProductAttributesPatternCacheKey => "Nop.productattribute.";
+        /// <remarks>
+        /// {0} : product id
+        /// </remarks>
+        public static string ProductHasProductAttributesCacheKey => "Nop.productattribute.producthasattributes.id-{0}";
 
         /// <summary>
         /// Gets a key pattern to clear cache
         /// </summary>
-        public static string ProductAttributeMappingsPatternCacheKey => "Nop.productattributemapping.";
+        public static string ProductAttributesPrefixCacheKey => "Nop.productattribute.";
 
         /// <summary>
         /// Gets a key pattern to clear cache
         /// </summary>
-        public static string ProductAttributeValuesPatternCacheKey => "Nop.productattributevalue.";
+        public static string ProductAttributeMappingsPrefixCacheKey => "Nop.productattributemapping.";
 
         /// <summary>
         /// Gets a key pattern to clear cache
         /// </summary>
-        public static string ProductAttributeCombinationsPatternCacheKey => "Nop.productattributecombination.";
+        public static string ProductAttributeValuesPrefixCacheKey => "Nop.productattributevalue.";
+
+        /// <summary>
+        /// Gets a key pattern to clear cache
+        /// </summary>
+        public static string ProductAttributeCombinationsPrefixCacheKey => "Nop.productattributecombination.";
 
         #endregion
 
@@ -291,8 +299,10 @@
         /// </summary>
         /// <remarks>
         /// {0} : store ID
+        /// {1} : comma separated list of customer roles
+        /// {2} : show hidden records?
         /// </remarks>
-        public static string ProductTagCountCacheKey => "Nop.producttag.count-{0}";
+        public static string ProductTagCountCacheKey => "Nop.producttag.count-{0}-{1}-{2}";
 
         /// <summary>
         /// Gets a key for caching
@@ -305,7 +315,7 @@
         /// <summary>
         /// Gets a key pattern to clear cache
         /// </summary>
-        public static string ProductTagPatternCacheKey => "Nop.producttag.";
+        public static string ProductTagPrefixCacheKey => "Nop.producttag.";
 
         #endregion
 
@@ -327,7 +337,7 @@
         /// <summary>
         /// Key pattern to clear cache review types
         /// </summary>
-        public static string ReviewTypeByPatternKey => "Nop.reviewType.";
+        public static string ReviewTypeByPrefixCacheKey => "Nop.reviewType.";
 
         /// <summary>
         /// Key for caching product review and review type mapping
@@ -355,7 +365,7 @@
         /// <summary>
         /// Gets a key pattern to clear cache
         /// </summary>
-        public static string ProductSpecificationAttributePatternCacheKey => "Nop.productspecificationattribute.";
+        public static string ProductSpecificationAttributePrefixCacheKey => "Nop.productspecificationattribute.";
 
         #endregion
     }

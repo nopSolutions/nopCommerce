@@ -23,69 +23,43 @@
         <div class="panel-group">
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <div id="onlinecustomers-grid"></div>
-
-                    <script>
-                        $(document).ready(function () {
-                            $("#onlinecustomers-grid").kendoGrid({
-                                dataSource: {
-                                    type: "json",
-                                    transport: {
-                                        read: {
-                                            url: "@Html.Raw(Url.Action("List", "OnlineCustomer"))",
-                                            type: "POST",
-                                            dataType: "json",
-                                            data: addAntiForgeryToken
-                                        }
-                                    },
-                                    schema: {
-                                        data: "Data",
-                                        total: "Total",
-                                        errors: "Errors"
-                                    },
-                                    error: function(e) {
-                                        display_kendoui_grid_error(e);
-                                        // Cancel the changes
-                                        this.cancelChanges();
-                                    },
-                                    pageSize: @(Model.PageSize),
-                                    serverPaging: true,
-                                    serverFiltering: true,
-                                    serverSorting: true
-                                },
-                                pageable: {
-                                    refresh: true,
-                                    pageSizes: [@(Model.AvailablePageSizes)],
-                                    @await Html.PartialAsync("_GridPagerMessages")
-                                },
-                                editable: {
-                                    confirmation: "@T("Admin.Common.DeleteConfirmation")",
-                                    mode: "inline"
-                                },
-                                scrollable: false,
-                                columns: [{
-                                    field: "Id",
-                                    title: "@T("Admin.Customers.OnlineCustomers.Fields.CustomerInfo")",
-                                    template: '<a href="@Url.Content("~/Admin/Customer/Edit/")#=Id#">#:CustomerInfo#</a>'
-                                }, {
-                                    field: "LastIpAddress",
-                                    title: "@T("Admin.Customers.OnlineCustomers.Fields.IPAddress")"
-                                }, {
-                                    field: "Location",
-                                    title: "@T("Admin.Customers.OnlineCustomers.Fields.Location")"
-                                }, {
-                                    field: "LastActivityDate",
-                                    title: "@T("Admin.Customers.OnlineCustomers.Fields.LastActivityDate")",
-                                    width: 200,
-                                    type: "date",
-                                    format: "{0:G}"
-                                }, {
-                                    field: "LastVisitedPage",
-                                    title: "@T("Admin.Customers.OnlineCustomers.Fields.LastVisitedPage")"
-                                }]
-                            });
-                        });
-                    </script>
+                    @await Html.PartialAsync("Table", new DataTablesModel
+                    {
+                        Name = "onlinecustomers-grid",
+                        UrlRead = new DataUrl("List", "OnlineCustomer", null),
+                        Length = Model.PageSize,
+                        LengthMenu = Model.AvailablePageSizes,
+                        ColumnCollection = new List<ColumnProperty>
+                        {
+                            new ColumnProperty(nameof(OnlineCustomerModel.CustomerInfo))
+                            {
+                                Title = T("Admin.Customers.OnlineCustomers.Fields.CustomerInfo").Text,
+                                Width = "100",
+                                Render = new RenderLink(new DataUrl("~/Admin/Customer/Edit", nameof(CustomerModel.Id)))
+                            },
+                            new ColumnProperty(nameof(OnlineCustomerModel.LastIpAddress))
+                            {
+                                Title = T("Admin.Customers.OnlineCustomers.Fields.IPAddress").Text,
+                                Width = "100"
+                            },
+                            new ColumnProperty(nameof(OnlineCustomerModel.Location))
+                            {
+                                Title = T("Admin.Customers.OnlineCustomers.Fields.Location").Text,
+                                Width = "100"
+                            },
+                            new ColumnProperty(nameof(OnlineCustomerModel.LastActivityDate))
+                            {
+                                Title = T("Admin.Customers.OnlineCustomers.Fields.LastActivityDate").Text,
+                                Width = "200",
+                                Render = new RenderDate()
+                            },
+                            new ColumnProperty(nameof(OnlineCustomerModel.LastVisitedPage))
+                            {
+                                Title = T("Admin.Customers.OnlineCustomers.Fields.LastVisitedPage").Text,
+                                Width = "100"
+                            }
+                        }
+                    })                    
                 </div>
             </div>
         </div>

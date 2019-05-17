@@ -11,7 +11,7 @@ namespace Nop.Core.Domain.Catalog
         /// <param name="productReview">Product review</param>
         public ProductReviewApprovedEvent(ProductReview productReview)
         {
-            this.ProductReview = productReview;
+            ProductReview = productReview;
         }
 
         /// <summary>

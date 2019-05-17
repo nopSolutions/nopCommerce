@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Extensions.Caching.Memory;
 using Moq;
 using Nop.Core;
 using Nop.Core.Data;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Directory;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
@@ -25,9 +25,11 @@ namespace Nop.Services.Tests.Directory
         private CurrencySettings _currencySettings;
         private Mock<IEventPublisher> _eventPublisher;
         private ICurrencyService _currencyService;
+        private IExchangeRatePluginManager _exchangeRatePluginManager;
+        private CatalogSettings _catalogSettings;
 
         private Currency currencyUSD, currencyRUR, currencyEUR;
-        
+
         [SetUp]
         public new void SetUp()
         {
@@ -81,7 +83,7 @@ namespace Nop.Services.Tests.Directory
 
             _storeMappingService = new Mock<IStoreMappingService>();
 
-            var cacheManager = new TestMemoryCacheManager(new Mock<IMemoryCache>().Object);
+            var cacheManager = new TestCacheManager();
 
             _currencySettings = new CurrencySettings
             {
@@ -91,19 +93,26 @@ namespace Nop.Services.Tests.Directory
 
             _eventPublisher = new Mock<IEventPublisher>();
             _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
-            
+
             var customerService = new Mock<ICustomerService>();
             var loger = new Mock<ILogger>();
             var webHelper = new Mock<IWebHelper>();
 
-            var pluginService = new PluginService(customerService.Object, loger.Object , CommonHelper.DefaultFileProvider, webHelper.Object);
-            _currencyService = new CurrencyService(_currencySettings, _eventPublisher.Object, pluginService, _currencyRepository.Object, cacheManager, _storeMappingService.Object);
+            _catalogSettings = new CatalogSettings();
+            var pluginService = new PluginService(_catalogSettings, customerService.Object, loger.Object, CommonHelper.DefaultFileProvider, webHelper.Object);
+            _exchangeRatePluginManager = new ExchangeRatePluginManager(_currencySettings, pluginService);
+            _currencyService = new CurrencyService(_currencySettings,
+                _eventPublisher.Object,
+                _exchangeRatePluginManager,
+                _currencyRepository.Object,
+                cacheManager,
+                _storeMappingService.Object);
         }
-        
+
         [Test]
         public void Can_load_exchangeRateProviders()
         {
-            var providers = _currencyService.LoadAllExchangeRateProviders();
+            var providers = _exchangeRatePluginManager.LoadAllPlugins();
             providers.ShouldNotBeNull();
             providers.Any().ShouldBeTrue();
         }
@@ -111,14 +120,14 @@ namespace Nop.Services.Tests.Directory
         [Test]
         public void Can_load_exchangeRateProvider_by_systemKeyword()
         {
-            var provider = _currencyService.LoadExchangeRateProviderBySystemName("CurrencyExchange.TestProvider");
+            var provider = _exchangeRatePluginManager.LoadPluginBySystemName("CurrencyExchange.TestProvider");
             provider.ShouldNotBeNull();
         }
 
         [Test]
         public void Can_load_active_exchangeRateProvider()
         {
-            var provider = _currencyService.LoadActiveExchangeRateProvider();
+            var provider = _exchangeRatePluginManager.LoadPrimaryPlugin();
             provider.ShouldNotBeNull();
         }
 

@@ -1,24 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using FluentValidation.Attributes;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Models;
-using Nop.Web.Validators.Customer;
 
 namespace Nop.Web.Models.Customer
 {
-    [Validator(typeof(RegisterValidator))]
     public partial class RegisterModel : BaseNopModel
     {
         public RegisterModel()
         {
-            this.AvailableTimeZones = new List<SelectListItem>();
-            this.AvailableCountries = new List<SelectListItem>();
-            this.AvailableStates = new List<SelectListItem>();
-            this.CustomerAttributes = new List<CustomerAttributeModel>();
-            this.GdprConsents = new List<GdprConsentModel>();
+            AvailableTimeZones = new List<SelectListItem>();
+            AvailableCountries = new List<SelectListItem>();
+            AvailableStates = new List<SelectListItem>();
+            CustomerAttributes = new List<CustomerAttributeModel>();
+            GdprConsents = new List<GdprConsentModel>();
         }
         
         [DataType(DataType.EmailAddress)]

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
@@ -31,7 +31,6 @@ namespace Nop.Services.Topics
         private readonly IRepository<Topic> _topicRepository;
         private readonly IStoreMappingService _storeMappingService;
         private readonly IWorkContext _workContext;
-        private readonly string _entityName;
 
         #endregion
 
@@ -47,16 +46,15 @@ namespace Nop.Services.Topics
             IStoreMappingService storeMappingService,
             IWorkContext workContext)
         {
-            this._catalogSettings = catalogSettings;
-            this._aclService = aclService;
-            this._cacheManager = cacheManager;
-            this._eventPublisher = eventPublisher;
-            this._aclRepository = aclRepository;
-            this._storeMappingRepository = storeMappingRepository;
-            this._topicRepository = topicRepository;
-            this._storeMappingService = storeMappingService;
-            this._workContext = workContext;
-            this._entityName = typeof(Topic).Name;
+            _catalogSettings = catalogSettings;
+            _aclService = aclService;
+            _cacheManager = cacheManager;
+            _eventPublisher = eventPublisher;
+            _aclRepository = aclRepository;
+            _storeMappingRepository = storeMappingRepository;
+            _topicRepository = topicRepository;
+            _storeMappingService = storeMappingService;
+            _workContext = workContext;
         }
 
         #endregion
@@ -75,7 +73,7 @@ namespace Nop.Services.Topics
             _topicRepository.Delete(topic);
 
             //cache
-            _cacheManager.RemoveByPattern(NopTopicDefaults.TopicsPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopTopicDefaults.TopicsPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(topic);
@@ -155,7 +153,7 @@ namespace Nop.Services.Topics
                         var allowedCustomerRolesIds = _workContext.CurrentCustomer.GetCustomerRoleIds();
                         query = from c in query
                                 join acl in _aclRepository.Table
-                                on new { c1 = c.Id, c2 = _entityName } equals new { c1 = acl.EntityId, c2 = acl.EntityName } into cAcl
+                                on new { c1 = c.Id, c2 = nameof(Topic) } equals new { c1 = acl.EntityId, c2 = acl.EntityName } into cAcl
                                 from acl in cAcl.DefaultIfEmpty()
                                 where !c.SubjectToAcl || allowedCustomerRolesIds.Contains(acl.CustomerRoleId)
                                 select c;
@@ -166,7 +164,7 @@ namespace Nop.Services.Topics
                         //Store mapping
                         query = from c in query
                                 join sm in _storeMappingRepository.Table
-                                on new { c1 = c.Id, c2 = _entityName } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into cSm
+                                on new { c1 = c.Id, c2 = nameof(Topic) } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into cSm
                                 from sm in cSm.DefaultIfEmpty()
                                 where !c.LimitedToStores || storeId == sm.StoreId
                                 select c;
@@ -191,7 +189,7 @@ namespace Nop.Services.Topics
             _topicRepository.Insert(topic);
 
             //cache
-            _cacheManager.RemoveByPattern(NopTopicDefaults.TopicsPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopTopicDefaults.TopicsPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(topic);
@@ -209,7 +207,7 @@ namespace Nop.Services.Topics
             _topicRepository.Update(topic);
 
             //cache
-            _cacheManager.RemoveByPattern(NopTopicDefaults.TopicsPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopTopicDefaults.TopicsPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(topic);

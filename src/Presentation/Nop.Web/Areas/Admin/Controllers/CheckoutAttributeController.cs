@@ -57,20 +57,20 @@ namespace Nop.Web.Areas.Admin.Controllers
             IStoreService storeService,
             MeasureSettings measureSettings)
         {
-            this._currencySettings = currencySettings;
-            this._checkoutAttributeModelFactory = checkoutAttributeModelFactory;
-            this._checkoutAttributeParser = checkoutAttributeParser;
-            this._checkoutAttributeService = checkoutAttributeService;
-            this._currencyService = currencyService;
-            this._customerActivityService = customerActivityService;
-            this._localizationService = localizationService;
-            this._localizedEntityService = localizedEntityService;
-            this._notificationService = notificationService;
-            this._measureService = measureService;
-            this._permissionService = permissionService;
-            this._storeMappingService = storeMappingService;
-            this._storeService = storeService;
-            this._measureSettings = measureSettings;
+            _currencySettings = currencySettings;
+            _checkoutAttributeModelFactory = checkoutAttributeModelFactory;
+            _checkoutAttributeParser = checkoutAttributeParser;
+            _checkoutAttributeService = checkoutAttributeService;
+            _currencyService = currencyService;
+            _customerActivityService = customerActivityService;
+            _localizationService = localizationService;
+            _localizedEntityService = localizedEntityService;
+            _notificationService = notificationService;
+            _measureService = measureService;
+            _permissionService = permissionService;
+            _storeMappingService = storeMappingService;
+            _storeService = storeService;
+            _measureSettings = measureSettings;
         }
 
         #endregion
@@ -214,7 +214,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult List(CheckoutAttributeSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _checkoutAttributeModelFactory.PrepareCheckoutAttributeListModel(searchModel);
@@ -258,10 +258,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 if (!continueEditing)
                     return RedirectToAction("List");
-
-                //selected tab
-                SaveSelectedTabName();
-
+                
                 return RedirectToAction("Edit", new { id = checkoutAttribute.Id });
             }
 
@@ -319,10 +316,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 if (!continueEditing)
                     return RedirectToAction("List");
-
-                //selected tab
-                SaveSelectedTabName();
-
+                
                 return RedirectToAction("Edit", new { id = checkoutAttribute.Id });
             }
             
@@ -363,7 +357,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult ValueList(CheckoutAttributeValueSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //try to get a checkout attribute with the specified id
             var checkoutAttribute = _checkoutAttributeService.GetCheckoutAttributeById(searchModel.CheckoutAttributeId)

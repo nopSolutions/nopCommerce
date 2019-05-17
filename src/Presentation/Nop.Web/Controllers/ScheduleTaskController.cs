@@ -11,7 +11,7 @@ namespace Nop.Web.Controllers
 
         public ScheduleTaskController(IScheduleTaskService scheduleTaskService)
         {
-            this._scheduleTaskService = scheduleTaskService;
+            _scheduleTaskService = scheduleTaskService;
         }
 
         [HttpPost]

@@ -43,9 +43,9 @@ namespace Nop.Web.Framework.Controllers
         public FormValueRequiredAttribute(FormValueRequirement requirement, bool validateNameOnly, params string[] submitButtonNames)
         {
             //at least one submit button should be found
-            this._submitButtonNames = submitButtonNames;
-            this._validateNameOnly = validateNameOnly;
-            this._requirement = requirement;
+            _submitButtonNames = submitButtonNames;
+            _validateNameOnly = validateNameOnly;
+            _requirement = requirement;
         }
 
 
@@ -64,7 +64,7 @@ namespace Nop.Web.Framework.Controllers
             {
                 try
                 {
-                    switch (this._requirement)
+                    switch (_requirement)
                     {
                         case FormValueRequirement.Equal:
                             {

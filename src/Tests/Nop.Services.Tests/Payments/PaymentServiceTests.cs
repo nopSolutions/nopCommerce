@@ -2,6 +2,7 @@
 using System.Linq;
 using Moq;
 using Nop.Core;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Services.Configuration;
@@ -22,8 +23,10 @@ namespace Nop.Services.Tests.Payments
         private ShoppingCartSettings _shoppingCartSettings;
         private Mock<IEventPublisher> _eventPublisher;
         private Mock<ISettingService> _settingService;
+        private IPaymentPluginManager _paymentPluginManager;
         private IPaymentService _paymentService;
-        
+        private CatalogSettings _catalogSettings;
+
         [SetUp]
         public new void SetUp()
         {
@@ -40,18 +43,19 @@ namespace Nop.Services.Tests.Payments
             var loger = new Mock<ILogger>();
             var webHelper = new Mock<IWebHelper>();
 
-            var pluginService = new PluginService(customerService.Object, loger.Object , CommonHelper.DefaultFileProvider, webHelper.Object);
+            _catalogSettings = new CatalogSettings();
+            var pluginService = new PluginService(_catalogSettings, customerService.Object, loger.Object, CommonHelper.DefaultFileProvider, webHelper.Object);
 
             _shoppingCartSettings = new ShoppingCartSettings();
             _settingService = new Mock<ISettingService>();
-
-            _paymentService = new PaymentService(pluginService, _settingService.Object, _paymentSettings, _shoppingCartSettings);
+            _paymentPluginManager = new PaymentPluginManager(pluginService, _settingService.Object, _paymentSettings);
+            _paymentService = new PaymentService(_paymentPluginManager, _paymentSettings, _shoppingCartSettings);
         }
 
         [Test]
         public void Can_load_paymentMethods()
         {
-            var srcm = _paymentService.LoadAllPaymentMethods();
+            var srcm = _paymentPluginManager.LoadAllPlugins();
             srcm.ShouldNotBeNull();
             srcm.Any().ShouldBeTrue();
         }
@@ -59,14 +63,14 @@ namespace Nop.Services.Tests.Payments
         [Test]
         public void Can_load_paymentMethod_by_systemKeyword()
         {
-            var srcm = _paymentService.LoadPaymentMethodBySystemName("Payments.TestMethod");
+            var srcm = _paymentPluginManager.LoadPluginBySystemName("Payments.TestMethod");
             srcm.ShouldNotBeNull();
         }
 
         [Test]
         public void Can_load_active_paymentMethods()
         {
-            var srcm = _paymentService.LoadActivePaymentMethods();
+            var srcm = _paymentPluginManager.LoadActivePlugins();
             srcm.ShouldNotBeNull();
             srcm.Any().ShouldBeTrue();
         }
@@ -82,7 +86,7 @@ namespace Nop.Services.Tests.Payments
         [Test]
         public void Can_deserialize_empty_string()
         {
-            var deserialized = _paymentService.DeserializeCustomValues(new Order {CustomValuesXml = string.Empty});
+            var deserialized = _paymentService.DeserializeCustomValues(new Order { CustomValuesXml = string.Empty });
 
             deserialized.ShouldNotBeNull();
             deserialized.Count.ShouldEqual(0);
@@ -91,7 +95,7 @@ namespace Nop.Services.Tests.Payments
         [Test]
         public void Can_deserialize_null_string()
         {
-            var deserialized = _paymentService.DeserializeCustomValues(new Order {CustomValuesXml = null});
+            var deserialized = _paymentService.DeserializeCustomValues(new Order { CustomValuesXml = null });
 
             deserialized.ShouldNotBeNull();
             deserialized.Count.ShouldEqual(0);
@@ -102,7 +106,7 @@ namespace Nop.Services.Tests.Payments
         {
             var processPaymentRequest = new ProcessPaymentRequest();
             var serializedXml = _paymentService.SerializeCustomValues(processPaymentRequest);
-            var deserialized = _paymentService.DeserializeCustomValues(new Order {CustomValuesXml = serializedXml});
+            var deserialized = _paymentService.DeserializeCustomValues(new Order { CustomValuesXml = serializedXml });
 
             deserialized.ShouldNotBeNull();
             deserialized.Count.ShouldEqual(0);
@@ -117,7 +121,7 @@ namespace Nop.Services.Tests.Payments
             processPaymentRequest.CustomValues.Add("key3", 3);
             processPaymentRequest.CustomValues.Add("<test key4>", "<test value 4>");
             var serializedXml = _paymentService.SerializeCustomValues(processPaymentRequest);
-            var deserialized = _paymentService.DeserializeCustomValues(new Order {CustomValuesXml = serializedXml});
+            var deserialized = _paymentService.DeserializeCustomValues(new Order { CustomValuesXml = serializedXml });
 
             deserialized.ShouldNotBeNull();
             deserialized.Count.ShouldEqual(4);

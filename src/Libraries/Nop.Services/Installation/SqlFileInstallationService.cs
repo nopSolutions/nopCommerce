@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -40,12 +40,12 @@ namespace Nop.Services.Installation
             IRepository<Store> storeRepository,
             IWebHelper webHelper)
         {
-            this._dbContext = dbContext;
-            this._fileProvider = fileProvider;
-            this._customerRepository = customerRepository;
-            this._languageRepository = languageRepository;
-            this._storeRepository = storeRepository;
-            this._webHelper = webHelper;
+            _dbContext = dbContext;
+            _fileProvider = fileProvider;
+            _customerRepository = customerRepository;
+            _languageRepository = languageRepository;
+            _storeRepository = storeRepository;
+            _webHelper = webHelper;
         }
 
         #endregion
@@ -157,23 +157,25 @@ namespace Nop.Services.Installation
         #region Methods
 
         /// <summary>
-        /// Install data
+        /// Install required data
         /// </summary>
         /// <param name="defaultUserEmail">Default user email</param>
         /// <param name="defaultUserPassword">Default user password</param>
-        /// <param name="installSampleData">A value indicating whether to install sample data</param>
-        public virtual void InstallData(string defaultUserEmail,
-            string defaultUserPassword, bool installSampleData = true)
+        public virtual void InstallRequiredData(string defaultUserEmail, string defaultUserPassword)
         {
             ExecuteSqlFile(_fileProvider.MapPath(NopInstallationDefaults.RequiredDataPath));
             InstallLocaleResources();
             UpdateDefaultCustomer(defaultUserEmail, defaultUserPassword);
             UpdateDefaultStoreUrl();
+        }
 
-            if (installSampleData)
-            {
-                ExecuteSqlFile(_fileProvider.MapPath(NopInstallationDefaults.SampleDataPath));
-            }
+        /// <summary>
+        /// Install sample data
+        /// </summary>
+        /// <param name="defaultUserEmail">Default user email</param>
+        public virtual void InstallSampleData(string defaultUserEmail)
+        {
+            ExecuteSqlFile(_fileProvider.MapPath(NopInstallationDefaults.SampleDataPath));
         }
 
         #endregion

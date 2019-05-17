@@ -9,6 +9,7 @@ using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Polls;
 using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -23,6 +24,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IBaseAdminModelFactory _baseAdminModelFactory;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ILanguageService _languageService;
+        private readonly ILocalizationService _localizationService;
         private readonly IPollService _pollService;
         private readonly IStoreMappingSupportedModelFactory _storeMappingSupportedModelFactory;
 
@@ -34,15 +36,17 @@ namespace Nop.Web.Areas.Admin.Factories
             IBaseAdminModelFactory baseAdminModelFactory,
             IDateTimeHelper dateTimeHelper,
             ILanguageService languageService,
+            ILocalizationService localizationService,
             IPollService pollService,
             IStoreMappingSupportedModelFactory storeMappingSupportedModelFactory)
         {
-            this._catalogSettings = catalogSettings;
-            this._baseAdminModelFactory = baseAdminModelFactory;
-            this._dateTimeHelper = dateTimeHelper;
-            this._languageService = languageService;
-            this._pollService = pollService;
-            this._storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
+            _catalogSettings = catalogSettings;
+            _baseAdminModelFactory = baseAdminModelFactory;
+            _dateTimeHelper = dateTimeHelper;
+            _languageService = languageService;
+            _localizationService = localizationService;
+            _pollService = pollService;
+            _storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
         }
 
         #endregion
@@ -112,9 +116,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new PollListModel
+            var model = new PollListModel().PrepareToGrid(searchModel, polls, () =>
             {
-                Data = polls.Select(poll =>
+                return polls.Select(poll =>
                 {
                     //fill in model values from the entity
                     var pollModel = poll.ToModel<PollModel>();
@@ -129,9 +133,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     pollModel.LanguageName = _languageService.GetLanguageById(poll.LanguageId)?.Name;
 
                     return pollModel;
-                }),
-                Total = polls.TotalCount
-            };
+                });
+            });
 
             return model;
         }
@@ -161,7 +164,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (poll == null)
             {
                 model.Published = true;
-                model.ShowOnHomePage = true;
+                model.ShowOnHomepage = true;
             }
 
             //prepare available languages
@@ -188,15 +191,11 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(poll));
 
             //get poll answers
-            var pollAnswers = poll.PollAnswers.OrderBy(pollAnswer => pollAnswer.DisplayOrder).ToList();
+            var pollAnswers = poll.PollAnswers.OrderBy(pollAnswer => pollAnswer.DisplayOrder).ToList().ToPagedList(searchModel);
 
             //prepare list model
-            var model = new PollAnswerListModel
-            {
-                //fill in model values from the entity
-                Data = pollAnswers.PaginationByRequestModel(searchModel).Select(pollAnswer => pollAnswer.ToModel<PollAnswerModel>()),
-                Total = pollAnswers.Count
-            };
+            var model = new PollAnswerListModel().PrepareToGrid(searchModel, pollAnswers,
+                () => pollAnswers.Select(pollAnswer => pollAnswer.ToModel<PollAnswerModel>()));
 
             return model;
         }

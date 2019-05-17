@@ -1,16 +1,16 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Nop.Core;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
-using Nop.Core.Plugins;
 using Nop.Plugin.Payments.Manual.Models;
 using Nop.Plugin.Payments.Manual.Validators;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Payments;
+using Nop.Services.Plugins;
 
 namespace Nop.Plugin.Payments.Manual
 {
@@ -37,11 +37,11 @@ namespace Nop.Plugin.Payments.Manual
             IWebHelper webHelper,
             ManualPaymentSettings manualPaymentSettings)
         {
-            this._localizationService = localizationService;
-            this._paymentService = paymentService;
-            this._settingService = settingService;
-            this._webHelper = webHelper;
-            this._manualPaymentSettings = manualPaymentSettings;
+            _localizationService = localizationService;
+            _paymentService = paymentService;
+            _settingService = settingService;
+            _webHelper = webHelper;
+            _manualPaymentSettings = manualPaymentSettings;
         }
 
         #endregion

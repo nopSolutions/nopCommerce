@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Caching;
@@ -38,14 +38,14 @@ namespace Nop.Services.Common
             IRepository<Address> addressRepository,
             IStateProvinceService stateProvinceService)
         {
-            this._addressSettings = addressSettings;
-            this._addressAttributeParser = addressAttributeParser;
-            this._addressAttributeService = addressAttributeService;
-            this._cacheManager = cacheManager;
-            this._countryService = countryService;
-            this._eventPublisher = eventPublisher;
-            this._addressRepository = addressRepository;
-            this._stateProvinceService = stateProvinceService;
+            _addressSettings = addressSettings;
+            _addressAttributeParser = addressAttributeParser;
+            _addressAttributeService = addressAttributeService;
+            _cacheManager = cacheManager;
+            _countryService = countryService;
+            _eventPublisher = eventPublisher;
+            _addressRepository = addressRepository;
+            _stateProvinceService = stateProvinceService;
         }
 
         #endregion
@@ -64,7 +64,7 @@ namespace Nop.Services.Common
             _addressRepository.Delete(address);
 
             //cache
-            _cacheManager.RemoveByPattern(NopCommonDefaults.AddressesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCommonDefaults.AddressesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(address);
@@ -136,7 +136,7 @@ namespace Nop.Services.Common
             _addressRepository.Insert(address);
 
             //cache
-            _cacheManager.RemoveByPattern(NopCommonDefaults.AddressesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCommonDefaults.AddressesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(address);
@@ -160,7 +160,7 @@ namespace Nop.Services.Common
             _addressRepository.Update(address);
 
             //cache
-            _cacheManager.RemoveByPattern(NopCommonDefaults.AddressesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCommonDefaults.AddressesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(address);
@@ -295,9 +295,9 @@ namespace Nop.Services.Common
             ((string.IsNullOrEmpty(a.Address2) && string.IsNullOrEmpty(address2)) || a.Address2 == address2) &&
             ((string.IsNullOrEmpty(a.City) && string.IsNullOrEmpty(city)) || a.City == city) &&
             ((string.IsNullOrEmpty(a.County) && string.IsNullOrEmpty(county)) || a.County == county) &&
-            ((a.StateProvinceId == null && stateProvinceId == null) || (a.StateProvinceId != null && a.StateProvinceId.Value == stateProvinceId.Value)) &&
+            ((a.StateProvinceId == null && (stateProvinceId == null || stateProvinceId == 0)) || (a.StateProvinceId != null && a.StateProvinceId == stateProvinceId)) &&
             ((string.IsNullOrEmpty(a.ZipPostalCode) && string.IsNullOrEmpty(zipPostalCode)) || a.ZipPostalCode == zipPostalCode) &&
-            ((a.CountryId == null && countryId == null) || (a.CountryId !=null && a.CountryId.Value == countryId.Value)) &&
+            ((a.CountryId == null && countryId == null) || (a.CountryId !=null && a.CountryId == countryId)) &&
             //actually we should parse custom address attribute (in case if "Display order" is changed) and then compare
             //bu we simplify this process and simply compare their values in XML
             ((string.IsNullOrEmpty(a.CustomAttributes) && string.IsNullOrEmpty(customAttributes)) || a.CustomAttributes == customAttributes));

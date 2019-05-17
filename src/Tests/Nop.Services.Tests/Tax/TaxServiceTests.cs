@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Moq;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
@@ -28,6 +27,7 @@ namespace Nop.Services.Tests.Tax
         private Mock<IStoreContext> _storeContext;
         private TaxSettings _taxSettings;
         private Mock<IEventPublisher> _eventPublisher;
+        private ITaxPluginManager _taxPluginManager;
         private ITaxService _taxService;
         private Mock<IGeoLookupService> _geoLookupService;
         private Mock<ICountryService> _countryService;
@@ -38,6 +38,7 @@ namespace Nop.Services.Tests.Tax
         private ShippingSettings _shippingSettings;
         private AddressSettings _addressSettings;
         private Mock<IGenericAttributeService> _genericAttributeService;
+        private CatalogSettings _catalogSettings;
 
         [SetUp]
         public new void SetUp()
@@ -57,7 +58,7 @@ namespace Nop.Services.Tests.Tax
 
             _eventPublisher = new Mock<IEventPublisher>();
             _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
-            
+
             _geoLookupService = new Mock<IGeoLookupService>();
             _countryService = new Mock<ICountryService>();
             _stateProvinceService = new Mock<IStateProvinceService>();
@@ -72,8 +73,12 @@ namespace Nop.Services.Tests.Tax
             var customerService = new Mock<ICustomerService>();
             var loger = new Mock<ILogger>();
 
-            var pluginService = new PluginService(customerService.Object, loger.Object , CommonHelper.DefaultFileProvider, _webHelper.Object);
-            
+            _catalogSettings = new CatalogSettings();
+            var pluginService = new PluginService(_catalogSettings, customerService.Object, loger.Object, CommonHelper.DefaultFileProvider, _webHelper.Object);
+            _taxPluginManager = new TaxPluginManager(pluginService, _taxSettings);
+
+            var cacheManager = new TestCacheManager();
+
             _taxService = new TaxService(_addressSettings,
                 _customerSettings,
                 _addressService.Object,
@@ -81,9 +86,10 @@ namespace Nop.Services.Tests.Tax
                 _genericAttributeService.Object,
                 _geoLookupService.Object,
                 _logger.Object,
-                pluginService,
                 _stateProvinceService.Object,
+                cacheManager,
                 _storeContext.Object,
+                _taxPluginManager,
                 _webHelper.Object,
                 _workContext,
                 _shippingSettings,
@@ -93,7 +99,7 @@ namespace Nop.Services.Tests.Tax
         [Test]
         public void Can_load_taxProviders()
         {
-            var providers = _taxService.LoadAllTaxProviders();
+            var providers = _taxPluginManager.LoadAllPlugins();
             providers.ShouldNotBeNull();
             providers.Any().ShouldBeTrue();
         }
@@ -101,14 +107,14 @@ namespace Nop.Services.Tests.Tax
         [Test]
         public void Can_load_taxProvider_by_systemKeyword()
         {
-            var provider = _taxService.LoadTaxProviderBySystemName("FixedTaxRateTest");
+            var provider = _taxPluginManager.LoadPluginBySystemName("FixedTaxRateTest");
             provider.ShouldNotBeNull();
         }
 
         [Test]
         public void Can_load_active_taxProvider()
         {
-            var provider = _taxService.LoadActiveTaxProvider();
+            var provider = _taxPluginManager.LoadPrimaryPlugin();
             provider.ShouldNotBeNull();
         }
 
@@ -191,9 +197,9 @@ namespace Nop.Services.Tests.Tax
         public void Can_do_VAT_check()
         {
             var vatNumberStatus1 = _taxService.DoVatCheck("GB", "523 2392 69",
-                out _, out _, out Exception exception);
+                out _, out _, out var exception);
 
-            if(exception != null)
+            if (exception != null)
             {
                 TestContext.WriteLine($"Can't run the \"Can_do_VAT_check\":\r\n{exception.Message}");
                 return;
@@ -204,7 +210,7 @@ namespace Nop.Services.Tests.Tax
             var vatNumberStatus2 = _taxService.DoVatCheck("GB", "000 0000 00",
                 out _, out _, out exception);
 
-            if(exception != null)
+            if (exception != null)
             {
                 TestContext.WriteLine($"Can't run the \"Can_do_VAT_check\":\r\n{exception.Message}");
                 return;

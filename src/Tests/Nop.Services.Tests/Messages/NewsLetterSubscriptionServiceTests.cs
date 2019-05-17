@@ -2,6 +2,7 @@
 using Nop.Core.Data;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Messages;
+using Nop.Core.Events;
 using Nop.Data;
 using Nop.Services.Customers;
 using Nop.Services.Events;
@@ -63,7 +64,6 @@ namespace Nop.Services.Tests.Messages
         /// Verifies the insert event is fired.
         /// </summary>
         [Test]
-        [Ignore("Moq can't verify an extension method")]
         public void VerifyInsertEventIsFired()
         {
             var service = new NewsLetterSubscriptionService(_customerService.Object, _dbContext.Object, _eventPublisher.Object,
@@ -73,7 +73,7 @@ namespace Nop.Services.Tests.Messages
 
             service.InsertNewsLetterSubscription(subscription);
 
-            _eventPublisher.Verify(x => x.EntityInserted(It.IsAny<NewsLetterSubscription>()));
+            _eventPublisher.Verify(x => x.Publish(It.IsAny<EntityInsertedEvent<NewsLetterSubscription>>()));
         }
     }
 }

@@ -1,9 +1,6 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Net;
-using System.Text;
 using Microsoft.AspNetCore.WebUtilities;
 using Newtonsoft.Json;
 using Nop.Core;
@@ -21,9 +18,10 @@ namespace Nop.Plugin.Payments.Square.Services
     public class SquarePaymentManager
     {
         #region Fields
-        
+
         private readonly ILogger _logger;
         private readonly IWorkContext _workContext;
+        private readonly SquareAuthorizationHttpClient _squareAuthorizationHttpClient;
         private readonly SquarePaymentSettings _squarePaymentSettings;
 
         #endregion
@@ -32,25 +30,18 @@ namespace Nop.Plugin.Payments.Square.Services
 
         public SquarePaymentManager(ILogger logger,
             IWorkContext workContext,
+            SquareAuthorizationHttpClient squareAuthorizationHttpClient,
             SquarePaymentSettings squarePaymentSettings)
         {
-            this._logger = logger;
-            this._workContext = workContext;
-            this._squarePaymentSettings = squarePaymentSettings;
+            _logger = logger;
+            _workContext = workContext;
+            _squareAuthorizationHttpClient = squareAuthorizationHttpClient;
+            _squarePaymentSettings = squarePaymentSettings;
         }
 
         #endregion
 
         #region Utilities
-
-        /// <summary>
-        /// Get the OAuth Square service base URL
-        /// </summary>
-        /// <returns>URL</returns>
-        private string GetOAuthServiceUrl()
-        {
-            return "https://connect.squareup.com/oauth2";
-        }
 
         /// <summary>
         /// Create the API configuration
@@ -59,8 +50,8 @@ namespace Nop.Plugin.Payments.Square.Services
         private Configuration CreateApiConfiguration()
         {
             //validate access token
-            if (_squarePaymentSettings.UseSandbox && 
-                (string.IsNullOrEmpty(_squarePaymentSettings.AccessToken) || 
+            if (_squarePaymentSettings.UseSandbox &&
+                (string.IsNullOrEmpty(_squarePaymentSettings.AccessToken) ||
                     !_squarePaymentSettings.AccessToken.StartsWith(SquarePaymentDefaults.SandboxCredentialsPrefix, StringComparison.InvariantCultureIgnoreCase)))
 
             {
@@ -498,11 +489,10 @@ namespace Nop.Plugin.Payments.Square.Services
         /// <summary>
         /// Generate URL for the authorization permissions page
         /// </summary>
-        /// <param name="verificationString">String to help protect against cross-site request forgery</param>
         /// <returns>URL</returns>
-        public string GenerateAuthorizeUrl(string verificationString)
+        public string GenerateAuthorizeUrl()
         {
-            var serviceUrl = $"{GetOAuthServiceUrl()}/authorize";
+            var serviceUrl = $"{_squareAuthorizationHttpClient.BaseAddress}authorize";
 
             //list of all available permission scopes
             var permissionScopes = new List<string>
@@ -575,7 +565,7 @@ namespace Nop.Plugin.Payments.Square.Services
                 ["session"] = "false",
 
                 //Include this parameter and verify its value to help protect against cross-site request forgery.
-                ["state"] = verificationString,
+                ["state"] = _squarePaymentSettings.AccessTokenVerificationString,
 
                 //The ID of the subscription plan to direct the merchant to sign up for, if any.
                 //You can provide this parameter with no value to give a merchant the option to cancel an active subscription.
@@ -589,112 +579,29 @@ namespace Nop.Plugin.Payments.Square.Services
         /// <summary>
         /// Exchange the authorization code for an access token
         /// </summary>
-        /// <param name="accessTokenRequest">Request parameters to obtain access token</param>
-        /// <returns>Access token</returns>
-        public string ObtainAccessToken(ObtainAccessTokenRequest accessTokenRequest)
+        /// <param name="authorizationCode">Authorization code</param>
+        /// <returns>Access and refresh tokens</returns>
+        public (string AccessToken, string RefreshToken) ObtainAccessToken(string authorizationCode)
         {
-            //create post data
-            var postData = Encoding.Default.GetBytes(JsonConvert.SerializeObject(accessTokenRequest));
-
-            //create web request
-            var serviceUrl = $"{GetOAuthServiceUrl()}/token";
-            var request = (HttpWebRequest)WebRequest.Create(serviceUrl);
-            request.Method = WebRequestMethods.Http.Post;
-            request.Accept = "application/json";
-            request.ContentType = "application/json";
-            request.ContentLength = postData.Length;
-            request.UserAgent = SquarePaymentDefaults.UserAgent;
-
-            //post request
-            using (var stream = request.GetRequestStream())
-            {
-                stream.Write(postData, 0, postData.Length);
-            }
-
-            //get response
-            var httpResponse = (HttpWebResponse)request.GetResponse();
-            using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
-            {
-                //return received access token
-                var response = JsonConvert.DeserializeObject<ObtainAccessTokenResponse>(streamReader.ReadToEnd());
-                return response?.AccessToken;
-            }
+            return _squareAuthorizationHttpClient.ObtainAccessTokenAsync(authorizationCode).Result;
         }
 
         /// <summary>
         /// Renew the expired access token
         /// </summary>
-        /// <param name="accessTokenRequest">Request parameters to renew access token</param>
-        /// <returns>Access token</returns>
-        public string RenewAccessToken(RenewAccessTokenRequest accessTokenRequest)
+        /// <returns>Access and refresh tokens</returns>
+        public (string AccessToken, string RefreshToken) RenewAccessToken()
         {
-            //create post data
-            var postData = Encoding.Default.GetBytes(JsonConvert.SerializeObject(accessTokenRequest));
-
-            //create web request
-            var serviceUrl = $"{GetOAuthServiceUrl()}/clients/{accessTokenRequest.ApplicationId}/access-token/renew";
-            var request = (HttpWebRequest)WebRequest.Create(serviceUrl);
-            request.Method = WebRequestMethods.Http.Post;
-            request.Accept = "application/json";
-            request.ContentType = "application/json";
-            request.ContentLength = postData.Length;
-            request.UserAgent = SquarePaymentDefaults.UserAgent;
-
-            //add authorization header
-            request.Headers.Add(HttpRequestHeader.Authorization, $"Client {accessTokenRequest.ApplicationSecret}");
-
-            //post request
-            using (var stream = request.GetRequestStream())
-            {
-                stream.Write(postData, 0, postData.Length);
-            }
-
-            //get response
-            var httpResponse = (HttpWebResponse)request.GetResponse();
-            using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
-            {
-                //return received access token
-                var response = JsonConvert.DeserializeObject<RenewAccessTokenResponse>(streamReader.ReadToEnd());
-                return response?.AccessToken;
-            }
+            return _squareAuthorizationHttpClient.RenewAccessTokenAsync().Result;
         }
 
         /// <summary>
         /// Revoke all access tokens
         /// </summary>
-        /// <param name="revokeTokenRequest">Request parameters to revoke access token</param>
         /// <returns>True if tokens were successfully revoked; otherwise false</returns>
-        public bool RevokeAccessTokens(RevokeAccessTokenRequest revokeTokenRequest)
+        public bool RevokeAccessTokens()
         {
-            //create post data
-            var postData = Encoding.Default.GetBytes(JsonConvert.SerializeObject(revokeTokenRequest));
-
-            //create web request
-            var serviceUrl = $"{GetOAuthServiceUrl()}/revoke";
-            var request = (HttpWebRequest)WebRequest.Create(serviceUrl);
-            request.Method = WebRequestMethods.Http.Post;
-            request.Accept = "application/json";
-            request.ContentType = "application/json";
-            request.ContentLength = postData.Length;
-            request.UserAgent = SquarePaymentDefaults.UserAgent;
-
-            //add authorization header
-            request.Headers.Add(HttpRequestHeader.Authorization, $"Client {revokeTokenRequest.ApplicationSecret}");
-
-            //post request
-            using (var stream = request.GetRequestStream())
-            {
-                stream.Write(postData, 0, postData.Length);
-            }
-
-            //get response
-            var httpResponse = (HttpWebResponse)request.GetResponse();
-            using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
-            {
-                //return received value
-                var response = JsonConvert.DeserializeObject<RevokeAccessTokenResponse>(streamReader.ReadToEnd());
-                return response?.SuccessfullyRevoked ?? false;
-            }
+            return _squareAuthorizationHttpClient.RevokeAccessTokensAsync().Result;
         }
 
         #endregion

@@ -42,14 +42,14 @@ namespace Nop.Web.Areas.Admin.Controllers
             IProductService productService,
             IWorkContext workContext)
         {
-            this._customerActivityService = customerActivityService;
-            this._customerRoleModelFactory = customerRoleModelFactory;
-            this._customerService = customerService;
-            this._localizationService = localizationService;
-            this._notificationService = notificationService;
-            this._permissionService = permissionService;
-            this._productService = productService;
-            this._workContext = workContext;
+            _customerActivityService = customerActivityService;
+            _customerRoleModelFactory = customerRoleModelFactory;
+            _customerService = customerService;
+            _localizationService = localizationService;
+            _notificationService = notificationService;
+            _permissionService = permissionService;
+            _productService = productService;
+            _workContext = workContext;
         }
 
         #endregion
@@ -76,7 +76,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult List(CustomerRoleSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _customerRoleModelFactory.PrepareCustomerRoleListModel(searchModel);
@@ -233,7 +233,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult AssociateProductToCustomerRolePopupList(CustomerRoleProductSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _customerRoleModelFactory.PrepareCustomerRoleProductListModel(searchModel);

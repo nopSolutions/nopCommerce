@@ -56,11 +56,11 @@ namespace Nop.Web.Framework.Mvc.Filters
                 INotificationService notificationService,
                 IWorkContext workContext)
             {
-                this._customerService = customerService;
-                this._discountService = discountService;
-                this._localizationService = localizationService;
-                this._notificationService = notificationService;
-                this._workContext = workContext;
+                _customerService = customerService;
+                _discountService = discountService;
+                _localizationService = localizationService;
+                _notificationService = notificationService;
+                _workContext = workContext;
             }
 
             #endregion

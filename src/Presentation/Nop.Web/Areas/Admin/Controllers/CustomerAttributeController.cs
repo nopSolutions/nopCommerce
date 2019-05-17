@@ -38,13 +38,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             INotificationService notificationService,
             IPermissionService permissionService)
         {
-            this._customerActivityService = customerActivityService;
-            this._customerAttributeModelFactory = customerAttributeModelFactory;
-            this._customerAttributeService = customerAttributeService;
-            this._localizationService = localizationService;
-            this._localizedEntityService = localizedEntityService;
-            this._notificationService = notificationService;
-            this._permissionService = permissionService;
+            _customerActivityService = customerActivityService;
+            _customerAttributeModelFactory = customerAttributeModelFactory;
+            _customerAttributeService = customerAttributeService;
+            _localizationService = localizationService;
+            _localizedEntityService = localizedEntityService;
+            _notificationService = notificationService;
+            _permissionService = permissionService;
         }
 
         #endregion
@@ -87,8 +87,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
-            //select "customer form fields" tab
-            SaveSelectedTabName("tab-customerformfields");
+            //select an appropriate panel
+            SaveSelectedPanelName("customersettings-customerformfields");
 
             //we just redirect a user to the customer settings page
             return RedirectToAction("CustomerUser", "Setting");
@@ -98,7 +98,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult List(CustomerAttributeSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _customerAttributeModelFactory.PrepareCustomerAttributeListModel(searchModel);
@@ -140,10 +140,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 if (!continueEditing)
                     return RedirectToAction("List");
-
-                //selected tab
-                SaveSelectedTabName();
-
+                
                 return RedirectToAction("Edit", new { id = customerAttribute.Id });
             }
             
@@ -200,10 +197,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (!continueEditing)
                 return RedirectToAction("List");
-
-            //selected tab
-            SaveSelectedTabName();
-
+            
             return RedirectToAction("Edit", new { id = customerAttribute.Id });
         }
 
@@ -233,7 +227,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult ValueList(CustomerAttributeValueSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //try to get a customer attribute with the specified id
             var customerAttribute = _customerAttributeService.GetCustomerAttributeById(searchModel.CustomerAttributeId)

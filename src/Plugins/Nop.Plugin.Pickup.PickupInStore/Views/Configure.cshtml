@@ -1,106 +1,73 @@
 ﻿@inject Nop.Core.Domain.Common.AdminAreaSettings adminAreaSettings
+@using Nop.Plugin.Pickup.PickupInStore.Models
+@using Nop.Web.Framework.Models.DataTables
+@model StorePickupPointSearchModel
 @{
     Layout = "_ConfigurePlugin";
-
-    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
-    var gridPageSizes = adminAreaSettings.GridPageSizes;
 }
 
 <form asp-controller="PickupInStore" asp-action="Configure" method="post" id="pickup-instore-form">
     <div class="panel-group">
         <div class="panel panel-default">
             <div class="panel-body">
-                <div id="pickup-points-grid"></div>
-                <script>
-                    $(document).ready(function() {
-                        $("#pickup-points-grid").kendoGrid({
-                            dataSource: {
-                                type: "json",
-                                transport: {
-                                    read: {
-                                        url: "@Html.Raw(Url.Action("List", "PickupInStore"))",
-                                        type: "POST",
-                                        dataType: "json",
-                                        data: addAntiForgeryToken
-                                    },
-                                    destroy: {
-                                        url: "@Html.Raw(Url.Action("Delete", "PickupInStore"))",
-                                        type: "POST",
-                                        dataType: "json",
-                                        data: addAntiForgeryToken
-                                    }
-                                },
-                                schema: {
-                                    data: "Data",
-                                    total: "Total",
-                                    errors: "Errors",
-                                    model: {
-                                        id: "Id"
-                                    }
-                                },
-                                requestEnd: function (e) {
-                                    if (e.type == "update") {
-                                        this.read();
-                                    }
-                                },
-                                error: function(e) {
-                                    display_kendoui_grid_error(e);
-                                    // Cancel the changes
-                                    this.cancelChanges();
-                                },
-                                    pageSize: @(defaultGridPageSize),
-                                    serverPaging: true,
-                                    serverFiltering: true,
-                                    serverSorting: true
-                            },
-                            pageable: {
-                                refresh: true,
-                                pageSizes: [@(gridPageSizes)],
-                                @await Html.PartialAsync("_GridPagerMessages")
-                            },
-                            editable: {
-                                confirmation: "@T("Admin.Common.DeleteConfirmation")",
-                                mode: "inline"
-                            },
-                            scrollable: false,
-                            columns: [ {
-                                field: "Name",
-                                width: 200,
-                                title: "@T("Plugins.Pickup.PickupInStore.Fields.Name")"
-                            }, {
-                                field: "OpeningHours",
-                                width: 200,
-                                title: "@T("Plugins.Pickup.PickupInStore.Fields.OpeningHours")"
-                            }, {
-                                field: "PickupFee",
-                                width: 100,
-                                title: "@T("Plugins.Pickup.PickupInStore.Fields.PickupFee")"
-                            }, {
-                                field: "DisplayOrder",
-                                width: 100,
-                                title: "@T("Plugins.Pickup.PickupInStore.Fields.DisplayOrder")"
-                            }, {
-                                field: "StoreName",
-                                width: 100,
-                                title: "@T("Plugins.Pickup.PickupInStore.Fields.Store")"
-                            }, {
-                                field: "Id",
-                                title: "@T("Admin.Common.Edit")",
-                                width: 100,
-                                headerAttributes: { style: "text-align:center" },
-                                attributes: { style: "text-align:center" },
-                                template: "<button onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/PickupInStore/Edit/")?id=#=Id#&btnId=btnRefresh&formId=pickup-instore-form', 800, 800, true); return false;\" class='btn btn-default'><i class=\"fa fa-pencil\"></i>@T("Admin.Common.Edit")</button>"
-                            }, {
-                                command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
-                                title: "@T("Admin.Common.Delete")",
-                                headerAttributes: { style: "text-align:center" },
-                                attributes: { style: "text-align:center" },
-                                width: 100
-                            }]
-                        });
-                    });
-                </script>
+                @await Html.PartialAsync("Table", new DataTablesModel
+           {
+               Name = "pickup-points-grid",
+               UrlRead = new DataUrl("List", "PickupInStore", null),
+               UrlDelete = new DataUrl("Delete", "PickupInStore", null),
+               Length = Model.PageSize,
+               LengthMenu = Model.AvailablePageSizes,
+               ColumnCollection = new List<ColumnProperty>
+                {
+                    new ColumnProperty(nameof(StorePickupPointModel.Name))
+                    {
+                        Title = T("Plugins.Pickup.PickupInStore.Fields.Name").Text,
+                        Width = "200"
+                    },
+                    new ColumnProperty(nameof(StorePickupPointModel.OpeningHours))
+                    {
+                        Title = T("Plugins.Pickup.PickupInStore.Fields.OpeningHours").Text,
+                        Width = "200"
+                    },
+                    new ColumnProperty(nameof(StorePickupPointModel.PickupFee))
+                    {
+                        Title = T("Plugins.Pickup.PickupInStore.Fields.PickupFee").Text,
+                        Width = "100"
+                    },
+                    new ColumnProperty(nameof(StorePickupPointModel.DisplayOrder))
+                    {
+                        Title = T("Plugins.Pickup.PickupInStore.Fields.DisplayOrder").Text,
+                        Width = "100"
+                    },
+                    new ColumnProperty(nameof(StorePickupPointModel.StoreName))
+                    {
+                        Title = T("Plugins.Pickup.PickupInStore.Fields.Store").Text,
+                        Width = "100"
+                    },
+                    new ColumnProperty(nameof(StorePickupPointModel.Id))
+                    {
+                        Title = T("Admin.Common.Edit").Text,
+                        ClassName = StyleColumn.ButtonStyle,
+                        Width = "100",
+                        Render = new RenderCustom("renderColumnEdit")
+                    },
+                    new ColumnProperty(nameof(StorePickupPointModel.Id))
+                    {
+                        Title = T("Admin.Common.Delete").Text,
+                        ClassName = StyleColumn.ButtonStyle,
+                        Render = new RenderButtonRemove(T("Admin.Common.Delete").Text) { Style = StyleButton.Default },
+                        Width = "100"
+                    }
+                }
+           })
             </div>
+
+            <script>
+                function renderColumnEdit(data, type, row, meta) {
+                    return '<button onclick=\"javascript:OpenWindow(\'@Url.Content("~/Admin/PickupInStore/Edit/")' + data + '?btnId=btnRefresh&formId=pickup-instore-form\', 800, 800, true); return false;\" class="btn btn-default"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</button>';
+                }
+            </script>
+
             <div class="panel-footer">
                 <input type="submit" id="btnAddNewOption" class="btn btn-primary" value="@T("Plugins.Pickup.PickupInStore.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("Create", "PickupInStore",  new { btnId = "btnRefresh", formId = "pickup-instore-form" }))', 800, 800, true); return false;"/>
                 <input type="submit" id="btnRefresh" class="btn btn-default" style="display: none" />
@@ -109,9 +76,7 @@
                 $(document).ready(function () {
                     $('#btnRefresh').click(function () {
                         //refresh grid
-                        var grid = $("#pickup-points-grid").data('kendoGrid');
-                        //grid.dataSource.page(1); //new search. Set page size to 1
-                        grid.dataSource.read();
+                        $('#pickup-points-grid').DataTable().ajax.reload();
 
                         //return false to don't reload a page
                         return false;

@@ -171,10 +171,10 @@ namespace Nop.Web.Models.ShoppingCart
         {
             public OrderReviewDataModel()
             {
-                this.BillingAddress = new AddressModel();
-                this.ShippingAddress = new AddressModel();
-                this.PickupAddress = new AddressModel();
-                this.CustomValues= new Dictionary<string, object>();
+                BillingAddress = new AddressModel();
+                ShippingAddress = new AddressModel();
+                PickupAddress = new AddressModel();
+                CustomValues= new Dictionary<string, object>();
             }
             public bool Display { get; set; }
 
@@ -182,7 +182,7 @@ namespace Nop.Web.Models.ShoppingCart
 
             public bool IsShippable { get; set; }
             public AddressModel ShippingAddress { get; set; }
-            public bool SelectedPickUpInStore { get; set; }
+            public bool SelectedPickupInStore { get; set; }
             public AddressModel PickupAddress { get; set; }
             public string ShippingMethod { get; set; }
 

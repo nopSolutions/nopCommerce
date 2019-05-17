@@ -18,7 +18,7 @@
         /// <summary>
         /// Gets a key pattern to clear cache
         /// </summary>
-        public static string ShippingMethodsPatternCacheKey => "Nop.shippingmethod.";
+        public static string ShippingMethodsPrefixCacheKey => "Nop.shippingmethod.";
 
         #endregion
 
@@ -35,7 +35,7 @@
         /// <summary>
         /// Gets a key pattern to clear cache
         /// </summary>
-        public static string WarehousesPatternCacheKey => "Nop.warehouse.";
+        public static string WarehousesPrefixCacheKey => "Nop.warehouse.";
 
         #endregion
     }

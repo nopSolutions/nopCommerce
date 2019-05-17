@@ -12,8 +12,8 @@ namespace Nop.Core.Domain.Gdpr
         /// <param name="email">Email</param>
         public CustomerPermanentlyDeleted(int customerId, string email)
         {
-            this.CustomerId = customerId;
-            this.Email = email;
+            CustomerId = customerId;
+            Email = email;
         }
 
         /// <summary>

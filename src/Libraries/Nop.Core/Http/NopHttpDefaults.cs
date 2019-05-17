@@ -7,14 +7,9 @@ namespace Nop.Core.Http
     public static partial class NopHttpDefaults
     {
         /// <summary>
-        /// Gets a request path to the install URL
+        /// Gets the name of the default HTTP client
         /// </summary>
-        public static string InstallPath => "install";
-
-        /// <summary>
-        /// Gets a request path to the keep alive URL
-        /// </summary>
-        public static string KeepAlivePath => "keepalive/index";
+        public static string DefaultHttpClient => "default";
 
         /// <summary>
         /// Gets the name of a request item that stores the value that indicates whether the client is being redirected to a new location using POST

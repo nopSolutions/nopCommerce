@@ -50,19 +50,19 @@ namespace Nop.Services.Catalog
             IStoreMappingService storeMappingService,
             IUrlRecordService urlRecordService)
         {
-            this._categoryService = categoryService;
-            this._downloadService = downloadService;
-            this._languageService = languageService;
-            this._localizationService = localizationService;
-            this._localizedEntityService = localizedEntityService;
-            this._manufacturerService = manufacturerService;
-            this._pictureService = pictureService;
-            this._productAttributeParser = productAttributeParser;
-            this._productAttributeService = productAttributeService;
-            this._productService = productService;
-            this._specificationAttributeService = specificationAttributeService;
-            this._storeMappingService = storeMappingService;
-            this._urlRecordService = urlRecordService;
+            _categoryService = categoryService;
+            _downloadService = downloadService;
+            _languageService = languageService;
+            _localizationService = localizationService;
+            _localizedEntityService = localizedEntityService;
+            _manufacturerService = manufacturerService;
+            _pictureService = pictureService;
+            _productAttributeParser = productAttributeParser;
+            _productAttributeService = productAttributeService;
+            _productService = productService;
+            _specificationAttributeService = specificationAttributeService;
+            _storeMappingService = storeMappingService;
+            _urlRecordService = urlRecordService;
         }
 
         #endregion
@@ -623,7 +623,7 @@ namespace Nop.Services.Catalog
                 VendorId = product.VendorId,
                 ProductTemplateId = product.ProductTemplateId,
                 AdminComment = product.AdminComment,
-                ShowOnHomePage = product.ShowOnHomePage,
+                ShowOnHomepage = product.ShowOnHomepage,
                 MetaKeywords = product.MetaKeywords,
                 MetaDescription = product.MetaDescription,
                 MetaTitle = product.MetaTitle,

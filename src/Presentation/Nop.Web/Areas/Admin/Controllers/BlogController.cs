@@ -49,16 +49,16 @@ namespace Nop.Web.Areas.Admin.Controllers
             IStoreService storeService,
             IUrlRecordService urlRecordService)
         {
-            this._blogModelFactory = blogModelFactory;
-            this._blogService = blogService;
-            this._customerActivityService = customerActivityService;
-            this._eventPublisher = eventPublisher;
-            this._localizationService = localizationService;
-            this._notificationService = notificationService;
-            this._permissionService = permissionService;
-            this._storeMappingService = storeMappingService;
-            this._storeService = storeService;
-            this._urlRecordService = urlRecordService;
+            _blogModelFactory = blogModelFactory;
+            _blogService = blogService;
+            _customerActivityService = customerActivityService;
+            _eventPublisher = eventPublisher;
+            _localizationService = localizationService;
+            _notificationService = notificationService;
+            _permissionService = permissionService;
+            _storeMappingService = storeMappingService;
+            _storeService = storeService;
+            _urlRecordService = urlRecordService;
         }
 
         #endregion
@@ -115,7 +115,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult List(BlogPostSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageBlog))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _blogModelFactory.PrepareBlogPostListModel(searchModel);
@@ -161,10 +161,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 if (!continueEditing)
                     return RedirectToAction("BlogPosts");
-
-                //selected tab
-                SaveSelectedTabName();
-
+                
                 return RedirectToAction("BlogPostEdit", new { id = blogPost.Id });
             }
 
@@ -222,10 +219,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 if (!continueEditing)
                     return RedirectToAction("BlogPosts");
-
-                //selected tab
-                SaveSelectedTabName();
-
+                
                 return RedirectToAction("BlogPostEdit", new { id = blogPost.Id });
             }
 
@@ -282,7 +276,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult Comments(BlogCommentSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageBlog))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _blogModelFactory.PrepareBlogCommentListModel(searchModel, searchModel.BlogPostId);
