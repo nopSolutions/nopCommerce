@@ -914,6 +914,12 @@ set @resources='
   <LocaleResource Name="Tax.Selector.Label">
     <Value>Tax selector</Value>
   </LocaleResource>
+  <LocaleResource Name="Products.Specs.AttributeName">
+    <Value>Attribute name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Specs.AttributeValue">
+    <Value>Attribute value</Value>
+  </LocaleResource>
 </Language>'
 
 CREATE TABLE #LocaleStringResourceTmp
