@@ -1599,6 +1599,11 @@ span.grid-report-item.red {
   border-right: 1px solid #e3e3e3;
 }
 
+.dataTables_scrollBody .dataTables_wrapper {
+  width: 95%;
+  margin-left: 3%;
+}
+
 @media (max-width: 1200px) {
   /* HEADER */
   .main-header .navbar-custom-menu {
@@ -1688,6 +1693,10 @@ span.grid-report-item.red {
     .parent-setting.opened + .nested-setting .form-group div[class^="col-md-"] + div[class^="col-md-"] {
         padding-bottom: 0;
     }
+    .dataTables_scrollBody .dataTables_wrapper {
+      width: 100%;
+      margin-left: 0;
+    }
 }
 
 @media (max-width: 992px) {
@@ -1724,7 +1733,6 @@ span.grid-report-item.red {
       text-align: right;
     }
 }
-
 @media (max-width: 767px) {
     /* COMMON */
     .modal-dialog {

@@ -1663,6 +1663,11 @@ table.table-bordered.dataTable td:last-child{
   border-right-width: 1px;
 }
 
+.dataTables_scrollBody .dataTables_wrapper {
+  width: 95%;
+  margin-right: 3%;
+}
+
 @media (max-width: 1200px) {
     /* HEADER */
     .main-header .navbar-custom-menu {
@@ -1752,7 +1757,10 @@ table.table-bordered.dataTable td:last-child{
     .parent-setting.opened + .nested-setting .form-group div[class^="col-md-"] + div[class^="col-md-"] {
         padding-bottom: 0;
     }
-
+    .dataTables_scrollBody .dataTables_wrapper {
+      width: 100%;
+      margin-right: 0;
+    }
 }
 
 @media (max-width: 992px) {
