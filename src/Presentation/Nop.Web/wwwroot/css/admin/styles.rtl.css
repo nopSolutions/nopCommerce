@@ -1668,6 +1668,11 @@ table.table-bordered.dataTable td:last-child{
   margin-right: 3%;
 }
 
+.dataTables_scroll > .dataTables_scrollBody > .table,
+.dataTables_scroll > .dataTables_scrollHead > .dataTables_scrollHeadInner > .table {
+  padding-right: 0 !important;
+}
+
 @media (max-width: 1200px) {
     /* HEADER */
     .main-header .navbar-custom-menu {

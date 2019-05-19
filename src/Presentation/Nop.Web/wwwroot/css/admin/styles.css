@@ -1604,6 +1604,11 @@ span.grid-report-item.red {
   margin-left: 3%;
 }
 
+.dataTables_scroll > .dataTables_scrollBody > .table,
+.dataTables_scroll > .dataTables_scrollHead > .dataTables_scrollHeadInner > .table {
+  padding-left: 0 !important;
+}
+
 @media (max-width: 1200px) {
   /* HEADER */
   .main-header .navbar-custom-menu {
