@@ -920,6 +920,9 @@ set @resources='
   <LocaleResource Name="Products.Specs.AttributeValue">
     <Value>Attribute value</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.CustomerRolesManagingError">
+    <Value>Not enough rights to manage customer roles.</Value>
+  </LocaleResource>
 </Language>'
 
 CREATE TABLE #LocaleStringResourceTmp
