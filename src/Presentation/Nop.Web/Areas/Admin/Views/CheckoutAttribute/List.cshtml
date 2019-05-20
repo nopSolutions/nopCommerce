@@ -49,20 +49,20 @@
                         {
                             Title = T("Admin.Catalog.Attributes.CheckoutAttributes.Fields.IsRequired").Text,
                             Width = "100",
-                            ClassName = StyleColumn.CenterAll,
+                            ClassName = NopColumnClassDefaults.CenterAll,
                             Render = new RenderBoolean()
                         },
                         new ColumnProperty(nameof(CheckoutAttributeModel.DisplayOrder))
                         {
                             Title = T("Admin.Catalog.Attributes.CheckoutAttributes.Fields.DisplayOrder").Text,
                             Width = "100",
-                            ClassName = StyleColumn.CenterAll
+                            ClassName = NopColumnClassDefaults.CenterAll
                         },
                         new ColumnProperty(nameof(CheckoutAttributeModel.Id))
                         {
                             Title = T("Admin.Common.Edit").Text,
                             Width = "100",
-                            ClassName = StyleColumn.ButtonStyle,
+                            ClassName = NopColumnClassDefaults.Button,
                             Render = new RenderButtonEdit(new DataUrl("Edit"))
                         }
                     }

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Nop.Web.Framework.Models.DataTables
+﻿namespace Nop.Web.Framework.Models.DataTables
 {
     /// <summary>
     /// Represents button custom render for DataTables column
@@ -14,26 +10,11 @@ namespace Nop.Web.Framework.Models.DataTables
         /// <summary>
         /// Initializes a new instance of the RenderButtonEdit class 
         /// </summary>
-        /// <param name="url">URL to action</param>
-        /// <param name="style">Style of button</param>
+        /// <param name="className">Class name of button</param>
         /// <param name="title">Title button</param>
-        public RenderButtonCustom(string url, StyleButton style, string title)
+        public RenderButtonCustom(string className, string title)
         {
-            Url = url;
-            Style = style;
-            Title = title;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the RenderButtonEdit class
-        /// </summary>
-        /// <param name="style">Style of button</param>
-        /// <param name="functionName">Function name on click button</param>
-        /// <param name="title">Title button</param>
-        public RenderButtonCustom(StyleButton style, string functionName, string title)
-        {
-            OnClickFunctionName = functionName;
-            Style = style;
+            ClassName = className;
             Title = title;
         }
 
@@ -47,9 +28,9 @@ namespace Nop.Web.Framework.Models.DataTables
         public string Url { get; set; }
 
         /// <summary>
-        /// Gets or sets button style
+        /// Gets or sets button class name
         /// </summary>
-        public StyleButton Style { get; set; }
+        public string ClassName { get; set; }
 
         /// <summary>
         /// Gets or sets button title

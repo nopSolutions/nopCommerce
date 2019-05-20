@@ -20,13 +20,6 @@
             ? $"{(dataUrl.Url.StartsWith("~/", StringComparison.Ordinal) ? Url.Content(dataUrl.Url) : dataUrl.Url).TrimEnd('/')}" + (!dataUrl.TrimEnd ? "/" : "")
             : string.Empty;
     }
-
-    string GetEnumValue(Type type, object value)
-    {
-        return type.GetMember(value.ToString())?[0]
-            ?.GetCustomAttributes(false).OfType<EnumMemberAttribute>().FirstOrDefault()
-            ?.Value;
-    }
 }
 
 @if (!string.IsNullOrEmpty(Model.HeaderCallback))
@@ -191,10 +184,10 @@ columns: [
                 autoWidth: @column.AutoWidth.ToString().ToLower(),
                 </text>
             }
-            @if (column.ClassName.HasValue)
+            @if (!string.IsNullOrEmpty(column.ClassName))
             {
                 <text>
-                className: '@GetEnumValue(typeof(StyleColumn), column.ClassName.Value)',
+                className: '@column.ClassName',
                 </text>
             }
             @if ((Model.UrlUpdate != null) || (Model.ChildTable?.UrlUpdate != null))
@@ -242,7 +235,7 @@ columns: [
                 case RenderButtonRemove button:
                     <text>
                     render: function (data, type, row, meta) {
-                        return '<a href="#" class="@GetEnumValue(typeof(StyleButton), button.Style)" onclick="table_deletedata_@(model_name)(\'' + data + '\');return false;"><i class="fa fa-remove"></i>@button.Title</a>';
+                        return '<a href="#" class="@button.ClassName" onclick="table_deletedata_@(model_name)(\'' + data + '\');return false;"><i class="fa fa-remove"></i>@button.Title</a>';
                     },
                     </text>
                     break;
@@ -254,23 +247,23 @@ columns: [
                             if (typeof data == 'string'){
                                 modData = data.replace(/[.*+?^${}()|[\]\\]/g, "_");
                             }
-                            return '<a href="#" class="@GetEnumValue(typeof(StyleButton), StyleButton.Default)" id="buttonEdit_@(model_name)'+ modData + '" onclick="editData_@(model_name)($(this).parent().parent(), \'' + origData + '\');return false;"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>' +
-                            '<a href="#" class="@GetEnumValue(typeof(StyleButton), StyleButton.Default)" id="buttonConfirm_@(model_name)'+ modData + '" style="display:none" onclick="confirmEditData_@(model_name)($(this).parent().parent(), \'' + origData + '\', \'@column.Data\');return false;"><i class="fa fa-check"></i>@T("Admin.Common.Update")</a>' +
-                            '<a href="#" class="@GetEnumValue(typeof(StyleButton), StyleButton.Default)" id="buttonCancel_@(model_name)'+ modData + '" style="display:none" onclick="cancelEditData_@(model_name)(\'' + row + '\', \'' + origData + '\');return false;"><i class="fa fa-ban"></i>@T("Admin.Common.Cancel")</a>';
+                            return '<a href="#" class="@button.ClassName" id="buttonEdit_@(model_name)'+ modData + '" onclick="editData_@(model_name)($(this).parent().parent(), \'' + origData + '\');return false;"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>' +
+                            '<a href="#" class="@button.ClassName" id="buttonConfirm_@(model_name)'+ modData + '" style="display:none" onclick="confirmEditData_@(model_name)($(this).parent().parent(), \'' + origData + '\', \'@column.Data\');return false;"><i class="fa fa-check"></i>@T("Admin.Common.Update")</a>' +
+                            '<a href="#" class="@button.ClassName" id="buttonCancel_@(model_name)'+ modData + '" style="display:none" onclick="cancelEditData_@(model_name)(\'' + row + '\', \'' + origData + '\');return false;"><i class="fa fa-ban"></i>@T("Admin.Common.Cancel")</a>';
                         },                         
                     </text>
                     break;
                 case RenderButtonEdit buttonEdit:
                     <text>
                     render: function (data, type, row, meta) {
-                        return '<a class="@GetEnumValue(typeof(StyleButton), buttonEdit.Style)" href="@GetUrl(buttonEdit.Url)' + data + '"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>';
+                        return '<a class="@buttonEdit.ClassName" href="@GetUrl(buttonEdit.Url)' + data + '"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>';
                     },
                     </text>
                     break;
                 case RenderButtonView buttonView:
                     <text>
                     render: function (data, type, row, meta) {
-                        return '<a class="@GetEnumValue(typeof(StyleButton), buttonView.Style)" href="@GetUrl(buttonView.Url)' + data + '"><i class="fa fa-eye"></i>@T("Admin.Common.View")</a>';
+                        return '<a class="@buttonView.ClassName" href="@GetUrl(buttonView.Url)' + data + '"><i class="fa fa-eye"></i>@T("Admin.Common.View")</a>';
                     },
                     </text>
                     break;
@@ -279,7 +272,7 @@ columns: [
                     {
                         <text>
                         render: function (data, type, row, meta) {
-                            return '<a class="@GetEnumValue(typeof(StyleButton), buttonCustom.Style)" href="@buttonCustom.Url' + data + '">@JavaScriptEncoder.Default.Encode(buttonCustom.Title)</a>';
+                            return '<a class="@buttonCustom.ClassName" href="@buttonCustom.Url' + data + '">@JavaScriptEncoder.Default.Encode(buttonCustom.Title)</a>';
                         },
                         </text>
                     }
@@ -287,7 +280,7 @@ columns: [
                     {
                         <text>
                         render: function (data, type, row, meta) {
-                            return '<a class="@GetEnumValue(typeof(StyleButton), buttonCustom.Style)" onclick="@buttonCustom.OnClickFunctionName' + '(' + data + ');">@JavaScriptEncoder.Default.Encode(buttonCustom.Title)</a>';
+                            return '<a class="@buttonCustom.ClassName" onclick="@buttonCustom.OnClickFunctionName' + '(' + data + ');">@JavaScriptEncoder.Default.Encode(buttonCustom.Title)</a>';
                         },
                         </text>
                     }

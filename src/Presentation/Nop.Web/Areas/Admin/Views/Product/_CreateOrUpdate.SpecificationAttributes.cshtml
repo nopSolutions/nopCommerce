@@ -39,27 +39,27 @@
                             {
                                 Title = T("Admin.Catalog.Products.SpecificationAttributes.Fields.AllowFiltering").Text,
                                 Width = "150",
-                                ClassName = StyleColumn.CenterAll,
+                                ClassName = NopColumnClassDefaults.CenterAll,
                                 Render = new RenderBoolean()
                             },
                             new ColumnProperty(nameof(ProductSpecificationAttributeModel.ShowOnProductPage))
                             {
                                 Title = T("Admin.Catalog.Products.SpecificationAttributes.Fields.ShowOnProductPage").Text,
                                 Width = "150",
-                                ClassName = StyleColumn.CenterAll,
+                                ClassName = NopColumnClassDefaults.CenterAll,
                                 Render = new RenderBoolean()
                             },
                             new ColumnProperty(nameof(ProductSpecificationAttributeModel.DisplayOrder))
                             {
                                 Title = T("Admin.Catalog.Products.SpecificationAttributes.Fields.DisplayOrder").Text,
                                 Width = "150",
-                                ClassName =  StyleColumn.CenterAll
+                                ClassName =  NopColumnClassDefaults.CenterAll
                             },
                             new ColumnProperty(nameof(ProductSpecificationAttributeModel.Id))
                             {
                                 Title = T("Admin.Common.Edit").Text,
                                 Width = "100",
-                                ClassName =  StyleColumn.ButtonStyle,
+                                ClassName =  NopColumnClassDefaults.Button,
                                 Render = new RenderButtonEdit(new DataUrl("~/Admin/Product/ProductSpecAttributeAddOrEdit?productId=" + Model.ProductSpecificationAttributeSearchModel.ProductId + "&specificationId=", true))  
                             }
                         }

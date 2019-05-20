@@ -57,7 +57,7 @@
                     {
                         IsMasterCheckBox = true,
                         Render = new RenderCheckBox("checkbox_log"),
-                        ClassName =  StyleColumn.CenterAll,
+                        ClassName =  NopColumnClassDefaults.CenterAll,
                         Width = "50",
                     },
                     new ColumnProperty(nameof(TaxTransactionLogModel.StatusCode))
@@ -80,7 +80,7 @@
                     {
                         Title = T("Admin.Common.View").Text,
                         Width = "100",
-                        ClassName = StyleColumn.ButtonStyle,
+                        ClassName = NopColumnClassDefaults.Button,
                         Render = new RenderButtonView(new DataUrl("~/Admin/TaxTransactionLog/View/"))
                     }
                 }

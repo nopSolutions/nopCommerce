@@ -83,48 +83,54 @@
                                 {
                                     Title = T("Admin.Configuration.Currencies.Fields.IsPrimaryExchangeRateCurrency").Text,
                                     Width = "250",
-                                    ClassName =  StyleColumn.CenterAll,
+                                    ClassName =  NopColumnClassDefaults.CenterAll,
                                     Render = new RenderBoolean()
                                 },
                                 new ColumnProperty(nameof(CurrencyModel.Id))
                                 {
                                     Title = T("Admin.Configuration.Currencies.Fields.MarkAsPrimaryExchangeRateCurrency").Text,
                                     Width = "200",
-                                    ClassName =  StyleColumn.CenterAll,
-                                    Render = new RenderButtonCustom(StyleButton.Success, "markAsPrimaryExchangeRateCurrency", T("Admin.Configuration.Currencies.Fields.MarkAsPrimaryExchangeRateCurrency").Text)
+                                    ClassName =  NopColumnClassDefaults.CenterAll,
+                                    Render = new RenderButtonCustom(NopButtonClassDefaults.Success, T("Admin.Configuration.Currencies.Fields.MarkAsPrimaryExchangeRateCurrency").Text)
+                                    {
+                                        OnClickFunctionName =  "markAsPrimaryExchangeRateCurrency"
+                                    }
                                 },
                                 new ColumnProperty(nameof(CurrencyModel.IsPrimaryStoreCurrency))
                                 {
                                     Title = T("Admin.Configuration.Currencies.Fields.IsPrimaryStoreCurrency").Text,
                                     Width = "200",
-                                    ClassName =  StyleColumn.CenterAll,
+                                    ClassName =  NopColumnClassDefaults.CenterAll,
                                     Render = new RenderBoolean()
                                 },
                                 new ColumnProperty(nameof(CurrencyModel.Id))
                                 {
                                     Title = T("Admin.Configuration.Currencies.Fields.MarkAsPrimaryStoreCurrency").Text,
                                     Width = "200",
-                                    ClassName =  StyleColumn.CenterAll,
-                                    Render = new RenderButtonCustom(StyleButton.Olive, "markAsPrimaryStoreCurrency", T("Admin.Configuration.Currencies.Fields.MarkAsPrimaryStoreCurrency").Text)
+                                    ClassName =  NopColumnClassDefaults.CenterAll,
+                                    Render = new RenderButtonCustom(NopButtonClassDefaults.Olive, T("Admin.Configuration.Currencies.Fields.MarkAsPrimaryStoreCurrency").Text)
+                                    {
+                                        OnClickFunctionName = "markAsPrimaryStoreCurrency"
+                                    }
                                 },
                                 new ColumnProperty(nameof(CurrencyModel.Published))
                                 {
                                     Title = T("Admin.Configuration.Currencies.Fields.Published").Text,
                                     Width = "50",
-                                    ClassName =  StyleColumn.CenterAll,
+                                    ClassName =  NopColumnClassDefaults.CenterAll,
                                     Render = new RenderBoolean()
                                 },
                                 new ColumnProperty(nameof(CurrencyModel.DisplayOrder))
                                 {
                                     Title = T("Admin.Configuration.Currencies.Fields.DisplayOrder").Text,
                                     Width = "100",
-                                    ClassName =  StyleColumn.CenterAll
+                                    ClassName =  NopColumnClassDefaults.CenterAll
                                 },
                                 new ColumnProperty(nameof(CurrencyModel.Id))
                                 {
                                     Title = T("Admin.Common.Edit").Text,
                                     Width = "100",
-                                    ClassName =  StyleColumn.ButtonStyle,
+                                    ClassName =  NopColumnClassDefaults.Button,
                                     Render = new RenderButtonEdit(new DataUrl("Edit"))
                                 }
                             }
@@ -226,7 +232,7 @@
                                     {
                                         Title = T("Admin.Configuration.Currencies.ApplyRate").Text,
                                         Width = "200",
-                                        ClassName = StyleColumn.ButtonStyle,
+                                        ClassName = NopColumnClassDefaults.Button,
                                         Render = new RenderCustom("renderColumnApplyRate")
                                     }
                                 }

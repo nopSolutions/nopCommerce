@@ -173,7 +173,7 @@
                                 IsMasterCheckBox = true,
                                 Render = new RenderCheckBox("checkbox_product_reviews"),
                                 Visible = !Model.IsLoggedInAsVendor,
-                                ClassName =  StyleColumn.CenterAll,
+                                ClassName =  NopColumnClassDefaults.CenterAll,
                                 Width = "50",
                             },
                             new ColumnProperty(nameof(ProductReviewModel.StoreName))
@@ -215,13 +215,13 @@
                             {
                                 Title = T("Admin.Catalog.ProductReviews.Fields.Rating").Text,
                                 Width = "100",
-                                ClassName =  StyleColumn.CenterAll
+                                ClassName =  NopColumnClassDefaults.CenterAll
                             },
                             new ColumnProperty(nameof(ProductReviewModel.IsApproved))
                             {
                                 Title = T("Admin.Catalog.ProductReviews.Fields.IsApproved").Text,
                                 Width = "100",
-                                ClassName =  StyleColumn.CenterAll,
+                                ClassName =  NopColumnClassDefaults.CenterAll,
                                 Render = new RenderBoolean()
                             },
                             new ColumnProperty(nameof(ProductReviewModel.CreatedOn))
@@ -234,7 +234,7 @@
                             {
                                 Title = T("Admin.Common.Edit").Text,
                                 Width = "100",
-                                ClassName =  StyleColumn.ButtonStyle,
+                                ClassName =  NopColumnClassDefaults.Button,
                                 Render = new RenderButtonEdit(new DataUrl("Edit"))
                             }
                         }

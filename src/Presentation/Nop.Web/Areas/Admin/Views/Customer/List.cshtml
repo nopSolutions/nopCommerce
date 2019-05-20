@@ -267,7 +267,7 @@
                             {
                                 IsMasterCheckBox = true,
                                 Render = new RenderCheckBox("checkbox_customers"),
-                                ClassName = StyleColumn.CenterAll,
+                                ClassName = NopColumnClassDefaults.CenterAll,
                                 Width = "50",
                             });
                             gridModel.ColumnCollection.Add(new ColumnProperty(nameof(CustomerModel.Email))
@@ -330,7 +330,7 @@
                             {
                                 Title = T("Admin.Customers.Customers.Fields.Active").Text,
                                 Width = "100",
-                                ClassName = StyleColumn.CenterAll,
+                                ClassName = NopColumnClassDefaults.CenterAll,
                                 Render = new RenderBoolean()
                             });
                             gridModel.ColumnCollection.Add(new ColumnProperty(nameof(CustomerModel.CreatedOn))
@@ -349,7 +349,7 @@
                             {
                                 Title = T("Admin.Common.Edit").Text,
                                 Width = "100",
-                                ClassName = StyleColumn.ButtonStyle,
+                                ClassName = NopColumnClassDefaults.Button,
                                 Render = new RenderButtonEdit(new DataUrl("Edit"))
                             });
                         }

@@ -183,7 +183,7 @@
                                 Render = new RenderChildCaret(),
                                 Width = "5",
                                 Searchable = false,
-                                ClassName =  StyleColumn.ChildControl,
+                                ClassName =  NopColumnClassDefaults.ChildControl,
                             },
                             new ColumnProperty(nameof(ShipmentModel.Id))
                             {
@@ -226,7 +226,7 @@
                             {
                                 Title = T("Admin.Common.View").Text,
                                 Width = "50",
-                                ClassName = StyleColumn.ButtonStyle,
+                                ClassName = NopColumnClassDefaults.Button,
                                 Render = new RenderButtonView(new DataUrl("~/Admin/Order/ShipmentDetails/"))
                             }
                         },

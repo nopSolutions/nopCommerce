@@ -45,13 +45,13 @@
                             new ColumnProperty(nameof(StoreModel.DisplayOrder))
                             {
                                 Title = T("Admin.Configuration.Stores.Fields.DisplayOrder").Text,
-                                ClassName =  StyleColumn.CenterAll
+                                ClassName =  NopColumnClassDefaults.CenterAll
                             },
                             new ColumnProperty(nameof(StoreModel.Id))
                             {
                                 Title = T("Admin.Common.Edit").Text,
                                 Width = "100",
-                                ClassName =  StyleColumn.ButtonStyle,
+                                ClassName =  NopColumnClassDefaults.Button,
                                 Render = new RenderButtonEdit(new DataUrl("Edit"))
                             }
                         }

@@ -26,7 +26,7 @@
                     {
                         Title = T("Admin.Catalog.Products.ProductAttributes.Attributes.Fields.IsRequired").Text,
                         Width = "100",
-                        ClassName = StyleColumn.CenterAll,
+                        ClassName = NopColumnClassDefaults.CenterAll,
                         Render = new RenderBoolean()
                     },
                     new ColumnProperty(nameof(ProductAttributeMappingModel.AttributeControlType))
@@ -38,27 +38,27 @@
                     {
                         Title = T("Admin.Catalog.Products.ProductAttributes.Attributes.Fields.DisplayOrder").Text,
                         Width = "150",
-                        ClassName =  StyleColumn.CenterAll
+                        ClassName =  NopColumnClassDefaults.CenterAll
                     },
                     new ColumnProperty(nameof(ProductAttributeMappingModel.ValidationRulesString))
                     {
                         Title = T("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules").Text,
                         Width = "150",
-                        ClassName = StyleColumn.CenterAll,
+                        ClassName = NopColumnClassDefaults.CenterAll,
                         Encode = false
                     },
                     new ColumnProperty(nameof(ProductAttributeMappingModel.ConditionString))
                     {
                         Title = T("Admin.Catalog.Products.ProductAttributes.Attributes.Condition").Text,
                         Width = "150",
-                        ClassName = StyleColumn.CenterAll,
+                        ClassName = NopColumnClassDefaults.CenterAll,
                         Encode = false
                     },
                     new ColumnProperty(nameof(ProductAttributeMappingModel.Id))
                     {
                         Title = T("Admin.Common.Edit").Text,
                         Width = "100",
-                        ClassName =  StyleColumn.ButtonStyle,
+                        ClassName =  NopColumnClassDefaults.Button,
                         Render = new RenderButtonEdit(new DataUrl("~/Admin/Product/ProductAttributeMappingEdit/"))
                     }
                 }

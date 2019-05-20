@@ -91,7 +91,7 @@
                             {
                                 Title = T("Admin.ContentManagement.News.NewsItems.Fields.Comments").Text,
                                 Width = "200",
-                                ClassName =  StyleColumn.ButtonStyle,
+                                ClassName =  NopColumnClassDefaults.Button,
                                 Render = new RenderCustom("renderColumnComments")
                             },
                             new ColumnProperty(nameof(NewsItemModel.StartDateUtc))
@@ -110,7 +110,7 @@
                             {
                                 Title = T("Admin.ContentManagement.News.NewsItems.Fields.Published").Text,
                                 Width = "100",
-                                ClassName =  StyleColumn.CenterAll,
+                                ClassName =  NopColumnClassDefaults.CenterAll,
                                 Render = new RenderBoolean()
                             },
                             new ColumnProperty(nameof(NewsItemModel.CreatedOn))
@@ -123,7 +123,7 @@
                             {
                                 Title = T("Admin.Common.Edit").Text,
                                 Width = "100",
-                                ClassName =  StyleColumn.ButtonStyle,
+                                ClassName =  NopColumnClassDefaults.Button,
                                 Render = new RenderButtonEdit(new DataUrl("NewsItemEdit"))
                             }
                         }

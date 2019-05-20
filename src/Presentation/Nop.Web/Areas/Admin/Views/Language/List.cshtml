@@ -42,7 +42,7 @@
                             {
                                 Title = T("Admin.Configuration.Languages.Fields.FlagImage").Text,
                                 Width = "100",
-                                ClassName =  StyleColumn.CenterAll,
+                                ClassName =  NopColumnClassDefaults.CenterAll,
                                 Render = new RenderPicture(Url.Content("~/images/flags/"))
                             },
                             new ColumnProperty(nameof(LanguageModel.LanguageCulture))
@@ -54,20 +54,20 @@
                             {
                                 Title = T("Admin.Configuration.Languages.Fields.DisplayOrder").Text,
                                 Width = "150",
-                                ClassName =  StyleColumn.CenterAll
+                                ClassName =  NopColumnClassDefaults.CenterAll
                             },
                             new ColumnProperty(nameof(LanguageModel.Published))
                             {
                                 Title = T("Admin.Configuration.Languages.Fields.Published").Text,
                                 Width = "150",
-                                ClassName =  StyleColumn.CenterAll,
+                                ClassName =  NopColumnClassDefaults.CenterAll,
                                 Render = new RenderBoolean()
                             },
                             new ColumnProperty(nameof(LanguageModel.Id))
                             {
                                 Title = T("Admin.Common.Edit").Text,
                                 Width = "100",
-                                ClassName =  StyleColumn.ButtonStyle,
+                                ClassName =  NopColumnClassDefaults.Button,
                                 Render = new RenderButtonEdit(new DataUrl("Edit"))
                             }
                         }
