@@ -914,6 +914,9 @@ set @resources='
   <LocaleResource Name="Tax.Selector.Label">
     <Value>Tax selector</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.CustomerRolesManagingError">
+    <Value>Not enough rights to manage customer roles.</Value>
+  </LocaleResource>
 </Language>'
 
 CREATE TABLE #LocaleStringResourceTmp
