@@ -76,7 +76,7 @@ namespace Nop.Web.Framework.Models.DataTables
         public bool Processing { get; set; }
 
         /// <summary>
-        /// Feature control DataTables' server-side processing mode.
+        /// Feature control DataTables' server-side processing mode
         /// </summary>
         public bool ServerSide { get; set; }
 
@@ -96,17 +96,17 @@ namespace Nop.Web.Framework.Models.DataTables
         public string PagingType { get; set; }
 
         /// <summary>
-        /// Number of rows to display on a single page when using pagination.
+        /// Number of rows to display on a single page when using pagination
         /// </summary>
         public int Length { get; set; }
 
         /// <summary>
-        /// This parameter allows you to readily specify the entries in the length drop down select list that DataTables shows when pagination is enabled.
+        /// This parameter allows you to readily specify the entries in the length drop down select list that DataTables shows when pagination is enabled
         /// </summary>
         public string LengthMenu { get; set; }
 
         /// <summary>
-        /// Feature control ordering (sorting) abilities in DataTables.
+        /// Feature control ordering (sorting) abilities in DataTables
         /// </summary>
         public bool Ordering { get; set; }
 
