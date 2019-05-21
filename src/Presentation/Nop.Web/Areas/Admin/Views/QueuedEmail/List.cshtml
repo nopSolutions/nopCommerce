@@ -233,8 +233,7 @@
                                             $("#deleteSelectedFailed").click();
                                         },
                                         complete: function (jqXHR, textStatus) {
-                                            $('#queuedEmails-grid').DataTable().ajax.reload();
-                                            selectedIds = [];
+                                            updateTableWithCheckBox('#queuedEmails-grid');
                                         }
                                     });
                                     $('#delete-selected-action-confirmation').modal('toggle');

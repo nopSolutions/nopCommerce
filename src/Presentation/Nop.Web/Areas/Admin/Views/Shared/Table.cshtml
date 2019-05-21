@@ -46,6 +46,12 @@
             var numChkBoxesChecked = $('#@Model.Name input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]:checked').length;
             $('#mastercheckbox').attr('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
         }
+
+        function updateTableWithCheckBox(tableSelector) {
+            $(tableSelector).DataTable().ajax.reload();
+            $('#mastercheckbox').attr('checked', false).change();
+            selectedIds = [];
+        }
         </text>
     }
     $(document).ready(function () {

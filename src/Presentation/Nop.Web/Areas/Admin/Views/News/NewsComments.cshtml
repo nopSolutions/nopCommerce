@@ -208,8 +208,7 @@
                                             $("#deleteSelectedCommentsFailed").click();
                                         },
                                         complete: function (jqXHR, textStatus) {
-                                            $('#comments-grid').DataTable().ajax.reload();
-                                            selectedIds = [];
+                                            updateTableWithCheckBox('#comments-grid');
                                         }
                                     });
                                     $('#delete-selected-action-confirmation').modal('toggle');
@@ -236,8 +235,7 @@
                                             $("#approveSelectedFailed").click();
                                         },
                                         complete: function (jqXHR, textStatus) {
-                                            $('#comments-grid').DataTable().ajax.reload();
-                                            selectedIds = [];
+                                            updateTableWithCheckBox('#comments-grid');
                                         }
                                     });
                                     return false;
@@ -263,8 +261,7 @@
                                             $("#disapproveSelectedFailed").click();
                                         },
                                         complete: function (jqXHR, textStatus) {
-                                            $('#comments-grid').DataTable().ajax.reload();
-                                            selectedIds = [];
+                                            updateTableWithCheckBox('#comments-grid');
                                         }
                                     });
                                     return false;

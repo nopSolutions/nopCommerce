@@ -160,8 +160,7 @@
                     $("#deleteSelectedSeNamesFailed").click();
                 },
                 complete: function (jqXHR, textStatus) {
-                    $('#sename-grid').DataTable().ajax.reload();
-                    selectedIds = [];
+                    updateTableWithCheckBox('#sename-grid');
                 }
             });
             $('#delete-selected-action-confirmation').modal('toggle');

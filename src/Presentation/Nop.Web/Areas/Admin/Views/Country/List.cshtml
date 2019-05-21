@@ -147,9 +147,7 @@
                                     data: postData,
                                     traditional: true,
                                     complete: function (jqXHR, textStatus) {
-                                        //reload grid
-                                        $('#countries-grid').DataTable().ajax.reload();
-                                        selectedIds = [];
+                                        updateTableWithCheckBox('#countries-grid');
                                     },
                                     error: function (jqXHR, textStatus, errorThrown) {
                                         $('#publishSelectedFailed-info').text(errorThrown);
@@ -179,8 +177,7 @@
                                         $("#unpublishSelectedFailed").click();
                                     },
                                     complete: function (jqXHR, textStatus) {
-                                        $('#countries-grid').DataTable().ajax.reload();
-                                        selectedIds = [];
+                                        updateTableWithCheckBox('#countries-grid');
                                     }
                                 });
                                 return false;
