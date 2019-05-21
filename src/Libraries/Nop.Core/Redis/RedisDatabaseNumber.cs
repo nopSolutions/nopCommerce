@@ -6,20 +6,16 @@
     public enum RedisDatabaseNumber
     {
         /// <summary>
-        /// Default database
-        /// </summary>
-        Default = -1,
-        /// <summary>
         /// Database for caching
         /// </summary>
-        Cache = 2,
+        Cache = 1,
         /// <summary>
         /// Database for plugins
         /// </summary>
-        Plugin = 3,
+        Plugin = 2,
         /// <summary>
         /// Database for data protection keys
         /// </summary>
-        DataProtectionKeys = 4
+        DataProtectionKeys = 3
     }
 }
