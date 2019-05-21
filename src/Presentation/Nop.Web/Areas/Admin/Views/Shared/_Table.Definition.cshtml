@@ -146,6 +146,9 @@ else
 }
 ordering: @Model.Ordering.ToString().ToLower(),
 fixedHeader: @Model.FixedHeader.ToString().ToLower(),
+@if (!Model.IsChildTable)
+{
+<text>
 dom: '<"row"<"col-md-12"t>>' +
      '<"row margin-t-5"' +
         '<"col-lg-5 col-md-5 col-xs-5"<"pull-left"p>>' +
@@ -161,6 +164,20 @@ buttons: [
         $('#@Model.Name').DataTable().ajax.reload();
     }
 }],
+</text>
+}
+else
+{
+<text>
+dom: '<"row"<"col-md-12"t>>' +
+     '<"row margin-t-5"' +
+        '<"col-lg-4 col-md-5 col-xs-6"<"pull-left"p>>' +
+        '<"col-lg-4 col-md-4 col-xs-6"<"data-tables-length text-center"l>>' +
+        '<"col-lg-4 col-md-3 col-xs-12"<"pull-right"i>>' +
+     '>',
+</text>
+}
+
 columns: [    
     @for (int i = 0; i < Model.ColumnCollection.Count; i++)
     {
