@@ -1106,6 +1106,7 @@ input[type=file].form-control {
 }
 .editor-settings-modal-dialog {
     width: 985px;
+    max-width: 95%;
 }
 .editor-settings-modal-dialog .modal-body {
     position: relative;
