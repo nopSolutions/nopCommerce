@@ -147,7 +147,7 @@
                                     data: postData,
                                     traditional: true,
                                     complete: function (jqXHR, textStatus) {
-                                        updateTableWithCheckBox('#countries-grid');
+                                        updateTable('#countries-grid');
                                     },
                                     error: function (jqXHR, textStatus, errorThrown) {
                                         $('#publishSelectedFailed-info').text(errorThrown);
@@ -177,7 +177,7 @@
                                         $("#unpublishSelectedFailed").click();
                                     },
                                     complete: function (jqXHR, textStatus) {
-                                        updateTableWithCheckBox('#countries-grid');
+                                        updateTable('#countries-grid');
                                     }
                                 });
                                 return false;

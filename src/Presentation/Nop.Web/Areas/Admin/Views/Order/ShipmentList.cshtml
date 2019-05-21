@@ -320,7 +320,7 @@
                                     $("#setAsShippedSelectedFailed").click();
                                 },
                                 complete: function (jqXHR, textStatus) {
-                                    updateTableWithCheckBox('#shipments-grid');
+                                    updateTable('#shipments-grid');
                                 }
                             });
                             return false;
@@ -346,7 +346,7 @@
                                     $("#setAsDeliveredSelectedFailed").click();
                                 },
                                 complete: function (jqXHR, textStatus) {
-                                    updateTableWithCheckBox('#shipments-grid');
+                                    updateTable('#shipments-grid');
                                 }
                             });
                             return false;
@@ -375,7 +375,7 @@
             var ids = selectedIds.join(",");
             $('#pdf-packaging-slip-selected-form #selectedIds').val(ids);
             $('#pdf-packaging-slip-selected-form').submit();
-            updateTableWithCheckBox('#shipments-grid');
+            updateTable('#shipments-grid');
             return false;
         });
     });

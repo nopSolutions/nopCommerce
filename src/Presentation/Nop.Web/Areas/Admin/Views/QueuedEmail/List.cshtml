@@ -233,7 +233,7 @@
                                             $("#deleteSelectedFailed").click();
                                         },
                                         complete: function (jqXHR, textStatus) {
-                                            updateTableWithCheckBox('#queuedEmails-grid');
+                                            updateTable('#queuedEmails-grid');
                                         }
                                     });
                                     $('#delete-selected-action-confirmation').modal('toggle');

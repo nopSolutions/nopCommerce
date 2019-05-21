@@ -89,7 +89,7 @@
             $(document).ready(function() {
                 $('#btnRefresh').click(function() {
                     //refresh grid
-                    $('#productattributevalues-grid').DataTable().ajax.reload();
+                    updateTable('#productattributevalues-grid');
 
                     //return false to don't reload a page
                     return false;

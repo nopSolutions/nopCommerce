@@ -69,7 +69,7 @@
             $(document).ready(function () {
                 $('#btnRefresh').click(function () {
                     //refresh grid
-                    $('#checkoutattributevalues-grid').DataTable().ajax.reload();
+                    updateTable('#checkoutattributevalues-grid');
 
                     //return false to don't reload a page
                     return false;

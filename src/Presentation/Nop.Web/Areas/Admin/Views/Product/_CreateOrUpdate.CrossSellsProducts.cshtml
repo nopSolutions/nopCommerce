@@ -47,7 +47,7 @@
                 $(document).ready(function () {
                     $('#btnRefreshCrossSellProducts').click(function () {
                         //refresh grid
-                        $('#crosssellproducts-grid').DataTable().ajax.reload();
+                        updateTable('#crosssellproducts-grid');
 
                         //return false to don't reload a page
                         return false;

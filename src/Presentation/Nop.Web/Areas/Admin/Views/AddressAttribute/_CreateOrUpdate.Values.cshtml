@@ -62,7 +62,7 @@
                 $(document).ready(function () {
                     $('#btnRefresh').click(function () {
                         //refresh grid
-                        $('#addressattributevalues-grid').DataTable().ajax.reload();
+                        updateTable('#addressattributevalues-grid');
 
                         //return false to don't reload a page
                         return false;

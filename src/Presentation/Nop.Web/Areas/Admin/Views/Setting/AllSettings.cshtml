@@ -185,7 +185,7 @@
                                     success: function (data, textStatus, jqXHR) {
                                         if (data.Result) {
                                             //reload grid
-                                            $('#settings-grid').DataTable().ajax.reload();
+                                            updateTable('#settings-grid');
 
                                             //clear input value
                                             $("#@Html.IdFor(model => model.AddSetting.Name)").val('');

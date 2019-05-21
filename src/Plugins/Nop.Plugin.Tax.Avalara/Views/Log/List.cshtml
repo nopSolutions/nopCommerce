@@ -105,7 +105,7 @@
                                 $("#deleteSelectedFailed").click();
                             },
                             complete: function (jqXHR, textStatus) {
-                                updateTableWithCheckBox('#log-grid');
+                                updateTable('#log-grid');
                             }
                         });
                         $('#delete-selected-action-confirmation').modal('toggle');

@@ -147,7 +147,7 @@
                 success: function (data, textStatus, jqXHR) {
                     if (data.Result) {
                         //reload grid
-                        $('#ordernotes-grid').DataTable().ajax.reload();
+                        updateTable('#ordernotes-grid');
                     } else {
                         //display errors if returned
                         display_nop_error(data);

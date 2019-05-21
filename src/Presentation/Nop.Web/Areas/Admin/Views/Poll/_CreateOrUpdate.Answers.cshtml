@@ -96,7 +96,7 @@
                         success: function (data, textStatus, jqXHR) {
                             if (data.Result) {
                                 //reload grid
-                                $('#answers-grid').DataTable().ajax.reload();
+                                updateTable('#answers-grid');
 
                                 //clear input value
                                 $("#@Html.IdFor(model => model.PollAnswerSearchModel.AddPollAnswer.Name)").val('');

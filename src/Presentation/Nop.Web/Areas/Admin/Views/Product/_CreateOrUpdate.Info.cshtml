@@ -497,7 +497,7 @@
                     $(document).ready(function () {
                         $('#btnRefreshAssociatedProducts').click(function () {
                             //refresh grid
-                            $('#associatedproducts-grid').DataTable().ajax.reload();
+                            updateTable('#associatedproducts-grid');
 
                             //return false to don't reload a page
                             return false;

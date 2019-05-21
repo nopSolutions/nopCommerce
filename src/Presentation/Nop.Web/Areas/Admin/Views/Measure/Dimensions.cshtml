@@ -95,7 +95,7 @@
                         url: "@(Url.Action("MarkAsPrimaryDimension", "Measure"))",
                         data: postData,
                         success: function (data, textStatus, jqXHR) {
-                            $('#measuredimension-grid').DataTable().ajax.reload();
+                            updateTable('#measuredimension-grid');
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
                             $("#markAsPrimaryDimensionAlert").click();
@@ -173,7 +173,7 @@
                             success: function (data, textStatus, jqXHR) {
                                 if (data.Result) {
                                     //reload grid
-                                    $('#measuredimension-grid').DataTable().ajax.reload();
+                                    updateTable('#measuredimension-grid');
 
                                     //clear input value
                                     $("#@Html.IdFor(model => model.AddMeasureDimension.Name)").val('');

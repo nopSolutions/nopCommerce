@@ -150,7 +150,7 @@
                                     url: "@(Url.Action("MarkAsPrimaryStoreCurrency", "Currency"))",
                                     data: postData,
                                     success: function (data, textStatus, jqXHR) {
-                                        $('#currencies-grid').DataTable().ajax.reload();
+                                        updateTable('#currencies-grid');
                                     },
                                     error: function (jqXHR, textStatus, errorThrown) {
                                         $("#currencyAlert").click();
@@ -170,7 +170,7 @@
                                     url: "@(Url.Action("MarkAsPrimaryExchangeRateCurrency", "Currency"))",
                                     data: postData,
                                     success: function (data, textStatus, jqXHR) {
-                                        $('#currencies-grid').DataTable().ajax.reload();
+                                        updateTable('#currencies-grid');
                                     },
                                     error: function (jqXHR, textStatus, errorThrown) {
                                         $("#currencyAlert").click();
@@ -251,7 +251,7 @@
                                         url: "@(Url.Action("ApplyRates"))",
                                         data: postData,
                                         success: function (data, textStatus, jqXHR) {
-                                            $('#currencies-grid').DataTable().ajax.reload();
+                                            updateTable('#currencies-grid');
                                         },
                                         error: function (jqXHR, textStatus, errorThrown) {
                                             $("#currencyAlert").click();

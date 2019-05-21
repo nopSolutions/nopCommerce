@@ -263,7 +263,7 @@
                                         $("#approveSelectedFailed").click();
                                     },
                                     complete: function (jqXHR, textStatus) {
-                                        updateTableWithCheckBox('#productreviews-grid');
+                                        updateTable('#productreviews-grid');
                                     }
                                 });
                                 return false;
@@ -289,7 +289,7 @@
                                         $("#disapproveSelectedFailed").click();
                                     },
                                     complete: function (jqXHR, textStatus) {
-                                        updateTableWithCheckBox('#productreviews-grid');
+                                        updateTable('#productreviews-grid');
                                     }
                                 });
                                 return false;
@@ -311,7 +311,7 @@
                                         $("#deleteSelectedFailed").click();
                                     },
                                     complete: function (jqXHR, textStatus) {
-                                        updateTableWithCheckBox('#productreviews-grid');
+                                        updateTable('#productreviews-grid');
                                     }
                                 });
                                 $('#delete-selected-action-confirmation').modal('toggle');

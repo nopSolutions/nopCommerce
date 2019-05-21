@@ -161,7 +161,8 @@ buttons: [
     name: 'refresh',
     text: '<i class="fa fa-refresh" style="padding-left: 5px"></i>',
     action: function () {
-        $('#@Model.Name').DataTable().ajax.reload();
+        @*$('#@Model.Name').DataTable().ajax.reload();*@
+        updateTable('#@Model.Name');
     }
 }],
 </text>

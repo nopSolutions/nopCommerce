@@ -299,7 +299,7 @@
                                             $('#deleteSelectedFailed').click();
                                         },
                                         complete: function (jqXHR, textStatus) {
-                                            updateTableWithCheckBox('#products-grid');
+                                            updateTable('#products-grid');
                                         }
                                     });
                                     $('#delete-selected-action-confirmation').modal('toggle');
@@ -381,7 +381,7 @@
             var ids = selectedIds.join(",");
             $('#export-xml-selected-form #selectedIds').val(ids);
             $('#export-xml-selected-form').submit();
-            updateTableWithCheckBox('#products-grid');
+            updateTable('#products-grid');
             return false;
         });
     });
@@ -399,7 +399,7 @@
                 var ids = selectedIds.join(",");
                 $('#export-excel-selected-form #selectedIds').val(ids);
                 $('#export-excel-selected-form').submit();
-                updateTableWithCheckBox('#products-grid');
+                updateTable('#products-grid');
                 return false;
             });
         });

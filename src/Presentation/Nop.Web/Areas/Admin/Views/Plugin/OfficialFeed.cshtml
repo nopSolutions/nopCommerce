@@ -152,7 +152,7 @@
                             $(document).ready(function () {
                                 $('#btnRefresh').click(function () {
                                     //refresh grid
-                                    $('#plugins-grid').DataTable().ajax.reload();
+                                    updateTable('#plugins-grid');
                                     //return false to don't reload a page
                                     return false;
                                 });

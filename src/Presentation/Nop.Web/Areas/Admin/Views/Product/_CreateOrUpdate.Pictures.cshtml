@@ -104,7 +104,7 @@
                                     if (!data.Result) {
                                         return;
                                     }                                        
-                                    $('#productpictures-grid').DataTable().ajax.reload();
+                                    updateTable('#productpictures-grid');
                                 },
                                 error: function (jqXHR, textStatus, errorThrown) {
                                     $("#productPictureAddAlert").click();

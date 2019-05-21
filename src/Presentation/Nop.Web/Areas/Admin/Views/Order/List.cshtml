@@ -477,7 +477,7 @@
             var ids = selectedIds.join(",");
             $('#export-xml-selected-form #selectedIds').val(ids);
             $('#export-xml-selected-form').submit();
-            updateTableWithCheckBox('#orders-grid');
+            updateTable('#orders-grid');
             return false;
         });
     });
@@ -495,7 +495,7 @@
             var ids = selectedIds.join(",");
             $('#export-excel-selected-form #selectedIds').val(ids);
             $('#export-excel-selected-form').submit();
-            updateTableWithCheckBox('#orders-grid');
+            updateTable('#orders-grid');
             return false;
         });
     });
@@ -513,7 +513,7 @@
             var ids = selectedIds.join(",");
             $('#pdf-invoice-selected-form #selectedIds').val(ids);
             $('#pdf-invoice-selected-form').submit();
-            updateTableWithCheckBox('#orders-grid');
+            updateTable('#orders-grid');
             return false;
         });
     });

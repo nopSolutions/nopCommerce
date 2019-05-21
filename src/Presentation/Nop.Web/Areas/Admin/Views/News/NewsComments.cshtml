@@ -208,7 +208,7 @@
                                             $("#deleteSelectedCommentsFailed").click();
                                         },
                                         complete: function (jqXHR, textStatus) {
-                                            updateTableWithCheckBox('#comments-grid');
+                                            updateTable('#comments-grid');
                                         }
                                     });
                                     $('#delete-selected-action-confirmation').modal('toggle');
@@ -235,7 +235,7 @@
                                             $("#approveSelectedFailed").click();
                                         },
                                         complete: function (jqXHR, textStatus) {
-                                            updateTableWithCheckBox('#comments-grid');
+                                            updateTable('#comments-grid');
                                         }
                                     });
                                     return false;
@@ -261,7 +261,7 @@
                                             $("#disapproveSelectedFailed").click();
                                         },
                                         complete: function (jqXHR, textStatus) {
-                                            updateTableWithCheckBox('#comments-grid');
+                                            updateTable('#comments-grid');
                                         }
                                     });
                                     return false;

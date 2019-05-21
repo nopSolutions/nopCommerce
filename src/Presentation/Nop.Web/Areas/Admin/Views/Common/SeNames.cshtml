@@ -160,7 +160,7 @@
                     $("#deleteSelectedSeNamesFailed").click();
                 },
                 complete: function (jqXHR, textStatus) {
-                    updateTableWithCheckBox('#sename-grid');
+                    updateTable('#sename-grid');
                 }
             });
             $('#delete-selected-action-confirmation').modal('toggle');

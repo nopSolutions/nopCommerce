@@ -264,7 +264,7 @@
                 $('#btnRefresh')
                     .click(function () {
                         //refresh grid
-                        $('#shipping-byweight-grid').DataTable().ajax.reload();
+                        updateTable('#shipping-byweight-grid');
 
                         //return false to don't reload a page
                         return false;

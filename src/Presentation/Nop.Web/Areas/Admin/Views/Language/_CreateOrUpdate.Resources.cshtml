@@ -142,7 +142,7 @@
                                 success: function (data, textStatus, jqXHR) {
                                     if (data.Result) {
                                         //reload grid
-                                        $('#resources-grid').DataTable().ajax.reload();
+                                        updateTable('#resources-grid');
 
                                         //clear input value
                                         $("#@Html.IdFor(model => model.LocaleResourceSearchModel.AddResourceString.ResourceName)").val('');
