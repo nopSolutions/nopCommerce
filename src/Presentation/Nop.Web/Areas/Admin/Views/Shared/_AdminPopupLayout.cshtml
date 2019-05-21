@@ -24,6 +24,8 @@
         Html.AppendCssFileParts("~/lib/bootstrap/css/bootstrap.min.css");
     }
 
+    Html.AppendCssFileParts($"~/lib/datatables/buttons.bootstrap.min.css");
+    Html.AppendCssFileParts($"~/lib/datatables/buttons.dataTables.min.css");
     Html.AppendCssFileParts($"~/lib/datatables/datatables.min.css");
     Html.AppendCssFileParts($"~/lib/datatables/css/dataTables.bootstrap.css");
     Html.AppendCssFileParts($"~/lib/kendo/{kendoVersion}/kendo.rtl.min.css");
@@ -36,6 +38,8 @@
     Html.AppendCssFileParts("~/lib/adminLTE/css/skins/_all-skins.min.css");
 
     //scripts
+    Html.AppendScriptParts($"~/lib/datatables/buttons.bootstrap.min.js");
+    Html.AppendScriptParts($"~/lib/datatables/dataTables.buttons.min.js");
     Html.AppendScriptParts($"~/lib/datatables/moment-with-locales-2.22.2.min.js");
     Html.AppendScriptParts($"~/lib/datatables/datatables.min.js");
     Html.AppendScriptParts($"~/lib/datatables/js/dataTables.bootstrap.min.js");
