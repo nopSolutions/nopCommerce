@@ -358,13 +358,13 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
 
             //we use the main IRedisConnectionWrapper implementation since the DI isn't initialized yet
             PluginsInfo = useRedisToStorePluginsInfo
-                ? new RedisPluginsInfo(_fileProvider, new RedisConnectionWrapper(config))
+                ? new RedisPluginsInfo(_fileProvider, new RedisConnectionWrapper(config), config)
                 : new PluginsInfo(_fileProvider);
 
             if (PluginsInfo.LoadPluginInfo() || useRedisToStorePluginsInfo || !config.RedisEnabled) 
                 return;
 
-            var redisPluginsInfo = new RedisPluginsInfo(_fileProvider, new RedisConnectionWrapper(config));
+            var redisPluginsInfo = new RedisPluginsInfo(_fileProvider, new RedisConnectionWrapper(config), config);
 
             if (!redisPluginsInfo.LoadPluginInfo()) 
                 return;
@@ -374,7 +374,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             PluginsInfo.Save();
                     
             //clear redis plugins info data
-            redisPluginsInfo = new RedisPluginsInfo(_fileProvider, new RedisConnectionWrapper(config));
+            redisPluginsInfo = new RedisPluginsInfo(_fileProvider, new RedisConnectionWrapper(config), config);
             redisPluginsInfo.Save();
         }
 
