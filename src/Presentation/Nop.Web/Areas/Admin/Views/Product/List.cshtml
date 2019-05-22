@@ -226,7 +226,7 @@
                                 {
                                     IsMasterCheckBox = true,
                                     Render = new RenderCheckBox("checkbox_products"),
-                                    ClassName =  StyleColumn.CenterAll,
+                                    ClassName =  NopColumnClassDefaults.CenterAll,
                                     Width = "50",
                                 },
                                 new ColumnProperty(nameof(ProductModel.PictureThumbnailUrl))
@@ -265,14 +265,14 @@
                                 {
                                     Title = T("Admin.Catalog.Products.Fields.Published").Text,
                                     Width = "100",
-                                    ClassName = StyleColumn.CenterAll,
+                                    ClassName = NopColumnClassDefaults.CenterAll,
                                     Render = new RenderBoolean()
                                 },
                                 new ColumnProperty(nameof(ProductModel.Id))
                                 {
                                     Title = T("Admin.Common.Edit").Text,
                                     Width = "100",
-                                    ClassName =  StyleColumn.ButtonStyle,
+                                    ClassName =  NopColumnClassDefaults.Button,
                                     Render = new RenderButtonEdit(new DataUrl("Edit"))
                                 }
                             }
@@ -291,16 +291,16 @@
                                     addAntiForgeryToken(postData);
                                     $.ajax({
                                         cache: false,
-                                        type: 'POST',
+                                        type: "POST",
                                         url: "@(Url.Action("DeleteSelected", "Product"))",
                                         data: postData,
-                                        complete: function (data) {
+                                        error: function (jqXHR, textStatus, errorThrown) {
+                                            $('#deleteSelectedFailed-info').text(errorThrown);
+                                            $('#deleteSelectedFailed').click();
+                                        },
+                                        complete: function (jqXHR, textStatus) {
                                             $('#products-grid').DataTable().ajax.reload();
                                             selectedIds = [];
-                                        },
-                                        error: function (xhr, ajaxOptions, thrownError) {
-                                            $('#deleteSelectedFailed-info').text(thrownError);
-                                            $('#deleteSelectedFailed').click();
                                         }
                                     });
                                     $('#delete-selected-action-confirmation').modal('toggle');

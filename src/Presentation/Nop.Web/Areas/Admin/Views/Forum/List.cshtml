@@ -38,7 +38,7 @@
                                 Render = new RenderChildCaret(),
                                 Width = "5",
                                 Searchable = false,
-                                ClassName =  StyleColumn.ChildControl
+                                ClassName =  NopColumnClassDefaults.ChildControl
                             },
                             new ColumnProperty(nameof(ForumGroupModel.Name))
                             {
@@ -49,7 +49,7 @@
                             {
                                 Title = T("Admin.ContentManagement.Forums.ForumGroup.Fields.DisplayOrder").Text,
                                 Width = "100",
-                                ClassName =  StyleColumn.CenterAll
+                                ClassName =  NopColumnClassDefaults.CenterAll
                             },
                             new ColumnProperty(nameof(ForumGroupModel.CreatedOn))
                             {
@@ -61,7 +61,7 @@
                             {
                                 Title = T("Admin.Common.Edit").Text,
                                 Width = "50",
-                                ClassName = StyleColumn.ButtonStyle,
+                                ClassName = NopColumnClassDefaults.Button,
                                 Render = new RenderButtonEdit(new DataUrl("EditForumGroup"))
                             }
                         },
@@ -87,7 +87,7 @@
                                 {
                                     Title = T("Admin.ContentManagement.Forums.Forum.Fields.DisplayOrder").Text,
                                     Width = "150",
-                                    ClassName =  StyleColumn.CenterAll
+                                    ClassName =  NopColumnClassDefaults.CenterAll
                                 },
                                 new ColumnProperty(nameof(ForumModel.CreatedOn))
                                 {
@@ -99,7 +99,7 @@
                                 {
                                     Title = T("Admin.Common.Edit").Text,
                                     Width = "50",
-                                    ClassName = StyleColumn.ButtonStyle,
+                                    ClassName = NopColumnClassDefaults.Button,
                                     Render = new RenderButtonEdit(new DataUrl("EditForum"))
                                 }
                             }

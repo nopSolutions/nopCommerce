@@ -26,8 +26,8 @@
                 {
                     Title = T("Admin.Common.Delete").Text,
                     Width = "100",
-                    Render = new RenderButtonRemove(T("Admin.Common.Delete").Text) { Style = StyleButton.Default },
-                    ClassName =  StyleColumn.ButtonStyle
+                    Render = new RenderButtonRemove(T("Admin.Common.Delete").Text),
+                    ClassName =  NopColumnClassDefaults.Button
                 }
             }
         })
@@ -72,7 +72,7 @@
                 type: "POST",
                 url: "@( Url.Action("VendorNoteAdd", "Vendor"))",
                 data: postData,
-                success: function (data) {
+                success: function (data, textStatus, jqXHR) {
                     if (data.Result) {
                         //reload grid
                         $("#vendornotes-grid").DataTable().ajax.reload();
@@ -80,10 +80,8 @@
                         //display errors if returned
                         display_nop_error(data);
                     }
-                    
-                    $('#addVendorNote').attr('disabled', false);
                 },
-                error: function(xhr, ajaxOptions, thrownError) {
+                complete: function (jqXHR, textStatus) {
                     $('#addVendorNote').attr('disabled', false);
                 }
             });

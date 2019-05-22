@@ -173,7 +173,7 @@
                                 IsMasterCheckBox = true,
                                 Render = new RenderCheckBox("checkbox_product_reviews"),
                                 Visible = !Model.IsLoggedInAsVendor,
-                                ClassName =  StyleColumn.CenterAll,
+                                ClassName =  NopColumnClassDefaults.CenterAll,
                                 Width = "50",
                             },
                             new ColumnProperty(nameof(ProductReviewModel.StoreName))
@@ -215,13 +215,13 @@
                             {
                                 Title = T("Admin.Catalog.ProductReviews.Fields.Rating").Text,
                                 Width = "100",
-                                ClassName =  StyleColumn.CenterAll
+                                ClassName =  NopColumnClassDefaults.CenterAll
                             },
                             new ColumnProperty(nameof(ProductReviewModel.IsApproved))
                             {
                                 Title = T("Admin.Catalog.ProductReviews.Fields.IsApproved").Text,
                                 Width = "100",
-                                ClassName =  StyleColumn.CenterAll,
+                                ClassName =  NopColumnClassDefaults.CenterAll,
                                 Render = new RenderBoolean()
                             },
                             new ColumnProperty(nameof(ProductReviewModel.CreatedOn))
@@ -234,7 +234,7 @@
                             {
                                 Title = T("Admin.Common.Edit").Text,
                                 Width = "100",
-                                ClassName =  StyleColumn.ButtonStyle,
+                                ClassName =  NopColumnClassDefaults.Button,
                                 Render = new RenderButtonEdit(new DataUrl("Edit"))
                             }
                         }
@@ -257,16 +257,15 @@
                                     type: "POST",
                                     url: "@(Url.Action("ApproveSelected", "ProductReview"))",
                                     data: postData,
-                                    complete: function(data) {
-                                        //reload grid
-                                        $('#productreviews-grid').DataTable().ajax.reload();
-                                        selectedIds = [];
-                                    },
-                                    error: function(xhr, ajaxOptions, thrownError) {
-                                        $('#approveSelectedFailed-info').text(thrownError);
+                                    traditional: true,
+                                    error: function (jqXHR, textStatus, errorThrown) {
+                                        $('#approveSelectedFailed-info').text(errorThrown);
                                         $("#approveSelectedFailed").click();
                                     },
-                                    traditional: true
+                                    complete: function (jqXHR, textStatus) {
+                                        $('#productreviews-grid').DataTable().ajax.reload();
+                                        selectedIds = [];
+                                    }
                                 });
                                 return false;
                             });
@@ -285,16 +284,15 @@
                                     type: "POST",
                                     url: "@(Url.Action("DisapproveSelected", "ProductReview"))",
                                     data: postData,
-                                    complete: function(data) {
-                                        //reload grid
-                                        $('#productreviews-grid').DataTable().ajax.reload();
-                                        selectedIds = [];
-                                    },
-                                    error: function(xhr, ajaxOptions, thrownError) {
-                                        $('#disapproveSelectedFailed-info').text(thrownError);
+                                    traditional: true,
+                                    error: function (jqXHR, textStatus, errorThrown) {
+                                        $('#disapproveSelectedFailed-info').text(errorThrown);
                                         $("#disapproveSelectedFailed").click();
                                     },
-                                    traditional: true
+                                    complete: function (jqXHR, textStatus) {
+                                        $('#productreviews-grid').DataTable().ajax.reload();
+                                        selectedIds = [];
+                                    }
                                 });
                                 return false;
                             });
@@ -310,14 +308,13 @@
                                     type: "POST",
                                     url: "@(Url.Action("DeleteSelected", "ProductReview"))",
                                     data: postData,
-                                    complete: function (data) {
-                                        //reload grid
+                                    error: function (jqXHR, textStatus, errorThrown) {
+                                        $('#deleteSelectedFailed-info').text(errorThrown);
+                                        $("#deleteSelectedFailed").click();
+                                    },
+                                    complete: function (jqXHR, textStatus) {
                                         $('#productreviews-grid').DataTable().ajax.reload();
                                         selectedIds = [];
-                                    },
-                                    error: function (xhr, ajaxOptions, thrownError) {
-                                        $('#deleteSelectedFailed-info').text(thrownError);
-                                        $("#deleteSelectedFailed").click();
                                     }
                                 });
                                 $('#delete-selected-action-confirmation').modal('toggle');

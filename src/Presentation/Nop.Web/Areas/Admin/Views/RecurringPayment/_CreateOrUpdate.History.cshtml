@@ -50,7 +50,7 @@
             new ColumnProperty(nameof(RecurringPaymentHistoryModel.CustomOrderNumber))
             {
                 Title = T("Admin.RecurringPayments.History.CustomOrderNumber").Text,
-                ClassName =  StyleColumn.ButtonStyle,
+                ClassName =  NopColumnClassDefaults.Button,
                 Width = "200",
                 Render = new RenderCustom("renderColumnOrderInfo")
             },

@@ -1,0 +1,9 @@
+﻿@model Nop.Plugin.Tax.Avalara.Models.Settings.TaxOriginAddressTypeModel
+
+<script>
+    $(document).ready(function() {
+        $('#@Model.PrecedingElementId').closest('.form-group')
+            .after(`@Html.Partial("~/Plugins/Tax.Avalara/Views/Settings/_TaxOriginAddressTypeField.cshtml", Model)`);
+        $("#AvalaraTaxOriginAddressType_label > .ico-help").css("color", "#f39c12")
+    });
+</script>

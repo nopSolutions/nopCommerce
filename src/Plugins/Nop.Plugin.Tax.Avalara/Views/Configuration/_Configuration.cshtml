@@ -1,0 +1,187 @@
+﻿@model Nop.Plugin.Tax.Avalara.Models.Configuration.ConfigurationModel
+
+<div class="panel-group">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <p>
+                To enable this tax provider, you'll need to:<br />
+                <br />
+                1. <a href="https://www.avalara.com" target="_blank">Create an Avalara account</a><br />
+                2. Log in at the <a href="https://admin-avatax.avalara.net/login.aspx" target="_blank">production service</a>
+                or at the <a href="https://admin-development.avalara.net/login.aspx" target="_blank"> development service</a><br />
+                3. Add a company and some nexus jurisdiction selections to get any tax results<br />
+                4. Fill in your Avalara account details below<br />
+                <br />
+                <em>
+                    Disclaimer: By enabling this plugin you transfer the checkout data of your store to Avalara for accurate tax counting and reporting. The pre-counted tax might vary with tax displayed after checkout.<br />
+                </em>
+            </p>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-label asp-for="AccountId" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="AccountId" asp-required="true" />
+                    <span asp-validation-for="AccountId"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-label asp-for="LicenseKey" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="LicenseKey" asp-required="true" asp-value="@Model.LicenseKey" />
+                    <span asp-validation-for="LicenseKey"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-label asp-for="CompanyCode" />
+                </div>
+                <div class="col-md-9">
+                    <nop-select asp-for="CompanyCode" asp-items="Model.Companies" />
+                    <span asp-validation-for="CompanyCode"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-label asp-for="UseSandbox" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="UseSandbox" />
+                    <span asp-validation-for="UseSandbox"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-label asp-for="CommitTransactions" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="CommitTransactions" />
+                    <span asp-validation-for="CommitTransactions"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-label asp-for="ValidateAddress" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="ValidateAddress" />
+                    <span asp-validation-for="ValidateAddress"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-9 col-md-offset-3">
+                    <div class="input-group input-group-short">
+                        <div class="input-group-text">
+                            <button type="submit" name="save" class="btn btn-primary">
+                                @T("Admin.Common.Save")
+                            </button>
+                        </div>
+                        @if (Model.IsConfigured)
+                        {
+                            <div class="input-group-btn">
+                                <button type="submit" name="verifyCredentials" class="btn btn-info">
+                                    @T("Plugins.Tax.Avalara.VerifyCredentials")
+                                </button>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @if (Model.IsConfigured)
+    {
+        <script>
+            $(document).ready(function () {
+                $("#@Html.IdFor(model => model.TestAddress.CountryId)").change(function () {
+                    var selectedItem = $(this).val();
+                    var ddlStates = $("#@Html.IdFor(model => model.TestAddress.StateProvinceId)");
+                    $.ajax({
+                        cache: false,
+                        type: "GET",
+                        url: "@(Url.Action("GetStatesByCountryId", "Country"))",
+                        data: {
+                            "countryId": selectedItem
+                        },
+                        success: function (data, textStatus, jqXHR) {
+                            ddlStates.html('');
+                            $.each(data, function (id, option) {
+                                ddlStates.append($('<option></option>').val(option.id).html(option.name));
+                            });
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            alert('Failed to retrieve states.');
+                        }
+                    });
+                });
+            });
+        </script>
+
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="TestAddress.CountryId" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-select asp-for="TestAddress.CountryId" asp-items="Model.TestAddress.AvailableCountries" />
+                        <span asp-validation-for="TestAddress.CountryId"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="TestAddress.StateProvinceId" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-select asp-for="TestAddress.StateProvinceId" asp-items="Model.TestAddress.AvailableStates" />
+                        <span asp-validation-for="TestAddress.StateProvinceId"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="TestAddress.City" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="TestAddress.City" />
+                        <span asp-validation-for="TestAddress.City"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="TestAddress.Address1" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="TestAddress.Address1" />
+                        <span asp-validation-for="TestAddress.Address1"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="TestAddress.ZipPostalCode" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="TestAddress.ZipPostalCode" />
+                        <span asp-validation-for="TestAddress.ZipPostalCode"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-9 col-md-offset-3">
+                        <button type="submit" name="testTax" class="btn btn-info">
+                            @T("Plugins.Tax.Avalara.TestTax")
+                        </button>
+                    </div>
+                </div>
+                @if (!string.IsNullOrEmpty(Model.TestTaxResult))
+                {
+                    <div class="form-group">
+                        <div class="col-md-12" style="white-space: pre-line">
+                            @Model.TestTaxResult
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+</div>

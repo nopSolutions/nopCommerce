@@ -117,7 +117,7 @@
                                 {
                                     IsMasterCheckBox = true,
                                     Render = new RenderCheckBox("checkbox_log"),
-                                    ClassName =  StyleColumn.CenterAll,
+                                    ClassName =  NopColumnClassDefaults.CenterAll,
                                     Width = "50",
                                 },
                                 new ColumnProperty(nameof(LogModel.LogLevel))
@@ -140,7 +140,7 @@
                                 {
                                     Title = T("Admin.Common.View").Text,
                                     Width = "100",
-                                    ClassName =  StyleColumn.ButtonStyle,
+                                    ClassName =  NopColumnClassDefaults.Button,
                                     Render = new RenderButtonView(new DataUrl("View"))
                                 }
                             }
@@ -159,16 +159,15 @@
                                         type: "POST",
                                         url: "@(Url.Action("DeleteSelected", "Log"))",
                                         data: postData,
-                                        complete: function (data) {
-                                            //reload grid
-                                            $('#log-grid').DataTable().ajax.reload();
-                                            selectedIds = [];
-                                        },
-                                        error: function (xhr, ajaxOptions, thrownError) {
-                                            $('#deleteSelectedFailed-info').text(thrownError);
+                                        traditional: true,
+                                        error: function (jqXHR, textStatus, errorThrown) {
+                                            $('#deleteSelectedFailed-info').text(errorThrown);
                                             $("#deleteSelectedFailed").click();
                                         },
-                                        traditional: true
+                                        complete: function (jqXHR, textStatus) {
+                                            $('#log-grid').DataTable().ajax.reload();
+                                            selectedIds = [];
+                                        }
                                     });
                                     $('#delete-selected-action-confirmation').modal('toggle');
                                     return false;

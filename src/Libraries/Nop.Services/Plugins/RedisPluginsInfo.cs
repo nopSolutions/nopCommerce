@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
 using Nop.Core.Redis;
 using StackExchange.Redis;
@@ -18,10 +19,10 @@ namespace Nop.Services.Plugins
 
         #region Ctor
 
-        public RedisPluginsInfo(INopFileProvider fileProvider, IRedisConnectionWrapper connectionWrapper)
+        public RedisPluginsInfo(INopFileProvider fileProvider, IRedisConnectionWrapper connectionWrapper, NopConfig config)
             : base(fileProvider)
         {
-            _db = connectionWrapper.GetDatabase(RedisDatabaseNumber.Plugin);
+            _db = connectionWrapper.GetDatabase(config.RedisDatabaseId ?? (int)RedisDatabaseNumber.Plugin);
         }
 
         #endregion

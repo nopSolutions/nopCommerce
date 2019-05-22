@@ -16,31 +16,31 @@
             new ColumnProperty(nameof(GdprConsentModel.IsRequired))
             {
                 Title = T("Admin.Configuration.Settings.Gdpr.Consent.IsRequired").Text,
-                ClassName =  StyleColumn.CenterAll,
+                ClassName =  NopColumnClassDefaults.CenterAll,
                 Render = new RenderBoolean()
             },
             new ColumnProperty(nameof(GdprConsentModel.DisplayDuringRegistration))
             {
                 Title = T("Admin.Configuration.Settings.Gdpr.Consent.DisplayDuringRegistration").Text,
-                ClassName =  StyleColumn.CenterAll,
+                ClassName =  NopColumnClassDefaults.CenterAll,
                 Render = new RenderBoolean()
             },
             new ColumnProperty(nameof(GdprConsentModel.DisplayOnCustomerInfoPage))
             {
                 Title = T("Admin.Configuration.Settings.Gdpr.Consent.DisplayOnCustomerInfoPage").Text,
-                ClassName =  StyleColumn.CenterAll,
+                ClassName =  NopColumnClassDefaults.CenterAll,
                 Render = new RenderBoolean()
             },
             new ColumnProperty(nameof(GdprConsentModel.DisplayOrder))
             {
                 Title = T("Admin.Configuration.Settings.Gdpr.Consent.DisplayOrder").Text,
-                ClassName = StyleColumn.CenterAll
+                ClassName = NopColumnClassDefaults.CenterAll
             },
             new ColumnProperty(nameof(GdprConsentModel.Id))
             {
                 Title = T("Admin.Common.Edit").Text,
                 Width = "100",
-                ClassName =  StyleColumn.ButtonStyle,
+                ClassName =  NopColumnClassDefaults.Button,
                 Render = new RenderButtonEdit(new DataUrl("~/Admin/Setting/EditGdprConsent/"))
             }
         }

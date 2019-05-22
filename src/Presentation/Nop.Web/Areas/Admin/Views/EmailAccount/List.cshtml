@@ -47,22 +47,25 @@
                             {
                                 Title = T("Admin.Configuration.EmailAccounts.Fields.IsDefaultEmailAccount").Text,
                                 Width = "200",
-                                ClassName =  StyleColumn.CenterAll,
+                                ClassName =  NopColumnClassDefaults.CenterAll,
                                 Render = new RenderBoolean()
                             },
                             new ColumnProperty(nameof(EmailAccountModel.Id))
                             {
                                 Title = T("Admin.Configuration.EmailAccounts.Fields.MarkAsDefaultEmail").Text,
                                 Width = "200",
-                                ClassName =  StyleColumn.CenterAll,
-                                Render = new RenderButtonCustom(Url.Content("~/Admin/EmailAccount/MarkAsDefaultEmail/"), StyleButton.Success, T("Admin.Configuration.EmailAccounts.Fields.MarkAsDefaultEmail").Text)
+                                ClassName =  NopColumnClassDefaults.CenterAll,
+                                Render = new RenderButtonCustom(NopButtonClassDefaults.Success, T("Admin.Configuration.EmailAccounts.Fields.MarkAsDefaultEmail").Text)
+                                {
+                                    Url = Url.Content("~/Admin/EmailAccount/MarkAsDefaultEmail/")
+                                }
 
                             },
                             new ColumnProperty(nameof(EmailAccountModel.Id))
                             {
                                 Title = T("Admin.Common.Edit").Text,
                                 Width = "100",
-                                ClassName =  StyleColumn.ButtonStyle,
+                                ClassName =  NopColumnClassDefaults.Button,
                                 Render = new RenderButtonEdit(new DataUrl("Edit"))
                             }
                         }

@@ -56,28 +56,28 @@
                                 {
                                     Title = T("Admin.Configuration.Payment.Methods.Fields.SupportCapture").Text,
                                     Width = "100",
-                                    ClassName = StyleColumn.CenterAll,
+                                    ClassName = NopColumnClassDefaults.CenterAll,
                                     Render = new RenderBoolean()
                                 },
                                 new ColumnProperty(nameof(PaymentMethodModel.SupportRefund))
                                 {
                                     Title = T("Admin.Configuration.Payment.Methods.Fields.SupportRefund").Text,
                                     Width = "100",
-                                    ClassName = StyleColumn.CenterAll,
+                                    ClassName = NopColumnClassDefaults.CenterAll,
                                     Render = new RenderBoolean()
                                 },
                                 new ColumnProperty(nameof(PaymentMethodModel.SupportPartiallyRefund))
                                 {
                                     Title = T("Admin.Configuration.Payment.Methods.Fields.SupportPartiallyRefund").Text,
                                     Width = "100",
-                                    ClassName = StyleColumn.CenterAll,
+                                    ClassName = NopColumnClassDefaults.CenterAll,
                                     Render = new RenderBoolean()
                                 },
                                 new ColumnProperty(nameof(PaymentMethodModel.SupportVoid))
                                 {
                                     Title = T("Admin.Configuration.Payment.Methods.Fields.SupportVoid").Text,
                                     Width = "100",
-                                    ClassName = StyleColumn.CenterAll,
+                                    ClassName = NopColumnClassDefaults.CenterAll,
                                     Render = new RenderBoolean()
                                 },
                                 new ColumnProperty(nameof(PaymentMethodModel.RecurringPaymentType))
@@ -89,7 +89,7 @@
                                 {
                                     Title = T("Admin.Configuration.Payment.Methods.Fields.DisplayOrder").Text,
                                     Width = "100",
-                                    ClassName = StyleColumn.CenterAll,
+                                    ClassName = NopColumnClassDefaults.CenterAll,
                                     Editable = true,
                                     EditType = EditType.Number
                                 },
@@ -97,7 +97,7 @@
                                 {
                                     Title = T("Admin.Configuration.Payment.Methods.Fields.IsActive").Text,
                                     Width = "100",
-                                    ClassName = StyleColumn.CenterAll,
+                                    ClassName = NopColumnClassDefaults.CenterAll,
                                     Render = new RenderBoolean(),
                                     Editable = true,
                                     EditType = EditType.Checkbox
@@ -106,14 +106,14 @@
                                 {
                                     Title = T("Admin.Configuration.Payment.Methods.Configure").Text,
                                     Width = "150",
-                                    ClassName =  StyleColumn.ButtonStyle,
+                                    ClassName =  NopColumnClassDefaults.Button,
                                     Render = new RenderCustom("renderColumnConfigure")
                                 },
                                 new ColumnProperty(nameof(PaymentMethodModel.SystemName))
                                 {
                                     Title = T("Admin.Common.Edit").Text,
                                     Width = "200",
-                                    ClassName =  StyleColumn.ButtonStyle,
+                                    ClassName =  NopColumnClassDefaults.Button,
                                     Render = new RenderButtonsInlineEdit()
                                 }
                             }

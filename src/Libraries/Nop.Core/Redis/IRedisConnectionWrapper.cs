@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Net;
 using StackExchange.Redis;
 
@@ -14,7 +14,7 @@ namespace Nop.Core.Redis
         /// </summary>
         /// <param name="db">Database number</param>
         /// <returns>Redis cache database</returns>
-        IDatabase GetDatabase(RedisDatabaseNumber db = RedisDatabaseNumber.Default);
+        IDatabase GetDatabase(int db);
 
         /// <summary>
         /// Obtain a configuration API for an individual server
@@ -33,6 +33,6 @@ namespace Nop.Core.Redis
         /// Delete all the keys of the database
         /// </summary>
         /// <param name="db">Database number</param>
-        void FlushDatabase(RedisDatabaseNumber db = RedisDatabaseNumber.Default);
+        void FlushDatabase(RedisDatabaseNumber db);
     }
 }

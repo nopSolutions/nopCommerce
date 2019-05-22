@@ -112,20 +112,20 @@
                 addAntiForgeryToken(postData);
 
                 $.ajax({
-                    url: '@Html.Raw(GetUrl((Model.ChildTable?.UrlDelete != null) ? Model.ChildTable?.UrlDelete : Model.UrlDelete))',
-                    type: '@WebRequestMethods.Http.Post',
-                    dataType: 'json',
+                    url: "@Html.Raw(GetUrl((Model.ChildTable?.UrlDelete != null) ? Model.ChildTable?.UrlDelete : Model.UrlDelete))",
+                    type: "@WebRequestMethods.Http.Post",
+                    dataType: "json",
                     data: postData,
-                    success: function (result) {
+                    success: function (data, textStatus, jqXHR) {
                         //display error if returned
-                        if (result) {
-                            display_nop_error(result);
+                        if (data) {
+                            display_nop_error(data);
                         }
                         //refresh grid
                         $('#@Model.Name').DataTable().draw(false);
                     },
-                    error: function (xhr, ajaxOptions, thrownError) {
-                        alert(thrownError);
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        alert(errorThrown);
                     }
                 });
             }
@@ -254,20 +254,20 @@
             addAntiForgeryToken(postData);
 
             $.ajax({
-                url: '@Html.Raw(GetUrl((Model.ChildTable?.UrlUpdate != null) ? Model.ChildTable?.UrlUpdate : Model.UrlUpdate))',
-                type: 'POST',
-                dataType: 'json',
+                url: "@Html.Raw(GetUrl((Model.ChildTable?.UrlUpdate != null) ? Model.ChildTable?.UrlUpdate : Model.UrlUpdate))",
+                type: "POST",
+                dataType: "json",
                 data: postData,
-                success: function (result) {
+                success: function (data, textStatus, jqXHR) {
                     //display error if returned
-                    if (result) {
-                        display_nop_error(result);
+                    if (data) {
+                        display_nop_error(data);
                     }
                     //refresh grid
                      $('#@Model.Name').DataTable().draw(false);
                 },
-                error: function (xhr, ajaxOptions, thrownError) {
-                    alert(thrownError);
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert(errorThrown);
                 }
             });
         }

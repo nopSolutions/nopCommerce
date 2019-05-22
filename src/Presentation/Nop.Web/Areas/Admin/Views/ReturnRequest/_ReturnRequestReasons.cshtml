@@ -25,13 +25,13 @@
                 {
                     Title = T("Admin.Configuration.Settings.Order.ReturnRequestReasons.DisplayOrder").Text,
                     Width = "100",
-                    ClassName =  StyleColumn.CenterAll
+                    ClassName =  NopColumnClassDefaults.CenterAll
                 },
                 new ColumnProperty(nameof(ReturnRequestReasonModel.Id))
                 {
                     Title = T("Admin.Common.Edit").Text,
                     Width = "100",
-                    ClassName =  StyleColumn.ButtonStyle,
+                    ClassName =  NopColumnClassDefaults.Button,
                     Render = new RenderButtonEdit(new DataUrl("~/Admin/ReturnRequest/ReturnRequestReasonEdit/"))
                 }
             }

@@ -65,7 +65,7 @@
                                 {
                                     Title = T("Admin.System.ScheduleTasks.Enabled").Text,
                                     Width = "100",
-                                    ClassName = StyleColumn.CenterAll,
+                                    ClassName = NopColumnClassDefaults.CenterAll,
                                     Render = new RenderBoolean(),
                                     Editable = true,
                                     EditType = EditType.Checkbox
@@ -74,7 +74,7 @@
                                 {
                                     Title = T("Admin.System.ScheduleTasks.StopOnError").Text,
                                     Width = "100",
-                                    ClassName = StyleColumn.CenterAll,
+                                    ClassName = NopColumnClassDefaults.CenterAll,
                                     Render = new RenderBoolean(),
                                     Editable = true,
                                     EditType = EditType.Checkbox
@@ -98,14 +98,14 @@
                                 {
                                     Title = T("Admin.System.ScheduleTasks.RunNow").Text,
                                     Width = "100",
-                                    ClassName =  StyleColumn.ButtonStyle,
+                                    ClassName =  NopColumnClassDefaults.Button,
                                     Render = new RenderCustom("renderColumnRunNow")
                                 },
                                 new ColumnProperty(nameof(ScheduleTaskModel.Id))
                                 {
                                     Title = T("Admin.Common.Edit").Text,
                                     Width = "200",
-                                    ClassName =  StyleColumn.ButtonStyle,
+                                    ClassName =  NopColumnClassDefaults.Button,
                                     Render = new RenderButtonsInlineEdit()
                                 }
                             }

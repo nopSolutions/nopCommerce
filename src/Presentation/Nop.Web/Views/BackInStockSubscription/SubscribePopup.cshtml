@@ -48,11 +48,13 @@
                             cache: false,
                             type: "POST",
                             url: "@(Url.RouteUrl("BackInStockSubscribeSend"))",
-                            data: { "productId": '@Model.ProductId' },
-                            success: function (data) {
+                            data: {
+                                "productId": '@Model.ProductId'
+                            },
+                            success: function (data, textStatus, jqXHR) {
                                 $(subscribeButton).closest('.ui-dialog-content').dialog('destroy').remove();
                             },
-                            error: function (xhr, ajaxOptions, thrownError) {
+                            error: function (jqXHR, textStatus, errorThrown) {
                                 alert('Failed to change subscription.');
                             }
                         });

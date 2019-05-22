@@ -56,7 +56,7 @@
                                 {
                                     Title = T("Admin.Configuration.Shipping.Providers.Fields.DisplayOrder").Text,
                                     Width = "100",
-                                    ClassName = StyleColumn.CenterAll,
+                                    ClassName = NopColumnClassDefaults.CenterAll,
                                     Editable = true,
                                     EditType = EditType.Number
                                 },
@@ -64,7 +64,7 @@
                                 {
                                     Title = T("Admin.Configuration.Shipping.Providers.Fields.IsActive").Text,
                                     Width = "100",
-                                    ClassName = StyleColumn.CenterAll,
+                                    ClassName = NopColumnClassDefaults.CenterAll,
                                     Render = new RenderBoolean(),
                                     Editable = true,
                                     EditType = EditType.Checkbox
@@ -73,14 +73,14 @@
                                 {
                                     Title = T("Admin.Configuration.Shipping.Providers.Configure").Text,
                                     Width = "150",
-                                    ClassName =  StyleColumn.ButtonStyle,
+                                    ClassName =  NopColumnClassDefaults.Button,
                                     Render = new RenderCustom("renderColumnConfigure")
                                 },
                                 new ColumnProperty(nameof(ShippingProviderModel.SystemName))
                                 {
                                     Title = T("Admin.Common.Edit").Text,
                                     Width = "200",
-                                    ClassName =  StyleColumn.ButtonStyle,
+                                    ClassName =  NopColumnClassDefaults.Button,
                                     Render = new RenderButtonsInlineEdit()
                                 }
                             }

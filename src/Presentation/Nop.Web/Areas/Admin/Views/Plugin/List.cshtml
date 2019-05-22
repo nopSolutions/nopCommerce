@@ -182,7 +182,7 @@
                                 {
                                     Title = T("Admin.Configuration.Plugins.Fields.Logo").Text,
                                     Width = "200",
-                                    ClassName = StyleColumn.CenterAll,
+                                    ClassName = NopColumnClassDefaults.CenterAll,
                                     Render = new RenderPicture()
                                 },
                                 new ColumnProperty(nameof(PluginModel.Description))
@@ -200,7 +200,7 @@
                                 {
                                     Title = T("Admin.Configuration.Plugins.Fields.Installation").Text,
                                     Width = "100",
-                                    ClassName =  StyleColumn.ButtonStyle,
+                                    ClassName =  NopColumnClassDefaults.Button,
                                     Render = new RenderCustom("renderColumnInstalled")
                                 }
                             }

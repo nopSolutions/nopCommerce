@@ -270,7 +270,7 @@
                                         {
                                             Title = T("Admin.ContentManagement.MessageTemplates.Fields.IsActive").Text,
                                             Width = "100",
-                                            ClassName = StyleColumn.CenterAll,
+                                            ClassName = NopColumnClassDefaults.CenterAll,
                                             Render = new RenderBoolean(),
                                             Editable = true,
                                             EditType = EditType.Checkbox
@@ -283,7 +283,7 @@
                                         {
                                             Title = T("Plugins.Misc.SendinBlue.UseSendinBlueTemplate").Text,
                                             Width = "100",
-                                            ClassName = StyleColumn.CenterAll,
+                                            ClassName = NopColumnClassDefaults.CenterAll,
                                             Render = new RenderBoolean(),
                                             Editable = true,
                                             EditType = EditType.Checkbox
@@ -301,7 +301,7 @@
                                         {
                                             Title = T("Admin.Common.Edit").Text,
                                             Width = "200",
-                                            ClassName =  StyleColumn.ButtonStyle,
+                                            ClassName =  NopColumnClassDefaults.Button,
                                             Render = new RenderButtonsInlineEdit()
                                         }
                                     }
@@ -409,7 +409,7 @@
                                         {
                                             Title = T("Admin.Common.Delete").Text,
                                             Width = "100",
-                                            ClassName =  StyleColumn.ButtonStyle,
+                                            ClassName =  NopColumnClassDefaults.Button,
                                             Render = new RenderButtonRemove(T("Admin.Common.Delete").Text)
                                         }
                                     }
@@ -463,19 +463,24 @@
                                                 };
                                                 addAntiForgeryToken(postData);
                                                 $.ajax({
-                                                    cache:false,
+                                                    cache: false,
                                                     type: "POST",
                                                     url: "@Html.Raw(Url.Action("SMSAdd", "SendinBlue"))",
                                                     data: postData,
-                                                    success: function (data) {
+                                                    success: function (data, textStatus, jqXHR) {
                                                         if (data.Result) {
                                                             $('#sms-grid').DataTable().ajax.reload();
+
+                                                            //clear input value
+                                                            $("#@Html.IdFor(model => model.AddSms.MessageId)").val('');
+                                                            $("#@Html.IdFor(model => model.AddSms.PhoneTypeId)").val('');
+                                                            $("#@Html.IdFor(model => model.AddSms.Text)").val('');
+
                                                         } else {
                                                             display_nop_error(data);
                                                         }
-                                                        $('#addSms').attr('disabled', false);
                                                     },
-                                                    error:function (xhr, ajaxOptions, thrownError){
+                                                    complete: function (jqXHR, textStatus) {
                                                         $('#addSms').attr('disabled', false);
                                                     }
                                                 });
