@@ -161,7 +161,7 @@ namespace Nop.Services.Media.RoxyFileman
                 switch (imageEncoder)
                 {
                     case JpegEncoder jpegEncoder:
-                        jpegEncoder.IgnoreMetadata = true;
+                        jpegEncoder.Subsample = JpegSubsample.Ratio444;
                         jpegEncoder.Quality = quality ?? _mediaSettings.DefaultImageQuality;
                         jpegEncoder.Encode(image, stream);
                         break;
@@ -177,7 +177,6 @@ namespace Nop.Services.Media.RoxyFileman
                         break;
 
                     case GifEncoder gifEncoder:
-                        gifEncoder.IgnoreMetadata = true;
                         gifEncoder.Encode(image, stream);
                         break;
 
