@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlTypes;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
@@ -410,14 +411,14 @@ namespace Nop.Services.Localization
         /// Import language resources from XML file
         /// </summary>
         /// <param name="language">Language</param>
-        /// <param name="xml">XML</param>
+        /// <param name="xmlStreamReader">Stream reader of XML file</param>
         /// <param name="updateExistingResources">A value indicating whether to update existing resources</param>
-        public virtual void ImportResourcesFromXml(Language language, string xml, bool updateExistingResources = true)
+        public virtual void ImportResourcesFromXml(Language language, StreamReader xmlStreamReader, bool updateExistingResources = true)
         {
             if (language == null)
                 throw new ArgumentNullException(nameof(language));
 
-            if (string.IsNullOrEmpty(xml))
+            if (xmlStreamReader.EndOfStream)
                 return;
 
             //stored procedures are enabled and supported by the database.
@@ -428,7 +429,7 @@ namespace Nop.Services.Localization
 
             var pXmlPackage = _dataProvider.GetParameter();
             pXmlPackage.ParameterName = "XmlPackage";
-            pXmlPackage.Value = xml;
+            pXmlPackage.Value = new SqlXml(XmlReader.Create(xmlStreamReader));
             pXmlPackage.DbType = DbType.Xml;
 
             var pUpdateExistingResources = _dataProvider.GetParameter();

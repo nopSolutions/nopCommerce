@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using Nop.Core;
@@ -444,9 +445,11 @@ namespace Nop.Services.Installation
             var pattern = $"*.{NopInstallationDefaults.LocalizationResourcesFileExtension}";
             foreach (var filePath in _fileProvider.EnumerateFiles(directoryPath, pattern))
             {
-                var localesXml = _fileProvider.ReadAllText(filePath, Encoding.UTF8);
                 var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
-                localizationService.ImportResourcesFromXml(language, localesXml);
+                using (var streamReader = new StreamReader(filePath))
+                {
+                    localizationService.ImportResourcesFromXml(language, streamReader);
+                }
             }
         }
 
