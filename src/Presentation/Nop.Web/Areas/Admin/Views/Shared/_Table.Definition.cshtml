@@ -149,10 +149,11 @@ fixedHeader: @Model.FixedHeader.ToString().ToLower(),
 @if (!Model.IsChildTable)
 {
 <text>
-dom: '<"row"<"col-md-12"t>>' +
+dom: 
+'<"row"<"col-md-12"t>>' +
      '<"row margin-t-5"' +
-        '<"col-lg-5 col-md-5 col-xs-5"<"pull-left"p>>' +
-        '<"col-lg-3 col-md-3 col-xs-3"<"data-tables-length text-center"l>>' +
+        '<"col-lg-5 col-md-5 col-xs-5"<"pull-left"p>>' +        
+        '<"col-lg-3 col-md-3 col-xs-3"<"pull-left"l>>' +
         '<"col-lg-3 col-md-3 col-xs-3"<"pull-right"i>>' +
         '<"col-lg-1 col-md-1 col-xs-1"<"pull-right"B>>' +
      '>',
@@ -161,7 +162,6 @@ buttons: [
     name: 'refresh',
     text: '<i class="fa fa-refresh" style="padding-left: 5px"></i>',
     action: function () {
-        @*$('#@Model.Name').DataTable().ajax.reload();*@
         updateTable('#@Model.Name');
     }
 }],
