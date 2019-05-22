@@ -18,7 +18,7 @@
                     @for (var i = 0; i < Model.Count; i++)
                     {
                         var item = Model[i];
-                        <tr role="row" @(i % 2 == 0 ? Html.Raw(" class=\"odd\"") : Html.Raw(" class=\"even\""))>
+                        <tr @(i % 2 == 0 ? Html.Raw(" class=\"odd\"") : Html.Raw(" class=\"even\""))>
                             <td class="spec-name">
                                 @item.SpecificationAttributeName
                             </td>
