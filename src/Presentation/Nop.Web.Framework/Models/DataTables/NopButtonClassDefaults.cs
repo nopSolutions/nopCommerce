@@ -1,10 +1,8 @@
 ﻿namespace Nop.Web.Framework.Models.DataTables
 {
     /// <summary>
-    /// /// <summary>
     /// Button class name defaults
     /// https://adminlte.io/themes/AdminLTE/pages/UI/buttons.html
-    /// </summary>
     /// </summary>
     public static partial class NopButtonClassDefaults
     {
