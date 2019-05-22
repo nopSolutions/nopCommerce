@@ -131,7 +131,7 @@
                             new ColumnProperty(nameof(ReturnRequestModel.CustomOrderNumber))
                             {
                                 Title = T("Admin.ReturnRequests.Fields.CustomOrderNumber").Text,
-                                ClassName =  StyleColumn.ButtonStyle,
+                                ClassName =  NopColumnClassDefaults.Button,
                                 Width = "200",
                                 Render = new RenderCustom("renderColumnOrderInfo")
                             },
@@ -150,7 +150,7 @@
                             {
                                 Title = T("Admin.Common.Edit").Text,
                                 Width = "100",
-                                ClassName =  StyleColumn.ButtonStyle,
+                                ClassName =  NopColumnClassDefaults.Button,
                                 Render = new RenderButtonEdit(new DataUrl("Edit"))
                             }
                         }

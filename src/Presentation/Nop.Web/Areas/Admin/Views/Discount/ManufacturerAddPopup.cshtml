@@ -77,7 +77,7 @@ else
                                     {
                                         IsMasterCheckBox = true,
                                         Render = new RenderCheckBox(nameof(AddManufacturerToDiscountModel.SelectedManufacturerIds)),
-                                        ClassName =  StyleColumn.CenterAll,
+                                        ClassName =  NopColumnClassDefaults.CenterAll,
                                         Width = "50",
                                     },
                                     new ColumnProperty(nameof(ManufacturerModel.Name))
@@ -88,7 +88,7 @@ else
                                     {
                                         Title = T("Admin.Catalog.Manufacturers.Fields.Published").Text,
                                         Width = "100",
-                                        ClassName = StyleColumn.CenterAll,
+                                        ClassName = NopColumnClassDefaults.CenterAll,
                                         Render = new RenderBoolean()
                                     }
                                 }

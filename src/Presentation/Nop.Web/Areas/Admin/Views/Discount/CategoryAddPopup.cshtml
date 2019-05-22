@@ -75,7 +75,7 @@ else
                                     {
                                         IsMasterCheckBox = true,
                                         Render = new RenderCheckBox(nameof(AddCategoryToDiscountModel.SelectedCategoryIds)),
-                                        ClassName =  StyleColumn.CenterAll,
+                                        ClassName =  NopColumnClassDefaults.CenterAll,
                                         Width = "50",
                                     },
                                     new ColumnProperty(nameof(CategoryModel.Breadcrumb))
@@ -86,7 +86,7 @@ else
                                     {
                                         Title = T("Admin.Catalog.Categories.Fields.Published").Text,
                                         Width = "100",
-                                        ClassName = StyleColumn.CenterAll,
+                                        ClassName = NopColumnClassDefaults.CenterAll,
                                         Render = new RenderBoolean()
                                     }
                                 }

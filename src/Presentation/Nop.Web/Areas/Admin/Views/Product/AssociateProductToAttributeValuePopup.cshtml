@@ -126,7 +126,10 @@
                                 {
                                     Title = T("Admin.Common.Select").Text,
                                     Width = "50",
-                                    Render = new RenderButtonCustom(StyleButton.Default, "selectAssociatedProduct", T("Admin.Common.Select").Text)
+                                    Render = new RenderButtonCustom(NopButtonClassDefaults.Default, T("Admin.Common.Select").Text)
+                                    {
+                                        OnClickFunctionName = "selectAssociatedProduct"
+                                    }
                                 },
                                 new ColumnProperty(nameof(ProductModel.Name))
                                 {
@@ -136,7 +139,7 @@
                                 {
                                     Title = T("Admin.Catalog.Products.Fields.Published").Text,
                                     Width = "100",
-                                    ClassName = StyleColumn.CenterAll,
+                                    ClassName = NopColumnClassDefaults.CenterAll,
                                     Render = new RenderBoolean()
                                 }
                             }

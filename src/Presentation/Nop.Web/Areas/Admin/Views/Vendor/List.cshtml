@@ -92,14 +92,14 @@
                             {
                                 Title = T("Admin.Vendors.Fields.Active").Text,
                                 Width = "50",
-                                ClassName =  StyleColumn.CenterAll,
+                                ClassName =  NopColumnClassDefaults.CenterAll,
                                 Render = new RenderBoolean()
                             },
                             new ColumnProperty(nameof(VendorModel.Id))
                             {
                                 Title = T("Admin.Common.Edit").Text,
                                 Width = "50",
-                                ClassName =  StyleColumn.ButtonStyle,
+                                ClassName =  NopColumnClassDefaults.Button,
                                 Render = new RenderButtonEdit(new DataUrl("Edit"))
                             }
                         }

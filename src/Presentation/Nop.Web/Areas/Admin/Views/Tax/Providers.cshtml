@@ -47,21 +47,21 @@
                                 {
                                     Title = T("Admin.Configuration.Tax.Providers.Fields.IsPrimaryTaxProvider").Text,
                                     Width = "100",
-                                    ClassName =  StyleColumn.CenterAll,
+                                    ClassName =  NopColumnClassDefaults.CenterAll,
                                     Render = new RenderBoolean()
                                 },
                                 new ColumnProperty(nameof(TaxProviderModel.SystemName))
                                 {
                                     Title = T("Admin.Configuration.Tax.Providers.Fields.MarkAsPrimaryProvider").Text,
                                     Width = "200",
-                                    ClassName =  StyleColumn.ButtonStyle,
+                                    ClassName =  NopColumnClassDefaults.Button,
                                     Render = new RenderCustom("renderColumnSystemName")
                                 },
                                 new ColumnProperty(nameof(TaxProviderModel.SystemName))
                                 {
                                     Title = T("Admin.Configuration.Tax.Providers.Configure").Text,
                                     Width = "150",
-                                    ClassName =  StyleColumn.ButtonStyle,
+                                    ClassName =  NopColumnClassDefaults.Button,
                                     Render = new RenderCustom("renderColumnConfigure")
                                 }
                             }

@@ -93,7 +93,7 @@
                             {
                                 Title = T("Admin.ContentManagement.Blog.BlogPosts.Fields.Comments").Text,
                                 Width = "200",
-                                ClassName = StyleColumn.ButtonStyle,
+                                ClassName = NopColumnClassDefaults.Button,
                                 Render = new RenderCustom("renderColumnComments")
                             },
                             new ColumnProperty(nameof(BlogPostModel.StartDateUtc))
@@ -118,7 +118,7 @@
                             {
                                 Title = T("Admin.Common.Edit").Text,
                                 Width = "100",
-                                ClassName = StyleColumn.ButtonStyle,
+                                ClassName = NopColumnClassDefaults.Button,
                                 Render = new RenderButtonEdit(new DataUrl("BlogPostEdit"))
                             }
                         }

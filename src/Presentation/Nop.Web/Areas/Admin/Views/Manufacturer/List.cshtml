@@ -122,20 +122,20 @@
                             {
                                 Title = T("Admin.Catalog.Manufacturers.Fields.Published").Text,
                                 Width = "100",
-                                ClassName =  StyleColumn.CenterAll,
+                                ClassName =  NopColumnClassDefaults.CenterAll,
                                 Render = new RenderBoolean()
                             },
                             new ColumnProperty(nameof(ManufacturerModel.DisplayOrder))
                             {
                                 Title = T("Admin.Catalog.Manufacturers.Fields.DisplayOrder").Text,
                                 Width = "150",
-                                ClassName = StyleColumn.CenterAll
+                                ClassName = NopColumnClassDefaults.CenterAll
                             },
                             new ColumnProperty(nameof(ManufacturerModel.Id))
                             {
                                 Title = T("Admin.Common.Edit").Text,
                                 Width = "100",
-                                ClassName =  StyleColumn.ButtonStyle,
+                                ClassName =  NopColumnClassDefaults.Button,
                                 Render = new RenderButtonEdit(new DataUrl("Edit"))
                             }
                         }

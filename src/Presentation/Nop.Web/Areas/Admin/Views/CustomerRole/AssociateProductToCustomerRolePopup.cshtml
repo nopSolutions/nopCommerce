@@ -129,7 +129,7 @@
                                     {
                                         Title = T("Admin.Common.Select").Text,
                                         Render = new RenderCustom("renderColumnSelectProduct"),
-                                        ClassName =  StyleColumn.ButtonStyle,
+                                        ClassName =  NopColumnClassDefaults.Button,
                                         Width = "50",
                                     },
                                     new ColumnProperty(nameof(ProductModel.Name))
@@ -140,7 +140,7 @@
                                     {
                                         Title = T("Admin.Catalog.Products.Fields.Published").Text,
                                         Width = "100",
-                                        ClassName = StyleColumn.CenterAll,
+                                        ClassName = NopColumnClassDefaults.CenterAll,
                                         Render = new RenderBoolean()
                                     }
                                 }

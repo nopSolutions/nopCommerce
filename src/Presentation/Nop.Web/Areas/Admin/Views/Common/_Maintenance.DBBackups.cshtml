@@ -24,21 +24,21 @@
                 Title = T("Admin.System.Maintenance.BackupDatabase.Download").Text,
                 Render = new RenderCustom("renderDownload"),
                 Width = "150",
-                ClassName = StyleColumn.ButtonStyle
+                ClassName = NopColumnClassDefaults.Button
             },
             new ColumnProperty(nameof(BackupFileModel.Name))
             {
                 Title = T("Admin.System.Maintenance.BackupDatabase.Restore").Text,
                 Render = new RenderCustom("renderRestore"),
                 Width = "150",
-                ClassName = StyleColumn.ButtonStyle
+                ClassName = NopColumnClassDefaults.Button
             },
             new ColumnProperty(nameof(BackupFileModel.Name))
             {
                 Title = T("Admin.System.Maintenance.BackupDatabase.Delete").Text,
                 Render = new RenderCustom("renderDelete"),
                 Width = "150",
-                ClassName = StyleColumn.ButtonStyle
+                ClassName = NopColumnClassDefaults.Button
             }
         }
     })

@@ -315,7 +315,7 @@
                                                 {
                                                     IsMasterCheckBox = true,
                                                     Render = new RenderCheckBox("checkbox_orders"),
-                                                    ClassName =  StyleColumn.CenterAll,
+                                                    ClassName =  NopColumnClassDefaults.CenterAll,
                                                     Width = "50",
                                                 },
                                                 new ColumnProperty(nameof(OrderModel.CustomOrderNumber))
@@ -379,7 +379,7 @@
                             {
                                 Title = T("Admin.Common.View").Text,
                                 Width = "50",
-                                ClassName = StyleColumn.ButtonStyle,
+                                ClassName = NopColumnClassDefaults.Button,
                                 Render = new RenderButtonEdit(new DataUrl("Edit"))
                             });
                             var orderSummaryColumnNumber = 2;

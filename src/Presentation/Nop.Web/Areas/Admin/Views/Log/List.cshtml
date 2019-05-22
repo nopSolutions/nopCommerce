@@ -117,7 +117,7 @@
                                 {
                                     IsMasterCheckBox = true,
                                     Render = new RenderCheckBox("checkbox_log"),
-                                    ClassName =  StyleColumn.CenterAll,
+                                    ClassName =  NopColumnClassDefaults.CenterAll,
                                     Width = "50",
                                 },
                                 new ColumnProperty(nameof(LogModel.LogLevel))
@@ -140,7 +140,7 @@
                                 {
                                     Title = T("Admin.Common.View").Text,
                                     Width = "100",
-                                    ClassName =  StyleColumn.ButtonStyle,
+                                    ClassName =  NopColumnClassDefaults.Button,
                                     Render = new RenderButtonView(new DataUrl("View"))
                                 }
                             }

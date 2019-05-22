@@ -80,13 +80,13 @@
                             {
                                 IsMasterCheckBox = true,
                                 Render = new RenderCheckBox("checkbox_senames"),
-                                ClassName = StyleColumn.CenterAll,
+                                ClassName = NopColumnClassDefaults.CenterAll,
                                 Width = "50"
                             },
                             new ColumnProperty(nameof(UrlRecordModel.Id))
                             {
                                 Title = T("Admin.System.SeNames.Id").Text,
-                                ClassName = StyleColumn.CenterAll,
+                                ClassName = NopColumnClassDefaults.CenterAll,
                                 Width = "50"
                             },
                             new ColumnProperty(nameof(UrlRecordModel.Name))
@@ -108,7 +108,7 @@
                             {
                                 Title = T("Admin.System.SeNames.IsActive").Text,
                                 Width = "50",
-                                ClassName = StyleColumn.CenterAll,
+                                ClassName = NopColumnClassDefaults.CenterAll,
                                 Render = new RenderBoolean()
                             },
                             new ColumnProperty(nameof(UrlRecordModel.Language))
@@ -120,7 +120,7 @@
                             {
                                 Title = T("Admin.System.SeNames.Details").Text,
                                 Width = "100",
-                                ClassName = StyleColumn.ButtonStyle,
+                                ClassName = NopColumnClassDefaults.Button,
                                 Render = new RenderCustom("renderColumnDetailsUrl")
                             }
                         }
