@@ -9,7 +9,7 @@ namespace Nop.Web.Framework.Models.DataTables
     {
         #region Const
 
-        protected const string DEFAULT_PAGING_TYPE = "full_numbers";
+        protected const string DEFAULT_PAGING_TYPE = "simple_numbers";
 
         #endregion
 
