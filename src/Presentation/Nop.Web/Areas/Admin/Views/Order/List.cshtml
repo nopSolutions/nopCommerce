@@ -289,7 +289,7 @@
                                 Length = Model.PageSize,
                                 LengthMenu = Model.AvailablePageSizes,
                                 FooterCallback = !Model.IsLoggedInAsVendor ? "ordersfootercallback" : null,
-                                FooterColumns = !Model.IsLoggedInAsVendor ? 3 : 0,
+                                FooterColumns = !Model.IsLoggedInAsVendor ? 10 : 0,
                                 Filters = new List<FilterParameter>
                                                 {
                                                     new FilterParameter(nameof(Model.StartDate)),
@@ -382,7 +382,7 @@
                                 ClassName = NopColumnClassDefaults.Button,
                                 Render = new RenderButtonEdit(new DataUrl("Edit"))
                             });
-                            var orderSummaryColumnNumber = 2;
+                            var orderSummaryColumnNumber = 8;
                         }
 
                         @await Html.PartialAsync("Table", gridModel)
