@@ -61,7 +61,7 @@
             $(document).ready(function () {
                 $('#btnRefresh').click(function () {
                     //refresh grid
-                    $('#specificationattributeoptions-grid').DataTable().ajax.reload();
+                    updateTable('#specificationattributeoptions-grid');
 
                     //return false to don't reload a page
                     return false;

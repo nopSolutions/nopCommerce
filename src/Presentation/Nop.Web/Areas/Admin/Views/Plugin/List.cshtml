@@ -293,7 +293,7 @@
                             $(document).ready(function () {
                                 $('#btnRefreshList').click(function () {
                                     //refresh grid
-                                    $('#plugins-local-grid').DataTable().ajax.reload();
+                                    updateTable('#plugins-local-grid');
 
                                     //return false to don't reload a page
                                     return false;

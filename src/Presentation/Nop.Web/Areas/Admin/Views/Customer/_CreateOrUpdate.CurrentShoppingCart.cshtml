@@ -64,7 +64,7 @@
     <script>
         $(document).ready(function() {
             $('#@Html.IdFor(model => model.CustomerShoppingCartSearchModel.ShoppingCartTypeId)').change(function() {
-                $('#currentshoppingcart-grid').DataTable().ajax.reload();
+                updateTable('#currentshoppingcart-grid');
             });
         });
     </script>

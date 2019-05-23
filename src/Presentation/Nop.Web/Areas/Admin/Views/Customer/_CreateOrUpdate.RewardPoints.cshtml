@@ -142,7 +142,7 @@
                     success: function (data, textStatus, jqXHR) {
                         if (data.Result) {
                             //reload grid
-                            $('#customer-rewardpoints-grid').DataTable().ajax.reload();
+                            updateTable('#customer-rewardpoints-grid');
 
                             $("#@Html.IdFor(model => model.AddRewardPoints.Points)").val(0);
                             $("#@Html.IdFor(model => model.AddRewardPoints.Message)").val('@JavaScriptEncoder.Default.Encode(Model.AddRewardPoints.Message)');

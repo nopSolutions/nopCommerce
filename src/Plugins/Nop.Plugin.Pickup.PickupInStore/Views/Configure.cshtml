@@ -76,7 +76,7 @@
                 $(document).ready(function () {
                     $('#btnRefresh').click(function () {
                         //refresh grid
-                        $('#pickup-points-grid').DataTable().ajax.reload();
+                        updateTable('#pickup-points-grid');
 
                         //return false to don't reload a page
                         return false;

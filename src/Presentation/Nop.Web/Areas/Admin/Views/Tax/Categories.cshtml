@@ -110,7 +110,7 @@
                                         success: function (data, textStatus, jqXHR) {
                                             if (data.Result) {
                                                 //reload grid
-                                                $('#tax-categories-grid').DataTable().ajax.reload();
+                                                updateTable('#tax-categories-grid');
                             
                                                 //clear input value
                                                 $("#@Html.IdFor(model => model.AddTaxCategory.Name)").val('');

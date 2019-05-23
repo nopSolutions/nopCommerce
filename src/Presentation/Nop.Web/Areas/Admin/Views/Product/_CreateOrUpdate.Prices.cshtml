@@ -350,7 +350,7 @@
                     <script>
                         $(document).ready(function () {
                             $('#btnRefreshTierPrices').click(function () {
-                                $('#tierprices-grid').DataTable().ajax.reload();
+                                updateTable('#tierprices-grid');
                                 //return false to don't reload a page
                                 return false;
                             });

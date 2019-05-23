@@ -127,7 +127,7 @@
                             success: function (data, textStatus, jqXHR) {
                                 if (data.Result) {
                                     //reload grid
-                                    $('#templates-product-grid').DataTable().ajax.reload();
+                                    updateTable('#templates-product-grid');
 
                                     //clear input value
                                     $("#@Html.IdFor(model => model.AddProductTemplate.Name)").val('');

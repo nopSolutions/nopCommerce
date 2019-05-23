@@ -43,7 +43,7 @@
             $(document).ready(function() {
                 $('#btnRefreshCategories').click(function() {
                     //refresh grid
-                    $('#categories-grid').DataTable().ajax.reload();
+                    updateTable('#categories-grid');
 
                     //return false to don't reload a page
                     return false;

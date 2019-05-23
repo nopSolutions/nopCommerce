@@ -96,7 +96,7 @@
                         url: "@(Url.Action("MarkAsPrimaryWeight", "Measure"))",
                         data: postData,
                         success: function (data, textStatus, jqXHR) {
-                            $('#measureweight-grid').DataTable().ajax.reload();
+                            updateTable('#measureweight-grid');
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
                             $("#markAsPrimaryWeightAlert").click();
@@ -174,7 +174,7 @@
                             success: function (data, textStatus, jqXHR) {
                                 if (data.Result) {
                                     //reload grid
-                                    $('#measureweight-grid').DataTable().ajax.reload();
+                                    updateTable('#measureweight-grid');
 
                                     //clear input value
                                     $("#@Html.IdFor(model => model.AddMeasureWeight.Name)").val('');

@@ -189,7 +189,7 @@
                                                 data: postData,
                                                 dataType: "json",
                                                 success: function (data, textStatus, jqXHR) {
-                                                    $('#tax-countrystatezip-grid').DataTable().ajax.reload();
+                                                    updateTable('#tax-countrystatezip-grid');
                                                 },
                                                 error: function (jqXHR, textStatus, errorThrown) {
                                                     $("#addRateByCountryStateZipAlert").click();

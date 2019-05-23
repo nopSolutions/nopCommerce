@@ -291,3 +291,15 @@ $(document).ready(function () {
     ensureDataTablesRendered();
   });
 });
+
+//reload datatables when sidebar-toggle click
+$(document).ready(function () {
+  $('#nopSideBarPusher').on('click', function (e) {
+    $("table[id$='-grid']").each(function (k, v) {
+      var table = this;
+      setTimeout(function () {
+        updateTable($(table));
+      }, 250); 
+    });
+  });
+});
