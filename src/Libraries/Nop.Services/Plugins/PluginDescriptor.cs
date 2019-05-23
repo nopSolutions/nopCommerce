@@ -203,6 +203,12 @@ namespace Nop.Services.Plugins
         /// </summary>
         [JsonProperty(PropertyName = "LimitedToCustomerRoles")]
         public virtual IList<int> LimitedToCustomerRoles { get; set; }
+        
+        /// <summary>
+        /// Gets or sets the list of plugins' system name that this plugin depends on
+        /// </summary>
+        [JsonProperty(PropertyName = "DependsOnSystemNames")]
+        public virtual IList<string> DependsOn { get; set; }
 
         /// <summary>
         /// Gets or sets the value indicating whether plugin is installed

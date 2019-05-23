@@ -132,6 +132,23 @@ namespace Nop.Services.Plugins
             return pluginDescriptor.LimitedToStores.Contains(storeId);
         }
 
+        /// <summary>
+        /// Check whether to load the plugin based on dependency from other plugin
+        /// </summary>
+        /// <param name="pluginDescriptor">Plugin descriptor to check</param>
+        /// <param name="dependsOnSystemName">Other plugin system name</param>
+        /// <returns>Result of check</returns>
+        protected virtual bool FilterByDependsOn(PluginDescriptor pluginDescriptor, string dependsOnSystemName)
+        {
+            if (pluginDescriptor == null)
+                throw new ArgumentNullException(nameof(pluginDescriptor));
+
+            if (string.IsNullOrEmpty(dependsOnSystemName))
+                return true;
+
+            return pluginDescriptor.DependsOn?.Contains(dependsOnSystemName) ?? false;
+        }
+        
         #endregion
 
         #region Methods
@@ -144,9 +161,10 @@ namespace Nop.Services.Plugins
         /// <param name="customer">Filter by  customer; pass null to load all records</param>
         /// <param name="storeId">Filter by store; pass 0 to load all records</param>
         /// <param name="group">Filter by plugin group; pass null to load all records</param>
+        /// <param name="dependsOnSystemName">System name of the plugin to define dependencies</param>
         /// <returns>Plugin descriptors</returns>
         public virtual IEnumerable<PluginDescriptor> GetPluginDescriptors<TPlugin>(LoadPluginsMode loadMode = LoadPluginsMode.InstalledOnly,
-            Customer customer = null, int storeId = 0, string group = null) where TPlugin : class, IPlugin
+            Customer customer = null, int storeId = 0, string group = null, string dependsOnSystemName = "") where TPlugin : class, IPlugin
         {
             var pluginDescriptors = _pluginsInfo.PluginDescriptors;
 
@@ -155,17 +173,16 @@ namespace Nop.Services.Plugins
                 FilterByLoadMode(descriptor, loadMode) &&
                 FilterByCustomer(descriptor, customer) &&
                 FilterByStore(descriptor, storeId) &&
-                FilterByPluginGroup(descriptor, group));
+                FilterByPluginGroup(descriptor, group) &&
+                FilterByDependsOn(descriptor, dependsOnSystemName));
 
             //filter by the passed type
             if (typeof(TPlugin) != typeof(IPlugin))
-            {
-                pluginDescriptors = pluginDescriptors
-                    .Where(descriptor => typeof(TPlugin).IsAssignableFrom(descriptor.PluginType))
-                    .OrderBy(descriptor => descriptor.DisplayOrder);
-            }
-            else
-                pluginDescriptors = pluginDescriptors.OrderBy(descriptor => descriptor.Group);
+                pluginDescriptors = pluginDescriptors.Where(descriptor => typeof(TPlugin).IsAssignableFrom(descriptor.PluginType));
+
+            //order by group name
+            pluginDescriptors = pluginDescriptors.OrderBy(descriptor => descriptor.Group)
+                .ThenBy(descriptor => descriptor.DisplayOrder).ToList();
 
             return pluginDescriptors;
         }
@@ -185,7 +202,7 @@ namespace Nop.Services.Plugins
             Customer customer = null, int storeId = 0, string group = null) where TPlugin : class, IPlugin
         {
             return GetPluginDescriptors<TPlugin>(loadMode, customer, storeId, group)
-                .FirstOrDefault(descriptor => descriptor.SystemName.Equals(systemName, StringComparison.InvariantCultureIgnoreCase));
+                .FirstOrDefault(descriptor => descriptor.SystemName.Equals(systemName));
         }
 
         /// <summary>
@@ -250,11 +267,38 @@ namespace Nop.Services.Plugins
         /// </summary>
         /// <param name="systemName">Plugin system name</param>
         /// <param name="customer">Customer</param>
-        public virtual void PreparePluginToInstall(string systemName, Customer customer = null)
+        /// <param name="checkDependencies">Specifies whether to check plugin dependencies</param>
+        public virtual void PreparePluginToInstall(string systemName, Customer customer = null, bool checkDependencies = true)
         {
             //add plugin name to the appropriate list (if not yet contained) and save changes
             if (_pluginsInfo.PluginNamesToInstall.Any(item => item.SystemName == systemName))
                 return;
+
+            var pluginsAfterRestart = _pluginsInfo.InstalledPluginNames.Where(installedSystemName => !_pluginsInfo.PluginNamesToUninstall.Contains(installedSystemName)).ToList();
+            pluginsAfterRestart.AddRange(_pluginsInfo.PluginNamesToInstall.Select(item => item.SystemName));
+
+            if (checkDependencies)
+            {
+                var descriptor = GetPluginDescriptorBySystemName<IPlugin>(systemName, LoadPluginsMode.NotInstalledOnly);
+
+                if (descriptor.DependsOn?.Any() ?? false)
+                {
+                    var dependsOn = descriptor.DependsOn
+                        .Where(dependsOnSystemName => !pluginsAfterRestart.Contains(dependsOnSystemName)).ToList();
+
+                    if (dependsOn.Any())
+                    {
+                        var dependsOnSystemNames = dependsOn.Aggregate((all, current) => $"{all}, {current}");
+
+                        //do not inject services via constructor because it'll cause circular references
+                        var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
+
+                        var errorMessage = string.Format(localizationService.GetResource("Admin.Plugins.Errors.InstallDependsOn"), string.IsNullOrEmpty(descriptor.FriendlyName) ? descriptor.SystemName : descriptor.FriendlyName, dependsOnSystemNames);
+
+                        throw new NopException(errorMessage);
+                    }
+                }
+            }
 
             _pluginsInfo.PluginNamesToInstall.Add((systemName, customer?.CustomerGuid));
             _pluginsInfo.Save();
@@ -270,7 +314,41 @@ namespace Nop.Services.Plugins
             if (_pluginsInfo.PluginNamesToUninstall.Contains(systemName))
                 return;
 
-            var plugin = GetPluginDescriptorBySystemName<IPlugin>(systemName)?.Instance<IPlugin>();
+            var dependentPlugins = GetPluginDescriptors<IPlugin>(dependsOnSystemName: systemName).ToList();
+            var descriptor = GetPluginDescriptorBySystemName<IPlugin>(systemName);
+
+            if (dependentPlugins.Any())
+            {
+                var dependsOn = new List<string>();
+
+                foreach (var dependentPlugin in dependentPlugins)
+                {
+                    if (!_pluginsInfo.InstalledPluginNames.Contains(dependentPlugin.SystemName))
+                        continue;
+                    if(_pluginsInfo.PluginNamesToUninstall.Contains(dependentPlugin.SystemName))
+                        continue;
+
+                    dependsOn.Add(string.IsNullOrEmpty(dependentPlugin.FriendlyName)
+                        ? dependentPlugin.SystemName
+                        : dependentPlugin.FriendlyName);
+                }
+
+                if (dependsOn.Any())
+                {
+                    var dependsOnSystemNames = dependsOn.Aggregate((all, current) => $"{all}, {current}");
+
+                    //do not inject services via constructor because it'll cause circular references
+                    var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
+
+                    var errorMessage = string.Format(localizationService.GetResource("Admin.Plugins.Errors.UninstallDependsOn"),
+                        string.IsNullOrEmpty(descriptor.FriendlyName) ? descriptor.SystemName : descriptor.FriendlyName,
+                        dependsOnSystemNames);
+
+                    throw new NopException(errorMessage);
+                }
+            }
+
+            var plugin = descriptor?.Instance<IPlugin>();
             plugin?.PreparePluginToUninstall();
 
             _pluginsInfo.PluginNamesToUninstall.Add(systemName);
@@ -333,7 +411,7 @@ namespace Nop.Services.Plugins
             var customerActivityService = EngineContext.Current.Resolve<ICustomerActivityService>();
 
             //install plugins
-            foreach (var descriptor in pluginDescriptors)
+            foreach (var descriptor in pluginDescriptors.OrderBy(pluginDescriptor => pluginDescriptor.DisplayOrder))
             {
                 try
                 {
@@ -386,7 +464,7 @@ namespace Nop.Services.Plugins
             var customerActivityService = EngineContext.Current.Resolve<ICustomerActivityService>();
 
             //uninstall plugins
-            foreach (var descriptor in pluginDescriptors)
+            foreach (var descriptor in pluginDescriptors.OrderByDescending(pluginDescriptor => pluginDescriptor.DisplayOrder))
             {
                 try
                 {
