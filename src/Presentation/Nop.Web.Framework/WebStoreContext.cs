@@ -60,7 +60,10 @@ namespace Nop.Web.Framework
 
                 //try to determine the current store by HOST header
                 string host = _httpContextAccessor.HttpContext?.Request?.Headers[HeaderNames.Host];
-
+                
+                if (host.Contains(":"))
+                    host = host.Substring(0, host.IndexOf(":"));
+                
                 var allStores = _storeService.GetAllStores();
                 var store = allStores.FirstOrDefault(s => _storeService.ContainsHostValue(s, host));
 
