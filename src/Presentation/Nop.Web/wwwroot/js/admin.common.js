@@ -278,6 +278,17 @@ function ensureDataTablesRendered() {
   $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
 }
 
+function reloadAllDataTables(itemCount) {
+  //depending on the number of elements, the time for animation of opening the menu should increase
+  var timePause = 300;
+  if (itemCount) {
+    timePause = itemCount * 100;
+  }
+  setTimeout(function () {
+    ensureDataTablesRendered();
+  }, timePause);
+}
+
 //scrolling and hidden DataTables issue workaround
 //More info - https://datatables.net/examples/api/tabs_and_scrolling.html
 $(document).ready(function () {
@@ -292,14 +303,16 @@ $(document).ready(function () {
   });
 });
 
-//reload datatables when sidebar-toggle click
+//Recalculate the column widths
 $(document).ready(function () {
+  // when menu item click
+  $('.treeview').on('click', function (e) {
+    var itemCount = $(e.currentTarget).find('ul').children('li:not([class])').length;
+       
+    reloadAllDataTables(itemCount);
+  });
+  //when sidebar-toggle click
   $('#nopSideBarPusher').on('click', function (e) {
-    $("table[id$='-grid']").each(function (k, v) {
-      var table = this;
-      setTimeout(function () {
-        updateTable($(table));
-      }, 250); 
-    });
+    reloadAllDataTables();
   });
 });
