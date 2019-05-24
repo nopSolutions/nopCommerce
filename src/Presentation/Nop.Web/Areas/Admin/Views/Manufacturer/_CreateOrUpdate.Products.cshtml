@@ -68,7 +68,7 @@
             $(document).ready(function () {
                 $('#btnRefreshProducts').click(function () {
                     //refresh grid
-                    $('#products-grid').DataTable().ajax.reload();
+                    updateTable('#products-grid');
 
                     //return false to don't reload a page
                     return false;

@@ -380,7 +380,7 @@ namespace Nop.Web.Controllers
 
                 foreach (var plugin in plugins)
                 {
-                    pluginService.PreparePluginToInstall(plugin.SystemName);
+                    pluginService.PreparePluginToInstall(plugin.SystemName, checkDependencies: false);
                 }
 
                 //register default permissions

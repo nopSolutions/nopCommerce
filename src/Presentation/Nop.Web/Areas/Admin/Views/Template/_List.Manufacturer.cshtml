@@ -110,7 +110,7 @@
                             success: function (data, textStatus, jqXHR) {
                                 if (data.Result) {
                                     //reload grid
-                                    $('#templates-manufacturer-grid').DataTable().ajax.reload();
+                                    updateTable('#templates-manufacturer-grid');
 
                                     //clear input value
                                     $("#@Html.IdFor(model => model.AddManufacturerTemplate.Name)").val('');

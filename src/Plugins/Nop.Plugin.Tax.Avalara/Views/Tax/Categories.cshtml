@@ -132,7 +132,7 @@
                                             data: postData,
                                             success: function (data, textStatus, jqXHR) {
                                                 if (data.Result) {
-                                                    $('#tax-categories-grid').DataTable().ajax.reload();
+                                                    updateTable('#tax-categories-grid');
                                                 } else {
                                                     //display errors if returned
                                                     display_nop_error(data);

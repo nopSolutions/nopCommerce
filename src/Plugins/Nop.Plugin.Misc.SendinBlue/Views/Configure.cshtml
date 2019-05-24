@@ -469,7 +469,7 @@
                                                     data: postData,
                                                     success: function (data, textStatus, jqXHR) {
                                                         if (data.Result) {
-                                                            $('#sms-grid').DataTable().ajax.reload();
+                                                            updateTable('#sms-grid');
 
                                                             //clear input value
                                                             $("#@Html.IdFor(model => model.AddSms.MessageId)").val('');
