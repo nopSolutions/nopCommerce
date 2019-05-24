@@ -941,6 +941,12 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.DisplayTaxShippingInfoWishlist.Hint">
     <Value>Check to display tax and shipping information on the wishlist page. This option is required in Germany.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Plugins.Errors.UninstallDependsOn">
+    <Value>The following plugins depend on the "{0}" plugin and must be uninstalled beforehand: "{1}"</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Plugins.Errors.InstallDependsOn">
+    <Value>The "{0}" plugin depends on the following plugins which must be installed beforehand: "{1}"</Value>
+  </LocaleResource>   
 </Language>'
 
 CREATE TABLE #LocaleStringResourceTmp
