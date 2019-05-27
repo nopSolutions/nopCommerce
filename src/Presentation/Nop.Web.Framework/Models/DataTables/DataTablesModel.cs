@@ -116,11 +116,6 @@ namespace Nop.Web.Framework.Models.DataTables
         public bool Ordering { get; set; }
 
         /// <summary>
-        /// Determines whether the table header should be fixed when scrolling
-        /// </summary>
-        public bool FixedHeader { get; set; }
-
-        /// <summary>
         /// Gets or sets custom render header function name(js)
         /// See also https://datatables.net/reference/option/headerCallback
         /// </summary>
