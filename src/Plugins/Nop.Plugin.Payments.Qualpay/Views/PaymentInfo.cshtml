@@ -66,7 +66,7 @@
             var selectedBillingCardId = $('#@Html.IdFor(model => model.BillingCardId)').val();
             if (!submitForm && (!selectedBillingCardId || selectedBillingCardId == '@Guid.Empty.ToString()')) {
                 if (!errorsExist && !stepBack) {
-                    $('#qualpay-payment-form-submit').click()
+                    $('#qualpay-payment-form-submit').click();
                 }
                 return false;
             }
