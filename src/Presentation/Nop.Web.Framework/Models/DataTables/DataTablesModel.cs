@@ -22,6 +22,7 @@ namespace Nop.Web.Framework.Models.DataTables
         {
             //set default values
             Info = true;
+            RefreshButton = true;
             ServerSide = true;
             Processing = true;
             Paging = true;
@@ -89,6 +90,11 @@ namespace Nop.Web.Framework.Models.DataTables
         /// Enable or disable information ("1 to n of n entries")
         /// </summary>
         public bool Info { get; set; }
+
+        /// <summary>
+        /// Enable or disable refresh button
+        /// </summary>
+        public bool RefreshButton { get; set; }
 
         /// <summary>
         /// Pagination button display options.
