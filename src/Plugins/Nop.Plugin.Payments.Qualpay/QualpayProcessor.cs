@@ -530,6 +530,11 @@ namespace Nop.Plugin.Payments.Qualpay
         /// </summary>
         public string PaymentMethodDescription => _localizationService.GetResource("Plugins.Payments.Qualpay.PaymentMethodDescription");
 
+        /// <summary>
+        /// Gets a value indicating whether to hide this plugin on the widget list page in the admin area
+        /// </summary>
+        public bool HideInWidgetList => false;
+
         #endregion
     }
 }

@@ -62,7 +62,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get widgets
-            var widgets = _widgetPluginManager.LoadAllPlugins().ToPagedList(searchModel);
+            var widgets = _widgetPluginManager.LoadAllPlugins()
+                .Where(widget => !widget.HideInWidgetList).ToList()
+                .ToPagedList(searchModel);
 
             //prepare grid model
             var model = new WidgetListModel().PrepareToGrid(searchModel, widgets, () =>
