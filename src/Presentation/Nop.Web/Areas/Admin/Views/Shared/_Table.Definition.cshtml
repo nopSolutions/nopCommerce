@@ -12,7 +12,7 @@
     var buttonsPanel = "";
     var infoPanel = "<'col-lg-4 col-xs-12'<'float-lg-right text-center'i>>";
 
-    if (Model.RefreshButton)
+    if (Model.RefreshButton && !Model.IsChildTable)
     {
         buttonsPanel = "<'col-lg-1 col-xs-12'<'float-lg-right text-center data-tables-refresh'B>>";
         infoPanel = "<'col-lg-3 col-xs-12'<'float-lg-right text-center'i>>";
