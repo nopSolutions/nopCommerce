@@ -497,8 +497,7 @@ To change your password <a href="%Customer.PasswordRecoveryURL%">click here</a>.
 INSERT [MessageTemplate] ([Id], [Name], [BccEmailAddresses], [Subject], [Body], [IsActive], [DelayBeforeSend], [DelayPeriodId], [AttachedDownloadId], [EmailAccountId], [LimitedToStores]) VALUES (30, N'Customer.WelcomeMessage', NULL, N'Welcome to %Store.Name%', N'We welcome you to <a href="%Store.URL%"> %Store.Name%</a>.
 <br />
 <br />
-You can now take part in the various services we have to  OFF
-GOer you. Some of these services include:
+You can now take part in the various services we have to  offer you. Some of these services include:
 <br />
 <br />
 Permanent Cart - Any products added to your online cart remain there until you remove them, or check them out.
@@ -2158,7 +2157,6 @@ INSERT [ReturnRequestReason] ([Id], [Name], [DisplayOrder]) VALUES (2, N'Wrong P
 INSERT [ReturnRequestReason] ([Id], [Name], [DisplayOrder]) VALUES (3, N'There Was A Problem With The Product', 3)
 SET IDENTITY_INSERT [ReturnRequestReason]  OFF
 GO
-
 
 SET IDENTITY_INSERT [UrlRecord] ON 
 
