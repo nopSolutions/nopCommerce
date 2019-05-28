@@ -6,10 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Caching;
-using Nop.Core.Domain.Cms;
 using Nop.Core.Domain.Tax;
 using Nop.Plugin.Tax.Avalara.Services;
-using Nop.Services.Cms;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
@@ -34,14 +32,9 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly INotificationService _notificationService;
         private readonly IPermissionService _permissionService;
-        private readonly ISettingService _settingService;
         private readonly IStaticCacheManager _cacheManager;
         private readonly ITaxCategoryService _taxCategoryService;
-        private readonly ITaxModelFactory _taxModelFactory;
         private readonly ITaxPluginManager _taxPluginManager;
-        private readonly IWidgetPluginManager _widgetPluginManager;
-        private readonly TaxSettings _taxSettings;
-        private readonly WidgetSettings _widgetSettings;
 
         #endregion
 
@@ -57,9 +50,7 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
             ITaxCategoryService taxCategoryService,
             ITaxModelFactory taxModelFactory,
             ITaxPluginManager taxPluginManager,
-            IWidgetPluginManager widgetPluginManager,
-            TaxSettings taxSettings,
-            WidgetSettings widgetSettings) : base(permissionService,
+            TaxSettings taxSettings) : base(permissionService,
                 settingService,
                 taxCategoryService,
                 taxModelFactory,
@@ -71,14 +62,9 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
             _localizationService = localizationService;
             _notificationService = notificationService;
             _permissionService = permissionService;
-            _settingService = settingService;
             _cacheManager = cacheManager;
             _taxCategoryService = taxCategoryService;
-            _taxModelFactory = taxModelFactory;
             _taxPluginManager = taxPluginManager;
-            _widgetPluginManager = widgetPluginManager;
-            _taxSettings = taxSettings;
-            _widgetSettings = widgetSettings;
         }
 
         #endregion
@@ -161,40 +147,6 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
             _taxCategoryService.DeleteTaxCategory(taxCategory);
 
             return new NullJsonResult();
-        }
-
-        public override IActionResult MarkAsPrimaryProvider(string systemName)
-        {
-            if (string.IsNullOrEmpty(systemName))
-                return RedirectToAction("Providers", "Tax");
-
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
-                return AccessDeniedView();
-
-            var taxProvider = _taxPluginManager.LoadPluginBySystemName(systemName);
-            if (taxProvider != null)
-            {
-                //mark as primary provider
-                _taxSettings.ActiveTaxProviderSystemName = systemName;
-                _settingService.SaveSetting(_taxSettings);
-
-                //accordingly update widgets of Avalara tax provider
-                var avalaraWidgetIsActive = _widgetPluginManager.IsPluginActive(AvalaraTaxDefaults.SystemName);
-                var avalaraTaxProviderIsActive = _taxSettings.ActiveTaxProviderSystemName.Equals(AvalaraTaxDefaults.SystemName);
-                if (avalaraTaxProviderIsActive)
-                {
-                    if (!avalaraWidgetIsActive)
-                        _widgetSettings.ActiveWidgetSystemNames.Add(AvalaraTaxDefaults.SystemName);
-                }
-                else
-                {
-                    if (avalaraWidgetIsActive)
-                        _widgetSettings.ActiveWidgetSystemNames.Remove(AvalaraTaxDefaults.SystemName);
-                }
-                _settingService.SaveSetting(_widgetSettings);
-            }
-
-            return RedirectToAction("Providers", "Tax");
         }
 
         [HttpPost, ActionName("Categories")]
