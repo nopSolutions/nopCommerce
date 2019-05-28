@@ -284,9 +284,11 @@ function reloadAllDataTables(itemCount) {
   if (itemCount) {
     timePause = itemCount * 100;
   }
+  $('table[class^="table"]').each(function () {
   setTimeout(function () {
     ensureDataTablesRendered();
   }, timePause);
+  });
 }
 
 //scrolling and hidden DataTables issue workaround
