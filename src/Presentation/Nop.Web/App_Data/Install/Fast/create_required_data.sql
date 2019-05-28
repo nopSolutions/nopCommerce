@@ -2043,8 +2043,6 @@ INSERT [ScheduleTask] ([Id], [Name], [Seconds], [Type], [Enabled], [StopOnError]
 INSERT [ScheduleTask] ([Id], [Name], [Seconds], [Type], [Enabled], [StopOnError], [LastStartUtc], [LastEndUtc], [LastSuccessUtc]) VALUES (4, N'Clear cache', 600, N'Nop.Services.Caching.ClearCacheTask, Nop.Services', 0, 0, NULL, NULL, NULL)
 INSERT [ScheduleTask] ([Id], [Name], [Seconds], [Type], [Enabled], [StopOnError], [LastStartUtc], [LastEndUtc], [LastSuccessUtc]) VALUES (5, N'Clear log', 3600, N'Nop.Services.Logging.ClearLogTask, Nop.Services', 0, 0, NULL, NULL, NULL)
 INSERT [ScheduleTask] ([Id], [Name], [Seconds], [Type], [Enabled], [StopOnError], [LastStartUtc], [LastEndUtc], [LastSuccessUtc]) VALUES (6, N'Update currency exchange rates', 3600, N'Nop.Services.Directory.UpdateExchangeRateTask, Nop.Services', 1, 0, NULL, NULL, NULL)
-INSERT [ScheduleTask] ([Id], [Name], [Seconds], [Type], [Enabled], [StopOnError], [LastStartUtc], [LastEndUtc], [LastSuccessUtc]) VALUES (7, N'Synchronization (SendinBlue plugin)', 43200, N'Nop.Plugin.Misc.SendinBlue.Services.SynchronizationTask', 1, 0, NULL, NULL, NULL)
-INSERT [ScheduleTask] ([Id], [Name], [Seconds], [Type], [Enabled], [StopOnError], [LastStartUtc], [LastEndUtc], [LastSuccessUtc]) VALUES (8, N'Renew access token (Square payment)', 1209600, N'Nop.Plugin.Payments.Square.Services.RenewAccessTokenTask', 1, 0, NULL, NULL, NULL)
 SET IDENTITY_INSERT [ScheduleTask]  OFF
 GO
 SET IDENTITY_INSERT [Address] ON 
