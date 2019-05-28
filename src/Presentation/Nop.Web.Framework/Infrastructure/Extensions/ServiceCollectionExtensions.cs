@@ -39,8 +39,6 @@ using Nop.Web.Framework.Mvc.Routing;
 using Nop.Web.Framework.Security.Captcha;
 using Nop.Web.Framework.Themes;
 using StackExchange.Profiling.Storage;
-using WebMarkupMin.AspNet.Brotli;
-using WebMarkupMin.AspNet.Common.Compressors;
 using WebMarkupMin.AspNetCore2;
 using WebMarkupMin.NUglify;
 
@@ -392,7 +390,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                     options.AllowMinificationInDevelopmentEnvironment = true;
                     options.AllowCompressionInDevelopmentEnvironment = true;
                     options.DisableMinification = !EngineContext.Current.Resolve<CommonSettings>().EnableHtmlMinification;
-                    options.DisableCompression = options.DisableMinification;
+                    options.DisableCompression = true;
                     options.DisablePoweredByHttpHeaders = true;
                 })
                 .AddHtmlMinification(options =>
@@ -409,15 +407,6 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                     var settings = options.MinificationSettings;
                     settings.RenderEmptyTagsWithSpace = true;
                     settings.CollapseTagsWithoutContent = true;
-                })
-                .AddHttpCompression(options =>
-                {
-                    options.CompressorFactories = new List<ICompressorFactory>
-                    {
-                        new BrotliCompressorFactory(new BrotliCompressionSettings { Level = 1 }),
-                        new DeflateCompressorFactory(new DeflateCompressionSettings { Level = CompressionLevel.Fastest }),
-                        new GZipCompressorFactory(new GZipCompressionSettings { Level = CompressionLevel.Fastest })
-                    };
                 });
         }
 
