@@ -7,7 +7,12 @@
     Html.SetActiveMenuItemSystemName("Search engine friendly names");
 }
 
-<nop-antiforgery-token/>
+@{
+    const string hideSearchBlockAttributeName = "UrlRecordPage.HideSearchBlock";
+    var hideSearchBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSearchBlockAttributeName);
+}
+
+<nop-antiforgery-token />
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.System.SeNames")
@@ -28,145 +33,116 @@
             @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.SenamesTop })
             <div class="panel panel-default panel-search">
                 <div class="panel-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <div class="col-md-4">
-                                    <nop-label asp-for="SeName"/>
+                    <div class="row search-row @(!hideSearchBlock ? "opened" : "")" data-hideAttribute="@hideSearchBlockAttributeName">
+                        <div class="search-text">@T("Admin.Common.Search")</div>
+                        <div class="icon-search"><i class="fa fa-search" aria-hidden="true"></i></div>
+                        <div class="icon-collapse"><i class="fa fa-angle-down" aria-hidden="true"></i></div>
+                    </div>
+
+                    <div class="search-body @(hideSearchBlock ? "closed" : "")">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="SeName" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-editor asp-for="SeName" />
+                                    </div>
                                 </div>
-                                <div class="col-md-8">
-                                    <nop-editor asp-for="SeName"/>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-md-8 col-md-offset-4">
-                                    <button type="button" id="search-senames" class="btn btn-primary btn-search"><i class="fa fa-search"></i>@T("Admin.Common.Search")</button>
+                                <div class="form-group">
+                                    <div class="col-md-8 col-md-offset-4">
+                                        <button type="button" id="search-senames" class="btn btn-primary btn-search"><i class="fa fa-search"></i>@T("Admin.Common.Search")</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <div id="sename-grid"></div>
-
-                    <script>
-                        $(document).ready(function () {
-                            $("#sename-grid").kendoGrid({
-                                dataSource: {
-                                    type: "json",
-                                    transport: {
-                                        read: {
-                                            url: "@Html.Raw(Url.Action("SeNames", "Common"))",
-                                            type: "POST",
-                                            dataType: "json",
-                                            data: function() {
-                                                var data = {
-                                                    SeName: $('#@Html.IdFor(model => model.SeName)').val()
-                                                };
-                                                addAntiForgeryToken(data);
-                                                return data;
-                                            }
-                                        }
-                                    },
-                                    schema: {
-                                        data: "Data",
-                                        total: "Total",
-                                        errors: "Errors"
-                                    },
-                                    error: function(e) {
-                                        display_kendoui_grid_error(e);
-                                        // Cancel the changes
-                                        this.cancelChanges();
-                                    },
-                                    pageSize: @(Model.PageSize),
-                                    serverPaging: true,
-                                    serverFiltering: true,
-                                    serverSorting: true
-                                },
-                                pageable: {
-                                    refresh: true,
-                                    pageSizes: [@(Model.AvailablePageSizes)],
-                                    @await Html.PartialAsync("_GridPagerMessages")
-                                },
-                                scrollable: false,
-                                dataBound: onDataBound,
-                                columns: [{
-                                    field: "Id",
-                                    headerTemplate: "<input id='mastercheckbox' type='checkbox'/>",
-                                    headerAttributes: { style: "text-align:center" },
-                                    attributes: { style: "text-align:center" },
-                                    template: "<input type='checkbox' value='#=Id#' class='checkboxGroups'/>",
-                                    width: 50
-                                }, {
-                                    field: "Id",
-                                    title: "@T("Admin.System.SeNames.Id")",
-                                    width: 50
-                                }, {
-                                    field: "Name",
-                                    title: "@T("Admin.System.SeNames.Name")",
-                                    width: 300
-                                }, {
-                                    field: "EntityId",
-                                    title: "@T("Admin.System.SeNames.EntityId")",
-                                    width: 50
-                                }, {
-                                    field: "EntityName",
-                                    title: "@T("Admin.System.SeNames.EntityName")",
-                                    width: 100
-                                }, {
-                                    field: "IsActive",
-                                    title: "@T("Admin.System.SeNames.IsActive")",
-                                    width: 50,
-                                    headerAttributes: { style: "text-align:center" },
-                                    attributes: { style: "text-align:center" },
-                                    template: '# if(IsActive) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
-                                }, {
-                                    field: "Language",
-                                    title: "@T("Admin.System.SeNames.Language")",
-                                    width: 100
-                                }, {
-                                    field: "DetailsUrl",
-                                    title: "@T("Admin.System.SeNames.Details")",
-                                    headerAttributes: { style: "text-align:center" },
-                                    attributes: { style: "text-align:center" },
-                                    width: 100,
-                                    template: '# if(DetailsUrl && DetailsUrl.length > 0) {# <a class="btn btn-default" href="#=DetailsUrl#"><i class="fa fa-pencil"></i>@T("Admin.System.SeNames.Details")</a> #} #'
-                                }]
-                            });
-                        });
-                    </script>
+                    @await Html.PartialAsync("Table", new DataTablesModel
+                    {
+                        Name = "sename-grid",
+                        UrlRead = new DataUrl("SeNames", "Common", null),
+                        SearchButtonId = "search-senames",
+                        Length = Model.PageSize,
+                        LengthMenu = Model.AvailablePageSizes,
+                        Filters = new List<FilterParameter>
+                        {
+                            new FilterParameter(nameof(Model.SeName))
+                        },
+                        ColumnCollection = new List<ColumnProperty>
+                        {
+                            new ColumnProperty(nameof(UrlRecordModel.Id))
+                            {
+                                IsMasterCheckBox = true,
+                                Render = new RenderCheckBox("checkbox_senames"),
+                                ClassName = NopColumnClassDefaults.CenterAll,
+                                Width = "50"
+                            },
+                            new ColumnProperty(nameof(UrlRecordModel.Id))
+                            {
+                                Title = T("Admin.System.SeNames.Id").Text,
+                                ClassName = NopColumnClassDefaults.CenterAll,
+                                Width = "50"
+                            },
+                            new ColumnProperty(nameof(UrlRecordModel.Name))
+                            {
+                                Title = T("Admin.System.SeNames.Name").Text,
+                                Width = "300"
+                            },
+                            new ColumnProperty(nameof(UrlRecordModel.EntityId))
+                            {
+                                Title = T("Admin.System.SeNames.EntityId").Text,
+                                Width = "50"
+                            },
+                            new ColumnProperty(nameof(UrlRecordModel.EntityName))
+                            {
+                                Title = T("Admin.System.SeNames.EntityName").Text,
+                                Width = "100"
+                            },
+                            new ColumnProperty(nameof(UrlRecordModel.IsActive))
+                            {
+                                Title = T("Admin.System.SeNames.IsActive").Text,
+                                Width = "50",
+                                ClassName = NopColumnClassDefaults.CenterAll,
+                                Render = new RenderBoolean()
+                            },
+                            new ColumnProperty(nameof(UrlRecordModel.Language))
+                            {
+                                Title = T("Admin.System.SeNames.Language").Text,
+                                Width = "100"
+                            },
+                            new ColumnProperty(nameof(UrlRecordModel.DetailsUrl))
+                            {
+                                Title = T("Admin.System.SeNames.Details").Text,
+                                Width = "100",
+                                ClassName = NopColumnClassDefaults.Button,
+                                Render = new RenderCustom("renderColumnDetailsUrl")
+                            }
+                        }
+                    })
                 </div>
             </div>
             @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.SenamesBottom })
         </div>
     </div>
 </div>
-
 <script>
-    var selectedIds = [];
-
+    function renderColumnDetailsUrl(data, type, row, meta) {
+        if (row.DetailsUrl && row.DetailsUrl.length > 0) {
+            return '<a class="btn btn-default" href="' + row.DetailsUrl + '"><i class="fa fa-pencil"></i>@T("Admin.System.SeNames.Details")</a>';
+        }
+        else {
+            return '';
+        }
+    }
+</script>
+<script>
     $(document).ready(function() {
-        //search button
-        $('#search-senames').click(function() {
-            //search
-            var grid = $('#sename-grid').data('kendoGrid');
-            grid.dataSource.page(1); //new search. Set page size to 1
-            //grid.dataSource.read(); we already loaded the grid above using "page" function
-            //clear selected checkboxes
-            $('.checkboxGroups').attr('checked', false).change();
-            selectedIds = [];
-            return false;
-        });
-
-        $("#@Html.IdFor(model => model.SeName)").keydown(function(event) {
-            if (event.keyCode == 13) {
-                $("#search-senames").click();
-                return false;
-            }
-        });
-
         //"delete selected" button
         $("#delete-selected-action-confirmation-submit-button").bind("click", function () {
             var postData = {
@@ -178,61 +154,18 @@
                 type: "POST",
                 url: "@(Url.Action("DeleteSelectedSeNames", "Common"))",
                 data: postData,
-                complete: function (data) {
-                    //reload grid
-                    var grid = $('#sename-grid').data('kendoGrid');
-                    grid.dataSource.page(1); //new search. Set page size to 1
-                    //grid.dataSource.read(); we already loaded the grid above using "page" function
-                    //clear selected checkboxes
-                    $('.checkboxGroups').attr('checked', false).change();
-                    selectedIds = [];
+                traditional: true,
+                error: function (jqXHR, textStatus, errorThrown) {
+                    $('#deleteSelectedSeNamesFailed-info').text(errorThrown);
+                    $("#deleteSelectedSeNamesFailed").click();
                 },
-                error: function (xhr, ajaxOptions, thrownError) {
-                    alert(thrownError);
-                },
-                traditional: true
+                complete: function (jqXHR, textStatus) {
+                    updateTable('#sename-grid');
+                }
             });
             $('#delete-selected-action-confirmation').modal('toggle');
             return false;
         });
-
-        $('#mastercheckbox').click(function() {
-            $('.checkboxGroups').attr('checked', $(this).is(':checked')).change();
-        });
-
-        //wire up checkboxes.
-        $('#sename-grid').on('change', 'input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]', function(e) {
-            var $check = $(this);
-            var checked = jQuery.inArray($check.val(), selectedIds);
-            if ($check.is(":checked") == true) {
-                if (checked == -1) {
-                    //add id to selectedIds.
-                    selectedIds.push($check.val());
-                }
-            } else if (checked > -1) {
-                //remove id from selectedIds.
-                selectedIds = $.grep(selectedIds, function (item, index) {
-                    return item != $check.val();
-                });
-            }
-            updateMasterCheckbox();
-        });
     });
-
-    function onDataBound(e) {
-        $('#sename-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]').each(function() {
-            var currentId = $(this).val();
-            var checked = jQuery.inArray(currentId, selectedIds);
-            //set checked based on if current checkbox's value is in selectedIds.
-            $(this).attr('checked', checked > -1);
-        });
-
-        updateMasterCheckbox();
-    }
-
-    function updateMasterCheckbox() {
-        var numChkBoxes = $('#sename-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]').length;
-        var numChkBoxesChecked = $('#sename-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]:checked').length;
-        $('#mastercheckbox').attr('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
-    }
 </script>
+<nop-alert asp-alert-id="deleteSelectedSeNamesFailed" />

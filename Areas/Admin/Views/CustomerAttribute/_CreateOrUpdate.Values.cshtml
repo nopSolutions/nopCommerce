@@ -1,126 +1,80 @@
 @model CustomerAttributeModel
 
-<div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerAttributeDetailsValuesTop, additionalData = Model })
-    <div class="panel panel-default">
-        @if (Model.Id > 0)
-        {
-            /*TODO display the following warning if values are not supported by selected attribute control type - 'Values are not required for this attribute control type' */
-            
-            <div class="panel-body">
-                <div id="customerattributevalues-grid"></div>
+@if (Model.Id > 0)
+{
+    /*TODO display the following warning if values are not supported by selected attribute control type - 'Values are not required for this attribute control type' */
 
-                <script>
-                    $(document).ready(function () {
-                        $("#customerattributevalues-grid").kendoGrid({
-                            dataSource: {
-                                type: "json",
-                                transport: {
-                                    read: {
-                                        url: "@Html.Raw(Url.Action("ValueList", "CustomerAttribute"))",
-                                        type: "POST",
-                                        dataType: "json",
-                                        data: function() {
-                                            var data = {
-                                                CustomerAttributeId: '@(Model.Id)'
-                                            };
-                                            addAntiForgeryToken(data);
-                                            return data;
-                                        }
-                                    },
-                                    destroy: {
-                                        url: "@Html.Raw(Url.Action("ValueDelete", "CustomerAttribute"))",
-                                        type: "POST",
-                                        dataType: "json",
-                                        data: addAntiForgeryToken
-                                    }
-                                },
-                                schema: {
-                                    data: "Data",
-                                    total: "Total",
-                                    errors: "Errors",
-                                    model: {
-                                        id: "Id"
-                                    }
-                                },
-                                error: function (e) {
-                                    display_kendoui_grid_error(e);
-                                    // Cancel the changes
-                                    this.cancelChanges();
-                                },
-                                pageSize: @(Model.CustomerAttributeValueSearchModel.PageSize),
-                                serverPaging: true,
-                                serverFiltering: true,
-                                serverSorting: true
-                            },
-                            pageable: {
-                                refresh: true,
-                                pageSizes: [@(Model.CustomerAttributeValueSearchModel.AvailablePageSizes)],
-                                @await Html.PartialAsync("_GridPagerMessages")
-                            },
-                            editable: {
-                                confirmation: "@T("Admin.Common.DeleteConfirmation")",
-                                mode: "inline"
-                            },
-                            scrollable: false,
-                            columns: [{
-                                field: "Name",
-                                title: "@T("Admin.Customers.CustomerAttributes.Values.Fields.Name")"
-                            }, {
-                                field: "IsPreSelected",
-                                title: "@T("Admin.Customers.CustomerAttributes.Values.Fields.IsPreSelected")",
-                                width: 100,
-                                headerAttributes: { style: "text-align:center" },
-                                attributes: { style: "text-align:center" },
-                                template: '# if(IsPreSelected) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
-                            }, {
-                                field: "DisplayOrder",
-                                title: "@T("Admin.Customers.CustomerAttributes.Values.Fields.DisplayOrder")",
-                                width: 100
-                            }, {
-                                field: "Id",
-                                title: "@T("Admin.Common.Edit")",
-                                width: 100,
-                                headerAttributes: { style: "text-align:center" },
-                                attributes: { style: "text-align:center" },
-                                template: "<button onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/CustomerAttribute/ValueEditPopup/")#=Id#?btnId=btnRefresh&formId=customerattribute-form', 800, 400, true); return false;\" class='btn btn-default'><i class=\"fa fa-pencil\"></i>@T("Admin.Common.Edit")</button>"
-                            }, {
-                                command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
-                                title: "@T("Admin.Common.Delete")",
-                                width: 100,
-                                headerAttributes: { style: "text-align:center" },
-                                attributes: { style: "text-align:center" }
-                            }]
-                        });
-                    });
-                </script>
-            </div>
-            <div class="panel-footer">
-                <button type="submit" id="btnAddNewValue" onclick="javascript:OpenWindow('@(Url.Action("ValueCreatePopup", "CustomerAttribute", new { customerAttributeId = Model.Id, btnId = "btnRefresh", formId = "customerattribute-form" }))', 800, 400, true); return false;" class="btn btn-primary">
-                    @T("Admin.Customers.CustomerAttributes.Values.AddNew")
-                </button>
-                <input type="submit" id="btnRefresh" style="display: none" />
-                <script>
-                    $(document).ready(function () {
-                        $('#btnRefresh').click(function () {
-                            //refresh grid
-                            var grid = $("#customerattributevalues-grid").data('kendoGrid');
-                            grid.dataSource.read();
-
-                            //return false to don't reload a page
-                            return false;
-                        });
-                    });
-                </script>
-            </div>
-        }
-        else
+    <div class="panel-body">
+        @await Html.PartialAsync("Table", new DataTablesModel
         {
-            <div class="panel-body">
-                @T("Admin.Customers.CustomerAttributes.Values.SaveBeforeEdit")
-            </div>
-        }
+            Name = "customerattributevalues-grid",
+            UrlRead = new DataUrl("ValueList", "CustomerAttribute", new RouteValueDictionary { [nameof(Model.CustomerAttributeValueSearchModel.CustomerAttributeId)] = Model.CustomerAttributeValueSearchModel.CustomerAttributeId }),
+            UrlDelete = new DataUrl("ValueDelete", "CustomerAttribute", null),
+            Length = Model.CustomerAttributeValueSearchModel.PageSize,
+            LengthMenu = Model.CustomerAttributeValueSearchModel.AvailablePageSizes,
+            ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(CustomerAttributeValueModel.Name))
+                {
+                    Title = T("Admin.Customers.CustomerAttributes.Values.Fields.Name").Text
+                },
+                new ColumnProperty(nameof(CustomerAttributeValueModel.IsPreSelected))
+                {
+                    Title = T("Admin.Customers.CustomerAttributes.Values.Fields.IsPreSelected").Text,
+                    Width = "100",
+                    ClassName = NopColumnClassDefaults.CenterAll,
+                    Render = new RenderBoolean()
+                },
+                new ColumnProperty(nameof(CustomerAttributeValueModel.DisplayOrder))
+                {
+                    Title = T("Admin.Customers.CustomerAttributes.Values.Fields.DisplayOrder").Text,
+                    Width = "100",
+                    ClassName =  NopColumnClassDefaults.CenterAll
+                },
+                new ColumnProperty(nameof(CustomerAttributeValueModel.Id))
+                {
+                    Title = T("Admin.Common.Edit").Text,
+                    Width = "100",
+                    ClassName =  NopColumnClassDefaults.Button,
+                    Render = new RenderCustom("renderColumnEdit")
+                },
+                new ColumnProperty(nameof(CustomerAttributeValueModel.Id))
+                {
+                    Title = T("Admin.Common.Delete").Text,
+                    Width = "100",
+                    Render = new RenderButtonRemove(T("Admin.Common.Delete").Text),
+                    ClassName =  NopColumnClassDefaults.Button
+                }
+            }
+        })
+    
+        <script>
+            function renderColumnEdit(data, type, row, meta) {
+                return '<button onclick=\"javascript:OpenWindow(\'@Url.Content("~/Admin/CustomerAttribute/ValueEditPopup/")' + data + '?btnId=btnRefresh&formId=customerattribute-form\', 800, 400, true); return false;\" class="btn btn-default"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</button>';
+            }
+        </script>    
     </div>
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerAttributeDetailsValuesBottom, additionalData = Model })
-</div>
+    <div class="panel-footer">
+        <button type="submit" id="btnAddNewValue" onclick="javascript:OpenWindow('@(Url.Action("ValueCreatePopup", "CustomerAttribute", new { customerAttributeId = Model.Id, btnId = "btnRefresh", formId = "customerattribute-form" }))', 800, 400, true); return false;" class="btn btn-primary">
+            @T("Admin.Customers.CustomerAttributes.Values.AddNew")
+        </button>
+        <input type="submit" id="btnRefresh" style="display: none" />
+        <script>
+            $(document).ready(function () {
+                $('#btnRefresh').click(function () {
+                    //refresh grid
+                     updateTable('#customerattributevalues-grid');
 
+                    //return false to don't reload a page
+                    return false;
+                });
+            });
+        </script>
+    </div>
+}
+else
+{
+    <div class="panel-body">
+        @T("Admin.Customers.CustomerAttributes.Values.SaveBeforeEdit")
+    </div>
+}

@@ -1,13 +1,15 @@
 ﻿@model IList<ProductAttributeCombinationModel.ProductAttributeModel>
 
 @using Nop.Core.Domain.Catalog;
+@using Nop.Web.Framework.Controllers;
+
 @inject CatalogSettings catalogSettings
 
 @if (Model.Count > 0)
 {
     foreach (var attribute in Model)
     {
-        var controlId = $"product_attribute_{attribute.Id}";
+        var controlId = $"{NopAttributePrefixDefaults.Product}{attribute.Id}";
         var textPrompt = !string.IsNullOrEmpty(attribute.TextPrompt) ? attribute.TextPrompt : attribute.Name;
         <div class="form-group">
             <div class="col-sm-4">

@@ -1,143 +1,76 @@
 ﻿@using Nop.Core.Domain.Common
-@model Nop.Plugin.Tax.FixedOrByCountryStateZip.Models.ConfigurationModel
+@using Nop.Plugin.Tax.FixedOrByCountryStateZip.Models
+@using Nop.Web.Framework.Models.DataTables
+@model ConfigurationModel
 @inject AdminAreaSettings adminAreaSettings
 
 @{
     Layout = "";
-
-    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
-    var gridPageSizes = adminAreaSettings.GridPageSizes;
 }
 
 <div class="panel-group advanced-setting">
     <div class="panel panel-default">
         <div class="panel-body">
-            <div id="tax-countrystatezip-grid"></div>
-            <script>
-                $(document)
-                    .ready(function() {
-                        $("#tax-countrystatezip-grid")
-                            .kendoGrid({
-                                dataSource: {
-                                    type: "json",
-                                    transport: {
-                                        read: {
-                                            url:
-                                                "@Html.Raw(Url.Action("RatesByCountryStateZipList", "FixedOrByCountryStateZip"))",
-                                            type: "POST",
-                                            dataType: "json",
-                                            data: addAntiForgeryToken
-                                        },
-                                        update: {
-                                            url:
-                                                "@Html.Raw(Url.Action("UpdateRateByCountryStateZip", "FixedOrByCountryStateZip"))",
-                                            type: "POST",
-                                            dataType: "json",
-                                            data: addAntiForgeryToken
-                                        },
-                                        destroy: {
-                                            url:
-                                                "@Html.Raw(Url.Action("DeleteRateByCountryStateZip", "FixedOrByCountryStateZip"))",
-                                            type: "POST",
-                                            dataType: "json",
-                                            data: addAntiForgeryToken
-                                        }
-                                    },
-                                    schema: {
-                                        data: "Data",
-                                        total: "Total",
-                                        errors: "Errors",
-                                        model: {
-                                            id: "Id",
-                                            fields: {
-                                                StoreName: { editable: false, type: "string" },
-                                                CountryName: { editable: false, type: "string" },
-                                                StateProvinceName: { editable: false, type: "string" },
-                                                Zip: { editable: true, type: "string" },
-                                                TaxCategoryName: { editable: false, type: "string" },
-                                                IsPrimaryDimension: { editable: false, type: "boolean" },
-                                                Id: { editable: false, type: "number" }
-                                            }
-                                        }
-                                    },
-                                    requestEnd: function(e) {
-                                        if (e.type == "update") {
-                                            this.read();
-                                        }
-                                    },
-                                    error: function(e) {
-                                        display_kendoui_grid_error(e);
-                                        // Cancel the changes
-                                        this.cancelChanges();
-                                    },
-                                    pageSize: @(defaultGridPageSize),
-                                    serverPaging: true,
-                                    serverFiltering: true,
-                                    serverSorting: true
-                                },
-                                pageable: {
-                                    refresh: true,
-                                    pageSizes: [@(gridPageSizes)],
-                                    @await Html.PartialAsync("~/Areas/Admin/Views/Shared/_GridPagerMessages.cshtml")
-                                },
-                                editable: {
-                                    confirmation: "@T("Admin.Common.DeleteConfirmation")",
-                                    mode: "inline"
-                                },
-                                scrollable: false,
-                                columns: [
-                                    {
-                                        field: "StoreName",
-                                        title: "@T("Plugins.Tax.FixedOrByCountryStateZip.Fields.Store")",
-                                        width: 300
-                                    }, {
-                                        field: "CountryName",
-                                        title: "@T("Plugins.Tax.FixedOrByCountryStateZip.Fields.Country")",
-                                        width: 200
-                                    }, {
-                                        field: "StateProvinceName",
-                                        title: "@T("Plugins.Tax.FixedOrByCountryStateZip.Fields.StateProvince")",
-                                        width: 200
-                                    }, {
-                                        field: "Zip",
-                                        title: "@T("Plugins.Tax.FixedOrByCountryStateZip.Fields.Zip")",
-                                        width: 200
-                                    }, {
-                                        field: "TaxCategoryName",
-                                        title: "@T("Plugins.Tax.FixedOrByCountryStateZip.Fields.TaxCategory")",
-                                        width: 200
-                                    }, {
-                                        field: "Percentage",
-                                        title: "@T("Plugins.Tax.FixedOrByCountryStateZip.Fields.Percentage")",
-                                        width: 100,
-                                        editor: function(container, options) {
-                                            $('<input name="' + options.field + '"/>')
-                                                .appendTo(container)
-                                                .kendoNumericTextBox({
-                                                    format: "{0:n4}",
-                                                    decimals: 4
-                                                });
-                                        }
-                                    }, {
-                                        command: [
-                                            {
-                                                name: "edit",
-                                                text: {
-                                                    edit: "@T("Admin.Common.Edit")",
-                                                    update: "@T("Admin.Common.Update")",
-                                                    cancel: "@T("Admin.Common.Cancel")"
-                                                }
-                                            }, {
-                                                name: "destroy",
-                                                text: "@T("Admin.Common.Delete")"
-                                            }
-                                        ],
-                                        width: 200
-                                    }
-                                ]
-                            });
-                    });
-            </script>
+            @await Html.PartialAsync("Table", new DataTablesModel
+           {
+               Name = "tax-countrystatezip-grid",
+               UrlRead = new DataUrl("RatesByCountryStateZipList", "FixedOrByCountryStateZip", null),
+               UrlUpdate = new DataUrl("UpdateRateByCountryStateZip", "FixedOrByCountryStateZip", null),
+               UrlDelete = new DataUrl("DeleteRateByCountryStateZip", "FixedOrByCountryStateZip", null),
+               Length = Model.PageSize,
+               LengthMenu = Model.AvailablePageSizes,
+               ColumnCollection = new List<ColumnProperty>
+               {
+                   new ColumnProperty(nameof(CountryStateZipModel.StoreName))
+                   {
+                       Title = T("Plugins.Tax.FixedOrByCountryStateZip.Fields.Store").Text,
+                       Width = "300"
+                   },
+                   new ColumnProperty(nameof(CountryStateZipModel.CountryName))
+                   {
+                       Title = T("Plugins.Tax.FixedOrByCountryStateZip.Fields.Country").Text,
+                       Width = "200"
+                   },
+                   new ColumnProperty(nameof(CountryStateZipModel.StateProvinceName))
+                   {
+                       Title = T("Plugins.Tax.FixedOrByCountryStateZip.Fields.StateProvince").Text,
+                       Width = "200"
+                   },
+                   new ColumnProperty(nameof(CountryStateZipModel.Zip))
+                   {
+                       Title = T("Plugins.Tax.FixedOrByCountryStateZip.Fields.Zip").Text,
+                       Width = "200",
+                       Editable = true,
+                       EditType = EditType.String
+                   },
+                   new ColumnProperty(nameof(CountryStateZipModel.TaxCategoryName))
+                   {
+                       Title = T("Plugins.Tax.FixedOrByCountryStateZip.Fields.TaxCategory").Text,
+                       Width = "200"
+                   },
+                   new ColumnProperty(nameof(CountryStateZipModel.Percentage))
+                   {
+                       Title = T("Plugins.Tax.FixedOrByCountryStateZip.Fields.Percentage").Text,
+                       Width = "100",
+                       Editable = true,
+                       EditType = EditType.Number
+                   },
+                   new ColumnProperty(nameof(CountryStateZipModel.Id))
+                   {
+                       Title = T("Admin.Common.Edit").Text,
+                       Width = "200",
+                       ClassName =  NopColumnClassDefaults.Button,
+                       Render = new RenderButtonsInlineEdit()
+                   },
+                   new ColumnProperty(nameof(CountryStateZipModel.Id))
+                   {
+                       Title = T("Admin.Common.Delete").Text,
+                       ClassName = NopColumnClassDefaults.Button,
+                       Render = new RenderButtonRemove(T("Admin.Common.Delete").Text),
+                       Width = "100"
+                   }
+               }
+           })
         </div>
     </div>
 </div>
@@ -159,10 +92,12 @@
                                     $.ajax({
                                         cache: false,
                                         type: "GET",
-                                        url:
-                                            "@(Url.Action("GetStatesByCountryId", "Country"))",
-                                        data: { "countryId": selectedItem, "addAsterisk": "true" },
-                                        success: function(data) {
+                                        url: "@(Url.Action("GetStatesByCountryId", "Country"))",
+                                        data: {
+                                            "countryId": selectedItem,
+                                            "addAsterisk": "true"
+                                        },
+                                        success: function (data, textStatus, jqXHR) {
                                             ddlStates.html('');
                                             $.each(data,
                                                 function(id, option) {
@@ -171,8 +106,8 @@
                                                             .html(option.name));
                                                 });
                                         },
-                                        error: function(xhr, ajaxOptions, thrownError) {
-                                            alert('Failed to retrieve states.');
+                                        error: function (jqXHR, textStatus, errorThrown) {
+                                            $("#getStatesByCountryIdAlert").click();
                                         }
                                     });
                                 });
@@ -249,17 +184,15 @@
 
                                             $.ajax({
                                                 cache: false,
-                                                type: 'POST',
-                                                url:
-                                                    '@Url.Action("AddRateByCountryStateZip", "FixedOrByCountryStateZip")',
+                                                type: "POST",
+                                                url: "@Url.Action("AddRateByCountryStateZip", "FixedOrByCountryStateZip")",
                                                 data: postData,
-                                                dataType: 'json',
-                                                success: function(data) {
-                                                    var grid = $("#tax-countrystatezip-grid").data('kendoGrid');
-                                                    grid.dataSource.read();
+                                                dataType: "json",
+                                                success: function (data, textStatus, jqXHR) {
+                                                    updateTable('#tax-countrystatezip-grid');
                                                 },
-                                                error: function(xhr, ajaxOptions, thrownError) {
-                                                    alert('Failed to add record.');
+                                                error: function (jqXHR, textStatus, errorThrown) {
+                                                    $("#addRateByCountryStateZipAlert").click();
                                                 }
                                             });
                                             return false;
@@ -272,3 +205,5 @@
         </div>
     </form>
 </div>
+<nop-alert asp-alert-id="getStatesByCountryIdAlert" asp-alert-message="@T("Admin.Common.Alert.States.Failed")" />
+<nop-alert asp-alert-id="addRateByCountryStateZipAlert" asp-alert-message="@T("Admin.Common.Alert.Add.Error")" />

@@ -7,7 +7,12 @@
     Html.SetActiveMenuItemSystemName("Gift cards");
 }
 
-<nop-antiforgery-token/>
+@{
+    const string hideSearchBlockAttributeName = "GiftCardsPage.HideSearchBlock";
+    var hideSearchBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSearchBlockAttributeName);
+}
+
+<nop-antiforgery-token />
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.GiftCards")
@@ -26,39 +31,50 @@
         <div class="panel-group">
             <div class="panel panel-default panel-search">
                 <div class="panel-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <div class="col-md-4">
-                                    <nop-label asp-for="ActivatedId"/>
+                    <div class="row search-row @(!hideSearchBlock ? "opened" : "")" data-hideAttribute="@hideSearchBlockAttributeName">
+                        <div class="search-text">@T("Admin.Common.Search")</div>
+                        <div class="icon-search"><i class="fa fa-search" aria-hidden="true"></i></div>
+                        <div class="icon-collapse"><i class="fa fa-angle-down" aria-hidden="true"></i></div>
+                    </div>
+
+                    <div class="search-body @(hideSearchBlock ? "closed" : "")">
+
+                        <div class="row">
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="RecipientName" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-editor asp-for="RecipientName" />
+                                    </div>
                                 </div>
-                                <div class="col-md-8">
-                                    <nop-select asp-for="ActivatedId" asp-items="Model.ActivatedList" />
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="ActivatedId" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-select asp-for="ActivatedId" asp-items="Model.ActivatedList" />
+                                    </div>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <div class="col-md-4">
-                                    <nop-label asp-for="CouponCode"/>
-                                </div>
-                                <div class="col-md-8">
-                                    <nop-editor asp-for="CouponCode"/>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-md-4">
-                                    <nop-label asp-for="RecipientName"/>
-                                </div>
-                                <div class="col-md-8">
-                                    <nop-editor asp-for="RecipientName"/>
+                            <div class="col-md-7">
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="CouponCode" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-editor asp-for="CouponCode" />
+                                    </div>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <div class="col-md-8 col-md-offset-4">
-                                    <button type="button" id="search-giftcards" class="btn btn-primary btn-search">
-                                        <i class="fa fa-search"></i>
-                                        @T("Admin.Common.Search")
-                                    </button>
-                                </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-7 col-md-offset-5">
+                                <button type="button" id="search-giftcards" class="btn btn-primary btn-search">
+                                    <i class="fa fa-search"></i>
+                                    @T("Admin.Common.Search")
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -67,108 +83,59 @@
 
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <div id="giftcards-grid"></div>
-
-                    <script>
-                        $(document).ready(function () {
-                            $("#giftcards-grid").kendoGrid({
-                                dataSource: {
-                                    type: "json",
-                                    transport: {
-                                        read: {
-                                            url: "@Html.Raw(Url.Action("GiftCardList", "GiftCard"))",
-                                            type: "POST",
-                                            dataType: "json",
-                                            data: function() {
-                                                var data = {
-                                                    ActivatedId: $('#@Html.IdFor(model => model.ActivatedId)').val(),
-                                                    CouponCode: $('#@Html.IdFor(model => model.CouponCode)').val(),
-                                                    RecipientName: $('#@Html.IdFor(model => model.RecipientName)').val()
-                                                };
-                                                addAntiForgeryToken(data);
-                                                return data;
-                                            }
-                                        }
-                                    },
-                                    schema: {
-                                        data: "Data",
-                                        total: "Total",
-                                        errors: "Errors"
-                                    },
-                                    error: function(e) {
-                                        display_kendoui_grid_error(e);
-                                        // Cancel the changes
-                                        this.cancelChanges();
-                                    },
-                                    pageSize: @(Model.PageSize),
-                                    serverPaging: true,
-                                    serverFiltering: true,
-                                    serverSorting: true
-                                },
-                                pageable: {
-                                    refresh: true,
-                                    pageSizes: [@(Model.AvailablePageSizes)],
-                                    @await Html.PartialAsync("_GridPagerMessages")
-                                },
-                                editable: {
-                                    confirmation: "@T("Admin.Common.DeleteConfirmation")",
-                                    mode: "inline"
-                                },
-                                scrollable: false,
-                                columns: [{
-                                    field: "AmountStr",
-                                    title: "@T("Admin.GiftCards.Fields.Amount")"
-                                }, {
-                                    field: "RemainingAmountStr",
-                                    title: "@T("Admin.GiftCards.Fields.RemainingAmount")"
-                                }, {
-                                    field: "GiftCardCouponCode",
-                                    title: "@T("Admin.GiftCards.Fields.GiftCardCouponCode")"
-                                }, {
-                                    field: "RecipientName",
-                                    title: "@T("Admin.GiftCards.Fields.RecipientName")"
-                                }, {
-                                    field: "IsGiftCardActivated",
-                                    title: "@T("Admin.GiftCards.Fields.IsGiftCardActivated")",
-                                    width: 200,
-                                    headerAttributes: { style: "text-align:center" },
-                                    attributes: { style: "text-align:center" },
-                                    template: '# if(IsGiftCardActivated) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
-                                }, {
-                                    field: "CreatedOn",
-                                    title: "@T("Admin.GiftCards.Fields.CreatedOn")",
-                                    width: 200,
-                                    type: "date",
-                                    format: "{0:G}"
-                                }, {
-                                    field: "Id",
-                                    title: "@T("Admin.Common.Edit")",
-                                    width: 100,
-                                    headerAttributes: { style: "text-align:center" },
-                                    attributes: { style: "text-align:center" },
-                                    template: '<a class="btn btn-default" href="Edit/#=Id#"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>'
-                                }]
-                            });
-                        });
-                    </script>
-
-                    <script>
-                        $(document).ready(function () {
-                            $('#search-giftcards').click(function () {
-                                var grid = $('#giftcards-grid').data('kendoGrid');
-                                grid.dataSource.page(1); //new search. Set page size to 1
-                                //grid.dataSource.read(); we already loaded the grid above using "page" function
-                                return false;
-                            });
-                        });
-
-                        $("#@Html.IdFor(model => model.CouponCode)").keydown(function (event) {
-                            if (event.keyCode == 13) {
-                                $("#search-giftcards").click();
-                                return false;
+                    @await Html.PartialAsync("Table", new DataTablesModel
+                    {
+                        Name = "giftcards-grid",
+                        UrlRead = new DataUrl("GiftCardList", "GiftCard", null),
+                        SearchButtonId = "search-giftcards",
+                        Length = Model.PageSize,
+                        LengthMenu = Model.AvailablePageSizes,
+                        Filters = new List<FilterParameter>
+                        {
+                            new FilterParameter(nameof(Model.ActivatedId)),
+                            new FilterParameter(nameof(Model.CouponCode)),
+                            new FilterParameter(nameof(Model.RecipientName))
+                        },
+                        ColumnCollection = new List<ColumnProperty>
+                        {
+                            new ColumnProperty(nameof(GiftCardModel.AmountStr))
+                            {
+                                Title = T("Admin.GiftCards.Fields.Amount").Text
+                            },
+                            new ColumnProperty(nameof(GiftCardModel.RemainingAmountStr))
+                            {
+                                Title = T("Admin.GiftCards.Fields.RemainingAmount").Text
+                            },
+                            new ColumnProperty(nameof(GiftCardModel.GiftCardCouponCode))
+                            {
+                                Title = T("Admin.GiftCards.Fields.GiftCardCouponCode").Text
+                            },
+                            new ColumnProperty(nameof(GiftCardModel.RecipientName))
+                            {
+                                Title = T("Admin.GiftCards.Fields.RecipientName").Text
+                            },
+                            new ColumnProperty(nameof(GiftCardModel.IsGiftCardActivated))
+                            {
+                                Title = T("Admin.GiftCards.Fields.IsGiftCardActivated").Text,
+                                Width = "200",
+                                ClassName =  NopColumnClassDefaults.CenterAll,
+                                Render = new RenderBoolean()
+                            },
+                            new ColumnProperty(nameof(GiftCardModel.CreatedOn))
+                            {
+                                Title = T("Admin.GiftCards.Fields.CreatedOn").Text,
+                                Width = "200",
+                                Render = new RenderDate()
+                            },
+                            new ColumnProperty(nameof(GiftCardModel.Id))
+                            {
+                                Title = T("Admin.Common.Edit").Text,
+                                Width = "100",
+                                ClassName =  NopColumnClassDefaults.Button,
+                                Render = new RenderButtonEdit(new DataUrl("Edit"))
                             }
-                        });
-                    </script>
+                        }
+                    })
                 </div>
             </div>
         </div>

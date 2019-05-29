@@ -8,6 +8,10 @@
     Html.SetActiveMenuItemSystemName("Shipments");
 }
 
+@{
+    const string hideSearchBlockAttributeName = "ShipmentsPage.HideSearchBlock";
+    var hideSearchBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSearchBlockAttributeName);
+}
 
 <form asp-controller="Order" asp-action="ShipmentList" method="post">
     <div class="content-header clearfix">
@@ -53,268 +57,224 @@
             <div class="panel-group">
                 <div class="panel panel-default panel-search">
                     <div class="panel-body">
-                        <div class="row">
-                            <div class="col-md-5">
-                                <div class="form-group">
-                                    <div class="col-md-4">
-                                        <nop-label asp-for="StartDate" />
-                                    </div>
-                                    <div class="col-md-8">
-                                        <nop-editor asp-for="StartDate" />
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="col-md-4">
-                                        <nop-label asp-for="EndDate" />
-                                    </div>
-                                    <div class="col-md-8">
-                                        <nop-editor asp-for="EndDate" />
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="col-md-4">
-                                        <nop-label asp-for="TrackingNumber" />
-                                    </div>
-                                    <div class="col-md-8">
-                                        <nop-editor asp-for="TrackingNumber" />
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="col-md-4">
-                                        <nop-label asp-for="WarehouseId" />
-                                    </div>
-                                    <div class="col-md-8">
-                                        <nop-select asp-for="WarehouseId" asp-items="Model.AvailableWarehouses" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-7">
-                                <div class="form-group">
-                                    <div class="col-md-4">
-                                        <nop-label asp-for="CountryId" />
-                                    </div>
-                                    <div class="col-md-8">
-                                        <nop-select asp-for="CountryId" asp-items="Model.AvailableCountries" />
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="col-md-4">
-                                        <nop-label asp-for="StateProvinceId" />
-                                    </div>
-                                    <div class="col-md-8">
-                                        <nop-select asp-for="StateProvinceId" asp-items="Model.AvailableStates" />
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="col-md-4">
-                                        <nop-label asp-for="County" />
-                                    </div>
-                                    <div class="col-md-8">
-                                        <nop-editor asp-for="County" />
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="col-md-4">
-                                        <nop-label asp-for="City" />
-                                    </div>
-                                    <div class="col-md-8">
-                                        <nop-editor asp-for="City" />
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="col-md-4">
-                                        <nop-label asp-for="LoadNotShipped" />
-                                    </div>
-                                    <div class="col-md-8">
-                                        <nop-editor asp-for="LoadNotShipped" />
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="row search-row @(!hideSearchBlock ? "opened" : "")" data-hideAttribute="@hideSearchBlockAttributeName">
+                            <div class="search-text">@T("Admin.Common.Search")</div>
+                            <div class="icon-search"><i class="fa fa-search" aria-hidden="true"></i></div>
+                            <div class="icon-collapse"><i class="fa fa-angle-down" aria-hidden="true"></i></div>
+                        </div>
+
+                        <div class="search-body @(hideSearchBlock ? "closed" : "")">
                             <div class="row">
-                                <div class="col-md-7 col-md-offset-5">
-                                    <button type="button" id="search-shipments" class="btn btn-primary btn-search">
-                                        <i class="fa fa-search"></i>
-                                        @T("Admin.Common.Search")
-                                    </button>
+                                <div class="col-md-5">
+                                    <div class="form-group">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="StartDate" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-editor asp-for="StartDate" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="EndDate" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-editor asp-for="EndDate" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="TrackingNumber" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-editor asp-for="TrackingNumber" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="WarehouseId" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-select asp-for="WarehouseId" asp-items="Model.AvailableWarehouses" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-7">
+                                    <div class="form-group">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="CountryId" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-select asp-for="CountryId" asp-items="Model.AvailableCountries" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="StateProvinceId" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-select asp-for="StateProvinceId" asp-items="Model.AvailableStates" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="County" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-editor asp-for="County" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="City" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-editor asp-for="City" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="LoadNotShipped" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-editor asp-for="LoadNotShipped" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-7 col-md-offset-5">
+                                        <button type="button" id="search-shipments" class="btn btn-primary btn-search">
+                                            <i class="fa fa-search"></i>
+                                            @T("Admin.Common.Search")
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                        <div id="shipments-grid"></div>
-
-                        <script>
-                            $(document).ready(function () {
-                                $("#shipments-grid").kendoGrid({
-                                    dataSource: {
-                                        type: "json",
-                                        transport: {
-                                            read: {
-                                                url: "@Html.Raw(Url.Action("ShipmentListSelect", "Order"))",
-                                                type: "POST",
-                                                dataType: "json",
-                                                data: function() {
-                                                    var data = {
-                                                        StartDate: $('#@Html.IdFor(model => model.StartDate)').val(),
-                                                        EndDate: $('#@Html.IdFor(model => model.EndDate)').val(),
-                                                        TrackingNumber: $('#@Html.IdFor(model => model.TrackingNumber)').val(),
-                                                        CountryId: $('#@Html.IdFor(model => model.CountryId)').val(),
-                                                        StateProvinceId: $('#@Html.IdFor(model => model.StateProvinceId)').val(),
-                                                        County: $('#@Html.IdFor(model => model.County)').val(),
-                                                        City: $('#@Html.IdFor(model => model.City)').val(),
-                                                        WarehouseId: $('#@Html.IdFor(model => model.WarehouseId)').val(),
-                                                        LoadNotShipped: $('#@Html.IdFor(model => model.LoadNotShipped)').is(':checked')
-                                                    };
-                                                    addAntiForgeryToken(data);
-                                                    return data;
-                                                }
-                                            }
-                                        },
-                                        schema: {
-                                            data: "Data",
-                                            total: "Total",
-                                            errors: "Errors"
-                                        },
-                                        error: function(e) {
-                                            display_kendoui_grid_error(e);
-                                            // Cancel the changes
-                                            this.cancelChanges();
-                                        },
-                                        pageSize: @(Model.PageSize),
-                                        serverPaging: true,
-                                        serverFiltering: true,
-                                        serverSorting: true
-                                    },
-                                    pageable: {
-                                        refresh: true,
-                                        pageSizes: [@(Model.AvailablePageSizes)],
-                                        @await Html.PartialAsync("_GridPagerMessages")
-                                    },
-                                    //details grid
-                                    detailInit: detailInit,
-                                    scrollable: false,
-                                    dataBound: onDataBound,
-                                    columns: [{
-                                        field: "Id",
-                                        headerTemplate: "<input id='mastercheckbox' type='checkbox'/>",
-                                        headerAttributes: { style: "text-align:center" },
-                                        attributes: { style: "text-align:center" },
-                                        template: "<input type='checkbox' value='#=Id#' class='checkboxGroups'/>",
-                                        width: 50
-                                    }, {
-                                        field: "Id",
-                                        title: "@T("Admin.Orders.Shipments.ID")",
-                                        width: 50
-                                    }, {
-                                        field: "CustomOrderNumber",
-                                        title: "@T("Admin.Orders.Shipments.CustomOrderNumber")",
-                                        width: 100
-                                    }, {
-                                        field: "TrackingNumber",
-                                        title: "@T("Admin.Orders.Shipments.TrackingNumber")",
-                                        width: 100
-                                    }, {
-                                        field: "TotalWeight",
-                                        title: "@T("Admin.Orders.Shipments.TotalWeight")",
-                                        width: 100
-                                    }, {
-                                        field: "ShippedDate",
-                                        title: "@T("Admin.Orders.Shipments.ShippedDate")",
-                                        width: 200,
-                                        type: "date",
-                                        format: "{0:G}"
-                                    }, {
-                                        field: "DeliveryDate",
-                                        title: "@T("Admin.Orders.Shipments.DeliveryDate")",
-                                        width: 200,
-                                        type: "date",
-                                        format: "{0:G}"
-                                    }, {
-                                        field: "Id",
-                                        title: "@T("Admin.Common.View")",
-                                        width: 50,
-                                        headerAttributes: { style: "text-align:center" },
-                                        attributes: { style: "text-align:center" },
-                                        template: '<a class="btn btn-default" href="@Url.Content("~/Admin/Order/ShipmentDetails/")#=Id#"><i class="fa fa-eye"></i>@T("Admin.Common.View")</a>'
-                                    }]
-                                });
-                            });
-
-                            //details grid
-                            function detailInit(e) {
-                                $("<div/>").appendTo(e.detailCell).kendoGrid({
-                                    dataSource: {
-                                        type: "json",
-                                        transport: {
-                                            read: {
-                                                url: "@Html.Raw(Url.Action("ShipmentsItemsByShipmentId", "Order"))",
-                                                type: "POST",
-                                                dataType: "json",
-                                                data: function() {
-                                                    var data = {
-                                                        ShipmentId: e.data.Id
-                                                    };
-                                                    addAntiForgeryToken(data);
-                                                    return data;
-                                                }
-                                            }
-                                        },
-                                        schema: {
-                                            data: "Data",
-                                            total: "Total",
-                                            errors: "Errors"
-                                        },
-                                        error: function(e) {
-                                            display_kendoui_grid_error(e);
-                                            // Cancel the changes
-                                            this.cancelChanges();
-                                        },
-                                        pageSize: @(Model.ShipmentItemSearchModel.PageSize),
-                                        serverPaging: true,
-                                        serverFiltering: true,
-                                        serverSorting: true
-                                    },
-                                    scrollable: false,
-                                    pageable: {
-                                        refresh: true,
-                                        pageSizes: [@(Model.ShipmentItemSearchModel.AvailablePageSizes)],
-                                        @await Html.PartialAsync("_GridPagerMessages")
-                                    },
-                                    columns: [
-                                        {
-                                            field: "ProductName",
-                                            title: "@T("Admin.Orders.Shipments.Products.ProductName")",
-                                            width: 400
-                                        },{
-                                            field: "ShippedFromWarehouse",
-                                            title: "@T("Admin.Orders.Shipments.Products.Warehouse")",
-                                            width: 150
-                                        },{
-                                            field: "QuantityInThisShipment",
-                                            title: "@T("Admin.Orders.Shipments.Products.QtyShipped")",
-                                            width: 150
-                                        },{
-                                            field: "ItemWeight",
-                                            title: "@T("Admin.Orders.Shipments.Products.ItemWeight")",
-                                            width: 150
-                                        },{
-                                            field: "ItemDimensions",
-                                            title: "@T("Admin.Orders.Shipments.Products.ItemDimensions")",
-                                            width: 150
-                                        }
-                                    ]
-                                });
+            <div class="panel panel-default">
+                <div class="panel-body">                        
+                    @await Html.PartialAsync("Table", new DataTablesModel
+                    {
+                        Name = "shipments-grid",
+                        UrlRead = new DataUrl("ShipmentListSelect", "Order", null),
+                        SearchButtonId = "search-shipments",
+                        PrimaryKeyColumn = nameof(ShipmentModel.Id),
+                        Length = Model.PageSize,
+                        LengthMenu = Model.AvailablePageSizes,
+                        Filters = new List<FilterParameter>
+                        {
+                            new FilterParameter(nameof(Model.StartDate)),
+                            new FilterParameter(nameof(Model.EndDate)),
+                            new FilterParameter(nameof(Model.TrackingNumber)),
+                            new FilterParameter(nameof(Model.CountryId)),
+                            new FilterParameter(nameof(Model.StateProvinceId)),
+                            new FilterParameter(nameof(Model.County)),
+                            new FilterParameter(nameof(Model.City)),
+                            new FilterParameter(nameof(Model.WarehouseId)),
+                            new FilterParameter(nameof(Model.LoadNotShipped), typeof(bool))
+                        },
+                        ColumnCollection = new List<ColumnProperty>
+                        {
+                            new ColumnProperty(null)
+                            {
+                                Render = new RenderChildCaret(),
+                                Width = "5",
+                                Searchable = false,
+                                ClassName =  NopColumnClassDefaults.ChildControl,
+                            },
+                            new ColumnProperty(nameof(ShipmentModel.Id))
+                            {
+                                IsMasterCheckBox = true,
+                                Render = new RenderCheckBox("checkbox_shipments"),
+                                Searchable = false,
+                                Width = "10",
+                            },
+                            new ColumnProperty(nameof(ShipmentModel.Id))
+                            {
+                                Title = T("Admin.Orders.Shipments.ID").Text,
+                                Width = "50"
+                            },
+                            new ColumnProperty(nameof(ShipmentModel.CustomOrderNumber))
+                            {
+                                Title = T("Admin.Orders.Shipments.CustomOrderNumber").Text,
+                                Width = "100"
+                            },
+                            new ColumnProperty(nameof(ShipmentModel.TrackingNumber))
+                            {
+                                Title = T("Admin.Orders.Shipments.TrackingNumber").Text,
+                                Width = "100"
+                            },
+                            new ColumnProperty(nameof(ShipmentModel.TotalWeight))
+                            {
+                                Title = T("Admin.Orders.Shipments.TotalWeight").Text,
+                                Width = "100"
+                            },
+                            new ColumnProperty(nameof(ShipmentModel.ShippedDate))
+                            {
+                                Title = T("Admin.Orders.Shipments.ShippedDate").Text,
+                                Width = "200"
+                            },
+                            new ColumnProperty(nameof(ShipmentModel.DeliveryDate))
+                            {
+                                Title = T("Admin.Orders.Shipments.DeliveryDate").Text,
+                                Width = "200"
+                            },
+                            new ColumnProperty(nameof(OrderModel.Id))
+                            {
+                                Title = T("Admin.Common.View").Text,
+                                Width = "50",
+                                ClassName = NopColumnClassDefaults.Button,
+                                Render = new RenderButtonView(new DataUrl("~/Admin/Order/ShipmentDetails/"))
                             }
-                        </script>
-                    </div>
+                        },
+                        ChildTable = new DataTablesModel
+                        {
+                            Name = "shipments-grid",
+                            UrlRead = new DataUrl("ShipmentsItemsByShipmentId", "Order", null),
+                            IsChildTable = true,
+                            Paging = false,
+                            Length = Model.PageSize,
+                            LengthMenu = Model.AvailablePageSizes,
+                            Filters = new List<FilterParameter>
+                            {
+                                new FilterParameter(nameof(ShipmentItemSearchModel.ShipmentId), nameof(OrderModel.Id), true)
+                            },
+                            ColumnCollection = new List<ColumnProperty>
+                            {
+                                new ColumnProperty(nameof(ShipmentItemModel.ProductName))
+                                {
+                                    Title = T("Admin.Orders.Shipments.Products.ProductName").Text,
+                                    Width = "400"
+                                },
+                                new ColumnProperty(nameof(ShipmentItemModel.ShippedFromWarehouse))
+                                {
+                                    Title = T("Admin.Orders.Shipments.Products.Warehouse").Text,
+                                    Width = "150"
+                                },
+                                new ColumnProperty(nameof(ShipmentItemModel.QuantityInThisShipment))
+                                {
+                                    Title = T("Admin.Orders.Shipments.Products.QtyShipped").Text,
+                                    Width = "150"
+                                },
+                                new ColumnProperty(nameof(ShipmentItemModel.ItemWeight))
+                                {
+                                    Title = T("Admin.Orders.Shipments.Products.ItemWeight").Text,
+                                    Width = "150"
+                                },
+                                new ColumnProperty(nameof(ShipmentItemModel.ItemDimensions))
+                                {
+                                    Title = T("Admin.Orders.Shipments.Products.ItemDimensions").Text,
+                                    Width = "150"
+                                }
+                            }
+                        }
+                    })                  
                 </div>
-
+            </div>
                 <script>
-                    var selectedIds = [];
-
                     $(document).ready(function() {
                         //load states when changing a country dropdownlist
                         $("#@Html.IdFor(model => model.CountryId)").change(function() {
@@ -324,39 +284,22 @@
                                 cache: false,
                                 type: "GET",
                                 url: "@(Url.Action("GetStatesByCountryId", "Country"))",
-                                data: { "countryId": selectedItem, "addAsterisk": "true" },
-                                success: function(data) {
+                                data: {
+                                    "countryId": selectedItem,
+                                    "addAsterisk": "true"
+                                },
+                                success: function (data, textStatus, jqXHR) {
                                     ddlStates.html('');
                                     $.each(data, function(id, option) {
                                         ddlStates.append($('<option></option>').val(option.id).html(option.name));
                                     });
                                 },
-                                error: function(xhr, ajaxOptions, thrownError) {
-                                    alert('Failed to retrieve states.');
+                                error: function (jqXHR, textStatus, errorThrown) {
+                                    $("#statesAlert").click();
                                 }
                             });
-                        });
-
-                        $("".concat("#@Html.IdFor(model => model.TrackingNumber),",
-                            "#@Html.IdFor(model => model.City)")).keydown(function(event) {
-                                if (event.keyCode === 13) {
-                                    $("#search-shipments").click();
-                                    return false;
-                                }
-                            });
-
-                        //search button
-                        $('#search-shipments').click(function() {
-                            //search
-                            var grid = $('#shipments-grid').data('kendoGrid');
-                            grid.dataSource.page(1); //new search. Set page size to 1
-                            //grid.dataSource.read(); we already loaded the grid above using "page" function
-                            //clear selected checkboxes
-                            $('.checkboxGroups').attr('checked', false).change();
-                            selectedIds = [];
-                            return false;
-                        });
-
+                        });                        
+                       
                         //"ship selected" button
                         $('#ship-selected').click(function(e) {
                             e.preventDefault();
@@ -371,15 +314,14 @@
                                 type: "POST",
                                 url: "@(Url.Action("SetAsShippedSelected", "Order"))",
                                 data: postData,
-                                complete: function(data) {
-                                    //reload grid
-                                    var grid = $('#shipments-grid').data('kendoGrid');
-                                    grid.dataSource.read();
+                                traditional: true,
+                                error: function (jqXHR, textStatus, errorThrown) {
+                                    $('#setAsShippedSelectedFailed-info').text(errorThrown);
+                                    $("#setAsShippedSelectedFailed").click();
                                 },
-                                error: function(xhr, ajaxOptions, thrownError) {
-                                    alert(thrownError);
-                                },
-                                traditional: true
+                                complete: function (jqXHR, textStatus) {
+                                    updateTable('#shipments-grid');
+                                }
                             });
                             return false;
                         });
@@ -398,77 +340,43 @@
                                 type: "POST",
                                 url: "@(Url.Action("SetAsDeliveredSelected", "Order"))",
                                 data: postData,
-                                complete: function(data) {
-                                    //reload grid
-                                    var grid = $('#shipments-grid').data('kendoGrid');
-                                    grid.dataSource.read();
+                                traditional: true,
+                                error: function (jqXHR, textStatus, errorThrown) {
+                                    $('#setAsDeliveredSelectedFailed-info').text(errorThrown);
+                                    $("#setAsDeliveredSelectedFailed").click();
                                 },
-                                error: function(xhr, ajaxOptions, thrownError) {
-                                    alert(thrownError);
-                                },
-                                traditional: true
+                                complete: function (jqXHR, textStatus) {
+                                    updateTable('#shipments-grid');
+                                }
                             });
                             return false;
                         });
-
-                        $('#mastercheckbox').click(function() {
-                            $('.checkboxGroups').attr('checked', $(this).is(':checked')).change();
-                        });
-
-                        //wire up checkboxes.
-                        $('#shipments-grid').on('change', 'input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]', function(e) {
-                            var $check = $(this);
-                            var checked = jQuery.inArray($check.val(), selectedIds);
-                            if ($check.is(":checked") == true) {
-                                if (checked == -1) {
-                                    //add id to selectedIds.
-                                    selectedIds.push($check.val());
-                                }
-                            } else if (checked > -1) {
-                                //remove id from selectedIds.
-                                selectedIds = $.grep(selectedIds, function (item, index) {
-                                    return item != $check.val();
-                                });
-                            }
-                            updateMasterCheckbox();
-                        });
                     });
-                    
-                    function onDataBound(e) {
-                        $('#shipments-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]').each(function() {
-                            var currentId = $(this).val();
-                            var checked = jQuery.inArray(currentId, selectedIds);
-                            //set checked based on if current checkbox's value is in selectedIds.
-                            $(this).attr('checked', checked > -1);
-                        });
-
-                        updateMasterCheckbox();
-                    }
-
-                    function updateMasterCheckbox() {
-                        var numChkBoxes = $('#shipments-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]').length;
-                        var numChkBoxesChecked = $('#shipments-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]:checked').length;
-                        $('#mastercheckbox').attr('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
-                    }
+                                       
                 </script>
+                
             </div>
         </div>
     </div>
- </form>
+</form>
 
 @*export selected (Excel). We don't use GET approach because it's limited to 2K-4K chars and won't work for large number of entities*@
 <form asp-controller="Order" asp-action="PdfPackagingSlipSelected" method="post" id="pdf-packaging-slip-selected-form">
     <input type="hidden" id="selectedIds" name="selectedIds" value="" />
 </form>
+<nop-alert asp-alert-id="statesAlert" asp-alert-message="@T("Admin.Common.Alert.States.Failed")" />
+<nop-alert asp-alert-id="setAsShippedSelectedFailed" />
+<nop-alert asp-alert-id="setAsDeliveredSelectedFailed" />
 
 <script>
-                $(document).ready(function () {
-                    $('#exportpackagingslips-selected').click(function (e) {
-                        e.preventDefault();
-                        var ids = selectedIds.join(",");
-                        $('#pdf-packaging-slip-selected-form #selectedIds').val(ids);
-                        $('#pdf-packaging-slip-selected-form').submit();
-                        return false;
-                    });
-                });
+    $(document).ready(function () {
+        $('#exportpackagingslips-selected').click(function (e) {
+            e.preventDefault();
+            var ids = selectedIds.join(",");
+            $('#pdf-packaging-slip-selected-form #selectedIds').val(ids);
+            $('#pdf-packaging-slip-selected-form').submit();
+            updateTable('#shipments-grid');
+            return false;
+        });
+    });
 </script>

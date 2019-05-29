@@ -1,11 +1,10 @@
-﻿@using Nop.Core
-@inject Nop.Services.Common.IGenericAttributeService genericAttributeService
+﻿@inject Nop.Services.Common.IGenericAttributeService genericAttributeService
 @inject IWorkContext workContext
 @{
     Html.AppendScriptParts("~/lib/chartjs/Chart.min.js");
 
     const string prefix = "order-statistics";
-    const string hidePanelAttributeName = "HideOrderStatisticsPanel";
+    const string hidePanelAttributeName = "Reports.HideOrderStatisticsPanel";
     var hidePanel = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hidePanelAttributeName);
 }
 
@@ -128,11 +127,11 @@
             $.ajax({
                 cache: false,
                 type: "GET",
-                url: '@Url.Action("LoadOrderStatistics", "Order")',
+                url: "@Url.Action("LoadOrderStatistics", "Order")",
                 data: {
                     period: period
                 },
-                success: function (data) {
+                success: function (data, textStatus, jqXHR) {
                     for (var i = 0; i < data.length; i++) {
                         osLabels.push(data[i].date);
                         osData.push(data[i].value);
@@ -149,8 +148,8 @@
                         window.orderStatistics.update();
                     }
                 },
-                error: function (xhr, ajaxOptions, thrownError) {
-                    alert('Failed to load statistics.');
+                error: function (jqXHR, textStatus, errorThrown) {
+                    $("#loadOrderStatisticsAlert").click();
                 }
             });
         }

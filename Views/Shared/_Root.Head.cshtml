@@ -14,6 +14,7 @@
 @inject StoreInformationSettings storeInformationSettings
 @inject Nop.Services.Localization.ILanguageService languageService
 @{
+    Html.AppendScriptParts(ResourceLocation.Footer, "~/js/public.countryselect.js");
     Html.AppendScriptParts(ResourceLocation.Footer, "~/js/public.ajaxcart.js");
     Html.AppendScriptParts(ResourceLocation.Footer, "~/js/public.common.js");
     //when jQuery migrate script logging is active you will see the log in the browser console
@@ -28,9 +29,7 @@
     Html.AppendScriptParts(ResourceLocation.Footer, "~/lib/jquery-ui/jquery-ui-1.12.1.custom/jquery-ui.min.js");
     Html.AppendScriptParts(ResourceLocation.Footer, "~/lib/jquery-validate/jquery.validate.unobtrusive-v3.2.10/jquery.validate.unobtrusive.min.js");
     Html.AppendScriptParts(ResourceLocation.Footer, "~/lib/jquery-validate/jquery.validate-v1.17.0/jquery.validate.min.js");
-    //jQuery is the only js file in the head. if we decide to move it to the footer, then ensure that all inline scripts (with jQuery usage) with are also moved to the footer
-    //the issue that it's not possible in some cases (e.g. "Edit address", when Ajax request is made on one-page checkout)
-    Html.AppendScriptParts(ResourceLocation.Head, "~/lib/jquery/jquery-3.3.1.min.js");
+    Html.AppendScriptParts(ResourceLocation.Footer, "~/lib/jquery/jquery-3.3.1.min.js");
     //X-UA-Compatible tag
     if (commonSettings.RenderXuaCompatible)
     {
@@ -59,24 +58,24 @@
     @*This is used so that themes can inject content into the header*@
     @await Html.PartialAsync("Head")
     @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HeadHtmlTag })
-    @Html.NopCssFiles(this.Url, ResourceLocation.Head)
-    @Html.NopScripts(this.Url, ResourceLocation.Head)
+    @Html.NopCssFiles(ResourceLocation.Head)
+    @Html.NopScripts(ResourceLocation.Head)
     @Html.NopCanonicalUrls()
     @await Component.InvokeAsync("NewsRssHeaderLink")
     @await Component.InvokeAsync("BlogRssHeaderLink")
-    @*Favicon - upload favicon.ico file to the root directory*@
+    @*Insert favicon and app icons head code*@
     @await Component.InvokeAsync("Favicon")
     @if (displayMiniProfiler)
     {
         <mini-profiler />
     }
-    @Html.NopInlineScripts(this.Url, ResourceLocation.Head)
+    @Html.NopInlineScripts(ResourceLocation.Head)
     <!--Powered by nopCommerce - https://www.nopCommerce.com-->
 </head>
 <body>
     @RenderBody()
-    @Html.NopCssFiles(this.Url, ResourceLocation.Footer)
-    @Html.NopScripts(this.Url, ResourceLocation.Footer)
-    @Html.NopInlineScripts(this.Url, ResourceLocation.Footer)
+    @Html.NopCssFiles(ResourceLocation.Footer)
+    @Html.NopScripts(ResourceLocation.Footer)
+    @Html.NopInlineScripts(ResourceLocation.Footer)
 </body>
 </html>

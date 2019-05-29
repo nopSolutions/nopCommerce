@@ -28,66 +28,33 @@
                 <p>
                     @T("Admin.Catalog.Attributes.SpecificationAttributes.Description")
                 </p>
-                <div id="specificationattributes-grid"></div>
-
-                <script>
-                    $(document).ready(function() {
-                        $("#specificationattributes-grid").kendoGrid({
-                            dataSource: {
-                                type: "json",
-                                transport: {
-                                    read: {
-                                        url: "@Html.Raw(Url.Action("List", "SpecificationAttribute"))",
-                                        type: "POST",
-                                        dataType: "json",
-                                        data: addAntiForgeryToken
-                                    }
-                                },
-                                schema: {
-                                    data: "Data",
-                                    total: "Total",
-                                    errors: "Errors"
-                                },
-                                error: function(e) {
-                                    display_kendoui_grid_error(e);
-                                    // Cancel the changes
-                                    this.cancelChanges();
-                                },
-                                pageSize: @(Model.PageSize),
-                                serverPaging: true,
-                                serverFiltering: true,
-                                serverSorting: true
-                            },
-                            pageable: {
-                                refresh: true,
-                                pageSizes: [@(Model.AvailablePageSizes)],
-                                @await Html.PartialAsync("_GridPagerMessages")
-                            },
-                            editable: {
-                                confirmation: "@T("Admin.Common.DeleteConfirmation")",
-                                mode: "inline"
-                            },
-                            scrollable: false,
-                            columns: [
-                                {
-                                    field: "Name",
-                                    title: "@T("Admin.Catalog.Attributes.SpecificationAttributes.Fields.Name")",
-                                    width: 300
-                                }, {
-                                    field: "DisplayOrder",
-                                    title: "@T("Admin.Catalog.Attributes.SpecificationAttributes.Fields.DisplayOrder")",
-                                    width: 100
-                                }, {
-                                    field: "Id",
-                                    title: "@T("Admin.Common.Edit")",
-                                    width: 80,
-                                    headerAttributes: { style: "text-align:center" },
-                                    attributes: { style: "text-align:center" },
-                                    template: '<a class="btn btn-default" href="Edit/#=Id#"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>'                                }
-                            ]
-                        });
-                    });
-                </script>
+                @await Html.PartialAsync("Table", new DataTablesModel
+                {
+                    Name = "specificationattributes-grid",
+                    UrlRead = new DataUrl("List", "SpecificationAttribute", null),
+                    Length = Model.PageSize,
+                    LengthMenu = Model.AvailablePageSizes,
+                    ColumnCollection = new List<ColumnProperty>
+                    {
+                        new ColumnProperty(nameof(SpecificationAttributeModel.Name))
+                        {
+                            Title = T("Admin.Catalog.Attributes.SpecificationAttributes.Fields.Name").Text
+                        },
+                        new ColumnProperty(nameof(SpecificationAttributeModel.DisplayOrder))
+                        {
+                            Title = T("Admin.Catalog.Attributes.SpecificationAttributes.Fields.DisplayOrder").Text,
+                            Width = "100",
+                            ClassName =  NopColumnClassDefaults.CenterAll
+                        },
+                        new ColumnProperty(nameof(SpecificationAttributeModel.Id))
+                        {
+                            Title = T("Admin.Common.Edit").Text,
+                            Width = "100",
+                            ClassName =  NopColumnClassDefaults.Button,
+                            Render = new RenderButtonEdit(new DataUrl("Edit"))
+                        }
+                    }
+                })
             </div>
         </div>
     </div>

@@ -7,6 +7,14 @@
     Html.SetActiveMenuItemSystemName("GDPR settings");
 }
 
+@{
+    const string hideCommonBlockAttributeName = "GdprSettingsPage.HideCommonBlock";
+    var hideCommonBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideCommonBlockAttributeName);
+
+    const string hideConsentsBlockAttributeName = "GdprSettingsPage.HideConsentsBlock";
+    var hideConsentsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideConsentsBlockAttributeName);
+}
+
 
 <form asp-controller="Setting" asp-action="GDPR" method="post">
     <div class="content-header clearfix">
@@ -28,157 +36,12 @@
             @await Component.InvokeAsync("SettingMode")
             <div asp-validation-summary="All"></div>
 
-            <div class="panel-group">
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.GdprSettingsTop })
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        @T("Admin.Configuration.Settings.Gdpr.BlockTitle.Common")
-                    </div>
-                    <div class="panel-body">
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="GdprEnabled_OverrideForStore" asp-input="GdprEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="GdprEnabled" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="GdprEnabled" />
-                                <span asp-validation-for="GdprEnabled"></span>
-                            </div>
-                        </div>
-                        <nop-nested-setting asp-for="GdprEnabled">
-                            <div class="form-group advanced-setting" id="pnlLogPrivacyPolicyConsent">
-                                <div class="col-md-3">
-                                    <nop-override-store-checkbox asp-for="LogPrivacyPolicyConsent_OverrideForStore" asp-input="LogPrivacyPolicyConsent" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                    <nop-label asp-for="LogPrivacyPolicyConsent" />
-                                </div>
-                                <div class="col-md-9">
-                                    <nop-editor asp-for="LogPrivacyPolicyConsent" />
-                                    <span asp-validation-for="LogPrivacyPolicyConsent"></span>
-                                </div>
-                            </div>
-                            <div class="form-group advanced-setting" id="pnlLogNewsletterConsent">
-                                <div class="col-md-3">
-                                    <nop-override-store-checkbox asp-for="LogNewsletterConsent_OverrideForStore" asp-input="LogNewsletterConsent" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                    <nop-label asp-for="LogNewsletterConsent" />
-                                </div>
-                                <div class="col-md-9">
-                                    <nop-editor asp-for="LogNewsletterConsent" />
-                                    <span asp-validation-for="LogNewsletterConsent"></span>
-                                </div>
-                            </div>
-                        </nop-nested-setting>
-                    </div>
-                    <script>
-                        $(document).ready(function () {
-                            $("#@Html.IdFor(model => model.GdprEnabled)").click(toggleGdprEnabled);
+            <nop-panels id="gdprsettings-panels">
+                <nop-panel asp-name="gdprsettings-common" asp-icon="fa fa-info" asp-title="@T("Admin.Configuration.Settings.Gdpr.BlockTitle.Common")" asp-hide-block-attribute-name="@hideCommonBlockAttributeName" asp-hide="@hideCommonBlock" asp-advanced="false">@await Html.PartialAsync("_Gdpr.Common", Model)</nop-panel>
+                <nop-panel asp-name="gdprsettings-consents" asp-icon="fa fa-thumbs-o-up" asp-title="@T("Admin.Configuration.Settings.Gdpr.BlockTitle.Consents")" asp-hide-block-attribute-name="@hideConsentsBlockAttributeName" asp-hide="@hideConsentsBlock" asp-advanced="true">@await Html.PartialAsync("_Gdpr.Consents", Model)</nop-panel>
 
-                            toggleGdprEnabled();
-                        });
-
-                        function toggleGdprEnabled() {
-                            if ($('#@Html.IdFor(model => model.GdprEnabled)').is(':checked')) {
-                                $('#pnlLogPrivacyPolicyConsent').show();
-                                $('#pnlLogNewsletterConsent').show();
-                                $('#pnlConsent').show();
-                            } else {
-                                $('#pnlLogPrivacyPolicyConsent').hide();
-                                $('#pnlLogNewsletterConsent').hide();
-                                $('#pnlConsent').hide();
-                            }
-                        }
-                    </script>
-                </div>
-
-                <div class="panel panel-default advanced-setting" id="pnlConsent">
-                    <div class="panel-heading">
-                        @T("Admin.Configuration.Settings.Gdpr.BlockTitle.Consents")
-                    </div>
-                    <div class="panel-body">
-                        <div id="consent-grid"></div>
-
-                        <script>
-                            $(document).ready(function() {
-                                $("#consent-grid").kendoGrid({
-                                    dataSource: {
-                                        type: "json",
-                                        transport: {
-                                            read: {
-                                                url: "@Html.Raw(Url.Action("GdprConsentList", "Setting"))",
-                                                type: "POST",
-                                                dataType: "json",
-                                                data: addAntiForgeryToken
-                                            }
-                                        },
-                                        schema: {
-                                            data: "Data",
-                                            total: "Total",
-                                            errors: "Errors"
-                                        },
-                                        error: function(e) {
-                                            display_kendoui_grid_error(e);
-                                            // Cancel the changes
-                                            this.cancelChanges();
-                                        },
-                                        pageSize: @(Model.GdprConsentSearchModel.PageSize),
-                                        serverPaging: true,
-                                        serverFiltering: true,
-                                        serverSorting: true
-                                    },
-                                    pageable: {
-                                        refresh: true,
-                                        pageSizes: [@(Model.GdprConsentSearchModel.AvailablePageSizes)],
-                                        @await Html.PartialAsync("_GridPagerMessages")
-                                    },
-                                    editable: {
-                                        confirmation: "@T("Admin.Common.DeleteConfirmation")",
-                                        mode: "inline"
-                                    },
-                                    scrollable: false,
-                                    columns: [
-                                        {
-                                            field: "Message",
-                                            title: "@T("Admin.Configuration.Settings.Gdpr.Consent.Message")"
-                                        }, {
-                                            field: "IsRequired",
-                                            title: "@T("Admin.Configuration.Settings.Gdpr.Consent.IsRequired")",
-                                            headerAttributes: { style: "text-align:center" },
-                                            attributes: { style: "text-align:center" },
-                                            template: '# if(IsRequired) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
-                                        }, {
-                                            field: "DisplayDuringRegistration",
-                                            title: "@T("Admin.Configuration.Settings.Gdpr.Consent.DisplayDuringRegistration")",
-                                            headerAttributes: { style: "text-align:center" },
-                                            attributes: { style: "text-align:center" },
-                                            template: '# if(DisplayDuringRegistration) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
-                                        }, {
-                                            field: "DisplayOnCustomerInfoPage",
-                                            title: "@T("Admin.Configuration.Settings.Gdpr.Consent.DisplayOnCustomerInfoPage")",
-                                            headerAttributes: { style: "text-align:center" },
-                                            attributes: { style: "text-align:center" },
-                                            template: '# if(DisplayOnCustomerInfoPage) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
-                                        }, {
-                                            field: "DisplayOrder",
-                                            title: "@T("Admin.Configuration.Settings.Gdpr.Consent.DisplayOrder")"
-                                        }, {
-                                            field: "Id",
-                                            title: "@T("Admin.Common.Edit")",
-                                            headerAttributes: { style: "text-align:center" },
-                                            attributes: { style: "text-align:center" },
-                                            template: '<a class="btn btn-default" href="@Url.Content("~/Admin/Setting/EditGdprConsent/")#=Id#"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>'
-                                        }
-                                    ]
-                                });
-                            });
-                        </script>
-                    </div>
-                    <div class="panel-footer">
-                        <button type="submit" id="btnAddNewConsent" name="btnAddNewConsent" onclick="javascript:setLocation('@(Url.Action("CreateGdprConsent", "Setting"))'); return false;" class="btn btn-primary">
-                            @T("Admin.Configuration.Settings.Gdpr.Consent.AddNew")
-                        </button>
-                    </div>
-                </div>
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.GdprSettingsBottom })
-            </div>
+                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.GdprSettingsDetailsBlock, additionalData = Model })
+            </nop-panels>
         </div>
     </div>
 </form>

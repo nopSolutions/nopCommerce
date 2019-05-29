@@ -1,83 +1,33 @@
-@model SpecificationAttributeModel
+﻿@model SpecificationAttributeModel
 
-<div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.SpecificationAttributeDetailsUsedByProductsTop, additionalData = Model })
-    <div class="panel panel-default">
-        <div class="panel-body">
-            <div id="used-by-products-grid"></div>
-
-            <script>
-                $(document).ready(function () {
-                    $("#used-by-products-grid").kendoGrid({
-                        dataSource: {
-                            type: "json",
-                            transport: {
-                                read: {
-                                    url: "@Html.Raw(Url.Action("UsedByProducts", "SpecificationAttribute"))",
-                                    type: "POST",
-                                    dataType: "json",
-                                    data: function() {
-                                        var data = {
-                                            SpecificationAttributeId: '@(Model.Id)'
-                                        };
-                                        addAntiForgeryToken(data);
-                                        return data;
-                                    }
-                                }
-                            },
-                            schema: {
-                                data: "Data",
-                                total: "Total",
-                                errors: "Errors",
-                                model: {
-                                    id: "Id"
-                                }
-                            },
-                            error: function (e) {
-                                display_kendoui_grid_error(e);
-                                // Cancel the changes
-                                this.cancelChanges();
-                            },
-                            pageSize: @(Model.SpecificationAttributeProductSearchModel.PageSize),
-                            serverPaging: true,
-                            serverFiltering: true,
-                            serverSorting: true
-                        },
-                        editable: {
-                            confirmation: "@T("Admin.Common.DeleteConfirmation")",
-                            mode: "inline"
-                        },
-                        pageable: {
-                            refresh: true,
-                            pageSizes: [@(Model.SpecificationAttributeProductSearchModel.AvailablePageSizes)],
-                            @await Html.PartialAsync("_GridPagerMessages")
-                        },
-                        scrollable: false,
-                        columns: [
-                            {
-                                field: "ProductName",
-                                title: "@T("Admin.Catalog.Attributes.SpecificationAttributes.UsedByProducts.Product")"
-                            }, {
-                                field: "Published",
-                                title: "@T("Admin.Catalog.Attributes.SpecificationAttributes.UsedByProducts.Published")",
-                                width: 100,
-                                headerAttributes: { style: "text-align:center" },
-                                attributes: { style: "text-align:center" },
-                                template: '# if(Published) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
-                            },
-                            {
-                                field: "ProductId",
-                                title: "@T("Admin.Common.View")",
-                                width: 100,
-                                headerAttributes: { style: "text-align:center" },
-                                attributes: { style: "text-align:center" },
-                                template: '<a class="btn btn-default" href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#"><i class="fa fa-eye"></i>@T("Admin.Common.View")</a>'
-                            }
-                        ]
-                    });
-                });
-            </script>
-        </div>
-    </div>
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.SpecificationAttributeDetailsUsedByProductsBottom, additionalData = Model })
+<div class="panel-body">
+    @await Html.PartialAsync("Table", new DataTablesModel
+    {
+        Name = "used-by-products-grid",
+        UrlRead = new DataUrl("UsedByProducts", "SpecificationAttribute", new RouteValueDictionary { [nameof(Model.SpecificationAttributeProductSearchModel.SpecificationAttributeId)] = Model.SpecificationAttributeProductSearchModel.SpecificationAttributeId }),
+        SearchButtonId = "search-categories",
+        Length = Model.SpecificationAttributeProductSearchModel.PageSize,
+        LengthMenu = Model.SpecificationAttributeProductSearchModel.AvailablePageSizes,
+        ColumnCollection = new List<ColumnProperty>
+        {
+            new ColumnProperty(nameof(SpecificationAttributeProductModel.ProductName))
+            {
+                Title = T("Admin.Catalog.Attributes.SpecificationAttributes.UsedByProducts.Product").Text
+            },
+            new ColumnProperty(nameof(SpecificationAttributeProductModel.Published))
+            {
+                Title = T("Admin.Catalog.Attributes.SpecificationAttributes.UsedByProducts.Published").Text,
+                Width = "100",
+                ClassName =  NopColumnClassDefaults.CenterAll,
+                Render = new RenderBoolean()
+            },
+            new ColumnProperty(nameof(SpecificationAttributeProductModel.ProductId))
+            {
+                Title = T("Admin.Common.View").Text,
+                Width = "100",
+                ClassName =  NopColumnClassDefaults.Button,
+                Render = new RenderButtonView(new DataUrl("~/Admin/Product/Edit/"))
+            }
+        }
+    })
 </div>

@@ -1,133 +1,125 @@
 @model PollModel
 
-<div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.PollDetailsAnswersTop, additionalData = Model })
-    <div class="panel panel-default">
-        @if (Model.Id > 0)
+@if (Model.Id > 0)
+{
+    <div class="panel-body">
+        @await Html.PartialAsync("Table", new DataTablesModel
         {
-            <div class="panel-body">
-                <div id="answers-grid"></div>
+            Name = "answers-grid",
+            UrlRead = new DataUrl("PollAnswers", "Poll", new RouteValueDictionary { [nameof(PollAnswerSearchModel.PollId)] = Model.PollAnswerSearchModel.PollId }),
+            UrlUpdate = new DataUrl("PollAnswerUpdate", "Poll", new RouteValueDictionary { [nameof(PollAnswerSearchModel.PollId)] = Model.PollAnswerSearchModel.PollId }),
+            UrlDelete = new DataUrl("PollAnswerDelete", "Poll", null),
+            Length = Model.PollAnswerSearchModel.PageSize,
+            LengthMenu = Model.PollAnswerSearchModel.AvailablePageSizes,
+            ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(PollAnswerModel.Name))
+                {
+                    Title = T("Admin.ContentManagement.Polls.Answers.Fields.Name").Text,
+                    Width = "300",
+                    Editable = true,
+                    EditType = EditType.String
+                },
+                new ColumnProperty(nameof(PollAnswerModel.NumberOfVotes))
+                {
+                    Title = T("Admin.ContentManagement.Polls.Answers.Fields.NumberOfVotes").Text,
+                    Width = "100"
+                },
+                new ColumnProperty(nameof(PollAnswerModel.DisplayOrder))
+                {
+                    Title = T("Admin.ContentManagement.Polls.Answers.Fields.DisplayOrder").Text,
+                    Width = "100",
+                    Editable = true,
+                    EditType = EditType.Number
+                },
+                new ColumnProperty(nameof(PollAnswerModel.Id))
+                {
+                    Title = T("Admin.Common.Edit").Text,
+                    Width = "200",
+                    ClassName =  NopColumnClassDefaults.Button,
+                    Render = new RenderButtonsInlineEdit()
+                },
+                new ColumnProperty(nameof(PollAnswerModel.Id))
+                {
+                    Title = T("Admin.Common.Delete").Text,
+                    Width = "100",
+                    ClassName =  NopColumnClassDefaults.Button,
+                    Render = new RenderButtonRemove(T("Admin.Common.Delete").Text)
+                }
+            }
+        })
 
-                <script>
-                    $(document).ready(function() {
-                        $("#answers-grid").kendoGrid({
-                            dataSource: {
-                                type: "json",
-                                transport: {
-                                    read: {
-                                        url: "@Html.Raw(Url.Action("PollAnswers", "Poll"))",
-                                        type: "POST",
-                                        dataType: "json",
-                                        data: function() {
-                                            var data = {
-                                                PollId: '@(Model.Id)'
-                                            };
-                                            addAntiForgeryToken(data);
-                                            return data;
-                                        }
-                                    },
-                                    create: {
-                                        url: "@Html.Raw(Url.Action("PollAnswerAdd", "Poll", new { pollId = Model.Id }))",
-                                        type: "POST",
-                                        dataType: "json",
-                                        data: addAntiForgeryToken
-                                    },
-                                    update: {
-                                        url: "@Html.Raw(Url.Action("PollAnswerUpdate", "Poll"))",
-                                        type: "POST",
-                                        dataType: "json",
-                                        data: addAntiForgeryToken
-                                    },
-                                    destroy: {
-                                        url: "@Html.Raw(Url.Action("PollAnswerDelete", "Poll"))",
-                                        type: "POST",
-                                        dataType: "json",
-                                        data: addAntiForgeryToken
-                                    }
-                                },
-                                schema: {
-                                    data: "Data",
-                                    total: "Total",
-                                    errors: "Errors",
-                                    model: {
-                                        id: "Id",
-                                        fields: {
-                                            Name: { editable: true, type: "string" },
-                                            NumberOfVotes: { editable: false, type: "number" },
-                                            DisplayOrder: { editable: true, type: "number" },
-                                            Id: { editable: false, type: "number" }
-                                        }
-                                    }
-                                },
-                                requestEnd: function(e) {
-                                    if (e.type == "create" || e.type == "update") {
-                                        this.read();
-                                    }
-                                },
-                                error: function(e) {
-                                    display_kendoui_grid_error(e);
-                                    // Cancel the changes
-                                    this.cancelChanges();
-                                },
-                                pageSize: @(Model.PollAnswerSearchModel.PageSize),
-                                serverPaging: true,
-                                serverFiltering: true,
-                                serverSorting: true
-                            },
-                            pageable: {
-                                refresh: true,
-                                pageSizes: [@(Model.PollAnswerSearchModel.AvailablePageSizes)],
-                                @await Html.PartialAsync("_GridPagerMessages")
-                            },
-                            toolbar: [{ name: "create", text: "@T("Admin.Common.AddNewRecord")" }],
-                            editable: {
-                                confirmation: "@T("Admin.Common.DeleteConfirmation")",
-                                mode: "inline"
-                            },
-                            scrollable: false,
-                            columns: [
-                                {
-                                    field: "Name",
-                                    title: "@T("Admin.ContentManagement.Polls.Answers.Fields.Name")",
-                                    width: 300
-                                }, {
-                                    field: "NumberOfVotes",
-                                    title: "@T("Admin.ContentManagement.Polls.Answers.Fields.NumberOfVotes")",
-                                    width: 100
-                                }, {
-                                    field: "DisplayOrder",
-                                    title: "@T("Admin.ContentManagement.Polls.Answers.Fields.DisplayOrder")",
-                                    //integer format
-                                    format: "{0:0}",
-                                    width: 100
-                                }, {
-                                    command: [
-                                        {
-                                            name: "edit",
-                                            text: {
-                                                edit: "@T("Admin.Common.Edit")",
-                                                update: "@T("Admin.Common.Update")",
-                                                cancel: "@T("Admin.Common.Cancel")"
-                                            }
-                                        }, {
-                                            name: "destroy",
-                                            text: "@T("Admin.Common.Delete")"
-                                        }
-                                    ],
-                                    width: 200
-                                }
-                            ]
-                        });
-                    });
-                </script>
+        <div class="panel panel-default no-margin">
+            <div class="panel-heading">
+                @T("Admin.Common.AddNewRecord")
             </div>
-        }
-        else
-        {
             <div class="panel-body">
-                @T("Admin.ContentManagement.Polls.Answers.SaveBeforeEdit")
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="@Model.PollAnswerSearchModel.AddPollAnswer.Name" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="@Model.PollAnswerSearchModel.AddPollAnswer.Name" />
+                        <span asp-validation-for="@Model.PollAnswerSearchModel.AddPollAnswer.Name"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="@Model.PollAnswerSearchModel.AddPollAnswer.DisplayOrder" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="@Model.PollAnswerSearchModel.AddPollAnswer.DisplayOrder" />
+                        <span asp-validation-for="@Model.PollAnswerSearchModel.AddPollAnswer.DisplayOrder"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-9 col-md-offset-3">
+                        <button type="button" id="addPollAnswer" class="btn btn-primary">@T("Admin.Common.AddNewRecord")</button>
+                    </div>
+                </div>
             </div>
-        }
+            <script>
+            $(document).ready(function () {
+                $('#addPollAnswer').click(function () {
+                    $('#addPollAnswer').attr('disabled', true);
+                    var postData = {
+                        Name: $("#@Html.IdFor(model => model.PollAnswerSearchModel.AddPollAnswer.Name)").val(),
+                        DisplayOrder: $("#@Html.IdFor(model => model.PollAnswerSearchModel.AddPollAnswer.DisplayOrder)").val()
+                    };
+                    addAntiForgeryToken(postData);
+
+                    $.ajax({
+                        cache: false,
+                        type: "POST",
+                        url: "@Html.Raw(Url.Action("PollAnswerAdd", "Poll", new { pollId = Model.Id }))",
+                        data: postData,
+                        success: function (data, textStatus, jqXHR) {
+                            if (data.Result) {
+                                //reload grid
+                                updateTable('#answers-grid');
+
+                                //clear input value
+                                $("#@Html.IdFor(model => model.PollAnswerSearchModel.AddPollAnswer.Name)").val('');
+                                $("#@Html.IdFor(model => model.PollAnswerSearchModel.AddPollAnswer.DisplayOrder)").val('');
+
+                            } else {
+                                //display errors if returned
+                                display_nop_error(data);
+                            }
+                        },
+                        complete: function (jqXHR, textStatus) {
+                            $('#addPollAnswer').attr('disabled', false);
+                        }
+                    });
+                });
+            });
+            </script>
+        </div>
     </div>
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.PollDetailsAnswersBottom, additionalData = Model })
-</div>
+}
+else
+{
+    <div class="panel-body">
+        @T("Admin.ContentManagement.Polls.Answers.SaveBeforeEdit")
+    </div>
+}

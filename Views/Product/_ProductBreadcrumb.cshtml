@@ -11,7 +11,7 @@
                 @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductBreadcrumbBefore, additionalData = Model })
                 <li>
                     <span>
-                        <a href="@Url.RouteUrl("HomePage")">
+                        <a href="@Url.RouteUrl("Homepage")">
                             <span>@T("Products.Breadcrumb.Top")</span>
                         </a>
                     </span>
@@ -32,11 +32,10 @@
                 
                 <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
                     <strong class="current-item" itemprop="name">@Model.ProductName</strong>
-                    <span itemprop="item" itemscope itemtype="http://schema.org/Thing">
-                        <link itemprop="url" href="@Url.RouteUrl("Product", new { SeName = Model.ProductSeName })">
+                    <span itemprop="item" itemscope itemtype="http://schema.org/Thing" 
+                          id="@Url.RouteUrl("Product", new { SeName = Model.ProductSeName })">
                     </span>
                     <meta itemprop="position" content="@position" />
-                    @*<strong class="current-item"><a href="@Url.RouteUrl("Product", new { SeName = Model.ProductSeName })">@Model.ProductName</a></strong>*@
                     @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductBreadcrumbAfter, additionalData = Model })
                 </li>
             </ul>

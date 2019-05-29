@@ -1,0 +1,12 @@
+﻿@model Nop.Plugin.Tax.Avalara.Models.EntityUseCode.EntityUseCodeModel
+
+@if (Model.Id > 0)
+{
+    <script>
+        $(document).ready(function() {
+            $('#@Model.PrecedingElementId').closest('.form-group')
+                .after(`@Html.Partial("~/Plugins/Tax.Avalara/Views/EntityUseCode/_EntityUseCodeField.cshtml", Model)`);
+            $("#AvalaraEntityUseCode_label > .ico-help").css("color", "#f39c12")
+        });
+    </script>
+}

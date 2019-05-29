@@ -28,77 +28,45 @@
                 <p>
                     @T("Admin.Catalog.Attributes.CheckoutAttributes.Description")
                 </p>
-                <div id="checkoutattributes-grid"></div>
-
-                <script>
-                    $(document).ready(function() {
-                        $("#checkoutattributes-grid").kendoGrid({
-                            dataSource: {
-                                type: "json",
-                                transport: {
-                                    read: {
-                                        url: "@Html.Raw(Url.Action("List", "CheckoutAttribute"))",
-                                        type: "POST",
-                                        dataType: "json",
-                                        data: addAntiForgeryToken
-                                    }
-                                },
-                                schema: {
-                                    data: "Data",
-                                    total: "Total",
-                                    errors: "Errors"
-                                },
-                                error: function(e) {
-                                    display_kendoui_grid_error(e);
-                                    // Cancel the changes
-                                    this.cancelChanges();
-                                },
-                                pageSize: @(Model.PageSize),
-                                serverPaging: true,
-                                serverFiltering: true,
-                                serverSorting: true
-                            },
-                            pageable: {
-                                refresh: true,
-                                pageSizes: [@(Model.AvailablePageSizes)],
-                                @await Html.PartialAsync("_GridPagerMessages")
-                            },
-                            editable: {
-                                confirmation: "@T("Admin.Common.DeleteConfirmation")",
-                                mode: "inline"
-                            },
-                            scrollable: false,
-                            columns: [
-                            {
-                                field: "Name",
-                                title: "@T("Admin.Catalog.Attributes.CheckoutAttributes.Fields.Name")"
-                            }, {
-                                field: "AttributeControlTypeName",
-                                title: "@T("Admin.Catalog.Attributes.CheckoutAttributes.Fields.AttributeControlType")",
-                                width: 200
-                            }, {
-                                field: "IsRequired",
-                                title: "@T("Admin.Catalog.Attributes.CheckoutAttributes.Fields.IsRequired")",
-                                width: 100,
-                                headerAttributes: { style: "text-align:center" },
-                                attributes: { style: "text-align:center" },
-                                template: '# if(IsRequired) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
-                            }, {
-                                field: "DisplayOrder",
-                                title: "@T("Admin.Catalog.Attributes.CheckoutAttributes.Fields.DisplayOrder")",
-                                width: 100
-                            }, {
-                                field: "Id",
-                                title: "@T("Admin.Common.Edit")",
-                                width: 100,
-                                headerAttributes: { style: "text-align:center" },
-                                attributes: { style: "text-align:center" },
-                                template: '<a class="btn btn-default" href="Edit/#=Id#"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>'
-                                }
-                            ]
-                        });
-                    });
-                </script>
+                @await Html.PartialAsync("Table", new DataTablesModel
+                {
+                    Name = "checkoutattributes-grid",
+                    UrlRead = new DataUrl("List", "CheckoutAttribute", null),
+                    Length = Model.PageSize,
+                    LengthMenu = Model.AvailablePageSizes,
+                    ColumnCollection = new List<ColumnProperty>
+                    {
+                        new ColumnProperty(nameof(CheckoutAttributeModel.Name))
+                        {
+                            Title = T("Admin.Catalog.Attributes.CheckoutAttributes.Fields.Name").Text
+                        },
+                        new ColumnProperty(nameof(CheckoutAttributeModel.AttributeControlTypeName))
+                        {
+                            Title = T("Admin.Catalog.Attributes.CheckoutAttributes.Fields.AttributeControlType").Text,
+                            Width = "200"
+                        },
+                        new ColumnProperty(nameof(CheckoutAttributeModel.IsRequired))
+                        {
+                            Title = T("Admin.Catalog.Attributes.CheckoutAttributes.Fields.IsRequired").Text,
+                            Width = "100",
+                            ClassName = NopColumnClassDefaults.CenterAll,
+                            Render = new RenderBoolean()
+                        },
+                        new ColumnProperty(nameof(CheckoutAttributeModel.DisplayOrder))
+                        {
+                            Title = T("Admin.Catalog.Attributes.CheckoutAttributes.Fields.DisplayOrder").Text,
+                            Width = "100",
+                            ClassName = NopColumnClassDefaults.CenterAll
+                        },
+                        new ColumnProperty(nameof(CheckoutAttributeModel.Id))
+                        {
+                            Title = T("Admin.Common.Edit").Text,
+                            Width = "100",
+                            ClassName = NopColumnClassDefaults.Button,
+                            Render = new RenderButtonEdit(new DataUrl("Edit"))
+                        }
+                    }
+                })
             </div>
         </div>
     </div>

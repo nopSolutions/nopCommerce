@@ -1,0 +1,63 @@
+@model VendorModel
+
+<div class="panel-body">
+    <div class="sub-panel">
+        <div class="form-group advanced-setting">
+            <div class="col-md-3">
+                <nop-label asp-for="AllowCustomersToSelectPageSize" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="AllowCustomersToSelectPageSize" />
+                <span asp-validation-for="AllowCustomersToSelectPageSize"></span>
+            </div>
+        </div>
+
+        <nop-nested-setting asp-for="AllowCustomersToSelectPageSize">
+            <div class="form-group advanced-setting" id="pnlPageSize">
+                <div class="col-md-3">
+                    <nop-label asp-for="PageSize" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="PageSize" />
+                    <span asp-validation-for="PageSize"></span>
+                </div>
+            </div>
+            <div class="form-group advanced-setting" id="pnlPageSizeOptions">
+                <div class="col-md-3">
+                    <nop-label asp-for="PageSizeOptions" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="PageSizeOptions" />
+                    <span asp-validation-for="PageSizeOptions"></span>
+                </div>
+            </div>
+        </nop-nested-setting>
+
+        <div class="form-group advanced-setting">
+            <div class="col-md-3">
+                <nop-label asp-for="DisplayOrder" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="DisplayOrder" />
+                <span asp-validation-for="DisplayOrder"></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $("#@Html.IdFor(model => model.AllowCustomersToSelectPageSize)").click(togglePageSize);
+        togglePageSize();
+    });
+
+    function togglePageSize() {
+        if ($('#@Html.IdFor(model => model.AllowCustomersToSelectPageSize)').is(':checked')) {
+            $('#pnlPageSize').hide();
+            $('#pnlPageSizeOptions').show();
+        } else {
+            $('#pnlPageSize').show();
+            $('#pnlPageSizeOptions').hide();
+        }
+    }
+</script>

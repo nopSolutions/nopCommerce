@@ -36,7 +36,7 @@
                                 <label asp-for="q">@T("Search.SearchTerm"):</label>
                                 <input asp-for="q" class="search-text"/>
                             </div>
-                            @await Component.InvokeAsync("Widget", new {widgetZone = "productsearch_page_basic"})
+                            @await Component.InvokeAsync("Widget", new {widgetZone = PublicWidgetZones.ProductSearchPageBasic})
                             <div class="inputs reversed">
                                 <input asp-for="adv"/>
                                 <label asp-for="adv">@T("Search.AdvancedSearch")</label>
@@ -72,16 +72,16 @@
                                 <label>@T("Search.PriceRange"):</label>
                                 <span class="price-range">
                                     @T("Search.PriceRange.From")
-                                    <input asp-for="pf" class="price-from"/>
+                                    <input asp-for="pf" class="price-from" aria-label="@T("Search.PriceRange.From")" />
                                     @T("Search.PriceRange.To")
-                                    <input asp-for="pt" class="price-to" />
+                                    <input asp-for="pt" class="price-to" aria-label="@T("Search.PriceRange.To")" />
                                 </span>
                             </div>
                             <div class="inputs reversed">
                                 <input asp-for="sid" />
                                 <label asp-for="sid">@T("Search.SearchInDescriptions")</label>
                             </div>
-                            @await Component.InvokeAsync("Widget", new {widgetZone = "productsearch_page_advanced"})
+                            @await Component.InvokeAsync("Widget", new {widgetZone = PublicWidgetZones.ProductSearchPageAdvanced})
                         </div>
                     </div>
                 </div>

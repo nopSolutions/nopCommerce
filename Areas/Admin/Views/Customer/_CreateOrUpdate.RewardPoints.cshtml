@@ -1,95 +1,49 @@
 ﻿@model CustomerModel
-
 @using Nop.Core.Domain.Customers
 @using Nop.Services
 @using Nop.Services.Stores
 @inject IStoreService storeService
-@{
-    var stores = storeService.GetAllStores();
-}
-
-<div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerDetailsRewardPointsTop, additionalData = Model })
-    <div class="panel panel-default">
-        <div class="panel-body">
-            <div id="customer-rewardpoints-grid"></div>
-
-            <script>
-                $(document).ready(function() {
-                    $("#customer-rewardpoints-grid").kendoGrid({
-                        dataSource: {
-                            type: "json",
-                            transport: {
-                                read: {
-                                    url: "@Html.Raw(Url.Action("RewardPointsHistorySelect"))",
-                                    type: "POST",
-                                    dataType: "json",
-                                    data: function() {
-                                        var data = {
-                                            CustomerId: '@(Model.Id)'
-                                        };
-                                        addAntiForgeryToken(data);
-                                        return data;
-                                    }
-                                }
-                            },
-                            schema: {
-                                data: "Data",
-                                total: "Total",
-                                errors: "Errors"
-                            },
-                            error: function(e) {
-                                display_kendoui_grid_error(e);
-                                // Cancel the changes
-                                this.cancelChanges();
-                            },
-                            pageSize: @(Model.CustomerRewardPointsSearchModel.PageSize),
-                            serverPaging: true,
-                            serverFiltering: true,
-                            serverSorting: true
-                        },
-                        pageable: {
-                            refresh: true,
-                            pageSizes: [@(Model.CustomerRewardPointsSearchModel.AvailablePageSizes)],
-                            @await Html.PartialAsync("_GridPagerMessages")
-                        },
-                        editable: {
-                            confirmation: "@T("Admin.Common.DeleteConfirmation")",
-                            mode: "inline"
-                        },
-                        scrollable: false,
-                        columns: [
-                        {
-                            field: "StoreName",
-                            title: "@T("Admin.Customers.Customers.RewardPoints.Fields.Store")",
-                            hidden: @(stores.Count > 1 ? "false" : "true"),
-                        }, {
-                            field: "Points",
-                            title: "@T("Admin.Customers.Customers.RewardPoints.Fields.Points")"
-                        }, {
-                            field: "PointsBalance",
-                            title: "@T("Admin.Customers.Customers.RewardPoints.Fields.PointsBalance")"
-                        }, {
-                            field: "Message",
-                            title: "@T("Admin.Customers.Customers.RewardPoints.Fields.Message")"
-                        }, {
-                            field: "CreatedOn",
-                            title: "@T("Admin.Customers.Customers.RewardPoints.Fields.CreatedDate")",
-                            type: "date",
-                            format: "{0:G}"
-                        }, {
-                            field: "EndDate",
-                            title: "@T("Admin.Customers.Customers.RewardPoints.Fields.EndDate")",
-                            type: "date",
-                            format: "{0:G}"
-                        }
-                        ]
-                    });
-                });
-            </script>
-        </div>
+<div class="panel-body">
+    <div class="sub-panel">
+        @await Html.PartialAsync("Table", new DataTablesModel
+        {
+            Name = "customer-rewardpoints-grid",
+            UrlRead = new DataUrl("RewardPointsHistorySelect", "Customer", new RouteValueDictionary { [nameof(Model.CustomerRewardPointsSearchModel.CustomerId)] = Model.CustomerRewardPointsSearchModel.CustomerId }),
+            Length = Model.CustomerRewardPointsSearchModel.PageSize,
+            LengthMenu = Model.CustomerRewardPointsSearchModel.AvailablePageSizes,
+            ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(CustomerRewardPointsModel.StoreName))
+                {
+                    Title = T("Admin.Customers.Customers.RewardPoints.Fields.Store").Text,
+                    Visible = storeService.GetAllStores().Count > 1
+                },
+                new ColumnProperty(nameof(CustomerRewardPointsModel.Points))
+                {
+                    Title = T("Admin.Customers.Customers.RewardPoints.Fields.Points").Text
+                },
+                new ColumnProperty(nameof(CustomerRewardPointsModel.PointsBalance))
+                {
+                    Title = T("Admin.Customers.Customers.RewardPoints.Fields.PointsBalance").Text
+                },
+                new ColumnProperty(nameof(CustomerRewardPointsModel.Message))
+                {
+                    Title = T("Admin.Customers.Customers.RewardPoints.Fields.Message").Text
+                },
+                new ColumnProperty(nameof(CustomerRewardPointsModel.CreatedOn))
+                {
+                    Title = T("Admin.Customers.Customers.RewardPoints.Fields.CreatedDate").Text,
+                    Render = new RenderDate()
+                },
+                new ColumnProperty(nameof(CustomerRewardPointsModel.EndDate))
+                {
+                    Title = T("Admin.Customers.Customers.RewardPoints.Fields.EndDate").Text,
+                    Render = new RenderDate()
+                }
+            }
+        })
     </div>
-    <div class="panel panel-default">
+    <div class="panel panel-default no-margin">
         <div class="panel-heading">
             @T("Admin.Customers.Customers.RewardPoints.AddTitle")
         </div>
@@ -117,7 +71,7 @@
                     <nop-label asp-for="@Model.AddRewardPoints.Message" />
                 </div>
                 <div class="col-md-9">
-                    <nop-editor asp-for="@Model.AddRewardPoints.Message" />
+                    <nop-editor asp-for="@Model.AddRewardPoints.Message" placeholder="@T("Admin.Customers.Customers.SomeComment")"/>
                     <span asp-validation-for="@Model.AddRewardPoints.Message"></span>
                 </div>
             </div>
@@ -163,64 +117,60 @@
             </div>
         </div>
         <script>
-            $(document).ready(function () {
-                $("#@Html.IdFor(model => Model.AddRewardPoints.ActivatePointsImmediately)").click(activatePointsImmediately);
-                activatePointsImmediately();
-                $('#addRewardPoints').click(function () {
-                    $('#addRewardPoints').attr('disabled', true);
-                    var postData = {
-                        Points: $("#@Html.IdFor(model => model.AddRewardPoints.Points)").val(),
-                        Message: $("#@Html.IdFor(model => model.AddRewardPoints.Message)").val(),
-                        StoreId: $("#@Html.IdFor(model => model.AddRewardPoints.StoreId)").val(),
-                        ActivatePointsImmediately: $("#@Html.IdFor(model => model.AddRewardPoints.ActivatePointsImmediately)").is(':checked'),
-                        ActivationDelayPeriodId: $("#@Html.IdFor(model => model.AddRewardPoints.ActivationDelayPeriodId)").val(),
-                        ActivationDelay: $("#@Html.IdFor(model => model.AddRewardPoints.ActivationDelay)").val(),
-                        PointsValidity: $("#@Html.IdFor(model => model.AddRewardPoints.PointsValidity)").val(),
-                        CustomerId: '@(Model.Id)'
-                    };
-                    addAntiForgeryToken(postData);
+        $(document).ready(function () {
+            $("#@Html.IdFor(model => Model.AddRewardPoints.ActivatePointsImmediately)").click(activatePointsImmediately);
+            activatePointsImmediately();
+            $('#addRewardPoints').click(function () {
+                $('#addRewardPoints').attr('disabled', true);
+                var postData = {
+                    Points: $("#@Html.IdFor(model => model.AddRewardPoints.Points)").val(),
+                    Message: $("#@Html.IdFor(model => model.AddRewardPoints.Message)").val(),
+                    StoreId: $("#@Html.IdFor(model => model.AddRewardPoints.StoreId)").val(),
+                    ActivatePointsImmediately: $("#@Html.IdFor(model => model.AddRewardPoints.ActivatePointsImmediately)").is(':checked'),
+                    ActivationDelayPeriodId: $("#@Html.IdFor(model => model.AddRewardPoints.ActivationDelayPeriodId)").val(),
+                    ActivationDelay: $("#@Html.IdFor(model => model.AddRewardPoints.ActivationDelay)").val(),
+                    PointsValidity: $("#@Html.IdFor(model => model.AddRewardPoints.PointsValidity)").val(),
+                    CustomerId: '@(Model.Id)'
+                };
+                addAntiForgeryToken(postData);
 
-                    $.ajax({
-                        cache:false,
-                        type: "POST",
-                        url: "@(Url.Action("RewardPointsHistoryAdd", "Customer"))",
-                        data: postData,
-                        success: function (data) {
-                            if (data.Result) {
-                                var grid = $("#customer-rewardpoints-grid").data('kendoGrid');
-                                grid.dataSource.read();
+                $.ajax({
+                    cache: false,
+                    type: "POST",
+                    url: "@(Url.Action("RewardPointsHistoryAdd", "Customer"))",
+                    data: postData,
+                    success: function (data, textStatus, jqXHR) {
+                        if (data.Result) {
+                            //reload grid
+                            updateTable('#customer-rewardpoints-grid');
 
-                                $("#@Html.IdFor(model => model.AddRewardPoints.Points)").val(0);
-                                $("#@Html.IdFor(model => model.AddRewardPoints.Message)").val("@Model.AddRewardPoints.Message");
-                                $("#@Html.IdFor(model => model.AddRewardPoints.StoreId)").val(@Model.AddRewardPoints.StoreId);
-                                $("#@Html.IdFor(model => model.AddRewardPoints.ActivationDelayPeriodId)").val(@Model.AddRewardPoints.ActivationDelayPeriodId);
-                                $("#@Html.IdFor(model => model.AddRewardPoints.ActivationDelay)").val(@Model.AddRewardPoints.ActivationDelay);
-                                $("#@Html.IdFor(model => model.AddRewardPoints.PointsValidity)").val('');
-                                $("#@Html.IdFor(model => model.AddRewardPoints.ActivatePointsImmediately)").prop('checked', @(Model.AddRewardPoints.ActivatePointsImmediately.ToString().ToLower()));
+                            $("#@Html.IdFor(model => model.AddRewardPoints.Points)").val(0);
+                            $("#@Html.IdFor(model => model.AddRewardPoints.Message)").val('@JavaScriptEncoder.Default.Encode(Model.AddRewardPoints.Message)');
+                            $("#@Html.IdFor(model => model.AddRewardPoints.StoreId)").val(@Model.AddRewardPoints.StoreId);
+                            $("#@Html.IdFor(model => model.AddRewardPoints.ActivationDelayPeriodId)").val(@Model.AddRewardPoints.ActivationDelayPeriodId);
+                            $("#@Html.IdFor(model => model.AddRewardPoints.ActivationDelay)").val(@Model.AddRewardPoints.ActivationDelay);
+                            $("#@Html.IdFor(model => model.AddRewardPoints.PointsValidity)").val('');
+                            $("#@Html.IdFor(model => model.AddRewardPoints.ActivatePointsImmediately)").prop('checked', @(Model.AddRewardPoints.ActivatePointsImmediately.ToString().ToLower()));
 
-                                activatePointsImmediately();
-                            } else {
-                                if(data.Error != undefined)
-                                    alert(data.Error);
-                            }
-
-                            $('#addRewardPoints').attr('disabled', false);
-                        },
-                        error:function (xhr, ajaxOptions, thrownError){
-                            alert('Failed to add reward points.');
-                            $('#addRewardPoints').attr('disabled', false);
+                            activatePointsImmediately();
+                        } else {
+                            //display errors if returned
+                            display_nop_error(data);
                         }
-                    });
+                    },
+                    complete: function (jqXHR, textStatus) {
+                        $('#addRewardPoints').attr('disabled', false);
+                    }
                 });
             });
+        });
 
-            function activatePointsImmediately() {
-                if ($('#@Html.IdFor(model => Model.AddRewardPoints.ActivatePointsImmediately)').is(':checked'))
-                    $('#pnl-activating-delay').hide();
-                else
-                    $('#pnl-activating-delay').show();
-            }
+        function activatePointsImmediately() {
+            if ($('#@Html.IdFor(model => Model.AddRewardPoints.ActivatePointsImmediately)').is(':checked'))
+                $('#pnl-activating-delay').hide();
+            else
+                $('#pnl-activating-delay').show();
+        }
         </script>
     </div>
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerDetailsRewardPointsBottom, additionalData = Model })
 </div>

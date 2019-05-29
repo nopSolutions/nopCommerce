@@ -1,6 +1,5 @@
 ﻿@using Microsoft.AspNetCore.Mvc.Controllers
 @using Nop.Core
-@using Nop.Core.Plugins
 @using Nop.Services.Authentication.External
 @using Nop.Services.Cms
 @using Nop.Services.Common
@@ -9,10 +8,10 @@
 @using Nop.Services.Shipping
 @using Nop.Services.Shipping.Pickup
 @using Nop.Services.Tax
-@inject IPluginFinder pluginFinder
+@inject IPluginService pluginService
 @inject IWebHelper webHelper
 @{
-    var plugin = PluginManager.FindPlugin((this.ViewContext.ActionDescriptor as ControllerActionDescriptor).ControllerTypeInfo).Instance();
+    var plugin = pluginService.FindPluginByTypeInAssembly((this.ViewContext.ActionDescriptor as ControllerActionDescriptor).ControllerTypeInfo);
 
     //friendly name
     var friendlyName = plugin?.PluginDescriptor.FriendlyName;
@@ -26,7 +25,7 @@
     if (plugin is IPaymentMethod)
     {
         //payment plugin
-        activeMenuSystemName = "PaymentMethods";
+        activeMenuSystemName = "Payment methods";
         configureLocale = "Admin.Configuration.Payment.Methods.Configure";
         backToLocale = "Admin.Configuration.Payment.Methods.BackToList";
         listActionMethodName = "PaymentMethods";
@@ -53,7 +52,7 @@
     else if (plugin is ITaxProvider)
     {
         //tax provider
-        activeMenuSystemName = "Tax";
+        activeMenuSystemName = "Tax providers";
         configureLocale = "Admin.Configuration.Tax.Providers.Configure";
         backToLocale = "Admin.Configuration.Tax.Providers.BackToList";
         listActionMethodName = "List";
@@ -80,7 +79,7 @@
     else if (plugin is IMiscPlugin)
     {
         //Misc plugins
-        activeMenuSystemName = "Plugins";
+        activeMenuSystemName = "Local plugins";
         configureLocale = "Admin.Configuration.Plugins.Misc.Configure";
         backToLocale = "Admin.Configuration.Plugins.Misc.BackToList";
         listActionMethodName = "List";

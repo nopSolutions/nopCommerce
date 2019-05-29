@@ -4,18 +4,14 @@
 @inject IPermissionService permissionService
 @inject ICustomerService customerService
 @inject IEventPublisher eventPublisher
-@inject IHttpContextAccessor httpContextAccessor
 @inject CommonSettings commonSettings
 @inject LocalizationSettings localizationSettings
 @inject StoreInformationSettings storeInformationSettings
 @inject Nop.Services.Common.IGenericAttributeService genericAttributeService
 @inject Nop.Services.Localization.ILanguageService languageService
 @using System.Globalization
-@using System.Text.Encodings.Web
-@using Microsoft.AspNetCore.Http
 @using Nop.Core.Domain.Customers
 @using Nop.Web.Framework.UI;
-@using Nop.Core;
 @using Nop.Core.Domain
 @using Nop.Core.Domain.Localization
 @using Nop.Services.Customers
@@ -23,8 +19,8 @@
 @using Nop.Services.Security;
 
 @{
-    var rawUrl = webHelper.GetRawUrl(httpContextAccessor.HttpContext.Request);
-    
+    var returnUrl = webHelper.GetRawUrl(Context.Request);
+
     var kendoVersion = "2014.1.318";
     var supportRtl = workContext.WorkingLanguage.Rtl && !localizationSettings.IgnoreRtlPropertyForAdminArea;
 
@@ -42,6 +38,10 @@
         Html.AppendCssFileParts("~/lib/bootstrap/css/bootstrap.min.css");
     }
 
+    Html.AppendCssFileParts($"~/lib/datatables/buttons.bootstrap.min.css");
+    Html.AppendCssFileParts($"~/lib/datatables/buttons.dataTables.min.css");
+    Html.AppendCssFileParts($"~/lib/datatables/datatables.min.css");
+    Html.AppendCssFileParts($"~/lib/datatables/css/dataTables.bootstrap.css");
     Html.AppendCssFileParts($"~/lib/kendo/{kendoVersion}/kendo.rtl.min.css");
     Html.AppendCssFileParts($"~/lib/kendo/{kendoVersion}/kendo.default.min.css");
     Html.AppendCssFileParts($"~/lib/kendo/{kendoVersion}/kendo.common.min.css");
@@ -49,10 +49,16 @@
     Html.AppendCssFileParts("~/lib/fontAwesome/css/font-awesome.min.css");
     Html.AppendCssFileParts("~/lib/typeahead/typeahead.css");
     Html.AppendCssFileParts("~/lib/bootstrap-touchspin/jquery.bootstrap-touchspin.min.css");
-    <!-- AdminLTE Skins (choose a skin from the css/skins) -->
+    //AdminLTE Skins (choose a skin from the css/skins)
     Html.AppendCssFileParts("~/lib/adminLTE/css/skins/_all-skins.min.css");
 
     //scripts
+    Html.AppendScriptParts($"~/lib/datatables/buttons.bootstrap.min.js");
+    Html.AppendScriptParts($"~/lib/datatables/dataTables.buttons.min.js");
+    Html.AppendScriptParts($"~/lib/datatables/moment-with-locales-2.22.2.min.js");
+    Html.AppendScriptParts($"~/lib/datatables/datatables.min.js");
+    Html.AppendScriptParts($"~/lib/datatables/js/dataTables.bootstrap.min.js");
+    Html.AppendScriptParts($"~/lib/datatables/js/jquery.dataTables.min.js");
     Html.AppendScriptParts($"~/lib/kendo/{kendoVersion}/kendo.web.min.js");
     Html.AppendScriptParts("~/js/admin.search.js");
     Html.AppendScriptParts("~/js/admin.navigation.js");
@@ -80,10 +86,6 @@
         Html.AppendHeadCustomParts($"<meta http-equiv=\"X-UA-Compatible\" content=\"{commonSettings.XuaCompatibleValue}\"/>");
     }
 
-    //sidebar
-    const string hideSidebarAttributeName = "HideSidebar";
-    var hideSidebar = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSidebarAttributeName);
-
     //avatar
     var currentCustomer = workContext.CurrentCustomer;
 
@@ -100,12 +102,16 @@
         <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
         @*Google Font*@
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+        <script>
+            var rootAppPath = '@(Url.Content("~/"))';
+        </script>
         @Html.NopHeadCustom()
-        @Html.NopCssFiles(this.Url, ResourceLocation.Head, false)
-        @Html.NopScripts(this.Url, ResourceLocation.Head, false)
+        @Html.NopCssFiles(ResourceLocation.Head, false)
+        @Html.NopScripts(ResourceLocation.Head, false)
+        @*Insert favicon and app icons head code*@
+        @await Component.InvokeAsync("Favicon")
     </head>
-    <body class="hold-transition skin-blue sidebar-mini @if (hideSidebar) 
-                                                    {<text>sidebar-collapse</text>}">
+    <body class="hold-transition skin-blue sidebar-mini">
         <div class="throbber">
             <div class="curtain">
             </div>
@@ -137,7 +143,7 @@
                         <span class="logo-lg"></span>
                     </a>
                     <div class="navbar navbar-static-top" role="navigation">
-                        <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+                        <a href="#" id="nopSideBarPusher" class="sidebar-toggle" data-toggle="push-menu" role="button">
                             <span class="sr-only">&nbsp;</span>
                         </a>
                         @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.HeaderToggleAfter })
@@ -169,7 +175,7 @@
                                         <ul class="maintenance-menu dropdown-menu bg-light-blue" role="menu">
                                             <li>
                                                 <form asp-controller="Common" asp-action="ClearCache" asp-area="@AreaNames.Admin">
-                                                    <input name="returnurl" type="hidden" value="@rawUrl">
+                                                    <input name="returnurl" type="hidden" value="@returnUrl">
                                                     <button type="submit" class="bg-light-blue">
                                                         <span>@T("Admin.Header.ClearCache")</span>
                                                     </button>
@@ -177,7 +183,7 @@
                                             </li>
                                             <li>
                                                 <form asp-controller="Common" asp-action="RestartApplication" asp-area="@AreaNames.Admin">
-                                                    <input name="returnurl" type="hidden" value="@rawUrl">
+                                                    <input name="returnurl" type="hidden" value="@returnUrl">
                                                     <button id="restart-application" type="submit" class="bg-light-blue">
                                                         <span>@T("Admin.Header.RestartApplication")</span>
                                                     </button>
@@ -234,7 +240,7 @@
                 @if (!storeInformationSettings.HidePoweredByNopCommerce)
                 {
                     @*Would you like to remove the "Powered by nopCommerce" link in the bottom of the footer?
-                        Please find more info at https://www.nopcommerce.com/copyrightremoval.aspx*@
+                    Please find more info at https://www.nopcommerce.com/copyrightremoval.aspx*@
                     <div class="pull-left">
                         Powered by <a href="https://www.nopcommerce.com/?utm_source=admin-panel&utm_medium=footer&utm_campaign=admin-panel" target="_blank">nopCommerce</a>
                     </div>
@@ -260,8 +266,18 @@
                 }
             };
         </script>
-        @Html.NopCssFiles(this.Url, ResourceLocation.Footer)
-        @Html.NopScripts(this.Url, ResourceLocation.Footer)
+        @{
+            //scroll to a selected panel (if specified)
+            var selectedPanelName = this.Html.GetSelectedPanelName();
+            if (!String.IsNullOrEmpty(selectedPanelName))
+            {
+                <script>
+                    location.hash = '#@(selectedPanelName)';
+                </script>
+            }
+        }
+        @Html.NopCssFiles(ResourceLocation.Footer)
+        @Html.NopScripts(ResourceLocation.Footer)
         <a id="backTop" class="btn btn-back-top bg-teal"></a>
         <script>
             $(document).ready(function () {
@@ -269,23 +285,7 @@
                 $('#backTop').backTop();
 
                 //enable tooltips
-                $('[data-toggle="tooltip"]').tooltip()
-
-                //save sidebar preferences
-                $('a.sidebar-toggle').on('click', function () {
-                    var collapsed = !$('body').hasClass('sidebar-collapse');
-                    saveUserPreferences('@(Url.Action("SavePreference", "Preferences"))', '@hideSidebarAttributeName', collapsed);
-                });
-
-                //bug-fix for unexpected auto-closing of grid's page size DropDownList in Chrome (Kendo grid bug)
-                var ddl = $(".k-grid-pager [data-role='dropdownlist']").data("kendoDropDownList");
-                if (ddl) {
-                    ddl.bind("close", pager_close);
-
-                    function pager_close(e) {
-                        e.sender.refresh()
-                    }
-                }
+                $('[data-toggle="tooltip"]').tooltip();
             });
         </script>
     </body>

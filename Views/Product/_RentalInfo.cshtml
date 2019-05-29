@@ -10,6 +10,7 @@
         @{
             var startDateControlId = $"rental_start_date_{Model.Id}";
             var endDateControlId = $"rental_end_date_{Model.Id}";
+            var dateControlChangeHandlerFuncName = $"on_rental_datepicker_select_{Model.Id}";
             //currenly we support only this format
             //java-script format
             const string datePickerFormat = "mm/dd/yy";
@@ -27,7 +28,7 @@
                     <input id="@(startDateControlId)" name="@(startDateControlId)" type="text" class="datepicker" value="@(Model.RentalStartDate.HasValue ? Model.RentalStartDate.Value.ToString(datePickerFormat2, CultureInfo.InvariantCulture) : null)" @if(isMobileDevice){<text>readonly</text>}/>
                     <script asp-location="Footer">
                         $(document).ready(function () {
-                            $("#@(startDateControlId)").datepicker({ dateFormat: "@datePickerFormat", onSelect: onRentalDatePickerSelect });
+                            $("#@(startDateControlId)").datepicker({ dateFormat: "@datePickerFormat", onSelect: @(dateControlChangeHandlerFuncName) });
                         });
                     </script>
                 </div>
@@ -43,7 +44,7 @@
                     <input id="@(endDateControlId)" name="@(endDateControlId)" type="text" class="datepicker" value="@(Model.RentalEndDate.HasValue ? Model.RentalEndDate.Value.ToString(datePickerFormat2, CultureInfo.InvariantCulture) : null)" @if(isMobileDevice){<text>readonly</text>}/>
                     <script asp-location="Footer">
                         $(document).ready(function () {
-                            $("#@(endDateControlId)").datepicker({ dateFormat: "@datePickerFormat", onSelect: onRentalDatePickerSelect });
+                            $("#@(endDateControlId)").datepicker({ dateFormat: "@datePickerFormat", onSelect: @(dateControlChangeHandlerFuncName) });
                         });
                     </script>
                 </div>
@@ -51,7 +52,7 @@
         }
 
         <script asp-location="Footer">
-            function onRentalDatePickerSelect() {
+            function @(dateControlChangeHandlerFuncName)() {
                 @{
                     //almost the same implementation is used in the \Views\Product\_ProductAttributes.cshtml file
                     var productId = Model.Id;
@@ -60,10 +61,10 @@
                         <text>
                         $.ajax({
                             cache: false,
-                            url: '@Html.Raw(Url.Action("productdetails_attributechange", "shoppingcart", new {productId = productId, validateAttributeConditions = false, loadPicture = false }))',
+                            url: "@Html.Raw(Url.Action("productdetails_attributechange", "shoppingcart", new {productId = productId, validateAttributeConditions = false, loadPicture = false }))",
                             data: $('#product-details-form').serialize(),
-                            type: 'post',
-                            success: function(data) {
+                            type: "POST",
+                            success: function (data, textStatus, jqXHR) {
                                 if (data.sku) {
                                     $('#sku-@productId').text(data.sku);
                                 }

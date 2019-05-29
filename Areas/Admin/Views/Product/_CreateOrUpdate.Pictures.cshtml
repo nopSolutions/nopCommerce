@@ -1,125 +1,70 @@
 @model ProductModel
 
-<div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductDetailsPicturesTop, additionalData = Model })
+<div class="panel-body">
     @if (Model.Id > 0)
     {
-        <div class="panel panel-default">
-            <div class="panel-body">
-                <div id="productpictures-grid"></div>
+    <div class="sub-panel">
 
-                <script>
-                    $(document).ready(function() {
-                        $("#productpictures-grid").kendoGrid({
-                            dataSource: {
-                                type: "json",
-                                transport: {
-                                    read: {
-                                        url: "@Html.Raw(Url.Action("ProductPictureList", "Product"))",
-                                        type: "POST",
-                                        dataType: "json",
-                                        data: function() {
-                                            var data = {
-                                                ProductId: '@(Model.Id)'
-                                            };
-                                            addAntiForgeryToken(data);
-                                            return data;
-                                        }
-                                    },
-                                    update: {
-                                        url: "@Html.Raw(Url.Action("ProductPictureUpdate", "Product"))",
-                                        type: "POST",
-                                        dataType: "json",
-                                        data: addAntiForgeryToken
-                                    },
-                                    destroy: {
-                                        url: "@Html.Raw(Url.Action("ProductPictureDelete", "Product"))",
-                                        type: "POST",
-                                        dataType: "json",
-                                        data: addAntiForgeryToken
-                                    }
-                                },
-                                schema: {
-                                    data: "Data",
-                                    total: "Total",
-                                    errors: "Errors",
-                                    model: {
-                                        id: "Id",
-                                        fields: {
-                                            PictureUrl: { editable: false, type: "string" },
-                                            DisplayOrder: { editable: true, type: "number" },
-                                            OverrideAltAttribute: { editable: true, type: "string" },
-                                            OverrideTitleAttribute: { editable: true, type: "string" }
-                                        }
-                                    }
-                                },
-                                requestEnd: function(e) {
-                                    if (e.type == "update") {
-                                        this.read();
-                                    }
-                                },
-                                error: function(e) {
-                                    display_kendoui_grid_error(e);
-                                    // Cancel the changes
-                                    this.cancelChanges();
-                                },
-                                pageSize: @(Model.ProductPictureSearchModel.PageSize),
-                                serverPaging: true,
-                                serverFiltering: true,
-                                serverSorting: true
-                            },
-                            pageable: {
-                                refresh: true,
-                                pageSizes: [@(Model.ProductPictureSearchModel.AvailablePageSizes)],
-                                @await Html.PartialAsync("_GridPagerMessages")
-                            },
-                            editable: {
-                                confirmation: "@T("Admin.Common.DeleteConfirmation")",
-                                mode: "inline"
-                            },
-                            scrollable: false,
-                            columns: [
-                            {
-                                field: "PictureUrl",
-                                title: "@T("Admin.Catalog.Products.Pictures.Fields.Picture")",
-                                template: '<a href="#=PictureUrl#" target="_blank"><img alt="#=PictureId#" src="#=PictureUrl#" width="150" /></a>',
-                                width: 200
-                            }, {
-                                field: "DisplayOrder",
-                                title: "@T("Admin.Catalog.Products.Pictures.Fields.DisplayOrder")",
-                                //integer format
-                                format: "{0:0}",
-                                width: 150
-                            }, {
-                                field: "OverrideAltAttribute",
-                                title: "@T("Admin.Catalog.Products.Pictures.Fields.OverrideAltAttribute")",
-                                width: 200
-                            }, {
-                                field: "OverrideTitleAttribute",
-                                title: "@T("Admin.Catalog.Products.Pictures.Fields.OverrideTitleAttribute")",
-                                width: 200
-                            }, {
-                                command: [
-                                {
-                                    name: "edit",
-                                    text: {
-                                        edit: "@T("Admin.Common.Edit")",
-                                        update: "@T("Admin.Common.Update")",
-                                        cancel: "@T("Admin.Common.Cancel")"
-                                    }
-                                }, {
-                                    name: "destroy",
-                                    text: "@T("Admin.Common.Delete")"
-                                }
-                                ],
-                                width: 200
-                            }
-                            ]
-                        });
-                    });
-                </script>
-            </div>
-        </div>
+        @await Html.PartialAsync("Table", new DataTablesModel
+        {
+            Name = "productpictures-grid",
+            UrlRead = new DataUrl("ProductPictureList", "Product", new RouteValueDictionary { [nameof(Model.ProductPictureSearchModel.ProductId)] = Model.ProductPictureSearchModel.ProductId }),
+            UrlDelete = new DataUrl("ProductPictureDelete", "Product", null),
+            UrlUpdate = new DataUrl("ProductPictureUpdate", "Product", null),
+            Length = Model.ProductPictureSearchModel.PageSize,
+            LengthMenu = Model.ProductPictureSearchModel.AvailablePageSizes,
+            ColumnCollection = new List<ColumnProperty>
+                {
+                    new ColumnProperty(nameof(ProductPictureModel.PictureUrl))
+                    {
+                        Title = T("Admin.Catalog.Products.Pictures.Fields.Picture").Text,
+                        Render = new RenderCustom("renderPicturesColumnProductPictureUrl")
+                    },
+                    new ColumnProperty(nameof(ProductPictureModel.DisplayOrder))
+                    {
+                        Title = T("Admin.Catalog.Products.Pictures.Fields.DisplayOrder").Text,
+                        Width = "150",
+                        ClassName = NopColumnClassDefaults.CenterAll,
+                        Editable = true,
+                        EditType = EditType.Number
+                    },
+                    new ColumnProperty(nameof(ProductPictureModel.OverrideAltAttribute))
+                    {
+                        Title = T("Admin.Catalog.Products.Pictures.Fields.OverrideAltAttribute").Text,
+                        Width = "200",
+                        Editable = true,
+                        EditType = EditType.String
+                    },
+                    new ColumnProperty(nameof(ProductPictureModel.OverrideTitleAttribute))
+                    {
+                        Title = T("Admin.Catalog.Products.Pictures.Fields.OverrideTitleAttribute").Text,
+                        Width = "200",
+                        Editable = true,
+                        EditType = EditType.String
+                    },
+                    new ColumnProperty(nameof(ProductPictureModel.Id))
+                    {
+                        Title = T("Admin.Common.Edit").Text,
+                        Width = "200",
+                        ClassName =  NopColumnClassDefaults.Button,
+                        Render = new RenderButtonsInlineEdit()
+                    },
+                    new ColumnProperty(nameof(ProductPictureModel.Id))
+                    {
+                        Title = T("Admin.Common.Delete").Text,
+                        Width = "100",
+                        Render = new RenderButtonRemove(T("Admin.Common.Delete").Text),
+                        ClassName = NopColumnClassDefaults.Button
+                    }
+                }
+        })
+        
+        <script>
+            function renderPicturesColumnProductPictureUrl(data, type, row, meta) {
+                return '<a href="' + row.PictureUrl + '" target="_blank"><img alt="' + row.PictureId + '" src="' + row.PictureUrl + '" width="150" /></a>';
+            }
+        </script>
+    </div>
 
         <div class="panel panel-default">
             <div class="panel-heading">
@@ -135,7 +80,7 @@
                             var displayOrder = $("#@Html.IdFor(model => model.AddPictureModel.DisplayOrder)").val();
 
                             if (pictureId == 0) {
-                                alert('Upload picture first');
+                                $("#addProductPictureAlert").click();
                                 return;
                             }
 
@@ -155,15 +100,16 @@
                                 type: "POST",
                                 url: "@(Url.Action("ProductPictureAdd", "Product"))",
                                 data: postData,
-                                success: function (data) {
-                                    $('#addProductPicture').attr('disabled', false);
-                                    if (!data.Result)
+                                success: function (data, textStatus, jqXHR) {
+                                    if (!data.Result) {
                                         return;
-                                    var grid = $("#productpictures-grid");
-                                    grid.data('kendoGrid').dataSource.read();
+                                    }                                        
+                                    updateTable('#productpictures-grid');
                                 },
-                                error: function(xhr, ajaxOptions, thrownError) {
-                                    alert('Failed to add product picture.');
+                                error: function (jqXHR, textStatus, errorThrown) {
+                                    $("#productPictureAddAlert").click();
+                                },
+                                complete: function (jqXHR, textStatus) {
                                     $('#addProductPicture').attr('disabled', false);
                                 }
                             });
@@ -222,5 +168,6 @@
             </div>
         </div>
     }
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductDetailsPicturesBottom, additionalData = Model })
 </div>
+<nop-alert asp-alert-id="addProductPictureAlert" asp-alert-message="@T("Admin.Catalog.Products.Pictures.Alert.AddNew")" />
+<nop-alert asp-alert-id="productPictureAddAlert" asp-alert-message="@T("Admin.Catalog.Products.Pictures.Alert.PictureAdd")" />

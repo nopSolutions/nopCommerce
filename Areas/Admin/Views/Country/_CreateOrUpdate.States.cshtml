@@ -1,132 +1,88 @@
 @model CountryModel
 
-<div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CountryDetailsStatesTop, additionalData = Model })
-    <div class="panel panel-default">
-        @if (Model.Id > 0)
+@if (Model.Id > 0)
+{
+    <div class="panel-body">
+        @await Html.PartialAsync("Table", new DataTablesModel
         {
-            <div class="panel-body">
-                <div id="states-grid"></div>
-
-                <script>
-                    $(document).ready(function () {
-                        $("#states-grid").kendoGrid({
-                            dataSource: {
-                                type: "json",
-                                transport: {
-                                    read: {
-                                        url: "@Html.Raw(Url.Action("States", "Country"))",
-                                        type: "POST",
-                                        dataType: "json",
-                                        data: function() {
-                                            var data = {
-                                                CountryId: '@(Model.Id)'
-                                            };
-                                            addAntiForgeryToken(data);
-                                            return data;
-                                        }
-                                    },
-                                    destroy: {
-                                        url: "@Html.Raw(Url.Action("StateDelete", "Country"))",
-                                        type: "POST",
-                                        dataType: "json",
-                                        data: addAntiForgeryToken
-                                    }
-                                },
-                                schema: {
-                                    data: "Data",
-                                    total: "Total",
-                                    errors: "Errors",
-                                    model: {
-                                        id: "Id"
-                                    }
-                                },
-                                error: function (e) {
-                                    display_kendoui_grid_error(e);
-                                    // Cancel the changes
-                                    this.cancelChanges();
-                                },
-                                pageSize: @(Model.StateProvinceSearchModel.PageSize),
-                                serverPaging: true,
-                                serverFiltering: true,
-                                serverSorting: true
-                            },
-                            pageable: {
-                                refresh: true,
-                                pageSizes: [@(Model.StateProvinceSearchModel.AvailablePageSizes)],
-                                @await Html.PartialAsync("_GridPagerMessages")
-                            },
-                            editable: {
-                                confirmation: "@T("Admin.Common.DeleteConfirmation")",
-                                mode: "inline"
-                            },
-                            scrollable: false,
-                            columns: [{
-                                field: "Name",
-                                title: "@T("Admin.Configuration.Countries.States.Fields.Name")",
-                                width: 300
-                            }, {
-                                field: "Abbreviation",
-                                title: "@T("Admin.Configuration.Countries.States.Fields.Abbreviation")",
-                                width: 150
-                            }, {
-                                field: "Published",
-                                title: "@T("Admin.Configuration.Countries.States.Fields.Published")",
-                                width: 100,
-                                headerAttributes: { style: "text-align:center" },
-                                attributes: { style: "text-align:center" },
-                                template: '# if(Published) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
-                            }, {
-                                field: "DisplayOrder",
-                                title: "@T("Admin.Configuration.Countries.States.Fields.DisplayOrder")",
-                                width: 100
-                            }, {
-                                field: "Id",
-                                title: "@T("Admin.Common.Edit")",
-                                headerAttributes: { style: "text-align:center" },
-                                attributes: { style: "text-align:center" },
-                                width: 100,
-                                template: "<button onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/Country/StateEditPopup/")#=Id#?btnId=btnRefresh&formId=country-form', 800, 450, true); return false;\" class='btn btn-default'><i class=\"fa fa-pencil\"></i>@T("Admin.Common.Edit")</button>"
-                            }, {
-                                command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
-                                title: "@T("Admin.Common.Delete")",
-                                headerAttributes: { style: "text-align:center" },
-                                attributes: { style: "text-align:center" },
-                                width: 100
-                            }]
-                        });
-                    });
-                </script>
-            </div>
-            <div class="panel-footer">
-                <div width="100%">
-                    <button type="submit" id="btnAddNewState"
-                            onclick="javascript:OpenWindow('@(Url.Action("StateCreatePopup", "Country", new { countryId = Model.Id, btnId = "btnRefresh", formId = "country-form" }))', 800, 450, true); return false;"
-                            class="btn btn-primary">
-                        @T("Admin.Configuration.Countries.States.AddNew")
-                    </button>
-                    <input type="submit" id="btnRefresh" style="display: none" />
-                    <script>
-                        $(document).ready(function () {
-                            $('#btnRefresh').click(function () {
-                                //refresh grid
-                                var grid = $("#states-grid").data('kendoGrid');
-                                grid.dataSource.read();
-
-                                //return false to don't reload a page
-                                return false;
-                            });
-                        });
-                    </script>
-                </div>
-            </div>
-        }
-        else
-        {
-            <div class="panel-body">
-                @T("Admin.Configuration.Countries.States.SaveBeforeEdit")
-            </div>
-        }
+            Name = "states-grid",
+            UrlRead = new DataUrl("States", "Country", new RouteValueDictionary { [nameof(StateProvinceSearchModel.CountryId)] = Model.StateProvinceSearchModel.CountryId }),
+            UrlDelete = new DataUrl("StateDelete", "Country", null),
+            Length = Model.StateProvinceSearchModel.PageSize,
+            LengthMenu = Model.StateProvinceSearchModel.AvailablePageSizes,
+            ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(StateProvinceModel.Name))
+                {
+                    Title = T("Admin.Configuration.Countries.States.Fields.Name").Text,
+                    Width = "300"
+                },
+                new ColumnProperty(nameof(StateProvinceModel.Abbreviation))
+                {
+                    Title = T("Admin.Configuration.Countries.States.Fields.Abbreviation").Text,
+                    Width = "150"
+                },
+                new ColumnProperty(nameof(StateProvinceModel.Published))
+                {
+                    Title = T("Admin.Configuration.Countries.States.Fields.Published").Text,
+                    Width = "100",
+                    ClassName = NopColumnClassDefaults.CenterAll,
+                    Render = new RenderBoolean()
+                },
+                new ColumnProperty(nameof(StateProvinceModel.DisplayOrder))
+                {
+                    Title = T("Admin.Configuration.Countries.States.Fields.DisplayOrder").Text,
+                    Width = "100",
+                    ClassName =  NopColumnClassDefaults.CenterAll
+                },
+                new ColumnProperty(nameof(StateProvinceModel.Id))
+                {
+                    Title = T("Admin.Common.Edit").Text,
+                    Width = "100",
+                    ClassName = NopColumnClassDefaults.Button,
+                    Render = new RenderCustom("renderColumnEdit")
+                },
+                new ColumnProperty(nameof(StateProvinceModel.Id))
+                {
+                    Title = T("Admin.Common.Delete").Text,
+                    Width = "100",
+                    Render = new RenderButtonRemove(T("Admin.Common.Delete").Text),
+                    ClassName = NopColumnClassDefaults.Button
+                }
+            }
+        })
     </div>
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CountryDetailsStatesBottom, additionalData = Model })
-</div>
+    <div class="panel-footer">
+        <div width="100%">
+            <button type="submit" id="btnAddNewState"
+                    onclick="javascript:OpenWindow('@(Url.Action("StateCreatePopup", "Country", new { countryId = Model.Id, btnId = "btnRefresh", formId = "country-form" }))', 800, 450, true); return false;"
+                    class="btn btn-primary">
+                @T("Admin.Configuration.Countries.States.AddNew")
+            </button>
+            <input type="submit" id="btnRefresh" style="display: none" />
+            <script>
+                $(document).ready(function () {
+                    $('#btnRefresh').click(function () {
+                        //refresh grid
+                        updateTable('#states-grid');
+
+                        //return false to don't reload a page
+                        return false;
+                    });
+                });
+            </script>
+        </div>
+    </div>
+}
+else
+{
+    <div class="panel-body">
+        @T("Admin.Configuration.Countries.States.SaveBeforeEdit")
+    </div>
+}
+
+<script>
+    function renderColumnEdit(data, type, row, meta) {
+        return '<button onclick=\"javascript:OpenWindow(\'@Url.Content("~/Admin/Country/StateEditPopup/")' + data + '?btnId=btnRefresh&formId=country-form\', 800, 400, true); return false;\" class="btn btn-default"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</button>';
+    }
+</script>

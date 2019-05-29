@@ -7,6 +7,11 @@
     Html.SetActiveMenuItemSystemName("Low stock");
 }
 
+@{
+    const string hideSearchBlockAttributeName = "LowStockPage.HideSearchBlock";
+    var hideSearchBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSearchBlockAttributeName);
+}
+
 <form asp-controller="Report" asp-action="LowStock" method="post">
     <div class="content-header clearfix">
         <h1 class="pull-left">
@@ -22,22 +27,30 @@
             <div class="panel-group">
                 <div class="panel panel-default panel-search">
                     <div class="panel-body">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <div class="col-md-4">
-                                        <nop-label asp-for="SearchPublishedId" />
+                        <div class="row search-row @(!hideSearchBlock ? "opened" : "")" data-hideAttribute="@hideSearchBlockAttributeName">
+                            <div class="search-text">@T("Admin.Common.Search")</div>
+                            <div class="icon-search"><i class="fa fa-search" aria-hidden="true"></i></div>
+                            <div class="icon-collapse"><i class="fa fa-angle-down" aria-hidden="true"></i></div>
+                        </div>
+
+                        <div class="search-body @(hideSearchBlock ? "closed" : "")">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="SearchPublishedId" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-select asp-for="SearchPublishedId" asp-items="Model.AvailablePublishedOptions" />
+                                        </div>
                                     </div>
-                                    <div class="col-md-8">
-                                        <nop-select asp-for="SearchPublishedId" asp-items="Model.AvailablePublishedOptions" />
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="col-md-8 col-md-offset-4">
-                                        <button type="button" id="search-products" class="btn btn-primary btn-search">
-                                            <i class="fa fa-search"></i>
-                                            @T("Admin.Common.Search")
-                                        </button>
+                                    <div class="form-group">
+                                        <div class="col-md-8 col-md-offset-4">
+                                            <button type="button" id="search-products" class="btn btn-primary btn-search">
+                                                <i class="fa fa-search"></i>
+                                                @T("Admin.Common.Search")
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -47,99 +60,67 @@
 
                 <div class="panel panel-default">
                     <div class="panel-body">
-                        <div id="products-grid"></div>
-
+                        @await Html.PartialAsync("Table", new DataTablesModel
+                        {
+                            Name = "products-grid",
+                            UrlRead = new DataUrl("LowStockList", "Report", null),
+                            SearchButtonId = "search-products",
+                            Length = Model.PageSize,
+                            LengthMenu = Model.AvailablePageSizes,
+                            Filters = new List<FilterParameter>
+                            {
+                                new FilterParameter(nameof(Model.SearchPublishedId))
+                            },
+                            ColumnCollection = new List<ColumnProperty>
+                            {
+                                new ColumnProperty(nameof(LowStockProductModel.Name))
+                                {
+                                    Title = T("Admin.Catalog.Products.Fields.Name").Text,
+                                    Width = "300",
+                                    Render = new RenderCustom("renderColumnName")
+                                },
+                                new ColumnProperty(nameof(LowStockProductModel.ManageInventoryMethod))
+                                {
+                                    Title = T("Admin.Catalog.Products.Fields.ManageInventoryMethod").Text,
+                                    Width = "150"
+                                },
+                                new ColumnProperty(nameof(LowStockProductModel.StockQuantity))
+                                {
+                                    Title = T("Admin.Catalog.Products.Fields.StockQuantity").Text,
+                                    Width = "100"
+                                },
+                                new ColumnProperty(nameof(LowStockProductModel.Published))
+                                {
+                                    Title = T("Admin.Catalog.Products.Fields.Published").Text,
+                                    Width = "100",
+                                    ClassName =  NopColumnClassDefaults.CenterAll,
+                                    Render = new RenderBoolean()
+                                },
+                                new ColumnProperty(nameof(LowStockProductModel.Id))
+                                {
+                                    Title = T("Admin.Common.View").Text,
+                                    Width = "100",
+                                    ClassName =  NopColumnClassDefaults.Button,
+                                    Render = new RenderButtonView(new DataUrl("~/Admin/Product/Edit/"))
+                                }
+                            }
+                        })
+                        
                         <script>
-                            $(document).ready(function() {
-                                $("#products-grid").kendoGrid({
-                                    dataSource: {
-                                        type: "json",
-                                        transport: {
-                                            read: {
-                                                url: "@Html.Raw(Url.Action("LowStockList", "Report"))",
-                                                type: "POST",
-                                                dataType: "json",
-                                                data: function() {
-                                                    var data = {
-                                                        SearchPublishedId: $('#SearchPublishedId').val()
-                                                    };
-                                                    addAntiForgeryToken(data);
-                                                    return data;
-                                                }
-                                            }
-                                        },
-                                        schema: {
-                                            data: "Data",
-                                            total: "Total",
-                                            errors: "Errors"
-                                        },
-                                        error: function(e) {
-                                            display_kendoui_grid_error(e);
-                                            // Cancel the changes
-                                            this.cancelChanges();
-                                        },
-                                        pageSize: @(Model.PageSize),
-                                        serverPaging: true,
-                                        serverFiltering: true,
-                                        serverSorting: true
-                                    },
-                                    pageable: {
-                                        refresh: true,
-                                        pageSizes: [@(Model.AvailablePageSizes)],
-                                        @await Html.PartialAsync("_GridPagerMessages")
-                                    },
-                                    editable: {
-                                        confirmation: "@T("Admin.Common.DeleteConfirmation")",
-                                        mode: "inline"
-                                    },
-                                    scrollable: false,
-                                    columns: [
-                                        {
-                                            field: "Name",
-                                            title: "@T("Admin.Catalog.Products.Fields.Name")",
-                                            width: 300,
-                                            //if not a grouped product, then display
-                                            template: "#:Name# # if(Attributes !== null) {# <div><i> #=Attributes# </i></div> #} #"
-                                        }, {
-                                            field: "ManageInventoryMethod",
-                                            title: "@T("Admin.Catalog.Products.Fields.ManageInventoryMethod")",
-                                            width: 150
-                                        }, {
-                                            field: "StockQuantity",
-                                            title: "@T("Admin.Catalog.Products.Fields.StockQuantity")",
-                                            width: 100
-                                        }, {
-                                            field: "Published",
-                                            title: "@T("Admin.Catalog.Products.Fields.Published")",
-                                            width: 100,
-                                            headerAttributes: { style: "text-align:center" },
-                                            attributes: { style: "text-align:center" },
-                                            template: '# if(Published) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
-                                        }, {
-                                            field: "Id",
-                                            title: "@T("Admin.Common.Edit")",
-                                            width: 100,
-                                            headerAttributes: { style: "text-align:center" },
-                                            attributes: { style: "text-align:center" },
-                                            template: '<a class="btn btn-default" href="@Url.Content("~/Admin/Product/Edit/")#=Id#"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>'                                }
-                                    ]
-                                });
-                            });
+                            function renderColumnName(data, type, row, meta) {
+                                var textRenderer = $.fn.dataTable.render.text().display;
+                                var res = data;
+                                if (row.Attributes !== null) {
+                                    return textRenderer(res) + '<div><i>' + textRenderer(row.Attributes) + '</i></div>';
+                                }
+                                else {
+                                    return textRenderer(res);
+                                }
+                            }
                         </script>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-    <script>
-        $(document).ready(function() {
-            $('#search-products').click(function() {
-                var grid = $('#products-grid').data('kendoGrid');
-                grid.dataSource.page(1); //new search. Set page size to 1
-                //grid.dataSource.read(); we already loaded the grid above using "page" function
-                return false;
-            });
-        });
-    </script>
 </form>

@@ -29,15 +29,23 @@
                 cache: false,
                 type: "POST",
                 url: "@(Url.Action("SaveDownloadUrl", "Download", new { area = AreaNames.Admin }))",
-                data: { "downloadUrl": downloadUrl },
-                success: function (data) {
-                    $('#pnlDownloadURLResult@(randomNumber)').fadeIn("slow").delay(1000).fadeOut("slow");
-                    $("#@(clientId + "value") input").val(data.downloadId);
-                    $('#saveDownloadUrl@(randomNumber)').attr('disabled', false);
-
+                data: {
+                    "downloadUrl": downloadUrl
                 },
-                error: function (xhr, ajaxOptions, thrownError) {
-                    alert('Failed to save download object.');
+                success: function (data, textStatus, jqXHR) {
+                    if (data.success) {
+                        $('#pnlDownloadURLResult@(randomNumber)').fadeIn("slow").delay(1000).fadeOut("slow");
+                        $("#@(clientId + "value") input").val(data.downloadId);
+                    }
+                    else {
+                        $('#saveDownloadUrlFailed-info').text(data.message);
+                        $("#saveDownloadUrlFailed").click();
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    $("#saveDownloadUrlAlert").click();
+                },
+                complete: function (jqXHR, textStatus) {
                     $('#saveDownloadUrl@(randomNumber)').attr('disabled', false);
                 }
             });
@@ -76,7 +84,7 @@
                 </div>
                 <div class="col-xs-8">
                     <input type="checkbox" name="cbUseDownloadURL@(randomNumber)" id="cbUseDownloadURL@(randomNumber)"
-                           @if (download != null && download.UseDownloadUrl) { <text> checked="checked" </text>        } />
+                           @if (download != null && download.UseDownloadUrl) { <text> checked="checked" </text> } />
                 </div>
             </div>
         }
@@ -91,7 +99,7 @@
                 </div>
                 <div class="col-xs-8">
                     <input type="text" class="form-control" name="downloadurl@(randomNumber)" id="downloadurl@(randomNumber)"
-                           @if (download != null && !string.IsNullOrEmpty(download.DownloadUrl)) { <text> value="@(download.DownloadUrl)" </text>  } />
+                           @if (download != null && !string.IsNullOrEmpty(download.DownloadUrl)) { <text> value="@(download.DownloadUrl)" </text> } />
                 </div>
             </div>
             <div class="form-group">
@@ -170,6 +178,7 @@
                         $("#@(clientId + "remove")").click(function (e) {
                             $("#@(clientId + "downloadurl")").html("");
                             $("#@(clientId + "value") input").val(0);
+                            $("#@(clientId) .qq-upload-list-selector").empty();
                             $(this).hide();
                         });
                     });
@@ -197,5 +206,5 @@
         </div>
     </div>
 </div>
-
-
+<nop-alert asp-alert-id="saveDownloadUrlAlert" asp-alert-message="@T("Admin.Download.SaveDownloadURL.Alert.FailedSave")" />
+<nop-alert asp-alert-id="saveDownloadUrlFailed" />

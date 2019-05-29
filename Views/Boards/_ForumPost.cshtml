@@ -109,9 +109,9 @@
                             $.ajax({
                                 cache: false,
                                 type: "POST",
-                                url: '@Url.Action("PostVote", "Boards")',
+                                url: "@Url.Action("PostVote", "Boards")",
                                 data: postData,
-                                success: function (data) {
+                                success: function (data, textStatus, jqXHR) {
                                     if (data.Error) {
                                         alert(data.Error);
                                     }
@@ -127,7 +127,7 @@
                                         }
                                     }
                                 },
-                                error: function (xhr, ajaxOptions, thrownError) {
+                                error: function (jqXHR, textStatus, errorThrown) {
                                     alert('Failed to vote');
                                 }
                             });

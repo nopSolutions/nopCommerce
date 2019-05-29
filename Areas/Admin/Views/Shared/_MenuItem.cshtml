@@ -1,5 +1,4 @@
 ﻿@model SiteMapNode
-@using Nop.Core
 @using Nop.Core.Domain.Localization
 @using Nop.Web.Framework.Menu
 @inject IWorkContext workContext
@@ -33,12 +32,27 @@
 }
 else
 {
-    <li class="treeview @(isActive ? Html.Raw("active current-active-item") : null)">
+    var childNodes = Model.ChildNodes.Where(x => x.Visible).ToList();
+    var hasChildNodes = childNodes.Any();
+    var liCssClass = "";
+    if (hasChildNodes)
+    {
+        liCssClass = "treeview";
+    }
+    if (isActive)
+    {
+        if (!String.IsNullOrEmpty(liCssClass))
+        {
+            liCssClass += " ";
+        }
+        liCssClass += "active current-active-item";
+    }
+    <li @(!String.IsNullOrEmpty(liCssClass) ? Html.Raw("class=\"" + liCssClass + "\"") : null)>
         <a href="#">
             @if (!string.IsNullOrEmpty(Model.IconClass))
             {
                 <text>
-                <i class="fa @Url.Content(Model.IconClass)"></i>
+                    <i class="fa @Url.Content(Model.IconClass)"></i>
                 </text>
             }
             <span>@Model.Title</span>
@@ -51,10 +65,7 @@ else
                 <i class="fa fa-angle-left pull-right"></i>
             }
         </a>
-        @{
-            var childNodes = Model.ChildNodes.Where(x => x.Visible).ToList();
-        }
-        @if (childNodes.Any())
+        @if (hasChildNodes)
         {
             <ul class="treeview-menu">
                 @foreach (var childItem in childNodes)
@@ -64,4 +75,4 @@ else
             </ul>
         }
     </li>
-            }
+}

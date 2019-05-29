@@ -1,5 +1,15 @@
 ﻿@model TopicModel
-@inject IEventPublisher eventPublisher
+
+@{
+    const string hideInfoBlockAttributeName = "TopicDetailsPage.HideInfoBlock";
+    var hideInfoBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideInfoBlockAttributeName);
+
+    const string hideDisplayBlockAttributeName = "TopicDetailsPage.HideDisplayBlock";
+    var hideDisplayBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideDisplayBlockAttributeName, defaultValue: true);
+
+    const string hideSeoBlockAttributeName = "TopicDetailsPage.HideSeoBlock";
+    var hideSeoBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSeoBlockAttributeName, defaultValue: true);
+}
 
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
@@ -13,19 +23,13 @@
                 </div>
             </div>
         </div>
-        <nop-tabs id="topic-edit">
-            <nop-tab asp-name="tab-info" asp-default="true" asp-title="@T("Admin.ContentManagement.Topics.Info")">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-tab>
-            <nop-tab asp-name="tab-seo" class="advanced-setting" asp-title="@T("Admin.Common.SEO")">@await Html.PartialAsync("_CreateOrUpdate.SEO", Model)</nop-tab>
-        </nop-tabs>
+
+        <nop-panels id="topic-details-panels">
+            <nop-panel asp-name="topic-info" asp-icon="fa fa-info" asp-title="@T("Admin.ContentManagement.Topics.Info")" asp-hide-block-attribute-name="@hideInfoBlockAttributeName" asp-hide="@hideInfoBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-panel>
+            <nop-panel asp-name="topic-display" asp-icon="fa fa-television" asp-title="@T("Admin.ContentManagement.Topics.Display")" asp-hide-block-attribute-name="@hideDisplayBlockAttributeName" asp-hide="@hideDisplayBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.Display", Model)</nop-panel>
+            <nop-panel asp-name="topic-seo" asp-icon="fa fa-search-plus" asp-title="@T("Admin.Common.SEO")" asp-hide-block-attribute-name="@hideSeoBlockAttributeName" asp-hide="@hideSeoBlock" asp-advanced="true">@await Html.PartialAsync("_CreateOrUpdate.Seo", Model)</nop-panel>
+
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.TopicDetailsBlock, additionalData = Model })
+        </nop-panels>
     </div>
 </div>
-
-@{
-    //custom tabs
-    var eventMessage = new AdminTabStripCreated(this.Html, "topic-edit");
-    eventPublisher.Publish(eventMessage);
-    foreach (var eventBlock in eventMessage.BlocksToRender)
-    {
-        @eventBlock
-    }
-}

@@ -55,10 +55,12 @@ Admin.Navigation = (function () {
         map = buildMap();
         $.ajax({
             cache: false,
-            url: '/admin/plugin/SearchList',
-            type: 'get',
-            async:false,
-            success: function (res) { result = res;}
+            url: rootAppPath + 'Admin/Plugin/AdminNavigationPlugins',
+            type: "GET",
+            async: false,
+            success: function (data, textStatus, jqXHR) {
+              result = data;
+            }
         });
 
         for (i = 0; i < result.length; i++) {

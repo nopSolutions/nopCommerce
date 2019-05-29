@@ -4,7 +4,7 @@
     //page title
     ViewBag.Title = T("Admin.ContentManagement.News.NewsItems.EditNewsItemDetails").Text;
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("News");
+    Html.SetActiveMenuItemSystemName("News items");
 }
 
 
@@ -14,7 +14,7 @@
             @T("Admin.ContentManagement.News.NewsItems.EditNewsItemDetails") - @Model.Title
             <small>
                 <i class="fa fa-arrow-circle-left"></i>
-                <a asp-action="List">@T("Admin.ContentManagement.News.NewsItems.BackToList")</a>
+                <a asp-action="NewsItems">@T("Admin.ContentManagement.News.NewsItems.BackToList")</a>
             </small>
         </h1>
         <div class="pull-right">            

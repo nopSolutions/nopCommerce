@@ -1,25 +1,23 @@
 ﻿@model RecurringPaymentModel
 
-@inject IEventPublisher eventPublisher
+@{
+    const string hideInfoBlockAttributeName = "RecurringPaymentPage.HideInfoBlock";
+    var hideInfoBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideInfoBlockAttributeName);
+
+    const string hideHistoryBlockAttributeName = "RecurringPaymentPage.HideHistoryBlock";
+    var hideHistoryBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideHistoryBlockAttributeName, defaultValue: true);
+}
 
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
 
 <div class="content">
     <div class="form-horizontal">
-        <nop-tabs id="recurringpayment-edit">
-            <nop-tab asp-name="tab-info" asp-default="true" asp-title="@T("Admin.RecurringPayments.Info")">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-tab>
-            <nop-tab asp-name="tab-history" asp-title="@T("Admin.RecurringPayments.History")">@await Html.PartialAsync("_CreateOrUpdate.History", Model)</nop-tab>
-        </nop-tabs>
+        <nop-panels id="recurringpayment-edit">
+            <nop-panel asp-name="recurringpayment-info" asp-icon="fa fa-info" asp-title="@T("Admin.RecurringPayments.Info")" asp-hide-block-attribute-name="@hideInfoBlockAttributeName" asp-hide="@hideInfoBlock">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-panel>
+            <nop-panel asp-name="recurringpayment-history" asp-icon="fa fa-history" asp-title="@T("Admin.RecurringPayments.History")" asp-hide-block-attribute-name="@hideHistoryBlockAttributeName" asp-hide="@hideHistoryBlock">@await Html.PartialAsync("_CreateOrUpdate.History", Model)</nop-panel>
+                    
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ReccuringPaymentDetailBlock, additionalData = Model })
+        </nop-panels>
     </div>
 </div>
-
-@{
-    //custom tabs
-    var eventMessage = new AdminTabStripCreated(this.Html, "recurringpayment-edit");
-    eventPublisher.Publish(eventMessage);
-    foreach (var eventBlock in eventMessage.BlocksToRender)
-    {
-        @eventBlock
-    }
-}

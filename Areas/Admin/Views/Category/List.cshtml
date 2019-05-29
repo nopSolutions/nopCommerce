@@ -2,15 +2,19 @@
 
 @{
     //page title
-    ViewBag.Title = T("Admin.Catalog.Categories.Manage").Text;
+    ViewBag.Title = T("Admin.Catalog.Categories").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Categories");
 }
 
+@{
+    const string hideSearchBlockAttributeName = "CategoryPage.HideSearchBlock";
+    var hideSearchBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSearchBlockAttributeName);
+}
 <nop-antiforgery-token />
 <div class="content-header clearfix">
     <h1 class="pull-left">
-        @T("Admin.Catalog.Categories.Manage")
+        @T("Admin.Catalog.Categories")
     </h1>
     <div class="pull-right">
         <a asp-action="Create" class="btn bg-blue">
@@ -54,27 +58,35 @@
         <div class="panel-group">
             <div class="panel panel-default panel-search">
                 <div class="panel-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <div class="col-md-4">
-                                    <nop-label asp-for="SearchCategoryName" />
+                    <div class="row search-row @(!hideSearchBlock ? "opened" : "")" data-hideAttribute="@hideSearchBlockAttributeName">
+                        <div class="search-text">@T("Admin.Common.Search")</div>
+                        <div class="icon-search"><i class="fa fa-search" aria-hidden="true"></i></div>
+                        <div class="icon-collapse"><i class="fa fa-angle-down" aria-hidden="true"></i></div>
+                    </div>
+
+                    <div class="search-body @(hideSearchBlock ? "closed" : "")">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="SearchCategoryName" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-editor asp-for="SearchCategoryName" />
+                                    </div>
                                 </div>
-                                <div class="col-md-8">
-                                    <nop-editor asp-for="SearchCategoryName" />
+                                <div class="form-group" @(Model.HideStoresList ? Html.Raw("style=\"display:none\"") : null)>
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="SearchStoreId" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-select asp-for="SearchStoreId" asp-items="Model.AvailableStores" />
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="form-group" @(Model.AvailableStores.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
-                                <div class="col-md-4">
-                                    <nop-label asp-for="SearchStoreId" />
-                                </div>
-                                <div class="col-md-8">
-                                    <nop-select asp-for="SearchStoreId" asp-items="Model.AvailableStores" />
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-md-8 col-md-offset-4">
-                                    <button type="button" id="search-categories" class="btn btn-primary btn-search"><i class="fa fa-search"></i>@T("Admin.Common.Search")</button>
+                                <div class="form-group">
+                                    <div class="col-md-8 col-md-offset-4">
+                                        <button type="button" id="search-categories" class="btn btn-primary btn-search"><i class="fa fa-search"></i>@T("Admin.Common.Search")</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -84,100 +96,46 @@
 
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <div id="categories-grid"></div>
-
-                    <script>
-                        $(document).ready(function() {
-                            $("#categories-grid").kendoGrid({
-                                dataSource: {
-                                    type: "json",
-                                    transport: {
-                                        read: {
-                                            url: "@Html.Raw(Url.Action("List", "Category"))",
-                                            type: "POST",
-                                            dataType: "json",
-                                            data: function() {
-                                                var data = {
-                                                    SearchCategoryName: $('#@Html.IdFor(model => model.SearchCategoryName)').val(),
-                                                    SearchStoreId: $('#SearchStoreId').val()
-                                                };
-                                                addAntiForgeryToken(data);
-                                                return data;
-                                            }
-                                        }
-                                    },
-                                    schema: {
-                                        data: "Data",
-                                        total: "Total",
-                                        errors: "Errors"
-                                    },
-                                    error: function(e) {
-                                        display_kendoui_grid_error(e);
-                                        // Cancel the changes
-                                        this.cancelChanges();
-                                    },
-                                    pageSize: @(Model.PageSize),
-                                    serverPaging: true,
-                                    serverFiltering: true,
-                                    serverSorting: true
-                                },
-                                pageable: {
-                                    refresh: true,
-                                    pageSizes: [@(Model.AvailablePageSizes)],
-                                    @await Html.PartialAsync("_GridPagerMessages")
-                                },
-                                editable: {
-                                    confirmation: "@T("Admin.Common.DeleteConfirmation")",
-                                    mode: "inline"
-                                },
-                                scrollable: false,
-                                columns: [
-                                    {
-                                        field: "Breadcrumb",
-                                        title: "@T("Admin.Catalog.Categories.Fields.Name")"
-                                    }, {
-                                        field: "Published",
-                                        title: "@T("Admin.Catalog.Categories.Fields.Published")",
-                                        width: 100,
-                                        headerAttributes: { style: "text-align:center" },
-                                        attributes: { style: "text-align:center" },
-                                        template: '# if(Published) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
-                                    }, {
-                                        field: "DisplayOrder",
-                                        title: "@T("Admin.Catalog.Categories.Fields.DisplayOrder")",
-                                        width: 150
-                                    }, {
-                                        field: "Id",
-                                        title: "@T("Admin.Common.Edit")",
-                                        width: 100,
-                                        headerAttributes: { style: "text-align:center" },
-                                        attributes: { style: "text-align:center" },
-                                        template: '<a class="btn btn-default" href="Edit/#=Id#"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>'
-                                    }
-                                ]
-                            });
-                        });
-                    </script>
-
-                    <script>
-                        $(document).ready(function() {
-                            //search button
-                            $('#search-categories').click(function() {
-                                //search
-                                var grid = $('#categories-grid').data('kendoGrid');
-                                grid.dataSource.page(1); //new search. Set page size to 1
-                                //grid.dataSource.read(); we already loaded the grid above using "page" function
-                                return false;
-                            });
-
-                            $("#@Html.IdFor(model => model.SearchCategoryName)").keydown(function(event) {
-                                if (event.keyCode == 13) {
-                                    $("#search-categories").click();
-                                    return false;
-                                }
-                            });
-                        });
-                    </script>
+                    @await Html.PartialAsync("Table", new DataTablesModel
+                    {
+                        Name = "categories-grid",
+                        UrlRead = new DataUrl("List", "Category", null),
+                        SearchButtonId = "search-categories",
+                        Length = Model.PageSize,
+                        LengthMenu = Model.AvailablePageSizes,
+                        Filters = new List<FilterParameter>
+                        {
+                            new FilterParameter(nameof(Model.SearchCategoryName)),
+                            new FilterParameter(nameof(Model.SearchStoreId))
+                        },
+                        ColumnCollection = new List<ColumnProperty>
+                        {
+                            new ColumnProperty(nameof(CategoryModel.Breadcrumb))
+                            {
+                                Title = T("Admin.Catalog.Categories.Fields.Name").Text
+                            },
+                            new ColumnProperty(nameof(CategoryModel.Published))
+                            {
+                                Title = T("Admin.Catalog.Categories.Fields.Published").Text,
+                                Width = "100",
+                                ClassName = NopColumnClassDefaults.CenterAll,
+                                Render = new RenderBoolean()
+                            },
+                            new ColumnProperty(nameof(CategoryModel.DisplayOrder))
+                            {
+                                Title = T("Admin.Catalog.Categories.Fields.DisplayOrder").Text,
+                                Width = "150",
+                                ClassName =  NopColumnClassDefaults.CenterAll
+                            },
+                            new ColumnProperty(nameof(CategoryModel.Id))
+                            {
+                                Title = T("Admin.Common.Edit").Text,
+                                Width = "100",
+                                ClassName =  NopColumnClassDefaults.Button,
+                                Render = new RenderButtonEdit(new DataUrl("Edit"))
+                            }
+                        }
+                    })
                 </div>
             </div>
         </div>

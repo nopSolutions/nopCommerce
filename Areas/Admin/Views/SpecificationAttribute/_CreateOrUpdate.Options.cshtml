@@ -1,129 +1,79 @@
-@model SpecificationAttributeModel
+﻿@model SpecificationAttributeModel
 
-<div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.SpecificationAttributeDetailsOptionsTop, additionalData = Model })
-    <div class="panel panel-default">
-        @if (Model.Id > 0)
+@if (Model.Id > 0)
+{
+    <div class="panel-body">
+        @await Html.PartialAsync("Table", new DataTablesModel
         {
-            <div class="panel-body">
-                <div id="specificationattributeoptions-grid"></div>
-
-                <script>
-                    $(document).ready(function () {
-                        $("#specificationattributeoptions-grid").kendoGrid({
-                            dataSource: {
-                                type: "json",
-                                transport: {
-                                    read: {
-                                        url: "@Html.Raw(Url.Action("OptionList", "SpecificationAttribute"))",
-                                        type: "POST",
-                                        dataType: "json",
-                                        data: function() {
-                                            var data = {
-                                                SpecificationAttributeId: '@(Model.Id)'
-                                            };
-                                            addAntiForgeryToken(data);
-                                            return data;
-                                        }
-                                    },
-                                    destroy: {
-                                        url: "@Html.Raw(Url.Action("OptionDelete", "SpecificationAttribute"))",
-                                        type: "POST",
-                                        dataType: "json",
-                                        data: addAntiForgeryToken
-                                    }
-                                },
-                                schema: {
-                                    data: "Data",
-                                    total: "Total",
-                                    errors: "Errors",
-                                    model: {
-                                        id: "Id"
-                                    }
-                                },
-                                requestEnd: function (e) {
-                                    if (e.type === "destroy") {
-                                        var grid = $("#specificationattributemappedproducts-grid").data('kendoGrid');
-                                        grid.dataSource.read();
-                                    }
-                                },
-                                error: function (e) {
-                                    display_kendoui_grid_error(e);
-                                    // Cancel the changes
-                                    this.cancelChanges();
-                                },
-                                pageSize: @(Model.SpecificationAttributeOptionSearchModel.PageSize),
-                                serverPaging: true,
-                                serverFiltering: true,
-                                serverSorting: true
-                            },
-                            pageable: {
-                                refresh: true,
-                                pageSizes: [@(Model.SpecificationAttributeOptionSearchModel.AvailablePageSizes)],
-                                @await Html.PartialAsync("_GridPagerMessages")
-                            },
-                            editable: {
-                                confirmation: "@T("Admin.Common.DeleteConfirmation")",
-                                mode: "inline"
-                            },
-                            scrollable: false,
-                            columns: [
-                                {
-                                    //TODO display localized values here
-                                    field: "Name",
-                                    title: "@T("Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.Name")"
-                                }, {
-                                    field: "DisplayOrder",
-                                    title: "@T("Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.DisplayOrder")",
-                                    width: 100
-                                }, {
-                                    field: "NumberOfAssociatedProducts",
-                                    title: "@T("Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.NumberOfAssociatedProducts")",
-                                    width: 250
-                                }, {
-                                    field: "Id",
-                                    title: "@T("Admin.Common.Edit")",
-                                    width: 100,
-                                    headerAttributes: { style: "text-align:center" },
-                                    attributes: { style: "text-align:center" },
-                                    template: "<button onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/SpecificationAttribute/OptionEditPopup/")#=Id#?btnId=btnRefresh&formId=specificationattribute-form', 800, 400, true); return false;\" class='btn btn-default'><i class=\"fa fa-pencil\"></i>@T("Admin.Common.Edit")</button>"
-                                }, {
-                                    command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
-                                    headerAttributes: { style: "text-align:center" },
-                                    attributes: { style: "text-align:center" },
-                                    title: "@T("Admin.Common.Delete")",
-                                    width: 100
-                                }
-                            ]
-                        });
-                    });
-                </script>
-            </div>
-            <div class="panel-footer">
-                <button type="submit" id="btnAddNewOption" onclick="javascript:OpenWindow('@(Url.Action("OptionCreatePopup", "SpecificationAttribute", new { specificationAttributeId = Model.Id, btnId = "btnRefresh", formId = "specificationattribute-form" }))', 800, 400, true); return false;" class="btn btn-primary">
-                    @T("Admin.Catalog.Attributes.SpecificationAttributes.Options.AddNew")
-                </button>
-                <input type="submit" id="btnRefresh" style="display: none" />
-                <script>
-                    $(document).ready(function () {
-                        $('#btnRefresh').click(function () {
-                            //refresh grid
-                            var grid = $("#specificationattributeoptions-grid").data('kendoGrid');
-                            grid.dataSource.read();
-
-                            //return false to don't reload a page
-                            return false;
-                        });
-                    });
-                </script>
-            </div>
-        }
-        else
-        {
-            <div class="panel-body">
-                @T("Admin.Catalog.Attributes.SpecificationAttributes.Options.SaveBeforeEdit")
-            </div>
-        }
+            Name = "specificationattributeoptions-grid",
+            UrlRead = new DataUrl("OptionList", "SpecificationAttribute", new RouteValueDictionary { [nameof(Model.SpecificationAttributeOptionSearchModel.SpecificationAttributeId)] = Model.SpecificationAttributeOptionSearchModel.SpecificationAttributeId }),
+            UrlDelete = new DataUrl("OptionDelete", "SpecificationAttribute", null),
+            Length = Model.SpecificationAttributeOptionSearchModel.PageSize,
+            LengthMenu = Model.SpecificationAttributeOptionSearchModel.AvailablePageSizes,
+            ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(SpecificationAttributeOptionModel.Name))
+                {
+                    Title = T("Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.Name").Text
+                },
+                new ColumnProperty(nameof(SpecificationAttributeOptionModel.DisplayOrder))
+                {
+                    Title = T("Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.DisplayOrder").Text,
+                    Width = "100",
+                    ClassName =  NopColumnClassDefaults.CenterAll
+                },
+                new ColumnProperty(nameof(SpecificationAttributeOptionModel.NumberOfAssociatedProducts))
+                {
+                    Title = T("Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.NumberOfAssociatedProducts").Text,
+                    Width = "250",
+                    ClassName =  NopColumnClassDefaults.CenterAll
+                },
+                new ColumnProperty(nameof(SpecificationAttributeOptionModel.Id))
+                {
+                    Title = T("Admin.Common.Edit").Text,
+                    Width = "100",
+                    ClassName =  NopColumnClassDefaults.Button,
+                    Render = new RenderCustom("renderColumnEdit")
+                },
+                new ColumnProperty(nameof(SpecificationAttributeOptionModel.Id))
+                {
+                    Title = T("Admin.Common.Delete").Text,
+                    Width = "100",
+                    Render = new RenderButtonRemove(T("Admin.Common.Delete").Text),
+                    ClassName =  NopColumnClassDefaults.Button
+                }
+            }
+        })
+    
+        <script>
+            function renderColumnEdit(data, type, row, meta) {
+                return '<button onclick=\"javascript:OpenWindow(\'@Url.Content("~/Admin/SpecificationAttribute/OptionEditPopup/")' + data + '?btnId=btnRefresh&formId=specificationattribute-form\', 800, 400, true); return false;\" class="btn btn-default"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</button>';
+            }
+        </script>
     </div>
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.SpecificationAttributeDetailsOptionsBottom, additionalData = Model })
-</div>
+    
+    <div class="panel-footer">
+        <button type="submit" id="btnAddNewOption" onclick="javascript:OpenWindow('@(Url.Action("OptionCreatePopup", "SpecificationAttribute", new { specificationAttributeId = Model.Id, btnId = "btnRefresh", formId = "specificationattribute-form" }))', 800, 400, true); return false;" class="btn btn-primary">
+            @T("Admin.Catalog.Attributes.SpecificationAttributes.Options.AddNew")
+        </button>
+        <input type="submit" id="btnRefresh" style="display: none" />
+        <script>
+            $(document).ready(function () {
+                $('#btnRefresh').click(function () {
+                    //refresh grid
+                    updateTable('#specificationattributeoptions-grid');
+
+                    //return false to don't reload a page
+                    return false;
+                });
+            });
+        </script>
+    </div>
+}    
+else
+{
+    <div class="panel-body">
+        @T("Admin.Catalog.Attributes.SpecificationAttributes.Options.SaveBeforeEdit")
+    </div>
+}
+

@@ -1,120 +1,59 @@
 @model DiscountModel
 
-<div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.DiscountDetailsAppliedToProductsTop, additionalData = Model })
-    <div class="panel panel-default">
-        @if (Model.Id > 0)
+@if (Model.Id > 0)
+{
+    <div class="panel-body">
+        @await Html.PartialAsync("Table", new DataTablesModel
         {
-            <div class="panel-body">
-                <div id="products-grid"></div>
-
-                <script>
-                    $(document).ready(function() {
-                        $("#products-grid").kendoGrid({
-                            dataSource: {
-                                type: "json",
-                                transport: {
-                                    read: {
-                                        url: "@Html.Raw(Url.Action("ProductList", "Discount"))",
-                                        type: "POST",
-                                        dataType: "json",
-                                        data: function() {
-                                            var data = {
-                                                DiscountId: '@(Model.Id)'
-                                            };
-                                            addAntiForgeryToken(data);
-                                            return data;
-                                        }
-                                    },
-                                    destroy: {
-                                        url: "@Html.Raw(Url.Action("ProductDelete", "Discount", new { discountId = Model.Id }))",
-                                        type: "POST",
-                                        dataType: "json",
-                                        data: addAntiForgeryToken
-                                    }
-                                },
-                                schema: {
-                                    data: "Data",
-                                    total: "Total",
-                                    errors: "Errors",
-                                    model: {
-                                        id: "ProductId",
-                                        fields: {
-                                            ProductName: { editable: false, type: "string" },
-                                            ProductId: { editable: false, type: "number" }
-                                        }
-                                    }
-                                },
-                                error: function(e) {
-                                    display_kendoui_grid_error(e);
-                                    // Cancel the changes
-                                    this.cancelChanges();
-                                },
-                                pageSize: @(Model.DiscountProductSearchModel.PageSize),
-                                serverPaging: true,
-                                serverFiltering: true,
-                                serverSorting: true
-                            },
-                            pageable: {
-                                refresh: true,
-                                pageSizes: [@(Model.DiscountProductSearchModel.AvailablePageSizes)],
-                                @await Html.PartialAsync("_GridPagerMessages")
-                            },
-                            editable: {
-                                confirmation: "@T("Admin.Common.DeleteConfirmation")",
-                                mode: "inline"
-                            },
-                            scrollable: false,
-                            columns: [
-                                {
-                                    field: "ProductName",
-                                    title: "@T("Admin.Promotions.Discounts.AppliedToProducts.Product")"
-                                }, {
-                                    field: "ProductId",
-                                    title: "@T("Admin.Common.View")",
-                                    width: 150,
-                                    headerAttributes: { style: "text-align:center" },
-                                    attributes: { style: "text-align:center" },
-                                    template: '<a class="btn btn-default" href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#"><i class="fa fa-eye"></i>@T("Admin.Common.View")</a>'
-                                }, {
-                                    command: [
-                                        {
-                                            name: "destroy",
-                                            text: "@T("Admin.Common.Delete")"
-                                        }
-                                    ],
-                                    width: 150
-                                }
-                            ]
-                        });
-                    });
-                </script>
-            </div>
-            <div class="panel-footer">
-                <button type="submit" id="btnAddNewProduct" onclick="javascript:OpenWindow('@(Url.Action("ProductAddPopup", "Discount", new { discountId = Model.Id, btnId = "btnRefreshProducts", formId = "discount-form" }))', 800, 800, true); return false;" class="btn btn-primary">
-                    @T("Admin.Promotions.Discounts.AppliedToProducts.AddNew")
-                </button>
-                <input type="submit" id="btnRefreshProducts" style="display: none" />
-                <script>
-                    $(document).ready(function() {
-                        $('#btnRefreshProducts').click(function() {
-                            //refresh grid
-                            var grid = $("#products-grid").data('kendoGrid');
-                            grid.dataSource.read();
-
-                            //return false to don't reload a page
-                            return false;
-                        });
-                    });
-                </script>
-            </div>
-        }
-        else
-        {
-            <div class="panel-body">
-                @T("Admin.Promotions.Discounts.AppliedToProducts.SaveBeforeEdit")
-            </div>
-        }
+            Name = "products-grid",
+            UrlRead = new DataUrl("ProductList", "Discount", new RouteValueDictionary { [nameof(Model.DiscountProductSearchModel.DiscountId)] = Model.DiscountProductSearchModel.DiscountId }),
+            UrlDelete = new DataUrl("ProductDelete", "Discount", new RouteValueDictionary { [nameof(Model.DiscountProductSearchModel.DiscountId)] = Model.DiscountProductSearchModel.DiscountId }),
+            BindColumnNameActionDelete = nameof(DiscountProductModel.ProductId),
+            Length = Model.DiscountProductSearchModel.PageSize,
+            LengthMenu = Model.DiscountProductSearchModel.AvailablePageSizes,
+            ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(DiscountProductModel.ProductName))
+                {
+                    Title = T("Admin.Promotions.Discounts.AppliedToProducts.Product").Text
+                },
+                new ColumnProperty(nameof(DiscountProductModel.ProductId))
+                {
+                    Title = T("Admin.Common.View").Text,
+                    Width = "150",
+                    ClassName =  NopColumnClassDefaults.Button,
+                    Render = new RenderButtonView(new DataUrl("~/Admin/Product/Edit/"))
+                },
+                new ColumnProperty(nameof(DiscountProductModel.ProductId))
+                {
+                    Title = T("Admin.Common.Delete").Text,
+                    Width = "150",
+                    Render = new RenderButtonRemove(T("Admin.Common.Delete").Text),
+                    ClassName =  NopColumnClassDefaults.Button
+                }
+            }
+        })
     </div>
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.DiscountDetailsAppliedToProductsBottom, additionalData = Model })
-</div>
+    <div class="panel-footer">
+        <button type="submit" id="btnAddNewProduct" onclick="javascript:OpenWindow('@(Url.Action("ProductAddPopup", "Discount", new { discountId = Model.Id, btnId = "btnRefreshProducts", formId = "discount-form" }))', 800, 800, true); return false;" class="btn btn-primary">
+            @T("Admin.Promotions.Discounts.AppliedToProducts.AddNew")
+        </button>
+        <input type="submit" id="btnRefreshProducts" style="display: none" />
+        <script>
+            $(document).ready(function() {
+                $('#btnRefreshProducts').click(function() {
+                    //refresh grid
+                    updateTable('#products-grid');
+                    //return false to don't reload a page
+                    return false;
+                });
+            });
+        </script>
+    </div>
+}
+else
+{
+    <div class="panel-body">
+        @T("Admin.Promotions.Discounts.AppliedToProducts.SaveBeforeEdit")
+    </div>
+}

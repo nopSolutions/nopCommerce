@@ -1,8 +1,7 @@
 @model LanguageModel
 
 <div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.LanguageDetailsResourcesTop, additionalData = Model })
-    <div class="panel panel-default panel-search">
+    <div class="sub-panel panel-search">
         <div class="panel-body">
             <div class="row">
                 <div class="col-md-6">
@@ -48,138 +47,120 @@
 
     @if (Model.Id > 0)
     {
-        <div class="panel panel-default">
+        <div class="sub-panel">
             <div class="panel-body">
-                <div id="resources-grid"></div>
-
-                <script>
-                    $(document).ready(function() {
-                        $("#resources-grid").kendoGrid({
-                            dataSource: {
-                                type: "json",
-                                transport: {
-                                    read: {
-                                        url: "@Html.Raw(Url.Action("Resources", "Language"))",
-                                        type: "POST",
-                                        dataType: "json",
-                                        data: function() {
-                                            var data = {
-                                                LanguageId: '@(Model.Id)',
-                                                SearchResourceName: $('#@Html.IdFor(model => model.LocaleResourceSearchModel.SearchResourceName)').val(),
-                                                SearchResourceValue: $('#@Html.IdFor(model => model.LocaleResourceSearchModel.SearchResourceValue)').val()
-                                            };
-                                            addAntiForgeryToken(data);
-                                            return data;
-                                        }
-                                    },
-                                    create: {
-                                        url: "@Html.Raw(Url.Action("ResourceAdd", "Language", new { languageId = Model.Id }))",
-                                        type: "POST",
-                                        dataType: "json",
-                                        data: addAntiForgeryToken
-                                    },
-                                    update: {
-                                        url: "@Html.Raw(Url.Action("ResourceUpdate", "Language"))",
-                                        type: "POST",
-                                        dataType: "json",
-                                        data: addAntiForgeryToken
-                                    },
-                                    destroy: {
-                                        url: "@Html.Raw(Url.Action("ResourceDelete", "Language"))",
-                                        type: "POST",
-                                        dataType: "json",
-                                        data: addAntiForgeryToken
-                                    }
-                                },
-                                schema: {
-                                    data: "Data",
-                                    total: "Total",
-                                    errors: "Errors",
-                                    model: {
-                                        id: "Id",
-                                        fields: {
-                                            Name: { editable: true, type: "string" },
-                                            Value: { editable: true, type: "string" },
-                                            Id: { editable: false, type: "number" }
-                                        }
-                                    }
-                                },
-                                requestEnd: function(e) {
-                                    if (e.type == "create" || e.type == "update") {
-                                        this.read();
-                                    }
-                                },
-                                error: function(e) {
-                                    display_kendoui_grid_error(e);
-                                    // Cancel the changes
-                                    this.cancelChanges();
-                                },
-                                pageSize: @(Model.LocaleResourceSearchModel.PageSize),
-                                serverPaging: true,
-                                serverFiltering: true,
-                                serverSorting: true
-                            },
-                            pageable: {
-                                refresh: true,
-                                pageSizes: [@(Model.LocaleResourceSearchModel.AvailablePageSizes)],
-                                @await Html.PartialAsync("_GridPagerMessages")
-                            },
-                            toolbar: [{ name: "create", text: "@T("Admin.Common.AddNewRecord")" }],
-                            editable: {
-                                confirmation: "@T("Admin.Common.DeleteConfirmation")",
-                                mode: "inline"
-                            },
-                            scrollable: false,
-                            columns: [
-                                {
-                                    field: "Name",
-                                    title: "@T("Admin.Configuration.Languages.Resources.Fields.Name")",
-                                    width: 300
-                                }, {
-                                    field: "Value",
-                                    title: "@T("Admin.Configuration.Languages.Resources.Fields.Value")",
-                                    width: 300
-
-                                }, {
-                                    command: [
-                                        {
-                                            name: "edit",
-                                            text: {
-                                                edit: "@T("Admin.Common.Edit")",
-                                                update: "@T("Admin.Common.Update")",
-                                                cancel: "@T("Admin.Common.Cancel")"
-                                            }
-                                        }, {
-                                            name: "destroy",
-                                            text: "@T("Admin.Common.Delete")"
-                                        }
-                                    ],
-                                    width: 200
-                                }
-                            ]
-                        });
-                    });
-                </script>
-
-                <script>
-                    $(document).ready(function() {
-                        $('#search-resources').click(function() {
-                            var grid = $('#resources-grid').data('kendoGrid');
-                            grid.dataSource.page(1);
-                            return false;
-                        });
-                    });
-
-                    $("".concat("#@Html.IdFor(model => model.LocaleResourceSearchModel.SearchResourceName),",
-                        "#@Html.IdFor(model => model.LocaleResourceSearchModel.SearchResourceValue)")).keydown(function(event) {
-                        if (event.keyCode === 13) {
-                            $("#search-resources").click();
-                            return false;
+                @await Html.PartialAsync("Table", new DataTablesModel
+                {
+                    Name = "resources-grid",
+                    UrlRead = new DataUrl("Resources", "Language", new RouteValueDictionary { [nameof(Model.LocaleResourceSearchModel.LanguageId)] = Model.Id }),
+                    UrlUpdate = new DataUrl("ResourceUpdate", "Language", null),
+                    UrlDelete = new DataUrl("ResourceDelete", "Language", null),
+                    SearchButtonId = "search-resources",
+                    Length = Model.LocaleResourceSearchModel.PageSize,
+                    LengthMenu = Model.LocaleResourceSearchModel.AvailablePageSizes,
+                    Filters = new List<FilterParameter>
+                    {
+                        new FilterParameter(nameof(Model.LocaleResourceSearchModel.SearchResourceName), nameof(LocaleResourceSearchModel)),
+                        new FilterParameter(nameof(Model.LocaleResourceSearchModel.SearchResourceValue), nameof(LocaleResourceSearchModel))
+                    },
+                    ColumnCollection = new List<ColumnProperty>
+                    {
+                        new ColumnProperty(nameof(LocaleResourceModel.ResourceName))
+                        {
+                            Title = T("Admin.Configuration.Languages.Resources.Fields.Name").Text,
+                            Width = "300",
+                            Editable = true,
+                            EditType = EditType.String
+                        },
+                        new ColumnProperty(nameof(LocaleResourceModel.ResourceValue))
+                        {
+                            Title = T("Admin.Configuration.Languages.Resources.Fields.Value").Text,
+                            Width = "300",
+                            Editable = true,
+                            EditType = EditType.String
+                        },
+                        new ColumnProperty(nameof(LocaleResourceModel.Id))
+                        {
+                            Title = T("Admin.Common.Edit").Text,
+                            Width = "200",
+                            ClassName =  NopColumnClassDefaults.Button,
+                            Render = new RenderButtonsInlineEdit()
+                        },
+                        new ColumnProperty(nameof(LocaleResourceModel.Id))
+                        {
+                            Title = T("Admin.Common.Delete").Text,
+                            Width = "100",
+                            ClassName =  NopColumnClassDefaults.Button,
+                            Render = new RenderButtonRemove(T("Admin.Common.Delete").Text)
                         }
+                    }
+                })
+                <div class="panel panel-default no-margin">
+                    <div class="panel-heading">
+                        @T("Admin.Common.AddNewRecord")
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="@Model.LocaleResourceSearchModel.AddResourceString.ResourceName" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="@Model.LocaleResourceSearchModel.AddResourceString.ResourceName" />
+                                <span asp-validation-for="@Model.LocaleResourceSearchModel.AddResourceString.ResourceName"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="@Model.LocaleResourceSearchModel.AddResourceString.ResourceValue" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="@Model.LocaleResourceSearchModel.AddResourceString.ResourceValue" />
+                                <span asp-validation-for="@Model.LocaleResourceSearchModel.AddResourceString.ResourceValue"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-9 col-md-offset-3">
+                                <button type="button" id="addResourceString" class="btn btn-primary">@T("Admin.Common.AddNewRecord")</button>
+                            </div>
+                        </div>
+                    </div>
+                    <script>
+                    $(document).ready(function () {
+                        $('#addResourceString').click(function () {
+                            $('#addResourceString').attr('disabled', true);
+                            var postData = {
+                                ResourceName: $("#@Html.IdFor(model => model.LocaleResourceSearchModel.AddResourceString.ResourceName)").val(),
+                                ResourceValue: $("#@Html.IdFor(model => model.LocaleResourceSearchModel.AddResourceString.ResourceValue)").val()
+                            };
+                            addAntiForgeryToken(postData);
+
+                            $.ajax({
+                                cache: false,
+                                type: "POST",
+                                url: "@Html.Raw(Url.Action("ResourceAdd", "Language", new { languageId = Model.Id }))",
+                                data: postData,
+                                success: function (data, textStatus, jqXHR) {
+                                    if (data.Result) {
+                                        //reload grid
+                                        updateTable('#resources-grid');
+
+                                        //clear input value
+                                        $("#@Html.IdFor(model => model.LocaleResourceSearchModel.AddResourceString.ResourceName)").val('');
+                                        $("#@Html.IdFor(model => model.LocaleResourceSearchModel.AddResourceString.ResourceValue)").val('');
+                                    } else {
+                                        //display errors if returned
+                                        display_nop_error(data);
+                                    }
+                                },
+                                complete: function (jqXHR, textStatus) {
+                                    $('#addResourceString').attr('disabled', false);
+                                }
+                            });
+                        });
                     });
-                </script>
+                    </script>
+                </div>
             </div>
         </div>
     }
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.LanguageDetailsResourcesBottom, additionalData = Model })
 </div>

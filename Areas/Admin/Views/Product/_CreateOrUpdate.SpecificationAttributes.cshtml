@@ -1,355 +1,78 @@
 ﻿@model ProductModel
 
-@using Nop.Core.Domain.Catalog
-@using Nop.Services
-
-<div class="panel-group">
+<div class="panel-body">
     <p>
         @T("Admin.Catalog.Products.SpecificationAttributes.Hint")
     </p>
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductDetailsSpecificationAttributesTop, additionalData = Model })
     @if (Model.Id > 0)
     {
         /*hide "add spec" table if no attributes are defined*/
-        if (Model.AddSpecificationAttributeModel.AvailableAttributes.Count > 0)
+        if (Model.HasAvailableSpecificationAttributes)
         {
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <div id="specificationattributes-grid"></div>
-
-                    <script>
-                        $(document).ready(function() {
-                            $("#specificationattributes-grid").kendoGrid({
-                                dataSource: {
-                                    type: "json",
-                                    transport: {
-                                        read: {
-                                            url: "@Html.Raw(Url.Action("ProductSpecAttrList", "Product"))",
-                                            type: "POST",
-                                            dataType: "json",
-                                            data: function additionalData() {
-                                                var data = {
-                                                    ProductId: '@(Model.Id)'
-                                                };
-                                                addAntiForgeryToken(data);
-                                                return data;
-                                            }
-                                        },
-                                        update: {
-                                            url: "@Html.Raw(Url.Action("ProductSpecAttrUpdate", "Product"))",
-                                            type: "POST",
-                                            dataType: "json",
-                                            data: addAntiForgeryToken
-                                        },
-                                        destroy: {
-                                            url: "@Html.Raw(Url.Action("ProductSpecAttrDelete", "Product"))",
-                                            type: "POST",
-                                            dataType: "json",
-                                            data: addAntiForgeryToken
-                                        }
-                                    },
-                                    schema: {
-                                        data: "Data",
-                                        total: "Total",
-                                        errors: "Errors",
-                                        model: {
-                                            id: "Id",
-                                            fields: {
-                                                //ProductId: { editable: false, type: "number" },
-                                                AttributeTypeName: { editable: false, type: "string" },
-                                                AttributeName: { editable: false, type: "string" },
-                                                ValueRaw: { editable: true, type: "string" },
-                                                AllowFiltering: { editable: true, type: "boolean" },
-                                                ShowOnProductPage: { editable: true, type: "boolean" },
-                                                DisplayOrder: { editable: true, type: "number" },
-                                                Id: { editable: false, type: "number" }
-                                            }
-                                        }
-                                    },
-                                    requestEnd: function(e) {
-                                        if (e.type == "update") {
-                                            this.read();
-                                        }
-                                    },
-                                    error: function(e) {
-                                        display_kendoui_grid_error(e);
-                                        // Cancel the changes
-                                        this.cancelChanges();
-                                    },
-                                    pageSize: @(Model.ProductSpecificationAttributeSearchModel.PageSize),
-                                    serverPaging: true,
-                                    serverFiltering: true,
-                                    serverSorting: true
-                                },
-                                pageable: {
-                                    refresh: true,
-                                    pageSizes: [@(Model.ProductSpecificationAttributeSearchModel.AvailablePageSizes)],
-                                    @await Html.PartialAsync("_GridPagerMessages")
-                                },
-                                editable: {
-                                    confirmation: "@T("Admin.Common.DeleteConfirmation")",
-                                    mode: "inline"
-                                },
-                                scrollable: false,
-                                columns: [
-                                    {
-                                        field: "AttributeTypeName",
-                                        title: "@T("Admin.Catalog.Products.SpecificationAttributes.Fields.AttributeType")",
-                                        width: 150
-                                    }, {
-                                        field: "AttributeName",
-                                        title: "@T("Admin.Catalog.Products.SpecificationAttributes.Fields.SpecificationAttribute")",
-                                        width: 200
-                                    }, {
-                                        field: "ValueRaw",
-                                        title: "@T("Admin.Catalog.Products.SpecificationAttributes.Fields.Value")",
-                                        width: 200,
-                                        encoded: false,
-                                        editor: function setDropDownEditor(container, options) {
-                                                    if (options.model.AttributeTypeId == @((int)SpecificationAttributeType.Option)) {
-                                                        var dropDownList = $('<input required data-text-field="Name" data-value-field="Id" data-bind="value:SpecificationAttributeOptionId"/>')
-                                                            .appendTo(container).kendoDropDownList().data("kendoDropDownList");
-                                                        $.ajax({
-                                                            type: "GET",
-                                                            url: "@(Url.Action("GetOptionsByAttributeId", "SpecificationAttribute"))",
-                                                            data: { "attributeId": options.model.AttributeId },
-                                                            success: function (data) {
-                                                                var availableOptions = [];
-                                                                $.each(data, function(id, option) {
-                                                                    availableOptions.push({ Id: option.id, Name: option.name });
-                                                                });
-                                                                dropDownList.setDataSource(availableOptions);
-                                                                dropDownList.select(function(item) {
-                                                                    return item.Id === options.model.SpecificationAttributeOptionId;
-                                                                });
-                                                            }
-                                                        });
-                                                    }
-                                                }
-                                    }, {
-                                        field: "AllowFiltering",
-                                        title: "@T("Admin.Catalog.Products.SpecificationAttributes.Fields.AllowFiltering")",
-                                        width: 150,
-                                        headerAttributes: { style: "text-align:center" },
-                                        attributes: { style: "text-align:center" },
-                                        template: '# if(AllowFiltering) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
-                                    }, {
-                                        field: "ShowOnProductPage",
-                                        title: "@T("Admin.Catalog.Products.SpecificationAttributes.Fields.ShowOnProductPage")",
-                                        width: 150,
-                                        headerAttributes: { style: "text-align:center" },
-                                        attributes: { style: "text-align:center" },
-                                        template: '# if(ShowOnProductPage) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
-                                    },
-                                    {
-                                        field: "DisplayOrder",
-                                        title: "@T("Admin.Catalog.Products.SpecificationAttributes.Fields.DisplayOrder")",
-                                        width: 150,
-                                        //integer format
-                                        format: "{0:0}"
-                                    }, {
-                                        command: [
-                                            {
-                                                name: "edit",
-                                                text: {
-                                                    edit: "@T("Admin.Common.Edit")",
-                                                    update: "@T("Admin.Common.Update")",
-                                                    cancel: "@T("Admin.Common.Cancel")"
-                                                }
-                                            }, {
-                                                name: "destroy",
-                                                text: "@T("Admin.Common.Delete")"
-                                            }
-                                        ],
-                                        width: 200
-                                    }
-                                ],
-                                edit: function(e) {
-                                    if (e.model.AttributeTypeId != @((int)SpecificationAttributeType.Option)) {
-                                        e.container.find("input[name=AllowFiltering]").attr("disabled", true);
-                                    }
-                                }
-                            });
-                        });
-                    </script>
+                    @await Html.PartialAsync("Table", new DataTablesModel
+                    {
+                        Name = "specificationattributes-grid",
+                        UrlRead = new DataUrl("ProductSpecAttrList", "Product", new RouteValueDictionary { [nameof(Model.ProductSpecificationAttributeSearchModel.ProductId)] = Model.ProductSpecificationAttributeSearchModel.ProductId }),
+                        Length = Model.ProductPictureSearchModel.PageSize,
+                        LengthMenu = Model.ProductPictureSearchModel.AvailablePageSizes,
+                        ColumnCollection = new List<ColumnProperty>
+                        {
+                            new ColumnProperty(nameof(ProductSpecificationAttributeModel.AttributeTypeName))
+                            {
+                                Title = T("Admin.Catalog.Products.SpecificationAttributes.Fields.AttributeType").Text,
+                                Width = "150"
+                            },
+                            new ColumnProperty(nameof(ProductSpecificationAttributeModel.AttributeName))
+                            {
+                                Title = T("Admin.Catalog.Products.SpecificationAttributes.Fields.SpecificationAttribute").Text,
+                                Width = "200"
+                            },
+                            new ColumnProperty(nameof(ProductSpecificationAttributeModel.ValueRaw))
+                            {
+                                Title = T("Admin.Catalog.Products.SpecificationAttributes.Fields.Value").Text,
+                                Width = "200",
+                                Encode = false
+                            },
+                            new ColumnProperty(nameof(ProductSpecificationAttributeModel.AllowFiltering))
+                            {
+                                Title = T("Admin.Catalog.Products.SpecificationAttributes.Fields.AllowFiltering").Text,
+                                Width = "150",
+                                ClassName = NopColumnClassDefaults.CenterAll,
+                                Render = new RenderBoolean()
+                            },
+                            new ColumnProperty(nameof(ProductSpecificationAttributeModel.ShowOnProductPage))
+                            {
+                                Title = T("Admin.Catalog.Products.SpecificationAttributes.Fields.ShowOnProductPage").Text,
+                                Width = "150",
+                                ClassName = NopColumnClassDefaults.CenterAll,
+                                Render = new RenderBoolean()
+                            },
+                            new ColumnProperty(nameof(ProductSpecificationAttributeModel.DisplayOrder))
+                            {
+                                Title = T("Admin.Catalog.Products.SpecificationAttributes.Fields.DisplayOrder").Text,
+                                Width = "150",
+                                ClassName =  NopColumnClassDefaults.CenterAll
+                            },
+                            new ColumnProperty(nameof(ProductSpecificationAttributeModel.Id))
+                            {
+                                Title = T("Admin.Common.Edit").Text,
+                                Width = "100",
+                                ClassName =  NopColumnClassDefaults.Button,
+                                Render = new RenderButtonEdit(new DataUrl("~/Admin/Product/ProductSpecAttributeAddOrEdit?productId=" + Model.ProductSpecificationAttributeSearchModel.ProductId + "&specificationId=", true))  
+                            }
+                        }
+                    })
                 </div>
-            </div>
+                <div class="panel-footer">
+                    <a asp-action="ProductSpecAttributeAddOrEdit"
+                       asp-route-productId="@Model.Id"
+                       class="btn bg-blue">
+                        <i class="fa fa-plus-square"></i>
+                        @T("Admin.Catalog.Products.SpecificationAttributes.AddButton")
+                    </a>
 
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    @T("Admin.Catalog.Products.SpecificationAttributes.AddNew")
-                </div>
-                <div class="panel-body">
-                    <script>
-                        $(document).ready(function() {
-                            $("#@Html.IdFor(model => model.AddSpecificationAttributeModel.SpecificationAttributeId)").change(function() {
-                                var selectedAttributeId = $(this).val();
-                                $.ajax({
-                                    cache: false,
-                                    type: "GET",
-                                    url: "@(Url.Action("GetOptionsByAttributeId", "SpecificationAttribute"))",
-                                    data: { "attributeId": selectedAttributeId },
-                                    success: function(data) {
-                                        var ddlSpecOptions = $("#@Html.IdFor(model => model.AddSpecificationAttributeModel.SpecificationAttributeOptionId)");
-                                        ddlSpecOptions.html('');
-                                        $.each(data, function(id, option) {
-                                            ddlSpecOptions.append($('<option></option>').val(option.id).html(option.name));
-                                        });
-                                    },
-                                    error: function(xhr, ajaxOptions, thrownError) {
-                                        alert('Failed to retrieve specification options.');
-                                    }
-                                });
-                            });
-                        });
-
-                        $(document).ready(function() {
-                            $('#addProductSpec').click(function() {
-                                var attributeTypeId = $("#@Html.IdFor(model => model.AddSpecificationAttributeModel.AttributeTypeId)").val();
-                                var specificationAttributeOptionId = $("#@Html.IdFor(model => model.AddSpecificationAttributeModel.SpecificationAttributeOptionId)").val();
-                                var customValue = $("#@Html.IdFor(model => model.AddSpecificationAttributeModel.CustomValue)").val();
-                                var allowFiltering = $("#@Html.IdFor(model => model.AddSpecificationAttributeModel.AllowFiltering)").is(':checked');
-                                var showOnProductPage = $("#@Html.IdFor(model => model.AddSpecificationAttributeModel.ShowOnProductPage)").is(':checked');
-                                var displayOrder = $("#@Html.IdFor(model => model.AddSpecificationAttributeModel.DisplayOrder)").val();
-
-                                if (specificationAttributeOptionId === null) {
-                                    //some validation
-                                    if (attributeTypeId == @(((int) SpecificationAttributeType.Option).ToString())) {
-                                        //option
-                                        alert('@T("Admin.Catalog.Products.SpecificationAttributes.SelectOption")');
-                                } else {
-                                    //other (text, hyperlink, etc)
-                                    alert('@T("Admin.Catalog.Products.SpecificationAttributes.NoAttributeOptions")');
-                                }
-                            } else {
-                                    $('#addProductSpec').attr('disabled', true);
-
-                            var postData = {
-                                attributeTypeId: attributeTypeId,
-                                specificationAttributeOptionId: specificationAttributeOptionId,
-                                customValue: customValue,
-                                allowFiltering: allowFiltering,
-                                showOnProductPage: showOnProductPage,
-                                displayOrder: displayOrder,
-                                productId: '@(Model.Id)'
-                            };
-                            addAntiForgeryToken(postData);
-
-                            $.ajax({
-                                cache: false,
-                                type: "POST",
-                                url: "@(Url.Action("ProductSpecificationAttributeAdd", "Product"))",
-                                data: postData,
-                                success: function(data) {
-                                    var grid = $("#specificationattributes-grid").data('kendoGrid');
-                                    grid.dataSource.read();
-                                    $('#addProductSpec').attr('disabled', false);
-                                },
-                                error: function(xhr, ajaxOptions, thrownError) {
-                                    alert('Failed to add specification attribute.');
-                                    $('#addProductSpec').attr('disabled', false);
-                                }
-                            });
-                        }
-                        });
-                        });
-
-
-                        $(document).ready(function() {
-                            $("#@Html.IdFor(model => model.AddSpecificationAttributeModel.AttributeTypeId)").change(toggleAttributeType);
-                            toggleAttributeType();
-                        });
-
-                        function toggleAttributeType() {
-                            var selectedTypeId = $("#@Html.IdFor(model => model.AddSpecificationAttributeModel.AttributeTypeId)").val();
-                            if (selectedTypeId == @(((int) SpecificationAttributeType.Option).ToString())) {
-                                $('#pnlSpecificationAttributeOptionId').show();
-                            $('#pnlCustomValue').hide();
-                            $('#pnlAllowFiltering').show();
-                        } else if (selectedTypeId == @(((int) SpecificationAttributeType.CustomText).ToString())) {
-                            $('#pnlSpecificationAttributeOptionId').hide();
-                            $('#pnlCustomValue').show();
-                            $('#pnlAllowFiltering').hide();
-                        } else if (selectedTypeId == @(((int) SpecificationAttributeType.CustomHtmlText).ToString())) {
-                            $('#pnlSpecificationAttributeOptionId').hide();
-                            $('#pnlCustomValue').show();
-                            $('#pnlAllowFiltering').hide();
-                        } else if (selectedTypeId == @(((int) SpecificationAttributeType.Hyperlink).ToString())) {
-                            $('#pnlSpecificationAttributeOptionId').hide();
-                            $('#pnlCustomValue').show();
-                            $('#pnlAllowFiltering').hide();
-                        }
-                        }
-                    </script>
-
-                    <div class="form-group">
-                        <div class="col-md-3">
-                            <nop-label asp-for="AddSpecificationAttributeModel.AttributeTypeId" />
-                        </div>
-                        <div class="col-md-9">
-                            <nop-select asp-for="AddSpecificationAttributeModel.AttributeTypeId" asp-items="@(((SpecificationAttributeType)Model.AddSpecificationAttributeModel.AttributeTypeId).ToSelectList())" />
-                            <span asp-validation-for="AddSpecificationAttributeModel.AttributeTypeId"></span>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-md-3">
-                            <nop-label asp-for="AddSpecificationAttributeModel.SpecificationAttributeId" />
-                        </div>
-                        <div class="col-md-9">
-                            <nop-select asp-for="AddSpecificationAttributeModel.SpecificationAttributeId" asp-items="Model.AddSpecificationAttributeModel.AvailableAttributes" />
-                            <span asp-validation-for="AddSpecificationAttributeModel.SpecificationAttributeId"></span>
-                        </div>
-                    </div>
-                    <div class="form-group" id="pnlSpecificationAttributeOptionId">
-                        <div class="col-md-3">
-                            <nop-label asp-for="AddSpecificationAttributeModel.SpecificationAttributeOptionId" />
-                        </div>
-                        <div class="col-md-9">
-                            <nop-select asp-for="AddSpecificationAttributeModel.SpecificationAttributeOptionId" asp-items="Model.AddSpecificationAttributeModel.AvailableOptions" />
-                            <span asp-validation-for="AddSpecificationAttributeModel.SpecificationAttributeOptionId"></span>
-                        </div>
-                    </div>
-                    <div class="form-group" id="pnlCustomValue">
-                        <div class="col-md-3">
-                            <nop-label asp-for="AddSpecificationAttributeModel.CustomValue" />
-                        </div>
-                        <div class="col-md-9">
-                            <nop-editor asp-for="AddSpecificationAttributeModel.CustomValue" />
-                            <span asp-validation-for="AddSpecificationAttributeModel.CustomValue"></span>
-                        </div>
-                    </div>
-                    <div class="form-group" id="pnlAllowFiltering">
-                        <div class="col-md-3">
-                            <nop-label asp-for="AddSpecificationAttributeModel.AllowFiltering" />
-                        </div>
-                        <div class="col-md-9">
-                            <nop-editor asp-for="AddSpecificationAttributeModel.AllowFiltering" />
-                            <span asp-validation-for="AddSpecificationAttributeModel.AllowFiltering"></span>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-md-3">
-                            <nop-label asp-for="AddSpecificationAttributeModel.ShowOnProductPage" />
-                        </div>
-                        <div class="col-md-9">
-                            <nop-editor asp-for="AddSpecificationAttributeModel.ShowOnProductPage" />
-                            <span asp-validation-for="AddSpecificationAttributeModel.ShowOnProductPage"></span>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-md-3">
-                            <nop-label asp-for="AddSpecificationAttributeModel.DisplayOrder" />
-                        </div>
-                        <div class="col-md-9">
-                            <nop-editor asp-for="AddSpecificationAttributeModel.DisplayOrder" />
-                            <span asp-validation-for="AddSpecificationAttributeModel.DisplayOrder"></span>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-md-9 col-md-offset-3">
-                            <button type="button" id="addProductSpec" class="btn btn-primary">@T("Admin.Catalog.Products.SpecificationAttributes.AddButton")</button>
-                        </div>
-                    </div>
                 </div>
             </div>
         }
@@ -370,5 +93,4 @@
             </div>
         </div>
     }
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductDetailsSpecificationAttributesBottom, additionalData = Model })
 </div>

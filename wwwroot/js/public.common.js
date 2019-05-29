@@ -64,6 +64,33 @@ function displayPopupNotification(message, messagetype, modal) {
         width: 350
     });
 }
+function displayJoinedPopupNotifications(notes) {
+    if (Object.keys(notes).length === 0) return;
+
+    var container = $('#dialog-notifications-success');
+    var htmlcode = document.createElement('div');
+
+    for (var note in notes) {
+        if (notes.hasOwnProperty(note)) {
+            var messages = notes[note];
+
+            for (var i = 0; i < messages.length; ++i) {
+                var elem = document.createElement("div");
+                elem.innerHTML = messages[i];
+                elem.classList.add('popup-notification');
+                elem.classList.add(note);
+
+                htmlcode.append(elem);
+            }
+        }
+    }
+
+    container.html(htmlcode);
+    container.dialog({
+        width: 350,
+        modal: true
+    });
+}
 function displayPopupContentFromUrl(url, title, modal, width) {
     var isModal = (modal ? true : false);
     var targetWidth = (width ? width : 550);
@@ -81,55 +108,64 @@ function displayPopupContentFromUrl(url, title, modal, width) {
         });
 }
 
-var barNotificationTimeout;
 function displayBarNotification(message, messagetype, timeout) {
-    clearTimeout(barNotificationTimeout);
+    var notificationTimeout;
+
+    var messages = typeof message === 'string' ? [message] : message;
+    if (messages.length === 0)
+        return;
 
     //types: success, error, warning
-    var cssclass = 'success';
-    if (messagetype == 'success') {
-        cssclass = 'success';
-    }
-    else if (messagetype == 'error') {
-        cssclass = 'error';
-    }
-    else if (messagetype == 'warning') {
-        cssclass = 'warning';
-    }
+    var cssclass = ['success', 'error', 'warning'].indexOf(messagetype) !== -1 ? messagetype : 'success';
+
     //remove previous CSS classes and notifications
     $('#bar-notification')
-        .removeClass('success')
-        .removeClass('error')
-        .removeClass('warning');
-    $('#bar-notification .content').remove();
-
-    //we do not encode displayed message
+      .removeClass('success')
+      .removeClass('error')
+      .removeClass('warning');
+    $('.bar-notification').remove();
 
     //add new notifications
-    var htmlcode = '';
-    if ((typeof message) == 'string') {
-        htmlcode = '<p class="content">' + message + '</p>';
-    } else {
-        for (var i = 0; i < message.length; i++) {
-            htmlcode = htmlcode + '<p class="content">' + message[i] + '</p>';
-        }
-    }
-    $('#bar-notification').append(htmlcode)
-        .addClass(cssclass)
-        .fadeIn('slow')
-        .on('mouseenter', function ()
-            {
-                clearTimeout(barNotificationTimeout);
-            });
+    var htmlcode = document.createElement('div');
+    htmlcode.classList.add('bar-notification', cssclass);
 
-    $('#bar-notification .close').off('click').on('click', function () {
-        $('#bar-notification').fadeOut('slow');
+    //add close button for notification
+    var close = document.createElement('span');
+    close.classList.add('close');
+    close.setAttribute('title', document.getElementById('bar-notification').dataset.close);
+
+    for (var i = 0; i < messages.length; i++) {
+        var content = document.createElement('p');
+        content.classList.add('content');
+        content.innerHTML = messages[i];
+
+        htmlcode.append(content);
+    }
+    
+    htmlcode.append(close);
+
+    $('#bar-notification')
+        .append(htmlcode);
+
+    $(htmlcode)
+        .fadeIn('slow')
+        .on('mouseenter', function() {
+            clearTimeout(notificationTimeout);
+        });
+
+    //callback for notification removing
+    var removeNoteItem = function () {
+        htmlcode.remove();
+    };
+
+    $(close).on('click', function () {
+        $(htmlcode).fadeOut('slow', removeNoteItem);
     });
 
     //timeout (if set)
     if (timeout > 0) {
-        barNotificationTimeout = setTimeout(function () {
-            $('#bar-notification').fadeOut('slow');
+        notificationTimeout = setTimeout(function () {
+            $(htmlcode).fadeOut('slow', removeNoteItem);
         }, timeout);
     }
 }

@@ -1,5 +1,4 @@
-﻿@using System.Text.Encodings.Web
-@using Nop.Core
+﻿@using Nop.Core
 @model CustomerInfoModel
 @inject Nop.Core.IWebHelper webHelper
 @{
@@ -15,37 +14,6 @@
 @section left
     {
     @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.Info })
-}
-
-@if (Model.CountryEnabled && Model.StateProvinceEnabled)
-{
-    <script asp-location="Footer">
-        $(document).ready(function () {
-            $("#@Html.IdFor(model => model.CountryId)").on('change', function () {
-                var selectedItem = $(this).val();
-                var ddlStates = $("#@Html.IdFor(model => model.StateProvinceId)");
-                var statesProgress = $("#states-loading-progress");
-                statesProgress.show();
-                $.ajax({
-                    cache: false,
-                    type: "GET",
-                    url: "@(Url.RouteUrl("GetStatesByCountryId"))",
-                    data: { "countryId": selectedItem, "addSelectStateItem": "true" },
-                    success: function (data) {
-                        ddlStates.html('');
-                        $.each(data, function (id, option) {
-                            ddlStates.append($('<option></option>').val(option.id).html(option.name));
-                        });
-                        statesProgress.hide();
-                    },
-                    error: function (xhr, ajaxOptions, thrownError) {
-                        alert('Failed to retrieve states.');
-                        statesProgress.hide();
-                    }
-                });
-            });
-        });
-    </script>
 }
 
 <div class="page account-page customer-info-page">
@@ -259,7 +227,11 @@
                         {
                             <div class="inputs">
                                 <label asp-for="CountryId" asp-postfix=":"></label>
-                                <select asp-for="CountryId" asp-items="Model.AvailableCountries"></select>
+                                <select asp-for="CountryId" asp-items="Model.AvailableCountries"
+                                        data-trigger="country-select"
+                                        data-url="@(Url.RouteUrl("GetStatesByCountryId"))"
+                                        data-stateprovince="#@Html.IdFor(model => model.StateProvinceId)"
+                                        data-loading="#states-loading-progress"></select>
                                 @if (Model.CountryRequired)
                                 {
                                     <nop-required />
@@ -276,8 +248,8 @@
                                 {
                                     <nop-required />
                                 }
-                                <span asp-validation-for="StateProvinceId"></span>
                                 <span id="states-loading-progress" style="display: none;" class="please-wait">@T("Common.Wait...")</span>
+                                <span asp-validation-for="StateProvinceId"></span>
                             </div>
                         }
                     </div>
@@ -486,14 +458,14 @@
             addAntiForgeryToken(postData);
             $.ajax({
                 cache: false,
-                type: 'POST',
-                url: '@Url.Action("RemoveExternalAssociation", "Customer")',
+                type: "POST",
+                url: "@Url.Action("RemoveExternalAssociation", "Customer")",
                 data: postData,
-                dataType: 'json',
-                success: function (data) {
+                dataType: "json",
+                success: function (data, textStatus, jqXHR) {
                     location.href = data.redirect;
                 },
-                error: function (xhr, ajaxOptions, thrownError) {
+                error: function (jqXHR, textStatus, errorThrown) {
                     alert('Failed to delete');
                 }
             });

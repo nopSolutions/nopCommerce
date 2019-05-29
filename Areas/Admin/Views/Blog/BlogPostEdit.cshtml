@@ -3,7 +3,7 @@
     //page title
     ViewBag.Title = T("Admin.ContentManagement.Blog.BlogPosts.EditBlogPostDetails").Text;
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("Blog");
+    Html.SetActiveMenuItemSystemName("Blog posts");
 }
 
 <form asp-controller="Blog" asp-action="BlogPostEdit" method="post">
@@ -12,7 +12,7 @@
             @T("Admin.ContentManagement.Blog.BlogPosts.EditBlogPostDetails") - @Model.Title
             <small>
                 <i class="fa fa-arrow-circle-left"></i>
-                <a asp-action="List">@T("Admin.ContentManagement.Blog.BlogPosts.BackToList")</a>
+                <a asp-action="BlogPosts">@T("Admin.ContentManagement.Blog.BlogPosts.BackToList")</a>
             </small>
         </h1>
         <div class="pull-right">

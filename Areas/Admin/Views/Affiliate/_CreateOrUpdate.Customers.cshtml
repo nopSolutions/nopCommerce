@@ -1,77 +1,30 @@
 @model AffiliateModel
-
-<div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.AffiliateDetailsCustomersTop, additionalData = Model })
-    <div class="panel panel-default">
-        <div class="panel-body">
-            <div id="customers-grid"></div>
-
-            <script>
-                $(document).ready(function() {
-                    $("#customers-grid").kendoGrid({
-                        dataSource: {
-                            type: "json",
-                            transport: {
-                                read: {
-                                    url: "@Html.Raw(Url.Action("AffiliatedCustomerList", "Affiliate"))",
-                                    type: "POST",
-                                    dataType: "json",
-                                    data: function() {
-                                        var data = {
-                                            AffliateId: '@(Model.Id)'
-                                        };
-                                        addAntiForgeryToken(data);
-                                        return data;
-                                    }
-                                }
-                            },
-                            schema: {
-                                data: "Data",
-                                total: "Total",
-                                errors: "Errors"
-                            },
-                            error: function(e) {
-                                display_kendoui_grid_error(e);
-                                // Cancel the changes
-                                this.cancelChanges();
-                            },
-                            pageSize: @(Model.AffiliatedCustomerSearchModel.PageSize),
-                            serverPaging: true,
-                            serverFiltering: true,
-                            serverSorting: true
-                        },
-                        pageable: {
-                            refresh: true,
-                            pageSizes: [@(Model.AffiliatedCustomerSearchModel.AvailablePageSizes)],
-                            @await Html.PartialAsync("_GridPagerMessages")
-                        },
-                        editable: {
-                            confirmation: "@T("Admin.Common.DeleteConfirmation")",
-                            mode: "inline"
-                        },
-                        scrollable: false,
-                        columns: [
-                        {
-                            field: "Id",
-                            title: "ID",
-                            width: 50
-                        }, {
-                            field: "Name",
-                            title: "@T("Admin.Affiliates.Customers.Name")",
-                            width: 200
-                        }, {
-                            field: "Id",
-                            title: "@T("Admin.Common.View")",
-                            width: 100,
-                            headerAttributes: { style: "text-align:center" },
-                            attributes: { style: "text-align:center" },
-                            template: '<a class="btn btn-default" href="@Url.Content("~/Admin/Customer/Edit/")#=Id#"><i class="fa fa-eye"></i>@T("Admin.Common.View")</a>'
-                            }
-                        ]
-                    });
-                });
-            </script>
-        </div>
-    </div>
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.AffiliateDetailsCustomersBottom, additionalData = Model })
+<div class="panel-body">
+    @await Html.PartialAsync("Table", new DataTablesModel
+    {
+        Name = "customers-grid",
+        UrlRead = new DataUrl("AffiliatedCustomerList", "Affiliate", new RouteValueDictionary { [nameof(Model.AffiliatedCustomerSearchModel.AffliateId)] = Model.AffiliatedCustomerSearchModel.AffliateId }),
+        Length = Model.AffiliatedCustomerSearchModel.PageSize,
+        LengthMenu = Model.AffiliatedCustomerSearchModel.AvailablePageSizes,
+        ColumnCollection = new List<ColumnProperty>
+        {
+            new ColumnProperty(nameof(AffiliatedCustomerModel.Id))
+            {
+                Title = "ID",
+                Width = "50"
+            },
+            new ColumnProperty(nameof(AffiliatedCustomerModel.Name))
+            {
+                Title = T("Admin.Affiliates.Customers.Name").Text,
+                Width = "200"
+            },
+            new ColumnProperty(nameof(AffiliatedCustomerModel.Id))
+            {
+                Title = T("Admin.Common.View").Text,
+                Width = "150",
+                ClassName = NopColumnClassDefaults.Button,
+                Render = new RenderButtonView(new DataUrl("~/Admin/Customer/Edit/", nameof(AffiliatedCustomerModel.Id)))
+            }
+        }
+    })
 </div>

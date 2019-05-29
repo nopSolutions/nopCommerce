@@ -1,123 +1,80 @@
 @model AddressAttributeModel
 
 <div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.AddressAttributeDetailsValuesTop, additionalData = Model })
-    <div class="panel panel-default">
-        @if (Model.Id > 0)
+    @if (Model.Id > 0)
+    {
+        /*TODO display the following warning if values are not supported by selected attribute control type - 'Values are not required for this attribute control type' */
+        
+    <div class="panel-body">
+        @await Html.PartialAsync("Table", new DataTablesModel
         {
-            /*TODO display the following warning if values are not supported by selected attribute control type - 'Values are not required for this attribute control type' */
-            
-            <div class="panel-body">
-                <div id="addressattributevalues-grid"></div>
+            Name = "addressattributevalues-grid",
+            UrlRead = new DataUrl("ValueList", "AddressAttribute", new RouteValueDictionary { [nameof(AddressAttributeValueSearchModel.AddressAttributeId)] = Model.Id }),
+            UrlDelete = new DataUrl("ValueDelete", "AddressAttribute", null),
+            Length = Model.AddressAttributeValueSearchModel.PageSize,
+            LengthMenu = Model.AddressAttributeValueSearchModel.AvailablePageSizes,
+            ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(AddressAttributeValueModel.Name))
+                {
+                    Title = T("Admin.Address.AddressAttributes.Values.Fields.Name").Text
+                },
+                new ColumnProperty(nameof(AddressAttributeValueModel.IsPreSelected))
+                {
+                    Title = T("Admin.Address.AddressAttributes.Values.Fields.IsPreSelected").Text,
+                    Width = "10",
+                    ClassName = NopColumnClassDefaults.CenterAll,
+                    Render = new RenderBoolean()
+                },
+                new ColumnProperty(nameof(AddressAttributeValueModel.DisplayOrder))
+                {
+                    Title = T("Admin.Address.AddressAttributes.Values.Fields.DisplayOrder").Text,
+                    Width = "100",
+                    ClassName =  NopColumnClassDefaults.CenterAll
+                },
+                new ColumnProperty(nameof(AddressAttributeValueModel.Id))
+                {
+                    Title = T("Admin.Common.Edit").Text,
+                    ClassName = NopColumnClassDefaults.Button,
+                    Width = "100",
+                    Render = new RenderCustom("renderColumnEdit")
+                },
+                new ColumnProperty(nameof(AddressAttributeValueModel.Id))
+                {
+                    Title = T("Admin.Common.Delete").Text,
+                    ClassName = NopColumnClassDefaults.Button,
+                    Render = new RenderButtonRemove(T("Admin.Common.Delete").Text),
+                    Width = "100"
+                }
+            }
+        })
+     </div>
+        <div class="panel-footer">
+            <button type="submit" id="btnAddNewValue" onclick="javascript:OpenWindow('@(Url.Action("ValueCreatePopup", "AddressAttribute", new { addressAttributeId = Model.Id, btnId = "btnRefresh", formId = "addressattribute-form" }))', 800, 400, true); return false;" class="btn btn-primary">
+                @T("Admin.Address.AddressAttributes.Values.AddNew")
+            </button>
+            <input type="submit" id="btnRefresh" style="display: none" />
+            <script>
+                function renderColumnEdit(data, type, row, meta) {
+                    return '<button onclick=\"javascript:OpenWindow(\'@Url.Content("~/Admin/AddressAttribute/ValueEditPopup/")' + data + '?btnId=btnRefresh&formId=addressattribute-form\', 800, 800, true); return false;\" class="btn btn-default"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</button>';
+                }
 
-                <script>
-                    $(document).ready(function () {
-                        $("#addressattributevalues-grid").kendoGrid({
-                            dataSource: {
-                                type: "json",
-                                transport: {
-                                    read: {
-                                        url: "@Html.Raw(Url.Action("ValueList", "AddressAttribute"))",
-                                        type: "POST",
-                                        dataType: "json",
-                                        data: function() {
-                                            var data = {
-                                                AddressAttributeId: '@(Model.Id)'
-                                            };
-                                            addAntiForgeryToken(data);
-                                            return data;
-                                        }
-                                    },
-                                    destroy: {
-                                        url: "@Html.Raw(Url.Action("ValueDelete", "AddressAttribute"))",
-                                        type: "POST",
-                                        dataType: "json",
-                                        data: addAntiForgeryToken
-                                    }
-                                },
-                                schema: {
-                                    data: "Data",
-                                    total: "Total",
-                                    errors: "Errors",
-                                    model: {
-                                        id: "Id"
-                                    }
-                                },
-                                error: function (e) {
-                                    display_kendoui_grid_error(e);
-                                    // Cancel the changes
-                                    this.cancelChanges();
-                                },
-                                pageSize: @(Model.AddressAttributeValueSearchModel.PageSize),
-                                serverPaging: true,
-                                serverFiltering: true,
-                                serverSorting: true
-                            },
-                            pageable: {
-                                refresh: true,
-                                pageSizes: [@(Model.AddressAttributeValueSearchModel.AvailablePageSizes)],
-                                @await Html.PartialAsync("_GridPagerMessages")
-                            },
-                            editable: {
-                                confirmation: "@T("Admin.Common.DeleteConfirmation")",
-                                mode: "inline"
-                            },
-                            scrollable: false,
-                            columns: [{
-                                field: "Name",
-                                title: "@T("Admin.Address.AddressAttributes.Values.Fields.Name")"
-                            }, {
-                                field: "IsPreSelected",
-                                title: "@T("Admin.Address.AddressAttributes.Values.Fields.IsPreSelected")",
-                                width: 100,
-                                headerAttributes: { style: "text-align:center" },
-                                attributes: { style: "text-align:center" },
-                                template: '# if(IsPreSelected) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
-                            }, {
-                                field: "DisplayOrder",
-                                title: "@T("Admin.Address.AddressAttributes.Values.Fields.DisplayOrder")",
-                                width: 100
-                            }, {
-                                field: "Id",
-                                title: "@T("Admin.Common.Edit")",
-                                width: 100,
-                                headerAttributes: { style: "text-align:center" },
-                                attributes: { style: "text-align:center" },
-                                template: "<button value='@T("Admin.Common.Edit")' onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/AddressAttribute/ValueEditPopup/")#=Id#?btnId=btnRefresh&formId=addressattribute-form', 800, 400, true); return false;\" class='btn btn-default'><i class=\"fa fa-pencil\"></i>@T("Admin.Common.Edit")</button>"
-                            }, {
-                                command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
-                                title: "@T("Admin.Common.Delete")",
-                                width: 100
-                            }]
-                        });
-                    });
-                </script>
-            </div>
-            <div class="panel-footer">
-                <button type="submit" id="btnAddNewValue" onclick="javascript:OpenWindow('@(Url.Action("ValueCreatePopup", "AddressAttribute", new { addressAttributeId = Model.Id, btnId = "btnRefresh", formId = "addressattribute-form" }))', 800, 400, true); return false;" class="btn btn-primary">
-                    @T("Admin.Address.AddressAttributes.Values.AddNew")
-                </button>
-                <input type="submit" id="btnRefresh" style="display: none" />
-                <script>
-                    $(document).ready(function () {
-                        $('#btnRefresh').click(function () {
-                            //refresh grid
-                            var grid = $("#addressattributevalues-grid").data('kendoGrid');
-                            grid.dataSource.read();
+                $(document).ready(function () {
+                    $('#btnRefresh').click(function () {
+                        //refresh grid
+                        updateTable('#addressattributevalues-grid');
 
-                            //return false to don't reload a page
-                            return false;
-                        });
+                        //return false to don't reload a page
+                        return false;
                     });
-                </script>
-            </div>
-        }
-        else
-        {
-            <div class="panel-body">
-                @T("Admin.Address.AddressAttributes.Values.SaveBeforeEdit")
-            </div>
-        }
-    </div>
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.AddressAttributeDetailsValuesBottom, additionalData = Model })
-</div>
+                });
+            </script>
+        </div>
+    }
+    else
+    {
+        <div class="panel-body">
+            @T("Admin.Address.AddressAttributes.Values.SaveBeforeEdit")
+        </div>
+    }
+</div>  

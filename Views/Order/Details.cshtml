@@ -220,10 +220,10 @@
                 <div class="shipping-info-wrap">
                     <div class="shipping-info">
 	                    <div class="title">
-	                        <strong>@(Model.PickUpInStore ? T("Order.PickupAddress") : T("Order.ShippingAddress"))</strong>
+	                        <strong>@(Model.PickupInStore ? T("Order.PickupAddress") : T("Order.ShippingAddress"))</strong>
 	                    </div>
                         <ul class="info-list">
-                            @if (!Model.PickUpInStore)
+                            @if (!Model.PickupInStore)
                             {
                                 <li class="name">
                                     @Model.ShippingAddress.FirstName @Model.ShippingAddress.LastName

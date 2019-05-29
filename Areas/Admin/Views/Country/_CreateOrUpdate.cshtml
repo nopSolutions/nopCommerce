@@ -1,25 +1,23 @@
 ﻿@model CountryModel
 
-@inject IEventPublisher eventPublisher
+@{
+    const string hideInfoBlockAttributeName = "CountryPage.HideInfoBlock";
+    var hideInfoBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideInfoBlockAttributeName);
+
+    const string hideStatesBlockAttributeName = "CountryPage.HideStatesBlock";
+    var hideStatesBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideStatesBlockAttributeName, defaultValue: true);
+}
 
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
 
 <div class="content">
     <div class="form-horizontal">
-        <nop-tabs id="country-edit">
-            <nop-tab asp-name="tab-info" asp-title="@T("Admin.Configuration.Countries.Info")" asp-default="true">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-tab>
-            <nop-tab asp-name="tab-states" asp-title="@T("Admin.Configuration.Countries.States")">@await Html.PartialAsync("_CreateOrUpdate.States", Model)</nop-tab>
-        </nop-tabs>
+        <nop-panels id="country-panels">
+            <nop-panel asp-name="country-info" asp-icon="fa fa-info" asp-title="@T("Admin.Configuration.Countries.Info")" asp-hide-block-attribute-name="@hideInfoBlockAttributeName" asp-hide="@hideInfoBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-panel>
+            <nop-panel asp-name="country-states" asp-icon="fa fa-globe"asp-title="@T("Admin.Configuration.Countries.States")" asp-hide-block-attribute-name="@hideStatesBlockAttributeName" asp-hide="@hideStatesBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.States", Model)</nop-panel>
+            
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CountryDetailsBlock, additionalData = Model })
+        </nop-panels>
     </div>
 </div>
-
-@{
-    //custom tabs
-    var eventMessage = new AdminTabStripCreated(this.Html, "country-edit");
-    eventPublisher.Publish(eventMessage);
-    foreach (var eventBlock in eventMessage.BlocksToRender)
-    {
-        @eventBlock
-    }
-}

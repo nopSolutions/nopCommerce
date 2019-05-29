@@ -22,10 +22,10 @@
     {
         <script src="@Url.Content("~/lib/jquery-migrate/jquery-migrate-3.0.1.min.js")"></script>
     }
-    @Html.NopInlineScripts(this.Url, ResourceLocation.Head)
+    @Html.NopInlineScripts(ResourceLocation.Head)
 </head>
 <body>
     @RenderBody()
-    @Html.NopInlineScripts(this.Url, ResourceLocation.Footer)
+    @Html.NopInlineScripts(ResourceLocation.Footer)
 </body>
 </html>

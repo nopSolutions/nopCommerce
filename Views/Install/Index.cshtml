@@ -1,5 +1,4 @@
 ﻿@model InstallModel
-@using System.Text.Encodings.Web
 @using Nop.Core.Data
 @using Nop.Web.Models.Install
 @using Nop.Web.Infrastructure.Installation
@@ -16,6 +15,7 @@
     <title>@ILS.GetResource("Title")</title>
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+    <link rel="shortcut icon" href="/icons/icons_0/favicon.ico">
     @if (ILS.GetCurrentLanguage().IsRightToLeft)
     {
         <link href="@Url.Content("~/lib/bootstrap/css/bootstrap.rtl.css")" type="text/css" rel="stylesheet" />

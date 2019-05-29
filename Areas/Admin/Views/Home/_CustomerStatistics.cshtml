@@ -5,7 +5,7 @@
     Html.AppendScriptParts("~/lib/chartjs/Chart.min.js");
 
     const string prefix = "customer-statistics";
-    const string hidePanelAttributeName = "HideCustomerStatisticsPanel";
+    const string hidePanelAttributeName = "Reports.HideCustomerStatisticsPanel";
     var hidePanel = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hidePanelAttributeName);
 }
 <div class="box box-info @if (hidePanel){<text>collapsed-box</text>}" id="@(prefix)-box">
@@ -127,11 +127,11 @@
             $.ajax({
                 cache: false,
                 type: "GET",
-                url: '@Url.Action("LoadCustomerStatistics", "Customer")',
+                url: "@Url.Action("LoadCustomerStatistics", "Customer")",
                 data: {
                     period: period
                 },
-                success: function (data) {
+                success: function (data, textStatus, jqXHR) {
                     for (var i = 0; i < data.length; i++) {
                         csLabels.push(data[i].date);
                         csData.push(data[i].value);
@@ -148,8 +148,8 @@
                         window.customerStatistics.update();
                     }
                 },
-                error: function (xhr, ajaxOptions, thrownError) {
-                    alert('Failed to load statistics.');
+                error: function (jqXHR, textStatus, errorThrown) {
+                    $("#loadCustomerStatisticsAlert").click();
                 }
             });
         }

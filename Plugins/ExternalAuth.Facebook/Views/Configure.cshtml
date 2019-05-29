@@ -1,14 +1,16 @@
 ﻿@model Nop.Plugin.ExternalAuth.Facebook.Models.ConfigurationModel
+
+@inject Nop.Core.IWebHelper webHelper
+
 @{
     Layout = "_ConfigurePlugin";
 }
-@inject Nop.Core.IWebHelper webHelper
 
 <form asp-controller="FacebookAuthentication" asp-action="Configure" method="post">
     <div class="panel-group">
         <div class="panel panel-default">
             <div class="panel-body">
-                @T("Plugins.ExternalAuth.Facebook.Instructions")
+                @Html.Raw(string.Format(T("Plugins.ExternalAuth.Facebook.Instructions").Text, webHelper.GetStoreLocation()))
                 <div class="form-group">
                     <div class="col-md-3">
                         <nop-label asp-for="ClientId" />
@@ -34,5 +36,5 @@
                 </div>
             </div>
         </div>
-    </div> 
+    </div>
 </form>

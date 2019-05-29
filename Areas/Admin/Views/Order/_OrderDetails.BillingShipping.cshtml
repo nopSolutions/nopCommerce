@@ -1,17 +1,18 @@
 @model OrderModel
 
-<div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.OrderDetailsBillingShippingTop, additionalData = Model })
-    <div class="panel panel-default">
+<div class="panel-body">
+    <div class="panel panel-default sub-panel">
         <div class="panel-body">
             <div class="col-md-6">
                 <div class="row">
                     <table class="table table-hover table-bordered" style="max-width: 500px;">
-                        <tr>
-                            <th colspan="2">
-                                <strong>@T("Admin.Orders.Fields.BillingAddress")</strong>
-                            </th>
-                        </tr>
+                        <thead>
+                            <tr>
+                                <th colspan="2">
+                                    <strong>@T("Admin.Orders.Fields.BillingAddress")</strong>
+                                </th>
+                            </tr>
+                        </thead>
                         @if (Model.BillingAddress.FirstNameEnabled || Model.BillingAddress.LastNameEnabled)
                         {
                             <tr>
@@ -167,7 +168,7 @@
             </div>
             @if (Model.IsShippable)
             {
-                if (!Model.PickUpInStore && Model.ShippingAddress != null)
+                if (!Model.PickupInStore && Model.ShippingAddress != null)
                 {
                     <div class="col-md-6">
                         <div class="row">
@@ -338,7 +339,7 @@
                     </div>
                 }
 
-                if (Model.PickUpInStore && Model.PickupAddress != null)
+                if (Model.PickupInStore && Model.PickupAddress != null)
                 {
                     <div class="col-md-6">
                         <div class="row">
@@ -424,7 +425,7 @@
     </div>
     @if (Model.IsShippable)
     {
-        <div class="panel panel-default">
+        <div class="panel panel-default sub-panel">
             <div class="panel-body">
                 <div class="form-group">
                     <div class="col-md-3">
@@ -499,162 +500,104 @@
                 }
             </div>
         </div>
-        <div class="panel panel-default">
+        <div class="panel panel-default sub-panel">
             <div class="panel-heading">
                 @T("Admin.Orders.Shipments")
             </div>
             <div class="panel-body">
-                <div id="shipments-grid"></div>
-
-                <script>
-                    $(document).ready(function () {
-                        $("#shipments-grid").kendoGrid({
-                            dataSource: {
-                                type: "json",
-                                transport: {
-                                    read: {
-                                        url: "@Html.Raw(Url.Action("ShipmentsByOrder", "Order"))",
-                                        type: "POST",
-                                        dataType: "json",
-                                        data: function () {
-                                            var data = {
-                                                OrderId: '@(Model.Id)'
-                                            };
-                                            addAntiForgeryToken(data);
-                                            return data;
-                                        }
-                                    }
-                                },
-                                schema: {
-                                    data: "Data",
-                                    total: "Total",
-                                    errors: "Errors"
-                                },
-                                error: function (e) {
-                                    display_kendoui_grid_error(e);
-                                    // Cancel the changes
-                                    this.cancelChanges();
-                                },
-                                pageSize: @(Model.OrderShipmentSearchModel.PageSize),
-                                serverPaging: true,
-                                serverFiltering: true,
-                                serverSorting: true
+                @await Html.PartialAsync("Table", new DataTablesModel
+                {
+                    Name = "shipments-grid",
+                    UrlRead = new DataUrl("ShipmentsByOrder", "Order", new RouteValueDictionary { [nameof(OrderShipmentSearchModel.OrderId)] = Model.Id }),
+                    PrimaryKeyColumn = nameof(ShipmentModel.Id),
+                    Length = Model.OrderShipmentSearchModel.PageSize,
+                    LengthMenu = Model.OrderShipmentSearchModel.AvailablePageSizes,
+                    ColumnCollection = new List<ColumnProperty>
+                    {
+                        new ColumnProperty(null)
+                        {
+                            Render = new RenderChildCaret(),
+                            Width = "5",
+                            Searchable = false,
+                            ClassName =  NopColumnClassDefaults.ChildControl
+                        },
+                        new ColumnProperty(nameof(ShipmentModel.Id))
+                        {
+                            Title = T("Admin.Orders.Shipments.ID").Text,
+                            Width = "50"
+                        },
+                        new ColumnProperty(nameof(ShipmentModel.CustomOrderNumber))
+                        {
+                            Title = T("Admin.Orders.Shipments.CustomOrderNumber").Text,
+                            Width = "100"
+                        },
+                        new ColumnProperty(nameof(ShipmentModel.TrackingNumber))
+                        {
+                            Title = T("Admin.Orders.Shipments.TrackingNumber").Text,
+                            Width = "100"
+                        },new ColumnProperty(nameof(ShipmentModel.TotalWeight))
+                        {
+                            Title = T("Admin.Orders.Shipments.TotalWeight").Text,
+                            Width = "100"
+                        },
+                        new ColumnProperty(nameof(ShipmentModel.ShippedDate))
+                        {
+                            Title = T("Admin.Orders.Shipments.ShippedDate").Text,
+                            Width = "100"
+                        },
+                        new ColumnProperty(nameof(ShipmentModel.DeliveryDate))
+                        {
+                            Title = T("Admin.Orders.Shipments.DeliveryDate").Text,
+                            Width = "100"
+                        },
+                        new ColumnProperty(nameof(ShipmentModel.Id))
+                        {
+                            Title = T("Admin.Common.View").Text,
+                            Width = "50",
+                            Render = new RenderButtonView(new DataUrl("~/Admin/Order/ShipmentDetails/"))
+                        }
+                    },
+                    ChildTable = new DataTablesModel
+                    {
+                        Name = "shipment-items-grid",
+                        UrlRead = new DataUrl("ShipmentsItemsByShipmentId", "Order", null),
+                        IsChildTable = true,
+                        Length = Model.OrderShipmentSearchModel.PageSize,
+                        LengthMenu = Model.OrderShipmentSearchModel.AvailablePageSizes,
+                        Filters = new List<FilterParameter>
+                        {
+                            new FilterParameter(nameof(ShipmentItemSearchModel.ShipmentId), nameof(ShipmentModel.Id), true)
+                        },
+                        ColumnCollection = new List<ColumnProperty>
+                        {
+                            new ColumnProperty(nameof(ShipmentItemModel.ProductName))
+                            {
+                                Title = T("Admin.Orders.Shipments.Products.ProductName").Text,
+                                Width = "400"
                             },
-                            pageable: {
-                                refresh: true,
-                                pageSizes: [@(Model.OrderShipmentSearchModel.AvailablePageSizes)],
-                                @await Html.PartialAsync("_GridPagerMessages")
+                            new ColumnProperty(nameof(ShipmentItemModel.ShippedFromWarehouse))
+                            {
+                                Title = T("Admin.Orders.Shipments.Products.Warehouse").Text,
+                                Width = "150"
                             },
-                            //details grid
-                            detailInit: detailInit,
-                            scrollable: false,
-                            columns: [
-                                {
-                                    field: "Id",
-                                    title: "@T("Admin.Orders.Shipments.ID")",
-                                    width: 50
-                                }, {
-                                    field: "CustomOrderNumber",
-                                    title: "@T("Admin.Orders.Shipments.CustomOrderNumber")",
-                                    width: 100
-                                }, {
-                                    field: "TrackingNumber",
-                                    title: "@T("Admin.Orders.Shipments.TrackingNumber")",
-                                    width: 100
-                                }, {
-                                    field: "TotalWeight",
-                                    title: "@T("Admin.Orders.Shipments.TotalWeight")",
-                                    width: 100
-                                }, {
-                                    field: "ShippedDate",
-                                    title: "@T("Admin.Orders.Shipments.ShippedDate")",
-                                    width: 200,
-                                    type: "date",
-                                    format: "{0:G}"
-                                }, {
-                                    field: "DeliveryDate",
-                                    title: "@T("Admin.Orders.Shipments.DeliveryDate")",
-                                    width: 200,
-                                    type: "date",
-                                    format: "{0:G}"
-                                }, {
-                                    field: "Id",
-                                    title: "@T("Admin.Common.View")",
-                                    width: 50,
-                                    headerAttributes: { style: "text-align:center" },
-                                    attributes: { style: "text-align:center" },
-                                    template: '<a class="btn btn-default" href="@Url.Content("~/Admin/Order/ShipmentDetails/")#=Id#"><i class="fa fa-eye"></i>@T("Admin.Common.View")</a>'
-                                }
-                            ]
-                        });
-                    });
-
-                    //details grid
-                    function detailInit(e) {
-                        $("<div/>").appendTo(e.detailCell).kendoGrid({
-                            dataSource: {
-                                type: "json",
-                                transport: {
-                                    read: {
-                                        url: "@Html.Raw(Url.Action("ShipmentsItemsByShipmentId", "Order"))",
-                                        type: "POST",
-                                        dataType: "json",
-                                        data: function () {
-                                            var data = {
-                                                ShipmentId: e.data.Id
-                                            };
-                                            addAntiForgeryToken(data);
-                                            return data;
-                                        }
-                                    }
-                                },
-                                schema: {
-                                    data: "Data",
-                                    total: "Total",
-                                    errors: "Errors"
-                                },
-                                error: function (e) {
-                                    display_kendoui_grid_error(e);
-                                    // Cancel the changes
-                                    this.cancelChanges();
-                                },
-                                pageSize: @(Model.OrderShipmentSearchModel.ShipmentItemSearchModel.PageSize),
-                                serverPaging: true,
-                                serverFiltering: true,
-                                serverSorting: true
+                            new ColumnProperty(nameof(ShipmentItemModel.QuantityInThisShipment))
+                            {
+                                Title = T("Admin.Orders.Shipments.Products.QtyShipped").Text,
+                                Width = "150"
                             },
-                            scrollable: false,
-                            pageable: {
-                                refresh: true,
-                                pageSizes: [@(Model.OrderShipmentSearchModel.ShipmentItemSearchModel.AvailablePageSizes)],
-                                @await Html.PartialAsync("_GridPagerMessages")
+                            new ColumnProperty(nameof(ShipmentItemModel.ItemWeight))
+                            {
+                                Title = T("Admin.Orders.Shipments.Products.ItemWeight").Text,
+                                Width = "150"
                             },
-                            columns: [
-                                {
-                                    field: "ProductName",
-                                    title: "@T("Admin.Orders.Shipments.Products.ProductName")",
-                                    width: 400
-                                }, {
-                                    field: "ShippedFromWarehouse",
-                                    title: "@T("Admin.Orders.Shipments.Products.Warehouse")",
-                                    width: 150
-                                }, {
-                                    field: "QuantityInThisShipment",
-                                    title: "@T("Admin.Orders.Shipments.Products.QtyShipped")",
-                                    width: 150
-                                }, {
-                                    field: "ItemWeight",
-                                    title: "@T("Admin.Orders.Shipments.Products.ItemWeight")",
-                                    width: 150
-                                }, {
-                                    field: "ItemDimensions",
-                                    title: "@T("Admin.Orders.Shipments.Products.ItemDimensions")",
-                                    width: 150
-                                }
-                            ]
-                        });
+                            new ColumnProperty(nameof(ShipmentItemModel.ItemDimensions))
+                            {
+                                Title = T("Admin.Orders.Shipments.Products.ItemDimensions").Text,
+                                Width = "150"
+                            }
+                        }
                     }
-                </script>
+                })
             </div>
             @if (Model.CanAddNewShipments)
             {
@@ -666,5 +609,4 @@
             }
         </div>
     }
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.OrderDetailsBillingShippingBottom, additionalData = Model })
 </div>

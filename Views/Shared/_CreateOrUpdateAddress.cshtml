@@ -1,35 +1,5 @@
 ﻿@model AddressModel
-@if (Model.CountryEnabled && Model.StateProvinceEnabled)
-{
-    //we don't move this script to the footer as it's used in Ajax requests where footer is not available
-    <script>
-        $(document).ready(function () {
-            $("#@Html.IdFor(model => model.CountryId)").on('change', function () {
-            var selectedItem = $(this).val();
-            var ddlStates = $("#@Html.IdFor(model => model.StateProvinceId)");
-            var statesProgress = $("#states-loading-progress");
-            statesProgress.show();
-                $.ajax({
-                cache: false,
-                    type: "GET",
-                    url: "@(Url.RouteUrl("GetStatesByCountryId"))",
-                    data: { "countryId": selectedItem, "addSelectStateItem": "true" },
-                    success: function (data) {
-                    ddlStates.html('');
-                        $.each(data, function (id, option) {
-                        ddlStates.append($('<option></option>').val(option.id).html(option.name));
-                    });
-                    statesProgress.hide();
-                },
-                    error: function (xhr, ajaxOptions, thrownError) {
-                    alert('Failed to retrieve states.');
-                    statesProgress.hide();
-                }
-            });
-        });
-    });
-    </script>
-}
+
 <input asp-for="Id" type="hidden"/>
 <div class="edit-address">
     <div class="inputs">
@@ -66,7 +36,11 @@
     {
         <div class="inputs">
             <label asp-for="CountryId" asp-postfix=":"></label>
-            <select asp-for="CountryId" asp-items="Model.AvailableCountries"></select>
+            <select asp-for="CountryId" asp-items="Model.AvailableCountries"
+                    data-trigger="country-select"
+                    data-url="@(Url.RouteUrl("GetStatesByCountryId"))"
+                    data-stateprovince="#@Html.IdFor(model => model.StateProvinceId)"
+                    data-loading="#states-loading-progress"></select>
             <nop-required />
             <span asp-validation-for="CountryId"></span>
         </div>

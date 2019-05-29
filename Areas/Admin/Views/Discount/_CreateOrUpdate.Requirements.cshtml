@@ -1,17 +1,17 @@
 ﻿@model DiscountModel
-@using System.Text.Encodings.Web
 @{
     Html.AddScriptParts("~/lib/jquery-tmpl/jquery.tmpl.min.js");
 }
-<div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.DiscountDetailsRequirementsTop, additionalData = Model })
-    @if (Model.Id > 0)
-    {
-        <p>
-            @T("Admin.Promotions.Discounts.Requirements.Description")
-        </p>
 
-        <script>
+<div class="panel-body">
+    <div class="panel-group">
+        @if (Model.Id > 0)
+        {
+            <p>
+                @T("Admin.Promotions.Discounts.Requirements.Description")
+            </p>
+
+            <script>
             $(document).ready(function() {
                 $("#@Html.IdFor(model => model.AddDiscountRequirement)").change(loadNewRequirementBox);
 
@@ -51,11 +51,14 @@
                         $.ajax({
                             cache: false,
                             url: "@(Url.Action("GetDiscountRequirementConfigurationUrl", "Discount"))",
-                            data: { "systemName": ruleSystemName, "discountId": @Model.Id },
-                            success: function(result) {
-                                loadRequirementIntoBox(result.url, '#addrequirementplaceholder');
+                            data: {
+                                "systemName": ruleSystemName,
+                                "discountId": @Model.Id 
                             },
-                            error: function(xhr, ajaxOptions, thrownError) {
+                            success: function (data, textStatus, jqXHR) {
+                                loadRequirementIntoBox(data.url, '#addrequirementplaceholder');
+                            },
+                            error: function (jqXHR, textStatus, errorThrown) {
                                 $('#addrequirementplaceholder').html('Failed to load requirement URL');
                             }
                         });
@@ -74,10 +77,10 @@
                     cache: false,
                     url: configureRuleUrl,
                     dataType: "html",
-                    success: function(result) {
-                        $(placeholderName).html(result);
+                    success: function (data, textStatus, jqXHR) {
+                        $(placeholderName).html(data);
                     },
-                    error: function(xhr, ajaxOptions, thrownError) {
+                    error: function (jqXHR, textStatus, errorThrown) {
                         $(placeholderName).html('Failed to load requirement content.');
                     }
                 });
@@ -98,14 +101,14 @@
                     type: "POST",
                     url: "@(Url.Action("GetDiscountRequirements", "Discount"))",
                     data: postData,
-                    success: function (result) {
+                    success: function (data, textStatus, jqXHR) {
                         //set requirements
-                        loadRequirementBoxes(result.Requirements, "#discountRequirementContainer", true);
+                        loadRequirementBoxes(data.Requirements, "#discountRequirementContainer", true);
 
                         //set available groups
                         var groupsElement = $("#@Html.IdFor(model => model.RequirementGroupId)");
                         groupsElement.html('');
-                        $.each(result.AvailableGroups, function (id, option) {
+                        $.each(data.AvailableGroups, function (id, option) {
                             groupsElement.append($('<option></option>').val(option.Value).html(option.Text));
                         });
                         var ruleSystemName = $("#@Html.IdFor(model => model.AddDiscountRequirement)").val();
@@ -116,8 +119,8 @@
                             $("#pnlGroup").hide();
                         }
                     },
-                    error: function(xhr, ajaxOptions, thrownError) {
-                        alert('Failed to load requirements info. Please refresh the page');
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        $("#getDiscountRequirementsAlert").click();
                     }
                 });
             };
@@ -156,11 +159,11 @@
                     type: "POST",
                     data: postData,
                     url: "@(Url.Action("AddNewGroup", "Discount"))",
-                    success: function (data) {
+                    success: function (data, textStatus, jqXHR) {
                         $("#discountRequirementContainer").trigger('nopnewdiscountruleadded', [data.NewRequirementId]);
                     },
-                    error:function (xhr, ajaxOptions, thrownError) {
-                        alert('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Admin.Promotions.Discounts.Requirements.FailedToSave").Text))');
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        $("#failedToSave").click();
                     }
                 });
             };
@@ -174,113 +177,115 @@
             function changeInteraction(discountRequirementId, parentId, typeId) {
                 loadRequirements(discountRequirementId, parentId, typeId);
             };
-        </script>
+            </script>
 
-        <!-- Template container -->
-        <div id="discountRequirementContainer"></div>
+            <!-- Template container -->
+            <div id="discountRequirementContainer"></div>
 
-        <!-- Discount requirement template -->
-        <script id="discountRequirementTemplate" type="text/html">
-            <div class="requirement-container {{if IsGroup}}requirement-group{{/if}}" id="editrequirement{{= DiscountRequirementId }}">
-                <div class="requirement-heading clearfix">
-                    {{if IsGroup}}
-                    <span class="pull-left margin-r-5">
-                        @T("Admin.Promotions.Discounts.Requirements.RequirementGroup.Title")
-                        <i>{{= RuleName }}</i>
-                    </span>
-                    <div class="interaction-type pull-left clearfix">
-                        <span class="pull-left margin-r-10">@T("Admin.Promotions.Discounts.Requirements.InteractionTypeInGroup")</span>
-                        <select class="form-control input-sm pull-left" id="interactiontype{{= DiscountRequirementId }}" name="interactiontype{{= DiscountRequirementId }}"
-                                onchange="changeInteraction({{= DiscountRequirementId }}, ${ParentId ? ParentId : 'null'}, this.value)">
-                            {{each AvailableInteractionTypes}}
+            <!-- Discount requirement template -->
+            <script id="discountRequirementTemplate" type="text/html">
+                <div class="requirement-container {{if IsGroup}}requirement-group{{/if}}" id="editrequirement{{= DiscountRequirementId }}">
+                    <div class="requirement-heading clearfix">
+                        {{if IsGroup}}
+                        <span class="pull-left margin-r-5">
+                            @T("Admin.Promotions.Discounts.Requirements.RequirementGroup.Title")
+                            <i>{{= RuleName }}</i>
+                        </span>
+                        <div class="interaction-type pull-left clearfix">
+                            <span class="pull-left margin-r-10">@T("Admin.Promotions.Discounts.Requirements.InteractionTypeInGroup")</span>
+                            <select class="form-control input-sm pull-left" id="interactiontype{{= DiscountRequirementId }}" name="interactiontype{{= DiscountRequirementId }}"
+                                    onchange="changeInteraction({{= DiscountRequirementId }}, ${ParentId ? ParentId : 'null'}, this.value)">
+                                {{each AvailableInteractionTypes}}
                                 {{if Selected}}
-                                    <option value="${Value}" selected>${Text}</option>
+                                <option value="${Value}" selected>${Text}</option>
                                 {{else}}
-                                    <option value="${Value}">${Text}</option>
+                                <option value="${Value}">${Text}</option>
                                 {{/if}}
-                            {{/each}}
-                        </select>
-                    </div>
-                    {{else}}
-                    <div class="pull-left">
-                        @T("Admin.Promotions.Discounts.Requirements.Requirement.Title")
-                        <i>{{= RuleName }}</i>
-                    </div>
-                    {{/if}}
-                    {{if ParentId}}
+                                {{/each}}
+                            </select>
+                        </div>
+                        {{else}}
+                        <div class="pull-left">
+                            @T("Admin.Promotions.Discounts.Requirements.Requirement.Title")
+                            <i>{{= RuleName }}</i>
+                        </div>
+                        {{/if}}
+                        {{if ParentId}}
                         <button type="button" class="btn btn-link" id="deleterequirement{{= DiscountRequirementId }}" onclick="deleteRequirement({{= DiscountRequirementId }})">
                             <i class="fa fa-trash"></i>
                             {{if IsGroup}}
-                                @T("Admin.Promotions.Discounts.Requirements.RemoveGroup")
+                            @T("Admin.Promotions.Discounts.Requirements.RemoveGroup")
                             {{else}}
-                                @T("Admin.Promotions.Discounts.Requirements.RemoveRequirement")
+                            @T("Admin.Promotions.Discounts.Requirements.RemoveRequirement")
                             {{/if}}
                         </button>
-                    {{/if}}
+                        {{/if}}
+                    </div>
+                    <div class="requirement-body">
+                        <div id="editrequirementplaceholder{{= DiscountRequirementId }}"></div>
+                    </div>
                 </div>
-                <div class="requirement-body">
-                    <div id="editrequirementplaceholder{{= DiscountRequirementId }}"></div>
-                </div>
-            </div>
-            {{if !IsLastInGroup}}
+                {{if !IsLastInGroup}}
                 <div class="interaction-type-label">
                     {{each AvailableInteractionTypes}}
-                        {{if Value == InteractionTypeId}}
-                            ${Text}
-                        {{/if}}
+                    {{if Value == InteractionTypeId}}
+                    ${Text}
+                    {{/if}}
                     {{/each}}
                 </div>
-            {{/if}}
-        </script>
+                {{/if}}
+            </script>
 
-        <div class="panel panel-default panel-add-requirement">
-            <div class="panel-heading">
-                @T("Admin.Promotions.Discounts.Requirements.AddNew")
+            <div class="panel panel-default panel-add-requirement">
+                <div class="panel-heading">
+                    @T("Admin.Promotions.Discounts.Requirements.AddNew")
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="AddDiscountRequirement" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-select asp-for="AddDiscountRequirement" asp-items="Model.AvailableDiscountRequirementRules" />
+                            <span asp-validation-for="AddDiscountRequirement"></span>
+                        </div>
+                    </div>
+                    <div class="form-group" id="pnlGroup" style="display: none">
+                        <div class="col-md-3">
+                            <nop-label asp-for="RequirementGroupId" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-select asp-for="RequirementGroupId" asp-items="Model.AvailableRequirementGroups" />
+                            <span asp-validation-for="RequirementGroupId"></span>
+                        </div>
+                    </div>
+                    <div id="addrequirementplaceholder"></div>
+                    <div class="form-group" id="pnlGroupName" style="display: none">
+                        <div class="col-md-3">
+                            <nop-label asp-for="GroupName" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="GroupName" />
+                            <span asp-validation-for="GroupName"></span>
+                        </div>
+                    </div>
+                    <div class="form-group" id="pnlAddNewGroup" style="display: none">
+                        <div class="col-md-9 col-md-offset-3">
+                            <input type="button" id="saverequirement" class="btn btn-primary" value="@T("Admin.Common.Save")" onclick="addNewGroup()" />
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="panel-body">
-                <div class="form-group">
-                    <div class="col-md-3">
-                        <nop-label asp-for="AddDiscountRequirement"/>
-                    </div>
-                    <div class="col-md-9">
-                        <nop-select asp-for="AddDiscountRequirement" asp-items="Model.AvailableDiscountRequirementRules" />
-                        <span asp-validation-for="AddDiscountRequirement"></span>
-                    </div>
-                </div>
-                <div class="form-group" id="pnlGroup" style="display: none">
-                    <div class="col-md-3">
-                        <nop-label asp-for="RequirementGroupId"/>
-                    </div>
-                    <div class="col-md-9">
-                        <nop-select asp-for="RequirementGroupId" asp-items="Model.AvailableRequirementGroups" />
-                        <span asp-validation-for="RequirementGroupId"></span>
-                    </div>
-                </div>
-                <div id="addrequirementplaceholder"></div>
-                <div class="form-group" id="pnlGroupName" style="display: none">
-                    <div class="col-md-3">
-                        <nop-label asp-for="GroupName"/>
-                    </div>
-                    <div class="col-md-9">
-                        <nop-editor asp-for="GroupName"/>
-                        <span asp-validation-for="GroupName"></span>
-                    </div>
-                </div>
-                <div class="form-group" id="pnlAddNewGroup" style="display: none">
-                    <div class="col-md-9 col-md-offset-3">
-                        <input type="button" id="saverequirement" class="btn btn-primary" value="@T("Admin.Common.Save")" onclick="addNewGroup()" />
-                    </div>
+        }
+        else
+        {
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    @T("Admin.Promotions.Discounts.Requirements.SaveBeforeEdit")
                 </div>
             </div>
-        </div>
-    }
-    else
-    {
-        <div class="panel panel-default">
-            <div class="panel-body">
-                @T("Admin.Promotions.Discounts.Requirements.SaveBeforeEdit")
-            </div>
-        </div>
-    }
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.DiscountDetailsRequirementsBottom, additionalData = Model })
+        }
+    </div>
+    <nop-alert asp-alert-id="failedToSave" asp-alert-message="@T("Admin.Promotions.Discounts.Requirements.Alert.FailedToSave")" />
+    <nop-alert asp-alert-id="getDiscountRequirementsAlert" asp-alert-message="@T("Admin.Promotions.Discounts.Requirements.Alert.FailedGetDiscountRequirements")" />
 </div>

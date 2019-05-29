@@ -7,6 +7,11 @@
     Html.SetActiveMenuItemSystemName("Orders");
 }
 
+@{
+    const string hideSearchBlockAttributeName = "AddProductToOrderPage.HideSearchBlock";
+    var hideSearchBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSearchBlockAttributeName);
+}
+
 <nop-antiforgery-token />
 <div class="content-header clearfix">
     <h1 class="pull-left">
@@ -26,46 +31,54 @@
         <div class="panel-group">
             <div class="panel panel-default panel-search">
                 <div class="panel-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <div class="col-md-4">
-                                    <nop-label asp-for="SearchProductName" />
+                    <div class="row search-row @(!hideSearchBlock ? "opened" : "")"  data-hideAttribute="@hideSearchBlockAttributeName">
+                        <div class="search-text">@T("Admin.Common.Search")</div>
+                        <div class="icon-search"><i class="fa fa-search" aria-hidden="true"></i></div>
+                        <div class="icon-collapse"><i class="fa fa-angle-down" aria-hidden="true"></i></div>
+                    </div>
+
+                    <div class="search-body @(hideSearchBlock ? "closed" : "")">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="SearchProductName" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-editor asp-for="SearchProductName" />
+                                    </div>
                                 </div>
-                                <div class="col-md-8">
-                                    <nop-editor asp-for="SearchProductName" />
+                                <div class="form-group" @(Model.AvailableCategories.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="SearchCategoryId" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-select asp-for="SearchCategoryId" asp-items="Model.AvailableCategories" />
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="form-group" @(Model.AvailableCategories.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
-                                <div class="col-md-4">
-                                    <nop-label asp-for="SearchCategoryId" />
+                                <div class="form-group" @(Model.AvailableManufacturers.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="SearchManufacturerId" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-select asp-for="SearchManufacturerId" asp-items="Model.AvailableManufacturers" />
+                                    </div>
                                 </div>
-                                <div class="col-md-8">
-                                    <nop-select asp-for="SearchCategoryId" asp-items="Model.AvailableCategories" />
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="SearchProductTypeId" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-select asp-for="SearchProductTypeId" asp-items="Model.AvailableProductTypes" />
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="form-group" @(Model.AvailableManufacturers.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
-                                <div class="col-md-4">
-                                    <nop-label asp-for="SearchManufacturerId" />
-                                </div>
-                                <div class="col-md-8">
-                                    <nop-select asp-for="SearchManufacturerId" asp-items="Model.AvailableManufacturers" />
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-md-4">
-                                    <nop-label asp-for="SearchProductTypeId" />
-                                </div>
-                                <div class="col-md-8">
-                                    <nop-select asp-for="SearchProductTypeId" asp-items="Model.AvailableProductTypes" />
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-md-8 col-md-offset-4">
-                                    <button type="button" id="search-products" class="btn btn-primary btn-search">
-                                        <i class="fa fa-search"></i>
-                                        @T("Admin.Common.Search")
-                                    </button>
+                                <div class="form-group">
+                                    <div class="col-md-8 col-md-offset-4">
+                                        <button type="button" id="search-products" class="btn btn-primary btn-search">
+                                            <i class="fa fa-search"></i>
+                                            @T("Admin.Common.Search")
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -75,98 +88,46 @@
 
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <div id="products-grid"></div>
-
-                    <script>
-                        $(document).ready(function() {
-                            $("#products-grid").kendoGrid({
-                                dataSource: {
-                                    type: "json",
-                                    transport: {
-                                        read: {
-                                            url: "@Html.Raw(Url.Action("AddProductToOrder", "Order"))",
-                                            type: "POST",
-                                            dataType: "json",
-                                            data: function() {
-                                                var data = {
-                                                    OrderId : '@(Model.OrderId)',
-                                                    SearchProductName: $('#@Html.IdFor(model => model.SearchProductName)').val(),
-                                                    SearchCategoryId: $('#SearchCategoryId').val(),
-                                                    SearchManufacturerId: $('#SearchManufacturerId').val(),
-                                                    SearchProductTypeId: $('#SearchProductTypeId').val()
-                                                };
-                                                addAntiForgeryToken(data);
-                                                return data;
-                                            }
-                                        }
-                                    },
-                                    schema: {
-                                        data: "Data",
-                                        total: "Total",
-                                        errors: "Errors"
-                                    },
-                                    error: function(e) {
-                                        display_kendoui_grid_error(e);
-                                        // Cancel the changes
-                                        this.cancelChanges();
-                                    },
-                                    pageSize: @(Model.PageSize),
-                                    serverPaging: true,
-                                    serverFiltering: true,
-                                    serverSorting: true
-                                },
-                                pageable: {
-                                    refresh: true,
-                                    pageSizes: [@(Model.AvailablePageSizes)],
-                                    @await Html.PartialAsync("_GridPagerMessages")
-                                },
-                                editable: {
-                                    confirmation: "@T("Admin.Common.DeleteConfirmation")",
-                                    mode: "inline"
-                                },
-                                scrollable: false,
-                                //selectable
-                                selectable: true,
-                                columns: [
-                                {
-                                    field: "Name",
-                                    title: "@T("Admin.Common.Select")",
-                                    width: 50,
-                                    template: '<button type="button" onclick="addProductToOrder(#=Id#)" class="btn btn-default">@T("Admin.Common.Select")</button>'
-                                },{
-                                    field: "Id",
-                                    title: "ID",
-                                    width: 50
-                                }, {
-                                    field: "Name",
-                                    title: "@T("Admin.Orders.Products.AddNew.Name")",
-                                    width: 400
-                                }, {
-                                    field: "Sku",
-                                    title: "@T("Admin.Orders.Products.AddNew.SKU")",
-                                    width: 100
-                                }
-                                ]
-                            });
-                        });
-                    </script>
-                    <script>
-                        $(document).ready(function() {
-                            $('#search-products').click(function() {
-                                var grid = $('#products-grid').data('kendoGrid');
-                                grid.dataSource.page(1); //new search. Set page size to 1
-                                //grid.dataSource.read(); we already loaded the grid above using "page" function
-                                return false;
-                            });
-                        });
-
-                        $("#@Html.IdFor(model => model.SearchProductName)").keydown(function(event) {
-                            if (event.keyCode == 13) {
-                                $("#search-products").click();
-                                return false;
+                    @await Html.PartialAsync("Table", new DataTablesModel
+                    {
+                        Name = "products-grid",
+                        UrlRead = new DataUrl("AddProductToOrder", "Order", new RouteValueDictionary { [nameof(Model.OrderId)] = Model.OrderId }),
+                        SearchButtonId = "search-products",
+                        Length = Model.PageSize,
+                        LengthMenu = Model.AvailablePageSizes,
+                        Filters = new List<FilterParameter>
+                        {
+                            new FilterParameter(nameof(Model.SearchProductName)),
+                            new FilterParameter(nameof(Model.SearchCategoryId)),
+                            new FilterParameter(nameof(Model.SearchManufacturerId)),
+                            new FilterParameter(nameof(Model.SearchProductTypeId))
+                        },
+                        ColumnCollection = new List<ColumnProperty>
+                        {
+                            new ColumnProperty(nameof(ProductModel.Id))
+                            {
+                                Title = T("Admin.Common.Select").Text,
+                                Render = new RenderCustom("renderColumnSelectProduct"),
+                                ClassName =  NopColumnClassDefaults.Button,
+                                Width = "50",
+                            },
+                            new ColumnProperty(nameof(ProductModel.Name))
+                            {
+                                Title = T("Admin.Orders.Products.AddNew.Name").Text,
+                                Width = "400"
+                            },
+                            new ColumnProperty(nameof(ProductModel.Sku))
+                            {
+                                Title = T("Admin.Orders.Products.AddNew.SKU").Text,
+                                Width = "100"
                             }
-                        });
-                        
+                        }
+                    })
+                    
+                    <script>
+                        function renderColumnSelectProduct(data, type, row, meta) {
+                            return '<button type="button" onclick="addProductToOrder(' + row.Id + ' )" class="btn btn-default">@T("Admin.Common.Select")</button>';
+                        }
                         function addProductToOrder(productId) {
                             //load "product details page" block
                             var productDetailsActionUrl = '@Html.Raw(Url.Action("AddProductToOrderDetails", "Order", new {orderId = Model.OrderId, productId = "productidplaceholder"}))';

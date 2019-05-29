@@ -1,57 +1,42 @@
-﻿@{
-    //success messages
-    var successMessages = new List<string>();
-    if (TempData[$"nop.notifications.{NotifyType.Success}"] != null)
+﻿@using Newtonsoft.Json
+@using Nop.Services.Messages
+@{
+    //Get messages from TempData
+    var notes = TempData.ContainsKey(NopMessageDefaults.NotificationListKey)
+        ? JsonConvert.DeserializeObject<IList<NotifyData>>(TempData[NopMessageDefaults.NotificationListKey].ToString())
+        : null;
+    if (notes != null)
     {
-        successMessages.AddRange(TempData[$"nop.notifications.{NotifyType.Success}"] as IList<string>);
+        foreach (var note in notes)
+        {
+            var cssStyle = "";
+            switch (note.Type)
+            {
+                case NotifyType.Success:
+                    cssStyle = "alert-success";
+                    break;
+                case NotifyType.Error:
+                    cssStyle = "alert-danger";
+                    break;
+                case NotifyType.Warning:
+                    cssStyle = "alert-warning";
+                    break;
+            }
+            <div class="alert @cssStyle alert-dismissable">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                @if (note.Encode)
+                {
+                    <text>
+                        @note.Message
+                    </text>
+                }
+                else
+                {
+                    <text>
+                        @Html.Raw(note.Message)
+                    </text>
+                }
+            </div>
+        }
     }
-    if (ViewData[$"nop.notifications.{NotifyType.Success}"] != null)
-    {
-        successMessages.AddRange(ViewData[$"nop.notifications.{NotifyType.Success}"] as IList<string>);
-    }
-
-
-    //error messages
-    var errorMessages = new List<string>();
-    if (TempData[$"nop.notifications.{NotifyType.Error}"] != null)
-    {
-        errorMessages.AddRange(TempData[$"nop.notifications.{NotifyType.Error}"] as IList<string>);
-    }
-    if (ViewData[$"nop.notifications.{NotifyType.Error}"] != null)
-    {
-        errorMessages.AddRange(ViewData[$"nop.notifications.{NotifyType.Error}"] as IList<string>);
-    }
-
-
-    //warning messages
-    var warningMessages = new List<string>();
-    if (TempData[$"nop.notifications.{NotifyType.Warning}"] != null) {
-        warningMessages.AddRange(TempData[$"nop.notifications.{NotifyType.Warning}"] as IList<string>);
-    }
-    if (ViewData[$"nop.notifications.{NotifyType.Warning}"] != null) {
-        warningMessages.AddRange(ViewData[$"nop.notifications.{NotifyType.Warning}"] as IList<string>);
-    }
-}
-
-@foreach (var message in successMessages)
-{
-    <div class="alert alert-success alert-dismissable">
-        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-        @message
-    </div>
-}
-
-@foreach (var message in errorMessages)
-{
-    <div class="alert alert-danger alert-dismissable">
-        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-        @message
-    </div>
-}
-
-@foreach (var message in warningMessages) {
-    <div class="alert alert-warning alert-dismissable">
-        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-        @message
-    </div>
 }

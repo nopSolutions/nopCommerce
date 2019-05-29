@@ -1,6 +1,212 @@
-﻿@model CheckoutAttributeModel
-@using Nop.Core.Domain.Catalog
+﻿@using Nop.Core.Domain.Catalog
 @using Nop.Services
+@model CheckoutAttributeModel
+
+<div class="panel-body">
+    @(Html.LocalizedEditor<CheckoutAttributeModel, CheckoutAttributeLocalizedModel>("checkoutattribute-localized",
+    @<div>
+        <div class="form-group">
+            <div class="col-md-3">
+                <nop-label asp-for="@Model.Locales[item].Name" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="@Model.Locales[item].Name" />
+                <span asp-validation-for="@Model.Locales[item].Name"></span>
+            </div>
+        </div>
+        <div class="form-group advanced-setting">
+            <div class="col-md-3">
+                <nop-label asp-for="@Model.Locales[item].TextPrompt" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="@Model.Locales[item].TextPrompt" />
+                <span asp-validation-for="@Model.Locales[item].TextPrompt"></span>
+            </div>
+        </div>
+        <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
+    </div>
+,
+    @<div>
+        <div class="form-group">
+            <div class="col-md-3">
+                <nop-label asp-for="Name" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="Name" asp-required="true" />
+                <span asp-validation-for="Name"></span>
+            </div>
+        </div>
+        <div class="form-group advanced-setting">
+            <div class="col-md-3">
+                <nop-label asp-for="TextPrompt" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="TextPrompt" />
+                <span asp-validation-for="TextPrompt"></span>
+            </div>
+        </div>
+    </div>))    
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-label asp-for="AttributeControlTypeId" />
+        </div>
+        <div class="col-md-9">
+            @{
+                var attributeControlTypes = ((AttributeControlType)Model.AttributeControlTypeId)
+                    .ToSelectList(valuesToExclude:
+                        //these attributes don't support some control types
+                        new[] { (int)AttributeControlType.ImageSquares });
+            }
+            <nop-select asp-for="AttributeControlTypeId" asp-items="@attributeControlTypes" />
+            <span asp-validation-for="AttributeControlTypeId"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-label asp-for="IsRequired" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="IsRequired" />
+            <span asp-validation-for="IsRequired"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-label asp-for="DisplayOrder" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="DisplayOrder" />
+            <span asp-validation-for="DisplayOrder"></span>
+        </div>
+    </div>
+    <div class="form-group advanced-setting">
+        <div class="col-md-3">
+            <nop-label asp-for="ShippableProductRequired" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ShippableProductRequired" />
+            <span asp-validation-for="ShippableProductRequired"></span>
+        </div>
+    </div>
+    <div class="form-group advanced-setting">
+        <div class="col-md-3">
+            <nop-label asp-for="IsTaxExempt" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="IsTaxExempt" />
+            <span asp-validation-for="IsTaxExempt"></span>
+        </div>
+    </div>
+    <div class="form-group advanced-setting" id="pnlTaxCategory">
+        <div class="col-md-3">
+            <nop-label asp-for="TaxCategoryId" />
+        </div>
+        <div class="col-md-9">
+            <nop-select asp-for="TaxCategoryId" asp-items="Model.AvailableTaxCategories" />
+            <span asp-validation-for="TaxCategoryId"></span>
+        </div>
+    </div>
+    
+    @(Html.LocalizedEditor<CheckoutAttributeModel, CheckoutAttributeLocalizedModel>("pnlDefaultValueLocalized",
+    @<div>
+        <div class="form-group advanced-setting">
+            <div class="col-md-3">
+                <nop-label asp-for="@Model.Locales[item].DefaultValue" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="@Model.Locales[item].DefaultValue" />
+                <span asp-validation-for="@Model.Locales[item].DefaultValue"></span>
+            </div>
+        </div>
+        <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
+    </div>
+,
+    @<div>
+        <div class="form-group advanced-setting">
+            <div class="col-md-3">
+                <nop-label asp-for="DefaultValue" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="DefaultValue" />
+                <span asp-validation-for="DefaultValue"></span>
+            </div>
+        </div>
+    </div>, cssClass: "advanced-setting"))
+    
+    <div class="form-group advanced-setting" id="pnlValidationMinLength">
+        <div class="col-md-3">
+            <nop-label asp-for="ValidationMinLength" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ValidationMinLength" />
+            <span asp-validation-for="ValidationMinLength"></span>
+        </div>
+    </div>
+    <div class="form-group advanced-setting" id="pnlValidationMaxLength">
+        <div class="col-md-3">
+            <nop-label asp-for="ValidationMaxLength" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ValidationMaxLength" />
+            <span asp-validation-for="ValidationMaxLength"></span>
+        </div>
+    </div>
+    <div class="form-group advanced-setting" id="pnlValidationFileAllowedExtensions">
+        <div class="col-md-3">
+            <nop-label asp-for="ValidationFileAllowedExtensions" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ValidationFileAllowedExtensions" />
+            <span asp-validation-for="ValidationFileAllowedExtensions"></span>
+        </div>
+    </div>
+    <div class="form-group advanced-setting" id="pnlValidationFileMaximumSize">
+        <div class="col-md-3">
+            <nop-label asp-for="ValidationFileMaximumSize" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ValidationFileMaximumSize" />
+            <span asp-validation-for="ValidationFileMaximumSize"></span>
+        </div>
+    </div>
+    <div class="form-group advanced-setting">
+        <div class="col-md-3">
+            <nop-label asp-for="SelectedStoreIds" />
+        </div>
+        <div class="col-md-9">
+            <div class="row">
+                <div class="col-md-4">
+                    <nop-select asp-for="SelectedStoreIds" asp-items="Model.AvailableStores" asp-multiple="true" />
+                    <script>
+                    $(document).ready(function() {
+                        var storesIdsInput = $('#@Html.IdFor(model => model.SelectedStoreIds)')
+                            .data("kendoMultiSelect");
+                        storesIdsInput.setOptions({
+                            autoClose: false,
+                            filter: "contains"
+                        });
+
+                        @if (Model.AvailableStores.Count == 0)
+                        {
+                            <text>
+                                storesIdsInput.setOptions({
+                                    enable: false,
+                                    placeholder: 'No stores available'
+                                });
+                                storesIdsInput._placeholder();
+                                storesIdsInput._enable();
+                            </text>
+                        }
+                    });
+                    </script>
+                </div>
+                <div class="col-md-8">
+                    @await Component.InvokeAsync("MultistoreDisabledWarning")
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script>
     $(document).ready(function() {
@@ -28,25 +234,25 @@
             $('#pnlValidationMaxLength').show();
             $('#pnlValidationFileMaximumSize').hide();
             $('#pnlValidationFileAllowedExtensions').hide();
-            $('#pnlDefaultValue').show();
+            $('#pnlDefaultValueLocalized').show();
         } else if (selectedAttributeControlTypeId == @(((int) AttributeControlType.MultilineTextbox).ToString())) {
             $('#pnlValidationMinLength').show();
             $('#pnlValidationMaxLength').show();
             $('#pnlValidationFileMaximumSize').hide();
             $('#pnlValidationFileAllowedExtensions').hide();
-            $('#pnlDefaultValue').show();
+            $('#pnlDefaultValueLocalized').show();
         } else if (selectedAttributeControlTypeId == @(((int) AttributeControlType.FileUpload).ToString())) {
             $('#pnlValidationMinLength').hide();
             $('#pnlValidationMaxLength').hide();
             $('#pnlValidationFileMaximumSize').show();
             $('#pnlValidationFileAllowedExtensions').show();
-            $('#pnlDefaultValue').hide();
+            $('#pnlDefaultValueLocalized').hide();
         } else {
             $('#pnlValidationMinLength').hide();
             $('#pnlValidationMaxLength').hide();
             $('#pnlValidationFileMaximumSize').hide();
             $('#pnlValidationFileAllowedExtensions').hide();
-            $('#pnlDefaultValue').hide();
+            $('#pnlDefaultValueLocalized').hide();
         }
 
         //values
@@ -56,204 +262,9 @@
             selectedAttributeControlTypeId == @(((int) AttributeControlType.ColorSquares).ToString()) ||
             selectedAttributeControlTypeId == @(((int) AttributeControlType.ImageSquares).ToString()) ||
             selectedAttributeControlTypeId == @(((int) AttributeControlType.ReadonlyCheckboxes).ToString())) {
-                $('[data-tab-name=tab-values]').show();
+            $('[data-panel-name=checkout-attributes-values]').show();
         } else {
-            $('[data-tab-name=tab-values]').hide();
+            $('[data-panel-name=checkout-attributes-values]').hide();
         }
     }
 </script>
-
-<div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CheckoutAttributeDetailsInfoTop, additionalData = Model })
-    <div class="panel panel-default">
-        <div class="panel-body">
-            @(Html.LocalizedEditor<CheckoutAttributeModel, CheckoutAttributeLocalizedModel>("checkoutattribute-localized",
-            @<div>
-                <div class="form-group">
-                    <div class="col-md-3">
-                        <nop-label asp-for="@Model.Locales[item].Name"/>
-                    </div>
-                    <div class="col-md-9">
-                        <nop-editor asp-for="@Model.Locales[item].Name"/>
-                        <span asp-validation-for="@Model.Locales[item].Name"></span>
-                    </div>
-                </div>
-                <div class="form-group advanced-setting">
-                    <div class="col-md-3">
-                        <nop-label asp-for="@Model.Locales[item].TextPrompt"/>
-                    </div>
-                    <div class="col-md-9">
-                        <nop-editor asp-for="@Model.Locales[item].TextPrompt"/>
-                        <span asp-validation-for="@Model.Locales[item].TextPrompt"></span>
-                    </div>
-                </div>
-                 <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
-            </div>
-,
-            @<div>
-                <div class="form-group">
-                    <div class="col-md-3">
-                        <nop-label asp-for="Name"/>
-                    </div>
-                    <div class="col-md-9">
-                        <nop-editor asp-for="Name" asp-required="true"/>
-                        <span asp-validation-for="Name"></span>
-                    </div>
-                </div>
-                <div class="form-group advanced-setting">
-                    <div class="col-md-3">
-                        <nop-label asp-for="TextPrompt"/>
-                    </div>
-                    <div class="col-md-9">
-                        <nop-editor asp-for="TextPrompt"/>
-                        <span asp-validation-for="TextPrompt"></span>
-                    </div>
-                </div>
-            </div>
-))
-            <div class="form-group">
-                <div class="col-md-3">
-                    <nop-label asp-for="IsRequired"/>
-                </div>
-                <div class="col-md-9">
-                    <nop-editor asp-for="IsRequired"/>
-                    <span asp-validation-for="IsRequired"></span>
-                </div>
-            </div>
-            <div class="form-group advanced-setting">
-                <div class="col-md-3">
-                    <nop-label asp-for="ShippableProductRequired"/>
-                </div>
-                <div class="col-md-9">
-                    <nop-editor asp-for="ShippableProductRequired"/>
-                    <span asp-validation-for="ShippableProductRequired"></span>
-                </div>
-            </div>
-            <div class="form-group advanced-setting">
-                <div class="col-md-3">
-                    <nop-label asp-for="IsTaxExempt"/>
-                </div>
-                <div class="col-md-9">
-                    <nop-editor asp-for="IsTaxExempt"/>
-                    <span asp-validation-for="IsTaxExempt"></span>
-                </div>
-            </div>
-            <div class="form-group advanced-setting" id="pnlTaxCategory">
-                <div class="col-md-3">
-                    <nop-label asp-for="TaxCategoryId"/>
-                </div>
-                <div class="col-md-9">
-                    <nop-select asp-for="TaxCategoryId" asp-items="Model.AvailableTaxCategories"/>
-                    <span asp-validation-for="TaxCategoryId"></span>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-md-3">
-                    <nop-label asp-for="AttributeControlTypeId"/>
-                </div>
-                <div class="col-md-9">
-                    @{
-                        var attributeControlTypes = ((AttributeControlType)Model.AttributeControlTypeId)
-                            .ToSelectList(valuesToExclude:
-                            //these attributes don't support some control types
-                            new[] { (int)AttributeControlType.ImageSquares });
-                    }
-                    <nop-select asp-for="AttributeControlTypeId" asp-items="@attributeControlTypes"/>
-                    <span asp-validation-for="AttributeControlTypeId"></span>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-md-3">
-                    <nop-label asp-for="DisplayOrder"/>
-                </div>
-                <div class="col-md-9">
-                    <nop-editor asp-for="DisplayOrder"/>
-                    <span asp-validation-for="DisplayOrder"></span>
-                </div>
-            </div>
-            <div class="form-group advanced-setting" id="pnlValidationMinLength">
-                <div class="col-md-3">
-                    <nop-label asp-for="ValidationMinLength"/>
-                </div>
-                <div class="col-md-9">
-                    <nop-editor asp-for="ValidationMinLength"/>
-                    <span asp-validation-for="ValidationMinLength"></span>
-                </div>
-            </div>
-            <div class="form-group advanced-setting" id="pnlValidationMaxLength">
-                <div class="col-md-3">
-                    <nop-label asp-for="ValidationMaxLength"/>
-                </div>
-                <div class="col-md-9">
-                    <nop-editor asp-for="ValidationMaxLength"/>
-                    <span asp-validation-for="ValidationMaxLength"></span>
-                </div>
-            </div>
-            <div class="form-group advanced-setting" id="pnlValidationFileAllowedExtensions">
-                <div class="col-md-3">
-                    <nop-label asp-for="ValidationFileAllowedExtensions"/>
-                </div>
-                <div class="col-md-9">
-                    <nop-editor asp-for="ValidationFileAllowedExtensions"/>
-                    <span asp-validation-for="ValidationFileAllowedExtensions"></span>
-                </div>
-            </div>
-            <div class="form-group advanced-setting" id="pnlValidationFileMaximumSize">
-                <div class="col-md-3">
-                    <nop-label asp-for="ValidationFileMaximumSize"/>
-                </div>
-                <div class="col-md-9">
-                    <nop-editor asp-for="ValidationFileMaximumSize"/>
-                    <span asp-validation-for="ValidationFileMaximumSize"></span>
-                </div>
-            </div>
-            <div class="form-group advanced-setting" id="pnlDefaultValue">
-                <div class="col-md-3">
-                    <nop-label asp-for="DefaultValue"/>
-                </div>
-                <div class="col-md-9">
-                    <nop-editor asp-for="DefaultValue"/>
-                    <span asp-validation-for="DefaultValue"></span>
-                </div>
-            </div>
-            <div class="form-group advanced-setting">
-                <div class="col-md-3">
-                    <nop-label asp-for="SelectedStoreIds"/>
-                </div>
-                <div class="col-md-9">
-                    <div class="row">
-                        <div class="col-md-4">
-                            <nop-select asp-for="SelectedStoreIds" asp-items="Model.AvailableStores" asp-multiple="true"/>
-                            <script>
-                                $(document).ready(function() {
-                                    var storesIdsInput = $('#@Html.IdFor(model => model.SelectedStoreIds)')
-                                        .data("kendoMultiSelect");
-                                    storesIdsInput.setOptions({
-                                        autoClose: false,
-                                        filter: "contains"
-                                    });
-
-                                    @if (Model.AvailableStores.Count == 0)
-                                    {
-                                        <text>
-                                            storesIdsInput.setOptions({
-                                                enable: false,
-                                                placeholder: 'No stores available'
-                                            });
-                                            storesIdsInput._placeholder();
-                                            storesIdsInput._enable();
-                                        </text>
-                                    }
-                                });
-                            </script>
-                        </div>
-                        <div class="col-md-8">
-                            @await Component.InvokeAsync("MultistoreDisabledWarning")
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CheckoutAttributeDetailsInfoBottom, additionalData = Model })
-</div>

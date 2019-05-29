@@ -40,8 +40,7 @@
                 type: "POST",
                 url: "@(Url.RouteUrl("SubscribeNewsletter"))",
                 data: postData,
-                success: function(data) {
-                    subscribeProgress.hide();
+                success: function (data, textStatus, jqXHR) {
                     $("#newsletter-result-block").html(data.Result);
                     if (data.Success) {
                         $('#newsletter-subscribe-block').hide();
@@ -50,8 +49,10 @@
                         $('#newsletter-result-block').fadeIn("slow").delay(2000).fadeOut("slow");
                     }
                 },
-                error: function(xhr, ajaxOptions, thrownError) {
+                error: function (jqXHR, textStatus, errorThrown) {
                     alert('Failed to subscribe.');
+                },
+                complete: function (jqXHR, textStatus) {
                     subscribeProgress.hide();
                 }
             });

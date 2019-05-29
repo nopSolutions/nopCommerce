@@ -88,112 +88,65 @@
                 </div>
             </div>
         </div>
-
         <div class="panel panel-default">
             <div class="panel-body">
-                <div id="products-grid"></div>
-
+                @await Html.PartialAsync("Table", new DataTablesModel
+                {
+                    Name = "products-grid",
+                    UrlRead = new DataUrl("RequiredProductAddPopupList", "Product", null),
+                    SearchButtonId = "search-products",
+                    Length = Model.PageSize,
+                    LengthMenu = Model.AvailablePageSizes,
+                    Filters = new List<FilterParameter>
+                    {
+                        new FilterParameter(nameof(Model.SearchProductName)),
+                        new FilterParameter(nameof(Model.SearchCategoryId)),
+                        new FilterParameter(nameof(Model.SearchManufacturerId)),
+                        new FilterParameter(nameof(Model.SearchStoreId)),
+                        new FilterParameter(nameof(Model.SearchVendorId)),
+                        new FilterParameter(nameof(Model.SearchProductTypeId))
+                    },
+                    ColumnCollection = new List<ColumnProperty>
+                    {
+                        new ColumnProperty(nameof(ProductModel.Id))
+                        {
+                            Title = T("Admin.Common.Select").Text,
+                            Render = new RenderCustom("renderColumnSelectProduct"),
+                            ClassName =  NopColumnClassDefaults.Button,
+                            Width = "50",
+                        },
+                        new ColumnProperty(nameof(ProductModel.Name))
+                        {
+                            Title = T("Admin.Catalog.Products.Fields.Name").Text
+                        },
+                        new ColumnProperty(nameof(ProductModel.Published))
+                        {
+                            Title = T("Admin.Catalog.Products.Fields.Published").Text,
+                            Width = "100",
+                            ClassName = NopColumnClassDefaults.CenterAll,
+                            Render = new RenderBoolean()
+                        }
+                    }
+                })
                 <script>
-                        $(document).ready(function () {
-                            $("#products-grid").kendoGrid({
-                                dataSource: {
-                                    type: "json",
-                                    transport: {
-                                        read: {
-                                            url: "@Html.Raw(Url.Action("RequiredProductAddPopupList", "Product"))",
-                                            type: "POST",
-                                            dataType: "json",
-                                            data: function() {
-                                                var data = {
-                                                    SearchProductName: $('#@Html.IdFor(model => model.SearchProductName)').val(),
-                                                    SearchCategoryId: $('#SearchCategoryId').val(),
-                                                    SearchManufacturerId: $('#SearchManufacturerId').val(),
-                                                    SearchStoreId: $('#SearchStoreId').val(),
-                                                    SearchVendorId: $('#SearchVendorId').val(),
-                                                    SearchProductTypeId: $('#SearchProductTypeId').val()
-                                                };
-                                                addAntiForgeryToken(data);
-                                                return data;
-                                            }
-                                        }
-                                    },
-                                    schema: {
-                                        data: "Data",
-                                        total: "Total",
-                                        errors: "Errors"
-                                    },
-                                    error: function(e) {
-                                        display_kendoui_grid_error(e);
-                                        // Cancel the changes
-                                        this.cancelChanges();
-                                    },
-                                    pageSize: @(Model.PageSize),
-                                    serverPaging: true,
-                                    serverFiltering: true,
-                                    serverSorting: true
-                                },
-                                pageable: {
-                                    refresh: true,
-                                    pageSizes: [@(Model.AvailablePageSizes)],
-                                    @await Html.PartialAsync("_GridPagerMessages")
-                                },
-                                editable: {
-                                    confirmation: "@T("Admin.Common.DeleteConfirmation")",
-                                    mode: "inline"
-                                },
-                                scrollable: false,
-                                columns: [{
-                                    field: "Name",
-                                    title: "@T("Admin.Common.Select")",
-                                    width: 50,
-                                    template: '<button type="button" onclick="selectRequiredProduct(#=Id#)" class="btn btn-default">@T("Admin.Common.Select")</button>'
-                                },{
-                                    field: "Name",
-                                    title: "@T("Admin.Catalog.Products.Fields.Name")"
-                                }, {
-                                    field: "Published",
-                                    title: "@T("Admin.Catalog.Products.Fields.Published")",
-                                    width: 100,
-                                    headerAttributes: { style: "text-align:center" },
-                                    attributes: { style: "text-align:center" },
-                                    template: '# if(Published) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
-                                }]
-                            });
-                        });
+                    function renderColumnSelectProduct(data, type, row, meta) {
+                        return '<button type="button" onclick="selectRequiredProduct(' + row.Id + ' )" class="btn btn-default">@T("Admin.Common.Select")</button>';
+                    }
+                    function selectRequiredProduct(productid) {
+                        try {
+                            var currentValue = window.opener.document.getElementById('@(Context.Request.Query["productIdsInput"])').value;
+                            if (currentValue) {
+                                //add comma
+                                window.opener.document.getElementById('@(Context.Request.Query["productIdsInput"])').value += ', ';
+                            }
+                            window.opener.document.getElementById('@(Context.Request.Query["productIdsInput"])').value += productid;
+                            window.opener.document.getElementById('@(Context.Request.Query["btnId"])').click();
+                        }
+                        catch (e){}
+                        window.close();
+                    }
                 </script>
             </div>
         </div>
     </div>
-
-    <script>
-            $(document).ready(function () {
-                $('#search-products').click(function () {
-                    var grid = $('#products-grid').data('kendoGrid');
-                    grid.dataSource.page(1); //new search. Set page size to 1
-                    //grid.dataSource.read(); we already loaded the grid above using "page" function
-                    return false;
-                });
-            });
-
-            $("#@Html.IdFor(model => model.SearchProductName)").keydown(function (event) {
-                if (event.keyCode == 13) {
-                    $("#search-products").click();
-                    return false;
-                }
-            });
-
-            function selectRequiredProduct(productid) {
-                try {
-                    var currentValue = window.opener.document.getElementById('@(Context.Request.Query["productIdsInput"])').value;
-                    if (currentValue) {
-                        //add comma
-                        window.opener.document.getElementById('@(Context.Request.Query["productIdsInput"])').value += ', ';
-                    }
-                    window.opener.document.getElementById('@(Context.Request.Query["productIdsInput"])').value += productid;
-                    window.opener.document.getElementById('@(Context.Request.Query["btnId"])').click();
-                }
-                catch (e){}
-                window.close();
-            }
-    </script>
 </div>

@@ -15,209 +15,141 @@
         window.close();
     </script>
 }
-
-<form asp-controller="Manufacturer" asp-action="ProductAddPopup"
-      asp-route-manufacturerId="@Context.Request.Query["manufacturerId"]"
-      asp-route-btnId="@Context.Request.Query["btnId"]"
-      asp-route-formId="@Context.Request.Query["formId"]">
-    <div class="content-header clearfix">
-        <h1 class="pull-left">
-            @T("Admin.Catalog.Manufacturers.Products.AddNew")
-        </h1>
-        <div class="pull-right">
-            &nbsp;
+else
+{
+    <form asp-controller="Manufacturer" asp-action="ProductAddPopup"
+          asp-route-manufacturerId="@Context.Request.Query["manufacturerId"]"
+          asp-route-btnId="@Context.Request.Query["btnId"]"
+          asp-route-formId="@Context.Request.Query["formId"]">
+        <div class="content-header clearfix">
+            <h1 class="pull-left">
+                @T("Admin.Catalog.Manufacturers.Products.AddNew")
+            </h1>
+            <div class="pull-right">
+                &nbsp;
+            </div>
         </div>
-    </div>
 
-    <div class="content">
-        <div class="form-horizontal">
-            <div class="panel-group">
-                <div class="panel panel-default panel-search panel-popup">
-                    <div class="panel-body">
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <div class="col-sm-5">
-                                        <nop-label asp-for="SearchProductName" />
+        <div class="content">
+            <div class="form-horizontal">
+                <div class="panel-group">
+                    <div class="panel panel-default panel-search panel-popup">
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <div class="col-sm-5">
+                                            <nop-label asp-for="SearchProductName" />
+                                        </div>
+                                        <div class="col-sm-7">
+                                            <nop-editor asp-for="SearchProductName" />
+                                        </div>
                                     </div>
-                                    <div class="col-sm-7">
-                                        <nop-editor asp-for="SearchProductName" />
+                                    <div class="form-group" @(Model.AvailableCategories.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
+                                        <div class="col-sm-5">
+                                            <nop-label asp-for="SearchCategoryId" />
+                                        </div>
+                                        <div class="col-sm-7">
+                                            <nop-select asp-for="SearchCategoryId" asp-items="Model.AvailableCategories" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group" @(Model.AvailableVendors.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
+                                        <div class="col-sm-5">
+                                            <nop-label asp-for="SearchVendorId" />
+                                        </div>
+                                        <div class="col-sm-7">
+                                            <nop-select asp-for="SearchVendorId" asp-items="Model.AvailableVendors" />
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="form-group" @(Model.AvailableCategories.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
-                                    <div class="col-sm-5">
-                                        <nop-label asp-for="SearchCategoryId" />
+                                <div class="col-sm-6">
+                                    <div class="form-group" @(Model.AvailableStores.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
+                                        <div class="col-sm-5">
+                                            <nop-label asp-for="SearchStoreId" />
+                                        </div>
+                                        <div class="col-sm-7">
+                                            <nop-select asp-for="SearchStoreId" asp-items="Model.AvailableStores" />
+                                        </div>
                                     </div>
-                                    <div class="col-sm-7">
-                                        <nop-select asp-for="SearchCategoryId" asp-items="Model.AvailableCategories" />
+                                    <div class="form-group">
+                                        <div class="col-sm-5">
+                                            <nop-label asp-for="SearchProductTypeId" />
+                                        </div>
+                                        <div class="col-sm-7">
+                                            <nop-select asp-for="SearchProductTypeId" asp-items="Model.AvailableProductTypes" />
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="form-group" @(Model.AvailableVendors.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
-                                    <div class="col-sm-5">
-                                        <nop-label asp-for="SearchVendorId" />
-                                    </div>
-                                    <div class="col-sm-7">
-                                        <nop-select asp-for="SearchVendorId" asp-items="Model.AvailableVendors" />
+                                    <div class="form-group" @(Model.AvailableManufacturers.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
+                                        <div class="col-sm-5">
+                                            <nop-label asp-for="SearchManufacturerId" />
+                                        </div>
+                                        <div class="col-sm-7">
+                                            <nop-select asp-for="SearchManufacturerId" asp-items="Model.AvailableManufacturers" />
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-6">
-                                <div class="form-group" @(Model.AvailableStores.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
-                                    <div class="col-sm-5">
-                                        <nop-label asp-for="SearchStoreId" />
-                                    </div>
-                                    <div class="col-sm-7">
-                                        <nop-select asp-for="SearchStoreId" asp-items="Model.AvailableStores" />
-                                    </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <button type="button" id="search-products" class="btn btn-primary btn-search">
+                                        <i class="fa fa-search"></i>
+                                        @T("Admin.Common.Search")
+                                    </button>
                                 </div>
-                                <div class="form-group">
-                                    <div class="col-sm-5">
-                                        <nop-label asp-for="SearchProductTypeId" />
-                                    </div>
-                                    <div class="col-sm-7">
-                                        <nop-select asp-for="SearchProductTypeId" asp-items="Model.AvailableProductTypes" />
-                                    </div>
-                                </div>
-                                <div class="form-group" @(Model.AvailableManufacturers.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
-                                    <div class="col-sm-5">
-                                        <nop-label asp-for="SearchManufacturerId" />
-                                    </div>
-                                    <div class="col-sm-7">
-                                        <nop-select asp-for="SearchManufacturerId" asp-items="Model.AvailableManufacturers" />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <button type="button" id="search-products" class="btn btn-primary btn-search">
-                                    <i class="fa fa-search"></i>
-                                    @T("Admin.Common.Search")
-                                </button>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                        <div id="products-grid"></div>
-
-                        <script>
-                            $(document).ready(function () {
-                                $("#products-grid").kendoGrid({
-                                    dataSource: {
-                                        type: "json",
-                                        transport: {
-                                            read: {
-                                                url: "@Html.Raw(Url.Action("ProductAddPopupList", "Manufacturer"))",
-                                                type: "POST",
-                                                dataType: "json",
-                                                data: function() {
-                                                    var data = {
-                                                        SearchProductName: $('#@Html.IdFor(model => model.SearchProductName)').val(),
-                                                        SearchCategoryId: $('#SearchCategoryId').val(),
-                                                        SearchManufacturerId: $('#SearchManufacturerId').val(),
-                                                        SearchStoreId: $('#SearchStoreId').val(),
-                                                        SearchVendorId: $('#SearchVendorId').val(),
-                                                        SearchProductTypeId: $('#SearchProductTypeId').val()
-                                                    };
-                                                    addAntiForgeryToken(data);
-                                                    return data;
-                                                }
-                                            }
-                                        },
-                                        schema: {
-                                            data: "Data",
-                                            total: "Total",
-                                            errors: "Errors"
-                                        },
-                                        error: function(e) {
-                                            display_kendoui_grid_error(e);
-                                            // Cancel the changes
-                                            this.cancelChanges();
-                                        },
-                                        pageSize: @(Model.PageSize),
-                                        serverPaging: true,
-                                        serverFiltering: true,
-                                        serverSorting: true
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            @await Html.PartialAsync("Table", new DataTablesModel
+                            {
+                                Name = "products-grid",
+                                UrlRead = new DataUrl("ProductAddPopupList", "Manufacturer", null),
+                                SearchButtonId = "search-products",
+                                Length = Model.PageSize,
+                                LengthMenu = Model.AvailablePageSizes,
+                                Filters = new List<FilterParameter>
+                                {
+                                    new FilterParameter(nameof(Model.SearchProductName)),
+                                    new FilterParameter(nameof(Model.SearchCategoryId)),
+                                    new FilterParameter(nameof(Model.SearchManufacturerId)),
+                                    new FilterParameter(nameof(Model.SearchStoreId)),
+                                    new FilterParameter(nameof(Model.SearchVendorId)),
+                                    new FilterParameter(nameof(Model.SearchProductTypeId))
+                                },
+                                ColumnCollection = new List<ColumnProperty>
+                                {
+                                    new ColumnProperty(nameof(ProductModel.Id))
+                                    {
+                                        IsMasterCheckBox = true,
+                                        Render = new RenderCheckBox(nameof(AddProductToManufacturerModel.SelectedProductIds)),
+                                        ClassName =  NopColumnClassDefaults.CenterAll,
+                                        Width = "50",
                                     },
-                                    pageable: {
-                                        refresh: true,
-                                        pageSizes: [@(Model.AvailablePageSizes)],
-                                        @await Html.PartialAsync("_GridPagerMessages")
+                                    new ColumnProperty(nameof(ProductModel.Name))
+                                    {
+                                        Title = T("Admin.Catalog.Products.Fields.Name").Text
                                     },
-                                    editable: {
-                                        confirmation: "@T("Admin.Common.DeleteConfirmation")",
-                                        mode: "inline"
-                                    },
-                                    scrollable: false,
-                                    columns: [{
-                                        field: "Id",
-                                        headerTemplate: "<input id='mastercheckbox' type='checkbox'/>",
-                                        headerAttributes: { style: "text-align:center" },
-                                        template: "<input type='checkbox' name='SelectedProductIds' value='#=Id#' class='checkboxGroups' />",
-                                        attributes: {
-                                            style: "text-align:center"
-                                        },
-                                        width: 50
-                                    }, {
-                                        field: "Name",
-                                        title: "@T("Admin.Catalog.Products.Fields.Name")"
-                                    }, {
-                                        field: "Published",
-                                        title: "@T("Admin.Catalog.Products.Fields.Published")",
-                                        width: 100,
-                                        headerAttributes: { style: "text-align:center" },
-                                        attributes: { style: "text-align:center" },
-                                        template: '# if(Published) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
-                                    }]
-                                });
-                            });
-                        </script>
-                        <script>
-                            $(document).ready(function () {
-                                $('#search-products').click(function () {
-                                    var grid = $('#products-grid').data('kendoGrid');
-                                    grid.dataSource.page(1); //new search. Set page size to 1
-                                    //grid.dataSource.read(); we already loaded the grid above using "page" function
-                                    //clear selected checkboxes
-                                    $('.checkboxGroups').attr('checked', false).change();
-                                    return false;
-                                });
-
-                                $("#@Html.IdFor(model => model.SearchProductName)").keydown(function (event) {
-                                    if (event.keyCode == 13) {
-                                        $("#search-products").click();
-                                        return false;
+                                    new ColumnProperty(nameof(ProductModel.Published))
+                                    {
+                                        Title = T("Admin.Catalog.Products.Fields.Published").Text,
+                                        Width = "100",
+                                        ClassName = NopColumnClassDefaults.CenterAll,
+                                        Render = new RenderBoolean()
                                     }
-                                });
-
-                                //wire up checkboxes
-                                $('#mastercheckbox').click(function() {
-                                    $('.checkboxGroups').attr('checked', $(this).is(':checked')).change();
-                                });
-
-                                $('#products-grid').on('change', 'input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]', function(e) {
-                                    updateMasterCheckbox();
-                                });
-                            });
-
-                            function updateMasterCheckbox() {
-                                var numChkBoxes = $('#products-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]').length;
-                                var numChkBoxesChecked = $('#products-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]:checked').length;
-                                $('#mastercheckbox').attr('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
-                            }
-                        </script>
-                    </div>
-                    <div class="panel-footer">
-                        <button type="submit" name="save" class="btn bg-blue">
-                            <i class="fa fa-floppy-o"></i>
-                            @T("Admin.Common.Save")
-                        </button>
+                                }
+                            })
+                        </div>
+                        <div class="panel-footer">
+                            <button type="submit" name="save" class="btn bg-blue">
+                                <i class="fa fa-floppy-o"></i>
+                                @T("Admin.Common.Save")
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</form>
+    </form>
+}

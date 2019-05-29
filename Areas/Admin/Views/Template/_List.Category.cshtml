@@ -1,111 +1,131 @@
-@model CategoryTemplateSearchModel
+@model TemplatesModel
 
-<nop-antiforgery-token />
-<div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CategoryTemplateListButtons })
-    <div class="panel panel-default">
-        <div class="panel-body">
-            <div id="templates-category-grid"></div>
+<div class="panel panel-default">
+    <div class="panel-body">
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CategoryTemplateListButtons })
 
+        @await Html.PartialAsync("Table", new DataTablesModel
+        {
+            Name = "templates-category-grid",
+            UrlRead = new DataUrl("CategoryTemplates", "Template", null),
+            UrlUpdate = new DataUrl("CategoryTemplateUpdate", "Template", null),
+            UrlDelete = new DataUrl("CategoryTemplateDelete", "Template", null),
+
+            Length = Model.TemplatesCategory.PageSize,
+            LengthMenu = Model.TemplatesCategory.AvailablePageSizes,
+            ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(CategoryTemplateModel.Name))
+                {
+                    Title = T("Admin.System.Templates.Category.Name").Text,
+                    Width = "300",
+                    Editable = true,
+                    EditType = EditType.String
+                },
+                new ColumnProperty(nameof(CategoryTemplateModel.ViewPath))
+                {
+                    Title = T("Admin.System.Templates.Category.ViewPath").Text,
+                    Width = "300",
+                    Editable = true,
+                    EditType = EditType.String
+                },
+                new ColumnProperty(nameof(CategoryTemplateModel.DisplayOrder))
+                {
+                    Title = T("Admin.System.Templates.Category.DisplayOrder").Text,
+                    Width = "100",
+                    Editable = true,
+                    EditType = EditType.Number
+                },
+                new ColumnProperty(nameof(CategoryTemplateModel.Id))
+                {
+                    Title = T("Admin.Common.Edit").Text,
+                    Width = "200",
+                    ClassName =  NopColumnClassDefaults.Button,
+                    Render = new RenderButtonsInlineEdit()
+                },
+                new ColumnProperty(nameof(CategoryTemplateModel.Id))
+                {
+                    Title = T("Admin.Common.Delete").Text,
+                    Width = "100",
+                    ClassName =  NopColumnClassDefaults.Button,
+                    Render = new RenderButtonRemove(T("Admin.Common.Delete").Text)
+                }
+            }
+        })
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                @T("Admin.Common.AddNewRecord")
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="@Model.AddCategoryTemplate.Name" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="@Model.AddCategoryTemplate.Name" />
+                        <span asp-validation-for="@Model.AddCategoryTemplate.Name"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="@Model.AddCategoryTemplate.ViewPath" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="@Model.AddCategoryTemplate.ViewPath" />
+                        <span asp-validation-for="@Model.AddCategoryTemplate.ViewPath"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="@Model.AddCategoryTemplate.DisplayOrder" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="@Model.AddCategoryTemplate.DisplayOrder" />
+                        <span asp-validation-for="@Model.AddCategoryTemplate.DisplayOrder"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-9 col-md-offset-3">
+                        <button type="button" id="addCategoryTemplate" class="btn btn-primary">@T("Admin.Common.AddNewRecord")</button>
+                    </div>
+                </div>
+            </div>
             <script>
                 $(document).ready(function () {
-                    $("#templates-category-grid").kendoGrid({
-                        dataSource: {
-                            type: "json",
-                            transport: {
-                                read: {
-                                    url: "@Html.Raw(Url.Action("CategoryTemplates", "Template"))",
-                                    type: "POST",
-                                    dataType: "json",
-                                    data: addAntiForgeryToken
-                                },
-                                create: {
-                                    url: "@Html.Raw(Url.Action("CategoryTemplateAdd", "Template"))",
-                                    type: "POST",
-                                    dataType: "json",
-                                    data: addAntiForgeryToken
-                                },
-                                update: {
-                                    url: "@Html.Raw(Url.Action("CategoryTemplateUpdate", "Template"))",
-                                    type: "POST",
-                                    dataType: "json",
-                                    data: addAntiForgeryToken
-                                },
-                                destroy: {
-                                    url: "@Html.Raw(Url.Action("CategoryTemplateDelete", "Template"))",
-                                    type: "POST",
-                                    dataType: "json",
-                                    data: addAntiForgeryToken
+                    $('#addCategoryTemplate').click(function () {
+                        $('#addCategoryTemplate').attr('disabled', true);
+                        var postData = {
+                            Name: $("#@Html.IdFor(model => model.AddCategoryTemplate.Name)").val(),
+                            ViewPath: $("#@Html.IdFor(model => model.AddCategoryTemplate.ViewPath)").val(),
+                            DisplayOrder: $("#@Html.IdFor(model => model.AddCategoryTemplate.DisplayOrder)").val()
+                        };
+                        addAntiForgeryToken(postData);
+
+                        $.ajax({
+                            cache: false,
+                            type: "POST",
+                            url: "@Html.Raw(Url.Action("CategoryTemplateAdd", "Template", null))",
+                            data: postData,
+                            success: function (data, textStatus, jqXHR) {
+                                if (data.Result) {
+                                    //reload grid
+                                    updateTable('#templates-category-grid');
+
+                                    //clear input value
+                                    $("#@Html.IdFor(model => model.AddCategoryTemplate.Name)").val('');
+                                    $("#@Html.IdFor(model => model.AddCategoryTemplate.ViewPath)").val('');
+                                    $("#@Html.IdFor(model => model.AddCategoryTemplate.DisplayOrder)").val('');
+
+                                } else {
+                                    //display errors if returned
+                                    display_nop_error(data);
                                 }
                             },
-                            schema: {
-                                data: "Data",
-                                total: "Total",
-                                errors: "Errors",
-                                model: {
-                                    id: "Id",
-                                    fields: {
-                                        Name: { editable: true, type: "string" },
-                                        ViewPath: { editable: true, type: "string" },
-                                        DisplayOrder: { editable: true, type: "number" },
-                                        Id: { editable: false, type: "number" }
-                                    }
-                                }
-                            },
-                            requestEnd: function (e) {
-                                if (e.type == "create" || e.type == "update") {
-                                    this.read();
-                                }
-                            },
-                            error: function (e) {
-                                display_kendoui_grid_error(e);
-                                // Cancel the changes
-                                this.cancelChanges();
-                            },
-                            pageSize: @(Model.PageSize),
-                            serverPaging: true,
-                            serverFiltering: true,
-                            serverSorting: true
-                        },
-                        pageable: {
-                            refresh: true,
-                            pageSizes: [@(Model.AvailablePageSizes)],
-                            @await Html.PartialAsync("_GridPagerMessages")
-                        },
-                        toolbar: [{ name: "create", text: "@T("Admin.Common.AddNewRecord")" }],
-                        editable: {
-                            confirmation: "@T("Admin.Common.DeleteConfirmation")",
-                            mode: "inline"
-                        },
-                        scrollable: false,
-                        columns: [{
-                            field: "Name",
-                            title: "@T("Admin.System.Templates.Category.Name")",
-                            width: 300
-                        }, {
-                            field: "ViewPath",
-                            title: "@T("Admin.System.Templates.Category.ViewPath")",
-                            width: 300
-                        }, {
-                            field: "DisplayOrder",
-                            title: "@T("Admin.System.Templates.Category.DisplayOrder")",
-                            //integer format
-                            format: "{0:0}",
-                            width: 100
-                        }, {
-                            command: [{
-                                name: "edit",
-                                text: {
-                                    edit: "@T("Admin.Common.Edit")",
-                                    update: "@T("Admin.Common.Update")",
-                                    cancel: "@T("Admin.Common.Cancel")"
-                                }
-                            }, {
-                                name: "destroy",
-                                text: "@T("Admin.Common.Delete")"
-                            }],
-                            width: 200
-                        }]
+                            complete: function (jqXHR, textStatus) {
+                                $('#addCategoryTemplate').attr('disabled', false);
+                            }
+                        });
                     });
                 });
             </script>

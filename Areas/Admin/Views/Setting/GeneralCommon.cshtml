@@ -7,6 +7,50 @@
     Html.SetActiveMenuItemSystemName("General settings");
 }
 
+@{
+    const string hideCommonBlockAttributeName = "GeneralCommonSettingsPage.HideCommonBlock";
+    var hideCommonBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideCommonBlockAttributeName);
+
+    const string hideFaviconBlockAttributeName = "GeneralCommonSettingsPage.HideFaviconBlock";
+    var hideFaviconBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideFaviconBlockAttributeName);
+
+    const string hideTopMenuItemsBlockAttributeName = "GeneralCommonSettingsPage.HideTopMenuItemsBlock";
+    var hideTopMenuItemsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideTopMenuItemsBlockAttributeName);
+
+    const string hideFooterItemsBlockAttributeName = "GeneralCommonSettingsPage.HideFooterItemsBlock";
+    var hideFooterItemsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideFooterItemsBlockAttributeName);
+
+    const string hideSocialMediaBlockAttributeName = "GeneralCommonSettingsPage.HideSocialMediaBlock";
+    var hideSocialMediaBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSocialMediaBlockAttributeName);
+
+    const string hideSitemapBlockAttributeName = "GeneralCommonSettingsPage.HideSitemapBlock";
+    var hideSitemapBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSitemapBlockAttributeName);
+
+    const string hideSEOBlockAttributeName = "GeneralCommonSettingsPage.HideSEOBlock";
+    var hideSEOBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSEOBlockAttributeName);
+
+    const string hideMinificationBlockAttributeName = "GeneralCommonSettingsPage.HideMinificationBlock";
+    var hideMinificationBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideMinificationBlockAttributeName);
+
+    const string hideSecurityBlockAttributeName = "GeneralCommonSettingsPage.HideSecurityBlock";
+    var hideSecurityBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSecurityBlockAttributeName);
+
+    const string hideCaptchaBlockAttributeName = "GeneralCommonSettingsPage.HideCaptchaBlock";
+    var hideCaptchaBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideCaptchaBlockAttributeName);
+
+    const string hidePDFBlockAttributeName = "GeneralCommonSettingsPage.HidePDFBlock";
+    var hidePDFBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hidePDFBlockAttributeName);
+
+    const string hideLocalizationBlockAttributeName = "GeneralCommonSettingsPage.HideLocalizationBlock";
+    var hideLocalizationBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideLocalizationBlockAttributeName);
+
+    const string hideFullTextBlockAttributeName = "GeneralCommonSettingsPage.HideFullTextBlock";
+    var hideFullTextBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideFullTextBlockAttributeName);
+
+    const string hideAdminAreaBlockAttributeName = "GeneralCommonSettingsPage.HideAdminAreaBlock";
+    var hideAdminAreaBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideAdminAreaBlockAttributeName);
+}
+
 <form asp-controller="Setting" asp-action="GeneralCommon" method="post">
     <div class="content-header clearfix">
         <h1 class="pull-left">
@@ -21,20 +65,47 @@
         </div>
     </div>
 
+    <div class="content">
+        <div class="form-horizontal">
+            @await Component.InvokeAsync("StoreScopeConfiguration")
+            @await Component.InvokeAsync("SettingMode")
+            <div asp-validation-summary="All"></div>
+
+            <nop-panels id="generalcommon-panels">
+                <nop-panel asp-name="generalcommon-common" asp-icon="fa fa-info" asp-title="@T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.Common")" asp-hide-block-attribute-name="@hideCommonBlockAttributeName" asp-hide="@hideCommonBlock" asp-advanced="false">@await Html.PartialAsync("_GeneralCommon.Common", Model)</nop-panel>
+                <nop-panel asp-name="generalcommon-top-menu-items" asp-icon="fa fa-level-up" asp-title="@T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.TopMenuItems")" asp-hide-block-attribute-name="@hideTopMenuItemsBlockAttributeName" asp-hide="@hideTopMenuItemsBlock" asp-advanced="true">@await Html.PartialAsync("_GeneralCommon.TopMenuItems", Model)</nop-panel>
+                <nop-panel asp-name="generalcommon-footeritems" asp-icon="fa fa-level-down" asp-title="@T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.FooterItems")" asp-hide-block-attribute-name="@hideFooterItemsBlockAttributeName" asp-hide="@hideFooterItemsBlock" asp-advanced="true">@await Html.PartialAsync("_GeneralCommon.FooterItems", Model)</nop-panel>
+                <nop-panel asp-name="generalcommon-socialmedia" asp-icon="fa fa-share-square-o" asp-title="@T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.SocialMedia")" asp-hide-block-attribute-name="@hideSocialMediaBlockAttributeName" asp-hide="@hideSocialMediaBlock" asp-advanced="false">@await Html.PartialAsync("_GeneralCommon.SocialMedia", Model)</nop-panel>
+                <nop-panel asp-name="generalcommon-favicon" asp-icon="fa fa-picture-o" asp-title="@T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.FaviconAndAppIcons")" asp-hide-block-attribute-name="@hideFaviconBlockAttributeName" asp-hide="@hideFaviconBlock" asp-advanced="false">@await Html.PartialAsync("_GeneralCommon.Favicon", Model)</nop-panel>
+                <nop-panel asp-name="generalcommon-sitemap" asp-icon="fa fa-sitemap" asp-title="@T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.Sitemap")" asp-hide-block-attribute-name="@hideSitemapBlockAttributeName" asp-hide="@hideSitemapBlock" asp-advanced="true">@await Html.PartialAsync("_GeneralCommon.Sitemap", Model)</nop-panel>
+                <nop-panel asp-name="generalcommon-seo" asp-icon="fa fa-search-plus" asp-title="@T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.SEO")" asp-hide-block-attribute-name="@hideSEOBlockAttributeName" asp-hide="@hideSEOBlock" asp-advanced="false">@await Html.PartialAsync("_GeneralCommon.SEO", Model)</nop-panel>
+                <nop-panel asp-name="generalcommon-minification" asp-icon="fa fa-compress" asp-title="@T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.Minification")" asp-hide-block-attribute-name="@hideMinificationBlockAttributeName" asp-hide="@hideMinificationBlock" asp-advanced="true">@await Html.PartialAsync("_GeneralCommon.Minification", Model)</nop-panel>
+                <nop-panel asp-name="generalcommon-security" asp-icon="fa fa-shield" asp-title="@T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.Security")" asp-hide-block-attribute-name="@hideSecurityBlockAttributeName" asp-hide="@hideSecurityBlock" asp-advanced="true">@await Html.PartialAsync("_GeneralCommon.Security", Model)</nop-panel>
+                <nop-panel asp-name="generalcommon-captcha" asp-icon="fa fa-lock" asp-title="@T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.Captcha")" asp-hide-block-attribute-name="@hideCaptchaBlockAttributeName" asp-hide="@hideCaptchaBlock" asp-advanced="true">@await Html.PartialAsync("_GeneralCommon.Captcha", Model)</nop-panel>
+                <nop-panel asp-name="generalcommon-pdf" asp-icon="fa fa-file-pdf-o" asp-title="@T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.Pdf")" asp-hide-block-attribute-name="@hidePDFBlockAttributeName" asp-hide="@hidePDFBlock" asp-advanced="true">@await Html.PartialAsync("_GeneralCommon.Pdf", Model)</nop-panel>
+                <nop-panel asp-name="generalcommon-localization" asp-icon="fa fa-globe" asp-title="@T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.Localization")" asp-hide-block-attribute-name="@hideLocalizationBlockAttributeName" asp-hide="@hideLocalizationBlock" asp-advanced="true">@await Html.PartialAsync("_GeneralCommon.Localization", Model)</nop-panel>
+                <nop-panel asp-name="generalcommon-fulltext" asp-icon="fa fa-search-plus" asp-title="@T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.FullText")" asp-hide-block-attribute-name="@hideFullTextBlockAttributeName" asp-hide="@hideFullTextBlock" asp-advanced="true">@await Html.PartialAsync("_GeneralCommon.FullText", Model)</nop-panel>
+                <nop-panel asp-name="generalcommon-adminarea" asp-icon="fa fa-clipboard" asp-title="@T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.AdminArea")" asp-hide-block-attribute-name="@hideAdminAreaBlockAttributeName" asp-hide="@hideAdminAreaBlock" asp-advanced="true">@await Html.PartialAsync("_GeneralCommon.AdminArea", Model)</nop-panel>
+
+                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.GeneralCommonDetailsBlock, additionalData = Model })
+            </nop-panels>
+        </div>
+    </div>
+    
     <script>
         $(document).ready(function () {
-            $("#@Html.IdFor(model => model.StoreInformationSettings.SitemapEnabled)").click(toggleSitemapSettings);
+            $("#@Html.IdFor(model => model.SitemapSettings.SitemapEnabled)").click(toggleSitemapSettings);
             $("#@Html.IdFor(model => model.LocalizationSettings.LoadAllLocaleRecordsOnStartup)").click(toggleLoadAllLocaleRecordsOnStartup);
             toggleSitemapSettings();
             toggleLoadAllLocaleRecordsOnStartup();
         });
 
         function toggleSitemapSettings() {
-            if ($('#@Html.IdFor(model => model.StoreInformationSettings.SitemapEnabled)').is(':checked')) {
-                $("#pnlSitemapPageSize, #pnlSitemapIncludeCategories, #pnlSitemapIncludeManufacturers, #pnlSitemapIncludeProducts, #pnlSitemapIncludeProductTags").show();
+            if ($('#@Html.IdFor(model => model.SitemapSettings.SitemapEnabled)').is(':checked')) {
+                $("#pnlSitemapPageSize, #pnlSitemapIncludeCategories, #pnlSitemapIncludeManufacturers, #pnlSitemapIncludeProducts, #pnlSitemapIncludeProductTags, #pnlSitemapIncludeTopics, #pnlSitemapIncludeBlogPosts, #pnlSitemapIncludeNews").show();
             }
             else {
-                $("#pnlSitemapPageSize, #pnlSitemapIncludeCategories, #pnlSitemapIncludeManufacturers, #pnlSitemapIncludeProducts, #pnlSitemapIncludeProductTags").hide();
+                $("#pnlSitemapPageSize, #pnlSitemapIncludeCategories, #pnlSitemapIncludeManufacturers, #pnlSitemapIncludeProducts, #pnlSitemapIncludeProductTags, #pnlSitemapIncludeTopics, #pnlSitemapIncludeBlogPosts, #pnlSitemapIncludeNews").hide();
             }
         }
 
@@ -46,1047 +117,45 @@
                 });
         }
     </script>
+</form>
 
-    <div class="content">
-        <div class="form-horizontal">
-            @await Component.InvokeAsync("StoreScopeConfiguration")
-            @await Component.InvokeAsync("SettingMode")
-            <div asp-validation-summary="All"></div>
-
-            <div class="panel-group">
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.GeneralCommonSettingsTop })
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        @T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.Common")
-                    </div>
-                    <div class="panel-body">
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="StoreInformationSettings.DefaultStoreTheme_OverrideForStore" asp-parent-container="theme-selection-block" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="StoreInformationSettings.DefaultStoreTheme" />
-                            </div>
-                            <div class="col-md-9">
-                                <div id="theme-selection-block" class="theme-selection-block clearfix">
-                                    @foreach (var theme in Model.StoreInformationSettings.AvailableStoreThemes)
-                                    {
-                                        <div class="checkbox">
-                                            <label>
-                                                <span>
-                                                    <input type="radio" name="@Html.NameFor(x => x.StoreInformationSettings.DefaultStoreTheme)" value="@theme.SystemName" @if (theme.SystemName.Equals(Model.StoreInformationSettings.DefaultStoreTheme, StringComparison.InvariantCultureIgnoreCase)) { <text> checked="checked" </text> }>
-                                                    @theme.FriendlyName
-                                                </span>
-                                                <img src="@Url.Content(theme.PreviewImageUrl)" alt="@theme.PreviewText" title="@theme.PreviewText">
-                                            </label>
-                                        </div>
-                                    }
-                                </div>
-                                <span asp-validation-for="StoreInformationSettings.DefaultStoreTheme"></span>
-                                <p><em>@T("Admin.Configuration.Settings.GeneralCommon.DefaultStoreTheme.GetMore")</em></p>
-                            </div>
-                        </div>
-                        <div class="form-group" @(Model.StoreInformationSettings.AvailableStoreThemes.Count == 1 ? Html.Raw("style=\"display:none\"") : null)>
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="StoreInformationSettings.AllowCustomerToSelectTheme_OverrideForStore" asp-input="StoreInformationSettings.AllowCustomerToSelectTheme" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="StoreInformationSettings.AllowCustomerToSelectTheme" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="StoreInformationSettings.AllowCustomerToSelectTheme" />
-                                <span asp-validation-for="StoreInformationSettings.AllowCustomerToSelectTheme"></span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="StoreInformationSettings.LogoPictureId_OverrideForStore" asp-parent-container="logo-block" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="StoreInformationSettings.LogoPictureId" />
-                            </div>
-                            <div class="col-md-9" id="logo-block">
-                                <nop-editor asp-for="StoreInformationSettings.LogoPictureId" />
-                                <span asp-validation-for="StoreInformationSettings.LogoPictureId"></span>
-                            </div>
-                        </div>
-                        <div class="form-group advanced-setting">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="StoreInformationSettings.DisplayEuCookieLawWarning_OverrideForStore" asp-input="StoreInformationSettings.DisplayEuCookieLawWarning" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="StoreInformationSettings.DisplayEuCookieLawWarning" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="StoreInformationSettings.DisplayEuCookieLawWarning" />
-                                <span asp-validation-for="StoreInformationSettings.DisplayEuCookieLawWarning"></span>
-                            </div>
-                        </div>
-                        <div class="form-group advanced-setting">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="StoreInformationSettings.StoreClosed_OverrideForStore" asp-input="StoreInformationSettings.StoreClosed" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="StoreInformationSettings.StoreClosed" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="StoreInformationSettings.StoreClosed" />
-                                <span asp-validation-for="StoreInformationSettings.StoreClosed"></span>
-                            </div>
-                        </div>
-                        <div class="form-group advanced-setting">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="StoreInformationSettings.SubjectFieldOnContactUsForm_OverrideForStore" asp-input="StoreInformationSettings.SubjectFieldOnContactUsForm" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="StoreInformationSettings.SubjectFieldOnContactUsForm" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="StoreInformationSettings.SubjectFieldOnContactUsForm" />
-                                <span asp-validation-for="StoreInformationSettings.SubjectFieldOnContactUsForm"></span>
-                            </div>
-                        </div>
-                        <div class="form-group advanced-setting">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="StoreInformationSettings.UseSystemEmailForContactUsForm_OverrideForStore" asp-input="StoreInformationSettings.UseSystemEmailForContactUsForm" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="StoreInformationSettings.UseSystemEmailForContactUsForm" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="StoreInformationSettings.UseSystemEmailForContactUsForm" />
-                                <span asp-validation-for="StoreInformationSettings.UseSystemEmailForContactUsForm"></span>
-                            </div>
-                        </div>
-                        <div class="form-group advanced-setting">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="StoreInformationSettings.PopupForTermsOfServiceLinks_OverrideForStore" asp-input="StoreInformationSettings.PopupForTermsOfServiceLinks" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="StoreInformationSettings.PopupForTermsOfServiceLinks" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="StoreInformationSettings.PopupForTermsOfServiceLinks" />
-                                <span asp-validation-for="StoreInformationSettings.PopupForTermsOfServiceLinks"></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="panel panel-default advanced-setting">
-                    <div class="panel-heading">
-                        @T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.TopMenuItems")
-                    </div>
-                    <div class="panel-body">
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="DisplayDefaultMenuItemSettings.DisplayHomePageMenuItem_OverrideForStore" asp-input="DisplayDefaultMenuItemSettings.DisplayHomePageMenuItem" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="DisplayDefaultMenuItemSettings.DisplayHomePageMenuItem" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="DisplayDefaultMenuItemSettings.DisplayHomePageMenuItem" />
-                                <span asp-validation-for="DisplayDefaultMenuItemSettings.DisplayHomePageMenuItem"></span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="DisplayDefaultMenuItemSettings.DisplayNewProductsMenuItem_OverrideForStore" asp-input="DisplayDefaultMenuItemSettings.DisplayNewProductsMenuItem" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="DisplayDefaultMenuItemSettings.DisplayNewProductsMenuItem" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="DisplayDefaultMenuItemSettings.DisplayNewProductsMenuItem" />
-                                <span asp-validation-for="DisplayDefaultMenuItemSettings.DisplayNewProductsMenuItem"></span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="DisplayDefaultMenuItemSettings.DisplayProductSearchMenuItem_OverrideForStore" asp-input="DisplayDefaultMenuItemSettings.DisplayProductSearchMenuItem" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="DisplayDefaultMenuItemSettings.DisplayProductSearchMenuItem" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="DisplayDefaultMenuItemSettings.DisplayProductSearchMenuItem" />
-                                <span asp-validation-for="DisplayDefaultMenuItemSettings.DisplayProductSearchMenuItem"></span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="DisplayDefaultMenuItemSettings.DisplayCustomerInfoMenuItem_OverrideForStore" asp-input="DisplayDefaultMenuItemSettings.DisplayCustomerInfoMenuItem" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="DisplayDefaultMenuItemSettings.DisplayCustomerInfoMenuItem" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="DisplayDefaultMenuItemSettings.DisplayCustomerInfoMenuItem" />
-                                <span asp-validation-for="DisplayDefaultMenuItemSettings.DisplayCustomerInfoMenuItem"></span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="DisplayDefaultMenuItemSettings.DisplayBlogMenuItem_OverrideForStore" asp-input="DisplayDefaultMenuItemSettings.DisplayBlogMenuItem" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="DisplayDefaultMenuItemSettings.DisplayBlogMenuItem" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="DisplayDefaultMenuItemSettings.DisplayBlogMenuItem" />
-                                <span asp-validation-for="DisplayDefaultMenuItemSettings.DisplayBlogMenuItem"></span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="DisplayDefaultMenuItemSettings.DisplayForumsMenuItem_OverrideForStore" asp-input="DisplayDefaultMenuItemSettings.DisplayForumsMenuItem" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="DisplayDefaultMenuItemSettings.DisplayForumsMenuItem" />
-                            </div>
-                            <div class="col-md-9">  
-                                <nop-editor asp-for="DisplayDefaultMenuItemSettings.DisplayForumsMenuItem" />
-                                <span asp-validation-for="DisplayDefaultMenuItemSettings.DisplayForumsMenuItem"></span> 
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="DisplayDefaultMenuItemSettings.DisplayContactUsMenuItem_OverrideForStore" asp-input="DisplayDefaultMenuItemSettings.DisplayContactUsMenuItem" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="DisplayDefaultMenuItemSettings.DisplayContactUsMenuItem" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="DisplayDefaultMenuItemSettings.DisplayContactUsMenuItem" />
-                                <span asp-validation-for="DisplayDefaultMenuItemSettings.DisplayContactUsMenuItem"></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            
-                <div class="panel panel-default advanced-setting">
-                    <div class="panel-heading">
-                        @T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.FooterItems")
-                    </div>
-                    <div class="panel-body">
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="DisplayDefaultFooterItemSettings.DisplaySitemapFooterItem_OverrideForStore" asp-input="DisplayDefaultFooterItemSettings.DisplaySitemapFooterItem" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="DisplayDefaultFooterItemSettings.DisplaySitemapFooterItem" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="DisplayDefaultFooterItemSettings.DisplaySitemapFooterItem" />
-                                <span asp-validation-for="DisplayDefaultFooterItemSettings.DisplaySitemapFooterItem"></span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="DisplayDefaultFooterItemSettings.DisplayContactUsFooterItem_OverrideForStore" asp-input="DisplayDefaultFooterItemSettings.DisplayContactUsFooterItem" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="DisplayDefaultFooterItemSettings.DisplayContactUsFooterItem" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="DisplayDefaultFooterItemSettings.DisplayContactUsFooterItem" />
-                                <span asp-validation-for="DisplayDefaultFooterItemSettings.DisplayContactUsFooterItem"></span>
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="DisplayDefaultFooterItemSettings.DisplayProductSearchFooterItem_OverrideForStore" asp-input="DisplayDefaultFooterItemSettings.DisplayProductSearchFooterItem" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="DisplayDefaultFooterItemSettings.DisplayProductSearchFooterItem" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="DisplayDefaultFooterItemSettings.DisplayProductSearchFooterItem" />
-                                <span asp-validation-for="DisplayDefaultFooterItemSettings.DisplayProductSearchFooterItem"></span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="DisplayDefaultFooterItemSettings.DisplayNewsFooterItem_OverrideForStore" asp-input="DisplayDefaultFooterItemSettings.DisplayNewsFooterItem" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="DisplayDefaultFooterItemSettings.DisplayNewsFooterItem" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="DisplayDefaultFooterItemSettings.DisplayNewsFooterItem" />
-                                <span asp-validation-for="DisplayDefaultFooterItemSettings.DisplayNewsFooterItem"></span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="DisplayDefaultFooterItemSettings.DisplayBlogFooterItem_OverrideForStore" asp-input="DisplayDefaultFooterItemSettings.DisplayBlogFooterItem" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="DisplayDefaultFooterItemSettings.DisplayBlogFooterItem" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="DisplayDefaultFooterItemSettings.DisplayBlogFooterItem" />
-                                <span asp-validation-for="DisplayDefaultFooterItemSettings.DisplayBlogFooterItem"></span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="DisplayDefaultFooterItemSettings.DisplayForumsFooterItem_OverrideForStore" asp-input="DisplayDefaultFooterItemSettings.DisplayForumsFooterItem" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="DisplayDefaultFooterItemSettings.DisplayForumsFooterItem" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="DisplayDefaultFooterItemSettings.DisplayForumsFooterItem" />
-                                <span asp-validation-for="DisplayDefaultFooterItemSettings.DisplayForumsFooterItem"></span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="DisplayDefaultFooterItemSettings.DisplayRecentlyViewedProductsFooterItem_OverrideForStore" asp-input="DisplayDefaultFooterItemSettings.DisplayRecentlyViewedProductsFooterItem" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="DisplayDefaultFooterItemSettings.DisplayRecentlyViewedProductsFooterItem" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="DisplayDefaultFooterItemSettings.DisplayRecentlyViewedProductsFooterItem" />
-                                <span asp-validation-for="DisplayDefaultFooterItemSettings.DisplayRecentlyViewedProductsFooterItem"></span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="DisplayDefaultFooterItemSettings.DisplayCompareProductsFooterItem_OverrideForStore" asp-input="DisplayDefaultFooterItemSettings.DisplayCompareProductsFooterItem" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="DisplayDefaultFooterItemSettings.DisplayCompareProductsFooterItem" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="DisplayDefaultFooterItemSettings.DisplayCompareProductsFooterItem" />
-                                <span asp-validation-for="DisplayDefaultFooterItemSettings.DisplayCompareProductsFooterItem"></span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="DisplayDefaultFooterItemSettings.DisplayNewProductsFooterItem_OverrideForStore" asp-input="DisplayDefaultFooterItemSettings.DisplayNewProductsFooterItem" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="DisplayDefaultFooterItemSettings.DisplayNewProductsFooterItem" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="DisplayDefaultFooterItemSettings.DisplayNewProductsFooterItem" />
-                                <span asp-validation-for="DisplayDefaultFooterItemSettings.DisplayNewProductsFooterItem"></span>
-                            </div>
-                        </div>                        
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="DisplayDefaultFooterItemSettings.DisplayCustomerInfoFooterItem_OverrideForStore" asp-input="DisplayDefaultFooterItemSettings.DisplayCustomerInfoFooterItem" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="DisplayDefaultFooterItemSettings.DisplayCustomerInfoFooterItem" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="DisplayDefaultFooterItemSettings.DisplayCustomerInfoFooterItem" />
-                                <span asp-validation-for="DisplayDefaultFooterItemSettings.DisplayCustomerInfoFooterItem"></span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="DisplayDefaultFooterItemSettings.DisplayCustomerOrdersFooterItem_OverrideForStore" asp-input="DisplayDefaultFooterItemSettings.DisplayCustomerOrdersFooterItem" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="DisplayDefaultFooterItemSettings.DisplayCustomerOrdersFooterItem" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="DisplayDefaultFooterItemSettings.DisplayCustomerOrdersFooterItem" />
-                                <span asp-validation-for="DisplayDefaultFooterItemSettings.DisplayCustomerOrdersFooterItem"></span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="DisplayDefaultFooterItemSettings.DisplayCustomerAddressesFooterItem_OverrideForStore" asp-input="DisplayDefaultFooterItemSettings.DisplayCustomerAddressesFooterItem" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="DisplayDefaultFooterItemSettings.DisplayCustomerAddressesFooterItem" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="DisplayDefaultFooterItemSettings.DisplayCustomerAddressesFooterItem" />
-                                <span asp-validation-for="DisplayDefaultFooterItemSettings.DisplayCustomerAddressesFooterItem"></span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="DisplayDefaultFooterItemSettings.DisplayShoppingCartFooterItem_OverrideForStore" asp-input="DisplayDefaultFooterItemSettings.DisplayShoppingCartFooterItem" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="DisplayDefaultFooterItemSettings.DisplayShoppingCartFooterItem" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="DisplayDefaultFooterItemSettings.DisplayShoppingCartFooterItem" />
-                                <span asp-validation-for="DisplayDefaultFooterItemSettings.DisplayShoppingCartFooterItem"></span>
-                            </div>
-                        </div>                        
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="DisplayDefaultFooterItemSettings.DisplayWishlistFooterItem_OverrideForStore" asp-input="DisplayDefaultFooterItemSettings.DisplayWishlistFooterItem" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="DisplayDefaultFooterItemSettings.DisplayWishlistFooterItem" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="DisplayDefaultFooterItemSettings.DisplayWishlistFooterItem" />
-                                <span asp-validation-for="DisplayDefaultFooterItemSettings.DisplayWishlistFooterItem"></span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="DisplayDefaultFooterItemSettings.DisplayApplyVendorAccountFooterItem_OverrideForStore" asp-input="DisplayDefaultFooterItemSettings.DisplayApplyVendorAccountFooterItem" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="DisplayDefaultFooterItemSettings.DisplayApplyVendorAccountFooterItem" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="DisplayDefaultFooterItemSettings.DisplayApplyVendorAccountFooterItem" />
-                                <span asp-validation-for="DisplayDefaultFooterItemSettings.DisplayApplyVendorAccountFooterItem"></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        @T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.SocialMedia")
-                    </div>
-                    <div class="panel-body">
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="StoreInformationSettings.FacebookLink_OverrideForStore" asp-input="StoreInformationSettings.FacebookLink" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="StoreInformationSettings.FacebookLink" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="StoreInformationSettings.FacebookLink" />
-                                <span asp-validation-for="StoreInformationSettings.FacebookLink"></span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="StoreInformationSettings.TwitterLink_OverrideForStore" asp-input="StoreInformationSettings.TwitterLink" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="StoreInformationSettings.TwitterLink" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="StoreInformationSettings.TwitterLink" />
-                                <span asp-validation-for="StoreInformationSettings.TwitterLink"></span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="StoreInformationSettings.YoutubeLink_OverrideForStore" asp-input="StoreInformationSettings.YoutubeLink" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="StoreInformationSettings.YoutubeLink" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="StoreInformationSettings.YoutubeLink" />
-                                <span asp-validation-for="StoreInformationSettings.YoutubeLink"></span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="StoreInformationSettings.GooglePlusLink_OverrideForStore" asp-input="StoreInformationSettings.GooglePlusLink" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="StoreInformationSettings.GooglePlusLink" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="StoreInformationSettings.GooglePlusLink" />
-                                <span asp-validation-for="StoreInformationSettings.GooglePlusLink"></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="panel panel-default advanced-setting">
-                    <div class="panel-heading">
-                        @T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.Sitemap")
-                    </div>
-                    <div class="panel-body">
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="StoreInformationSettings.SitemapEnabled_OverrideForStore" asp-input="StoreInformationSettings.SitemapEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="StoreInformationSettings.SitemapEnabled" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="StoreInformationSettings.SitemapEnabled" />
-                                <span asp-validation-for="StoreInformationSettings.SitemapEnabled"></span>
-                            </div>
-                        </div>
-                        <nop-nested-setting asp-for="StoreInformationSettings.SitemapEnabled">
-                            <div class="form-group advanced-setting" id="pnlSitemapPageSize">
-                                <div class="col-md-3">
-                                    <nop-override-store-checkbox asp-for="StoreInformationSettings.SitemapPageSize_OverrideForStore" asp-input="StoreInformationSettings.SitemapPageSize" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                    <nop-label asp-for="StoreInformationSettings.SitemapPageSize" />
-                                </div>
-                                <div class="col-md-9">
-                                    <nop-editor asp-for="StoreInformationSettings.SitemapPageSize" />
-                                    <span asp-validation-for="StoreInformationSettings.SitemapPageSize"></span>
-                                </div>
-                            </div>
-                            <div class="form-group advanced-setting" id="pnlSitemapIncludeCategories">
-                                <div class="col-md-3">
-                                    <nop-override-store-checkbox asp-for="StoreInformationSettings.SitemapIncludeCategories_OverrideForStore" asp-input="StoreInformationSettings.SitemapIncludeCategories" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                    <nop-label asp-for="StoreInformationSettings.SitemapIncludeCategories" />
-                                </div>
-                                <div class="col-md-9">
-                                    <nop-editor asp-for="StoreInformationSettings.SitemapIncludeCategories" />
-                                    <span asp-validation-for="StoreInformationSettings.SitemapIncludeCategories"></span>
-                                </div>
-                            </div>
-                            <div class="form-group advanced-setting" id="pnlSitemapIncludeManufacturers">
-                                <div class="col-md-3">
-                                    <nop-override-store-checkbox asp-for="StoreInformationSettings.SitemapIncludeManufacturers_OverrideForStore" asp-input="StoreInformationSettings.SitemapIncludeManufacturers" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                    <nop-label asp-for="StoreInformationSettings.SitemapIncludeManufacturers" />
-                                </div>
-                                <div class="col-md-9">
-                                    <nop-editor asp-for="StoreInformationSettings.SitemapIncludeManufacturers" />
-                                    <span asp-validation-for="StoreInformationSettings.SitemapIncludeManufacturers"></span>
-                                </div>
-                            </div>
-                            <div class="form-group advanced-setting" id="pnlSitemapIncludeProducts">
-                                <div class="col-md-3">
-                                    <nop-override-store-checkbox asp-for="StoreInformationSettings.SitemapIncludeProducts_OverrideForStore" asp-input="StoreInformationSettings.SitemapIncludeProducts" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                    <nop-label asp-for="StoreInformationSettings.SitemapIncludeProducts" />
-                                </div>
-                                <div class="col-md-9">
-                                    <nop-editor asp-for="StoreInformationSettings.SitemapIncludeProducts" />
-                                    <span asp-validation-for="StoreInformationSettings.SitemapIncludeProducts"></span>
-                                </div>
-                            </div>
-                            <div class="form-group advanced-setting" id="pnlSitemapIncludeProductTags">
-                                <div class="col-md-3">
-                                    <nop-override-store-checkbox asp-for="StoreInformationSettings.SitemapIncludeProductTags_OverrideForStore" asp-input="StoreInformationSettings.SitemapIncludeProductTags" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                    <nop-label asp-for="StoreInformationSettings.SitemapIncludeProductTags" />
-                                </div>
-                                <div class="col-md-9">
-                                    <nop-editor asp-for="StoreInformationSettings.SitemapIncludeProductTags" />
-                                    <span asp-validation-for="StoreInformationSettings.SitemapIncludeProductTags"></span>
-                                </div>
-                            </div>
-                        </nop-nested-setting>
-                    </div>
-                </div>
-
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        @T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.SEO")
-                    </div>
-                    <div class="panel-body">
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="SeoSettings.DefaultTitle_OverrideForStore" asp-input="SeoSettings.DefaultTitle" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="SeoSettings.DefaultTitle" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="SeoSettings.DefaultTitle" />
-                                <span asp-validation-for="SeoSettings.DefaultTitle"></span>
-                            </div>
-                        </div>
-                        <div class="form-group advanced-setting">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="SeoSettings.PageTitleSeoAdjustment_OverrideForStore" asp-input="SeoSettings.PageTitleSeoAdjustment" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="SeoSettings.PageTitleSeoAdjustment" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-select asp-for="SeoSettings.PageTitleSeoAdjustment" asp-items="Model.SeoSettings.PageTitleSeoAdjustmentValues" />
-                                <span asp-validation-for="SeoSettings.PageTitleSeoAdjustment"></span>
-                            </div>
-                        </div>
-                        <div class="form-group advanced-setting">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="SeoSettings.PageTitleSeparator_OverrideForStore" asp-input="SeoSettings.PageTitleSeparator" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="SeoSettings.PageTitleSeparator" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="SeoSettings.PageTitleSeparator" />
-                                <span asp-validation-for="SeoSettings.PageTitleSeparator"></span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="SeoSettings.DefaultMetaKeywords_OverrideForStore" asp-input="SeoSettings.DefaultMetaKeywords" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="SeoSettings.DefaultMetaKeywords" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="SeoSettings.DefaultMetaKeywords" />
-                                <span asp-validation-for="SeoSettings.DefaultMetaKeywords"></span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="SeoSettings.DefaultMetaDescription_OverrideForStore" asp-input="SeoSettings.DefaultMetaDescription" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="SeoSettings.DefaultMetaDescription" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="SeoSettings.DefaultMetaDescription" />
-                                <span asp-validation-for="SeoSettings.DefaultMetaDescription"></span>
-                            </div>
-                        </div>
-                        <div class="form-group advanced-setting">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="SeoSettings.GenerateProductMetaDescription_OverrideForStore" asp-input="SeoSettings.GenerateProductMetaDescription" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="SeoSettings.GenerateProductMetaDescription" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="SeoSettings.GenerateProductMetaDescription" />
-                                <span asp-validation-for="SeoSettings.GenerateProductMetaDescription"></span>
-                            </div>
-                        </div>
-                        <div class="form-group advanced-setting">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="SeoSettings.EnableJsBundling_OverrideForStore" asp-input="SeoSettings.EnableJsBundling" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="SeoSettings.EnableJsBundling" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="SeoSettings.EnableJsBundling" />
-                                <span asp-validation-for="SeoSettings.EnableJsBundling"></span>
-                            </div>
-                        </div>
-                        <div class="form-group advanced-setting">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="SeoSettings.EnableCssBundling_OverrideForStore" asp-input="SeoSettings.EnableCssBundling" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="SeoSettings.EnableCssBundling" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="SeoSettings.EnableCssBundling" />
-                                <span asp-validation-for="SeoSettings.EnableCssBundling"></span>
-                            </div>
-                        </div>
-                        <div class="form-group advanced-setting">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="SeoSettings.WwwRequirement_OverrideForStore" asp-input="SeoSettings.WwwRequirement" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="SeoSettings.WwwRequirement" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-select asp-for="SeoSettings.WwwRequirement" asp-items="Model.SeoSettings.WwwRequirementValues" />
-                                <span asp-validation-for="SeoSettings.WwwRequirement"></span>
-                            </div>
-                        </div>
-                        <div class="form-group advanced-setting">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="SeoSettings.ConvertNonWesternChars_OverrideForStore" asp-input="SeoSettings.ConvertNonWesternChars" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="SeoSettings.ConvertNonWesternChars" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="SeoSettings.ConvertNonWesternChars" />
-                                <span asp-validation-for="SeoSettings.ConvertNonWesternChars"></span>
-                            </div>
-                        </div>
-                        <div class="form-group advanced-setting">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="SeoSettings.CanonicalUrlsEnabled_OverrideForStore" asp-input="SeoSettings.CanonicalUrlsEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="SeoSettings.CanonicalUrlsEnabled" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="SeoSettings.CanonicalUrlsEnabled" />
-                                <span asp-validation-for="SeoSettings.CanonicalUrlsEnabled"></span>
-                            </div>
-                        </div>
-                        <div class="form-group advanced-setting">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="SeoSettings.TwitterMetaTags_OverrideForStore" asp-input="SeoSettings.TwitterMetaTags" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="SeoSettings.TwitterMetaTags" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="SeoSettings.TwitterMetaTags" />
-                                <span asp-validation-for="SeoSettings.TwitterMetaTags"></span>
-                            </div>
-                        </div>
-                        <div class="form-group advanced-setting">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="SeoSettings.OpenGraphMetaTags_OverrideForStore" asp-input="SeoSettings.OpenGraphMetaTags" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="SeoSettings.OpenGraphMetaTags" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="SeoSettings.OpenGraphMetaTags" />
-                                <span asp-validation-for="SeoSettings.OpenGraphMetaTags"></span>
-                            </div>
-                        </div>
-                        <div class="form-group advanced-setting">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="SeoSettings.CustomHeadTags_OverrideForStore" asp-input="SeoSettings.CustomHeadTags" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="SeoSettings.CustomHeadTags" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-textarea asp-for="SeoSettings.CustomHeadTags" />
-                                <span asp-validation-for="SeoSettings.CustomHeadTags"></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="panel panel-default advanced-setting">
-                    <div class="panel-heading">
-                        @T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.Security")
-                    </div>
-                    <div class="panel-body">
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                <nop-label asp-for="SecuritySettings.AdminAreaAllowedIpAddresses" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="SecuritySettings.AdminAreaAllowedIpAddresses" />
-                                <span asp-validation-for="SecuritySettings.AdminAreaAllowedIpAddresses"></span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                <nop-label asp-for="SecuritySettings.ForceSslForAllPages" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="SecuritySettings.ForceSslForAllPages" />
-                                <span asp-validation-for="SecuritySettings.ForceSslForAllPages"></span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                <nop-label asp-for="SecuritySettings.EnableXsrfProtectionForAdminArea" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="SecuritySettings.EnableXsrfProtectionForAdminArea" />
-                                <span asp-validation-for="SecuritySettings.EnableXsrfProtectionForAdminArea"></span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                <nop-label asp-for="SecuritySettings.EnableXsrfProtectionForPublicStore" />
-                            </div>
-                            <div class="col-md-9"> 
-                                <nop-editor asp-for="SecuritySettings.EnableXsrfProtectionForPublicStore" />
-                                <span asp-validation-for="SecuritySettings.EnableXsrfProtectionForPublicStore"></span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                <nop-label asp-for="SecuritySettings.HoneypotEnabled" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="SecuritySettings.HoneypotEnabled" />
-                                <span asp-validation-for="SecuritySettings.HoneypotEnabled"></span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                <nop-label asp-for="SecuritySettings.EncryptionKey" />
-                            </div>
-                            <div class="col-md-9">
-                                <div class="input-group input-group-short">
-                                    <nop-editor asp-for="SecuritySettings.EncryptionKey" />
-                                    <span class="input-group-btn">
-                                        <button type="submit" name="changeencryptionkey" id="changeencryptionkey" class="btn btn-info">
-                                            @T("Admin.Common.Change")
-                                        </button>
-                                        <nop-action-confirmation asp-button-id="changeencryptionkey" />
-                                    </span>
-                                </div>
-                                <span asp-validation-for="SecuritySettings.EncryptionKey"></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="panel panel-default advanced-setting">
-                    <div class="panel-heading">
-                        @T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.Captcha")
-                    </div>
-                    <div class="panel-body">
-                       @T("Admin.Configuration.Settings.GeneralCommon.Captcha.Instructions")
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="CaptchaSettings.Enabled_OverrideForStore" asp-input="CaptchaSettings.Enabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="CaptchaSettings.Enabled"/>
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="CaptchaSettings.Enabled" />
-                                <span asp-validation-for="CaptchaSettings.Enabled"></span>
-                            </div>
-                        </div>
-                        <nop-nested-setting asp-for="CaptchaSettings.Enabled">
-                            <div class="form-group" id="ssCaptchaShowOnLoginPagepnl">
-                                <div class="col-md-3">
-                                    <nop-override-store-checkbox asp-for="CaptchaSettings.ShowOnLoginPage_OverrideForStore" asp-input="CaptchaSettings.ShowOnLoginPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                    <nop-label asp-for="CaptchaSettings.ShowOnLoginPage" />
-                                </div>
-                                <div class="col-md-9">
-                                    <nop-editor asp-for="CaptchaSettings.ShowOnLoginPage" />
-                                    <span asp-validation-for="CaptchaSettings.ShowOnLoginPage"></span>
-                                </div>
-                            </div>
-                            <div class="form-group" id="ssCaptchaShowOnRegistrationPagepnl">
-                                <div class="col-md-3">
-                                    <nop-override-store-checkbox asp-for="CaptchaSettings.ShowOnRegistrationPage_OverrideForStore" asp-input="CaptchaSettings.ShowOnRegistrationPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                    <nop-label asp-for="CaptchaSettings.ShowOnRegistrationPage" />
-                                </div>
-                                <div class="col-md-9">
-                                    <nop-editor asp-for="CaptchaSettings.ShowOnRegistrationPage" />
-                                    <span asp-validation-for="CaptchaSettings.ShowOnRegistrationPage"></span>
-                                </div>
-                            </div>
-                            <div class="form-group" id="ssCaptchaShowOnContactUsPagepnl">
-                                <div class="col-md-3">
-                                    <nop-override-store-checkbox asp-for="CaptchaSettings.ShowOnContactUsPage_OverrideForStore" asp-input="CaptchaSettings.ShowOnContactUsPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                    <nop-label asp-for="CaptchaSettings.ShowOnContactUsPage" />
-                                </div>
-                                <div class="col-md-9">
-                                    <nop-editor asp-for="CaptchaSettings.ShowOnContactUsPage" />
-                                    <span asp-validation-for="CaptchaSettings.ShowOnContactUsPage"></span>
-                                </div>
-                            </div>
-                            <div class="form-group" id="ssCaptchaShowOnEmailWishlistToFriendPagepnl">
-                                <div class="col-md-3">
-                                    <nop-override-store-checkbox asp-for="CaptchaSettings.ShowOnEmailWishlistToFriendPage_OverrideForStore" asp-input="CaptchaSettings.ShowOnEmailWishlistToFriendPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                    <nop-label asp-for="CaptchaSettings.ShowOnEmailWishlistToFriendPage" />
-                                </div>
-                                <div class="col-md-9">
-                                    <nop-editor asp-for="CaptchaSettings.ShowOnEmailWishlistToFriendPage" />
-                                    <span asp-validation-for="CaptchaSettings.ShowOnEmailWishlistToFriendPage"></span>
-                                </div>
-                            </div>
-                            <div class="form-group" id="ssCaptchaShowOnEmailProductToFriendPagepnl">
-                                <div class="col-md-3">
-                                    <nop-override-store-checkbox asp-for="CaptchaSettings.ShowOnEmailProductToFriendPage_OverrideForStore" asp-input="CaptchaSettings.ShowOnEmailProductToFriendPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                    <nop-label asp-for="CaptchaSettings.ShowOnEmailProductToFriendPage" />
-                                </div>
-                                <div class="col-md-9">
-                                    <nop-editor asp-for="CaptchaSettings.ShowOnEmailProductToFriendPage" />
-                                    <span asp-validation-for="CaptchaSettings.ShowOnEmailProductToFriendPage"></span>
-                                </div>
-                            </div>
-                            <div class="form-group" id="ssCaptchaShowOnBlogCommentPagepnl">
-                                <div class="col-md-3">
-                                    <nop-override-store-checkbox asp-for="CaptchaSettings.ShowOnBlogCommentPage_OverrideForStore" asp-input="CaptchaSettings.ShowOnBlogCommentPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                    <nop-label asp-for="CaptchaSettings.ShowOnBlogCommentPage" />
-                                </div>
-                                <div class="col-md-9">
-                                    <nop-editor asp-for="CaptchaSettings.ShowOnBlogCommentPage" />
-                                    <span asp-validation-for="CaptchaSettings.ShowOnBlogCommentPage"></span>
-                                </div>
-                            </div>
-                            <div class="form-group" id="ssCaptchaShowOnNewsCommentPagepnl">
-                                <div class="col-md-3">
-                                    <nop-override-store-checkbox asp-for="CaptchaSettings.ShowOnNewsCommentPage_OverrideForStore" asp-input="CaptchaSettings.ShowOnNewsCommentPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                    <nop-label asp-for="CaptchaSettings.ShowOnNewsCommentPage" />
-                                </div>
-                                <div class="col-md-9">
-                                    <nop-editor asp-for="CaptchaSettings.ShowOnNewsCommentPage" />
-                                    <span asp-validation-for="CaptchaSettings.ShowOnNewsCommentPage"></span>
-                                </div>
-                            </div>
-                            <div class="form-group" id="ssCaptchaShowOnProductReviewPagepnl">
-                                <div class="col-md-3">
-                                    <nop-override-store-checkbox asp-for="CaptchaSettings.ShowOnProductReviewPage_OverrideForStore" asp-input="CaptchaSettings.ShowOnProductReviewPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                    <nop-label asp-for="CaptchaSettings.ShowOnProductReviewPage" />
-                                </div>
-                                <div class="col-md-9">
-                                    <nop-editor asp-for="CaptchaSettings.ShowOnProductReviewPage" />
-                                    <span asp-validation-for="CaptchaSettings.ShowOnProductReviewPage"></span>
-                                </div>
-                            </div>
-                            <div class="form-group" id="ssCaptchaShowOnApplyVendorPagepnl">
-                                <div class="col-md-3">
-                                    <nop-override-store-checkbox asp-for="CaptchaSettings.ShowOnApplyVendorPage_OverrideForStore" asp-input="CaptchaSettings.ShowOnApplyVendorPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                    <nop-label asp-for="CaptchaSettings.ShowOnApplyVendorPage" />
-                                </div>
-                                <div class="col-md-9">
-                                    <nop-editor asp-for="CaptchaSettings.ShowOnApplyVendorPage" />
-                                    <span asp-validation-for="CaptchaSettings.ShowOnApplyVendorPage"></span>
-                                </div>
-                            </div>                            
-                            <div class="form-group" id="ssReCaptchaPublicKeypnl">
-                                <div class="col-md-3">
-                                    <nop-override-store-checkbox asp-for="CaptchaSettings.ReCaptchaPublicKey_OverrideForStore" asp-input="CaptchaSettings.ReCaptchaPublicKey" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                    <nop-label asp-for="CaptchaSettings.ReCaptchaPublicKey" />
-                                </div>
-                                <div class="col-md-9">
-                                    <nop-editor asp-for="CaptchaSettings.ReCaptchaPublicKey" />
-                                    <span asp-validation-for="CaptchaSettings.ReCaptchaPublicKey"></span>
-                                </div>
-                            </div>
-                            <div class="form-group" id="ssReCaptchaPrivateKeypnl">
-                                <div class="col-md-3">
-                                    <nop-override-store-checkbox asp-for="CaptchaSettings.ReCaptchaPrivateKey_OverrideForStore" asp-input="CaptchaSettings.ReCaptchaPrivateKey" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                    <nop-label asp-for="CaptchaSettings.ReCaptchaPrivateKey" />
-                                </div>
-                                <div class="col-md-9">
-                                    <nop-editor asp-for="CaptchaSettings.ReCaptchaPrivateKey" />
-                                    <span asp-validation-for="CaptchaSettings.ReCaptchaPrivateKey"></span>
-                                </div>
-                            </div>
-                        </nop-nested-setting>
-                    </div>
-                    <script>
-                        $(document).ready(function () {
-                            $("#@Html.IdFor(model => model.CaptchaSettings.Enabled)").click(toggleReCaptcha);
-                            toggleReCaptcha();
-                        });
-
-                        function toggleReCaptcha() {
-                            if ($('#@Html.IdFor(model => model.CaptchaSettings.Enabled)').is(':checked')) {
-                                $('#ssCaptchaShowOnLoginPagepnl').show();
-                                $('#ssCaptchaShowOnRegistrationPagepnl').show();
-                                $('#ssCaptchaShowOnContactUsPagepnl').show();
-                                $('#ssCaptchaShowOnEmailWishlistToFriendPagepnl').show();
-                                $('#ssCaptchaShowOnEmailProductToFriendPagepnl').show();
-                                $('#ssCaptchaShowOnBlogCommentPagepnl').show();
-                                $('#ssCaptchaShowOnNewsCommentPagepnl').show();
-                                $('#ssCaptchaShowOnProductReviewPagepnl').show();
-                                $('#ssCaptchaShowOnApplyVendorPagepnl').show();
-                                $('#ssReCaptchaPublicKeypnl').show();
-                                $('#ssReCaptchaPrivateKeypnl').show();
-                            } else {
-                                $('#ssCaptchaShowOnLoginPagepnl').hide();
-                                $('#ssCaptchaShowOnRegistrationPagepnl').hide();
-                                $('#ssCaptchaShowOnContactUsPagepnl').hide();
-                                $('#ssCaptchaShowOnEmailWishlistToFriendPagepnl').hide();
-                                $('#ssCaptchaShowOnEmailProductToFriendPagepnl').hide();
-                                $('#ssCaptchaShowOnBlogCommentPagepnl').hide();
-                                $('#ssCaptchaShowOnNewsCommentPagepnl').hide();
-                                $('#ssCaptchaShowOnProductReviewPagepnl').hide();
-                                $('#ssCaptchaShowOnApplyVendorPagepnl').hide();
-                                $('#ssReCaptchaPublicKeypnl').hide();
-                                $('#ssReCaptchaPrivateKeypnl').hide();
-                            }
-                        }
-                    </script>
-                </div>
-                <div class="panel panel-default advanced-setting">
-                    <div class="panel-heading">
-                        @T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.Pdf")
-                    </div>
-                    <div class="panel-body">
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="PdfSettings.LogoPictureId_OverrideForStore" asp-parent-container="pdf-logo-picture" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="PdfSettings.LogoPictureId" />
-                            </div>
-                            <div class="col-md-9" id="pdf-logo-picture">
-                                <nop-editor asp-for="PdfSettings.LogoPictureId" />
-                                <span asp-validation-for="PdfSettings.LogoPictureId"></span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="PdfSettings.InvoiceFooterTextColumn1_OverrideForStore" asp-input="PdfSettings.InvoiceFooterTextColumn1" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="PdfSettings.InvoiceFooterTextColumn1" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-textarea asp-for="PdfSettings.InvoiceFooterTextColumn1" />
-                                <span asp-validation-for="PdfSettings.InvoiceFooterTextColumn1"></span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="PdfSettings.InvoiceFooterTextColumn2_OverrideForStore" asp-input="PdfSettings.InvoiceFooterTextColumn2" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="PdfSettings.InvoiceFooterTextColumn2" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-textarea asp-for="PdfSettings.InvoiceFooterTextColumn2" />
-                                <span asp-validation-for="PdfSettings.InvoiceFooterTextColumn2"></span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="PdfSettings.LetterPageSizeEnabled_OverrideForStore" asp-input="PdfSettings.LetterPageSizeEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="PdfSettings.LetterPageSizeEnabled" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="PdfSettings.LetterPageSizeEnabled" />
-                                <span asp-validation-for="PdfSettings.LetterPageSizeEnabled"></span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="PdfSettings.DisablePdfInvoicesForPendingOrders_OverrideForStore" asp-input="PdfSettings.DisablePdfInvoicesForPendingOrders" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="PdfSettings.DisablePdfInvoicesForPendingOrders" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="PdfSettings.DisablePdfInvoicesForPendingOrders" />
-                                <span asp-validation-for="PdfSettings.DisablePdfInvoicesForPendingOrders"></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="panel panel-default advanced-setting">
-                    <div class="panel-heading">
-                        @T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.Localization")
-                    </div>
-                    <div class="panel-body">
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                <nop-label asp-for="LocalizationSettings.LoadAllLocaleRecordsOnStartup" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="LocalizationSettings.LoadAllLocaleRecordsOnStartup" />
-                                <span asp-validation-for="LocalizationSettings.LoadAllLocaleRecordsOnStartup"></span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                <nop-label asp-for="LocalizationSettings.LoadAllLocalizedPropertiesOnStartup" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="LocalizationSettings.LoadAllLocalizedPropertiesOnStartup" />
-                                <span asp-validation-for="LocalizationSettings.LoadAllLocalizedPropertiesOnStartup"></span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                <nop-label asp-for="LocalizationSettings.LoadAllUrlRecordsOnStartup" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="LocalizationSettings.LoadAllUrlRecordsOnStartup" />
-                                <span asp-validation-for="LocalizationSettings.LoadAllUrlRecordsOnStartup"></span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                <nop-label asp-for="LocalizationSettings.UseImagesForLanguageSelection" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="LocalizationSettings.UseImagesForLanguageSelection" />
-                                <span asp-validation-for="LocalizationSettings.UseImagesForLanguageSelection"></span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                <nop-label asp-for="LocalizationSettings.SeoFriendlyUrlsForLanguagesEnabled" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="LocalizationSettings.SeoFriendlyUrlsForLanguagesEnabled" />
-                                <span asp-validation-for="LocalizationSettings.SeoFriendlyUrlsForLanguagesEnabled"></span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                <nop-label asp-for="LocalizationSettings.AutomaticallyDetectLanguage" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="LocalizationSettings.AutomaticallyDetectLanguage" />
-                                <span asp-validation-for="LocalizationSettings.AutomaticallyDetectLanguage"></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="panel panel-default advanced-setting">
-                    <div class="panel-heading">
-                        @T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.FullText")
-                    </div>
-                    <div class="panel-body">
-                        <p>
-                            @if (Model.FullTextSettings.Supported)
-                            {
-                                @T("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.Supported")
-                            }
-                            else
-                            {
-                                @T("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.NotSupported")
-                            }
-                        </p>
-                        @if (Model.FullTextSettings.Supported)
-                        {
-                            <div class="form-group">
-                                <div class="col-md-3">
-                                    <div class="label-wrapper">
-                                        <label class="control-label">
-                                            @if (Model.FullTextSettings.Enabled)
-                                            {
-                                                @T("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.CurrenlyEnabled")
-                                            }
-                                            else
-                                            {
-                                                @T("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.CurrenlyDisabled")
-                                            }
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="col-md-9">
-                                    <button type="submit" name="togglefulltext" class="btn btn-primary">
-                                        @(Model.FullTextSettings.Enabled ? T("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.Disable").Text : T("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.Enable").Text)
-                                    </button>
-                                </div>
-                            </div>
-                            if (Model.FullTextSettings.Enabled)
-                            {
-                                <div class="form-group">
-                                    <div class="col-md-9 col-md-offset-3">
-                                        @T("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.NoiseWords")
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="col-md-3">
-                                        <nop-label asp-for="FullTextSettings.SearchMode" />
-                                    </div>
-                                    <div class="col-md-9">
-                                        <nop-select asp-for="FullTextSettings.SearchMode" asp-items="Model.FullTextSettings.SearchModeValues" />
-                                        <span asp-validation-for="FullTextSettings.SearchMode"></span>
-                                    </div>
-                                </div>
-                            }
-                        }
-                    </div>
-                </div>
-                <div class="panel panel-default advanced-setting">
-                    <div class="panel-heading">
-                        @T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.AdminArea")
-                    </div>
-                    <div class="panel-body">
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="AdminAreaSettings.UseRichEditorInMessageTemplates_OverrideForStore" asp-input="AdminAreaSettings.UseRichEditorInMessageTemplates" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="AdminAreaSettings.UseRichEditorInMessageTemplates" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="AdminAreaSettings.UseRichEditorInMessageTemplates" />
-                                <span asp-validation-for="AdminAreaSettings.UseRichEditorInMessageTemplates"></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.GeneralCommonSettingsBottom })
+@*upload favicon and app icons form*@
+<div id="uploadiconsarchive-window" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="uploadiconsarchive-window-title">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="uploadiconsarchive-window-title">@T("Admin.Configuration.Settings.GeneralCommon.FaviconAndAppIcons.UploadIconsArchive")</h4>
             </div>
+            <form asp-controller="Setting" asp-action="UploadIconsArchive" method="post" enctype="multipart/form-data">
+                <div class="form-horizontal">
+                    <div class="modal-body">
+                        <ul class="common-list">
+                            <li>
+                                @string.Format(T("Admin.Configuration.Settings.GeneralCommon.FaviconAndAppIcons.UploadIconsArchive.Hint").Text, Model.ActiveStoreScopeConfiguration)
+                            </li>
+                        </ul>
+                        <div class="form-group">
+                            <div class="col-md-2">
+                                <div class="label-wrapper">
+                                    <label class="control-label">
+                                        @T("Admin.Common.ZipFile")
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-10">
+                                <input type="file" id="archivefile" name="archivefile" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary" id="upload-icons-archive">
+                            @T("Admin.Configuration.Settings.GeneralCommon.FaviconAndAppIcons.UploadIconsArchive")
+                        </button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
-</form>
+</div>
+

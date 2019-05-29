@@ -1,111 +1,131 @@
-@model ManufacturerTemplateSearchModel
+@model TemplatesModel
 
-<nop-antiforgery-token />
-<div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ManufacturerTemplateListButtons })
-    <div class="panel panel-default">
-        <div class="panel-body">
-            <div id="templates-manufacturer-grid"></div>
+<div class="panel panel-default">
+    <div class="panel-body">
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ManufacturerTemplateListButtons })
 
+        @await Html.PartialAsync("Table", new DataTablesModel
+        {
+            Name = "templates-manufacturer-grid",
+            UrlRead = new DataUrl("ManufacturerTemplates", "Template", null),
+            UrlUpdate = new DataUrl("ManufacturerTemplateUpdate", "Template", null),
+            UrlDelete = new DataUrl("ManufacturerTemplateDelete", "Template", null),
+
+            Length = Model.TemplatesManufacturer.PageSize,
+            LengthMenu = Model.TemplatesManufacturer.AvailablePageSizes,
+            ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(ManufacturerTemplateModel.Name))
+                {
+                    Title = T("Admin.System.Templates.Manufacturer.Name").Text,
+                    Width = "300",
+                    Editable = true,
+                    EditType = EditType.String
+                },
+                new ColumnProperty(nameof(ManufacturerTemplateModel.ViewPath))
+                {
+                    Title = T("Admin.System.Templates.Manufacturer.ViewPath").Text,
+                    Width = "300",
+                    Editable = true,
+                    EditType = EditType.String
+                },
+                new ColumnProperty(nameof(ManufacturerTemplateModel.DisplayOrder))
+                {
+                    Title = T("Admin.System.Templates.Manufacturer.DisplayOrder").Text,
+                    Width = "100",
+                    Editable = true,
+                    EditType = EditType.Number
+                },
+                new ColumnProperty(nameof(ManufacturerTemplateModel.Id))
+                {
+                    Title = T("Admin.Common.Edit").Text,
+                    Width = "200",
+                    ClassName =  NopColumnClassDefaults.Button,
+                    Render = new RenderButtonsInlineEdit()
+                },
+                new ColumnProperty(nameof(ManufacturerTemplateModel.Id))
+                {
+                    Title = T("Admin.Common.Delete").Text,
+                    Width = "100",
+                    ClassName =  NopColumnClassDefaults.Button,
+                    Render = new RenderButtonRemove(T("Admin.Common.Delete").Text)
+                }
+            }
+        })
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                @T("Admin.Common.AddNewRecord")
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="@Model.AddManufacturerTemplate.Name" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="@Model.AddManufacturerTemplate.Name" />
+                        <span asp-validation-for="@Model.AddManufacturerTemplate.Name"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="@Model.AddManufacturerTemplate.ViewPath" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="@Model.AddManufacturerTemplate.ViewPath" />
+                        <span asp-validation-for="@Model.AddManufacturerTemplate.ViewPath"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="@Model.AddManufacturerTemplate.DisplayOrder" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="@Model.AddManufacturerTemplate.DisplayOrder" />
+                        <span asp-validation-for="@Model.AddManufacturerTemplate.DisplayOrder"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-9 col-md-offset-3">
+                        <button type="button" id="addManufacturerTemplate" class="btn btn-primary">@T("Admin.Common.AddNewRecord")</button>
+                    </div>
+                </div>
+            </div>
             <script>
                 $(document).ready(function () {
-                    $("#templates-manufacturer-grid").kendoGrid({
-                        dataSource: {
-                            type: "json",
-                            transport: {
-                                read: {
-                                    url: "@Html.Raw(Url.Action("ManufacturerTemplates", "Template"))",
-                                    type: "POST",
-                                    dataType: "json",
-                                    data: addAntiForgeryToken
-                                },
-                                create: {
-                                    url: "@Html.Raw(Url.Action("ManufacturerTemplateAdd", "Template"))",
-                                    type: "POST",
-                                    dataType: "json",
-                                    data: addAntiForgeryToken
-                                },
-                                update: {
-                                    url: "@Html.Raw(Url.Action("ManufacturerTemplateUpdate", "Template"))",
-                                    type: "POST",
-                                    dataType: "json",
-                                    data: addAntiForgeryToken
-                                },
-                                destroy: {
-                                    url: "@Html.Raw(Url.Action("ManufacturerTemplateDelete", "Template"))",
-                                    type: "POST",
-                                    dataType: "json",
-                                    data: addAntiForgeryToken
+                    $('#addManufacturerTemplate').click(function () {
+                        $('#addManufacturerTemplate').attr('disabled', true);
+                        var postData = {
+                            Name: $("#@Html.IdFor(model => model.AddManufacturerTemplate.Name)").val(),
+                            ViewPath: $("#@Html.IdFor(model => model.AddManufacturerTemplate.ViewPath)").val(),
+                            DisplayOrder: $("#@Html.IdFor(model => model.AddManufacturerTemplate.DisplayOrder)").val()
+                        };
+                        addAntiForgeryToken(postData);
+
+                        $.ajax({
+                            cache: false,
+                            type: "POST",
+                            url: "@Html.Raw(Url.Action("ManufacturerTemplateAdd", "Template", null))",
+                            data: postData,
+                            success: function (data, textStatus, jqXHR) {
+                                if (data.Result) {
+                                    //reload grid
+                                    updateTable('#templates-manufacturer-grid');
+
+                                    //clear input value
+                                    $("#@Html.IdFor(model => model.AddManufacturerTemplate.Name)").val('');
+                                    $("#@Html.IdFor(model => model.AddManufacturerTemplate.ViewPath)").val('');
+                                    $("#@Html.IdFor(model => model.AddManufacturerTemplate.DisplayOrder)").val('');
+
+                                } else {
+                                    //display errors if returned
+                                    display_nop_error(data);
                                 }
                             },
-                            schema: {
-                                data: "Data",
-                                total: "Total",
-                                errors: "Errors",
-                                model: {
-                                    id: "Id",
-                                    fields: {
-                                        Name: { editable: true, type: "string" },
-                                        ViewPath: { editable: true, type: "string" },
-                                        DisplayOrder: { editable: true, type: "number" },
-                                        Id: { editable: false, type: "number" }
-                                    }
-                                }
-                            },
-                            requestEnd: function (e) {
-                                if (e.type == "create" || e.type == "update") {
-                                    this.read();
-                                }
-                            },
-                            error: function (e) {
-                                display_kendoui_grid_error(e);
-                                // Cancel the changes
-                                this.cancelChanges();
-                            },
-                            pageSize: @(Model.PageSize),
-                            serverPaging: true,
-                            serverFiltering: true,
-                            serverSorting: true
-                        },
-                        pageable: {
-                            refresh: true,
-                            pageSizes: [@(Model.AvailablePageSizes)],
-                            @await Html.PartialAsync("_GridPagerMessages")
-                        },
-                        toolbar: [{ name: "create", text: "@T("Admin.Common.AddNewRecord")" }],
-                        editable: {
-                            confirmation: "@T("Admin.Common.DeleteConfirmation")",
-                            mode: "inline"
-                        },
-                        scrollable: false,
-                        columns: [{
-                            field: "Name",
-                            title: "@T("Admin.System.Templates.Manufacturer.Name")",
-                            width: 300
-                        }, {
-                            field: "ViewPath",
-                            title: "@T("Admin.System.Templates.Manufacturer.ViewPath")",
-                            width: 300
-                        }, {
-                            field: "DisplayOrder",
-                            title: "@T("Admin.System.Templates.Manufacturer.DisplayOrder")",
-                            //integer format
-                            format: "{0:0}",
-                            width: 100
-                        }, {
-                            command: [{
-                                name: "edit",
-                                text: {
-                                    edit: "@T("Admin.Common.Edit")",
-                                    update: "@T("Admin.Common.Update")",
-                                    cancel: "@T("Admin.Common.Cancel")"
-                                }
-                            }, {
-                                name: "destroy",
-                                text: "@T("Admin.Common.Delete")"
-                            }],
-                            width: 200
-                        }]
+                            complete: function (jqXHR, textStatus) {
+                                $('#addManufacturerTemplate').attr('disabled', false);
+                            }
+                        });
                     });
                 });
             </script>

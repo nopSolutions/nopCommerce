@@ -1,113 +1,107 @@
 @model VendorModel
 
-<div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.VendorDetailsSeoTop, additionalData = Model })
-    <div class="panel panel-default">
-        <div class="panel-body">
-            @(Html.LocalizedEditor<VendorModel, VendorLocalizedModel>("vendor-seo-localized",
-                  @<div>
-                      <div class="form-group">
-                          <div class="col-md-3">
-                              <nop-label asp-for="@Model.Locales[item].MetaKeywords" />
-                          </div>
-                          <div class="col-md-9">
-                              <nop-editor asp-for="@Model.Locales[item].MetaKeywords" />
-                              <span asp-validation-for="@Model.Locales[item].MetaKeywords"></span>
-                          </div>
-                      </div>
-                      <div class="form-group">
-                          <div class="col-md-3">
-                              <nop-label asp-for="@Model.Locales[item].MetaDescription" />
-                          </div>
-                          <div class="col-md-9">
-                              <nop-textarea asp-for="@Model.Locales[item].MetaDescription"></nop-textarea>
-                              <span asp-validation-for="@Model.Locales[item].MetaDescription"></span>
-                          </div>
-                      </div>
-                      <div class="form-group">
-                          <div class="col-md-3">
-                              <nop-label asp-for="@Model.Locales[item].MetaTitle" />
-                          </div>
-                          <div class="col-md-9">
-                              <nop-editor asp-for="@Model.Locales[item].MetaTitle" />
-                              <span asp-validation-for="@Model.Locales[item].MetaTitle"></span>
-                          </div>
-                      </div>
-                      <div class="form-group">
-                          <div class="col-md-3">
-                              <nop-label asp-for="@Model.Locales[item].SeName" />
-                          </div>
-                          <div class="col-md-9">
-                              <nop-editor asp-for="@Model.Locales[item].SeName" />
-                              <span asp-validation-for="@Model.Locales[item].SeName"></span>
-                          </div>
-                      </div>
-                      <script>
-                          $(document).ready(function () {
-                              $('#@Html.IdFor(model => model.Locales[item].SeName)').on('input change', function () {
-                                  var parameters = {
-                                      entityId: '@Model.Id',
-                                      entityName: 'Vendor',
-                                      seName: $(this).val()
-                                  };
-                                  warningValidation('@Url.Action("UrlReservedWarning", "Common")', '@Html.NameFor(model => model.Locales[item].SeName)', parameters);
-                              });
-                          });
-                      </script>
-                      <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
-                  </div>
-    ,
-                  @<div>
-                      <div class="form-group">
-                          <div class="col-md-3">
-                              <nop-label asp-for="MetaKeywords" />
-                          </div>
-                          <div class="col-md-9">
-                              <nop-editor asp-for="MetaKeywords" />
-                              <span asp-validation-for="MetaKeywords"></span>
-                          </div>
-                      </div>
-                      <div class="form-group">
-                          <div class="col-md-3">
-                              <nop-label asp-for="MetaDescription" />
-                          </div>
-                          <div class="col-md-9">
-                              <nop-textarea asp-for="MetaDescription"></nop-textarea>
-                              <span asp-validation-for="MetaDescription"></span>
-                          </div>
-                      </div>
-                      <div class="form-group">
-                          <div class="col-md-3">
-                              <nop-label asp-for="MetaTitle" />
-                          </div>
-                          <div class="col-md-9">
-                              <nop-editor asp-for="MetaTitle" />
-                              <span asp-validation-for="MetaTitle"></span>
-                          </div>
-                      </div>
-                      <div class="form-group">
-                          <div class="col-md-3">
-                              <nop-label asp-for="SeName" />
-                          </div>
-                          <div class="col-md-9">
-                              <nop-editor asp-for="SeName" />
-                              <span asp-validation-for="SeName"></span>
-                          </div>
-                      </div>
-                      <script>
-                          $(document).ready(function () {
-                              $('#@Html.IdFor(model => model.SeName)').on('input change', function () {
-                                  var parameters = {
-                                      entityId: '@Model.Id',
-                                      entityName: 'Vendor',
-                                      seName: $(this).val()
-                                  };
-                                  warningValidation('@Url.Action("UrlReservedWarning", "Common")', '@Html.NameFor(model => model.SeName)', parameters);
-                              });
-                          });
-                      </script>
-                  </div>))
+<div class="panel-body">
+    @(Html.LocalizedEditor<VendorModel, VendorLocalizedModel>("vendor-seo-localized",
+    @<div>
+        <div class="form-group">
+            <div class="col-md-3">
+                <nop-label asp-for="@Model.Locales[item].SeName" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="@Model.Locales[item].SeName" />
+                <span asp-validation-for="@Model.Locales[item].SeName"></span>
+            </div>
         </div>
-    </div>
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.VendorDetailsSeoBottom, additionalData = Model })
+        <div class="form-group">
+            <div class="col-md-3">
+                <nop-label asp-for="@Model.Locales[item].MetaTitle" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="@Model.Locales[item].MetaTitle" />
+                <span asp-validation-for="@Model.Locales[item].MetaTitle"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-3">
+                <nop-label asp-for="@Model.Locales[item].MetaKeywords" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="@Model.Locales[item].MetaKeywords" />
+                <span asp-validation-for="@Model.Locales[item].MetaKeywords"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-3">
+                <nop-label asp-for="@Model.Locales[item].MetaDescription" />
+            </div>
+            <div class="col-md-9">
+                <nop-textarea asp-for="@Model.Locales[item].MetaDescription"></nop-textarea>
+                <span asp-validation-for="@Model.Locales[item].MetaDescription"></span>
+            </div>
+         </div>
+        <script>
+          $(document).ready(function () {
+              $('#@Html.IdFor(model => model.Locales[item].SeName)').on('input change', function () {
+                  var parameters = {
+                      entityId: '@Model.Id',
+                      entityName: 'Vendor',
+                      seName: $(this).val()
+                  };
+                  warningValidation('@Url.Action("UrlReservedWarning", "Common")', '@Html.NameFor(model => model.Locales[item].SeName)', parameters);
+              });
+          });
+        </script>
+        <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
+     </div>
+    ,
+        @<div>
+        <div class="form-group">
+            <div class="col-md-3">
+                <nop-label asp-for="SeName" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="SeName" />
+                <span asp-validation-for="SeName"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-3">
+                <nop-label asp-for="MetaTitle" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="MetaTitle" />
+                <span asp-validation-for="MetaTitle"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-3">
+                <nop-label asp-for="MetaKeywords" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="MetaKeywords" />
+                <span asp-validation-for="MetaKeywords"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-3">
+                <nop-label asp-for="MetaDescription" />
+            </div>
+            <div class="col-md-9">
+                <nop-textarea asp-for="MetaDescription"></nop-textarea>
+                <span asp-validation-for="MetaDescription"></span>
+            </div>
+        </div>
+        <script>
+              $(document).ready(function () {
+                  $('#@Html.IdFor(model => model.SeName)').on('input change', function () {
+                      var parameters = {
+                          entityId: '@Model.Id',
+                          entityName: 'Vendor',
+                          seName: $(this).val()
+                      };
+                      warningValidation('@Url.Action("UrlReservedWarning", "Common")', '@Html.NameFor(model => model.SeName)', parameters);
+                  });
+              });
+        </script>
+    </div>))
 </div>

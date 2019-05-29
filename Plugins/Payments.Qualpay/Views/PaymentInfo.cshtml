@@ -1,0 +1,196 @@
+﻿@model Nop.Plugin.Payments.Qualpay.Models.PaymentInfoModel
+
+@inject Nop.Core.Domain.Orders.OrderSettings orderSettings
+@inject Nop.Plugin.Payments.Qualpay.QualpaySettings qualpaySettings
+
+@{
+    Layout = "";
+    Html.AddScriptParts(ResourceLocation.Footer, Nop.Plugin.Payments.Qualpay.QualpayDefaults.EmbeddedFieldsScriptPath, excludeFromBundle: true);
+    Html.AddCssFileParts(Nop.Plugin.Payments.Qualpay.QualpayDefaults.EmbeddedFieldsStylePath, excludeFromBundle: true);
+}
+
+<script asp-location="Footer">
+    $(document).ready(function() {
+        $("#@Html.IdFor(model => model.BillingCardId)").change(toggleBillingCard);
+        toggleBillingCard();
+
+@if (qualpaySettings.UseEmbeddedFields)
+{
+    <text>
+        $('.section.payment-info').before('<form id="qualpay-payment-form"><input type="submit" id="qualpay-payment-form-submit" style="display: none" /></form>');
+
+        var submitForm = false;
+        var errorsExist = false;
+        var stepBack = false;
+        var onePageCheckout = @orderSettings.OnePageCheckoutEnabled.ToString().ToLower();
+        $('.payment-info-next-step-button').attr('onclick', null);
+        $('.payment-info-next-step-button').prop('disabled', true);
+        $('.payment-info-next-step-button').css("opacity", .3);
+
+        var configurationParams = {
+            formId: 'qualpay-payment-form',
+            mode: '@(qualpaySettings.UseSandbox ? "test" : "prod")',
+            transientKey: '@Model.TransientKey',
+            tokenize: false,
+            onSuccess: (data) => {
+                $('#@Html.IdFor(model => model.TokenizedCardId)').val(data.card_id);
+                submitForm = true;
+                $('input.payment-info-next-step-button').click();
+            },
+            onError: (error) => {
+                qpEmbeddedForm.unloadFrame();
+                if (error.msg) {
+                    var currentErrorvalue = $('#@Html.IdFor(model => model.Errors)').val();
+                    $('#@Html.IdFor(model => model.Errors)').val(currentErrorvalue + '|' + error.msg);
+                }
+                if (error.detail) {
+                    error.detail.forEach(function (detail) {
+                        var currentErrorvalue = $('#@Html.IdFor(model => model.Errors)').val();
+                        $('#@Html.IdFor(model => model.Errors)').val(currentErrorvalue + '|' + detail);
+                    });
+                }
+                errorsExist = true;
+                submitForm = true;
+                $('input.payment-info-next-step-button').click();
+            }
+        };
+
+        if (!stepBack) {
+            qpEmbeddedForm.loadFrame('@qualpaySettings.MerchantId', configurationParams);
+        }
+        else {
+            qpEmbeddedForm.unloadFrame();
+        }
+
+        $('input.payment-info-next-step-button').on('click', function (data) {
+            var selectedBillingCardId = $('#@Html.IdFor(model => model.BillingCardId)').val();
+            if (!submitForm && (!selectedBillingCardId || selectedBillingCardId == '@Guid.Empty.ToString()')) {
+                if (!errorsExist && !stepBack) {
+                    $('#qualpay-payment-form-submit').click();
+                }
+                return false;
+            }
+            else if (onePageCheckout) {
+                submitForm = false;
+                PaymentInfo.save();
+            }
+        });
+
+        $(document).on('accordion_section_opened', function (data) {
+            if (data && (data.currentSectionId == 'opc-billing' || data.currentSectionId == 'opc-shipping' || data.currentSectionId == 'opc-shipping_method' || data.currentSectionId == 'opc-payment_method')) {
+                stepBack = true;
+            }
+        });
+
+        $("#qp-embedded-frame").on("load", function () {
+            $('.payment-info-next-step-button').prop('disabled', false);
+            $('.payment-info-next-step-button').css("opacity", 1);
+        });
+
+        $(window).on("beforeunload", function() {
+            qpEmbeddedForm.unloadFrame();
+        });
+    </text>
+}
+    });
+
+    function toggleBillingCard() {
+        var selectedBillingCardId = $('#@Html.IdFor(model => model.BillingCardId)').val();
+        if (!selectedBillingCardId || selectedBillingCardId == '@Guid.Empty.ToString()') {
+            $('#qualpay-card-details').show();
+        } else {
+            $('#qualpay-card-details').hide();
+        }
+    }
+</script>
+
+@if (qualpaySettings.UseCustomerVault && !Model.IsGuest && Model.BillingCards.Any())
+{
+    <table width="100%" cellspacing="2" cellpadding="1" border="0">
+        <tr>
+            <td>
+                <label asp-for="BillingCardId">@T("Plugins.Payments.Qualpay.Customer.Card"):</label>
+            </td>
+            <td>
+                <select asp-for="BillingCardId" asp-items="Model.BillingCards" class="dropdownlists"></select>
+                <span asp-validation-for="BillingCardId"></span>
+            </td>
+        </tr>
+    </table>
+}
+
+<table width="100%" cellspacing="2" cellpadding="1" border="0" id="qualpay-card-details">
+    <style type='text/css'>
+        @@media (max-width: 422px) {
+            #qp-embedded-container {
+                height: 12em;
+            }
+        }
+    </style>
+    @if (qualpaySettings.UseEmbeddedFields)
+    {
+        <tr>
+            <td>
+                <input type="hidden" asp-for="TokenizedCardId">
+                <input type="hidden" asp-for="Errors">
+            </td>
+            <td>
+                <div id="qp-embedded-container" align="center"></div>
+            </td>
+        </tr>
+    }
+    else
+    {
+        <tr>
+            <td>
+                <label asp-for="CardholderName">@T("Payment.CardholderName"):</label>
+            </td>
+            <td>
+                <input type="text" asp-for="CardholderName" style="width: 165px;" autocomplete="off" />
+                <span asp-validation-for="CardholderName"></span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label asp-for="CardNumber">@T("Payment.CardNumber"):</label>
+            </td>
+            <td>
+                <input type="text" asp-for="CardNumber" style="width: 165px;" autocomplete="off" maxlength="22" />
+                <span asp-validation-for="CardNumber"></span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label asp-for="ExpireMonth">@T("Payment.ExpirationDate"):</label>
+            </td>
+            <td>
+                <select asp-for="ExpireMonth" asp-items="Model.ExpireMonths"></select>
+                /
+                <select asp-for="ExpireYear" asp-items="Model.ExpireYears"></select>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label asp-for="CardCode">@T("Payment.CardCode"):</label>
+            </td>
+            <td>
+                <input type="text" asp-for="CardCode" style="width: 60px;" autocomplete="off" maxlength="4" />
+                <span asp-validation-for="CardCode"></span>
+            </td>
+        </tr>
+    }
+    @if (qualpaySettings.UseCustomerVault && !Model.IsGuest && !Model.IsRecurringOrder)
+    {
+        <tr>
+            <td>
+                <label asp-for="SaveCardDetails">@T("Plugins.Payments.Qualpay.Customer.Card.Save"):</label>
+            </td>
+            <td>
+                <input type="checkbox" asp-for="SaveCardDetails" />
+                <span asp-validation-for="SaveCardDetails"></span>
+            </td>
+        </tr>
+    }
+</table>
+
+@Html.NopInlineScripts(ResourceLocation.Footer)

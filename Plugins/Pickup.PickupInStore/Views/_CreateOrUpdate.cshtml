@@ -24,15 +24,17 @@
                         cache: false,
                         type: "GET",
                         url: "@(Url.Action("GetStatesByCountryId", "Country"))",
-                        data: { "countryId": selectedItem},
-                        success: function(data) {
+                        data: {
+                            "countryId": selectedItem
+                        },
+                        success: function (data, textStatus, jqXHR) {
                             ddlStates.html('');
                             $.each(data, function(id, option) {
                                 ddlStates.append($('<option></option>').val(option.id).html(option.name));
                             });
                         },
-                        error: function(xhr, ajaxOptions, thrownError) {
-                            alert('Failed to retrieve states.');
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            $("#getStatesByCountryIdAlert").click();
                         }
                     });
                 });
@@ -58,42 +60,54 @@
                     <span asp-validation-for="Description"></span>
                 </div>
             </div>
-            <div class="form-group">
-                <div class="col-sm-3">
-                    <nop-label asp-for="Address.CountryId" />
+            @if (Model.Address.CountryEnabled)
+            {
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        <nop-label asp-for="Address.CountryId" />
+                    </div>
+                    <div class="col-sm-9">
+                        <nop-select asp-for="Address.CountryId" asp-items="Model.Address.AvailableCountries" />
+                        <span asp-validation-for="Address.CountryId"></span>
+                    </div>
                 </div>
-                <div class="col-sm-9">
-                    <nop-select asp-for="Address.CountryId" asp-items="Model.Address.AvailableCountries" />
-                    <span asp-validation-for="Address.CountryId"></span>
+            }
+            @if (Model.Address.StateProvinceEnabled)
+            {
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        <nop-label asp-for="Address.StateProvinceId" />
+                    </div>
+                    <div class="col-sm-9">
+                        <nop-select asp-for="Address.StateProvinceId" asp-items="Model.Address.AvailableStates" />
+                        <span asp-validation-for="Address.StateProvinceId"></span>
+                    </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-3">
-                    <nop-label asp-for="Address.StateProvinceId" />
+            }
+            @if (Model.Address.CountyEnabled)
+            {
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        <nop-label asp-for="Address.County" />
+                    </div>
+                    <div class="col-sm-9">
+                        <nop-editor asp-for="Address.County" />
+                        <span asp-validation-for="Address.County"></span>
+                    </div>
                 </div>
-                <div class="col-sm-9">
-                    <nop-select asp-for="Address.StateProvinceId" asp-items="Model.Address.AvailableStates" />
-                    <span asp-validation-for="Address.StateProvinceId"></span>
+            }
+            @if (Model.Address.CityEnabled)
+            {
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        <nop-label asp-for="Address.City" />
+                    </div>
+                    <div class="col-sm-9">
+                        <nop-editor asp-for="Address.City" />
+                        <span asp-validation-for="Address.City"></span>
+                    </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-3">
-                    <nop-label asp-for="Address.County" />
-                </div>
-                <div class="col-sm-9">
-                    <nop-editor asp-for="Address.County" />
-                    <span asp-validation-for="Address.County"></span>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-3">
-                    <nop-label asp-for="Address.City" />
-                </div>
-                <div class="col-sm-9">
-                    <nop-editor asp-for="Address.City" />
-                    <span asp-validation-for="Address.City"></span>
-                </div>
-            </div>
+            }
             <div class="form-group">
                 <div class="col-sm-3">
                     <nop-label asp-for="Address.Address1" />
@@ -103,15 +117,18 @@
                     <span asp-validation-for="Address.Address1"></span>
                 </div>
             </div>
-            <div class="form-group">
-                <div class="col-sm-3">
-                    <nop-label asp-for="Address.ZipPostalCode" />
+            @if (Model.Address.ZipPostalCodeEnabled)
+            {
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        <nop-label asp-for="Address.ZipPostalCode" />
+                    </div>
+                    <div class="col-sm-9">
+                        <nop-editor asp-for="Address.ZipPostalCode" />
+                        <span asp-validation-for="Address.ZipPostalCode"></span>
+                    </div>
                 </div>
-                <div class="col-sm-9">
-                    <nop-editor asp-for="Address.ZipPostalCode" />
-                    <span asp-validation-for="Address.ZipPostalCode"></span>
-                </div>
-            </div>
+            }
             <div class="form-group">
                 <div class="col-sm-3">
                     <nop-label asp-for="OpeningHours" />
@@ -151,3 +168,4 @@
         </div>
     </div>
 </div>
+<nop-alert asp-alert-id="getStatesByCountryIdAlert" asp-alert-message="@T("Admin.Common.Alert.States.Failed")" />

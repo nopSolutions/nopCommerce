@@ -3,6 +3,7 @@
 @using Nop.Core.Domain.Media
 @using System.Text
 @using Nop.Services.Media
+@using Nop.Web.Framework.Controllers;
 @inject IDownloadService downloadService
 @inject CatalogSettings catalogSettings
 @if (Model.Count > 0)
@@ -11,9 +12,9 @@
         <dl>
             @foreach (var attribute in Model)
             {
-                var controlId = $"product_attribute_{attribute.Id}";
+                var controlId = $"{NopAttributePrefixDefaults.Product}{attribute.Id}";
                 var textPrompt = !string.IsNullOrEmpty(attribute.TextPrompt) ? attribute.TextPrompt : attribute.Name;
-                <dt id="@($"product_attribute_label_{attribute.Id}")">
+                <dt id="@($"{NopAttributePrefixDefaults.Product}label_{attribute.Id}")">
                     <label class="text-prompt">
                         @textPrompt
                     </label>
@@ -28,7 +29,7 @@
                         </div>
                     }
                 </dt>
-                <dd id="@($"product_attribute_input_{attribute.Id}")">
+                <dd id="@($"{NopAttributePrefixDefaults.Product}input_{attribute.Id}")">
                     @switch (attribute.AttributeControlType)
                     {
                         case AttributeControlType.DropdownList:
@@ -358,9 +359,7 @@
             };
         </script>
     </div>
-}
-@if (Model.Count > 0)
-{
+
     //dynamic update support
     var attributesHaveConditions = Model.Any(x => x.HasCondition);
     var attributesHaveAssociatedPictures = Model.Any(x => x.ProductId > 0);
@@ -372,7 +371,7 @@
         //generate change event script
         foreach (var attribute in Model)
         {
-            var controlId = $"product_attribute_{attribute.Id}";
+            var controlId = $"{NopAttributePrefixDefaults.Product}{attribute.Id}";
             switch (attribute.AttributeControlType)
             {
                 case AttributeControlType.DropdownList:
@@ -415,16 +414,16 @@
             function @(attributeChangeHandlerFuncName)() {
                 $.ajax({
                     cache: false,
-                    url: '@Html.Raw(Url.Action("productdetails_attributechange", "shoppingcart", new {productId = productId, validateAttributeConditions = attributesHaveConditions, loadPicture = attributesHaveAssociatedPictures }))',
+                    url: "@Html.Raw(Url.Action("productdetails_attributechange", "shoppingcart", new {productId = productId, validateAttributeConditions = attributesHaveConditions, loadPicture = attributesHaveAssociatedPictures }))",
                     data: $('#product-details-form').serialize(),
-                    type: 'post',
-                    success: function(data) {
+                    type: "POST",
+                    success: function (data, textStatus, jqXHR) {
                         if (data.price) {
                             $('.price-value-@productId').text(data.price);
                         }
                         if (data.basepricepangv) {
                             $('#base-price-pangv-@productId').text(data.basepricepangv);
-                        }else {
+                        } else {
                             $('#base-price-pangv-@productId').hide();
                         }
                         if (data.sku) {
@@ -447,14 +446,14 @@
                         }
                         if (data.enabledattributemappingids) {
                             for (var i = 0; i < data.enabledattributemappingids.length; i++) {
-                                $('#product_attribute_label_' + data.enabledattributemappingids[i]).show();
-                                $('#product_attribute_input_' + data.enabledattributemappingids[i]).show();
+                                $('#@(NopAttributePrefixDefaults.Product)label_' + data.enabledattributemappingids[i]).show();
+                                $('#@(NopAttributePrefixDefaults.Product)input_' + data.enabledattributemappingids[i]).show();
                             }
                         }
                         if (data.disabledattributemappingids) {
                             for (var i = 0; i < data.disabledattributemappingids.length; i++) {
-                                $('#product_attribute_label_' + data.disabledattributemappingids[i]).hide();
-                                $('#product_attribute_input_' + data.disabledattributemappingids[i]).hide();
+                                $('#@(NopAttributePrefixDefaults.Product)label_' + data.disabledattributemappingids[i]).hide();
+                                $('#@(NopAttributePrefixDefaults.Product)input_' + data.disabledattributemappingids[i]).hide();
                             }
                         }
                         if (data.pictureDefaultSizeUrl) {

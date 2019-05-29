@@ -1,79 +1,37 @@
 @model GiftCardModel
-
-<div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.GiftCardDetailsHistoryTop, additionalData = Model })
-    <div class="panel panel-default">
-        <div class="panel-body">
-            <div id="usagehistory-grid"></div>
-
-            <script>
-                $(document).ready(function() {
-                    $("#usagehistory-grid").kendoGrid({
-                        dataSource: {
-                            type: "json",
-                            transport: {
-                                read: {
-                                    url: "@Html.Raw(Url.Action("UsageHistoryList", "GiftCard"))",
-                                    type: "POST",
-                                    dataType: "json",
-                                    data: function() {
-                                        var data = {
-                                            GiftCardId: '@(Model.Id)'
-                                        };
-                                        addAntiForgeryToken(data);
-                                        return data;
-                                    }
-                                }
-                            },
-                            schema: {
-                                data: "Data",
-                                total: "Total",
-                                errors: "Errors"
-                            },
-                            error: function(e) {
-                                display_kendoui_grid_error(e);
-                                // Cancel the changes
-                                this.cancelChanges();
-                            },
-                            pageSize: @(Model.GiftCardUsageHistorySearchModel.PageSize),
-                            serverPaging: true,
-                            serverFiltering: true,
-                            serverSorting: true
-                        },
-                        pageable: {
-                            refresh: true,
-                            pageSizes: [@(Model.GiftCardUsageHistorySearchModel.AvailablePageSizes)],
-                            @await Html.PartialAsync("_GridPagerMessages")
-                        },
-                        editable: {
-                            confirmation: "@T("Admin.Common.DeleteConfirmation")",
-                            mode: "inline"
-                        },
-                        scrollable: false,
-                        columns: [
-                        {
-                            field: "CreatedOn",
-                            title: "@T("Admin.GiftCards.History.CreatedOn")",
-                            width: 200,
-                            type: "date",
-                            format: "{0:G}"
-                        }, {
-                            field: "CustomOrderNumber",
-                            title: "@T("Admin.GiftCards.History.CustomOrderNumber")",
-                            width: 200,
-                            headerAttributes: { style: "text-align:center" },
-                            attributes: { style: "text-align:center" },
-                            template: '<a class="btn btn-default" href="@Url.Content("~/Admin/Order/Edit/")#=OrderId#"><i class="fa fa-eye"></i>#=CustomOrderNumber# - @T("Admin.Common.View")</a>'
-                        }, {
-                            field: "UsedValue",
-                            title: "@T("Admin.GiftCards.History.UsedValue")",
-                            width: 200
-                        }
-                        ]
-                    });
-                });
-            </script>
-        </div>
-    </div>
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.GiftCardDetailsHistoryBottom, additionalData = Model })
+<div class="panel-body">
+    @await Html.PartialAsync("Table", new DataTablesModel
+    {
+        Name = "usagehistory-grid",
+        UrlRead = new DataUrl("UsageHistoryList", "GiftCard", new RouteValueDictionary { [nameof(Model.GiftCardUsageHistorySearchModel.GiftCardId)] = Model.GiftCardUsageHistorySearchModel.GiftCardId }),
+        Length = Model.GiftCardUsageHistorySearchModel.PageSize,
+        LengthMenu = Model.GiftCardUsageHistorySearchModel.AvailablePageSizes,
+        ColumnCollection = new List<ColumnProperty>
+        {
+            new ColumnProperty(nameof(GiftCardUsageHistoryModel.CreatedOn))
+            {
+                Title = T("Admin.GiftCards.History.CreatedOn").Text,
+                Width = "200",
+                Render = new RenderDate()
+            },
+            new ColumnProperty(nameof(GiftCardUsageHistoryModel.OrderId))
+            {
+                Title = T("Admin.GiftCards.History.CustomOrderNumber").Text,
+                Width = "200",
+                ClassName =  NopColumnClassDefaults.Button,
+                Render = new RenderCustom("renderColumnOrderNumber")
+            },
+            new ColumnProperty(nameof(GiftCardUsageHistoryModel.UsedValue))
+            {
+                Title = T("Admin.GiftCards.History.UsedValue").Text,
+                Width = "200"
+            }
+        }
+    })
+    <script>
+        function renderColumnOrderNumber(data, type, row, meta) {
+            var textRenderer = $.fn.dataTable.render.text().display;
+            return '<a class="btn btn-default" href="@Url.Content("~/Admin/Order/Edit/")' + row.OrderId + '"><i class="fa fa-eye"></i>' + textRenderer(row.CustomOrderNumber) + ' - @T("Admin.Common.View")</a>';
+        }
+    </script>
 </div>
