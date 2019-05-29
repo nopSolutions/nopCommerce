@@ -667,6 +667,12 @@ namespace Nop.Plugin.Tax.Avalara
                 TaxOriginAddressType = TaxOriginAddressType.ShippingOrigin
             });
 
+            if (!_widgetSettings.ActiveWidgetSystemNames.Contains(AvalaraTaxDefaults.SystemName))
+            {
+                _widgetSettings.ActiveWidgetSystemNames.Add(AvalaraTaxDefaults.SystemName);
+                _settingService.SaveSetting(_widgetSettings);
+            }
+
             //locales
             _localizationService.AddOrUpdatePluginLocaleResource("Enums.Nop.Plugin.Tax.Avalara.Domain.LogType.Create", "Create request");
             _localizationService.AddOrUpdatePluginLocaleResource("Enums.Nop.Plugin.Tax.Avalara.Domain.LogType.CreateResponse", "Create response");
@@ -872,5 +878,10 @@ namespace Nop.Plugin.Tax.Avalara
         }
 
         #endregion
+
+        /// <summary>
+        /// Gets a value indicating whether to hide this plugin on the widget list page in the admin area
+        /// </summary>
+        public bool HideInWidgetList => true;
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
 using Nop.Core;
+using Nop.Core.Domain.Cms;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Plugin.Payments.Qualpay.Domain;
@@ -32,6 +33,7 @@ namespace Nop.Plugin.Payments.Qualpay
         private readonly IWebHelper _webHelper;
         private readonly QualpayManager _qualpayManager;
         private readonly QualpaySettings _qualpaySettings;
+        private readonly WidgetSettings _widgetSettings;
 
         #endregion
 
@@ -42,7 +44,8 @@ namespace Nop.Plugin.Payments.Qualpay
             ISettingService settingService,
             IWebHelper webHelper,
             QualpayManager qualpayManager,
-            QualpaySettings qualpaySettings)
+            QualpaySettings qualpaySettings,
+            WidgetSettings widgetSettings)
         {
             _localizationService = localizationService;
             _paymentService = paymentService;
@@ -50,6 +53,7 @@ namespace Nop.Plugin.Payments.Qualpay
             _webHelper = webHelper;
             _qualpayManager = qualpayManager;
             _qualpaySettings = qualpaySettings;
+            _widgetSettings = widgetSettings;
         }
 
         #endregion
@@ -376,6 +380,12 @@ namespace Nop.Plugin.Payments.Qualpay
                 PaymentTransactionType = TransactionType.Sale
             });
 
+            if (!_widgetSettings.ActiveWidgetSystemNames.Contains(QualpayDefaults.SystemName))
+            {
+                _widgetSettings.ActiveWidgetSystemNames.Add(QualpayDefaults.SystemName);
+                _settingService.SaveSetting(_widgetSettings);
+            }
+
             //locales
             _localizationService.AddOrUpdatePluginLocaleResource("Enums.Nop.Plugin.Payments.Qualpay.Domain.Authorization", "Authorization");
             _localizationService.AddOrUpdatePluginLocaleResource("Enums.Nop.Plugin.Payments.Qualpay.Domain.Sale", "Sale (authorization and capture)");
@@ -433,6 +443,11 @@ namespace Nop.Plugin.Payments.Qualpay
         public override void Uninstall()
         {
             //settings
+            if (_widgetSettings.ActiveWidgetSystemNames.Contains(QualpayDefaults.SystemName))
+            {
+                _widgetSettings.ActiveWidgetSystemNames.Remove(QualpayDefaults.SystemName);
+                _settingService.SaveSetting(_widgetSettings);
+            }
             _settingService.DeleteSetting<QualpaySettings>();
 
             //locales
@@ -529,6 +544,11 @@ namespace Nop.Plugin.Payments.Qualpay
         /// Gets a payment method description that will be displayed on checkout pages in the public store
         /// </summary>
         public string PaymentMethodDescription => _localizationService.GetResource("Plugins.Payments.Qualpay.PaymentMethodDescription");
+
+        /// <summary>
+        /// Gets a value indicating whether to hide this plugin on the widget list page in the admin area
+        /// </summary>
+        public bool HideInWidgetList => true;
 
         #endregion
     }

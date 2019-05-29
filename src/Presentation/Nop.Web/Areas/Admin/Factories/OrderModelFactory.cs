@@ -487,6 +487,8 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare billing address
             model.BillingAddress = order.BillingAddress.ToModel(model.BillingAddress);
+            model.BillingAddress.CountryName = order.BillingAddress.Country?.Name;
+            model.BillingAddress.StateProvinceName = order.BillingAddress.StateProvince?.Name;
             PrepareAddressModel(model.BillingAddress, order.BillingAddress);
 
             if (order.AllowStoringCreditCardNumber)
@@ -568,6 +570,8 @@ namespace Nop.Web.Areas.Admin.Factories
             if (!order.PickupInStore)
             {
                 model.ShippingAddress = order.ShippingAddress.ToModel(model.ShippingAddress);
+                model.ShippingAddress.CountryName = order.ShippingAddress.Country?.Name;
+                model.ShippingAddress.StateProvinceName = order.ShippingAddress.StateProvince?.Name;
                 PrepareAddressModel(model.ShippingAddress, order.ShippingAddress);
                 model.ShippingAddressGoogleMapsUrl = $"https://maps.google.com/maps?f=q&hl=en&ie=UTF8&oe=UTF8&geocode=&q={WebUtility.UrlEncode(order.ShippingAddress.Address1 + " " + order.ShippingAddress.ZipPostalCode + " " + order.ShippingAddress.City + " " + (order.ShippingAddress.Country != null ? order.ShippingAddress.Country.Name : ""))}";
             }

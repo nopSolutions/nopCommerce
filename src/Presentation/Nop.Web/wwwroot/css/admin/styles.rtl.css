@@ -1644,8 +1644,19 @@ span.grid-report-item.red {
   margin-bottom: 1px;
   padding: 5px 12px;
 }
-.data-tables-length {
+div.dataTables_wrapper div.dataTables_length {
   margin: 5px 5px 0 5px;
+}
+
+div.dataTables_wrapper div.dataTables_info {
+  padding-top: 0;
+  margin-top: 10px;
+}
+
+div.dataTables_wrapper .data-tables-refresh > div {
+  float: none;
+  margin-top: 2px;
+  width: auto;
 }
 
 .table-bordered {
@@ -1777,6 +1788,12 @@ div.dataTables_wrapper div.dataTables_paginate{
       width: 100%;
       margin-right: 0;
     }
+    div.dataTables_wrapper div.dataTables_info {
+      margin-top: 0;
+    }
+    div.dataTables_wrapper .data-tables-refresh {
+      margin-top: 8px;
+    }
     .float-lg-left {
       float: none;
     }
@@ -1811,7 +1828,7 @@ div.dataTables_wrapper div.dataTables_paginate{
     .panel-search .form-control {
         max-width: 100%;
     }
-    .data-tables-length {
+    div.dataTables_wrapper div.dataTables_length {
       margin-left: 0;
     }
 }

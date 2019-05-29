@@ -1,5 +1,5 @@
 ﻿Steps:
-1. Backup your existing database
+1. Make a backup of everything on your site, including the database. This is extremely important so that you can roll back to a running site no matter what happens during migration.
 2. Execute upgrade.sql script over your database
 3. Remove all files from the previous version except App_Data\dataSettings.json (Settings.txt) and App_Data\installedPlugins.json (InstalledPlugins.txt)
 4. Upload new site files

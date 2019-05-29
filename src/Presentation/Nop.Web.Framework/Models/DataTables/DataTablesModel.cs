@@ -22,6 +22,7 @@ namespace Nop.Web.Framework.Models.DataTables
         {
             //set default values
             Info = true;
+            RefreshButton = true;
             ServerSide = true;
             Processing = true;
             Paging = true;
@@ -91,6 +92,11 @@ namespace Nop.Web.Framework.Models.DataTables
         public bool Info { get; set; }
 
         /// <summary>
+        /// Enable or disable refresh button
+        /// </summary>
+        public bool RefreshButton { get; set; }
+
+        /// <summary>
         /// Pagination button display options.
         /// </summary>
         public string PagingType { get; set; }
@@ -114,11 +120,6 @@ namespace Nop.Web.Framework.Models.DataTables
         /// Feature control ordering (sorting) abilities in DataTables
         /// </summary>
         public bool Ordering { get; set; }
-
-        /// <summary>
-        /// Determines whether the table header should be fixed when scrolling
-        /// </summary>
-        public bool FixedHeader { get; set; }
 
         /// <summary>
         /// Gets or sets custom render header function name(js)
