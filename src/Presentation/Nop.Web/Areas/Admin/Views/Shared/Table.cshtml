@@ -192,6 +192,23 @@
             }
         }
 
+        var entityMap = {
+          '&': '&amp;',
+          '<': '&lt;',
+          '>': '&gt;',
+          '"': '&quot;',
+          "'": '&#39;',
+          '/': '&#x2F;',
+          '`': '&#x60;',
+          '=': '&#x3D;'
+        };
+
+        function escapeHtml (value) {
+          return String(value).replace(/[&<>"'`=\/]/g, function (s) {
+            return entityMap[s];
+          });
+        }
+
         function setEditStateValue_@(model_name)(curRow) {
             for (var cellName in editRowData_@(model_name)) {
                 var columnType = 'string';
@@ -215,7 +232,8 @@
                     }
                 }
                 if (columnType == 'string') {
-                    $($(curRow).children("[data-columnname='" + cellName + "']")[0]).html('<input value="' + editRowData_@(model_name)[cellName] + '" class="userinput"  style="width: 99% " />');
+                    var strValue = editRowData_@(model_name)[cellName];
+                    $($(curRow).children("[data-columnname='" + cellName + "']")[0]).html('<input value="' + escapeHtml(strValue) + '" class="userinput"  style="width: 99% " />');
                 }
             }
         }
