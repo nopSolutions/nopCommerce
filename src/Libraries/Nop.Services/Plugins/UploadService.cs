@@ -242,8 +242,16 @@ namespace Nop.Services.Plugins
                         var fileName = entry.FullName.Substring(itemPath.Length);
                         if (string.IsNullOrEmpty(fileName))
                             continue;
+                        
+                        var filePath = _fileProvider.Combine(pathToUpload, fileName);
 
-                        var filePath = _fileProvider.Combine(pathToUpload, fileName.Replace("/", "\\"));
+                        //if it's a folder, we need to create it
+                        if (string.IsNullOrEmpty(entry.Name) && !_fileProvider.DirectoryExists(filePath))
+                        {
+                            _fileProvider.CreateDirectory(filePath);
+                            continue;
+                        }
+
                         var directoryPath = _fileProvider.GetDirectoryName(filePath);
 
                         //whether the file directory is already exists, otherwise create the new one
