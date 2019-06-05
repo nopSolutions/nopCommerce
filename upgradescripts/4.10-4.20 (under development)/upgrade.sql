@@ -2671,3 +2671,143 @@ BEGIN
 	ALTER TABLE [TierPrice] ALTER column [EndDateTimeUtc] [datetime2](7) NULL
 END
 GO	
+
+-- alter procedure
+ALTER PROCEDURE [FullText_Enable]
+AS
+BEGIN
+	--create catalog
+	EXEC('
+	IF NOT EXISTS (SELECT 1 FROM sys.fulltext_catalogs WHERE [name] = ''nopCommerceFullTextCatalog'')
+		CREATE FULLTEXT CATALOG [nopCommerceFullTextCatalog] AS DEFAULT')
+
+	DECLARE @SQL nvarchar(500);
+	DECLARE @index_name nvarchar(1000)
+	DECLARE @ParmDefinition nvarchar(500);
+
+	SELECT @SQL = N'SELECT @index_name_out = i.name FROM sys.tables AS tbl INNER JOIN sys.indexes AS i ON (i.index_id > 0 and i.is_hypothetical = 0) AND (i.object_id=tbl.object_id) WHERE (i.is_unique=1 and i.is_disabled=0) and (tbl.name=@table_name)'
+	SELECT @ParmDefinition = N'@table_name varchar(100), @index_name_out nvarchar(1000) OUTPUT'
+
+	EXEC sp_executesql @SQL, @ParmDefinition, @table_name = 'Product', @index_name_out=@index_name OUTPUT
+	
+	--create indexes
+	DECLARE @create_index_text nvarchar(4000)
+	SET @create_index_text = '
+	IF NOT EXISTS (SELECT 1 FROM sys.fulltext_indexes WHERE object_id = object_id(''[Product]''))
+		CREATE FULLTEXT INDEX ON [Product]([Name], [ShortDescription], [FullDescription])
+		KEY INDEX [' + @index_name +  '] ON [nopCommerceFullTextCatalog] WITH CHANGE_TRACKING AUTO'
+	EXEC(@create_index_text)
+
+	EXEC sp_executesql @SQL, @ParmDefinition, @table_name = 'LocalizedProperty', @index_name_out=@index_name OUTPUT
+	
+	SET @create_index_text = '
+	IF NOT EXISTS (SELECT 1 FROM sys.fulltext_indexes WHERE object_id = object_id(''[LocalizedProperty]''))
+		CREATE FULLTEXT INDEX ON [LocalizedProperty]([LocaleValue])
+		KEY INDEX [' + @index_name +  '] ON [nopCommerceFullTextCatalog] WITH CHANGE_TRACKING AUTO'
+	EXEC(@create_index_text)
+
+	EXEC sp_executesql @SQL, @ParmDefinition, @table_name = 'ProductTag', @index_name_out=@index_name OUTPUT
+
+	SET @create_index_text = '
+	IF NOT EXISTS (SELECT 1 FROM sys.fulltext_indexes WHERE object_id = object_id(''[ProductTag]''))
+		CREATE FULLTEXT INDEX ON [ProductTag]([Name])
+		KEY INDEX [' + @index_name +  '] ON [nopCommerceFullTextCatalog] WITH CHANGE_TRACKING AUTO'
+	EXEC(@create_index_text)
+END
+GO
+
+-- alter procedure
+ALTER PROCEDURE [CategoryLoadAllPaged]
+(
+    @ShowHidden         BIT = 0,
+    @Name               NVARCHAR(MAX) = NULL,
+    @StoreId            INT = 0,
+    @CustomerRoleIds	NVARCHAR(MAX) = NULL,
+    @PageIndex			INT = 0,
+	@PageSize			INT = 2147483644,
+    @TotalRecords		INT = NULL OUTPUT
+)
+AS
+BEGIN
+	SET NOCOUNT ON
+
+    --filter by customer role IDs (access control list)
+	SET @CustomerRoleIds = ISNULL(@CustomerRoleIds, '')
+	CREATE TABLE #FilteredCustomerRoleIds
+	(
+		CustomerRoleId INT NOT NULL
+	)
+	INSERT INTO #FilteredCustomerRoleIds (CustomerRoleId)
+	SELECT CAST(data AS INT) FROM [nop_splitstring_to_table](@CustomerRoleIds, ',')
+	DECLARE @FilteredCustomerRoleIdsCount INT = (SELECT COUNT(1) FROM #FilteredCustomerRoleIds)
+
+    --ordered categories
+    CREATE TABLE #OrderedCategoryIds
+	(
+		[Id] int IDENTITY (1, 1) NOT NULL,
+		[CategoryId] int NOT NULL
+	)
+    
+    --get max length of DisplayOrder and Id columns (used for padding Order column)
+    DECLARE @lengthId INT = (SELECT LEN(MAX(Id)) FROM [Category])
+    DECLARE @lengthOrder INT = (SELECT LEN(MAX(DisplayOrder)) FROM [Category])
+
+    --get category tree
+    ;WITH [CategoryTree]
+    AS (SELECT [Category].[Id] AS [Id], 
+		(select RIGHT(REPLICATE('0', @lengthOrder)+ RTRIM(CAST([Category].[DisplayOrder] AS NVARCHAR(MAX))), @lengthOrder)) + '-' + (select RIGHT(REPLICATE('0', @lengthId)+ RTRIM(CAST([Category].[Id] AS NVARCHAR(MAX))), @lengthId))  AS [Order]
+        FROM [Category] WHERE [Category].[ParentCategoryId] = 0
+        UNION ALL
+        SELECT [Category].[Id] AS [Id], 
+		[CategoryTree].[Order] + '|' + (select RIGHT(REPLICATE('0', @lengthOrder)+ RTRIM(CAST([Category].[DisplayOrder] AS NVARCHAR(MAX))), @lengthOrder)) + '-' + (select RIGHT(REPLICATE('0', @lengthId)+ RTRIM(CAST([Category].[Id] AS NVARCHAR(MAX))), @lengthId))  AS [Order]
+        FROM [Category]
+        INNER JOIN [CategoryTree] ON [CategoryTree].[Id] = [Category].[ParentCategoryId])
+    INSERT INTO #OrderedCategoryIds ([CategoryId])
+    SELECT [Category].[Id]
+    FROM [CategoryTree]
+    RIGHT JOIN [Category] ON [CategoryTree].[Id] = [Category].[Id]
+
+    --filter results
+    WHERE [Category].[Deleted] = 0
+    AND (@ShowHidden = 1 OR [Category].[Published] = 1)
+    AND (@Name IS NULL OR @Name = '' OR [Category].[Name] LIKE ('%' + @Name + '%'))
+    AND (@ShowHidden = 1 OR @FilteredCustomerRoleIdsCount  = 0 OR [Category].[SubjectToAcl] = 0
+        OR EXISTS (SELECT 1 FROM #FilteredCustomerRoleIds [roles] WHERE [roles].[CustomerRoleId] IN
+            (SELECT [acl].[CustomerRoleId] FROM [AclRecord] acl WITH (NOLOCK) WHERE [acl].[EntityId] = [Category].[Id] AND [acl].[EntityName] = 'Category')
+        )
+    )
+    AND (@StoreId = 0 OR [Category].[LimitedToStores] = 0
+        OR EXISTS (SELECT 1 FROM [StoreMapping] sm WITH (NOLOCK)
+			WHERE [sm].[EntityId] = [Category].[Id] AND [sm].[EntityName] = 'Category' AND [sm].[StoreId] = @StoreId
+		)
+    )
+    ORDER BY ISNULL([CategoryTree].[Order], 1)
+
+    --total records
+    SET @TotalRecords = @@ROWCOUNT
+
+    --paging
+    SELECT [Category].* FROM #OrderedCategoryIds AS [Result] INNER JOIN [Category] ON [Result].[CategoryId] = [Category].[Id]
+    WHERE ([Result].[Id] > @PageSize * @PageIndex AND [Result].[Id] <= @PageSize * (@PageIndex + 1))
+    ORDER BY [Result].[Id]
+
+    DROP TABLE #FilteredCustomerRoleIds
+    DROP TABLE #OrderedCategoryIds
+END
+
+-- delete unused functions
+IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[nop_getnotnullnotempty]') AND type = N'FN')
+BEGIN
+	DROP FUNCTION [nop_getnotnullnotempty]
+END
+GO
+IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[nop_getprimarykey_indexname]') AND type = N'FN')
+BEGIN
+	DROP FUNCTION [nop_getprimarykey_indexname]
+END
+GO
+IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[nop_padright]') AND type = N'FN')
+BEGIN
+	DROP FUNCTION [nop_padright]
+END
+GO
