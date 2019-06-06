@@ -2,7 +2,7 @@
   "Group": "Payment methods",
   "FriendlyName": "Credit Card",
   "SystemName": "Payments.Square",
-  "Version": "1.31",
+  "Version": "1.32",
   "SupportedVersions": [ "4.20" ],
   "Author": "nopCommerce team",
   "DisplayOrder": 1,
