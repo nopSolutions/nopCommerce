@@ -75,7 +75,7 @@
                         LengthMenu = Model.BlogPosts.AvailablePageSizes,
                         Filters = new List<FilterParameter>
                         {
-                            new FilterParameter(nameof(Model.BlogPosts.SearchStoreId))
+                            new FilterParameter(nameof(Model.BlogPosts.SearchStoreId), nameof(Model.BlogPosts))
                         },
                         ColumnCollection = new List<ColumnProperty>
                         {
