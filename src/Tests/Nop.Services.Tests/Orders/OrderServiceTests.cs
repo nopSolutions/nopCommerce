@@ -8,6 +8,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Events;
 using Nop.Services.Catalog;
 using Nop.Services.Directory;
 using Nop.Services.Events;
@@ -120,5 +121,42 @@ namespace Nop.Services.Tests.Orders {
             var foundedOrder = _orderService.GetOrderByGuid(knownGuid);
             foundedOrder.Id.ShouldEqual(order.Id);
         }
+
+        [Test]
+        public void it_should_throw_exception_if_order_is_null_when_delete_order() 
+        {
+            Assert.Throws(typeof(ArgumentNullException), () => _orderService.DeleteOrder(null));
+        }
+
+        [Test]
+        public void it_should_delete_order() 
+        {
+            var order = new Order();
+
+            _orderService.DeleteOrder(order);
+
+            order.Deleted.ShouldBeTrue();
+            _orderRepository.Verify(repo => repo.Update(order), Times.Once);
+            _eventPublisher.Verify(publisher => publisher.Publish(It.Is<EntityUpdatedEvent<Order>>(e => e.Entity == order)), Times.Once);
+        }
+
+        [Test]
+        public void it_should_throw_if_order_is_null_when_insert_order()
+        {
+            Assert.Throws(typeof(ArgumentNullException), () => _orderService.InsertOrder(null));
+        }
+
+        [Test]
+        public void it_should_insert_order() 
+        {
+            var order = new Order();
+
+            _orderService.InsertOrder(order);
+
+            _orderRepository.Verify(repo => repo.Insert(order), Times.Once);
+            _eventPublisher.Verify(publisher => publisher.Publish(It.Is<EntityInsertedEvent<Order>>(e => e.Entity == order)), Times.Once);
+        }
+
+    
     }
 }
