@@ -157,6 +157,23 @@ namespace Nop.Services.Tests.Orders {
             _eventPublisher.Verify(publisher => publisher.Publish(It.Is<EntityInsertedEvent<Order>>(e => e.Entity == order)), Times.Once);
         }
 
+        [Test]
+        public void it_should_throw_if_order_is_null_when_update_order()
+        {
+            Assert.Throws(typeof(ArgumentNullException), () => _orderService.UpdateOrder(null));
+        }
+
+        [Test]
+        public void it_should_update_order() 
+        {
+            var order = new Order();
+
+            _orderService.UpdateOrder(order);
+
+            _orderRepository.Verify(repo => repo.Update(order), Times.Once);
+            _eventPublisher.Verify(publisher => publisher.Publish(It.Is<EntityUpdatedEvent<Order>>(e => e.Entity == order)), Times.Once);
+        }
+
     
     }
 }
