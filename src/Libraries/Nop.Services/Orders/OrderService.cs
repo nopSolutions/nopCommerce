@@ -116,11 +116,7 @@ namespace Nop.Services.Orders
             if (orderGuid == Guid.Empty)
                 return null;
 
-            var query = from o in _orderRepository.Table
-                        where o.OrderGuid == orderGuid
-                        select o;
-            var order = query.FirstOrDefault();
-            return order;
+            return _orderRepository.Table.FirstOrDefault(o => o.OrderGuid == orderGuid);
         }
 
         /// <summary>
