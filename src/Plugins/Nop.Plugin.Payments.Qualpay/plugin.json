@@ -3,7 +3,7 @@
   "FriendlyName": "Qualpay",
   "SystemName": "Payments.Qualpay",
   "Version": "1.56",
-  "SupportedVersions": [ "4.20" ],
+  "SupportedVersions": [ "4.30" ],
   "Author": "nopCommerce team",
   "DisplayOrder": 1,
   "FileName": "Nop.Plugin.Payments.Qualpay.dll",

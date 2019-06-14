@@ -3,7 +3,7 @@
   "FriendlyName": "Manual (Fixed or By Weight and By Total)",
   "SystemName": "Shipping.FixedByWeightByTotal",
   "Version": "2.19",
-  "SupportedVersions": [ "4.20" ],
+  "SupportedVersions": [ "4.30" ],
   "Author": "nopCommerce team",
   "DisplayOrder": 1,
   "FileName": "Nop.Plugin.Shipping.FixedByWeightByTotal.dll",

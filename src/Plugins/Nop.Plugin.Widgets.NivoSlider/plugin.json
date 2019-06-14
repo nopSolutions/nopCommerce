@@ -3,7 +3,7 @@
   "FriendlyName": "Nivo Slider",
   "SystemName": "Widgets.NivoSlider",
   "Version": "1.34",
-  "SupportedVersions": [ "4.20" ],
+  "SupportedVersions": [ "4.30" ],
   "Author": "nopCommerce team",
   "DisplayOrder": 1,
   "FileName": "Nop.Plugin.Widgets.NivoSlider.dll",

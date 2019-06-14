@@ -3,7 +3,7 @@
   "FriendlyName": "Google Analytics",
   "SystemName": "Widgets.GoogleAnalytics",
   "Version": "1.58",
-  "SupportedVersions": [ "4.20" ],
+  "SupportedVersions": [ "4.30" ],
   "Author": "nopCommerce team, Nicolas Muniere",
   "DisplayOrder": 1,
   "FileName": "Nop.Plugin.Widgets.GoogleAnalytics.dll",

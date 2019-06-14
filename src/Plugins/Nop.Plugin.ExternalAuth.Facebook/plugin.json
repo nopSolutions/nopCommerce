@@ -3,7 +3,7 @@
   "FriendlyName": "Facebook authentication",
   "SystemName": "ExternalAuth.Facebook",
   "Version": "1.58",
-  "SupportedVersions": [ "4.20" ],
+  "SupportedVersions": [ "4.30" ],
   "Author": "nopCommerce team",
   "DisplayOrder": 5,
   "FileName": "Nop.Plugin.ExternalAuth.Facebook.dll",
