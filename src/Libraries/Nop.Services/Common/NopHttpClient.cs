@@ -78,19 +78,22 @@ namespace Nop.Services.Common
         /// Get official news RSS
         /// </summary>
         /// <returns>The asynchronous task whose result contains news RSS feed</returns>
-        public virtual async Task<RssFeed> GetNewsRssAsync()
+        public virtual Task<RssFeed> GetNewsRssAsync()
         {
-            //prepare URL to request
-            var url = string.Format(NopCommonDefaults.NopNewsRssPath,
-                NopVersion.CurrentVersion,
-                _webHelper.IsLocalRequest(_httpContextAccessor.HttpContext.Request),
-                _adminAreaSettings.HideAdvertisementsOnAdminArea,
-                _webHelper.GetStoreLocation())
-                .ToLowerInvariant();
+            //rss feed not working anymore
+            return Task.FromResult(default(RssFeed));
 
-            //get response
-            var stream = await _httpClient.GetStreamAsync(url);
-            return await RssFeed.LoadAsync(stream);
+            ////prepare URL to request
+            //var url = string.Format(NopCommonDefaults.NopNewsRssPath,
+            //    NopVersion.CurrentVersion,
+            //    _webHelper.IsLocalRequest(_httpContextAccessor.HttpContext.Request),
+            //    _adminAreaSettings.HideAdvertisementsOnAdminArea,
+            //    _webHelper.GetStoreLocation())
+            //    .ToLowerInvariant();
+
+            ////get response
+            //var stream = await _httpClient.GetStreamAsync(url);
+            //return await RssFeed.LoadAsync(stream);
         }
 
         /// <summary>

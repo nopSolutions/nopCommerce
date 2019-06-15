@@ -82,32 +82,34 @@ namespace Nop.Web.Areas.Admin.Factories
             };
 
             var rssData = _cacheManager.Get(NopModelCacheDefaults.OfficialNewsModelKey, () => _nopHttpClient.GetNewsRssAsync().Result);
-
-            for (var i = 0; i < rssData.Items.Count; i++)
+            if (rssData != null)
             {
-                var item = rssData.Items.ElementAt(i);
-                var newsItem = new NopCommerceNewsDetailsModel
+                for (var i = 0; i < rssData.Items.Count; i++)
                 {
-                    Title = item.TitleText,
-                    Summary = item.ContentText,
-                    Url = item.Url.OriginalString,
-                    PublishDate = item.PublishDate
-                };
-                model.Items.Add(newsItem);
-
-                //has new items?
-                if (i == 0)
-                {
-                    var firstRequest = string.IsNullOrEmpty(_adminAreaSettings.LastNewsTitleAdminArea);
-                    if (_adminAreaSettings.LastNewsTitleAdminArea != newsItem.Title)
+                    var item = rssData.Items.ElementAt(i);
+                    var newsItem = new NopCommerceNewsDetailsModel
                     {
-                        _adminAreaSettings.LastNewsTitleAdminArea = newsItem.Title;
-                        _settingService.SaveSetting(_adminAreaSettings);
+                        Title = item.TitleText,
+                        Summary = item.ContentText,
+                        Url = item.Url.OriginalString,
+                        PublishDate = item.PublishDate
+                    };
+                    model.Items.Add(newsItem);
 
-                        if (!firstRequest)
+                    //has new items?
+                    if (i == 0)
+                    {
+                        var firstRequest = string.IsNullOrEmpty(_adminAreaSettings.LastNewsTitleAdminArea);
+                        if (_adminAreaSettings.LastNewsTitleAdminArea != newsItem.Title)
                         {
-                            //new item
-                            model.HasNewItems = true;
+                            _adminAreaSettings.LastNewsTitleAdminArea = newsItem.Title;
+                            _settingService.SaveSetting(_adminAreaSettings);
+
+                            if (!firstRequest)
+                            {
+                                //new item
+                                model.HasNewItems = true;
+                            }
                         }
                     }
                 }
