@@ -1,0 +1,471 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<FxCopProject Version="10.0" Name="My FxCop Project">
+ <ProjectOptions>
+  <SharedProject>True</SharedProject>
+  <Stylesheet Apply="False">$(FxCopDir)\Xml\FxCopReport.xsl</Stylesheet>
+  <SaveMessages>
+   <Project Status="Active, Excluded, Good, Noise" NewOnly="False" />
+   <Report Status="Active, Good, Noise" NewOnly="False" />
+  </SaveMessages>
+  <ProjectFile Compress="True" DefaultTargetCheck="True" DefaultRuleCheck="True" SaveByRuleGroup="" Deterministic="True" />
+  <EnableMultithreadedLoad>True</EnableMultithreadedLoad>
+  <EnableMultithreadedAnalysis>True</EnableMultithreadedAnalysis>
+  <SourceLookup>True</SourceLookup>
+  <AnalysisExceptionsThreshold>10</AnalysisExceptionsThreshold>
+  <RuleExceptionsThreshold>1</RuleExceptionsThreshold>
+  <Spelling Locale="en-US" />
+  <OverrideRuleVisibilities>False</OverrideRuleVisibilities>
+  <CustomDictionaries SearchFxCopDir="True" SearchUserProfile="True" SearchProjectDir="True" />
+  <SearchGlobalAssemblyCache>False</SearchGlobalAssemblyCache>
+  <DeadlockDetectionTimeout>120</DeadlockDetectionTimeout>
+  <IgnoreGeneratedCode>False</IgnoreGeneratedCode>
+ </ProjectOptions>
+ <Targets>
+  <Target Name="$(ProjectDir)/bin/Debug/Uol.PagSeguro.dll" Analyze="True" AnalyzeAllChildren="True" />
+ </Targets>
+ <Rules>
+  <RuleFiles>
+   <RuleFile Name="$(FxCopDir)\Rules\DesignRules.dll" Enabled="True" AllRulesEnabled="True" />
+   <RuleFile Name="$(FxCopDir)\Rules\GlobalizationRules.dll" Enabled="True" AllRulesEnabled="True" />
+   <RuleFile Name="$(FxCopDir)\Rules\InteroperabilityRules.dll" Enabled="True" AllRulesEnabled="True" />
+   <RuleFile Name="$(FxCopDir)\Rules\MobilityRules.dll" Enabled="True" AllRulesEnabled="True" />
+   <RuleFile Name="$(FxCopDir)\Rules\NamingRules.dll" Enabled="True" AllRulesEnabled="True" />
+   <RuleFile Name="$(FxCopDir)\Rules\PerformanceRules.dll" Enabled="True" AllRulesEnabled="True" />
+   <RuleFile Name="$(FxCopDir)\Rules\PortabilityRules.dll" Enabled="True" AllRulesEnabled="True" />
+   <RuleFile Name="$(FxCopDir)\Rules\SecurityRules.dll" Enabled="True" AllRulesEnabled="True" />
+   <RuleFile Name="$(FxCopDir)\Rules\SecurityTransparencyRules.dll" Enabled="True" AllRulesEnabled="True" />
+   <RuleFile Name="$(FxCopDir)\Rules\UsageRules.dll" Enabled="True" AllRulesEnabled="True" />
+  </RuleFiles>
+  <Groups />
+  <Settings />
+ </Rules>
+ <FxCopReport Version="10.0">
+  <Namespaces>
+   <Namespace Name="Uol.PagSeguro">
+    <Messages>
+     <Message Id="Pag" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2011-07-04 13:47:08Z">
+      <Issue Name="Namespace">
+       <Item>Pag</Item>
+       <Item>Uol.PagSeguro</Item>
+      </Issue>
+     </Message>
+     <Message Id="Seguro" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2011-07-04 13:47:08Z">
+      <Issue Name="Namespace">
+       <Item>Seguro</Item>
+       <Item>Uol.PagSeguro</Item>
+      </Issue>
+     </Message>
+     <Message Id="Uol" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2011-07-04 13:47:08Z">
+      <Issue Name="Namespace">
+       <Item>Uol</Item>
+       <Item>Uol.PagSeguro</Item>
+      </Issue>
+     </Message>
+    </Messages>
+   </Namespace>
+   <Namespace Name="Uol.PagSeguro.Serialization">
+    <Messages>
+     <Message TypeName="AvoidNamespacesWithFewTypes" Category="Microsoft.Design" CheckId="CA1020" Status="Excluded" Created="2011-07-04 13:47:08Z">
+      <Issue>
+       <Item>Uol.PagSeguro.Serialization</Item>
+      </Issue>
+      <Notes>
+       <User Name="tech_muemura">
+        <Note Id="0" />
+       </User>
+      </Notes>
+     </Message>
+     <Message Id="Pag" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2011-07-04 13:47:08Z">
+      <Issue Name="Namespace">
+       <Item>Pag</Item>
+       <Item>Uol.PagSeguro.Serialization</Item>
+      </Issue>
+     </Message>
+     <Message Id="Seguro" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2011-07-04 13:47:08Z">
+      <Issue Name="Namespace">
+       <Item>Seguro</Item>
+       <Item>Uol.PagSeguro.Serialization</Item>
+      </Issue>
+     </Message>
+     <Message Id="Uol" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2011-07-04 13:47:08Z">
+      <Issue Name="Namespace">
+       <Item>Uol</Item>
+       <Item>Uol.PagSeguro.Serialization</Item>
+      </Issue>
+     </Message>
+    </Messages>
+   </Namespace>
+  </Namespaces>
+  <Targets>
+   <Target Name="$(ProjectDir)/bin/Debug/Uol.PagSeguro.dll">
+    <Modules>
+     <Module Name="uol.pagseguro.dll">
+      <Messages>
+       <Message TypeName="AssembliesShouldHaveValidStrongNames" Category="Microsoft.Design" CheckId="CA2210" Created="2011-07-05 01:57:50Z">
+        <Issue Name="NoStrongName">
+         <Item>'Uol.PagSeguro.dll'</Item>
+        </Issue>
+       </Message>
+       <Message Id="Pag" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2011-07-04 13:47:08Z">
+        <Issue Name="Assembly">
+         <Item>Pag</Item>
+         <Item>'Uol.PagSeguro.dll'</Item>
+        </Issue>
+       </Message>
+       <Message Id="Seguro" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2011-07-04 13:47:08Z">
+        <Issue Name="Assembly">
+         <Item>Seguro</Item>
+         <Item>'Uol.PagSeguro.dll'</Item>
+        </Issue>
+       </Message>
+       <Message Id="Uol" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2011-07-04 13:47:08Z">
+        <Issue Name="Assembly">
+         <Item>Uol</Item>
+         <Item>'Uol.PagSeguro.dll'</Item>
+        </Issue>
+       </Message>
+      </Messages>
+      <Namespaces>
+       <Namespace Name="Uol.PagSeguro">
+        <Types>
+         <Type Name="Currency">
+          <Members>
+           <Member Name="#Brl">
+            <Messages>
+             <Message Id="Brl" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2011-07-04 13:47:08Z">
+              <Issue Name="Member">
+               <Item>Brl</Item>
+               <Item>'Currency.Brl'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="PagSeguroServiceError">
+          <Messages>
+           <Message Id="Pag" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2011-07-05 01:59:45Z">
+            <Issue Name="Type">
+             <Item>Pag</Item>
+             <Item>'PagSeguroServiceError'</Item>
+            </Issue>
+            <Notes>
+             <User Name="idlebot">
+              <Note Id="1" />
+             </User>
+            </Notes>
+           </Message>
+           <Message Id="Seguro" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2011-07-05 01:59:45Z">
+            <Issue Name="Type">
+             <Item>Seguro</Item>
+             <Item>'PagSeguroServiceError'</Item>
+            </Issue>
+            <Notes>
+             <User Name="idlebot">
+              <Note Id="1" />
+             </User>
+            </Notes>
+           </Message>
+          </Messages>
+         </Type>
+         <Type Name="PagSeguroServiceException">
+          <Messages>
+           <Message Id="Pag" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2011-07-05 01:57:50Z">
+            <Issue Name="Type">
+             <Item>Pag</Item>
+             <Item>'PagSeguroServiceException'</Item>
+            </Issue>
+            <Notes>
+             <User Name="idlebot">
+              <Note Id="0" />
+             </User>
+            </Notes>
+           </Message>
+           <Message Id="Seguro" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2011-07-05 01:57:50Z">
+            <Issue Name="Type">
+             <Item>Seguro</Item>
+             <Item>'PagSeguroServiceException'</Item>
+            </Issue>
+            <Notes>
+             <User Name="idlebot">
+              <Note Id="0" />
+             </User>
+            </Notes>
+           </Message>
+          </Messages>
+         </Type>
+         <Type Name="PaymentMethodCode">
+          <Members>
+           <Member Name="#BancoBrasilOnlineTransfer">
+            <Messages>
+             <Message Id="Banco" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2011-07-04 13:47:08Z">
+              <Issue Name="Member">
+               <Item>Banco</Item>
+               <Item>'PaymentMethodCode.BancoBrasilOnlineTransfer'</Item>
+              </Issue>
+             </Message>
+             <Message Id="Brasil" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2011-07-04 13:47:08Z">
+              <Issue Name="Member">
+               <Item>Brasil</Item>
+               <Item>'PaymentMethodCode.BancoBrasilOnlineTransfer'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#BanrisulOnlineTransfer">
+            <Messages>
+             <Message Id="Banrisul" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2011-07-04 13:47:08Z">
+              <Issue Name="Member">
+               <Item>Banrisul</Item>
+               <Item>'PaymentMethodCode.BanrisulOnlineTransfer'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#BradescoBoleto">
+            <Messages>
+             <Message Id="Boleto" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2011-07-04 13:47:08Z">
+              <Issue Name="Member">
+               <Item>Boleto</Item>
+               <Item>'PaymentMethodCode.BradescoBoleto'</Item>
+              </Issue>
+             </Message>
+             <Message Id="Bradesco" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2011-07-04 13:47:08Z">
+              <Issue Name="Member">
+               <Item>Bradesco</Item>
+               <Item>'PaymentMethodCode.BradescoBoleto'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#BradescoOnlineTransfer">
+            <Messages>
+             <Message Id="Bradesco" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2011-07-04 13:47:08Z">
+              <Issue Name="Member">
+               <Item>Bradesco</Item>
+               <Item>'PaymentMethodCode.BradescoOnlineTransfer'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#Elo">
+            <Messages>
+             <Message Id="Elo" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2011-08-29 19:11:59Z">
+              <Issue Name="Member">
+               <Item>Elo</Item>
+               <Item>'PaymentMethodCode.Elo'</Item>
+              </Issue>
+              <Notes>
+               <User Name="tech_muemura">
+                <Note Id="1" />
+               </User>
+              </Notes>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#Hipercard">
+            <Messages>
+             <Message Id="Hipercard" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2011-07-04 13:47:08Z">
+              <Issue Name="Member">
+               <Item>Hipercard</Item>
+               <Item>'PaymentMethodCode.Hipercard'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#ItauOnlineTransfer">
+            <Messages>
+             <Message Id="Itau" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2011-07-04 13:47:08Z">
+              <Issue Name="Member">
+               <Item>Itau</Item>
+               <Item>'PaymentMethodCode.ItauOnlineTransfer'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#OiPaggo">
+            <Messages>
+             <Message Id="Oi" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2011-07-04 13:47:08Z">
+              <Issue Name="Member">
+               <Item>Oi</Item>
+               <Item>'PaymentMethodCode.OiPaggo'</Item>
+               <Item>OI</Item>
+              </Issue>
+             </Message>
+             <Message Id="Oi" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2011-07-04 13:47:08Z">
+              <Issue Name="Member">
+               <Item>Oi</Item>
+               <Item>'PaymentMethodCode.OiPaggo'</Item>
+              </Issue>
+             </Message>
+             <Message Id="Paggo" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2011-07-04 13:47:08Z">
+              <Issue Name="Member">
+               <Item>Paggo</Item>
+               <Item>'PaymentMethodCode.OiPaggo'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#PagSeguroBalance">
+            <Messages>
+             <Message Id="Pag" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2011-07-04 13:47:08Z">
+              <Issue Name="Member">
+               <Item>Pag</Item>
+               <Item>'PaymentMethodCode.PagSeguroBalance'</Item>
+              </Issue>
+             </Message>
+             <Message Id="Seguro" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2011-07-04 13:47:08Z">
+              <Issue Name="Member">
+               <Item>Seguro</Item>
+               <Item>'PaymentMethodCode.PagSeguroBalance'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#SantanderBoleto">
+            <Messages>
+             <Message Id="Boleto" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2011-07-04 13:47:08Z">
+              <Issue Name="Member">
+               <Item>Boleto</Item>
+               <Item>'PaymentMethodCode.SantanderBoleto'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#UnibancoOnlineTransfer">
+            <Messages>
+             <Message Id="Unibanco" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2011-07-04 13:47:08Z">
+              <Issue Name="Member">
+               <Item>Unibanco</Item>
+               <Item>'PaymentMethodCode.UnibancoOnlineTransfer'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="PaymentMethodType">
+          <Members>
+           <Member Name="#Boleto">
+            <Messages>
+             <Message Id="Boleto" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2011-07-04 13:47:08Z">
+              <Issue Name="Member">
+               <Item>Boleto</Item>
+               <Item>'PaymentMethodType.Boleto'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#OiPaggo">
+            <Messages>
+             <Message Id="Oi" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2011-07-04 13:47:08Z">
+              <Issue Name="Member">
+               <Item>Oi</Item>
+               <Item>'PaymentMethodType.OiPaggo'</Item>
+               <Item>OI</Item>
+              </Issue>
+             </Message>
+             <Message Id="Oi" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2011-07-04 13:47:08Z">
+              <Issue Name="Member">
+               <Item>Oi</Item>
+               <Item>'PaymentMethodType.OiPaggo'</Item>
+              </Issue>
+             </Message>
+             <Message Id="Paggo" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2011-07-04 13:47:08Z">
+              <Issue Name="Member">
+               <Item>Paggo</Item>
+               <Item>'PaymentMethodType.OiPaggo'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="ShippingType">
+          <Members>
+           <Member Name="#Sedex">
+            <Messages>
+             <Message Id="Sedex" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2011-07-04 13:47:08Z">
+              <Issue Name="Member">
+               <Item>Sedex</Item>
+               <Item>'ShippingType.Sedex'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="TransactionStatus">
+          <Members>
+           <Member Name="#Cancelled">
+            <Messages>
+             <Message Id="Cancelled" TypeName="UsePreferredTerms" Category="Microsoft.Naming" CheckId="CA1726" Status="Excluded" Created="2011-07-29 19:01:54Z">
+              <Issue Name="Member">
+               <Item>Cancelled</Item>
+               <Item>'TransactionStatus.Cancelled'</Item>
+               <Item>Canceled</Item>
+              </Issue>
+              <Notes>
+               <User Name="tech_muemura">
+                <Note Id="2" />
+               </User>
+              </Notes>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="TransactionType">
+          <Members>
+           <Member Name="#BonusRepass">
+            <Messages>
+             <Message Id="Repass" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2011-07-04 13:47:08Z">
+              <Issue Name="Member">
+               <Item>Repass</Item>
+               <Item>'TransactionType.BonusRepass'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+        </Types>
+       </Namespace>
+      </Namespaces>
+     </Module>
+    </Modules>
+   </Target>
+  </Targets>
+  <Notes>
+   <User Name="idlebot">
+    <Note Id="0" Modified="2011-07-05 02:00:08Z">PagSeguro spelling is ok</Note>
+    <Note Id="1" Modified="2011-07-05 02:00:20Z">PagSeguro spelling is ok</Note>
+   </User>
+   <User Name="tech_muemura">
+    <Note Id="0" Modified="2011-07-04 14:43:15Z">Este namespace atualmente é usado apenas para tipos internos.</Note>
+    <Note Id="1" Modified="2011-08-29 19:12:16Z">Valid spelling</Note>
+    <Note Id="2" Modified="2011-07-29 19:05:59Z">Ignorado para manter consistencia com as bibliotecas Java e PHP</Note>
+   </User>
+  </Notes>
+  <Rules>
+   <Rule TypeName="AssembliesShouldHaveValidStrongNames" Category="Microsoft.Design" CheckId="CA2210">
+    <Resolution Name="NoStrongName">Sign {0} with a strong name key.</Resolution>
+   </Rule>
+   <Rule TypeName="AvoidNamespacesWithFewTypes" Category="Microsoft.Design" CheckId="CA1020">
+    <Resolution Name="Default">Consider merging the types defined in '{0}' with another namespace.</Resolution>
+   </Rule>
+   <Rule TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709">
+    <Resolution Name="Member">Correct the casing of '{0}' in member name {1} by changing it to '{2}'.</Resolution>
+   </Rule>
+   <Rule TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704">
+    <Resolution Name="Assembly">Correct the spelling of '{0}' in assembly name {1}.</Resolution>
+    <Resolution Name="Member">Correct the spelling of '{0}' in member name {1} or remove it entirely if it represents any sort of Hungarian notation.</Resolution>
+    <Resolution Name="Namespace">Correct the spelling of '{0}' in namespace name '{1}'.</Resolution>
+    <Resolution Name="Type">Correct the spelling of '{0}' in type name {1}.</Resolution>
+   </Rule>
+   <Rule TypeName="UsePreferredTerms" Category="Microsoft.Naming" CheckId="CA1726">
+    <Resolution Name="Member">Replace the term '{0}' in member name {1} with the preferred alternate '{2}'.</Resolution>
+   </Rule>
+  </Rules>
+ </FxCopReport>
+</FxCopProject>

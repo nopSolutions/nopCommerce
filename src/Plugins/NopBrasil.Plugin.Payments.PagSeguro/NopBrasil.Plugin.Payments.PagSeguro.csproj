@@ -1,0 +1,68 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <Copyright>Copyright © nopCommerce Brasil</Copyright>
+    <Company>nopCommerce Brasil</Company>
+    <Authors>nopCommerce Brasil - www.nopcommercebrasil.com - nopcommercebrasil@nopcommercebrasil.com</Authors>
+    <Version>1.00</Version>
+    <Description>Payment plugin for integration with UOL PagSeguro for nopCommerce</Description>
+    <PackageLicenseUrl></PackageLicenseUrl>
+    <PackageProjectUrl>http://www.nopcommercebrasil.com/</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/nopCommerceBrasil/NopBrasil.Plugin.Payments.PagSeguro</RepositoryUrl>
+    <RepositoryType>Git</RepositoryType>
+
+    <OutputPath>..\..\Presentation\Nop.Web\Plugins\Payments.PagSeguro</OutputPath>
+    <OutDir>$(OutputPath)</OutDir>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <None Remove="Content\Images\logoPagamento.png" />
+    <None Remove="Content\Images\nopCommerceBrasil.png" />
+    <None Remove="Content\PagSeguro.css" />
+    <None Remove="Logo.jpg" />
+    <None Remove="plugin.json" />
+    <None Remove="Views\Configure.cshtml" />
+    <None Remove="Views\PaymentInfo.cshtml" />
+    <None Remove="Views\_ViewImports.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\Images\logoPagamento.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\nopCommerceBrasil.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\PagSeguro.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Logo.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="plugin.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Configure.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\PaymentInfo.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\_ViewImports.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ClearPluginAssemblies Include="$(MSBuildProjectDirectory)\..\..\Build\ClearPluginAssemblies.proj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Presentation\Nop.Web.Framework\Nop.Web.Framework.csproj" />
+  </ItemGroup>
+
+  <!-- This target execute after "Build" target -->
+  <Target Name="NopTarget" AfterTargets="Build">
+    <!-- Delete unnecessary libraries from plugins path -->
+    <MSBuild Projects="@(ClearPluginAssemblies)" Properties="PluginPath=$(MSBuildProjectDirectory)\$(OutDir)" Targets="NopClear" />
+  </Target>
+</Project>

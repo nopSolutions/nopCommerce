@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Payment methods",
+  "FriendlyName": "Credit Card Mercado Pago",
+  "SystemName": "Payments.MercadoPago",
+  "Version": "2.24",
+  "SupportedVersions": [ "4.00" ],
+  "Author": "Guillermo Bejarano",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Payments.MercadoPago.dll",
+  "Description": "This plugin allows paying with MercadoPago"
+}
