@@ -17,7 +17,7 @@ using NopBrasil.Plugin.Payments.PagSeguro.Task;
 
 namespace NopBrasil.Plugin.Payments.PagSeguro
 {
-    public class PagSeguroPaymentProcessor : BasePlugin, IPaymentMethod
+    public class PagSeguroPaymentProcessor : BasePlugin, IPaymentMethod, IPaymentMethodAsync
     {
         private readonly ILogger _logger;
         private readonly IHttpContextAccessor _httpContextAccessor;
@@ -72,8 +72,6 @@ namespace NopBrasil.Plugin.Payments.PagSeguro
 
         public ProcessPaymentResult ProcessPayment(ProcessPaymentRequest processPaymentRequest)
         {
-            Debugger.Break();
-
             var processPaymentResult = new ProcessPaymentResult()
             {
                 NewPaymentStatus = PaymentStatus.Pending

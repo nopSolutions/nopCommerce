@@ -101,7 +101,16 @@ namespace Nop.Services.Payments
             var paymentMethod = _paymentPluginManager.LoadPluginBySystemName(postProcessPaymentRequest.Order.PaymentMethodSystemName)
                 ?? throw new NopException("Payment method couldn't be loaded");
 
-            return paymentMethod.PostProcessPaymentAsync(postProcessPaymentRequest);
+            if (paymentMethod is IPaymentMethodAsync)
+            {
+                return ((IPaymentMethodAsync)paymentMethod).PostProcessPaymentAsync(postProcessPaymentRequest);
+            }
+            else
+            {
+                //for old versions
+                paymentMethod.PostProcessPayment(postProcessPaymentRequest);
+            }
+            return Task.CompletedTask;
         }
 
         /// <summary>
