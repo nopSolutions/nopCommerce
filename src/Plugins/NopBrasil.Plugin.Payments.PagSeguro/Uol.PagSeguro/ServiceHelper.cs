@@ -18,6 +18,7 @@ using System.Text;
 using System.Xml;
 using Uol.PagSeguro.Serialization;
 using System.Net;
+using System.IO;
 
 namespace Uol.PagSeguro
 {
@@ -28,14 +29,11 @@ namespace Uol.PagSeguro
         internal const string FORM_URL_ENCODED = "application/x-www-form-urlencoded";
         internal const string XML_ENCODED = "application/xml";
 
-        internal static PagSeguroServiceException CreatePagSeguroServiceException(HttpWebResponse response)
+        internal static PagSeguroServiceException CreatePagSeguroServiceException(Stream responseStream, HttpStatusCode httpStatusCode)
         {
-            if (response.StatusCode == HttpStatusCode.OK)
-                throw new ArgumentException("response.StatusCode must be different than HttpStatusCode.OK", "response");
-
-            using (XmlReader reader = XmlReader.Create(response.GetResponseStream()))
+            using (XmlReader reader = XmlReader.Create(responseStream))
             {
-                switch (response.StatusCode)
+                switch (httpStatusCode)
                 {
                     case HttpStatusCode.BadRequest:
                         var errors = new List<PagSeguroServiceError>();
@@ -45,15 +43,20 @@ namespace Uol.PagSeguro
                         }
                         catch (XmlException e)
                         {
-                            return new PagSeguroServiceException(response.StatusCode, e);
+                            return new PagSeguroServiceException(httpStatusCode, e);
                         }
 
-                        return new PagSeguroServiceException(response.StatusCode, errors);
+                        return new PagSeguroServiceException(httpStatusCode, errors);
 
                     default:
-                        return new PagSeguroServiceException(response.StatusCode);
+                        return new PagSeguroServiceException(httpStatusCode);
                 }
             }
+        }
+
+        internal static PagSeguroServiceException CreatePagSeguroServiceException(Exception exception)
+        {
+            return new PagSeguroServiceException(exception);
         }
 
         internal static string EncodeCredentialsAsQueryString(Credentials credentials)

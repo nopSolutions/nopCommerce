@@ -352,6 +352,16 @@ namespace Nop.Plugin.Payments.Square
         }
 
         /// <summary>
+        /// Post process payment (used by payment gateways that require redirecting to a third-party URL)
+        /// </summary>
+        /// <param name="postProcessPaymentRequest">Payment info required for an order processing</param>
+        public System.Threading.Tasks.Task PostProcessPaymentAsync(PostProcessPaymentRequest postProcessPaymentRequest)
+        {
+            //do nothing
+            return System.Threading.Tasks.Task.CompletedTask;
+        }
+
+        /// <summary>
         /// Returns a value indicating whether payment method should be hidden during checkout
         /// </summary>
         /// <param name="cart">Shopping cart</param>

@@ -25,7 +25,7 @@ namespace Uol.PagSeguro
 
         private static Uri NotificationUri { get; } = new Uri("https://ws.pagseguro.uol.com.br/v2/transactions/notifications");
 
-        private static Uri SandboxNotificationUri { get; } = new Uri("https://ws.pagseguro.uol.com.br/v2/transactions/notifications");
+        private static Uri SandboxNotificationUri { get; } = new Uri("https://ws.sandbox.pagseguro.uol.com.br/v2/transactions/notifications");
 
         internal static Uri GetNotificationUri(bool isSandbox)
         {
@@ -43,7 +43,7 @@ namespace Uol.PagSeguro
 
         private static Uri PaymentRedirectUri { get; } = new Uri("https://pagseguro.uol.com.br/v2/checkout/payment.html");
 
-        private static Uri SandboxPaymentRedirectUri { get; } = new Uri("https://pagseguro.uol.com.br/v2/checkout/payment.html");
+        private static Uri SandboxPaymentRedirectUri { get; } = new Uri("https://sandbox.pagseguro.uol.com.br/v2/checkout/payment.html");
 
         internal static Uri GetPaymentRedirectUri(bool isSandbox)
         {

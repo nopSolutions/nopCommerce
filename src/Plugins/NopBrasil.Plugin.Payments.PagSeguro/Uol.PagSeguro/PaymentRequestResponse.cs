@@ -23,8 +23,7 @@ namespace Uol.PagSeguro
     /// </summary>
     internal class PaymentRequestResponse
     {
-        private Uri paymentRedirectBaseUri;
-        private string code = String.Empty;
+        private Uri _paymentRedirectBaseUri;
 
         /// <summary>
         /// Initializes a new instance of the PaymentRequestResponse class
@@ -32,38 +31,18 @@ namespace Uol.PagSeguro
         /// <param name="paymentRedirectBaseUri"></param>
         internal PaymentRequestResponse(Uri paymentRedirectBaseUri)
         {
-            if (paymentRedirectBaseUri == null)
-                throw new ArgumentNullException("paymentRedirectBaseUri");
-
-            this.paymentRedirectBaseUri = paymentRedirectBaseUri;
+            _paymentRedirectBaseUri = paymentRedirectBaseUri ?? throw new ArgumentNullException("paymentRedirectBaseUri");
         }
 
         /// <summary>
         /// Payment request code
         /// </summary>
-        public string Code
-        {
-            get
-            {
-                return this.code;
-            }
-            set
-            {
-                if (value == null)
-                    throw new ArgumentNullException("value");
-
-                this.code = value;
-            }
-        }
+        public string Code { get; set; }
 
         /// <summary>
         /// Registration date
         /// </summary>
-        public DateTime RegistrationDate
-        {
-            get;
-            set;
-        }
+        public DateTime RegistrationDate { get; set; }
 
         /// <summary>
         /// Uri for the payment page in the PagSeguro web site for this payment request
@@ -72,9 +51,10 @@ namespace Uol.PagSeguro
         {
             get
             {
-                QueryStringBuilder builder = new QueryStringBuilder();
-                builder.Append("code", this.Code);
-                UriBuilder uriBuilder = new UriBuilder(this.paymentRedirectBaseUri);
+                var builder = new QueryStringBuilder();
+                builder.Append("code", Code);
+
+                var uriBuilder = new UriBuilder(_paymentRedirectBaseUri);
                 uriBuilder.Query = builder.ToString();
                 return uriBuilder.Uri;
             }
@@ -86,12 +66,12 @@ namespace Uol.PagSeguro
         /// <returns></returns>
         public override string ToString()
         {
-            StringBuilder builder = new StringBuilder();
-            builder.Append(this.GetType().Name);
+            var builder = new StringBuilder();
+            builder.Append(GetType().Name);
             builder.Append('(');
-            builder.Append("Code=").Append(this.Code).Append(", ");
-            builder.Append("RegistrationDate=").Append(this.RegistrationDate).Append(", ");
-            builder.Append("PaymentRedirectUri=").Append(this.PaymentRedirectUri.ToString());
+            builder.Append("Code=").Append(Code).Append(", ");
+            builder.Append("RegistrationDate=").Append(RegistrationDate).Append(", ");
+            builder.Append("PaymentRedirectUri=").Append(PaymentRedirectUri.ToString());
             builder.Append(')');
             return builder.ToString();
         }

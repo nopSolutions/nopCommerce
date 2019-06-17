@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
@@ -34,14 +35,14 @@ namespace Nop.Web.Controllers
 
         #endregion
 
-		#region Ctor
+        #region Ctor
 
         public OrderController(IOrderModelFactory orderModelFactory,
-            IOrderProcessingService orderProcessingService, 
-            IOrderService orderService, 
-            IPaymentService paymentService, 
+            IOrderProcessingService orderProcessingService,
+            IOrderService orderService,
+            IPaymentService paymentService,
             IPdfService pdfService,
-            IShipmentService shipmentService, 
+            IShipmentService shipmentService,
             IWebHelper webHelper,
             IWorkContext workContext,
             RewardPointsSettings rewardPointsSettings)
@@ -210,7 +211,7 @@ namespace Nop.Web.Controllers
         [HttpPost, ActionName("Details")]
         [PublicAntiForgery]
         [FormValueRequired("repost-payment")]
-        public virtual IActionResult RePostPayment(int orderId)
+        public async virtual Task<IActionResult> RePostPayment(int orderId)
         {
             var order = _orderService.GetOrderById(orderId);
             if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
@@ -223,7 +224,7 @@ namespace Nop.Web.Controllers
             {
                 Order = order
             };
-            _paymentService.PostProcessPayment(postProcessPaymentRequest);
+            await _paymentService.PostProcessPaymentAsync(postProcessPaymentRequest);
 
             if (_webHelper.IsRequestBeingRedirected || _webHelper.IsPostBeingDone)
             {
@@ -251,7 +252,7 @@ namespace Nop.Web.Controllers
             var model = _orderModelFactory.PrepareShipmentDetailsModel(shipment);
             return View(model);
         }
-        
+
         #endregion
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
@@ -146,7 +147,7 @@ namespace Nop.Web.Controllers
             //in order to avoid any possible limitations by payment gateway we reset GUID periodically
             var previousPaymentRequest = HttpContext.Session.Get<ProcessPaymentRequest>("OrderPaymentInfo");
             if (_paymentSettings.RegenerateOrderGuidInterval > 0 &&
-                previousPaymentRequest != null && 
+                previousPaymentRequest != null &&
                 previousPaymentRequest.OrderGuidGeneratedOnUtc.HasValue)
             {
                 var interval = DateTime.UtcNow - previousPaymentRequest.OrderGuidGeneratedOnUtc.Value;
@@ -909,7 +910,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost, ActionName("Confirm")]
-        public virtual IActionResult ConfirmOrder()
+        public async virtual Task<IActionResult> ConfirmOrder()
         {
             //validation
             if (_orderSettings.CheckoutDisabled)
@@ -958,7 +959,7 @@ namespace Nop.Web.Controllers
                     {
                         Order = placeOrderResult.PlacedOrder
                     };
-                    _paymentService.PostProcessPayment(postProcessPaymentRequest);
+                    await _paymentService.PostProcessPaymentAsync(postProcessPaymentRequest);
 
                     if (_webHelper.IsRequestBeingRedirected || _webHelper.IsPostBeingDone)
                     {
@@ -1618,7 +1619,7 @@ namespace Nop.Web.Controllers
             }
         }
 
-        public virtual IActionResult OpcConfirmOrder()
+        public async virtual Task<IActionResult> OpcConfirmOrder()
         {
             try
             {
@@ -1686,7 +1687,7 @@ namespace Nop.Web.Controllers
                         });
                     }
 
-                    _paymentService.PostProcessPayment(postProcessPaymentRequest);
+                    await _paymentService.PostProcessPaymentAsync(postProcessPaymentRequest);
                     //success
                     return Json(new { success = 1 });
                 }
@@ -1713,7 +1714,7 @@ namespace Nop.Web.Controllers
             }
         }
 
-        public virtual IActionResult OpcCompleteRedirectionPayment()
+        public async virtual Task<IActionResult> OpcCompleteRedirectionPayment()
         {
             try
             {
@@ -1748,7 +1749,7 @@ namespace Nop.Web.Controllers
                     Order = order
                 };
 
-                _paymentService.PostProcessPayment(postProcessPaymentRequest);
+                await _paymentService.PostProcessPaymentAsync(postProcessPaymentRequest);
 
                 if (_webHelper.IsRequestBeingRedirected || _webHelper.IsPostBeingDone)
                 {

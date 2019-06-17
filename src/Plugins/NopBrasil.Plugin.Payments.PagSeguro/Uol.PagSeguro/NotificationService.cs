@@ -62,16 +62,15 @@ namespace Uol.PagSeguro
                         Transaction transaction = new Transaction();
                         TransactionSerializer.Read(reader, transaction);
 
-                        PagSeguroTrace.Info(String.Format(CultureInfo.InvariantCulture, "NotificationService.CheckTransaction(notificationCode={0}) - end {1}", notificationCode, transaction));
+                        PagSeguroTrace.Info(string.Format(CultureInfo.InvariantCulture, "NotificationService.CheckTransaction(notificationCode={0}) - end {1}", notificationCode, transaction));
                         return transaction;
                     }
                 }
             }
             catch (WebException exception)
             {
-                PagSeguroServiceException pse = ServiceHelper.CreatePagSeguroServiceException((HttpWebResponse)exception.Response);
-                PagSeguroTrace.Error(
-                    string.Format(CultureInfo.InvariantCulture, "NotificationService.CheckTransaction(notificationCode={0}) - error {1}", notificationCode, pse));
+                var pse = ServiceHelper.CreatePagSeguroServiceException(exception);
+                PagSeguroTrace.Error(string.Format(CultureInfo.InvariantCulture, "NotificationService.CheckTransaction(notificationCode={0}) - error {1}", notificationCode, pse));
                 throw pse;
             }
         }

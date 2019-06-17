@@ -72,8 +72,8 @@ namespace Uol.PagSeguro
             }
             catch (WebException exception)
             {
-                PagSeguroServiceException pse = ServiceHelper.CreatePagSeguroServiceException((HttpWebResponse)exception.Response);
-                PagSeguroTrace.Error(String.Format(CultureInfo.InvariantCulture, "TransactionSearchService.SearchByCode(transactionCode={0}) - error {1}", transactionCode, pse));
+                PagSeguroServiceException pse = ServiceHelper.CreatePagSeguroServiceException(exception);
+                PagSeguroTrace.Error(string.Format(CultureInfo.InvariantCulture, "TransactionSearchService.SearchByCode(transactionCode={0}) - error {1}", transactionCode, pse));
                 throw pse;
             }
         }
@@ -111,8 +111,8 @@ namespace Uol.PagSeguro
             }
             catch (WebException exception)
             {
-                PagSeguroServiceException pse = ServiceHelper.CreatePagSeguroServiceException((HttpWebResponse)exception.Response);
-                PagSeguroTrace.Error(String.Format(CultureInfo.InvariantCulture, "TransactionSearchService.SearchByReference(referenceCode={0}) - error {1}", referenceCode, pse));
+                PagSeguroServiceException pse = ServiceHelper.CreatePagSeguroServiceException(exception);
+                PagSeguroTrace.Error(string.Format(CultureInfo.InvariantCulture, "TransactionSearchService.SearchByReference(referenceCode={0}) - error {1}", referenceCode, pse));
                 throw pse;
             }
         }
@@ -283,8 +283,8 @@ namespace Uol.PagSeguro
             }
             catch (WebException exception)
             {
-                PagSeguroServiceException pse = ServiceHelper.CreatePagSeguroServiceException((HttpWebResponse)exception.Response);
-                PagSeguroTrace.Error(String.Format(CultureInfo.InvariantCulture, "TransactionSearchService.SearchByDate(initialDate={0}, finalDate={1}) - error {2}", initialDate, finalDate, pse));
+                var pse = ServiceHelper.CreatePagSeguroServiceException(exception);
+                PagSeguroTrace.Error(string.Format(CultureInfo.InvariantCulture, "TransactionSearchService.SearchByDate(initialDate={0}, finalDate={1}) - error {2}", initialDate, finalDate, pse));
                 throw pse;
             }
         }

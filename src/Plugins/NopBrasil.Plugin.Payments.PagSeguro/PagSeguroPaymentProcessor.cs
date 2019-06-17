@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Nop.Core;
 using Nop.Core.Domain.Orders;
@@ -70,6 +72,8 @@ namespace NopBrasil.Plugin.Payments.PagSeguro
 
         public ProcessPaymentResult ProcessPayment(ProcessPaymentRequest processPaymentRequest)
         {
+            Debugger.Break();
+
             var processPaymentResult = new ProcessPaymentResult()
             {
                 NewPaymentStatus = PaymentStatus.Pending
@@ -77,11 +81,25 @@ namespace NopBrasil.Plugin.Payments.PagSeguro
             return processPaymentResult;
         }
 
+        [Obsolete("Use async version instead")]
         public void PostProcessPayment(PostProcessPaymentRequest postProcessPaymentRequest)
         {
             try
             {
                 var uri = _pagSeguroService.CreatePayment(postProcessPaymentRequest);
+                _httpContextAccessor.HttpContext.Response.Redirect(uri.AbsoluteUri);
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e.Message, e);
+            }
+        }
+
+        public async System.Threading.Tasks.Task PostProcessPaymentAsync(PostProcessPaymentRequest postProcessPaymentRequest)
+        {
+            try
+            {
+                var uri = await _pagSeguroService.CreatePaymentAsync(postProcessPaymentRequest);
                 _httpContextAccessor.HttpContext.Response.Redirect(uri.AbsoluteUri);
             }
             catch (Exception e)
@@ -131,5 +149,7 @@ namespace NopBrasil.Plugin.Payments.PagSeguro
         public override string GetConfigurationPageUrl() => $"{_webHelper.GetStoreLocation()}Admin/PaymentPagSeguro/Configure";
 
         public string GetPublicViewComponentName() => "PaymentPagSeguro";
+
+
     }
 }

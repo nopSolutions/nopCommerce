@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.WebUtilities;
 using Nop.Core;
@@ -223,7 +224,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
                 var roundedAttributePrice = Math.Round(attributePrice, 2);
 
                 //add query parameters
-                if (attributeValue.CheckoutAttribute == null) 
+                if (attributeValue.CheckoutAttribute == null)
                     continue;
 
                 parameters.Add($"item_name_{itemCount}", attributeValue.CheckoutAttribute.Name);
@@ -323,6 +324,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
         /// Post process payment (used by payment gateways that require redirecting to a third-party URL)
         /// </summary>
         /// <param name="postProcessPaymentRequest">Payment info required for an order processing</param>
+        [Obsolete("Use async version instead")]
         public void PostProcessPayment(PostProcessPaymentRequest postProcessPaymentRequest)
         {
             var baseUrl = _payPalStandardPaymentSettings.UseSandbox ?
@@ -361,6 +363,52 @@ namespace Nop.Plugin.Payments.PayPalStandard
 
             var url = QueryHelpers.AddQueryString(baseUrl, queryParameters);
             _httpContextAccessor.HttpContext.Response.Redirect(url);
+        }
+
+        /// <summary>
+        /// Post process payment (used by payment gateways that require redirecting to a third-party URL)
+        /// </summary>
+        /// <param name="postProcessPaymentRequest">Payment info required for an order processing</param>
+        public Task PostProcessPaymentAsync(PostProcessPaymentRequest postProcessPaymentRequest)
+        {
+            var baseUrl = _payPalStandardPaymentSettings.UseSandbox ?
+                "https://www.sandbox.paypal.com/us/cgi-bin/webscr" :
+                "https://www.paypal.com/us/cgi-bin/webscr";
+
+            //create common query parameters for the request
+            var queryParameters = CreateQueryParameters(postProcessPaymentRequest);
+
+            //whether to include order items in a transaction
+            if (_payPalStandardPaymentSettings.PassProductNamesAndTotals)
+            {
+                //add order items query parameters to the request
+                var parameters = new Dictionary<string, string>(queryParameters);
+                AddItemsParameters(parameters, postProcessPaymentRequest);
+
+                //remove null values from parameters
+                parameters = parameters.Where(parameter => !string.IsNullOrEmpty(parameter.Value))
+                    .ToDictionary(parameter => parameter.Key, parameter => parameter.Value);
+
+                //ensure redirect URL doesn't exceed 2K chars to avoid "too long URL" exception
+                var redirectUrl = QueryHelpers.AddQueryString(baseUrl, parameters);
+                if (redirectUrl.Length <= 2048)
+                {
+                    _httpContextAccessor.HttpContext.Response.Redirect(redirectUrl);
+                    return Task.CompletedTask;
+                }
+            }
+
+            //or add only an order total query parameters to the request
+            AddOrderTotalParameters(queryParameters, postProcessPaymentRequest);
+
+            //remove null values from parameters
+            queryParameters = queryParameters.Where(parameter => !string.IsNullOrEmpty(parameter.Value))
+                .ToDictionary(parameter => parameter.Key, parameter => parameter.Value);
+
+            var url = QueryHelpers.AddQueryString(baseUrl, queryParameters);
+            _httpContextAccessor.HttpContext.Response.Redirect(url);
+
+            return Task.CompletedTask;
         }
 
         /// <summary>

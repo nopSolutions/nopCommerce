@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Nop.Core;
 using Nop.Core.Domain.Orders;
@@ -85,6 +86,16 @@ namespace Nop.Plugin.Payments.Manual
         public void PostProcessPayment(PostProcessPaymentRequest postProcessPaymentRequest)
         {
             //nothing
+        }
+
+        /// <summary>
+        /// Post process payment (used by payment gateways that require redirecting to a third-party URL)
+        /// </summary>
+        /// <param name="postProcessPaymentRequest">Payment info required for an order processing</param>
+        public Task PostProcessPaymentAsync(PostProcessPaymentRequest postProcessPaymentRequest)
+        {
+            //nothing
+            return Task.CompletedTask;
         }
 
         /// <summary>

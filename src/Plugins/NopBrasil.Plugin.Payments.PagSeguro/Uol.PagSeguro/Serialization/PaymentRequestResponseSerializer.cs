@@ -7,8 +7,8 @@ namespace Uol.PagSeguro.Serialization
 {
     internal static class PaymentRequestResponseSerializer
     {
-        private const string Code = "code";
-        private const string Date = "date";
+        private const string CODE = "code";
+        private const string DATE = "date";
 
         internal static void Read(XmlReader reader, PaymentRequestResponse paymentResponse)
         {
@@ -39,10 +39,10 @@ namespace Uol.PagSeguro.Serialization
                 {
                     switch (reader.Name)
                     {
-                        case PaymentRequestResponseSerializer.Date:
+                        case DATE:
                             paymentResponse.RegistrationDate = reader.ReadElementContentAsDateTime();
                             break;
-                        case PaymentRequestResponseSerializer.Code:
+                        case CODE:
                             paymentResponse.Code = reader.ReadElementContentAsString();
                             break;
                         default:

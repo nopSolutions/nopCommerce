@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Nop.Core.Domain.Orders;
 
 namespace Nop.Services.Payments
@@ -19,7 +21,14 @@ namespace Nop.Services.Payments
         /// Post process payment (used by payment gateways that require redirecting to a third-party URL)
         /// </summary>
         /// <param name="postProcessPaymentRequest">Payment info required for an order processing</param>
+        [Obsolete("Use async version instead")]
         void PostProcessPayment(PostProcessPaymentRequest postProcessPaymentRequest);
+
+        /// <summary>
+        /// Post process payment (used by payment gateways that require redirecting to a third-party URL)
+        /// </summary>
+        /// <param name="postProcessPaymentRequest">Payment info required for an order processing</param>
+        Task PostProcessPaymentAsync(PostProcessPaymentRequest postProcessPaymentRequest);
 
         /// <summary>
         /// Gets a value indicating whether customers can complete a payment after order is placed but not completed (for redirection payment methods)

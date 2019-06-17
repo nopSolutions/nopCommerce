@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Nop.Core;
 using Nop.Core.Domain.Orders;
@@ -65,6 +66,11 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder
         public void PostProcessPayment(PostProcessPaymentRequest postProcessPaymentRequest)
         {
             //nothing
+        }
+
+        public Task PostProcessPaymentAsync(PostProcessPaymentRequest postProcessPaymentRequest)
+        {
+            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -243,6 +249,8 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder
 
             base.Uninstall();
         }
+
+
 
         #endregion
 

@@ -44,6 +44,14 @@ namespace Uol.PagSeguro
         /// <summary>
         /// Initializes a new instance of the PagSeguroServiceException class
         /// </summary>
+        public PagSeguroServiceException(Exception exception)
+            : base(exception.Message, exception)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the PagSeguroServiceException class
+        /// </summary>
         /// <param name="statusCode"></param>
         public PagSeguroServiceException(HttpStatusCode statusCode) :
             base(String.Format(CultureInfo.InvariantCulture, "HttpStatusCode: {0}", statusCode))

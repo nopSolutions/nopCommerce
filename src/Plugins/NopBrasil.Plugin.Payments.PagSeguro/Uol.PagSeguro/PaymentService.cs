@@ -21,6 +21,10 @@ using Uol.PagSeguro.Serialization;
 using System.IO;
 using System.Globalization;
 using System.Diagnostics;
+using System.Threading.Tasks;
+using Nop.Core.Infrastructure;
+using NopBrasil.Plugin.Payments.PagSeguro.Services;
+using System.Threading;
 
 namespace Uol.PagSeguro
 {
@@ -35,6 +39,7 @@ namespace Uol.PagSeguro
         /// <param name="credentials">PagSeguro credentials</param>
         /// <param name="payment">Payment request information</param>
         /// <returns>The Uri to where the user needs to be redirected to in order to complete the payment process</returns>
+        [Obsolete("Use async version instead")]
         public static Uri Register(Credentials credentials, PaymentRequest payment)
         {
             if (credentials == null)
@@ -42,13 +47,31 @@ namespace Uol.PagSeguro
             if (payment == null)
                 throw new ArgumentNullException("payment");
 
-            PaymentRequestResponse response = RegisterCore(credentials, payment);
+            PaymentRequestResponse response = RegisterCoreAsync(credentials, payment).GetAwaiter().GetResult();
+            return response.PaymentRedirectUri;
+        }
+
+        /// <summary>
+        /// Requests a payment
+        /// </summary>
+        /// <param name="credentials">PagSeguro credentials</param>
+        /// <param name="payment">Payment request information</param>
+        /// <returns>The Uri to where the user needs to be redirected to in order to complete the payment process</returns>
+        public static async Task<Uri> RegisterAsync(Credentials credentials, PaymentRequest payment)
+        {
+            if (credentials == null)
+                throw new ArgumentNullException(nameof(credentials));
+            if (payment == null)
+                throw new ArgumentNullException(nameof(payment));
+
+            PaymentRequestResponse response = await RegisterCoreAsync(credentials, payment);
             return response.PaymentRedirectUri;
         }
 
         // RegisterCore is the actual implementation of the Register method 
         // This separation serves as test hook to validate the Uri 
         // against the code returned by the service
+        [Obsolete("Use the async version instead")]
         internal static PaymentRequestResponse RegisterCore(Credentials credentials, PaymentRequest payment)
         {
             var uriBuilder = new UriBuilder(PagSeguroConfiguration.GetPaymentUri(credentials.IsSandbox));
@@ -87,7 +110,7 @@ namespace Uol.PagSeguro
                             }
                             else
                             {
-                                PagSeguroServiceException pse = ServiceHelper.CreatePagSeguroServiceException(response);
+                                PagSeguroServiceException pse = ServiceHelper.CreatePagSeguroServiceException(response.GetResponseStream(), response.StatusCode);
                                 PagSeguroTrace.Error(string.Format(CultureInfo.InvariantCulture, "PaymentService.Register({0}) - error {1}", payment, pse));
                                 throw pse;
                             }
@@ -95,12 +118,17 @@ namespace Uol.PagSeguro
                     }
                     catch (WebException exception)
                     {
-                        PagSeguroServiceException pse = ServiceHelper.CreatePagSeguroServiceException((HttpWebResponse)exception.Response);
-                        PagSeguroTrace.Error(string.Format(CultureInfo.InvariantCulture, "PaymentService.Register({0}) - error {1}", payment, pse));
-                        throw pse;
+                        //todo better loggin
+                        throw exception;
                     }
                 }
             }
+        }
+
+        internal static Task<PaymentRequestResponse> RegisterCoreAsync(Credentials credentials, PaymentRequest payment, CancellationToken cancellationToken = default)
+        {
+            var client = EngineContext.Current.Resolve<PagSeguroHttpClient>();
+            return client.CreatePayment(credentials, payment, cancellationToken);
         }
     }
 }

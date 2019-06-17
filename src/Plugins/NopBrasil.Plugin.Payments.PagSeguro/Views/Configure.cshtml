@@ -4,12 +4,14 @@
     Layout = "_ConfigurePlugin";
 }
 
+@await Component.InvokeAsync("StoreScopeConfiguration")
+
 <form asp-controller="PaymentPagSeguro" asp-action="Configure" method="post">
     <div class="panel-group">
         <div class="panel panel-default">
             <div class="panel-body">
                 <div>
-                    <a href="http://www.nopcommercebrasil.com"><img src="/Plugins/Payments.PagSeguro/Content/Images/nopCommerceBrasil.png"></a>
+                    <a href="http://www.nopcommercebrasil.com"><img src="~/Plugins/Payments.PagSeguro/Content/Images/nopCommerceBrasil.png"></a>
                     <br />
                     <p>
                         Este plugin foi desenvolvido por <a href="http://www.nopcommercebrasil.com">NopCommerce Brasil - http://www.nopcommercebrasil.com</a><br />
@@ -25,6 +27,7 @@
 
                 <div class="form-group">
                     <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="PagSeguroEmail_OverrideForStore" asp-input="PagSeguroEmail" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                         <nop-label asp-for="PagSeguroEmail" />
                     </div>
                     <div class="col-md-9">
@@ -35,6 +38,7 @@
 
                 <div class="form-group">
                     <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="PagSeguroToken_OverrideForStore" asp-input="PagSeguroToken" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                         <nop-label asp-for="PagSeguroToken" />
                     </div>
                     <div class="col-md-9">
@@ -45,6 +49,7 @@
 
                 <div class="form-group">
                     <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="PaymentMethodDescription_OverrideForStore" asp-input="PaymentMethodDescription" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                         <nop-label asp-for="PaymentMethodDescription" />
                     </div>
                     <div class="col-md-9">
@@ -55,6 +60,7 @@
 
                 <div class="form-group">
                     <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="IsSandbox_OverrideForStore" asp-input="IsSandbox" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                         <nop-label asp-for="IsSandbox" />
                     </div>
                     <div class="col-md-9">

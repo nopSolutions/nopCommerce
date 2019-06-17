@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
 using Nop.Core;
@@ -74,6 +75,7 @@ namespace Nop.Services.Payments
         /// Post process payment (used by payment gateways that require redirecting to a third-party URL)
         /// </summary>
         /// <param name="postProcessPaymentRequest">Payment info required for an order processing</param>
+        [Obsolete("Use async version instead")]
         public virtual void PostProcessPayment(PostProcessPaymentRequest postProcessPaymentRequest)
         {
             //already paid or order.OrderTotal == decimal.Zero
@@ -84,6 +86,22 @@ namespace Nop.Services.Payments
                 ?? throw new NopException("Payment method couldn't be loaded");
 
             paymentMethod.PostProcessPayment(postProcessPaymentRequest);
+        }
+
+        /// <summary>
+        /// Post process payment (used by payment gateways that require redirecting to a third-party URL)
+        /// </summary>
+        /// <param name="postProcessPaymentRequest">Payment info required for an order processing</param>
+        public virtual Task PostProcessPaymentAsync(PostProcessPaymentRequest postProcessPaymentRequest)
+        {
+            //already paid or order.OrderTotal == decimal.Zero
+            if (postProcessPaymentRequest.Order.PaymentStatus == PaymentStatus.Paid)
+                return Task.CompletedTask;
+
+            var paymentMethod = _paymentPluginManager.LoadPluginBySystemName(postProcessPaymentRequest.Order.PaymentMethodSystemName)
+                ?? throw new NopException("Payment method couldn't be loaded");
+
+            return paymentMethod.PostProcessPaymentAsync(postProcessPaymentRequest);
         }
 
         /// <summary>

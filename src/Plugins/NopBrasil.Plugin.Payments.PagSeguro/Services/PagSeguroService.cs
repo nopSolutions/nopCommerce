@@ -8,6 +8,7 @@ using Nop.Services.Payments;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Uol.PagSeguro;
 
 namespace NopBrasil.Plugin.Payments.PagSeguro.Services
@@ -39,6 +40,7 @@ namespace NopBrasil.Plugin.Payments.PagSeguro.Services
             _storeContext = storeContext ?? throw new ArgumentNullException(nameof(storeContext));
         }
 
+        [Obsolete("Use async version instead")]
         public Uri CreatePayment(PostProcessPaymentRequest postProcessPaymentRequest)
         {
             // Seta as credenciais
@@ -57,6 +59,26 @@ namespace NopBrasil.Plugin.Payments.PagSeguro.Services
             LoadingSender(postProcessPaymentRequest, payment);
 
             return Uol.PagSeguro.PaymentService.Register(credentials, payment);
+        }
+
+        public Task<Uri> CreatePaymentAsync(PostProcessPaymentRequest postProcessPaymentRequest)
+        {
+            // Seta as credenciais
+            var credentials = new AccountCredentials(_pagSeguroPaymentSetting.PagSeguroEmail,
+                _pagSeguroPaymentSetting.PagSeguroToken,
+                _pagSeguroPaymentSetting.IsSandbox);
+
+            var payment = new PaymentRequest
+            {
+                Currency = CURRENCY_CODE,
+                Reference = postProcessPaymentRequest.Order.Id.ToString()
+            };
+
+            LoadingItems(postProcessPaymentRequest, payment);
+            LoadingShipping(postProcessPaymentRequest, payment);
+            LoadingSender(postProcessPaymentRequest, payment);
+
+            return Uol.PagSeguro.PaymentService.RegisterAsync(credentials, payment);
         }
 
         private void LoadingSender(PostProcessPaymentRequest postProcessPaymentRequest, PaymentRequest payment)

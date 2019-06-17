@@ -15,6 +15,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Nop.Core.Infrastructure;
 
 namespace Uol.PagSeguro
 {
@@ -23,24 +24,17 @@ namespace Uol.PagSeguro
     /// </summary>
     public class PaymentRequest
     {
-        private IList<Item> items;
+        private IList<Item> _items;
 
         /// <summary>
         /// Initializes a new instance of the PaymentRequest class
         /// </summary>
-        public PaymentRequest()
-        {
-            this.Currency = Uol.PagSeguro.Currency.Brl;
-        }
+        public PaymentRequest() => Currency = PagSeguro.Currency.Brl;
 
         /// <summary>
         /// Party that will be sending the money
         /// </summary>
-        public Sender Sender
-        {
-            get;
-            set;
-        }
+        public Sender Sender { get; set; }
 
         /// <summary>
         /// Payment currency. 
@@ -48,11 +42,7 @@ namespace Uol.PagSeguro
         /// <remarks>
         /// The expected currency values are defined in the <c cref="T:Uol.PagSeguro.Currency">Currencty</c> class.
         /// </remarks>
-        public string Currency
-        {
-            get;
-            set;
-        }
+        public string Currency { get; set; }
 
         /// <summary>
         /// Products/items in this payment request
@@ -61,11 +51,11 @@ namespace Uol.PagSeguro
         {
             get
             {
-                if (this.items == null)
+                if (_items == null)
                 {
-                    this.items = new List<Item>();
+                    _items = new List<Item>();
                 }
-                return items;
+                return _items;
             }
         }
 
@@ -75,12 +65,8 @@ namespace Uol.PagSeguro
         /// <remarks>
         /// Typically this is a confirmation page on your web site.
         /// </remarks>
-        public Uri RedirectUri
-        {
-            get;
-            set;
-        }
-
+        public Uri RedirectUri { get; set; }
+        
         /// <summary>
         /// Extra amount to be added to the transaction total
         /// </summary>
@@ -88,11 +74,7 @@ namespace Uol.PagSeguro
         /// This value can be used to add an extra charge to the transaction 
         /// or provide a discount in the case <c>ExtraAmount</c> is a negative value.
         /// </remarks>
-        public decimal? ExtraAmount
-        {
-            get;
-            set;
-        }
+        public decimal? ExtraAmount { get; set; }
 
         /// <summary>
         /// Reference code
@@ -101,20 +83,12 @@ namespace Uol.PagSeguro
         /// Optional. You can use the reference code to store an identifier so you can 
         /// associate the PagSeguro transaction to a transaction in your system.
         /// </remarks>
-        public string Reference
-        {
-            get;
-            set;
-        }
+        public string Reference { get; set; }
 
         /// <summary>
         /// Shipping information associated with this payment request
         /// </summary>
-        public Shipping Shipping
-        {
-            get;
-            set;
-        }
+        public Shipping Shipping { get; set; }
 
         /// <summary>
         /// How long this payment request will remain valid, in seconds.
@@ -123,11 +97,7 @@ namespace Uol.PagSeguro
         /// Optional. After this payment request is submitted, the payment code returned
         /// will remain valid for the period specified here. 
         /// </remarks>
-        public long? MaxAge
-        {
-            get;
-            set;
-        }
+        public long? MaxAge { get; set; }
 
         /// <summary>
         /// How many times the payment redirect uri returned by the payment web service can be accessed.
@@ -138,22 +108,7 @@ namespace Uol.PagSeguro
         /// 
         /// See also <seealso cref="Uol.PagSeguro.PaymentRequestResponse.PaymentRedirectUri"/>
         /// </remarks>
-        public long? MaxUses
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// Calls the PagSeguro web service and register this request for payment
-        /// </summary>
-        /// <param name="credentials">PagSeguro credentials</param>
-        /// <returns>The Uri to where the user needs to be redirected to in order to complete the payment process</returns>
-        public Uri Register(Credentials credentials)
-        {
-            return PaymentService.Register(credentials, this);
-        }
-
+        public long? MaxUses { get; set; }
 
         /// <summary>
         /// Returns a string that represents the current object
@@ -161,12 +116,15 @@ namespace Uol.PagSeguro
         /// <returns></returns>
         public override string ToString()
         {
-            StringBuilder builder = new StringBuilder();
-            builder.Append(this.GetType().Name).Append("(");
-            builder.Append("Reference=").Append(this.Reference).Append(", ");
-            string email = this.Sender == null ? null : this.Sender.Email;
+            var builder = PooledStringBuilder.Create();
+            builder.Append(GetType().Name).Append("(");
+
+            builder.Append("Reference=").Append(Reference).Append(", ");
+
+            string email = Sender?.Email;
             builder.Append("Sender.Email=").Append(email).Append(")");
-            return builder.ToString();
+
+            return builder.ToStringAndReturn();
         }
     }
 }

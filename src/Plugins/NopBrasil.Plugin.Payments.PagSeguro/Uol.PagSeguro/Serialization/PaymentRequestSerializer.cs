@@ -8,13 +8,13 @@ namespace Uol.PagSeguro.Serialization
 {
     internal static class PaymentRequestSerializer
     {
-        internal const string Checkout = "checkout";
-        private const string Currency = "currency";
-        private const string RedirectUrl = "redirectURL";
-        private const string ExtraAmount = "extraAmount";
-        private const string Reference = "reference";
-        private const string MaxAge = "maxAge";
-        private const string MaxUses = "maxUses";
+        internal const string CHECKOUT = "checkout";
+        private const string CURRENCY = "currency";
+        private const string REDIRECT_URL = "redirectURL";
+        private const string EXTRA_AMOUNT = "extraAmount";
+        private const string REFERENCE = "reference";
+        private const string MAX_AGE = "maxAge";
+        private const string MAX_USES = "maxUses";
 
         internal static void Write(XmlWriter writer, PaymentRequest payment)
         {
@@ -23,9 +23,9 @@ namespace Uol.PagSeguro.Serialization
             if (payment == null)
                 throw new ArgumentNullException("payment");
 
-            writer.WriteStartElement(PaymentRequestSerializer.Checkout);
+            writer.WriteStartElement(PaymentRequestSerializer.CHECKOUT);
 
-            writer.WriteElementString(PaymentRequestSerializer.Currency, payment.Currency);
+            writer.WriteElementString(PaymentRequestSerializer.CURRENCY, payment.Currency);
 
             if (payment.Sender != null)
             {
@@ -34,7 +34,7 @@ namespace Uol.PagSeguro.Serialization
 
             if (payment.RedirectUri != null)
             {
-                writer.WriteElementString(PaymentRequestSerializer.RedirectUrl, payment.RedirectUri.ToString());
+                writer.WriteElementString(PaymentRequestSerializer.REDIRECT_URL, payment.RedirectUri.ToString());
             }
 
             if (payment.Items.Count > 0)
@@ -42,16 +42,16 @@ namespace Uol.PagSeguro.Serialization
                 ItemListSerializer.Write(writer, payment.Items);
             }
 
-            SerializationHelper.WriteElementStringNotNull(writer, PaymentRequestSerializer.ExtraAmount, payment.ExtraAmount);
-            SerializationHelper.WriteElementStringNotNull(writer, PaymentRequestSerializer.Reference, payment.Reference);
+            SerializationHelper.WriteElementStringNotNull(writer, PaymentRequestSerializer.EXTRA_AMOUNT, payment.ExtraAmount);
+            SerializationHelper.WriteElementStringNotNull(writer, PaymentRequestSerializer.REFERENCE, payment.Reference);
 
             if (payment.Shipping != null)
             {
                 ShippingSerializer.Write(writer, payment.Shipping);
             }
 
-            SerializationHelper.WriteElementStringNotNull(writer, PaymentRequestSerializer.MaxAge, payment.MaxAge);
-            SerializationHelper.WriteElementStringNotNull(writer, PaymentRequestSerializer.MaxUses, payment.MaxUses);
+            SerializationHelper.WriteElementStringNotNull(writer, PaymentRequestSerializer.MAX_AGE, payment.MaxAge);
+            SerializationHelper.WriteElementStringNotNull(writer, PaymentRequestSerializer.MAX_USES, payment.MaxUses);
 
             writer.WriteEndElement();
         }
