@@ -115,12 +115,16 @@ namespace Nop.Services.Messages
 
             //find conditional statements in the original template
             var conditionalStatements = regexFullConditionalSatement.Matches(template)
-                .SelectMany(match => match.Groups["Condition"].Captures.Select(capture => new
-                {
-                    capture.Index,
-                    FullStatement = capture.Value,
-                    Condition = regexCondition.Match(capture.Value).Value
-                })).ToList();
+                .ToDynamicArray<Match>()
+                .SelectMany(match => match.Groups["Condition"].Captures
+                    .ToDynamicArray<Capture>()
+                    .Select(capture => new
+                    {
+                        capture.Index,
+                        FullStatement = capture.Value,
+                        Condition = regexCondition.Match(capture.Value).Value
+                    })
+                ).ToList();
 
             if (!conditionalStatements.Any())
                 return template;

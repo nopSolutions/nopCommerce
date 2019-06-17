@@ -706,7 +706,7 @@ namespace Nop.Services.Media
             var query = _pictureRepository.Table;
 
             if (!string.IsNullOrEmpty(virtualPath))
-                query = virtualPath.EndsWith('/') ? query.Where(p => p.VirtualPath.StartsWith(virtualPath) || p.VirtualPath == virtualPath.TrimEnd('/')) : query.Where(p => p.VirtualPath == virtualPath);
+                query = virtualPath.EndsWith("/") ? query.Where(p => p.VirtualPath.StartsWith(virtualPath) || p.VirtualPath == virtualPath.TrimEnd('/')) : query.Where(p => p.VirtualPath == virtualPath);
 
             query = query.OrderByDescending(p => p.Id);
 

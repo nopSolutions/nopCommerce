@@ -102,13 +102,13 @@
     <div class="topic-posts">
         @foreach (var post in @Model.ForumPostModels)
         {
-            Html.RenderPartial("_ForumPost", post);
+            await Html.RenderPartialAsync("_ForumPost", post);
         }
     </div>
 
     <div class="topic-actions lower">
         <div class="actions">
-            @Html.RouteLink(T("Forum.Reply").Text, "PostCreate", new {id = Model.Id}, new {@class = "reply-topic-button"})
+            @Html.RouteLink(T("Forum.Reply").Text, "PostCreate", new { id = Model.Id }, new { @class = "reply-topic-button" })
             @if (Model.IsCustomerAllowedToSubscribe)
             {
                 <a class="watch-topic-button" href="#" id="watch-topic-bottom">@Model.WatchTopicText</a>

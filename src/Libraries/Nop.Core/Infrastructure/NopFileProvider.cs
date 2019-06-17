@@ -479,7 +479,7 @@ namespace Nop.Core.Infrastructure
             path = path.Replace("~/", string.Empty).TrimStart('/');
 
             //if virtual path has slash on the end, it should be after transform the virtual path to physical path too
-            var pathEnd = path.EndsWith('/') ? Path.DirectorySeparatorChar.ToString() : string.Empty;
+            var pathEnd = path.EndsWith("/") ? Path.DirectorySeparatorChar.ToString() : string.Empty;
 
             return Combine(BaseDirectory ?? string.Empty, path) + pathEnd;
         }

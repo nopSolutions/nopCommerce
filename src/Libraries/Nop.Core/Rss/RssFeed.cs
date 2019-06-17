@@ -86,11 +86,11 @@ namespace Nop.Core.Rss
         /// </summary>
         /// <param name="stream">Stream</param>
         /// <returns>The asynchronous task whose result contains the RSS feed</returns>
-        public static async Task<RssFeed> LoadAsync(Stream stream)
+        public static Task<RssFeed> LoadAsync(Stream stream)
         {
             try
             {
-                var document = await XDocument.LoadAsync(stream, LoadOptions.None, default(CancellationToken));
+                var document = XDocument.Load(stream, LoadOptions.None);
 
                 var channel = document.Root?.Element(NopRssDefaults.Channel);
 
@@ -110,12 +110,11 @@ namespace Nop.Core.Rss
                     feed.Items.Add(new RssItem(item));
                 }
 
-                return feed;
-
+                return Task.FromResult(feed);
             }
             catch
             {
-                return null;
+                return Task.FromResult(default(RssFeed));
             }
         }
 
