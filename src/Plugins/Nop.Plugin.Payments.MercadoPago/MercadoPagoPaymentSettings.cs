@@ -9,11 +9,16 @@ namespace Nop.Plugin.Payments.MercadoPago
     {
         public string PublicKey { get; set; }
 
-        public string AccessToken { get; set; }
-
         public string PublicKeySandbox { get; set; }
 
+        public string AccessToken { get; set; }
+
         public string AccessTokenSandbox { get; set; }
+
+        public string GetAccessTokenEnvironment()
+        {
+            return UseSandbox ? AccessTokenSandbox : AccessToken;
+        }
 
         /// <summary>
         /// Gets or sets a value indicating whether to use sandbox (testing environment)

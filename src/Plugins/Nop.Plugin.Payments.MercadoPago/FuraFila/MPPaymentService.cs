@@ -1,12 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using FuraFila.Payments.MercadoPago.Services;
+using Nop.Core;
+using Nop.Core.Infrastructure;
 using Nop.Plugin.Payments.MercadoPago;
 using Nop.Plugin.Payments.MercadoPago.FuraFila;
 using Nop.Plugin.Payments.MercadoPago.FuraFila.Models;
+using Nop.Plugin.Payments.MercadoPago.FuraFila.Payments;
 using Nop.Plugin.Payments.MercadoPago.FuraFila.Preferences;
+using Nop.Services.Orders;
 using Nop.Services.Payments;
 
 namespace Nop.Plugin.Payments.MercadoPago.FuraFila
@@ -31,15 +36,20 @@ namespace Nop.Plugin.Payments.MercadoPago.FuraFila
             LoadingSender(postProcessPaymentRequest, payment);
 
             payment.AutoReturn = AutoReturn.ALL;
-            payment.ExternalReference = postProcessPaymentRequest.Order.Id.ToString();
-            payment.AdditionalInfo = "NopS SVC";
+
+            payment.ExternalReference = $"NP-{postProcessPaymentRequest.Order.StoreId}-{postProcessPaymentRequest.Order.Id}";
+            payment.AdditionalInfo = $"NOP-STORE-{postProcessPaymentRequest.Order.StoreId}-ORDER{postProcessPaymentRequest.Order.Id}";
+
+
+            var webHelper = EngineContext.Current.Resolve<IWebHelper>();
+            string storeLocation = webHelper.GetStoreLocation();
 
             payment.BackUrls = new BackUrls();
-            payment.BackUrls.Success = $"https://localhost/Nop.Web/checkout/completed/{postProcessPaymentRequest.Order.Id}";
-            payment.BackUrls.Pending = $"https://localhost/Nop.Web/checkout/completed/{postProcessPaymentRequest.Order.Id}";
-            payment.BackUrls.Failure = $"https://localhost/Nop.Web/checkout/completed/{postProcessPaymentRequest.Order.Id}";
+            payment.BackUrls.Success = $"{storeLocation}/checkout/completed/{postProcessPaymentRequest.Order.Id}";
+            payment.BackUrls.Pending = $"{storeLocation}/checkout/completed/{postProcessPaymentRequest.Order.Id}";
+            payment.BackUrls.Failure = $"{storeLocation}/checkout/completed/{postProcessPaymentRequest.Order.Id}";
 
-            string accessToken = settings.UseSandbox ? settings.AccessTokenSandbox : settings.AccessToken;
+            string accessToken = settings.GetAccessTokenEnvironment();
             var preferenceResponse = await _service.CreatePaymentPreference(payment, accessToken, cancellationToken);
 
             return GetRedirectUri(preferenceResponse.InitPoint, preferenceResponse.SandboxInitPoint, settings.UseSandbox);
@@ -98,6 +108,46 @@ namespace Nop.Plugin.Payments.MercadoPago.FuraFila
                 item.CurrencyId = CURRENCY_CODE;
 
                 payment.Items.Add(item);
+            }
+        }
+
+
+        private IEnumerable<Core.Domain.Orders.Order> GetPendingOrders(IOrderService orderService, IStoreContext storeContext, IOrderProcessingService orderProcessingService)
+        {
+            return orderService.SearchOrders(storeId: storeContext.CurrentStore.Id,
+                paymentMethodSystemName: "Payments.MercadoPago",
+                psIds: new List<int>() { 10 })
+                    .Where(o => orderProcessingService.CanMarkOrderAsPaid(o)
+                );
+        }
+
+        private async Task<Payment> GetTransaction(MercadoPagoPaymentSettings settings, string referenceCode, CancellationToken cancellationToken = default)
+        {
+            var svc = EngineContext.Current.Resolve<MPHttpService>();
+
+            var rq = new SearchPaymentRequest { ExternalReference = referenceCode };
+
+            string accessToken = settings.GetAccessTokenEnvironment();
+            var result = await svc.SearchByReference(rq, accessToken, cancellationToken);
+
+            if (result != null)
+                return result.Results.FirstOrDefault(x => string.Compare(referenceCode, x.ExternalReference, true) == 0);
+            return null;
+        }
+
+        private bool TransactionIsPaid(Payment transaction) => (string.Compare(PaymentStatuses.APPROVED, transaction?.Status, true) == 0);
+
+        public async Task CheckPayments(CancellationToken cancellationToken = default)
+        {
+            var settings = EngineContext.Current.Resolve<MercadoPagoPaymentSettings>();
+            var store = EngineContext.Current.Resolve<IStoreContext>();
+            var orderService = EngineContext.Current.Resolve<IOrderService>();
+            var orderPorcessingSvc = EngineContext.Current.Resolve<IOrderProcessingService>();
+
+            foreach (var order in GetPendingOrders(orderService, store, orderPorcessingSvc))
+            {
+                if (TransactionIsPaid(await GetTransaction(settings, order.Id.ToString())))
+                    orderPorcessingSvc.MarkOrderAsPaid(order);
             }
         }
     }

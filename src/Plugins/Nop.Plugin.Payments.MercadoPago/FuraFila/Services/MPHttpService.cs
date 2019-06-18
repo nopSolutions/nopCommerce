@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Nop.Core.Infrastructure;
 using Nop.Plugin.Payments.MercadoPago.Exceptions;
+using Nop.Plugin.Payments.MercadoPago.FuraFila.Payments;
 using Nop.Plugin.Payments.MercadoPago.FuraFila.Preferences;
 using Nop.Services.Logging;
 
@@ -60,14 +61,49 @@ namespace FuraFila.Payments.MercadoPago.Services
                         var jResult = await response.Content.ReadAsStringAsync();
                         var logger = EngineContext.Current.Resolve<ILogger>();
 
-                        logger.Error($"PaymentService.Register({rq}) - error {jResult}");
+                        logger.Error($"PaymentService.CreatePaymentPreference({rq}) - error {jResult}");
 
                         throw new CreatePaymentPreferenceHttpException();
                     }
                     else
                     {
                         var logger = EngineContext.Current.Resolve<ILogger>();
-                        logger.Error($"PaymentService.Register({rq}) - unknow error with status code {response.StatusCode}");
+                        logger.Error($"PaymentService.CreatePaymentPreference({rq}) - unknow error with status code {response.StatusCode}");
+                        throw new CreatePaymentPreferenceHttpException();
+                    }
+                }
+            }
+        }
+
+        public async Task<SearchPaymentResponse> SearchByReference(SearchPaymentRequest rq, string accessToken, CancellationToken cancellationToken = default)
+        {
+            using (var request = new HttpRequestMessage(HttpMethod.Get, $"/v1/payments/search?access_token={accessToken}&external_reference={rq.ExternalReference}"))
+            {
+                request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                using (var response = await _client.SendAsync(request, cancellationToken))
+                {
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        var jResult = await response.Content.ReadAsStringAsync();
+
+                        var result = JsonConvert.DeserializeObject<SearchPaymentResponse>(jResult);
+
+                        return result;
+                    }
+                    else if (response.StatusCode == HttpStatusCode.BadRequest)
+                    {
+                        var jResult = await response.Content.ReadAsStringAsync();
+                        var logger = EngineContext.Current.Resolve<ILogger>();
+
+                        logger.Error($"PaymentService.PaymentsSearch({rq}) - error {jResult}");
+
+                        throw new CreatePaymentPreferenceHttpException();
+                    }
+                    else
+                    {
+                        var logger = EngineContext.Current.Resolve<ILogger>();
+                        logger.Error($"PaymentService.PaymentsSearch({rq}) - unknow error with status code {response.StatusCode}");
                         throw new CreatePaymentPreferenceHttpException();
                     }
                 }

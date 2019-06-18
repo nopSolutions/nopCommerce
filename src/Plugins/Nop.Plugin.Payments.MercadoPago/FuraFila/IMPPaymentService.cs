@@ -11,5 +11,7 @@ namespace Nop.Plugin.Payments.MercadoPago.FuraFila
     public interface IMPPaymentService
     {
         Task<Uri> CreatePaymentRequest(PostProcessPaymentRequest request, MercadoPagoPaymentSettings settings, CancellationToken cancellationToken = default);
+
+        Task CheckPayments(CancellationToken cancellationToken = default);
     }
 }

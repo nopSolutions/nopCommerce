@@ -8,6 +8,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Infrastructure;
 using Nop.Plugin.Payments.MercadoPago.FuraFila;
+using Nop.Plugin.Payments.MercadoPago.Tasks;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
@@ -140,11 +141,16 @@ namespace Nop.Plugin.Payments.MercadoPago
             localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.MercadoPago.Fields.PassPurchasedItems", "Enviar produtos ao checkout do Mercado Pago");
             localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.MercadoPago.Fields.MethodDescription", "Descrição que será exibida no checkout");
 
+            var checkPaymentTask = EngineContext.Current.Resolve<CheckPaymentMPTask>();
+            checkPaymentTask.InstallTask();
             base.Install();
         }
 
         public override void Uninstall()
         {
+            var checkPaymentTask = EngineContext.Current.Resolve<CheckPaymentMPTask>();
+            checkPaymentTask.UninstallTask();
+
             var settingService = EngineContext.Current.Resolve<ISettingService>();
             settingService.DeleteSetting<MercadoPagoPaymentSettings>();
 
