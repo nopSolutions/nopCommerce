@@ -4,7 +4,7 @@
   "SystemName": "Payments.PagSeguro",
   "Version": "2.00",
   "SupportedVersions": [ "4.20" ],
-  "Author": "nopCommerce Brasil and rmauro@dev",
+  "Author": "nopCommerce Brasil & rmauro@dev",
   "DisplayOrder": 1,
   "FileName": "NopBrasil.Plugin.Payments.PagSeguro.dll",
   "Description": "Payment plugin for integration with UOL PagSeguro for nopCommerce"

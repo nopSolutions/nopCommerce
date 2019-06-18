@@ -4,6 +4,8 @@ using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Orders;
@@ -25,6 +27,7 @@ using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Plugin.Payments.MercadoPago.Controllers
 {
+    [Area(AreaNames.Admin)]
     public class PaymentMercadoPagoController : BasePaymentController
     {
         private readonly INotificationService _notificationService;
@@ -33,10 +36,10 @@ namespace Nop.Plugin.Payments.MercadoPago.Controllers
         private readonly ISettingService _settingService;
         private readonly IStoreContext _storeContext;
 
-        public PaymentMercadoPagoController(INotificationService notificationService, 
-            ILocalizationService localizationService, 
-            IPermissionService permissionService, 
-            ISettingService settingService, 
+        public PaymentMercadoPagoController(INotificationService notificationService,
+            ILocalizationService localizationService,
+            IPermissionService permissionService,
+            ISettingService settingService,
             IStoreContext storeContext)
         {
             _notificationService = notificationService ?? throw new ArgumentNullException(nameof(notificationService));
@@ -47,8 +50,7 @@ namespace Nop.Plugin.Payments.MercadoPago.Controllers
         }
 
         [AuthorizeAdmin]
-        [Area(AreaNames.Admin)]
-        public IActionResult Configure()
+        public IActionResult Configure(CancellationToken cancellationToken = default)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePaymentMethods))
                 return AccessDeniedView();
@@ -86,7 +88,6 @@ namespace Nop.Plugin.Payments.MercadoPago.Controllers
         [HttpPost]
         [AuthorizeAdmin]
         [AdminAntiForgery]
-        [Area(AreaNames.Admin)]
         public IActionResult Configure(ConfigurationModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePaymentMethods))

@@ -19,7 +19,7 @@ namespace Nop.Plugin.Payments.MercadoPago.FuraFila.Models
         /// O numero
         /// </summary>
         [JsonProperty(PropertyName = "street_number")]
-        public int StreetNumber { get; set; }
+        public int? StreetNumber { get; set; }
 
         /// <summary>
         /// Codigo postal

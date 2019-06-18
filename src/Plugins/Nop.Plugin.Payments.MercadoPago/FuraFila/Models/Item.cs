@@ -24,9 +24,9 @@ namespace Nop.Plugin.Payments.MercadoPago.FuraFila.Models
         [JsonProperty(PropertyName = "currency_id")]
         public string CurrencyId { get; set; }
 
-        public int Quantity { get; set; }
+        public int? Quantity { get; set; }
 
         [JsonProperty(PropertyName = "unit_price")]
-        public decimal UnitPrice { get; set; }
+        public decimal? UnitPrice { get; set; }
     }
 }

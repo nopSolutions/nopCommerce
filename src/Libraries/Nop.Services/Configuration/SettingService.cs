@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -143,7 +143,7 @@ namespace Nop.Services.Configuration
                 InsertSetting(setting, clearCache);
             }
         }
-       
+
         #endregion
 
         #region Methods
@@ -254,7 +254,7 @@ namespace Nop.Services.Configuration
 
             var settings = GetAllSettingsCached();
             key = key.Trim().ToLowerInvariant();
-            if (!settings.ContainsKey(key)) 
+            if (!settings.ContainsKey(key))
                 return null;
 
             var settingsByKey = settings[key];
@@ -276,15 +276,14 @@ namespace Nop.Services.Configuration
         /// <param name="storeId">Store identifier</param>
         /// <param name="loadSharedValueIfNotFound">A value indicating whether a shared (for all stores) value should be loaded if a value specific for a certain is not found</param>
         /// <returns>Setting value</returns>
-        public virtual T GetSettingByKey<T>(string key, T defaultValue = default(T),
-            int storeId = 0, bool loadSharedValueIfNotFound = false)
+        public virtual T GetSettingByKey<T>(string key, T defaultValue = default, int storeId = 0, bool loadSharedValueIfNotFound = false)
         {
             if (string.IsNullOrEmpty(key))
                 return defaultValue;
 
             var settings = GetAllSettingsCached();
             key = key.Trim().ToLowerInvariant();
-            if (!settings.ContainsKey(key)) 
+            if (!settings.ContainsKey(key))
                 return defaultValue;
 
             var settingsByKey = settings[key];
@@ -510,7 +509,7 @@ namespace Nop.Services.Configuration
             var allSettings = GetAllSettingsCached();
             var settingForCaching = allSettings.ContainsKey(key) ?
                 allSettings[key].FirstOrDefault(x => x.StoreId == storeId) : null;
-            if (settingForCaching == null) 
+            if (settingForCaching == null)
                 return;
 
             //update
@@ -544,7 +543,7 @@ namespace Nop.Services.Configuration
                 throw new ArgumentException($"Expression '{keySelector}' refers to a field, not a property.");
 
             var key = $"{typeof(TSettings).Name}.{propInfo.Name}";
-            
+
             return key;
         }
         #endregion

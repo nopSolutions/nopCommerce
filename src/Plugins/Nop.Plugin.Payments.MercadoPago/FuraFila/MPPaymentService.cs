@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using FuraFila.Payments.MercadoPago.Services;
@@ -8,7 +9,7 @@ using Nop.Plugin.Payments.MercadoPago.FuraFila.Models;
 using Nop.Plugin.Payments.MercadoPago.FuraFila.Preferences;
 using Nop.Services.Payments;
 
-namespace FuraFila.Payments.MercadoPago
+namespace Nop.Plugin.Payments.MercadoPago.FuraFila
 {
     public class MPPaymentService : IMPPaymentService
     {
@@ -30,6 +31,13 @@ namespace FuraFila.Payments.MercadoPago
             LoadingSender(postProcessPaymentRequest, payment);
 
             payment.AutoReturn = AutoReturn.ALL;
+            payment.ExternalReference = postProcessPaymentRequest.Order.Id.ToString();
+            payment.AdditionalInfo = "NopS SVC";
+
+            payment.BackUrls = new BackUrls();
+            payment.BackUrls.Success = $"https://localhost/Nop.Web/checkout/completed/{postProcessPaymentRequest.Order.Id}";
+            payment.BackUrls.Pending = $"https://localhost/Nop.Web/checkout/completed/{postProcessPaymentRequest.Order.Id}";
+            payment.BackUrls.Failure = $"https://localhost/Nop.Web/checkout/completed/{postProcessPaymentRequest.Order.Id}";
 
             string accessToken = settings.UseSandbox ? settings.AccessTokenSandbox : settings.AccessToken;
             var preferenceResponse = await _service.CreatePaymentPreference(payment, accessToken, cancellationToken);
@@ -74,6 +82,7 @@ namespace FuraFila.Payments.MercadoPago
 
         private void LoadingItems(PostProcessPaymentRequest postProcessPaymentRequest, PreferenceRequest payment)
         {
+            payment.Items = new List<Item>();
             foreach (var product in postProcessPaymentRequest.Order.OrderItems)
             {
                 var item = new Item();

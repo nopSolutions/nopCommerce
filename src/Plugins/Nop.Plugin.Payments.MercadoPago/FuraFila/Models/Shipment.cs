@@ -32,12 +32,12 @@ namespace Nop.Plugin.Payments.MercadoPago.FuraFila.Models
         /// Escolha um metodo de envio padrao no _check_(mode:me2 somente)
         /// </summary>
         [JsonProperty(PropertyName ="default_shipping_method")]
-        public int DefaultShippingMethod { get; set; }
+        public int? DefaultShippingMethod { get; set; }
 
         /// <summary>
         /// Custo do transporte (mode:custom somente)
         /// </summary>
-        public decimal Cost { get; set; }
+        public decimal? Cost { get; set; }
 
         /// <summary>
         /// Preferencia de frente grátis para mode:custom

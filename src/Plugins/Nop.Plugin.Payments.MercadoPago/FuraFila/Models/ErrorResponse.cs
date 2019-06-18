@@ -6,8 +6,12 @@ using System.Threading.Tasks;
 
 namespace Nop.Plugin.Payments.MercadoPago.FuraFila.Models
 {
-    public class Preference
+    public class BaseResponse
     {
-        
+        public string Message { get; set; }
+
+        public string Error { get; set; }
+
+        public string Status { get; set; }
     }
 }

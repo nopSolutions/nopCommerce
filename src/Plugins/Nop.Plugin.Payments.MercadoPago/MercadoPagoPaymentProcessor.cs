@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Nop.Core;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Infrastructure;
 using Nop.Plugin.Payments.MercadoPago.FuraFila;
+using Nop.Services.Configuration;
+using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Payments;
 using Nop.Services.Plugins;
@@ -124,5 +127,43 @@ namespace Nop.Plugin.Payments.MercadoPago
         public IList<string> ValidatePaymentForm(IFormCollection form) => new List<string>();
 
         public VoidPaymentResult Void(VoidPaymentRequest voidPaymentRequest) => new VoidPaymentResult();
+
+        public override void Install()
+        {
+            var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
+            localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.MercadoPago.Fields.Redirection", "Você será redirecionado para a pagina do Mercado Pago");
+            localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.MercadoPago.Fields.PublicKey", "Public Key");
+            localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.MercadoPago.Fields.AccessToken", "Access Token");
+            localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.MercadoPago.Fields.PublicKeySandbox", "Public Key Sandbox");
+            localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.MercadoPago.Fields.AccessTokenSandbox", "Access Token Sandbox");
+            localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.MercadoPago.Fields.UseSandbox", "Ambiente Sandbox");
+            localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.MercadoPago.Fields.PassPurchasedItems", "Enviar produtos ao checkout do Mercado Pago");
+            localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.MercadoPago.Fields.MethodDescription", "Descrição que será exibida no checkout");
+
+            base.Install();
+        }
+
+        public override void Uninstall()
+        {
+            var settingService = EngineContext.Current.Resolve<ISettingService>();
+            settingService.DeleteSetting<MercadoPagoPaymentSettings>();
+
+            var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
+            localizationService.DeletePluginLocaleResource("Plugins.Payments.MercadoPago.Fields.Redirection");
+            localizationService.DeletePluginLocaleResource("Plugins.Payments.MercadoPago.Fields.PublicKey");
+            localizationService.DeletePluginLocaleResource("Plugins.Payments.MercadoPago.Fields.AccessToken");
+            localizationService.DeletePluginLocaleResource("Plugins.Payments.MercadoPago.Fields.PublicKeySandbox");
+            localizationService.DeletePluginLocaleResource("Plugins.Payments.MercadoPago.Fields.AccessTokenSandbox");
+            localizationService.DeletePluginLocaleResource("Plugins.Payments.MercadoPago.Fields.UseSandbox");
+            localizationService.DeletePluginLocaleResource("Plugins.Payments.MercadoPago.Fields.PassPurchasedItems");
+            localizationService.DeletePluginLocaleResource("Plugins.Payments.MercadoPago.Fields.MethodDescription");
+            base.Uninstall();
+        }
+
+        public override string GetConfigurationPageUrl()
+        {
+            var webHelper = EngineContext.Current.Resolve<IWebHelper>();
+            return $"{webHelper.GetStoreLocation()}Admin/PaymentMercadoPago/Configure";
+        }
     }
 }

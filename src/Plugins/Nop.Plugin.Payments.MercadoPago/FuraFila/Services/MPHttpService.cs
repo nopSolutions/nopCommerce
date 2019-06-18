@@ -31,6 +31,7 @@ namespace FuraFila.Payments.MercadoPago.Services
         public MPHttpService(HttpClient client)
         {
             _client = client ?? throw new ArgumentNullException(nameof(client));
+            _client.BaseAddress = new Uri(MP_URI);
         }
 
         public async Task<PreferenceResponse> CreatePaymentPreference(PreferenceRequest rq, string accessToken, CancellationToken cancellationToken = default)
@@ -46,7 +47,7 @@ namespace FuraFila.Payments.MercadoPago.Services
 
                 using (var response = await _client.SendAsync(request, cancellationToken))
                 {
-                    if (response.StatusCode == HttpStatusCode.OK)
+                    if (response.StatusCode == HttpStatusCode.OK || response.StatusCode == HttpStatusCode.Created)
                     {
                         var jResult = await response.Content.ReadAsStringAsync();
 
@@ -65,6 +66,8 @@ namespace FuraFila.Payments.MercadoPago.Services
                     }
                     else
                     {
+                        var logger = EngineContext.Current.Resolve<ILogger>();
+                        logger.Error($"PaymentService.Register({rq}) - unknow error with status code {response.StatusCode}");
                         throw new CreatePaymentPreferenceHttpException();
                     }
                 }

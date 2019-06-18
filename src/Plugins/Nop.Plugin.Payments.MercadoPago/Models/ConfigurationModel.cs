@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Web.Framework.Models;
+﻿using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Plugin.Payments.MercadoPago.Models
@@ -34,7 +33,6 @@ namespace Nop.Plugin.Payments.MercadoPago.Models
 
         [NopResourceDisplayName("Plugins.Payments.MercadoPago.Fields.MethodDescription")]
         public string PaymentMethodDescription { get; set; }
-
         public bool PaymentMethodDescription_OverrideForStore { get; set; }
     }
 }

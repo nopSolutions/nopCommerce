@@ -6,7 +6,7 @@
 
 @await Component.InvokeAsync("StoreScopeConfiguration")
 
-<form asp-controller="PaymentPagSeguro" asp-action="Configure" method="post">
+<form asp-controller="PaymentMercadoPago" asp-action="Configure" method="post">
     <div class="panel-group">
         <div class="panel panel-default">
             <div class="panel-body">
@@ -82,12 +82,12 @@
 
                 <div class="form-group">
                     <div class="col-md-3">
-                        <nop-override-store-checkbox asp-for="IsSandbox_OverrideForStore" asp-input="IsSandbox" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                        <nop-label asp-for="IsSandbox" />
+                        <nop-override-store-checkbox asp-for="UseSandbox_OverrideForStore" asp-input="UseSandbox" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="UseSandbox" />
                     </div>
                     <div class="col-md-9">
-                        <nop-editor asp-for="IsSandbox" />
-                        <span asp-validation-for="IsSandbox"></span>
+                        <nop-editor asp-for="UseSandbox" />
+                        <span asp-validation-for="UseSandbox"></span>
                     </div>
                 </div>
 

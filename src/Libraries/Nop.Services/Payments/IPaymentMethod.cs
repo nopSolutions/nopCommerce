@@ -24,7 +24,6 @@ namespace Nop.Services.Payments
         /// Post process payment (used by payment gateways that require redirecting to a third-party URL)
         /// </summary>
         /// <param name="postProcessPaymentRequest">Payment info required for an order processing</param>
-        [System.Obsolete("Use async version instead")]
         void PostProcessPayment(PostProcessPaymentRequest postProcessPaymentRequest);
 
         /// <summary>

@@ -4,7 +4,7 @@ using Nop.Plugin.Payments.MercadoPago.FuraFila.Models;
 
 namespace Nop.Plugin.Payments.MercadoPago.FuraFila.Preferences
 {
-    public class PreferenceResponse
+    public class PreferenceResponse : BaseResponse
     {
         [JsonProperty(PropertyName = "collector_id")]
         public int CollectorId { get; set; }
