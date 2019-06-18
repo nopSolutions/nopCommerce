@@ -1,10 +1,13 @@
 ﻿using Nop.Core;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Stores;
+using Nop.Core.Infrastructure;
 using Nop.Services.Configuration;
 using Nop.Services.Directory;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
+using Nop.Services.Stores;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -143,21 +146,53 @@ namespace NopBrasil.Plugin.Payments.PagSeguro.Services
             }
         }
 
-        private IEnumerable<Order> GetPendingOrders() => _orderService.SearchOrders(_storeContext.CurrentStore.Id, paymentMethodSystemName: "Payments.PagSeguro", psIds: new List<int>() { 10 }).Where(o => _orderProcessingService.CanMarkOrderAsPaid(o));
+        private IEnumerable<Order> GetPendingOrders(Store store)
+        {
+            return _orderService.SearchOrders(
+                storeId: store.Id,
+                paymentMethodSystemName: "Payments.PagSeguro",
+                psIds: new List<int>() { 10 }).Where(o => _orderProcessingService.CanMarkOrderAsPaid(o)
+            );
+        }
 
-        private TransactionSummary GetTransaction(AccountCredentials credentials, string referenceCode) => TransactionSearchService.SearchByReference(credentials, referenceCode)?.Items?.FirstOrDefault();
+        private async System.Threading.Tasks.Task<TransactionSummary> GetTransaction(AccountCredentials credentials, string referenceCode, CancellationToken cancellationToken = default)
+        {
+            var client = EngineContext.Current.Resolve<PagSeguroHttpClient>();
+            var result = await client.SearchByReference(credentials, referenceCode, cancellationToken);
+            return result?.Items.FirstOrDefault();
+        }
 
         private bool TransactionIsPaid(TransactionSummary transaction) => (transaction?.TransactionStatus == TransactionStatus.Paid || transaction?.TransactionStatus == TransactionStatus.Available);
 
-        public void CheckPayments()
+        public async System.Threading.Tasks.Task CheckPayments(CancellationToken cancellationToken = default)
         {
-            var credentials = new AccountCredentials(_pagSeguroPaymentSetting.PagSeguroEmail, _pagSeguroPaymentSetting.PagSeguroToken, _pagSeguroPaymentSetting.IsSandbox);
-            foreach (var order in GetPendingOrders())
+            var storeService = EngineContext.Current.Resolve<IStoreService>();
+            var storesToSyncColl = storeService.GetAllStores();
+
+            var settingService = EngineContext.Current.Resolve<ISettingService>();
+            var orderService = EngineContext.Current.Resolve<IOrderService>();
+            var orderProcessingSvc = EngineContext.Current.Resolve<IOrderProcessingService>();
+
+            foreach (var store in storesToSyncColl)
             {
-                string referenceId = GetExternalReferenceFromOrder(order);
-                if (TransactionIsPaid(GetTransaction(credentials, referenceId)))
+                var storeSetting = settingService.LoadSetting<PagSeguroPaymentSetting>(store.Id);
+                await CheckPayments(store, storeSetting, orderService, orderProcessingSvc, cancellationToken);
+            }
+        }
+
+        private async System.Threading.Tasks.Task CheckPayments(Store store, PagSeguroPaymentSetting setting, IOrderService orderService, IOrderProcessingService orderProcessingSvc, CancellationToken cancellationToken = default)
+        {
+            if (setting.IsSetup)
+            {
+                var credentials = new AccountCredentials(setting.PagSeguroEmail, setting.PagSeguroToken, setting.IsSandbox);
+                foreach (var order in GetPendingOrders(store))
                 {
-                    _orderProcessingService.MarkOrderAsPaid(order);
+                    string referenceId = GetExternalReferenceFromOrder(order);
+                    var transaction = await GetTransaction(credentials, referenceId);
+                    if (TransactionIsPaid(transaction))
+                    {
+                        _orderProcessingService.MarkOrderAsPaid(order);
+                    }
                 }
             }
         }

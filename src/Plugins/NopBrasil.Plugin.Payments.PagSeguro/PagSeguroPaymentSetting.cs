@@ -11,5 +11,7 @@ namespace NopBrasil.Plugin.Payments.PagSeguro
         public string PaymentMethodDescription { get; set; }
 
         public bool IsSandbox { get; set; }
+
+        public bool IsSetup => !string.IsNullOrEmpty(PagSeguroToken) && !string.IsNullOrEmpty(PagSeguroToken);
     }
 }

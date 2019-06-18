@@ -138,12 +138,10 @@ namespace Nop.Plugin.Payments.MercadoPago.FuraFila
 
         private async Task<Payment> GetTransaction(MercadoPagoPaymentSettings settings, string referenceCode, CancellationToken cancellationToken = default)
         {
-            var svc = EngineContext.Current.Resolve<MPHttpService>();
-
             var rq = new SearchPaymentRequest { ExternalReference = referenceCode };
 
             string accessToken = settings.GetAccessTokenEnvironment();
-            var result = await svc.SearchByReference(rq, accessToken, cancellationToken);
+            var result = await _service.SearchByReference(rq, accessToken, cancellationToken);
 
             if (result != null)
                 return result.Results.FirstOrDefault(x => string.Compare(referenceCode, x.ExternalReference, true) == 0);

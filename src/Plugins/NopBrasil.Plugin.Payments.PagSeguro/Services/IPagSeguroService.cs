@@ -12,6 +12,6 @@ namespace NopBrasil.Plugin.Payments.PagSeguro.Services
 
         Task<Uri> CreatePaymentAsync(PostProcessPaymentRequest postProcessPaymentRequest, CancellationToken cancellationToken = default);
 
-        void CheckPayments();
+        System.Threading.Tasks.Task CheckPayments(CancellationToken cancellationToken = default);
     }
 }

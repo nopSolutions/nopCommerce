@@ -15,7 +15,7 @@ namespace NopBrasil.Plugin.Payments.PagSeguro.Task
             this._scheduleTaskService = scheduleTaskService;
         }
 
-        public void Execute() => _pagSeguroService.CheckPayments();
+        public void Execute() => _pagSeguroService.CheckPayments().GetAwaiter().GetResult();
 
         private ScheduleTask GetScheduleTask()
         {

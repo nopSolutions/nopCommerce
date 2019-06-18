@@ -78,6 +78,7 @@ namespace Uol.PagSeguro
             }
         }
 
+        [Obsolete("Use HttpService version instead")]
         public static TransactionSearchResult SearchByReference(Credentials credentials, string referenceCode)
         {
             if (credentials == null)

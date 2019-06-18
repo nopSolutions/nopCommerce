@@ -31,6 +31,11 @@ namespace NopBrasil.Plugin.Payments.PagSeguro.Services
 
         internal async Task<PaymentRequestResponse> CreatePayment(Credentials credentials, PaymentRequest payment, CancellationToken cancellationToken = default)
         {
+            if (credentials == null)
+                throw new ArgumentNullException(nameof(credentials));
+            if (payment == null)
+                throw new ArgumentNullException(nameof(payment));
+
             var uriBuilder = new UriBuilder(PagSeguroConfiguration.GetPaymentUri(credentials.IsSandbox));
             uriBuilder.Query = ServiceHelper.EncodeCredentialsAsQueryString(credentials);
 
@@ -71,6 +76,53 @@ namespace NopBrasil.Plugin.Payments.PagSeguro.Services
                         {
                             var pse = ServiceHelper.CreatePagSeguroServiceException(stream, responseMessage.StatusCode);
                             PagSeguroTrace.Error(string.Format(CultureInfo.InvariantCulture, "PaymentService.Register({0}) - error {1}", payment, pse));
+                            throw pse;
+                        }
+                    }
+                }
+                //todo - put logger over here
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+        }
+
+        internal async Task<TransactionSearchResult> SearchByReference(Credentials credentials, string referenceCode, CancellationToken cancellationToken = default)
+        {
+            if (credentials == null)
+                throw new ArgumentNullException(nameof(credentials));
+            if (string.IsNullOrEmpty(referenceCode))
+                throw new ArgumentNullException(nameof(referenceCode));
+
+            PagSeguroTrace.Info(string.Format(CultureInfo.InvariantCulture, "TransactionSearchService.SearchByReference(referenceCode={0}) - begin", referenceCode));
+
+            UriBuilder uriBuilder = new UriBuilder(PagSeguroConfiguration.GetSearchUri(credentials.IsSandbox));
+            uriBuilder.Query = $"{ServiceHelper.EncodeCredentialsAsQueryString(credentials)}&reference={WebUtility.UrlEncode(referenceCode)}";
+
+            using (var requestMessage = new HttpRequestMessage(HttpMethod.Get, uriBuilder.Uri))
+            {
+                try
+                {
+                    HttpResponseMessage responseMessage = await _httpClient.SendAsync(requestMessage, cancellationToken);
+                    using (var stream = await responseMessage.Content.ReadAsStreamAsync())
+                    {
+                        if (responseMessage.StatusCode == HttpStatusCode.OK)
+                        {
+                            using (var reader = XmlReader.Create(stream))
+                            {
+                                var result = new TransactionSearchResult();
+                                TransactionSearchResultSerializer.Read(reader, result);
+
+                                PagSeguroTrace.Info(String.Format(CultureInfo.InvariantCulture, "TransactionSearchService.SearchByReference(referenceCode={0}) - end", referenceCode));
+
+                                return result;
+                            }
+                        }
+                        else
+                        {
+                            var pse = ServiceHelper.CreatePagSeguroServiceException(stream, responseMessage.StatusCode);
+                            PagSeguroTrace.Error(string.Format(CultureInfo.InvariantCulture, "TransactionSearchService.SearchByReference(referenceCode={0}) - error {1}", referenceCode, pse));
                             throw pse;
                         }
                     }

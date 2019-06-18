@@ -19,7 +19,7 @@
     <None Remove="Content\Images\logoPagamento.png" />
     <None Remove="Content\Images\nopCommerceBrasil.png" />
     <None Remove="Content\PagSeguro.css" />
-    <None Remove="Logo.jpg" />
+    <None Remove="logo.png" />
     <None Remove="plugin.json" />
     <None Remove="Views\Configure.cshtml" />
     <None Remove="Views\PaymentInfo.cshtml" />
@@ -35,7 +35,7 @@
     <Content Include="Content\PagSeguro.css">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Logo.jpg">
+    <Content Include="logo.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="plugin.json">

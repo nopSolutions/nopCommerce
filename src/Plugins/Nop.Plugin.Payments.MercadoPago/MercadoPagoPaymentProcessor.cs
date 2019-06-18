@@ -21,6 +21,13 @@ namespace Nop.Plugin.Payments.MercadoPago
     {
         internal const string PAYMENT_METHOD_NAME = "Payments.MercadoPago";
 
+        private readonly MercadoPagoPaymentSettings _settings;
+
+        public MercadoPagoPaymentProcessor(MercadoPagoPaymentSettings settings)
+        {
+            _settings = settings ?? throw new ArgumentNullException(nameof(settings));
+        }
+
         public bool SupportCapture => false;
 
         public bool SupportPartiallyRefund => false;
@@ -83,8 +90,7 @@ namespace Nop.Plugin.Payments.MercadoPago
             try
             {
                 var svc = EngineContext.Current.Resolve<IMPPaymentService>();
-                var settings = EngineContext.Current.Resolve<MercadoPagoPaymentSettings>();
-                var redirectUri = svc.CreatePaymentRequest(postProcessPaymentRequest, settings, CancellationToken.None).GetAwaiter().GetResult();
+                var redirectUri = svc.CreatePaymentRequest(postProcessPaymentRequest, _settings, CancellationToken.None).GetAwaiter().GetResult();
 
                 var httpContext = EngineContext.Current.Resolve<IHttpContextAccessor>();
                 httpContext.HttpContext.Response.Redirect(redirectUri.AbsoluteUri);
@@ -101,8 +107,7 @@ namespace Nop.Plugin.Payments.MercadoPago
             try
             {
                 var svc = EngineContext.Current.Resolve<IMPPaymentService>();
-                var settings = EngineContext.Current.Resolve<MercadoPagoPaymentSettings>();
-                var redirectUri = await svc.CreatePaymentRequest(postProcessPaymentRequest, settings, cancellationToken);
+                var redirectUri = await svc.CreatePaymentRequest(postProcessPaymentRequest, _settings, cancellationToken);
 
                 var httpContext = EngineContext.Current.Resolve<IHttpContextAccessor>();
                 httpContext.HttpContext.Response.Redirect(redirectUri.AbsoluteUri);
