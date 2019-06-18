@@ -9,6 +9,7 @@ using Nop.Core.Infrastructure;
 using Nop.Core.Infrastructure.DependencyManagement;
 using Nop.Plugin.Payments.MercadoPago.Controllers;
 using Nop.Plugin.Payments.MercadoPago.FuraFila;
+using Nop.Plugin.Payments.MercadoPago.Tasks;
 
 namespace Nop.Plugin.Payments.MercadoPago.Infrastructure
 {
@@ -20,6 +21,7 @@ namespace Nop.Plugin.Payments.MercadoPago.Infrastructure
         {
             builder.RegisterType<PaymentMercadoPagoController>().AsSelf();
             builder.RegisterType<MPPaymentService>().As<IMPPaymentService>().InstancePerDependency();
+            builder.RegisterType<CheckPaymentMPTask>().AsSelf().InstancePerDependency();
         }
     }
 }

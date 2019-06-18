@@ -31,5 +31,7 @@ namespace Nop.Plugin.Payments.MercadoPago
         public bool PassPurchasedItems { get; set; }
 
         public string PaymentMethodDescription { get; set; }
+
+        public bool IsSetup => (!UseSandbox && !string.IsNullOrEmpty(AccessToken)) || (UseSandbox && !string.IsNullOrEmpty(AccessTokenSandbox));
     }
 }

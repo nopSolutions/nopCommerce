@@ -16,7 +16,6 @@ namespace NopBrasil.Plugin.Payments.PagSeguro.Services
 {
     public class PagSeguroService : IPagSeguroService
     {
-        //todo: colocar a moeda utilizada como configuração
         private const string CURRENCY_CODE = "BRL";
 
         private readonly ICurrencyService _currencyService;
@@ -41,6 +40,11 @@ namespace NopBrasil.Plugin.Payments.PagSeguro.Services
             _storeContext = storeContext ?? throw new ArgumentNullException(nameof(storeContext));
         }
 
+        private static string GetExternalReferenceFromOrder(Order order)
+        {
+            return $"NOPS-{order.OrderGuid}";
+        }
+
         [Obsolete("Use async version instead")]
         public Uri CreatePayment(PostProcessPaymentRequest postProcessPaymentRequest)
         {
@@ -52,7 +56,7 @@ namespace NopBrasil.Plugin.Payments.PagSeguro.Services
             var payment = new PaymentRequest
             {
                 Currency = CURRENCY_CODE,
-                Reference = postProcessPaymentRequest.Order.Id.ToString()
+                Reference = GetExternalReferenceFromOrder(postProcessPaymentRequest.Order)
             };
 
             LoadingItems(postProcessPaymentRequest, payment);
@@ -72,7 +76,7 @@ namespace NopBrasil.Plugin.Payments.PagSeguro.Services
             var payment = new PaymentRequest
             {
                 Currency = CURRENCY_CODE,
-                Reference = postProcessPaymentRequest.Order.Id.ToString()
+                Reference = GetExternalReferenceFromOrder(postProcessPaymentRequest.Order)
             };
 
             LoadingItems(postProcessPaymentRequest, payment);
@@ -149,8 +153,13 @@ namespace NopBrasil.Plugin.Payments.PagSeguro.Services
         {
             var credentials = new AccountCredentials(_pagSeguroPaymentSetting.PagSeguroEmail, _pagSeguroPaymentSetting.PagSeguroToken, _pagSeguroPaymentSetting.IsSandbox);
             foreach (var order in GetPendingOrders())
-                if (TransactionIsPaid(GetTransaction(credentials, order.Id.ToString())))
+            {
+                string referenceId = GetExternalReferenceFromOrder(order);
+                if (TransactionIsPaid(GetTransaction(credentials, referenceId)))
+                {
                     _orderProcessingService.MarkOrderAsPaid(order);
+                }
+            }
         }
     }
 }

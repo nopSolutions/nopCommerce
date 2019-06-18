@@ -7,6 +7,7 @@ using FuraFila.Payments.MercadoPago.Services;
 using Nop.Core;
 using Nop.Core.Infrastructure;
 using Nop.Plugin.Payments.MercadoPago;
+using Nop.Plugin.Payments.MercadoPago.Exceptions;
 using Nop.Plugin.Payments.MercadoPago.FuraFila;
 using Nop.Plugin.Payments.MercadoPago.FuraFila.Models;
 using Nop.Plugin.Payments.MercadoPago.FuraFila.Payments;
@@ -27,8 +28,22 @@ namespace Nop.Plugin.Payments.MercadoPago.FuraFila
             _service = service;
         }
 
+        private string GetExternalReferenceFromOrder(Core.Domain.Orders.Order order)
+        {
+            return $"NP-{order.StoreId}-{order.OrderGuid}";
+        }
+
         public async Task<Uri> CreatePaymentRequest(PostProcessPaymentRequest postProcessPaymentRequest, MercadoPagoPaymentSettings settings, CancellationToken cancellationToken = default)
         {
+            if (postProcessPaymentRequest == null)
+                throw new ArgumentNullException(nameof(postProcessPaymentRequest));
+
+            if (settings == null)
+                throw new ArgumentNullException(nameof(settings));
+
+            if (!settings.IsSetup)
+                throw new SettingNotConfiguredException();
+
             var payment = new PreferenceRequest();
 
             LoadingItems(postProcessPaymentRequest, payment);
@@ -37,7 +52,7 @@ namespace Nop.Plugin.Payments.MercadoPago.FuraFila
 
             payment.AutoReturn = AutoReturn.ALL;
 
-            payment.ExternalReference = $"NP-{postProcessPaymentRequest.Order.StoreId}-{postProcessPaymentRequest.Order.Id}";
+            payment.ExternalReference = GetExternalReferenceFromOrder(postProcessPaymentRequest.Order);
             payment.AdditionalInfo = $"NOP-STORE-{postProcessPaymentRequest.Order.StoreId}-ORDER{postProcessPaymentRequest.Order.Id}";
 
 
@@ -111,7 +126,6 @@ namespace Nop.Plugin.Payments.MercadoPago.FuraFila
             }
         }
 
-
         private IEnumerable<Core.Domain.Orders.Order> GetPendingOrders(IOrderService orderService, IStoreContext storeContext, IOrderProcessingService orderProcessingService)
         {
             return orderService.SearchOrders(storeId: storeContext.CurrentStore.Id,
@@ -140,14 +154,24 @@ namespace Nop.Plugin.Payments.MercadoPago.FuraFila
         public async Task CheckPayments(CancellationToken cancellationToken = default)
         {
             var settings = EngineContext.Current.Resolve<MercadoPagoPaymentSettings>();
-            var store = EngineContext.Current.Resolve<IStoreContext>();
-            var orderService = EngineContext.Current.Resolve<IOrderService>();
-            var orderPorcessingSvc = EngineContext.Current.Resolve<IOrderProcessingService>();
-
-            foreach (var order in GetPendingOrders(orderService, store, orderPorcessingSvc))
+            if (settings.IsSetup)
             {
-                if (TransactionIsPaid(await GetTransaction(settings, order.Id.ToString())))
-                    orderPorcessingSvc.MarkOrderAsPaid(order);
+                var store = EngineContext.Current.Resolve<IStoreContext>();
+                var orderService = EngineContext.Current.Resolve<IOrderService>();
+                var orderPorcessingSvc = EngineContext.Current.Resolve<IOrderProcessingService>();
+
+                foreach (var order in GetPendingOrders(orderService, store, orderPorcessingSvc))
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+
+                    string referenceId = GetExternalReferenceFromOrder(order);
+                    var transaction = await GetTransaction(settings, referenceId, cancellationToken);
+
+                    if (TransactionIsPaid(transaction))
+                    {
+                        orderPorcessingSvc.MarkOrderAsPaid(order);
+                    }
+                }
             }
         }
     }
