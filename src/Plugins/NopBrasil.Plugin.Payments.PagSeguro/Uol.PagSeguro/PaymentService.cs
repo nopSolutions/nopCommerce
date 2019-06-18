@@ -57,14 +57,14 @@ namespace Uol.PagSeguro
         /// <param name="credentials">PagSeguro credentials</param>
         /// <param name="payment">Payment request information</param>
         /// <returns>The Uri to where the user needs to be redirected to in order to complete the payment process</returns>
-        public static async Task<Uri> RegisterAsync(Credentials credentials, PaymentRequest payment)
+        public static async Task<Uri> RegisterAsync(Credentials credentials, PaymentRequest payment, CancellationToken cancellationToken = default)
         {
             if (credentials == null)
                 throw new ArgumentNullException(nameof(credentials));
             if (payment == null)
                 throw new ArgumentNullException(nameof(payment));
 
-            PaymentRequestResponse response = await RegisterCoreAsync(credentials, payment);
+            var response = await RegisterCoreAsync(credentials, payment, cancellationToken);
             return response.PaymentRedirectUri;
         }
 

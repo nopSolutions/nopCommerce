@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Nop.Core;
@@ -93,11 +94,11 @@ namespace NopBrasil.Plugin.Payments.PagSeguro
             }
         }
 
-        public async System.Threading.Tasks.Task PostProcessPaymentAsync(PostProcessPaymentRequest postProcessPaymentRequest)
+        public async System.Threading.Tasks.Task PostProcessPaymentAsync(PostProcessPaymentRequest postProcessPaymentRequest, CancellationToken cancellationToken = default)
         {
             try
             {
-                var uri = await _pagSeguroService.CreatePaymentAsync(postProcessPaymentRequest);
+                var uri = await _pagSeguroService.CreatePaymentAsync(postProcessPaymentRequest, cancellationToken);
                 _httpContextAccessor.HttpContext.Response.Redirect(uri.AbsoluteUri);
             }
             catch (Exception e)

@@ -1,80 +1,74 @@
 ﻿@model Nop.Plugin.Payments.MercadoPago.Models.ConfigurationModel
+
 @{
     Layout = "_ConfigurePlugin";
 }
-@inject Nop.Core.IWebHelper _webHelper
 
 @await Component.InvokeAsync("StoreScopeConfiguration")
 
-<form asp-controller="PaymentMercadoPago" asp-action="Configure" method="post">
+<form asp-controller="PaymentPagSeguro" asp-action="Configure" method="post">
     <div class="panel-group">
         <div class="panel panel-default">
             <div class="panel-body">
-                @Html.Raw(string.Format(T("Plugins.Payments.MercadoPago.Instructions").Text, $"{_webHelper.GetStoreLocation(true)}Plugins/PaymentMercadoPago/Webhook", T("Plugins.Payments.MercadoPago.WebhookCreate").Text))
-                <div class="form-group">
-                    <div class="col-md-3">
-                        <nop-override-store-checkbox asp-for="ClientId_OverrideForStore" asp-input="ClientId" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                        <nop-label asp-for="ClientId" />
-                    </div>
-                    <div class="col-md-9">
-                        <nop-editor asp-for="ClientId" />
-                        <span asp-validation-for="ClientId"></span>
-                    </div>
+                <div>
+                    <h3>Mercado Pago Plugin</h3>
                 </div>
+
                 <div class="form-group">
                     <div class="col-md-3">
-                        <nop-override-store-checkbox asp-for="ClientSecret_OverrideForStore" asp-input="ClientSecret" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                        <nop-label asp-for="ClientSecret" />
+                        <nop-override-store-checkbox asp-for="PublicKey_OverrideForStore" asp-input="PublicKey" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="PublicKey" />
                     </div>
                     <div class="col-md-9">
-                        <nop-editor asp-for="ClientSecret" />
-                        <span asp-validation-for="ClientSecret"></span>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-md-3">
-                        <nop-label asp-for="WebhookId" />
-                    </div>
-                    <div class="col-md-9">
-                        @if (_webHelper.IsLocalRequest(this.Context.Request))
-                        {
-                            <nop-editor asp-for="WebhookId" />
-                        }
-                        else
-                        {
-                            <div class="input-group">
-                                <nop-editor asp-for="WebhookId" />
-                                <div class="input-group-btn">
-                                    <button type="submit" name="createwebhook" class="btn btn-info">
-                                        @Html.Raw(T("Plugins.Payments.MercadoPago.WebhookCreate"))
-                                    </button>
-                                </div>
-                            </div>
-                        }
-                        <span asp-validation-for="WebhookId"></span>
+                        <nop-editor asp-for="PublicKey" />
+                        <span asp-validation-for="PublicKey"></span>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <div class="col-md-3">
-                        <nop-override-store-checkbox asp-for="TransactModeId_OverrideForStore" asp-input="TransactModeId" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                        <nop-label asp-for="TransactModeValues" />
+                        <nop-override-store-checkbox asp-for="AccessToken_OverrideForStore" asp-input="AccessToken" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="AccessToken" />
                     </div>
                     <div class="col-md-9">
-                        <nop-select asp-for="TransactModeId" asp-items="Model.TransactModeValues" />
-                        <span asp-validation-for="TransactModeId"></span>
+                        <nop-editor asp-for="AccessToken" />
+                        <span asp-validation-for="AccessToken"></span>
                     </div>
                 </div>
+
                 <div class="form-group">
                     <div class="col-md-3">
-                        <nop-override-store-checkbox asp-for="UseSandbox_OverrideForStore" asp-input="UseSandbox" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                        <nop-label asp-for="UseSandbox" />
+                        <nop-override-store-checkbox asp-for="PublicKeySandbox_OverrideForStore" asp-input="PublicKeySandbox" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="PublicKeySandbox" />
                     </div>
                     <div class="col-md-9">
-                        <nop-editor asp-for="UseSandbox" />
-                        <span asp-validation-for="UseSandbox"></span>
+                        <nop-editor asp-for="PublicKeySandbox" />
+                        <span asp-validation-for="PublicKeySandbox"></span>
                     </div>
                 </div>
+
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="AccessTokenSandbox_OverrideForStore" asp-input="AccessTokenSandbox" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="AccessTokenSandbox" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="AccessTokenSandbox" />
+                        <span asp-validation-for="AccessTokenSandbox"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="PaymentMethodDescription_OverrideForStore" asp-input="PaymentMethodDescription" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="PaymentMethodDescription" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="PaymentMethodDescription" />
+                        <span asp-validation-for="PaymentMethodDescription"></span>
+                    </div>
+                </div>
+
                 <div class="form-group">
                     <div class="col-md-3">
                         <nop-override-store-checkbox asp-for="PassPurchasedItems_OverrideForStore" asp-input="PassPurchasedItems" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
@@ -85,31 +79,24 @@
                         <span asp-validation-for="PassPurchasedItems"></span>
                     </div>
                 </div>
+
                 <div class="form-group">
                     <div class="col-md-3">
-                        <nop-override-store-checkbox asp-for="AdditionalFee_OverrideForStore" asp-input="AdditionalFee" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                        <nop-label asp-for="AdditionalFee" />
+                        <nop-override-store-checkbox asp-for="IsSandbox_OverrideForStore" asp-input="IsSandbox" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="IsSandbox" />
                     </div>
                     <div class="col-md-9">
-                        <nop-editor asp-for="AdditionalFee" />
-                        <span asp-validation-for="AdditionalFee"></span>
+                        <nop-editor asp-for="IsSandbox" />
+                        <span asp-validation-for="IsSandbox"></span>
                     </div>
                 </div>
-                <div class="form-group">
-                    <div class="col-md-3">
-                        <nop-override-store-checkbox asp-for="AdditionalFeePercentage_OverrideForStore" asp-input="AdditionalFeePercentage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                        <nop-label asp-for="AdditionalFeePercentage" />
-                    </div>
-                    <div class="col-md-9">
-                        <nop-editor asp-for="AdditionalFeePercentage" />
-                        <span asp-validation-for="AdditionalFeePercentage"></span>
-                    </div>
-                </div>
+
                 <div class="form-group">
                     <div class="col-md-9 col-md-offset-3">
-                        <input type="submit" name="save" class="btn btn-primary" value="@T("Admin.Common.Save")" />
+                        <input type="submit" name="save" class="btn bg-blue" value="@T("Admin.Common.Save")" />
                     </div>
                 </div>
+
             </div>
         </div>
     </div>

@@ -8,17 +8,21 @@ namespace Nop.Plugin.Payments.MercadoPago.Models
     {
         public int ActiveStoreScopeConfiguration { get; set; }
 
-        [NopResourceDisplayName("Plugins.Payments.MercadoPago.Fields.ClientId")]
-        public string ClientId { get; set; }
-        public bool ClientId_OverrideForStore { get; set; }
+        [NopResourceDisplayName("Plugins.Payments.MercadoPago.Fields.PublicKey")]
+        public string PublicKey { get; set; }
+        public bool PublicKey_OverrideForStore { get; set; }
 
-        [NopResourceDisplayName("Plugins.Payments.MercadoPago.Fields.ClientSecret")]
-        public string ClientSecret { get; set; }
-        public bool ClientSecret_OverrideForStore { get; set; }
+        [NopResourceDisplayName("Plugins.Payments.MercadoPago.Fields.AccessToken")]
+        public string AccessToken { get; set; }
+        public bool AccessToken_OverrideForStore { get; set; }
 
-        [NopResourceDisplayName("Plugins.Payments.MercadoPago.Fields.WebhookId")]
-        public string WebhookId { get; set; }
-        public bool WebhookId_OverrideForStore { get; set; }
+        [NopResourceDisplayName("Plugins.Payments.MercadoPago.Fields.PublicKeySandbox")]
+        public string PublicKeySandbox { get; set; }
+        public bool PublicKeySandbox_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Plugins.Payments.MercadoPago.Fields.AccessTokenSandbox")]
+        public string AccessTokenSandbox { get; set; }
+        public bool AccessTokenSandbox_OverrideForStore { get; set; }
 
         [NopResourceDisplayName("Plugins.Payments.MercadoPago.Fields.UseSandbox")]
         public bool UseSandbox { get; set; }
@@ -28,17 +32,9 @@ namespace Nop.Plugin.Payments.MercadoPago.Models
         public bool PassPurchasedItems { get; set; }
         public bool PassPurchasedItems_OverrideForStore { get; set; }
 
-        public int TransactModeId { get; set; }
-        public bool TransactModeId_OverrideForStore { get; set; }
-        [NopResourceDisplayName("Plugins.Payments.MercadoPago.Fields.TransactMode")]
-        public SelectList TransactModeValues { get; set; }
+        [NopResourceDisplayName("Plugins.Payments.MercadoPago.Fields.MethodDescription")]
+        public string PaymentMethodDescription { get; set; }
 
-        [NopResourceDisplayName("Plugins.Payments.MercadoPago.Fields.AdditionalFee")]
-        public decimal AdditionalFee { get; set; }
-        public bool AdditionalFee_OverrideForStore { get; set; }
-
-        [NopResourceDisplayName("Plugins.Payments.MercadoPago.Fields.AdditionalFeePercentage")]
-        public bool AdditionalFeePercentage { get; set; }
-        public bool AdditionalFeePercentage_OverrideForStore { get; set; }
+        public bool PaymentMethodDescription_OverrideForStore { get; set; }
     }
 }

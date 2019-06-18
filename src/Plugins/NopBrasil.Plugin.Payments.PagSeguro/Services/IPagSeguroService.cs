@@ -1,5 +1,6 @@
 ﻿using Nop.Services.Payments;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace NopBrasil.Plugin.Payments.PagSeguro.Services
@@ -9,7 +10,7 @@ namespace NopBrasil.Plugin.Payments.PagSeguro.Services
         [Obsolete("Use async version instead")]
         Uri CreatePayment(PostProcessPaymentRequest postProcessPaymentRequest);
 
-        Task<Uri> CreatePaymentAsync(PostProcessPaymentRequest postProcessPaymentRequest);
+        Task<Uri> CreatePaymentAsync(PostProcessPaymentRequest postProcessPaymentRequest, CancellationToken cancellationToken = default);
 
         void CheckPayments();
     }

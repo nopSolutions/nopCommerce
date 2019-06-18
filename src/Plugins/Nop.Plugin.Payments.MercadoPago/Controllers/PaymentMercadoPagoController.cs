@@ -27,75 +27,24 @@ namespace Nop.Plugin.Payments.MercadoPago.Controllers
 {
     public class PaymentMercadoPagoController : BasePaymentController
     {
-        #region Fields
-
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly IOrderProcessingService _orderProcessingService;
-        private readonly IOrderService _orderService;
-        private readonly IPaymentPluginManager _paymentPluginManager;
-        private readonly ILogger _logger;
         private readonly INotificationService _notificationService;
         private readonly ILocalizationService _localizationService;
         private readonly IPermissionService _permissionService;
         private readonly ISettingService _settingService;
         private readonly IStoreContext _storeContext;
-        private readonly IStoreService _storeService;
-        private readonly IWorkContext _workContext;
-        private readonly IWebHelper _webHelper;
-        private readonly ShoppingCartSettings _shoppingCartSettings;
-        #endregion
 
-
-        #region Ctor
-
-        public PaymentMercadoPagoController(IGenericAttributeService genericAttributeService,
-            IOrderProcessingService orderProcessingService,
-            IOrderService orderService,
-            IPaymentPluginManager paymentPluginManager,
-            IPermissionService permissionService,
-            ILocalizationService localizationService,
-            ILogger logger,
-            INotificationService notificationService,
-            ISettingService settingService,
-            IStoreContext storeContext,
-            IWebHelper webHelper,
-            IWorkContext workContext,
-            ShoppingCartSettings shoppingCartSettings)
+        public PaymentMercadoPagoController(INotificationService notificationService, 
+            ILocalizationService localizationService, 
+            IPermissionService permissionService, 
+            ISettingService settingService, 
+            IStoreContext storeContext)
         {
-            _genericAttributeService = genericAttributeService;
-            _orderProcessingService = orderProcessingService;
-            _orderService = orderService;
-            _paymentPluginManager = paymentPluginManager;
-            _permissionService = permissionService;
-            _localizationService = localizationService;
-            _logger = logger;
-            _notificationService = notificationService;
-            _settingService = settingService;
-            _storeContext = storeContext;
-            _webHelper = webHelper;
-            _workContext = workContext;
-            _shoppingCartSettings = shoppingCartSettings;
+            _notificationService = notificationService ?? throw new ArgumentNullException(nameof(notificationService));
+            _localizationService = localizationService ?? throw new ArgumentNullException(nameof(localizationService));
+            _permissionService = permissionService ?? throw new ArgumentNullException(nameof(permissionService));
+            _settingService = settingService ?? throw new ArgumentNullException(nameof(settingService));
+            _storeContext = storeContext ?? throw new ArgumentNullException(nameof(storeContext));
         }
-
-        #endregion
-
-        #region Utilities
-
-        ///// <summary>
-        ///// Create webhook that receive events for the subscribed event types
-        ///// </summary>
-        ///// <returns>Webhook id</returns>
-        //protected string CreateWebHook()
-        //{
-        //    //var storeScope = GetActiveStoreScopeConfiguration(_storeService, _workContext);
-        //    //var payPalDirectPaymentSettings = _settingService.LoadSetting<PayPalDirectPaymentSettings>(storeScope);
-
-        //    return string.Empty;
-        //}
-
-        #endregion
-
-        #region Methods
 
         [AuthorizeAdmin]
         [Area(AreaNames.Admin)]
@@ -110,27 +59,25 @@ namespace Nop.Plugin.Payments.MercadoPago.Controllers
 
             var model = new ConfigurationModel
             {
-                ClientId = mercadoPagoPaymentSettings.ClientId,
-                ClientSecret = mercadoPagoPaymentSettings.ClientSecret,
+                AccessToken = mercadoPagoPaymentSettings.AccessToken,
+                AccessTokenSandbox = mercadoPagoPaymentSettings.AccessTokenSandbox,
                 UseSandbox = mercadoPagoPaymentSettings.UseSandbox,
-                WebhookId = mercadoPagoPaymentSettings.WebhookId,
                 PassPurchasedItems = mercadoPagoPaymentSettings.PassPurchasedItems,
-                TransactModeId = (int)mercadoPagoPaymentSettings.TransactMode,
-                AdditionalFee = mercadoPagoPaymentSettings.AdditionalFee,
-                AdditionalFeePercentage = mercadoPagoPaymentSettings.AdditionalFeePercentage,
+                PaymentMethodDescription = mercadoPagoPaymentSettings.PaymentMethodDescription,
+                PublicKey = mercadoPagoPaymentSettings.PublicKey,
+                PublicKeySandbox = mercadoPagoPaymentSettings.PublicKeySandbox,
                 ActiveStoreScopeConfiguration = storeScope
             };
 
             if (storeScope > 0)
             {
-                model.ClientId_OverrideForStore = _settingService.SettingExists(mercadoPagoPaymentSettings, x => x.ClientId, storeScope);
-                model.ClientSecret_OverrideForStore = _settingService.SettingExists(mercadoPagoPaymentSettings, x => x.ClientSecret, storeScope);
+                model.AccessToken_OverrideForStore = _settingService.SettingExists(mercadoPagoPaymentSettings, x => x.AccessToken, storeScope);
+                model.AccessTokenSandbox_OverrideForStore = _settingService.SettingExists(mercadoPagoPaymentSettings, x => x.AccessTokenSandbox, storeScope);
                 model.UseSandbox_OverrideForStore = _settingService.SettingExists(mercadoPagoPaymentSettings, x => x.UseSandbox, storeScope);
-                model.WebhookId_OverrideForStore = _settingService.SettingExists(mercadoPagoPaymentSettings, x => x.WebhookId, storeScope);
                 model.PassPurchasedItems_OverrideForStore = _settingService.SettingExists(mercadoPagoPaymentSettings, x => x.PassPurchasedItems, storeScope);
-                model.TransactModeId_OverrideForStore = _settingService.SettingExists(mercadoPagoPaymentSettings, x => x.TransactMode, storeScope);
-                model.AdditionalFee_OverrideForStore = _settingService.SettingExists(mercadoPagoPaymentSettings, x => x.AdditionalFee, storeScope);
-                model.AdditionalFeePercentage_OverrideForStore = _settingService.SettingExists(mercadoPagoPaymentSettings, x => x.AdditionalFeePercentage, storeScope);
+                model.PaymentMethodDescription_OverrideForStore = _settingService.SettingExists(mercadoPagoPaymentSettings, x => x.PaymentMethodDescription, storeScope);
+                model.PublicKey_OverrideForStore = _settingService.SettingExists(mercadoPagoPaymentSettings, x => x.PublicKey, storeScope);
+                model.PublicKeySandbox_OverrideForStore = _settingService.SettingExists(mercadoPagoPaymentSettings, x => x.PublicKeySandbox, storeScope);
             }
 
             return View("~/Plugins/Payments.MercadoPago/Views/Configure.cshtml", model);
@@ -153,26 +100,24 @@ namespace Nop.Plugin.Payments.MercadoPago.Controllers
             var mercadoPagoPaymentSettings = _settingService.LoadSetting<MercadoPagoPaymentSettings>(storeScope);
 
             //save settings
-            mercadoPagoPaymentSettings.ClientId = model.ClientId;
-            mercadoPagoPaymentSettings.ClientSecret = model.ClientSecret;
+            mercadoPagoPaymentSettings.AccessToken = model.AccessToken;
+            mercadoPagoPaymentSettings.AccessTokenSandbox = model.AccessTokenSandbox;
             mercadoPagoPaymentSettings.UseSandbox = model.UseSandbox;
-            mercadoPagoPaymentSettings.WebhookId = model.WebhookId;
             mercadoPagoPaymentSettings.PassPurchasedItems = model.PassPurchasedItems;
-            mercadoPagoPaymentSettings.TransactMode = (TransactMode)model.TransactModeId;
-            mercadoPagoPaymentSettings.AdditionalFee = model.AdditionalFee;
-            mercadoPagoPaymentSettings.AdditionalFeePercentage = model.AdditionalFeePercentage;
+            mercadoPagoPaymentSettings.PaymentMethodDescription = model.PaymentMethodDescription;
+            mercadoPagoPaymentSettings.PublicKey = model.PublicKey;
+            mercadoPagoPaymentSettings.PublicKeySandbox = model.PublicKeySandbox;
 
             /* We do not clear cache after each setting update.
              * This behavior can increase performance because cached settings will not be cleared 
              * and loaded from database after each update */
-            _settingService.SaveSettingOverridablePerStore(mercadoPagoPaymentSettings, x => x.ClientId, model.ClientId_OverrideForStore, storeScope, false);
-            _settingService.SaveSettingOverridablePerStore(mercadoPagoPaymentSettings, x => x.ClientSecret, model.ClientSecret_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(mercadoPagoPaymentSettings, x => x.AccessToken, model.AccessToken_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(mercadoPagoPaymentSettings, x => x.AccessTokenSandbox, model.AccessTokenSandbox_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(mercadoPagoPaymentSettings, x => x.UseSandbox, model.UseSandbox_OverrideForStore, storeScope, false);
-            _settingService.SaveSettingOverridablePerStore(mercadoPagoPaymentSettings, x => x.WebhookId, model.WebhookId_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(mercadoPagoPaymentSettings, x => x.PassPurchasedItems, model.PassPurchasedItems_OverrideForStore, storeScope, false);
-            _settingService.SaveSettingOverridablePerStore(mercadoPagoPaymentSettings, x => x.TransactMode, model.TransactModeId_OverrideForStore, storeScope, false);
-            _settingService.SaveSettingOverridablePerStore(mercadoPagoPaymentSettings, x => x.AdditionalFee, model.AdditionalFee_OverrideForStore, storeScope, false);
-            _settingService.SaveSettingOverridablePerStore(mercadoPagoPaymentSettings, x => x.AdditionalFeePercentage, model.AdditionalFeePercentage_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(mercadoPagoPaymentSettings, x => x.PaymentMethodDescription, model.PaymentMethodDescription_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(mercadoPagoPaymentSettings, x => x.PublicKey, model.PublicKey_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(mercadoPagoPaymentSettings, x => x.PublicKeySandbox, model.PublicKeySandbox_OverrideForStore, storeScope, false);
 
             //now clear settings cache
             _settingService.ClearCache();
@@ -181,50 +126,5 @@ namespace Nop.Plugin.Payments.MercadoPago.Controllers
 
             return Configure();
         }
-
-        //[HttpPost, ActionName("Configure")]
-        //[FormValueRequired("createwebhook")]
-        //[AuthorizeAdmin]
-        //[AdminAntiForgery]
-        //[Area(AreaNames.Admin)]
-        //public IActionResult GetWebhookId(ConfigurationModel model)
-        //{
-        //    if (!_permissionService.Authorize(StandardPermissionProvider.ManagePaymentMethods))
-        //        return AccessDeniedView();
-
-        //    //var payPalDirectPaymentSettings = _settingService.LoadSetting<PayPalDirectPaymentSettings>();
-        //    //payPalDirectPaymentSettings.WebhookId = CreateWebHook();
-        //    //_settingService.SaveSetting(payPalDirectPaymentSettings);
-        //    //
-        //    //if (string.IsNullOrEmpty(payPalDirectPaymentSettings.WebhookId))
-        //    //    ErrorNotification(_localizationService.GetResource("Plugins.Payments.PayPalDirect.WebhookError"));
-
-        //    return Configure();
-        //}
-
-        //[HttpPost]
-        //public IActionResult WebhookEventsHandler()
-        //{
-        //    var storeScope = GetActiveStoreScopeConfiguration(_storeService, _workContext);
-        //    //var payPalDirectPaymentSettings = _settingService.LoadSetting<PayPalDirectPaymentSettings>(storeScope);
-
-        //    try
-        //    {
-        //        var requestBody = string.Empty;
-        //        using (var stream = new StreamReader(this.Request.Body, Encoding.UTF8))
-        //        {
-        //            requestBody = stream.ReadToEnd();
-        //        }
-
-
-        //        return Ok();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return Ok();
-        //    }
-        //}
-
-        #endregion
     }
 }

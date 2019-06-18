@@ -8,6 +8,7 @@ using Nop.Services.Payments;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Uol.PagSeguro;
 
@@ -61,7 +62,7 @@ namespace NopBrasil.Plugin.Payments.PagSeguro.Services
             return Uol.PagSeguro.PaymentService.Register(credentials, payment);
         }
 
-        public Task<Uri> CreatePaymentAsync(PostProcessPaymentRequest postProcessPaymentRequest)
+        public Task<Uri> CreatePaymentAsync(PostProcessPaymentRequest postProcessPaymentRequest, CancellationToken cancellationToken = default)
         {
             // Seta as credenciais
             var credentials = new AccountCredentials(_pagSeguroPaymentSetting.PagSeguroEmail,
