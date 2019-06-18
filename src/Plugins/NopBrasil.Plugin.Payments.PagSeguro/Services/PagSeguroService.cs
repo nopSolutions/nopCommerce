@@ -82,6 +82,10 @@ namespace NopBrasil.Plugin.Payments.PagSeguro.Services
                 Reference = GetExternalReferenceFromOrder(postProcessPaymentRequest.Order)
             };
 
+            var webHelper = EngineContext.Current.Resolve<IWebHelper>();
+            string storeLocation = webHelper.GetStoreLocation();
+            payment.RedirectUri = new Uri($"{storeLocation}/checkout/completed/{postProcessPaymentRequest.Order.Id}");
+
             LoadingItems(postProcessPaymentRequest, payment);
             LoadingShipping(postProcessPaymentRequest, payment);
             LoadingSender(postProcessPaymentRequest, payment);
