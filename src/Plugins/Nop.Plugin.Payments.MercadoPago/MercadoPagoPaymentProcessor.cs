@@ -19,6 +19,8 @@ namespace Nop.Plugin.Payments.MercadoPago
 {
     public class MercadoPagoPaymentProcessor : BasePlugin, IPaymentMethod, IPaymentMethodAsync
     {
+        internal const string PAYMENT_METHOD_NAME = "Payments.MercadoPago";
+
         public bool SupportCapture => false;
 
         public bool SupportPartiallyRefund => false;

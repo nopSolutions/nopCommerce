@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using FuraFila.Payments.MercadoPago.Services;
 using Nop.Core;
+using Nop.Core.Domain.Stores;
 using Nop.Core.Infrastructure;
 using Nop.Plugin.Payments.MercadoPago;
 using Nop.Plugin.Payments.MercadoPago.Exceptions;
@@ -12,8 +13,10 @@ using Nop.Plugin.Payments.MercadoPago.FuraFila;
 using Nop.Plugin.Payments.MercadoPago.FuraFila.Models;
 using Nop.Plugin.Payments.MercadoPago.FuraFila.Payments;
 using Nop.Plugin.Payments.MercadoPago.FuraFila.Preferences;
+using Nop.Services.Configuration;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
+using Nop.Services.Stores;
 
 namespace Nop.Plugin.Payments.MercadoPago.FuraFila
 {
@@ -60,9 +63,7 @@ namespace Nop.Plugin.Payments.MercadoPago.FuraFila
             string storeLocation = webHelper.GetStoreLocation();
 
             payment.BackUrls = new BackUrls();
-            payment.BackUrls.Success = $"{storeLocation}/checkout/completed/{postProcessPaymentRequest.Order.Id}";
-            payment.BackUrls.Pending = $"{storeLocation}/checkout/completed/{postProcessPaymentRequest.Order.Id}";
-            payment.BackUrls.Failure = $"{storeLocation}/checkout/completed/{postProcessPaymentRequest.Order.Id}";
+            payment.BackUrls.Success = payment.BackUrls.Pending = payment.BackUrls.Failure = $"{storeLocation}/checkout/completed/{postProcessPaymentRequest.Order.Id}";
 
             string accessToken = settings.GetAccessTokenEnvironment();
             var preferenceResponse = await _service.CreatePaymentPreference(payment, accessToken, cancellationToken);
@@ -126,10 +127,10 @@ namespace Nop.Plugin.Payments.MercadoPago.FuraFila
             }
         }
 
-        private IEnumerable<Core.Domain.Orders.Order> GetPendingOrders(IOrderService orderService, IStoreContext storeContext, IOrderProcessingService orderProcessingService)
+        private IEnumerable<Core.Domain.Orders.Order> GetPendingOrders(IOrderService orderService, Store store, IOrderProcessingService orderProcessingService)
         {
-            return orderService.SearchOrders(storeId: storeContext.CurrentStore.Id,
-                paymentMethodSystemName: "Payments.MercadoPago",
+            return orderService.SearchOrders(storeId: store.Id,
+                paymentMethodSystemName: MercadoPagoPaymentProcessor.PAYMENT_METHOD_NAME,
                 psIds: new List<int>() { 10 })
                     .Where(o => orderProcessingService.CanMarkOrderAsPaid(o)
                 );
@@ -153,14 +154,25 @@ namespace Nop.Plugin.Payments.MercadoPago.FuraFila
 
         public async Task CheckPayments(CancellationToken cancellationToken = default)
         {
-            var settings = EngineContext.Current.Resolve<MercadoPagoPaymentSettings>();
+            var storeService = EngineContext.Current.Resolve<IStoreService>();
+            var storesToSyncColl = storeService.GetAllStores();
+
+            var settingService = EngineContext.Current.Resolve<ISettingService>();
+            var orderService = EngineContext.Current.Resolve<IOrderService>();
+            var orderProcessingSvc = EngineContext.Current.Resolve<IOrderProcessingService>();
+
+            foreach (var store in storesToSyncColl)
+            {
+                var storeSetting = settingService.LoadSetting<MercadoPagoPaymentSettings>(store.Id);
+                await SyncStore(store, storeSetting, orderService, orderProcessingSvc, cancellationToken);
+            }
+        }
+
+        private async Task SyncStore(Store store, MercadoPagoPaymentSettings settings, IOrderService orderService, IOrderProcessingService orderProcessingSvc, CancellationToken cancellationToken = default)
+        {
             if (settings.IsSetup)
             {
-                var store = EngineContext.Current.Resolve<IStoreContext>();
-                var orderService = EngineContext.Current.Resolve<IOrderService>();
-                var orderPorcessingSvc = EngineContext.Current.Resolve<IOrderProcessingService>();
-
-                foreach (var order in GetPendingOrders(orderService, store, orderPorcessingSvc))
+                foreach (var order in GetPendingOrders(orderService, store, orderProcessingSvc))
                 {
                     cancellationToken.ThrowIfCancellationRequested();
 
@@ -169,7 +181,7 @@ namespace Nop.Plugin.Payments.MercadoPago.FuraFila
 
                     if (TransactionIsPaid(transaction))
                     {
-                        orderPorcessingSvc.MarkOrderAsPaid(order);
+                        orderProcessingSvc.MarkOrderAsPaid(order);
                     }
                 }
             }
