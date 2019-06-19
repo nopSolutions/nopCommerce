@@ -178,14 +178,10 @@ namespace Nop.Web.Controllers
             {
                 AdminEmail = "admin@yourStore.com",
                 InstallSampleData = false,
-                DatabaseConnectionString = _dataSettings.DataConnectionString,
-                DataProvider = DataProviderType.SqlServer,
-
+                
                 //fast installation service does not support SQL compact
                 DisableSampleDataOption = _config.DisableSampleDataDuringInstallation,
 
-                SqlAuthenticationType = "sqlauthentication",
-                SqlConnectionInfo = "sqlconnectioninfo_values",
                 SqlServerCreateDatabase = false,
                 UseCustomCollation = false,
                 Collation = "SQL_Latin1_General_CP1_CI_AS"
@@ -209,9 +205,6 @@ namespace Nop.Web.Controllers
             if (DataSettingsManager.GetDatabaseIsInstalled(_dataSettings))
                 return RedirectToRoute("Homepage");
 
-            if (model.DatabaseConnectionString != null)
-                model.DatabaseConnectionString = model.DatabaseConnectionString.Trim();
-
             //prepare language list
             foreach (var lang in _locService.GetAvailableLanguages())
             {
@@ -225,51 +218,6 @@ namespace Nop.Web.Controllers
 
             model.DisableSampleDataOption = _config.DisableSampleDataDuringInstallation;
 
-            //SQL Server
-            if (model.DataProvider == DataProviderType.SqlServer)
-            {
-                if (model.SqlConnectionInfo.Equals("sqlconnectioninfo_raw", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    //raw connection string
-                    if (string.IsNullOrEmpty(model.DatabaseConnectionString))
-                        ModelState.AddModelError(string.Empty, _locService.GetResource("ConnectionStringRequired"));
-
-                    try
-                    {
-                        //try to create connection string
-                        var unused = new SqlConnectionStringBuilder(model.DatabaseConnectionString);
-                    }
-                    catch
-                    {
-                        ModelState.AddModelError(string.Empty, _locService.GetResource("ConnectionStringWrongFormat"));
-                    }
-                }
-                else
-                {
-                    //values
-                    if (string.IsNullOrEmpty(model.SqlServerName))
-                        ModelState.AddModelError(string.Empty, _locService.GetResource("SqlServerNameRequired"));
-                    if (string.IsNullOrEmpty(model.SqlDatabaseName))
-                        ModelState.AddModelError(string.Empty, _locService.GetResource("DatabaseNameRequired"));
-
-                    //authentication type
-                    if (model.SqlAuthenticationType.Equals("sqlauthentication", StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        //SQL authentication
-                        if (string.IsNullOrEmpty(model.SqlServerUsername))
-                            ModelState.AddModelError(string.Empty, _locService.GetResource("SqlServerUsernameRequired"));
-                        if (string.IsNullOrEmpty(model.SqlServerPassword))
-                            ModelState.AddModelError(string.Empty, _locService.GetResource("SqlServerPasswordRequired"));
-                    }
-                }
-            }
-
-            //Consider granting access rights to the resource to the ASP.NET request identity. 
-            //ASP.NET has a base process identity 
-            //(typically {MACHINE}\ASPNET on IIS 5 or Network Service on IIS 6 and IIS 7, 
-            //and the configured application pool identity on IIS 7.5) that is used if the application is not impersonating.
-            //If the application is impersonating via <identity impersonate="true"/>, 
-            //the identity will be the anonymous user (typically IUSR_MACHINENAME) or the authenticated request user.
             var webHelper = EngineContext.Current.Resolve<IWebHelper>();
             //validate permissions
             var dirsToCheck = FilePermissionHelper.GetDirectoriesWrite();
@@ -292,30 +240,10 @@ namespace Nop.Web.Controllers
 
             try
             {
-                var connectionString = string.Empty;
-                if (model.DataProvider == DataProviderType.SqlServer)
+                var connectionString = _dataSettings.DataConnectionString;
+                if (_dataSettings.DataProvider == DataProviderType.SqlServer)
                 {
                     //SQL Server
-
-                    if (model.SqlConnectionInfo.Equals("sqlconnectioninfo_raw", StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        //raw connection string
-
-                        //we know that MARS option is required when using Entity Framework
-                        //let's ensure that it's specified
-                        var sqlCsb = new SqlConnectionStringBuilder(model.DatabaseConnectionString);
-                        if (UseMars)
-                            sqlCsb.MultipleActiveResultSets = true;
-
-                        connectionString = sqlCsb.ToString();
-                    }
-                    else
-                    {
-                        //values
-                        connectionString = CreateConnectionString(model.SqlAuthenticationType == "windowsauthentication",
-                            model.SqlServerName, model.SqlDatabaseName,
-                            model.SqlServerUsername, model.SqlServerPassword);
-                    }
 
                     if (model.SqlServerCreateDatabase)
                     {
@@ -335,13 +263,6 @@ namespace Nop.Web.Controllers
                             throw new Exception(_locService.GetResource("DatabaseNotExists"));
                     }
                 }
-
-                //save settings
-                DataSettingsManager.SaveSettings(new DataSettings
-                {
-                    DataProvider = model.DataProvider,
-                    DataConnectionString = connectionString
-                }, _fileProvider);
 
                 //initialize database
                 EngineContext.Current.Resolve<IDataProvider>().InitializeDatabase();
@@ -399,9 +320,6 @@ namespace Nop.Web.Controllers
 
                 var cacheManager = EngineContext.Current.Resolve<IStaticCacheManager>();
                 cacheManager.Clear();
-
-                //clear provider settings if something got wrong
-                DataSettingsManager.SaveSettings(new DataSettings(), _fileProvider);
 
                 ModelState.AddModelError(string.Empty, string.Format(_locService.GetResource("SetupFailed"), exception.Message));
             }

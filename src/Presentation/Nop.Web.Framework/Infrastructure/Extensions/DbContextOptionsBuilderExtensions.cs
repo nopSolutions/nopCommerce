@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Nop.Core.Configuration;
 using Nop.Core.Data;
 
@@ -17,9 +18,12 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         /// <param name="services">Collection of service descriptors</param>
         public static void UseSqlServerWithLazyLoading(this DbContextOptionsBuilder optionsBuilder, IServiceCollection services)
         {
-            var nopConfig = services.BuildServiceProvider().GetRequiredService<NopConfig>();
+            var svcProvider = services.BuildServiceProvider();
+            var nopConfig = svcProvider.GetRequiredService<NopConfig>();
+            var dbOptions = svcProvider.GetRequiredService<IOptions<DataSettings>>();
 
-            var dataSettings = DataSettingsManager.LoadSettings();
+            var dataSettings = dbOptions.Value;
+
             if (!dataSettings?.IsValid ?? true)
                 return;
 

@@ -13,6 +13,7 @@
     <RepositoryType>Git</RepositoryType>
     <!--Set this parameter to true to get the dlls copied from the NuGet cache to the output of your project-->
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+
   </PropertyGroup>
 
   <ItemGroup>
@@ -103,6 +104,7 @@
       
       More details here: https://docs.microsoft.com/en-us/dotnet/standard/garbage-collection/fundamentals#concurrent-garbage-collection-->
     <ConcurrentGarbageCollection>false</ConcurrentGarbageCollection>
+    <UserSecretsId>79eb045e-aaad-46b2-998e-e5f3ffff22cf</UserSecretsId>
   </PropertyGroup>
 
 </Project>

@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore;
+﻿using System.IO;
+using System.Reflection;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 
 namespace Nop.Web
 {
@@ -7,12 +10,20 @@ namespace Nop.Web
     {
         public static void Main(string[] args)
         {
-            var host = WebHost.CreateDefaultBuilder(args)
-                .UseKestrel(options => options.AddServerHeader = false)
-                .UseStartup<Startup>()
-                .Build();
-
-            host.Run();
+            CreateWebHostBuilder(args)
+                .Build()
+                .Run();
         }
+
+
+
+        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
+            WebHost.CreateDefaultBuilder(args)
+                .ConfigureAppConfiguration((hostingContext, config) =>
+                {
+                    config.AddJsonFile("secrets.json", optional: true, reloadOnChange: true);
+                })
+                .UseKestrel(opt => opt.AddServerHeader = false)
+                .UseStartup<Startup>();
     }
 }

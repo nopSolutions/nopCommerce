@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.Linq;
+using Microsoft.Extensions.Options;
 using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain.Common;
@@ -18,15 +19,9 @@ namespace Nop.Services.Common
     /// </summary>
     public partial class MaintenanceService : IMaintenanceService
     {
-        #region Fields
-
         private readonly IDataProvider _dataProvider;
         private readonly IDbContext _dbContext;
         private readonly INopFileProvider _fileProvider;
-
-        #endregion
-
-        #region Ctor
 
         public MaintenanceService(IDataProvider dataProvider,
             IDbContext dbContext,
@@ -36,10 +31,6 @@ namespace Nop.Services.Common
             _dbContext = dbContext;
             _fileProvider = fileProvider;
         }
-
-        #endregion
-
-        #region Utilities
 
         /// <summary>
         /// Get directory path for backs
@@ -63,10 +54,6 @@ namespace Nop.Services.Common
                 throw new DataException("This database does not support backup");
         }
 
-        #endregion
-
-        #region Methods
-
         /// <summary>
         /// Get the current identity value
         /// </summary>
@@ -89,7 +76,7 @@ namespace Nop.Services.Common
         public virtual void SetTableIdent<T>(int ident) where T : BaseEntity
         {
             var currentIdent = GetTableIdent<T>();
-            if (!currentIdent.HasValue || ident <= currentIdent.Value) 
+            if (!currentIdent.HasValue || ident <= currentIdent.Value)
                 return;
 
             var tableName = _dbContext.GetTableName<T>();
@@ -134,7 +121,10 @@ namespace Nop.Services.Common
         {
             CheckBackupSupported();
 
-            var conn = new SqlConnectionStringBuilder(DataSettingsManager.LoadSettings(fileProvider: _fileProvider).DataConnectionString)
+            var optionsDbSettings = EngineContext.Current.Resolve<IOptions<DataSettings>>();
+            var connectionString = optionsDbSettings.Value.DataConnectionString;
+
+            var conn = new SqlConnectionStringBuilder(connectionString)
             {
                 InitialCatalog = "master"
             };
@@ -202,7 +192,5 @@ namespace Nop.Services.Common
 
             _dbContext.ExecuteSqlCommand(commandText, true);
         }
-
-        #endregion
     }
 }
