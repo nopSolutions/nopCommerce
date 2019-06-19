@@ -396,8 +396,6 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 .AddHtmlMinification(options =>
                 {
                     var settings = options.MinificationSettings;
-                    settings.RemoveHttpProtocolFromAttributes = true;
-                    settings.RemoveHttpsProtocolFromAttributes = true;
 
                     options.CssMinifierFactory = new NUglifyCssMinifierFactory();
                     options.JsMinifierFactory = new NUglifyJsMinifierFactory();

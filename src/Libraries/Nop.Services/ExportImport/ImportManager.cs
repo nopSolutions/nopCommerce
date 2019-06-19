@@ -1615,13 +1615,11 @@ namespace Nop.Services.ExportImport
                     }
 
                     var tempProperty = metadata.Manager.GetProperty("SeName");
-                    if (tempProperty != null)
-                    {
-                        var seName = tempProperty.StringValue;
-                        //search engine name
-                        _urlRecordService.SaveSlug(product, _urlRecordService.ValidateSeName(product, seName, product.Name, true), 0);
-                    }
 
+                    //search engine name
+                    var seName = tempProperty?.StringValue ?? (isNew ? string.Empty : _urlRecordService.GetSeName(product, 0));
+                    _urlRecordService.SaveSlug(product, _urlRecordService.ValidateSeName(product, seName, product.Name, true), 0);
+                    
                     tempProperty = metadata.Manager.GetProperty("Categories");
 
                     if (tempProperty != null)

@@ -192,21 +192,10 @@
             }
         }
 
-        var entityMap = {
-          '&': '&amp;',
-          '<': '&lt;',
-          '>': '&gt;',
-          '"': '&quot;',
-          "'": '&#39;',
-          '/': '&#x2F;',
-          '`': '&#x60;',
-          '=': '&#x3D;'
-        };
-
-        function escapeHtml (value) {
-          return String(value).replace(/[&<>"'`=\/]/g, function (s) {
-            return entityMap[s];
-          });
+        function escapeQuotHtml (value) {
+            return String(value).replace(/["]/g, function (s) {
+                return '&quot;';
+            });
         }
 
         function setEditStateValue_@(model_name)(curRow) {
@@ -233,7 +222,7 @@
                 }
                 if (columnType == 'string') {
                     var strValue = editRowData_@(model_name)[cellName];
-                    $($(curRow).children("[data-columnname='" + cellName + "']")[0]).html('<input value="' + escapeHtml(strValue) + '" class="userinput"  style="width: 99% " />');
+                    $($(curRow).children("[data-columnname='" + cellName + "']")[0]).html('<input value="' + escapeQuotHtml(strValue) + '" class="userinput"  style="width: 99% " />');
                 }
             }
         }

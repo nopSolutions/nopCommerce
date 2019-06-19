@@ -39,7 +39,6 @@
         toggleStoredCard();
 
         var submitForm = false;
-        var stepBack = false;
         var onePageCheckout = @orderSettings.OnePageCheckoutEnabled.ToString().ToLower();
         $('.payment-info-next-step-button').attr('onclick', null);
         $('.payment-info-next-step-button').prop('disabled', true);
@@ -91,13 +90,7 @@
 
                 paymentFormLoaded: function () {
                     if (paymentForm) {
-                        if (stepBack) {
-                            paymentForm.destroy();
-                            paymentForm = null;
-                        }
-                        else {
-                            paymentForm.setPostalCode('@Model.PostalCode');
-                        }
+                        paymentForm.setPostalCode('@Model.PostalCode');
                     }
                     $('.payment-info-next-step-button').prop('disabled', false);
                     $('.payment-info-next-step-button').css("opacity", 1);
@@ -113,8 +106,8 @@
             if (!submitForm && (!selectedStoredCardId || selectedStoredCardId == '@(Guid.Empty.ToString())')) {
                 if (paymentForm) {
                     paymentForm.requestCardNonce();
+                    return false;
                 }
-                return false;
             }
             else if (onePageCheckout) {
                 submitForm = false;
@@ -123,8 +116,15 @@
         });
 
         $(document).on('accordion_section_opened', function (data) {
-            if (data && (data.currentSectionId == 'opc-billing' || data.currentSectionId == 'opc-shipping' || data.currentSectionId == 'opc-shipping_method' || data.currentSectionId == 'opc-payment_method')) {
-                stepBack = true;
+            if (data.currentSectionId != 'opc-confirm_order' && data.currentSectionId != 'opc-payment_info') {
+                if (paymentForm) {
+                    paymentForm.destroy();
+                    paymentForm = null;
+                }
+                $('.payment-info-next-step-button').attr('onclick', 'PaymentInfo.save()');
+            }
+            if (data.currentSectionId == 'opc-payment_info' && data.previousSectionId == 'opc-confirm_order') {
+                $('.payment-info-next-step-button').attr('onclick', null);
             }
         });
     });
