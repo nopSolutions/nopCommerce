@@ -40,7 +40,7 @@ namespace Nop.Web.Framework.Globalization
         /// <param name="workContext">Work context</param>
         protected void SetWorkingCulture(IWebHelper webHelper, IWorkContext workContext)
         {
-            if (!DataSettingsManager.DatabaseIsInstalled)
+            if (!DataSettingsManager.GetDatabaseIsInstalled())
                 return;
 
             if (webHelper.IsStaticResource())
@@ -84,7 +84,7 @@ namespace Nop.Web.Framework.Globalization
             //call the next middleware in the request pipeline
             return _next(context);
         }
-        
+
         #endregion
     }
 }

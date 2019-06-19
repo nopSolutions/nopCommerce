@@ -71,6 +71,13 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             //add accessor to HttpContext
             services.AddHttpContextAccessor();
 
+
+            services.Configure<DataSettings>(x =>
+            {
+                x.DataConnectionString = configuration["ConnectionStrings:NopDatabase"];
+                x.DataProvider = DataProviderType.SqlServer;
+            });
+
             //create default file provider
             CommonHelper.DefaultFileProvider = new NopFileProvider(hostingEnvironment);
 
@@ -83,7 +90,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             var serviceProvider = engine.ConfigureServices(services, configuration, nopConfig);
 
             //further actions are performed only when the database is installed
-            if (!DataSettingsManager.DatabaseIsInstalled)
+            if (!DataSettingsManager.GetDatabaseIsInstalled(serviceProvider))
                 return serviceProvider;
 
             //initialize and start schedule tasks
@@ -106,7 +113,8 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         /// <param name="services">Collection of service descriptors</param>
         /// <param name="configuration">Set of key/value application configuration properties</param>
         /// <returns>Instance of configuration parameters</returns>
-        public static TConfig ConfigureStartupConfig<TConfig>(this IServiceCollection services, IConfiguration configuration) where TConfig : class, new()
+        public static TConfig ConfigureStartupConfig<TConfig>(this IServiceCollection services, IConfiguration configuration)
+            where TConfig : class, new()
         {
             if (services == null)
                 throw new ArgumentNullException(nameof(services));
@@ -175,7 +183,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         /// <param name="services">Collection of service descriptors</param>
         public static void AddThemes(this IServiceCollection services)
         {
-            if (!DataSettingsManager.DatabaseIsInstalled)
+            if (!DataSettingsManager.GetDatabaseIsInstalled(services.BuildServiceProvider()))
                 return;
 
             //themes support

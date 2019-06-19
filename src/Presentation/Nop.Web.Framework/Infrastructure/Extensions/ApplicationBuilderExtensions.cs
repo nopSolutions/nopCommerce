@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.Options;
 using Microsoft.Net.Http.Headers;
 using Nop.Core;
 using Nop.Core.Configuration;
@@ -73,8 +74,9 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
 
                     try
                     {
+                        var dbSettings = EngineContext.Current.Resolve<IOptions<DataSettings>>();
                         //check whether database is installed
-                        if (DataSettingsManager.DatabaseIsInstalled)
+                        if (DataSettingsManager.GetDatabaseIsInstalled(dbSettings.Value))
                         {
                             //get current customer
                             var currentCustomer = EngineContext.Current.Resolve<IWorkContext>().CurrentCustomer;

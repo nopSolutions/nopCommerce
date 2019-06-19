@@ -3,6 +3,13 @@ using System.IO;
 using System.Text;
 using Newtonsoft.Json;
 using Nop.Core.Infrastructure;
+using System.Data.SqlClient;
+using System.Threading.Tasks;
+using Nop.Core.Exceptions;
+using System.Collections.Generic;
+using System.Linq;
+using Nop.Core.Configuration;
+using Microsoft.Extensions.Options;
 
 namespace Nop.Core.Data
 {
@@ -11,13 +18,181 @@ namespace Nop.Core.Data
     /// </summary>
     public partial class DataSettingsManager
     {
-        #region Fields
-
         private static bool? _databaseIsInstalled;
 
-        #endregion
+        private static readonly string[] _tableNames = new string[]
+        {
+            "AclRecord",
+            "ActivityLog",
+            "ActivityLogType",
+            "Address",
+            "AddressAttribute",
+            "AddressAttributeValue",
+            "Affiliate",
+            "BackInStockSubscription",
+            "BlogComment",
+            "BlogPost",
+            "Campaign",
+            "Category",
+            "CategoryTemplate",
+            "CheckoutAttribute",
+            "CheckoutAttributeValue",
+            "Country",
+            "CrossSellProduct",
+            "Currency",
+            "Customer",
+            "Customer_CustomerRole_Mapping",
+            "CustomerAddresses",
+            "CustomerAttribute",
+            "CustomerAttributeValue",
+            "CustomerPassword",
+            "CustomerRole",
+            "DeliveryDate",
+            "Discount",
+            "Discount_AppliedToCategories",
+            "Discount_AppliedToManufacturers",
+            "Discount_AppliedToProducts",
+            "DiscountRequirement",
+            "DiscountUsageHistory",
+            "Download",
+            "EmailAccount",
+            "ExternalAuthenticationRecord",
+            "Forums_Forum",
+            "Forums_Group",
+            "Forums_Post",
+            "Forums_PostVote",
+            "Forums_PrivateMessage",
+            "Forums_Subscription",
+            "Forums_Topic",
+            "GdprConsent",
+            "GdprLog",
+            "GenericAttribute",
+            "GiftCard",
+            "GiftCardUsageHistory",
+            "Language",
+            "LocaleStringResource",
+            "LocalizedProperty",
+            "Log",
+            "Manufacturer",
+            "ManufacturerTemplate",
+            "MeasureDimension",
+            "MeasureWeight",
+            "MessageTemplate",
+            "News",
+            "NewsComment",
+            "NewsLetterSubscription",
+            "Order",
+            "OrderItem",
+            "OrderNote",
+            "PermissionRecord",
+            "PermissionRecord_Role_Mapping",
+            "Picture",
+            "PictureBinary",
+            "Poll",
+            "PollAnswer",
+            "PollVotingRecord",
+            "PredefinedProductAttributeValue",
+            "Product",
+            "Product_Category_Mapping",
+            "Product_Manufacturer_Mapping",
+            "Product_Picture_Mapping",
+            "Product_ProductAttribute_Mapping",
+            "Product_ProductTag_Mapping",
+            "Product_SpecificationAttribute_Mapping",
+            "ProductAttribute",
+            "ProductAttributeCombination",
+            "ProductAttributeValue",
+            "ProductAvailabilityRange",
+            "ProductReview",
+            "ProductReview_ReviewType_Mapping",
+            "ProductReviewHelpfulness",
+            "ProductTag",
+            "ProductTemplate",
+            "ProductWarehouseInventory",
+            "QueuedEmail",
+            "RecurringPayment",
+            "RecurringPaymentHistory",
+            "RelatedProduct",
+            "ReturnRequest",
+            "ReturnRequestAction",
+            "ReturnRequestReason",
+            "ReviewType",
+            "RewardPointsHistory",
+            "ScheduleTask",
+            "SearchTerm",
+            "Setting",
+            "Shipment",
+            "ShipmentItem",
+            "ShippingByWeightByTotalRecord",
+            "ShippingMethod",
+            "ShippingMethodRestrictions",
+            "ShoppingCartItem",
+            "SpecificationAttribute",
+            "SpecificationAttributeOption",
+            "StateProvince",
+            "StockQuantityHistory",
+            "Store",
+            "StoreMapping",
+            "StorePickupPoint",
+            "TaxCategory",
+            "TaxRate",
+            "TaxTransactionLog",
+            "TierPrice",
+            "Topic",
+            "TopicTemplate",
+            "UrlRecord",
+            "Vendor",
+            "VendorAttribute",
+            "VendorAttributeValue",
+            "VendorNote",
+            "Warehouse"
+        };
 
-        #region Methods
+        private static async Task<bool> IsDatabaseInitialized(string connectionString)
+        {
+            if (string.IsNullOrEmpty(connectionString))
+                throw new EmptyConnectionStringException();
+
+            try
+            {
+                var builder = new SqlConnectionStringBuilder(connectionString);
+                if (string.IsNullOrEmpty(builder.InitialCatalog))
+                    throw new ConnectionStringBadFormatException(connectionString);
+
+                var tables = new List<string>();
+
+                //just try to connect
+                using (var conn = new SqlConnection(connectionString))
+                {
+                    using (var cmd = conn.CreateCommand())
+                    {
+                        cmd.CommandText = @"SELECT TABLE_NAME
+                            FROM INFORMATION_SCHEMA.TABLES
+                            WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_CATALOG = @PARAM_CATALOG";
+                        cmd.Parameters.AddWithValue("@PARAM_CATALOG", builder.InitialCatalog);
+
+                        await cmd.Connection.OpenAsync();
+
+                        using (var reader = await cmd.ExecuteReaderAsync(System.Data.CommandBehavior.CloseConnection))
+                        {
+                            if (reader.HasRows)
+                            {
+                                while (await reader.ReadAsync())
+                                {
+                                    tables.Add(reader.GetString(0));
+                                }
+                            }
+                        }
+                    }
+                }
+
+                return tables.Count == _tableNames.Length && _tableNames.SequenceEqual(tables);
+            }
+            catch
+            {
+                return false;
+            }
+        }
 
         /// <summary>
         /// Load data settings
@@ -119,24 +294,57 @@ namespace Nop.Core.Data
             _databaseIsInstalled = null;
         }
 
-        #endregion
-
-        #region Properties
-
         /// <summary>
         /// Gets a value indicating whether database is already installed
         /// </summary>
+        [Obsolete("Use method version instead")]
         public static bool DatabaseIsInstalled
         {
             get
             {
                 if (!_databaseIsInstalled.HasValue)
-                    _databaseIsInstalled = !string.IsNullOrEmpty(LoadSettings(reloadSettings: true)?.DataConnectionString);
+                {
+                    var dbConfig = EngineContext.Current.Resolve<IOptions<DataSettings>>() ?? throw new NopDbConfigOptionNotConfiguredException();
+
+                    _databaseIsInstalled = IsDatabaseInitialized(dbConfig.Value.DataConnectionString).GetAwaiter().GetResult();
+                }
+                //_databaseIsInstalled = !string.IsNullOrEmpty(LoadSettings(reloadSettings: true)?.DataConnectionString);
 
                 return _databaseIsInstalled.Value;
             }
         }
 
-        #endregion
+        public static bool GetDatabaseIsInstalled()
+        {
+            if (!_databaseIsInstalled.HasValue)
+            {
+                var dbConfig = EngineContext.Current.Resolve<IOptions<DataSettings>>();
+                return GetDatabaseIsInstalled(dbConfig.Value);
+            }
+
+            return _databaseIsInstalled.Value;
+        }
+
+        public static bool GetDatabaseIsInstalled(IServiceProvider serviceProvider)
+        {
+            if (!_databaseIsInstalled.HasValue)
+            {
+                var dbConfig = (IOptions<DataSettings>)serviceProvider.GetService(typeof(IOptions<DataSettings>));
+
+                return GetDatabaseIsInstalled(dbConfig.Value);
+            }
+
+            return _databaseIsInstalled.Value;
+        }
+
+        public static bool GetDatabaseIsInstalled(DataSettings dbConfig)
+        {
+            if (!_databaseIsInstalled.HasValue)
+            {
+                _databaseIsInstalled = IsDatabaseInitialized(dbConfig.DataConnectionString).GetAwaiter().GetResult();
+            }
+
+            return _databaseIsInstalled.Value;
+        }
     }
 }

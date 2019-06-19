@@ -20,7 +20,7 @@ namespace Nop.Web.Infrastructure
         /// <param name="routeBuilder">Route builder</param>
         public void RegisterRoutes(IRouteBuilder routeBuilder)
         {
-            if (DataSettingsManager.DatabaseIsInstalled && !EngineContext.Current.Resolve<CommonSettings>().SupportPreviousNopcommerceVersions)
+            if (DataSettingsManager.GetDatabaseIsInstalled() && !EngineContext.Current.Resolve<CommonSettings>().SupportPreviousNopcommerceVersions)
                 return;
 
             //all old aspx URLs

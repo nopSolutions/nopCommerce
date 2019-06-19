@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Options;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Configuration;
@@ -21,28 +22,23 @@ namespace Nop.Web.Controllers
 {
     public partial class InstallController : Controller
     {
-        #region Fields
-
         private readonly IInstallationLocalizationService _locService;
         private readonly INopFileProvider _fileProvider;
         private readonly NopConfig _config;
+        private readonly DataSettings _dataSettings;
 
-        #endregion
-
-        #region Ctor
-
-        public InstallController(IInstallationLocalizationService locService,
+        public InstallController(
+            IInstallationLocalizationService locService,
             INopFileProvider fileProvider,
-            NopConfig config)
+            NopConfig config,
+            IOptions<DataSettings> dataSettings)
         {
             _locService = locService;
             _fileProvider = fileProvider;
             _config = config;
+            _dataSettings = dataSettings.Value;
         }
 
-        #endregion
-
-        #region Utilities
 
         /// <summary>
         /// A value indicating whether we use MARS (Multiple Active Result Sets)
@@ -106,7 +102,7 @@ namespace Nop.Web.Controllers
                 }
 
                 //try connect
-                if (triesToConnect <= 0) 
+                if (triesToConnect <= 0)
                     return string.Empty;
 
                 //sometimes on slow servers (hosting) there could be situations when database requires some time to be created.
@@ -173,23 +169,21 @@ namespace Nop.Web.Controllers
             return builder.ConnectionString;
         }
 
-        #endregion
-
-        #region Methods
-
         public virtual IActionResult Index()
         {
-            if (DataSettingsManager.DatabaseIsInstalled)
+            if (DataSettingsManager.GetDatabaseIsInstalled(_dataSettings))
                 return RedirectToRoute("Homepage");
 
             var model = new InstallModel
             {
                 AdminEmail = "admin@yourStore.com",
                 InstallSampleData = false,
-                DatabaseConnectionString = string.Empty,
+                DatabaseConnectionString = _dataSettings.DataConnectionString,
                 DataProvider = DataProviderType.SqlServer,
+
                 //fast installation service does not support SQL compact
                 DisableSampleDataOption = _config.DisableSampleDataDuringInstallation,
+
                 SqlAuthenticationType = "sqlauthentication",
                 SqlConnectionInfo = "sqlconnectioninfo_values",
                 SqlServerCreateDatabase = false,
@@ -212,7 +206,7 @@ namespace Nop.Web.Controllers
         [HttpPost]
         public virtual IActionResult Index(InstallModel model)
         {
-            if (DataSettingsManager.DatabaseIsInstalled)
+            if (DataSettingsManager.GetDatabaseIsInstalled(_dataSettings))
                 return RedirectToRoute("Homepage");
 
             if (model.DatabaseConnectionString != null)
@@ -243,7 +237,7 @@ namespace Nop.Web.Controllers
                     try
                     {
                         //try to create connection string
-                        var unused = new SqlConnectionStringBuilder(model.DatabaseConnectionString);    
+                        var unused = new SqlConnectionStringBuilder(model.DatabaseConnectionString);
                     }
                     catch
                     {
@@ -293,7 +287,7 @@ namespace Nop.Web.Controllers
                     ModelState.AddModelError(string.Empty, string.Format(_locService.GetResource("ConfigureFilePermissions"), CurrentOSUser.FullName, file));
             }
 
-            if (!ModelState.IsValid) 
+            if (!ModelState.IsValid)
                 return View(model);
 
             try
@@ -417,7 +411,7 @@ namespace Nop.Web.Controllers
 
         public virtual IActionResult ChangeLanguage(string language)
         {
-            if (DataSettingsManager.DatabaseIsInstalled)
+            if (DataSettingsManager.GetDatabaseIsInstalled(_dataSettings))
                 return RedirectToRoute("Homepage");
 
             _locService.SaveCurrentLanguage(language);
@@ -429,7 +423,7 @@ namespace Nop.Web.Controllers
         [HttpPost]
         public virtual IActionResult RestartInstall()
         {
-            if (DataSettingsManager.DatabaseIsInstalled)
+            if (DataSettingsManager.GetDatabaseIsInstalled(_dataSettings))
                 return RedirectToRoute("Homepage");
 
             //restart application
@@ -439,7 +433,5 @@ namespace Nop.Web.Controllers
             //Redirect to home page
             return RedirectToRoute("Homepage");
         }
-
-        #endregion
     }
 }
