@@ -965,6 +965,48 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.BlockTitle.FaviconAndAppIcons">
     <Value>Favicon and app icons</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.ApplyChanges">
+    <Value>Restart application to apply changes</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.DiscardChanges">
+    <Value>Discard changes</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Configuration.Plugins.ApplyChanges.Progress">
+    <Value>Applying changes on plugins...</Value>
+  </LocaleResource>    
+  <LocaleResource Name="Admin.Configuration.Plugins.DiscardChanges.Progress">
+    <Value>Discarding changes on plugins...</Value>
+  </LocaleResource>    
+  <LocaleResource Name="Admin.Configuration.Plugins.ChangesApplyAfterReboot">
+    <Value>Changes will be apply after restart application</Value>
+  </LocaleResource> 
+  <LocaleResource Name="Admin.Plugins.Errors.NotDeleted">
+    <Value>The plugin "{0}" not deleted</Value>
+  </LocaleResource> 
+  <LocaleResource Name="Admin.Plugins.Errors.NotInstalled">
+    <Value>The plugin "{0}" not installed</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Plugins.Errors.NotUninstalled">
+    <Value>The plugin "{0}" not uninstalled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Warnings.PluginRequiredAssembly">
+    <Value>the ''{0}'' plugin required the ''{1}'' assembly</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.System.Warnings.AssemblyHasCollision">
+    <Value>The ''{0}'' assembly has collision, application loaded the ''{1}'' assembly, but {2}</Value>
+  </LocaleResource> 
+  <LocaleResource Name="Admin.Configuration.Plugins.Deleted">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.Installed">
+    <Value></Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Configuration.Plugins.Uninstalled">
+    <Value></Value>
+  </LocaleResource>   
+  <LocaleResource Name="ActivityLog.UploadNewIconsArchive">
+    <Value>Uploaded a new favicon and app icons archive for store (ID = ''{0}'')</Value>
+  </LocaleResource>  
 </Language>'
 
 CREATE TABLE #LocaleStringResourceTmp
