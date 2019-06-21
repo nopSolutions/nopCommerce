@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Nop.Web.Framework.Infrastructure.Extensions;
 
 namespace Nop.Web
@@ -17,14 +18,17 @@ namespace Nop.Web
         private readonly IConfiguration _configuration;
         private readonly IHostingEnvironment _hostingEnvironment;
 
+        private readonly ILogger<Startup> _logger;
+
         #endregion
 
         #region Ctor
 
-        public Startup(IConfiguration configuration, IHostingEnvironment hostingEnvironment)
+        public Startup(IConfiguration configuration, IHostingEnvironment hostingEnvironment, ILogger<Startup> logger)
         {
             _configuration = configuration;
             _hostingEnvironment = hostingEnvironment;
+            _logger = logger;
         }
 
         #endregion
@@ -35,7 +39,13 @@ namespace Nop.Web
         /// <param name="services">Collection of service descriptors</param>
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            return services.ConfigureApplicationServices(_configuration, _hostingEnvironment);
+            _logger.LogInformation("Start of ConfigureServices");
+
+            var svcs = services.ConfigureApplicationServices(_configuration, _hostingEnvironment);
+
+            _logger.LogInformation("End of ConfigureServices");
+
+            return svcs;
         }
 
         /// <summary>
@@ -44,7 +54,11 @@ namespace Nop.Web
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public void Configure(IApplicationBuilder application)
         {
+            _logger.LogInformation("Start of Configure");
+
             application.ConfigureRequestPipeline();
+
+            _logger.LogInformation("End of Configure");
         }
     }
 }

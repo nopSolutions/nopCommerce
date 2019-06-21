@@ -267,7 +267,7 @@ namespace Nop.Web.Framework.Infrastructure
             }).As<IRoxyFilemanService>().InstancePerLifetimeScope();
 
             //installation service
-            if (!DataSettingsManager.DatabaseIsInstalled)
+            if (!DataSettingsManager.GetDatabaseIsInstalled())
             {
                 if (config.UseFastInstallationService)
                     builder.RegisterType<SqlFileInstallationService>().As<IInstallationService>().InstancePerLifetimeScope();
