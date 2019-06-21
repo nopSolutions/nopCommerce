@@ -1,11 +1,9 @@
 ﻿using System;
-using System.IO;
-using System.Reflection;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Serilog;
-using Serilog.Events;
 
 namespace Nop.Web
 {
@@ -16,9 +14,6 @@ namespace Nop.Web
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
                 .Enrich.FromLogContext()
-                //.WriteTo.ColoredConsole(
-                //    LogEventLevel.Verbose,
-                //    "{NewLine}{Timestamp:HH:mm:ss} [{Level}] ({CorrelationToken}) {Message}{NewLine}{Exception}")
                 .WriteTo.File(
                     @"D:\home\LogFiles\Application\myapp.txt",
                     fileSizeLimitBytes: 1_000_000,
@@ -50,11 +45,24 @@ namespace Nop.Web
                 {
                     config.AddJsonFile("secrets.json", optional: true, reloadOnChange: true);
                 })
+                .UseApplicationInsightsV2()
                 .UseKestrel(opt => opt.AddServerHeader = false)
                 .UseStartup<Startup>()
                 .UseSerilog((ctx, config) =>
                 {
                     config.ReadFrom.Configuration(ctx.Configuration);
                 });
+    }
+
+    internal static class ProgramExtensions
+    {
+        public static IWebHostBuilder UseApplicationInsightsV2(this IWebHostBuilder webHostBuilder)
+        {
+            webHostBuilder.ConfigureServices((ctx, collection) =>
+            {
+                collection.AddApplicationInsightsTelemetry(ctx.Configuration["ApplicationInsights:InstrumentationKey"]);
+            });
+            return webHostBuilder;
+        }
     }
 }

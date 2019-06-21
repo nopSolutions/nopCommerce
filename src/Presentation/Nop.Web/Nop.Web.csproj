@@ -52,6 +52,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.7.1" />
     <PackageReference Include="Serilog.AspNetCore" Version="2.1.1" />
     <PackageReference Include="Serilog.Enrichers.CorrelationId" Version="1.0.1" />
     <PackageReference Include="Serilog.Enrichers.Environment" Version="2.1.3" />
@@ -60,6 +61,28 @@
     <PackageReference Include="Serilog.Sinks.ApplicationInsights" Version="3.0.3" />
     <PackageReference Include="Serilog.Sinks.ColoredConsole" Version="3.0.1" />
     <PackageReference Include="Serilog.Sinks.File" Version="4.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="appsettings.Development.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Update="appsettings.Production.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Update="appsettings.Staging.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Update="secrets.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <!-- This target execute after "Build" target.
@@ -116,6 +139,8 @@
       More details here: https://docs.microsoft.com/en-us/dotnet/standard/garbage-collection/fundamentals#concurrent-garbage-collection-->
     <ConcurrentGarbageCollection>false</ConcurrentGarbageCollection>
     <UserSecretsId>79eb045e-aaad-46b2-998e-e5f3ffff22cf</UserSecretsId>
+    <ApplicationInsightsResourceId>/subscriptions/15cc9dae-09f8-42c1-aaeb-9cc29f17eb7f/resourcegroups/NopS/providers/microsoft.insights/components/AI-NopS-a357</ApplicationInsightsResourceId>
+    <ApplicationInsightsAnnotationResourceId>/subscriptions/15cc9dae-09f8-42c1-aaeb-9cc29f17eb7f/resourcegroups/NopS/providers/microsoft.insights/components/AI-NopS-a357</ApplicationInsightsAnnotationResourceId>
   </PropertyGroup>
 
 </Project>
