@@ -170,7 +170,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         public static void UseNopResponseCompression(this IApplicationBuilder application)
         {
             //whether to use compression (gzip by default)
-            if (DataSettingsManager.DatabaseIsInstalled && EngineContext.Current.Resolve<CommonSettings>().UseResponseCompression)
+            if (DataSettingsManager.GetDatabaseIsInstalled() && EngineContext.Current.Resolve<CommonSettings>().UseResponseCompression)
                 application.UseResponseCompression();
         }
 
@@ -182,7 +182,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         {
             void staticFileResponse(StaticFileResponseContext context)
             {
-                if (!DataSettingsManager.DatabaseIsInstalled)
+                if (!DataSettingsManager.GetDatabaseIsInstalled())
                     return;
 
                 var commonSettings = EngineContext.Current.Resolve<CommonSettings>();
@@ -211,7 +211,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 OnPrepareResponse = staticFileResponse
             };
 
-            if (DataSettingsManager.DatabaseIsInstalled)
+            if (DataSettingsManager.GetDatabaseIsInstalled())
             {
                 var securitySettings = EngineContext.Current.Resolve<SecuritySettings>();
                 if (!string.IsNullOrEmpty(securitySettings.PluginStaticFileExtensionsBlacklist))
@@ -256,7 +256,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 ContentTypeProvider = provider
             });
 
-            if (DataSettingsManager.DatabaseIsInstalled)
+            if (DataSettingsManager.GetDatabaseIsInstalled())
             {
                 application.UseStaticFiles(new StaticFileOptions
                 {
@@ -292,7 +292,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         public static void UseNopAuthentication(this IApplicationBuilder application)
         {
             //check whether database is installed
-            if (!DataSettingsManager.DatabaseIsInstalled)
+            if (!DataSettingsManager.GetDatabaseIsInstalled())
                 return;
 
             application.UseMiddleware<AuthenticationMiddleware>();
@@ -306,7 +306,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         {
             application.UseRequestLocalization(options =>
             {
-                if (!DataSettingsManager.DatabaseIsInstalled)
+                if (!DataSettingsManager.GetDatabaseIsInstalled())
                     return;
 
                 //prepare supported cultures
@@ -325,7 +325,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         public static void UseCulture(this IApplicationBuilder application)
         {
             //check whether database is installed
-            if (!DataSettingsManager.DatabaseIsInstalled)
+            if (!DataSettingsManager.GetDatabaseIsInstalled())
                 return;
 
             application.UseMiddleware<CultureMiddleware>();
@@ -351,7 +351,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         public static void UseNopWebMarkupMin(this IApplicationBuilder application)
         {
             //check whether database is installed
-            if (!DataSettingsManager.DatabaseIsInstalled)
+            if (!DataSettingsManager.GetDatabaseIsInstalled())
                 return;
 
             application.UseWebMarkupMin();

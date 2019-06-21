@@ -4,8 +4,9 @@ using System;
 using MaxMind.GeoIP2;
 using MaxMind.GeoIP2.Exceptions;
 using MaxMind.GeoIP2.Responses;
+using Microsoft.Extensions.Logging;
 using Nop.Core.Infrastructure;
-using Nop.Services.Logging;
+using Nop.Services.Logging.Events;
 
 namespace Nop.Services.Directory
 {
@@ -14,23 +15,15 @@ namespace Nop.Services.Directory
     /// </summary>
     public partial class GeoLookupService : IGeoLookupService
     {
-        #region Fields
-
         private readonly ILogger _logger;
         private readonly INopFileProvider _fileProvider;
 
-        #endregion
-
-        #region Ctor
-
-        public GeoLookupService(ILogger logger,
+        public GeoLookupService(ILogger<GeoLookupService> logger,
             INopFileProvider fileProvider)
         {
             _logger = logger;
             _fileProvider = fileProvider;
         }
-
-        #endregion
 
         #region Utilities
 
@@ -71,17 +64,15 @@ namespace Nop.Services.Directory
                 //do not throw exceptions
                 return null;
             }
-            catch (Exception exc)
+            catch (Exception ex)
             {
                 //do not throw exceptions
-                _logger.Warning("Cannot load MaxMind record", exc);
+                _logger.LogError(LoggingEvents.GeoLookupGetInformation, ex, "Cannot load MaxMind record");
                 return null;
             }
         }
 
         #endregion
-
-        #region Methods
 
         /// <summary>
         /// Get country ISO code
@@ -110,7 +101,5 @@ namespace Nop.Services.Directory
 
             return string.Empty;
         }
-
-        #endregion
     }
 }

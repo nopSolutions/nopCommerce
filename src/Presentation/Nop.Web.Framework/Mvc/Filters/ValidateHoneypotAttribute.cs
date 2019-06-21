@@ -67,7 +67,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                 if (filterContext.HttpContext.Request == null)
                     return;
 
-                if (!DataSettingsManager.DatabaseIsInstalled)
+                if (!DataSettingsManager.GetDatabaseIsInstalled())
                     return;
 
                 //whether honeypot is enabled

@@ -33,7 +33,7 @@ namespace Nop.Web.Framework.Localization
         /// <param name="constraints">Constraints</param>
         /// <param name="dataTokens">Data tokens</param>
         /// <param name="inlineConstraintResolver">Inline constraint resolver</param>
-        public LocalizedRoute(IRouter target, string routeName, string routeTemplate, RouteValueDictionary defaults, 
+        public LocalizedRoute(IRouter target, string routeName, string routeTemplate, RouteValueDictionary defaults,
             IDictionary<string, object> constraints, RouteValueDictionary dataTokens, IInlineConstraintResolver inlineConstraintResolver)
             : base(target, routeName, routeTemplate, defaults, constraints, dataTokens, inlineConstraintResolver)
         {
@@ -56,7 +56,7 @@ namespace Nop.Web.Framework.Localization
             if (data == null)
                 return null;
 
-            if (!DataSettingsManager.DatabaseIsInstalled || !SeoFriendlyUrlsForLanguagesEnabled)
+            if (!DataSettingsManager.GetDatabaseIsInstalled() || !SeoFriendlyUrlsForLanguagesEnabled)
                 return data;
 
             //add language code to page URL in case if it's localized URL
@@ -74,7 +74,7 @@ namespace Nop.Web.Framework.Localization
         /// <returns>Task of the routing</returns>
         public override Task RouteAsync(RouteContext context)
         {
-            if (!DataSettingsManager.DatabaseIsInstalled || !SeoFriendlyUrlsForLanguagesEnabled)
+            if (!DataSettingsManager.GetDatabaseIsInstalled() || !SeoFriendlyUrlsForLanguagesEnabled)
                 return base.RouteAsync(context);
 
             //if path isn't localized, no special action required
@@ -101,9 +101,9 @@ namespace Nop.Web.Framework.Localization
         {
             _seoFriendlyUrlsForLanguagesEnabled = null;
         }
-        
+
         #endregion
-        
+
         #region Properties
 
         /// <summary>
@@ -119,7 +119,7 @@ namespace Nop.Web.Framework.Localization
                 return _seoFriendlyUrlsForLanguagesEnabled.Value;
             }
         }
-        
+
         #endregion
     }
 }

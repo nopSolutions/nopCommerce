@@ -85,7 +85,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                 if (actionFilter?.IgnoreFilter ?? _ignoreFilter)
                     return;
 
-                if (!DataSettingsManager.DatabaseIsInstalled)
+                if (!DataSettingsManager.GetDatabaseIsInstalled())
                     return;
 
                 //check whether current customer has access to a public store

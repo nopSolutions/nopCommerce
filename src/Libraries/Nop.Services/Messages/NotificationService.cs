@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Nop.Core;
 using Nop.Services.Logging;
+using Nop.Services.Logging.Events;
 
 namespace Nop.Services.Messages
 {
@@ -13,19 +15,13 @@ namespace Nop.Services.Messages
     /// </summary>
     public partial class NotificationService : INotificationService
     {
-        #region Fields
-
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly ILogger _logger;
+        private readonly ILogger<NotificationService> _logger;
         private readonly ITempDataDictionaryFactory _tempDataDictionaryFactory;
         private readonly IWorkContext _workContext;
 
-        #endregion
-
-        #region Ctor
-
         public NotificationService(IHttpContextAccessor httpContextAccessor,
-            ILogger logger,
+            ILogger<NotificationService> logger,
             ITempDataDictionaryFactory tempDataDictionaryFactory,
             IWorkContext workContext)
         {
@@ -34,10 +30,6 @@ namespace Nop.Services.Messages
             _tempDataDictionaryFactory = tempDataDictionaryFactory;
             _workContext = workContext;
         }
-
-        #endregion
-
-        #region Utilities
 
         /// <summary>
         /// Save message into TempData
@@ -74,12 +66,8 @@ namespace Nop.Services.Messages
             if (exception == null)
                 return;
             var customer = _workContext.CurrentCustomer;
-            _logger.Error(exception.Message, exception, customer);
+            _logger.LogError(LoggingEvents.NotificationServiceNotify, exception, "Error while sending notification to Customer {CustomerId}", customer.Id);
         }
-
-        #endregion
-
-        #region Methods
 
         /// <summary>
         /// Display notification
@@ -137,7 +125,5 @@ namespace Nop.Services.Messages
 
             ErrorNotification(exception.Message);
         }
-
-        #endregion
     }
 }

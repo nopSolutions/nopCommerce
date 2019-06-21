@@ -116,7 +116,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                 if (context == null)
                     throw new ArgumentNullException(nameof(context));
 
-                if (!DataSettingsManager.DatabaseIsInstalled)
+                if (!DataSettingsManager.GetDatabaseIsInstalled())
                     return;
 
                 //whether CAPTCHA is enabled

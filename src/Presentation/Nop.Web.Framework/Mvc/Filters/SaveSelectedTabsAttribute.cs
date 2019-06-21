@@ -108,7 +108,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                 if (_webHelper.IsAjaxRequest(filterContext.HttpContext.Request))
                     return;
 
-                if (!DataSettingsManager.DatabaseIsInstalled)
+                if (!DataSettingsManager.GetDatabaseIsInstalled())
                     return;
 
                 //check whether this filter has been overridden for the Action

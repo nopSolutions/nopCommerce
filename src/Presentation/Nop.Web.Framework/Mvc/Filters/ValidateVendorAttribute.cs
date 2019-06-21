@@ -86,7 +86,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                 if (actionFilter?.IgnoreFilter ?? _ignoreFilter)
                     return;
 
-                if (!DataSettingsManager.DatabaseIsInstalled)
+                if (!DataSettingsManager.GetDatabaseIsInstalled())
                     return;
 
                 //whether current customer is vendor

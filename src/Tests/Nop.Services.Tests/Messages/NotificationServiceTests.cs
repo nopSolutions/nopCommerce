@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.Extensions.Logging;
 using Moq;
 using Newtonsoft.Json;
 using Nop.Core;
@@ -19,7 +20,7 @@ namespace Nop.Services.Tests.Messages
         private INotificationService _notificationService;
 
         private Mock<IHttpContextAccessor> _httpContextAccessor;
-        private Mock<ILogger> _logger;
+        private Mock<ILogger<NotificationService>> _logger;
         private Mock<ITempDataDictionaryFactory> _tempDataDictionaryFactory;
         private Mock<IWorkContext> _workContext;
 
@@ -35,7 +36,7 @@ namespace Nop.Services.Tests.Messages
             _dataDictionary = new TempDataDictionary(httpContext.Object, tempDataProvider.Object);
 
             _httpContextAccessor = new Mock<IHttpContextAccessor>();
-            _logger = new Mock<ILogger>();
+            _logger = new Mock<ILogger<NotificationService>>();
             _tempDataDictionaryFactory = new Mock<ITempDataDictionaryFactory>();
             _tempDataDictionaryFactory.Setup(f => f.GetTempData(It.IsAny<HttpContext>())).Returns(_dataDictionary);
             _workContext = new Mock<IWorkContext>();

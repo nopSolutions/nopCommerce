@@ -8,6 +8,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 using System.Xml;
+using Microsoft.Extensions.Logging;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Configuration;
@@ -19,6 +20,7 @@ using Nop.Data.Extensions;
 using Nop.Services.Configuration;
 using Nop.Services.Events;
 using Nop.Services.Logging;
+using Nop.Services.Logging.Events;
 using Nop.Services.Plugins;
 
 namespace Nop.Services.Localization
@@ -28,30 +30,24 @@ namespace Nop.Services.Localization
     /// </summary>
     public partial class LocalizationService : ILocalizationService
     {
-        #region Fields
-
         private readonly IDataProvider _dataProvider;
         private readonly IDbContext _dbContext;
         private readonly IEventPublisher _eventPublisher;
         private readonly ILanguageService _languageService;
         private readonly ILocalizedEntityService _localizedEntityService;
-        private readonly ILogger _logger;
+        private readonly ILogger<LocalizationService> _logger;
         private readonly IRepository<LocaleStringResource> _lsrRepository;
         private readonly ISettingService _settingService;
         private readonly IStaticCacheManager _cacheManager;
         private readonly IWorkContext _workContext;
         private readonly LocalizationSettings _localizationSettings;
 
-        #endregion
-
-        #region Ctor
-
         public LocalizationService(IDataProvider dataProvider,
             IDbContext dbContext,
             IEventPublisher eventPublisher,
             ILanguageService languageService,
             ILocalizedEntityService localizedEntityService,
-            ILogger logger,
+            ILogger<LocalizationService> logger,
             IRepository<LocaleStringResource> lsrRepository,
             ISettingService settingService,
             IStaticCacheManager cacheManager,
@@ -70,10 +66,6 @@ namespace Nop.Services.Localization
             _workContext = workContext;
             _localizationSettings = localizationSettings;
         }
-
-        #endregion
-
-        #region Utilities
 
         /// <summary>
         /// Insert resources
@@ -132,10 +124,6 @@ namespace Nop.Services.Localization
 
             return dictionary;
         }
-
-        #endregion
-
-        #region Methods
 
         /// <summary>
         /// Deletes a locale string resource
@@ -198,7 +186,9 @@ namespace Nop.Services.Localization
             var localeStringResource = query.FirstOrDefault();
 
             if (localeStringResource == null && logIfNotFound)
-                _logger.Warning($"Resource string ({resourceName}) not found. Language ID = {languageId}");
+            {
+                _logger.LogWarning(LoggingEvents.LocalizationGetLocaleString, "Resource string ({resourceName}) not found. Language ID = {languageId}", resourceName, languageId);
+            }
             return localeStringResource;
         }
 
@@ -356,11 +346,13 @@ namespace Nop.Services.Localization
                     result = lsr;
             }
 
-            if (!string.IsNullOrEmpty(result)) 
+            if (!string.IsNullOrEmpty(result))
                 return result;
 
             if (logIfNotFound)
-                _logger.Warning($"Resource string ({resourceKey}) is not found. Language ID = {languageId}");
+            {
+                _logger.LogWarning(LoggingEvents.LocalizationGetResource, "Resource string ({resourceKey}) is not found. Language ID = {languageId}", resourceKey, languageId);
+            }
 
             if (!string.IsNullOrEmpty(defaultValue))
             {
@@ -502,7 +494,7 @@ namespace Nop.Services.Localization
             }
 
             //set default value if required
-            if (!string.IsNullOrEmpty(resultStr) || !returnDefaultValue) 
+            if (!string.IsNullOrEmpty(resultStr) || !returnDefaultValue)
                 return result;
             var localizer = keySelector.Compile();
             result = localizer(entity);
@@ -782,7 +774,5 @@ namespace Nop.Services.Localization
                 InsertLocaleStringResource(resource);
             }
         }
-
-        #endregion
     }
 }

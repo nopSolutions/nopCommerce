@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using Microsoft.Extensions.Logging;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -9,12 +10,12 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Localization;
-using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
+using Nop.Core.Infrastructure;
 using Nop.Services.Affiliates;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
@@ -23,7 +24,7 @@ using Nop.Services.Directory;
 using Nop.Services.Discounts;
 using Nop.Services.Events;
 using Nop.Services.Localization;
-using Nop.Services.Logging;
+using Nop.Services.Logging.Events;
 using Nop.Services.Messages;
 using Nop.Services.Payments;
 using Nop.Services.Security;
@@ -40,12 +41,14 @@ namespace Nop.Services.Orders
     {
         #region Fields
 
+        private readonly ILogger<OrderProcessingService> _logger;
+
         private readonly CurrencySettings _currencySettings;
         private readonly IAffiliateService _affiliateService;
         private readonly ICheckoutAttributeFormatter _checkoutAttributeFormatter;
         private readonly ICountryService _countryService;
         private readonly ICurrencyService _currencyService;
-        private readonly ICustomerActivityService _customerActivityService;
+        private readonly Logging.ICustomerActivityService _customerActivityService;
         private readonly ICustomerService _customerService;
         private readonly ICustomNumberFormatter _customNumberFormatter;
         private readonly IDiscountService _discountService;
@@ -55,7 +58,6 @@ namespace Nop.Services.Orders
         private readonly IGiftCardService _giftCardService;
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
-        private readonly ILogger _logger;
         private readonly IOrderService _orderService;
         private readonly IOrderTotalCalculationService _orderTotalCalculationService;
         private readonly IPaymentPluginManager _paymentPluginManager;
@@ -94,7 +96,7 @@ namespace Nop.Services.Orders
             ICheckoutAttributeFormatter checkoutAttributeFormatter,
             ICountryService countryService,
             ICurrencyService currencyService,
-            ICustomerActivityService customerActivityService,
+            Logging.ICustomerActivityService customerActivityService,
             ICustomerService customerService,
             ICustomNumberFormatter customNumberFormatter,
             IDiscountService discountService,
@@ -104,7 +106,7 @@ namespace Nop.Services.Orders
             IGiftCardService giftCardService,
             ILanguageService languageService,
             ILocalizationService localizationService,
-            ILogger logger,
+            Logging.ILogger logger,
             IOrderService orderService,
             IOrderTotalCalculationService orderTotalCalculationService,
             IPaymentPluginManager paymentPluginManager,
@@ -149,7 +151,7 @@ namespace Nop.Services.Orders
             _giftCardService = giftCardService;
             _languageService = languageService;
             _localizationService = localizationService;
-            _logger = logger;
+            _logger = EngineContext.Current.Resolve<ILogger<OrderProcessingService>>();
             _orderService = orderService;
             _orderTotalCalculationService = orderTotalCalculationService;
             _paymentPluginManager = paymentPluginManager;
@@ -1587,20 +1589,14 @@ namespace Nop.Services.Orders
                     foreach (var paymentError in processPaymentResult.Errors)
                         result.AddError(string.Format(_localizationService.GetResource("Checkout.PaymentError"), paymentError));
             }
-            catch (Exception exc)
+            catch (Exception ex)
             {
-                _logger.Error(exc.Message, exc);
-                result.AddError(exc.Message);
+                _logger.LogError(LoggingEvents.OrderProcessingPlaceOrder, ex, "Error while PlacingOrder with {Id} and Customer {CustomerId}", processPaymentRequest.OrderGuid, processPaymentRequest.CustomerId);
+                result.AddError(ex.Message);
             }
 
             if (result.Success)
                 return result;
-
-            //log errors
-            var logError = result.Errors.Aggregate("Error while placing order. ",
-                (current, next) => $"{current}Error {result.Errors.IndexOf(next) + 1}: {next}. ");
-            var customer = _customerService.GetCustomerById(processPaymentRequest.CustomerId);
-            _logger.Error(logError, customer: customer);
 
             return result;
         }
@@ -1923,9 +1919,9 @@ namespace Nop.Services.Orders
                 }
 
                 //log errors
-                var logError = processPaymentResult.Errors.Aggregate("Error while processing recurring order. ",
-                    (current, next) => $"{current}Error {processPaymentResult.Errors.IndexOf(next) + 1}: {next}. ");
-                _logger.Error(logError, customer: customer);
+                var logError = processPaymentResult.Errors.Aggregate("Error while processing recurring order. ", (current, next) => $"{current}Error {processPaymentResult.Errors.IndexOf(next) + 1}: {next}. ");
+
+                _logger.LogError(eventId: LoggingEvents.OrderProcessingProcessNextRecurringPayment, message: logError);
 
                 if (!processPaymentResult.RecurringPaymentFailed)
                     return processPaymentResult.Errors;
@@ -1937,7 +1933,7 @@ namespace Nop.Services.Orders
                 if (_paymentSettings.CancelRecurringPaymentsAfterFailedPayment)
                 {
                     //cancel recurring payment
-                    CancelRecurringPayment(recurringPayment).ToList().ForEach(error => _logger.Error(error));
+                    CancelRecurringPayment(recurringPayment).ToList().ForEach(error => _logger.LogError(eventId: LoggingEvents.OrderProcessingProcessNextRecurringPaymentCancel, message: error));
 
                     //notify a customer about cancelled payment
                     _workflowMessageService.SendRecurringPaymentCancelledCustomerNotification(recurringPayment, initialOrder.CustomerLanguageId);
@@ -1948,9 +1944,9 @@ namespace Nop.Services.Orders
 
                 return processPaymentResult.Errors;
             }
-            catch (Exception exc)
+            catch (Exception ex)
             {
-                _logger.Error($"Error while processing recurring order. {exc.Message}", exc);
+                _logger.LogError(LoggingEvents.OrderProcessingProcessNextRecurringPayment, ex, "Error while ProcessNextRecurringPayment order. Initial Order {InitialOrder} with Id {Id}", recurringPayment.InitialOrder, recurringPayment.Id);
                 throw;
             }
         }
@@ -2000,6 +1996,8 @@ namespace Nop.Services.Orders
                 if (result == null)
                     result = new CancelRecurringPaymentResult();
                 result.AddError($"Error: {exc.Message}. Full exception: {exc}");
+
+                _logger.LogError(LoggingEvents.OrderProcessingCancelRecurringPayment, exc, "Error while processing CancelRecurring with InitialOrderId {InitialOrderId}", initialOrder.Id);
             }
 
             //process errors
@@ -2023,9 +2021,6 @@ namespace Nop.Services.Orders
             });
             _orderService.UpdateOrder(initialOrder);
 
-            //log it
-            var logError = $"Error cancelling recurring payment. Order #{initialOrder.Id}. Error: {error}";
-            _logger.InsertLog(LogLevel.Error, logError, logError);
             return result.Errors;
         }
 
@@ -2370,6 +2365,7 @@ namespace Nop.Services.Orders
                 if (result == null)
                     result = new CapturePaymentResult();
                 result.AddError($"Error: {exc.Message}. Full exception: {exc}");
+                _logger.LogError(LoggingEvents.OrderProcessingCapture, exc, "Error while processing CancelRecurring with OrderId {OrderId}", order.Id);
             }
 
             //process errors
@@ -2387,9 +2383,6 @@ namespace Nop.Services.Orders
             //add a note
             AddOrderNote(order, $"Unable to capture order. {error}");
 
-            //log it
-            var logError = $"Error capturing order #{order.Id}. Error: {error}";
-            _logger.InsertLog(LogLevel.Error, logError, logError);
             return result.Errors;
         }
 
@@ -2524,6 +2517,7 @@ namespace Nop.Services.Orders
                 if (result == null)
                     result = new RefundPaymentResult();
                 result.AddError($"Error: {exc.Message}. Full exception: {exc}");
+                _logger.LogError(LoggingEvents.OrderProcessingRefund, exc, "Error while processing Refund with OrderId {OrderId}", order.Id);
             }
 
             //process errors
@@ -2541,9 +2535,6 @@ namespace Nop.Services.Orders
             //add a note
             AddOrderNote(order, $"Unable to refund order. {error}");
 
-            //log it
-            var logError = $"Error refunding order #{order.Id}. Error: {error}";
-            _logger.InsertLog(LogLevel.Error, logError, logError);
             return result.Errors;
         }
 
@@ -2708,6 +2699,8 @@ namespace Nop.Services.Orders
                 if (result == null)
                     result = new RefundPaymentResult();
                 result.AddError($"Error: {exc.Message}. Full exception: {exc}");
+
+                _logger.LogError(LoggingEvents.OrderProcessingPartiallyRefund, exc, "Error while processing PartiallyRefund with OrderId {OrderId}", order.Id);
             }
 
             //process errors
@@ -2725,9 +2718,6 @@ namespace Nop.Services.Orders
             //add a note
             AddOrderNote(order, $"Unable to partially refund order. {error}");
 
-            //log it
-            var logError = $"Error refunding order #{order.Id}. Error: {error}";
-            _logger.InsertLog(LogLevel.Error, logError, logError);
             return result.Errors;
         }
 
@@ -2869,6 +2859,8 @@ namespace Nop.Services.Orders
                 if (result == null)
                     result = new VoidPaymentResult();
                 result.AddError($"Error: {exc.Message}. Full exception: {exc}");
+
+                _logger.LogError(LoggingEvents.OrderProcessingVoid, exc, "Error while processing Void with OrderId {OrderId}", order.Id);
             }
 
             //process errors
@@ -2886,9 +2878,6 @@ namespace Nop.Services.Orders
             //add a note
             AddOrderNote(order, $"Unable to voiding order. {error}");
 
-            //log it
-            var logError = $"Error voiding order #{order.Id}. Error: {error}";
-            _logger.InsertLog(LogLevel.Error, logError, logError);
             return result.Errors;
         }
 

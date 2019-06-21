@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net.Http;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
@@ -21,6 +22,7 @@ using Nop.Services.Directory;
 using Nop.Services.ExportImport.Help;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
+using Nop.Services.Logging.Events;
 using Nop.Services.Media;
 using Nop.Services.Messages;
 using Nop.Services.Security;
@@ -39,16 +41,12 @@ namespace Nop.Services.ExportImport
     /// </summary>
     public partial class ImportManager : IImportManager
     {
-        #region Constants
-
         //it's quite fast hash (to cheaply distinguish between objects)
         private const string IMAGE_HASH_ALGORITHM = "SHA1";
 
         private const string UPLOADS_TEMP_PATH = "~/App_Data/TempUploads";
 
-        #endregion
-
-        #region Fields
+        private readonly ILogger<ImportManager> _logger;
 
         private readonly CatalogSettings _catalogSettings;
         private readonly ICategoryService _categoryService;
@@ -59,7 +57,6 @@ namespace Nop.Services.ExportImport
         private readonly IEncryptionService _encryptionService;
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly ILocalizationService _localizationService;
-        private readonly ILogger _logger;
         private readonly IManufacturerService _manufacturerService;
         private readonly IMeasureService _measureService;
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
@@ -83,9 +80,6 @@ namespace Nop.Services.ExportImport
         private readonly MediaSettings _mediaSettings;
         private readonly VendorSettings _vendorSettings;
 
-        #endregion
-
-        #region Ctor
 
         public ImportManager(CatalogSettings catalogSettings,
             ICategoryService categoryService,
@@ -96,7 +90,7 @@ namespace Nop.Services.ExportImport
             IEncryptionService encryptionService,
             IHttpClientFactory httpClientFactory,
             ILocalizationService localizationService,
-            ILogger logger,
+            ILogger<ImportManager> logger,
             IManufacturerService manufacturerService,
             IMeasureService measureService,
             INewsLetterSubscriptionService newsLetterSubscriptionService,
@@ -153,10 +147,6 @@ namespace Nop.Services.ExportImport
             _mediaSettings = mediaSettings;
             _vendorSettings = vendorSettings;
         }
-
-        #endregion
-
-        #region Utilities
 
         private static ExportedAttributeType GetTypeOfExportedAttribute(ExcelWorksheet worksheet, PropertyManager<ExportProductAttribute> productAttributeManager, PropertyManager<ExportSpecificationAttribute> specificationAttributeManager, int iRow)
         {
@@ -293,7 +283,7 @@ namespace Nop.Services.ExportImport
 
             var point = string.IsNullOrEmpty(extension) ? string.Empty : ".";
             var fileName = _fileProvider.FileExists(picturePath) ? $"{name}{point}{extension}" : string.Empty;
-            _logger.Error($"Insert picture failed (file name: {fileName})", ex);
+            _logger.LogError(LoggingEvents.ImportManagerPictureInsert, ex, "Insert picture failed. {fileName}", fileName);
         }
 
         protected virtual void ImportProductImagesUsingServices(IList<ProductPictureMetadata> productPictureMetadata)
@@ -786,7 +776,9 @@ namespace Nop.Services.ExportImport
             try
             {
                 var client = _httpClientFactory.CreateClient(NopHttpDefaults.DefaultHttpClient);
-                var fileData = client.GetByteArrayAsync(urlString).Result;
+
+                var fileData = client.GetByteArrayAsync(urlString).GetAwaiter().GetResult();
+
                 using (var fs = new FileStream(filePath, FileMode.OpenOrCreate))
                 {
                     fs.Write(fileData, 0, fileData.Length);
@@ -797,7 +789,7 @@ namespace Nop.Services.ExportImport
             }
             catch (Exception ex)
             {
-                _logger.Error("Download image failed", ex);
+                _logger.LogError(LoggingEvents.ImportManagerDownloadFile, ex, "Download image failed {urlString}", urlString);
             }
 
             return string.Empty;
@@ -1131,9 +1123,6 @@ namespace Nop.Services.ExportImport
             return filePaths;
         }
 
-        #endregion
-
-        #region Methods
 
         /// <summary>
         /// Get property list by excel cells
@@ -2146,8 +2135,6 @@ namespace Nop.Services.ExportImport
                 throw new ArgumentException(string.Format(_localizationService.GetResource("Admin.Catalog.Categories.Import.CategoriesArentImported"), string.Join(", ", caregoriesName)));
             }
         }
-
-        #endregion
 
         #region Nested classes
 
