@@ -123,7 +123,7 @@
     <Value>SQL Benutzername ist notwendig</Value>
   </LocaleResource>
   <LocaleResource Name="SqlStandard">
-    <Value>SQL Server (oder SQL Express) Datenbank verwenden</Value>
+    <Value>Microsoft SQL Server (oder SQL Express) Datenbank verwenden</Value>
   </LocaleResource>
   <LocaleResource Name="StoreInformation">
     <Value>Shop Information</Value>

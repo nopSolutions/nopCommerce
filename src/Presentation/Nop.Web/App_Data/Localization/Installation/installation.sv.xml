@@ -124,7 +124,7 @@
     <Value>SQL Användarnamn måste anges</Value>
   </LocaleResource>
   <LocaleResource Name="SqlStandard">
-    <Value>Använd SQL Server (eller SQL Express) databas</Value>
+    <Value>Använd Microsoft SQL Server (eller SQL Express) databas</Value>
   </LocaleResource>
   <LocaleResource Name="StoreInformation">
     <Value>Butiksinformation</Value>
