@@ -1,0 +1,110 @@
+﻿@model Nop.Plugin.Widgets.AI.Models.ConfigurationModel
+@{
+    Layout = "_ConfigurePlugin";
+}
+
+@await Component.InvokeAsync("StoreScopeConfiguration")
+
+<form asp-controller="WidgetsAI" asp-action="Configure" method="post">
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                @T("Plugins.Widgets.AI.Instructions")
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="OverrideInstrumentationKey_OverrideForStore" asp-input="OverrideInstrumentationKey" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="OverrideInstrumentationKey" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="OverrideInstrumentationKey" />
+                        <span asp-validation-for="OverrideInstrumentationKey"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="Enabled_OverrideForStore" asp-input="Enabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="Enabled" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="Enabled" />
+                        <span asp-validation-for="Enabled"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="EnableDebug_OverrideForStore" asp-input="EnableDebug" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="EnableDebug" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="EnableDebug" />
+                        <span asp-validation-for="EnableDebug"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="DisableExceptionTracking_OverrideForStore" asp-input="DisableExceptionTracking" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="DisableExceptionTracking" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="DisableExceptionTracking" />
+                        <span asp-validation-for="DisableExceptionTracking"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="DisableFetchTracking_OverrideForStore" asp-input="DisableFetchTracking" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="DisableFetchTracking" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="DisableFetchTracking" />
+                        <span asp-validation-for="DisableFetchTracking"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="DisableAjaxTracking_OverrideForStore" asp-input="DisableAjaxTracking" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="DisableAjaxTracking" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="DisableAjaxTracking" />
+                        <span asp-validation-for="DisableAjaxTracking"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="MaxAjaxCallsPerView_OverrideForStore" asp-input="MaxAjaxCallsPerView" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="MaxAjaxCallsPerView" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="MaxAjaxCallsPerView" />
+                        <span asp-validation-for="MaxAjaxCallsPerView"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="OverridePageViewDuration_OverrideForStore" asp-input="OverridePageViewDuration" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="OverridePageViewDuration" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="OverridePageViewDuration" />
+                        <span asp-validation-for="OverridePageViewDuration"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-3">
+                        &nbsp;
+                    </div>
+                    <div class="col-md-9">
+                        <input type="submit" name="save" class="btn bg-blue" value="@T("Admin.Common.Save")" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

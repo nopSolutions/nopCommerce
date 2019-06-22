@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Widgets",
+  "FriendlyName": "Application Insights",
+  "SystemName": "Widgets.AI",
+  "Version": "1.0",
+  "SupportedVersions": [ "4.20" ],
+  "Author": "rmauro",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Widgets.AI.dll",
+  "Description": "This plugin integrates with Application Insights on frontend."
+}
