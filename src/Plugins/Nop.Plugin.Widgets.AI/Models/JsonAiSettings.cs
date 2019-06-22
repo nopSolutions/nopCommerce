@@ -25,7 +25,7 @@ namespace Nop.Plugin.Widgets.AI.Models
         public bool DisableAjaxTracking { get; set; }
 
         [JsonProperty(PropertyName = "maxAjaxCallsPerView")]
-        public int MaxAjaxCallsPerView { get; set; }
+        public int? MaxAjaxCallsPerView { get; set; }
 
         [JsonProperty(PropertyName = "overridePageViewDuration")]
         public bool OverridePageViewDuration { get; set; }

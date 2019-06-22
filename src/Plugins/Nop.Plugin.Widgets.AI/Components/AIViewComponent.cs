@@ -56,8 +56,10 @@ namespace Nop.Plugin.Widgets.AI.Components
                         jsAiSetting.DisableExceptionTracking = _setting.DisableExceptionTracking;
                         jsAiSetting.DisableFetchTracking = _setting.DisableFetchTracking;
                         jsAiSetting.DisableAjaxTracking = _setting.DisableAjaxTracking;
-                        jsAiSetting.MaxAjaxCallsPerView = _setting.MaxAjaxCallsPerView;
                         jsAiSetting.OverridePageViewDuration = _setting.OverridePageViewDuration;
+
+                        if (_setting.MaxAjaxCallsPerView >= 0)
+                            jsAiSetting.MaxAjaxCallsPerView = _setting.MaxAjaxCallsPerView;
 
                         return JsonConvert.SerializeObject(jsAiSetting, _jSettings);
                     }, null);
