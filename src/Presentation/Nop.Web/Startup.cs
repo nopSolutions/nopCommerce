@@ -13,16 +13,10 @@ namespace Nop.Web
     /// </summary>
     public class Startup
     {
-        #region Fields
-
         private readonly IConfiguration _configuration;
         private readonly IHostingEnvironment _hostingEnvironment;
 
         private readonly ILogger<Startup> _logger;
-
-        #endregion
-
-        #region Ctor
 
         public Startup(IConfiguration configuration, IHostingEnvironment hostingEnvironment, ILogger<Startup> logger)
         {
@@ -30,8 +24,6 @@ namespace Nop.Web
             _hostingEnvironment = hostingEnvironment;
             _logger = logger;
         }
-
-        #endregion
 
         /// <summary>
         /// Add services to the application and configure service provider
@@ -43,7 +35,7 @@ namespace Nop.Web
 
             services.AddApplicationInsightsTelemetry();
 
-            var svcs = services.ConfigureApplicationServices(_configuration, _hostingEnvironment);
+            var svcs = services.ConfigureApplicationServices(_configuration, _hostingEnvironment, _logger);
             
             _logger.LogInformation("End of ConfigureServices");
 

@@ -56,8 +56,11 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         /// <param name="configuration">Configuration of the application</param>
         /// <param name="hostingEnvironment">Hosting environment</param>
         /// <returns>Configured service provider</returns>
-        public static IServiceProvider ConfigureApplicationServices(this IServiceCollection services,
-            IConfiguration configuration, IHostingEnvironment hostingEnvironment)
+        public static IServiceProvider ConfigureApplicationServices(
+            this IServiceCollection services,
+            IConfiguration configuration,
+            IHostingEnvironment hostingEnvironment,
+            Microsoft.Extensions.Logging.ILogger logger)
         {
             //most of API providers require TLS 1.2 nowadays
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
@@ -71,9 +74,12 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             //add accessor to HttpContext
             services.AddHttpContextAccessor();
 
+            string connectionString = configuration.GetConnectionString("NopDatabase");
+            Microsoft.Extensions.Logging.LoggerExtensions.LogInformation(logger, "ConnectionStrings is empty ? {empty}", string.IsNullOrEmpty(connectionString));
+
             services.Configure<DataSettings>(x =>
             {
-                x.DataConnectionString = configuration["ConnectionStrings:NopDatabase"];
+                x.DataConnectionString = configuration.GetConnectionString("NopDatabase");
                 x.DataProvider = DataProviderType.SqlServer;
             });
 
@@ -89,7 +95,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             var serviceProvider = engine.ConfigureServices(services, configuration, nopConfig);
 
             //further actions are performed only when the database is installed
-            if (!DataSettingsManager.GetDatabaseIsInstalled(serviceProvider))
+            if (!DataSettingsManager.GetDatabaseIsInstalled(serviceProvider, force: true))
                 return serviceProvider;
 
             //initialize and start schedule tasks
@@ -182,7 +188,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         /// <param name="services">Collection of service descriptors</param>
         public static void AddThemes(this IServiceCollection services)
         {
-            if (!DataSettingsManager.GetDatabaseIsInstalled(services.BuildServiceProvider()))
+            if (!DataSettingsManager.GetDatabaseIsInstalled(services.BuildServiceProvider(), force: true))
                 return;
 
             //themes support

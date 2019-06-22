@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Nop.Core;
 using Nop.Core.Caching;
@@ -26,17 +27,20 @@ namespace Nop.Web.Controllers
         private readonly INopFileProvider _fileProvider;
         private readonly NopConfig _config;
         private readonly DataSettings _dataSettings;
+        private readonly ILogger<InstallController> _logger;
 
         public InstallController(
             IInstallationLocalizationService locService,
             INopFileProvider fileProvider,
             NopConfig config,
-            IOptions<DataSettings> dataSettings)
+            IOptions<DataSettings> dataSettings,
+            ILogger<InstallController> logger)
         {
             _locService = locService;
             _fileProvider = fileProvider;
             _config = config;
             _dataSettings = dataSettings.Value;
+            _logger = logger;
         }
 
 
@@ -171,14 +175,14 @@ namespace Nop.Web.Controllers
 
         public virtual IActionResult Index()
         {
-            if (DataSettingsManager.GetDatabaseIsInstalled(_dataSettings))
+            if (DataSettingsManager.GetDatabaseIsInstalled(_dataSettings, logger: _logger, force: true))
                 return RedirectToRoute("Homepage");
 
             var model = new InstallModel
             {
                 AdminEmail = "admin@yourStore.com",
                 InstallSampleData = false,
-                
+
                 //fast installation service does not support SQL compact
                 DisableSampleDataOption = _config.DisableSampleDataDuringInstallation,
 
@@ -202,7 +206,7 @@ namespace Nop.Web.Controllers
         [HttpPost]
         public virtual IActionResult Index(InstallModel model)
         {
-            if (DataSettingsManager.GetDatabaseIsInstalled(_dataSettings))
+            if (DataSettingsManager.GetDatabaseIsInstalled(_dataSettings, logger: _logger, force: true))
                 return RedirectToRoute("Homepage");
 
             //prepare language list
@@ -341,7 +345,7 @@ namespace Nop.Web.Controllers
         [HttpPost]
         public virtual IActionResult RestartInstall()
         {
-            if (DataSettingsManager.GetDatabaseIsInstalled(_dataSettings))
+            if (DataSettingsManager.GetDatabaseIsInstalled(_dataSettings, logger: _logger, force: true))
                 return RedirectToRoute("Homepage");
 
             //restart application

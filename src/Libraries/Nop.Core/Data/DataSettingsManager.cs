@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Configuration;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Logging;
 
 namespace Nop.Core.Data
 {
@@ -22,16 +23,20 @@ namespace Nop.Core.Data
 
         private static readonly string[] _tableNamesToValidate = new string[] { "Customer", "Discount", "Order", "Product", "ShoppingCartItem" };
 
-        private static async Task<bool> IsDatabaseInitialized(string connectionString)
+        private static async Task<bool> IsDatabaseInitialized(string connectionString, ILogger logger = null)
         {
             if (string.IsNullOrEmpty(connectionString))
                 throw new EmptyConnectionStringException();
+
+            logger?.LogInformation(DataLoggingEvents.DataConnectionStringEmpty, "ConnectionString is not empty");
 
             try
             {
                 var builder = new SqlConnectionStringBuilder(connectionString);
                 if (string.IsNullOrEmpty(builder.InitialCatalog))
                     throw new ConnectionStringBadFormatException(connectionString);
+
+                logger?.LogInformation(DataLoggingEvents.DataConnectionStringWellFormatted, "ConnectionString is well formatted");
 
                 var tables = new List<string>();
 
@@ -47,8 +52,12 @@ namespace Nop.Core.Data
 
                         await cmd.Connection.OpenAsync();
 
+                        logger?.LogInformation(DataLoggingEvents.DataConnectionOpenned, "Connection openned to check tables");
+
                         using (var reader = await cmd.ExecuteReaderAsync(System.Data.CommandBehavior.CloseConnection))
                         {
+                            logger?.LogInformation(DataLoggingEvents.DataConnectionReaderOpenned, "DataReader openned");
+
                             if (reader.HasRows)
                             {
                                 while (await reader.ReadAsync())
@@ -59,10 +68,13 @@ namespace Nop.Core.Data
                         }
                     }
                 }
-                return _tableNamesToValidate.Intersect(tables, StringComparer.InvariantCultureIgnoreCase).Any();
+                bool intersect = _tableNamesToValidate.Intersect(tables, StringComparer.InvariantCultureIgnoreCase).Any();
+                logger?.LogInformation(DataLoggingEvents.DataConnectionTablesIntersect, "Tables intersect {intersect}", intersect);
+                return intersect;
             }
-            catch
+            catch (Exception ex)
             {
+                logger?.LogError(DataLoggingEvents.DataConnection, ex, "Erro while attempting to check data connection");
                 return false;
             }
         }
@@ -95,34 +107,47 @@ namespace Nop.Core.Data
             }
         }
 
-        public static bool GetDatabaseIsInstalled()
+        public static bool GetDatabaseIsInstalled(bool force = false)
         {
-            if (!_databaseIsInstalled.HasValue)
+            if (force || !_databaseIsInstalled.HasValue)
             {
                 var dbConfig = EngineContext.Current.Resolve<IOptions<DataSettings>>();
-                return GetDatabaseIsInstalled(dbConfig.Value);
+                return GetDatabaseIsInstalled(dbConfig.Value, force: force);
             }
 
             return _databaseIsInstalled.Value;
         }
 
-        public static bool GetDatabaseIsInstalled(IServiceProvider serviceProvider)
+        public static bool GetDatabaseIsInstalled(IServiceProvider serviceProvider, bool force = false)
         {
-            if (!_databaseIsInstalled.HasValue)
+            if (force || !_databaseIsInstalled.HasValue)
+            {
+                var dbConfig = (IOptions<DataSettings>)serviceProvider.GetService(typeof(IOptions<DataSettings>));
+                var logger = (ILogger)serviceProvider.GetService(typeof(ILogger));
+
+                return GetDatabaseIsInstalled(dbConfig.Value, logger: logger, force: force);
+            }
+
+            return _databaseIsInstalled.Value;
+        }
+
+        public static bool GetDatabaseIsInstalled(IServiceProvider serviceProvider, ILogger logger, bool force = false)
+        {
+            if (force || !_databaseIsInstalled.HasValue)
             {
                 var dbConfig = (IOptions<DataSettings>)serviceProvider.GetService(typeof(IOptions<DataSettings>));
 
-                return GetDatabaseIsInstalled(dbConfig.Value);
+                return GetDatabaseIsInstalled(dbConfig.Value, logger, force);
             }
 
             return _databaseIsInstalled.Value;
         }
 
-        public static bool GetDatabaseIsInstalled(DataSettings dbConfig)
+        public static bool GetDatabaseIsInstalled(DataSettings dbConfig, ILogger logger = null, bool force = false)
         {
-            if (!_databaseIsInstalled.HasValue)
+            if (force || !_databaseIsInstalled.HasValue)
             {
-                _databaseIsInstalled = IsDatabaseInitialized(dbConfig.DataConnectionString).GetAwaiter().GetResult();
+                _databaseIsInstalled = IsDatabaseInitialized(dbConfig.DataConnectionString, logger).GetAwaiter().GetResult();
             }
 
             return _databaseIsInstalled.Value;
