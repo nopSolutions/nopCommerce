@@ -14,6 +14,9 @@ set @resources='
       You can add attribute for your product using existing list of attributes, or if you need to create a new one go to Catalog &gt; Attributes &gt; Specification attributes.
     </Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Tax.DefaultTaxCategory.Hint">
+    <Value>Select default tax category for products. It''ll be pre-selected on the "Add new product" page.</Value>
+  </LocaleResource>
 </Language>
 '
 
