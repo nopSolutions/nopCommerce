@@ -17,6 +17,24 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.Tax.DefaultTaxCategory.Hint">
     <Value>Select default tax category for products. It''ll be pre-selected on the "Add new product" page.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Fields.TaxCategory.Hint">
+    <Value>The tax classification for this attribute (used to calculate tax). You can manage tax categories by selecting Configuration &gt; Tax &gt; Tax Categories.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.SpecificationAttributes.Fields.SpecificationAttribute.Hint">
+    <Value>Choose a product specification attribute. You can manage specification attributes from Catalog &gt; Attributes &gt; Product Specifications.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.OrderTotalDiscount.Hint">
+    <Value>The total discount applied to this order. Manage your discounts from Promotions &gt; Discounts.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.PaymentMethod.Hint">
+    <Value>The payment method used for this transaction. You can manage Payment Methods from Configuration &gt; Payment &gt; Payment Methods.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.ShippingMethod.Hint">
+    <Value>The customers chosen shipping method for this order. You can manage shipping methods from Configuration &gt; Shipping &gt; Shipping Methods.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.Tax.Hint">
+    <Value>Total tax applied to this order. Manage your tax settings from Configuration &gt; Tax.</Value>
+  </LocaleResource>
 </Language>
 '
 
