@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -371,6 +371,10 @@ namespace Nop.Web.Controllers
         [CheckAccessPublicStore(true)]
         public virtual IActionResult Login(bool? checkoutAsGuest)
         {
+            if (_authenticationService.IsLoggedIn())
+            {
+                return RedirectToRoute("Homepage");
+            }
             var model = _customerModelFactory.PrepareLoginModel(checkoutAsGuest);
             return View(model);
         }
