@@ -8,6 +8,9 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EnableHtmlMinification">
     <Value>HTML minification</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Tax.DefaultTaxCategory.Hint">
+    <Value>Select default tax category for products. It''ll be pre-selected on the "Add new product" page.</Value>
+  </LocaleResource>
 </Language>
 '
 
