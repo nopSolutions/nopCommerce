@@ -4,9 +4,15 @@
 declare @resources xml
 --a resource will be deleted if its value is empty
 set @resources='
-<Language>  
+<Language>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EnableHtmlMinification">
     <Value>HTML minification</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.SpecificationAttributes.Hint">
+    <Value>
+      Specification attributes are product features i.e, screen size, number of USB-ports, visible on product details page. Specification attributes can be used for filtering products on the category details page. Unlike product attributes, specification attributes are used for information purposes only.
+      You can add attribute for your product using existing list of attributes, or if you need to create a new one go to Catalog &gt; Attributes &gt; Specification attributes.
+    </Value>
   </LocaleResource>
 </Language>
 '
