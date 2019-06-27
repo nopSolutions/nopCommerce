@@ -31,4 +31,14 @@
             <span asp-validation-for="TaxBasedOnPickupPointAddress"></span>
         </div>
     </div>
+    <div class="form-group advanced-setting">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="PricesIncludeTax_OverrideForStore" asp-input="PricesIncludeTax" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="PricesIncludeTax" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="PricesIncludeTax" />
+            <span asp-validation-for="PricesIncludeTax"></span>
+        </div>
+    </div>
 </div>
