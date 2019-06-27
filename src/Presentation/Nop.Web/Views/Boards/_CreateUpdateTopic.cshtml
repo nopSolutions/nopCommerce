@@ -54,6 +54,12 @@
                         <label asp-for="Subscribed">@T("Forum.NotifyWhenSomeonePostsInThisTopic")</label>
                     </div>
                 }
+                @if (Model.DisplayCaptcha)
+                {
+                    <div class="captcha-box">
+                        <nop-captcha />
+                    </div>
+                }
             </div>
         </div>
         <div class="buttons">

@@ -6662,7 +6662,22 @@ namespace Nop.Services.Installation
             settingService.SaveSetting(new CaptchaSettings
             {
                 ReCaptchaDefaultLanguage = string.Empty,
-                AutomaticallyChooseLanguage = true
+                ReCaptchaPrivateKey = string.Empty,
+                ReCaptchaPublicKey = string.Empty,
+                ReCaptchaTheme = string.Empty,
+                AutomaticallyChooseLanguage = true,
+                Enabled = false,
+                ShowOnApplyVendorPage = false,
+                ShowOnBlogCommentPage = false,
+                ShowOnContactUsPage = false,
+                ShowOnEmailProductToFriendPage = false,
+                ShowOnEmailWishlistToFriendPage = false,
+                ShowOnForgotPasswordPage = false,
+                ShowOnForum = false,
+                ShowOnLoginPage = false,
+                ShowOnNewsCommentPage = false,
+                ShowOnProductReviewPage = false,
+                ShowOnRegistrationPage = false,
             });
 
             settingService.SaveSetting(new MessagesSettings
