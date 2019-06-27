@@ -1720,7 +1720,7 @@
     <Value>Tax category</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Fields.TaxCategory.Hint">
-    <Value>The tax classification for this attribute (used to calculate tax). You can manage tax categories by selecting Configuration : Tax : Tax Categories.</Value>
+    <Value>The tax classification for this attribute (used to calculate tax). You can manage tax categories by selecting Configuration &gt; Tax &gt; Tax Categories.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Fields.TextPrompt">
     <Value>Text prompt</Value>
@@ -3865,7 +3865,7 @@
     <Value>Attribute</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.SpecificationAttributes.Fields.SpecificationAttribute.Hint">
-    <Value>Choose a product specification attribute. You can manage specification attributes from Catalog : Attributes : Product Specifications.</Value>
+    <Value>Choose a product specification attribute. You can manage specification attributes from Catalog &gt; Attributes &gt; Product Specifications.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.SpecificationAttributes.Fields.SpecificationAttributeOption">
     <Value>Attribute option</Value>
@@ -11536,7 +11536,7 @@
     <Value>Order discount</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Fields.OrderTotalDiscount.Hint">
-    <Value>The total discount applied to this order. Manage your discounts from Promotions : Discounts.</Value>
+    <Value>The total discount applied to this order. Manage your discounts from Promotions &gt; Discounts.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Fields.PartialRefund">
     <Value>Partial refund</Value>
@@ -11560,7 +11560,7 @@
     <Value>Payment method</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Fields.PaymentMethod.Hint">
-    <Value>The payment method used for this transaction. You can manage Payment Methods from Configuration : Payment : Payment Methods.</Value>
+    <Value>The payment method used for this transaction. You can manage Payment Methods from Configuration &gt; Payment &gt; Payment Methods.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Fields.PaymentMethodAdditionalFee">
     <Value>Payment method additional fee</Value>
@@ -11641,7 +11641,7 @@
     <Value>Shipping method</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Fields.ShippingMethod.Hint">
-    <Value>The customers chosen shipping method for this order. You can manage shipping methods from Configuration : Shipping : Shipping Methods.</Value>
+    <Value>The customers chosen shipping method for this order. You can manage shipping methods from Configuration &gt; Shipping &gt; Shipping Methods.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Fields.ShippingStatus">
     <Value>Shipping status</Value>
@@ -11665,7 +11665,7 @@
     <Value>Order tax</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Fields.Tax.Hint">
-    <Value>Total tax applied to this order. Manage your tax settings from Configuration : Tax.</Value>
+    <Value>Total tax applied to this order. Manage your tax settings from Configuration &gt; Tax.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Fields.UsedDiscounts">
     <Value>Used discounts</Value>
