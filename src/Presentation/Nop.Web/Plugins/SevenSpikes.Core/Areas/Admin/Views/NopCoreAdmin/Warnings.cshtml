@@ -1,0 +1,75 @@
+﻿@model IList<WarningsModel>
+
+@{
+    Layout = AdminViewLocations.AdminLayoutViewPath;
+
+    //page title
+    ViewBag.Title = T("Admin.System.Warnings").Text;
+    Html.SetActiveMenuItemSystemName("7Spikes Warnings");
+}
+
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        @T("SevenSpikes.Plugins.Admin.Warnings.Title")
+    </h1>
+</div>
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    @if (Model.Count > 0)
+                    {
+                        foreach (var plugin in Model)
+                        {
+                            if (plugin.Warnings.Count > 0)
+                            {
+                                <div>
+                                    <h2>@plugin.PluginName</h2>
+
+                                    @foreach (var warning in plugin.Warnings)
+                                    {
+                                        switch (warning.Level)
+                                        {
+                                            case SystemWarningLevel.Pass:
+                                                {
+                                                    <p class="text-green">
+                                                        <i class="icon fa fa-check"></i>
+                                                        @warning.Text
+                                                    </p>
+                                                }
+                                                break;
+                                            case SystemWarningLevel.Warning:
+                                                {
+                                                    <p class="text-yellow">
+                                                        <i class="icon fa fa-warning"></i>
+                                                        @warning.Text
+                                                    </p>
+                                                }
+                                                break;
+                                            case SystemWarningLevel.Fail:
+                                                {
+                                                    <p class="text-red">
+                                                        <i class="icon fa fa-ban"></i>
+                                                        @warning.Text
+                                                    </p>
+                                                }
+                                                break;
+                                        }
+                                    }
+
+                                    <hr/>
+                                </div>
+                            }
+                        }
+                    }
+                    else
+                    {
+                        <div>@T("SevenSpikes.Plugins.Admin.Warnings.NoWarnings")</div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,56 @@
+﻿@using Nop.Web.Framework
+@using SevenSpikes.Nop.Framework.MVCExtensions
+@using SevenSpikes.Nop.Plugins.MegaMenu
+@using SevenSpikes.Nop.Plugins.MegaMenu.Models
+
+@model MegaMenuSettingsModel
+
+@{
+    Layout = AdminViewLocations.AdminLayoutViewPath;
+
+    // Active menu item (system name)
+    Html.SetActiveMenuItemSystemName("SevenSpikes.MegaMenu.Admin.Submenus.Settings");
+}
+
+<form method="post">
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("SevenSpikes.MegaMenu.Admin.Settings")
+        </h1>
+        <div class="pull-right">
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
+        </div>
+    </div>
+
+
+
+    <div class="content">
+        <div class="form-horizontal">
+
+            @Html.TrialMessage(Model.IsTrialVersion, Plugin.Name, Plugin.UrlInStore)
+            @await Component.InvokeAsync("StoreScopeConfiguration")
+
+            <div class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="Enabled_OverrideForStore" asp-input="Enabled" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="Enabled" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="Enabled" />
+                                <span asp-validation-for="Enabled"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@*@Html.Partial("~/Plugins/SevenSpikes.Core/Views/Shared/ResetDefaultSettingsView.cshtml", Constants.PluginFolderName)*@

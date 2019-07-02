@@ -1,0 +1,252 @@
+﻿@{
+    Layout = "_AdminPopupLayout";
+}
+
+@model ProductOverridesModel
+@inject AdminAreaSettings adminAreaSettings
+
+@{
+    if (ViewBag.RefreshPage == true)
+    {
+        <script type="text/javascript">
+            try
+            {
+                var gridElement = window.opener.document.getElementById("@ViewBag.btnId");
+                $(gridElement).click();
+            }
+            catch (e){}
+            window.close();
+        </script>
+
+        return;
+    }
+}
+
+@{
+    var popupGridPageSize = adminAreaSettings.PopupGridPageSize;
+}
+
+<form method="post">
+    <nop-antiforgery-token />
+    <input type="hidden" asp-for="ConditionId" />
+
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("SevenSpikes.Conditions.Admin.ProductOverrides.AddNew")
+        </h1>
+        <div class="pull-right">
+            &nbsp;
+        </div>
+    </div>
+    <div class="content">
+        <div class="form-horizontal">
+            <div class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <div class="col-sm-5">
+                                        <nop-label asp-for="SearchProductName" />
+                                    </div>
+                                    <div class="col-sm-7">
+                                        <nop-editor asp-for="SearchProductName" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-5">
+                                        <nop-label asp-for="SearchCategoryId" />
+                                    </div>
+                                    <div class="col-sm-7">
+                                        <nop-select asp-for="SearchCategoryId" asp-items="Model.AvailableCategories" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-5">
+                                        <nop-label asp-for="SearchManufacturerId" />
+                                    </div>
+                                    <div class="col-sm-7">
+                                        <nop-select asp-for="SearchManufacturerId" asp-items="Model.AvailableManufacturers" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <div class="col-sm-5">
+                                        <nop-label asp-for="SearchStoreId" />
+                                    </div>
+                                    <div class="col-sm-7">
+                                        <nop-select asp-for="SearchStoreId" asp-items="Model.AvailableStores" />
+                                    </div>
+                                </div>
+                                <div class="form-group" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
+                                    <div class="col-sm-5">
+                                        <nop-label asp-for="SearchVendorId" />
+                                    </div>
+                                    <div class="col-sm-7">
+                                        <nop-select asp-for="SearchVendorId" asp-items="Model.AvailableVendors" />
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12" style="text-align: center">
+                                <button type="submit" id="search-products" value="search-products" class="btn btn-primary btn-search">
+                                    <i class="fa fa-search"></i>
+                                    @T("Admin.Common.Search")
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div id="products-grid"></div>
+
+                        <script>
+            var selectedIds = [];
+            $(document).ready(function () {
+                $("#products-grid").kendoGrid({
+                    dataSource: {
+                        type: "json",
+                        transport: {
+                            read: {
+                                url: "@Html.Raw(Url.Action("ProductOverridesPopupList", "ProductOverridesAdmin", new { conditionId = Model.ConditionId }))",
+                                type: "POST",
+                                dataType: "json",
+                                data: additionalData
+                            }
+                        },
+                        schema: {
+                            data: "Data",
+                            total: "Total",
+                            errors: "Errors"
+                        },
+                        error: function(e) {
+                            display_kendoui_grid_error(e);
+                            // Cancel the changes
+                            this.cancelChanges();
+                        },
+                        pageSize: @(popupGridPageSize),
+                        serverPaging: true,
+                        serverFiltering: true,
+                        serverSorting: true
+                    },
+                    pageable: {
+                        refresh: true
+                    },
+                    editable: {
+                        confirmation: false,
+                        mode: "inline"
+                    },
+                    scrollable: false,
+                    dataBound: onDataBound,
+                    columns: [{
+                        field: "Id",
+                        headerTemplate: "<input id='mastercheckbox' type='checkbox'/>",
+                        headerAttributes: { style: "text-align:center" },
+                        template: "<input type='checkbox' name='SelectedProductIds' value='#=ProductId#' #= Selected ? checked='checked' : '' # class='checkboxGroups' />",
+                        attributes: {
+                            style: "text-align:center"
+                        },
+                        width: 50
+                    }, {
+                        field: "ProductName",
+                        title: "@T("SevenSpikes.Conditions.Admin.ProductOverrides.ProductName")"
+                    }]
+                });
+            });
+
+            $(document).ready(function () {
+                $('#search-products').click(function () {
+                    var grid = $('#products-grid').data('kendoGrid');
+                    grid.dataSource.page(1); //new search. Set page size to 1
+                    grid.dataSource.read();
+                    return false;
+                });
+
+                $('#mastercheckbox').click(function () {
+                    $('.checkboxGroups').attr('checked', $(this).is(':checked')).change();
+                });
+
+                //wire up checkboxes.
+                $('#products-grid').on('change', 'input[type=checkbox][id!=mastercheckbox]', function (e) {
+                    var $check = $(this);
+                    if ($check.is(":checked") == true) {
+                        var checked = jQuery.inArray($check.val(), selectedIds);
+                        if (checked == -1) {
+                            //add id to selectedIds.
+                            selectedIds.push($check.val());
+                        }
+                    }
+                    else {
+                        var checked = jQuery.inArray($check.val(), selectedIds);
+                        if (checked > -1) {
+                            //remove id from selectedIds.
+                            selectedIds = $.grep(selectedIds, function (item, index) {
+                                return item != $check.val();
+                            });
+                        }
+                    }
+                    updateMasterCheckbox();
+                });
+            });
+
+            function onDataBound(e) {
+                $('#products-grid input[type=checkbox][id!=mastercheckbox]').each(function () {
+                    var currentId = $(this).val();
+                    var checked = jQuery.inArray(currentId, selectedIds);
+                    //set checked based on if current checkbox's value is in selectedIds.
+                    $(this).attr('checked', checked > -1);
+                });
+
+                updateMasterCheckbox();
+            }
+
+            function updateMasterCheckbox() {
+                var numChkBoxes = $('#products-grid input[type=checkbox][id!=mastercheckbox]').length;
+                var numChkBoxesChecked = $('#products-grid input[type=checkbox][id!=mastercheckbox]:checked').length;
+                $('#mastercheckbox').attr('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
+            }
+
+            $("#@Html.IdFor(model => model.SearchProductName)").keydown(function (event) {
+                if (event.keyCode == 13) {
+                    $("#search-products").click();
+                    return false;
+                }
+            });
+
+            function additionalData() {
+                var data = {
+                    SearchProductName: $('#@Html.IdFor(model => model.SearchProductName)').val(),
+                    SearchCategoryId: $('#SearchCategoryId').val(),
+                    SearchManufacturerId: $('#SearchManufacturerId').val(),
+                    SearchStoreId: $('#SearchStoreId').val(),
+                    SearchVendorId: $('#SearchVendorId').val(),
+                    SearchProductTypeId: $('#SearchProductTypeId').val(),
+                };
+
+                addAntiForgeryToken(data);
+
+                return data;
+            }
+
+            function GetAntiForgeryToken() {
+
+                var token = $("input[name=__RequestVerificationToken]:first").val();
+                return token;
+            };
+                        </script>
+                    </div>
+                    <div class="panel-footer">
+                        <button type="submit" name="save" class="btn bg-blue">
+                            <i class="fa fa-floppy-o"></i>
+                            @T("Admin.Common.Save")
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

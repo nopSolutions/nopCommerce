@@ -1,0 +1,12 @@
+﻿@using SevenSpikes.Nop.Conditions
+@model SevenSpikes.Nop.Conditions.Areas.Admin.Models.ConditionModel
+
+@{
+    Html.AddScriptParts("~/Plugins/SevenSpikes.Core/Scripts/jquery.livequery.min.js");
+    Html.AddScriptParts("~/Plugins/SevenSpikes.Core/Areas/Admin/Content/Scripts/jquery.json-2.4.min.js");
+    Html.AddScriptParts("~/Plugins/SevenSpikes.Core/Scripts/sevenspikes.core.min.js");
+    Html.AddScriptParts("~/Plugins/SevenSpikes.Core/Areas/Admin/Content/Scripts/Conditions.min.js");
+
+}
+  
+@await Html.PartialAsync(Constants.ViewAdminConditionCreateOrUpdate, Model)

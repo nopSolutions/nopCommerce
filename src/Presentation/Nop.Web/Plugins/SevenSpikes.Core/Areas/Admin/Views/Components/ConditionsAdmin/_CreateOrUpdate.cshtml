@@ -1,0 +1,6 @@
+﻿@using SevenSpikes.Nop.Conditions;
+
+@model SevenSpikes.Nop.Conditions.Areas.Admin.Models.ConditionModel
+
+<div asp-validation-summary="All"></div>
+<nop-editor asp-for="@Model" asp-template="@Constants.ViewAdminCondition"/>

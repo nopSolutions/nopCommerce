@@ -1,0 +1,106 @@
+﻿@model SevenSpikes.Nop.Plugins.CloudZoom.Areas.Admin.Models.CloudZoomSettingsModel
+
+<div class="panel-group">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="ZoomPosition_OverrideForStore" asp-input="ZoomPosition" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="ZoomPosition" />
+                </div>
+                <div class="col-md-9">
+                    <nop-select asp-for="ZoomPosition" asp-items="Model.AvailableZoomPositions" />
+                </div>
+            </div>
+            <div class="form-group autoInside advanced-setting">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="ZoomAutoInside_OverrideForStore" asp-input="ZoomAutoInside" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="ZoomAutoInside" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="ZoomAutoInside" asp-postfix="@T("SevenSpikes.Plugins.Admin.InputStyles.Postfix.Pixels")" />
+                </div>
+            </div>
+            <div class="form-group outerSettings advanced-setting">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="ZoomWidth_OverrideForStore" asp-input="ZoomWidth" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="ZoomWidth" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="ZoomWidth" asp-postfix="@T("SevenSpikes.Plugins.Admin.InputStyles.Postfix.Pixels")" />
+                    <span asp-validation-for="ZoomWidth"></span>
+                </div>
+            </div>
+            <div class="form-group outerSettings advanced-setting">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="ZoomHeight_OverrideForStore" asp-input="ZoomHeight" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="ZoomHeight" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="ZoomHeight" asp-postfix="@T("SevenSpikes.Plugins.Admin.InputStyles.Postfix.Pixels")" />
+                    <span asp-validation-for="ZoomHeight"></span>
+                </div>
+            </div>
+            <div class="form-group allSettings advanced-setting">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="SmoothMove_OverrideForStore" asp-input="SmoothMove" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="SmoothMove" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="SmoothMove" />
+                    <span asp-validation-for="SmoothMove"></span>
+                </div>
+            </div>
+            <div class="form-group allSettings advanced-setting">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="TouchStartDelay_OverrideForStore" asp-input="TouchStartDelay" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="TouchStartDelay" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="TouchStartDelay" />
+                    <span asp-validation-for="TouchStartDelay"></span>
+                </div>
+            </div>
+            <div class="form-group showTitle">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="ShowTitle_OverrideForStore" asp-input="ShowTitle" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="ShowTitle" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="ShowTitle" />
+                    <span asp-validation-for="ShowTitle"></span>
+                </div>
+            </div>
+            <div class="form-group advanced-setting">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="EnableTint_OverrideForStore" asp-input="EnableTint" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="EnableTint" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="EnableTint" />
+                    <span asp-validation-for="EnableTint"></span>
+                </div>
+            </div>
+            <div class="form-group advanced-setting tint-color">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="TintColor_OverrideForStore" asp-input="TintColor" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="TintColor" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="TintColor" />
+                    <span asp-validation-for="TintColor"></span>
+                </div>
+            </div>
+            <div class="form-group advanced-setting tint-opacity">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="TintOpacity_OverrideForStore" asp-input="TintOpacity" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="TintOpacity" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="TintOpacity" />
+                    <span asp-validation-for="TintOpacity"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

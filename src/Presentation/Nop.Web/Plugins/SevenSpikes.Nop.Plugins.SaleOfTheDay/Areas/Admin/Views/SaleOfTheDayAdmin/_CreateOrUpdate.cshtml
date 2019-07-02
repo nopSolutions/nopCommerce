@@ -1,0 +1,40 @@
+﻿@model SaleOfTheDayOfferAdminModel
+
+@{
+    Html.SetActiveMenuItemSystemName("SevenSpikes.SaleOfTheDay.Admin.Submenus.ManageOffers");
+}
+
+<div asp-validation-summary="All"></div>
+<input type="hidden" asp-for="Id" />
+
+<div class="content">
+    <div class="form-horizontal">
+        @Html.TrialMessage(Model.SaleOfTheDaySettings.IsTrialVersion, Plugin.Name, Plugin.UrlInStore)
+        @await Component.InvokeAsync("SettingMode")
+
+        <nop-tabs id="sale-of-the-day-create-or-update">
+            <nop-tab asp-name="tab-settings" asp-default="true" asp-title="@T("SevenSpikes.SaleOfTheDay.Admin.Offers.TabTitle.Settings")">
+                @await Html.PartialAsync("_CreateOrUpdate.Settings", Model)
+                @if (Model.Id > 0)
+                {
+                    @await Html.PartialAsync("_CreateOrUpdate.StoreMappings", Model)
+                }
+            </nop-tab>
+            @if (Model.Id > 0)
+            {
+                <nop-tab asp-name="tab-widgets" asp-title="@T("SevenSpikes.SaleOfTheDay.Admin.Offers.TabTitle.Widgets")">
+                    @await Component.InvokeAsync("WidgetMappingsAdmin", new { entityType = Plugin.EntityType, entityId = Model.Id, pluginFolderName = Plugin.FolderName })
+                </nop-tab>
+                <nop-tab asp-name="tab-scheduling" class="advanced-setting" asp-title="@T("SevenSpikes.Scheduling.Admin.Schedule.TabTitle")">
+                    @await Component.InvokeAsync("ScheduleAdmin", new { entityType = Plugin.EntityType, entityId = Model.Id })
+                </nop-tab>
+                <nop-tab asp-name="tab-conditions" asp-title="@T("SevenSpikes.SaleOfTheDay.Admin.Offers.TabTitle.Conditions")">
+                    @await Component.InvokeAsync("ConditionsAdmin", new { entityType = Plugin.EntityType, entityId = Model.Id, availableConditionTypes = Plugin.AvailableConditionTypes, active = true, defaultGroupState = true })
+                </nop-tab>
+                <nop-tab asp-name="tab-product-mapping" class="advanced-setting" asp-title="@T("SevenSpikes.SaleOfTheDay.Admin.Offers.TabTitle.ProductMappings")">
+                    @await Component.InvokeAsync("ProductMappingsAdmin", new { entityId = Model.Id, entityType = Plugin.EntityType })
+                </nop-tab>
+            }
+        </nop-tabs>
+    </div>
+</div>

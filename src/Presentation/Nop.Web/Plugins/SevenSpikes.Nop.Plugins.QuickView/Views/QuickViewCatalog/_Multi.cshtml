@@ -1,0 +1,124 @@
+﻿@using SevenSpikes.Nop.Framework.MVCExtensions
+
+@inject QuickViewSettings quickViewSettings
+
+@model ProductDetailsModel
+
+<div class="product-essential">
+    <form asp-route="Product" asp-route-sename="@Model.SeName" method="post" id="product-details-form">
+        <div class="popup-header">
+            <h1 class="product-name">
+                @Model.Name
+            </h1>
+        </div>
+        <div class="product-content">
+            <div class="gallery">
+                <!--product pictures-->
+                @await Component.InvokeAsync("NopQuickViewProductPictures", new { model = Model })
+
+                <div class="links-panel">
+                    <a href="@Url.RouteUrl("Product", new { SeName = Model.SeName })" class="link-to-product-page">@T("SevenSpikes.QuickView.Public.GoToProductPageLink")</a>
+                </div>
+            </div>
+            <div class="overview">
+                <div id="accordion">
+                    <h3>@T("SevenSpikes.QuickView.Public.ProductVariants")</h3>
+                    <div class="product-details variants-in-grid">
+                        <!--product variants-->
+                        <div class="product-variant-list">
+                            @(Html.DataList7Spikes<ProductDetailsModel>(Model.AssociatedProducts, 2,
+                            @<div class="product-variant">
+                                @if (!String.IsNullOrWhiteSpace(item.DefaultPictureModel.ImageUrl))
+                                {
+                                    <div class="variant-picture">
+                                        <a href="@Url.RouteUrl("Product", new { SeName = Model.SeName })">
+                                            <img alt="@item.DefaultPictureModel.AlternateText" src="@item.DefaultPictureModel.ImageUrl" />
+                                        </a>
+                                    </div>
+                                }
+                                <div class="variant-info">
+                                    @if (!String.IsNullOrWhiteSpace(item.Name))
+                                    {
+                                        <div class="variant-name">
+                                            <a href="@Url.RouteUrl("Product", new { SeName = Model.SeName })">@item.Name</a>
+                                        </div>
+                                    }
+                                    @{
+                                        var dataDictPrice = new ViewDataDictionary(ViewData);
+                                        dataDictPrice.TemplateInfo.HtmlFieldPrefix = $"price_{item.Id}";
+                                        @await Html.PartialAsync("_ProductPrice", item.ProductPrice, dataDictPrice)
+                                    }
+                                </div>
+                                @*<div class="moreInfoHover">
+                                    <span>@T("SevenSpikes.QuickView.Public.MoreInfoHover")</span>
+                                </div>*@
+                            </div>
+                            ))
+                        </div>
+
+                        @{
+                            var manufacturers = await @Html.PartialAsync("_ProductManufacturers", Model.ProductManufacturers);
+                        }
+
+                        @if (quickViewSettings.ShowCompareProductsButton || !string.IsNullOrEmpty(manufacturers.ToHtmlString()))
+                        {
+                            <div class="variant-grid-info">
+                                <!--product manufacturers-->
+                                @manufacturers
+
+                                @if (quickViewSettings.ShowCompareProductsButton)
+                                {
+                                    @await Html.PartialAsync("_CompareProductsButton", Model)
+                                }
+                            </div>
+                        }
+                    </div>
+                    @if (quickViewSettings.ShowShortProductDescription || quickViewSettings.ShowFullProductDescription)
+                    {
+                        if (!String.IsNullOrEmpty(Model.ShortDescription) || !String.IsNullOrEmpty(Model.FullDescription))
+                        {
+                            <h3>@T("SevenSpikes.QuickView.Public.ProductDescription")</h3>
+                            <div class="product-details">
+                                @if (quickViewSettings.ShowShortProductDescription)
+                                {
+                                    <div class="short-description">
+                                        @Html.Raw(Model.ShortDescription)
+                                    </div>
+                                }
+
+                                @if (quickViewSettings.ShowFullProductDescription)
+                                {
+                                    <div class="full-description">
+                                        @Html.Raw(Model.FullDescription)
+                                    </div>
+                                }
+                            </div>
+                        }
+                    }
+
+                    @if (quickViewSettings.ShowProductSpecification)
+                    {
+                        var productSpecificationsContent = await @Html.PartialAsync("_ProductSpecifications", Model.ProductSpecifications);
+
+                        if (!string.IsNullOrEmpty(productSpecificationsContent.ToHtmlString()))
+                        {
+                            <h3>@T("SevenSpikes.QuickView.Public.ProductSpecifications")</h3>
+                            <div class="product-details">
+                                @productSpecificationsContent
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+        @if (quickViewSettings.ShowRelatedProducts)
+        {
+            @await Component.InvokeAsync("RelatedProducts", new { productId = Model.Id })
+        }
+
+        @if (quickViewSettings.ShowProductsAlsoPurchased)
+        {
+            @await Component.InvokeAsync("ProductsAlsoPurchased", new { productId = Model.Id })
+        }
+    </form>
+</div>

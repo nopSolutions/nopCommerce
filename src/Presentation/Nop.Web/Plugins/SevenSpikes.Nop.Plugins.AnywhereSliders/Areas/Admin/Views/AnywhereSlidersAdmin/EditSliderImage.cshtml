@@ -1,0 +1,41 @@
+﻿@using SevenSpikes.Nop.Plugins.AnywhereSliders.Infrastructure.Constants
+@{
+    Layout = "_AdminPopupLayout";
+}
+
+@model SevenSpikes.Nop.Plugins.AnywhereSliders.Areas.Admin.Models.Sliders.SliderImageModel
+
+@{
+    if (ViewBag.RefreshPage == true)
+    {
+        <script type="text/javascript">
+            try {
+                var gridElement = window.opener.document.getElementById("@ViewBag.btnId");
+                $(gridElement).click();
+            }
+            catch (e) {
+                console.log("@ViewBag.btnId");
+            }
+            window.close();
+        </script>
+    }
+}
+
+<form method="post">
+    <nop-antiforgery-token />
+
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("SevenSpikes.Plugins.AnywhereSliders.Admin.SliderImage.EditSliderImageDetails")
+        </h1>
+        <div class="pull-right">
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
+        </div>
+    </div>
+    <input type="hidden" name="refreshButtonId" value="btnRefreshImgs" />
+
+    @await Html.PartialAsync(Views.CreateOrUpdateSliderImage, Model)
+</form>

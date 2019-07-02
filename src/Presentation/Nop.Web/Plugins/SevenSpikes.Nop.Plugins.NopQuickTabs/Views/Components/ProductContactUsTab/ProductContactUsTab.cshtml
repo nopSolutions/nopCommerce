@@ -1,0 +1,39 @@
+﻿@using SevenSpikes.Nop.Plugins.NopQuickTabs.Models;
+
+@model ContactUsModel
+
+
+<div id="contact-us-tab" class="write-review">  
+    <div class="form-fields">
+        <div class="inputs">            
+            <label asp-for="FullName"></label>
+            <input asp-for="FullName" placeholder="@T("ContactUs.FullName.Hint")" class="contact_tab_fullname review-title" />
+            <nop-required />
+            <span asp-validation-for="FullName"></span>
+        </div>
+        <div class="inputs">
+            <label asp-for="Email"></label>
+            <input asp-for="Email" placeholder="@T("ContactUs.Email.Hint")" class="contact_tab_email review-title" />
+            <nop-required />
+            <span asp-validation-for="Email"></span>
+        </div>
+        @if (Model.SubjectEnabled)
+        {
+            <div class="inputs">               
+                <label asp-for="Subject" asp-postfix=":"></label>
+                <input asp-for="Subject" placeholder="@T("ContactUs.Subject.Hint")" class="contact_tab_subject subject" />
+                <nop-required />
+                <span asp-validation-for="Subject"></span>
+            </div>
+        }
+        <div class="inputs">            
+            <label asp-for="Enquiry" ></label>
+            <textarea asp-for="Enquiry" placeholder="@T("ContactUs.Enquiry.Hint")" class="contact_tab_enquiry review-text"></textarea>
+            <nop-required />
+            <span asp-validation-for="Enquiry"></span>
+        </div>
+    </div>
+    <div class="buttons">
+        <input type="button" id="send-contact-us-form" name="send-email" class="button-1 contact-us-button" value="@T("ContactUs.Button")" />
+    </div>
+</div>

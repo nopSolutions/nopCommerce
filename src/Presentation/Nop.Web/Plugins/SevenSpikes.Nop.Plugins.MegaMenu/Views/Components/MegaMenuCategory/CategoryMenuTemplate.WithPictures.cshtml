@@ -1,0 +1,73 @@
+﻿@using SevenSpikes.Nop.Framework.MVCExtensions
+@using SevenSpikes.Nop.Plugins.MegaMenu.Models
+
+@model MenuItemCategoryModel
+
+@{
+    var areCategoriesInASingleItem = Model.Item.EntityId == 0;
+    var hasSubCategories = Model.Categories.Count > 0;
+    var hasSublistClass = hasSubCategories ? "has-sublist" : string.Empty;
+    var withSubcategoriesClass = hasSubCategories ? "with-subcategories" : string.Empty;
+}
+
+<li class="@hasSublistClass with-dropdown-in-grid @Model.Item.CssClass">
+    @if (areCategoriesInASingleItem)
+    {
+        <span class="@withSubcategoriesClass single-item-categories labelfornextplusbutton">@Model.Item.Title</span>
+    }
+    else
+    {
+        <a class="@withSubcategoriesClass" href="@Model.Item.Url"><span>@Model.Item.Title</span></a>
+    }
+
+    @if (hasSubCategories)
+    {
+        <div class="dropdown categories fullWidth boxes-@Model.Item.NumberOfBoxesPerRow">
+            <div class="row-wrapper">
+                @(Html.DataTable<MegaMenuCategoryModel>(Model.Categories, Model.Item.NumberOfBoxesPerRow, "row", "box",
+                @<text>
+                <div class="picture-title-wrap">
+                    <div class="title">
+                        <a href="@Url.RouteUrl("Category", new {item.CategoryModel.SeName})" title="@item.CategoryModel.Name"><span>@item.CategoryModel.Name</span></a>
+                    </div>
+                    <div class="picture">
+                        <a href="@Url.RouteUrl("Category", new {item.CategoryModel.SeName})" title="@item.CategoryModel.PictureModel.Title">
+                            <img class="lazy" alt="@item.CategoryModel.PictureModel.AlternateText" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-original="@item.CategoryModel.PictureModel.ImageUrl" />
+                        </a>
+                    </div>
+                </div>
+                @if (item.SubCategories.Count > 0)
+                {
+                    <ul class="subcategories">
+                        @foreach (var subCategory in item.SubCategories)
+                        {
+                            <li class="subcategory-item">
+                                <a href="@Url.RouteUrl("Category", new {subCategory.CategoryModel.SeName})" title="@subCategory.CategoryModel.Name"><span>@subCategory.CategoryModel.Name</span></a>
+                            </li>
+                        }
+
+                        @if (item.ShouldShowViewAllLink)
+                        {
+                            <li class="subcategory-item all">
+                                <a class="view-all" href="@Url.RouteUrl("Category", new {item.CategoryModel.SeName})" title="@T("SevenSpikes.MegaMenu.ViewAllCategories")">
+                                    <span>@T("SevenSpikes.MegaMenu.ViewAllCategories")</span>
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                }
+                </text>
+                ))
+            </div>
+
+            @if (areCategoriesInASingleItem)
+            {
+                @await Component.InvokeAsync("Widget", new { widgetZone = "mega_menu_categories_before_dropdown_end" })
+            }
+            else
+            {
+                @await Component.InvokeAsync("Widget", new { widgetZone = $"mega_menu_categories_before_dropdown_end_{Model.CategoryMenuItemIndex}" })
+            }
+        </div>
+    }
+</li>

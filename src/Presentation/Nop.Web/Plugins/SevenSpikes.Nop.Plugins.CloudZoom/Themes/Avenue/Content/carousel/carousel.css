@@ -1,0 +1,111 @@
+/*
+* Copyright 2016 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+* http://www.nop-templates.com/t/licensinginfo
+*/
+
+.picture-thumbs.in-carousel {
+    margin: 10px -10px 0;
+}
+.in-carousel .picture-thumbs-item {
+	border: none;
+    padding: 10px;
+}
+.in-carousel .picture-thumbs-item a {
+    display: block !important;
+    margin: 0 !important;
+    float: none !important;
+    width: auto !important;
+    height: auto !important;
+}
+
+.slick-dots {
+    margin: 20px 0 0;
+}
+.slick-dots li {
+    display: inline-block;
+    margin: 0 5px;
+	border: 1px solid #ddd;
+	border-radius: 50%;
+}
+.slick-dots button {
+	width: 20px;
+    height: 20px;
+	border: 5px solid #fff;
+	border-radius: 50%;
+    background-color: #222;
+	font-size: 0;
+}
+.slick-dots .slick-active button {
+    background-color: #f61853;
+}
+
+
+
+@media all and (min-width: 1501px) {
+
+.picture-thumbs.in-carousel {
+	margin: 0;
+}
+.picture-thumbs.has-navigation {
+	position: absolute;
+	height: 100%;
+}
+.has-navigation .picture-thumbs-list {
+	height: 100%;
+	padding: 20% 0;
+}
+.has-navigation /*button +*/ .slick-list {
+	height: 100% !important;
+	margin-top: -1px;
+}
+.in-carousel .picture-thumbs-item {
+	width: 100% !important;
+	padding: 0 0 17.5%;
+}
+.in-carousel button + .slick-list 
+.picture-thumbs-item {
+    padding: 1.35% 0;
+}
+
+.picture-thumbs .slick-prev,
+.picture-thumbs .slick-next {
+    position: absolute;
+	left: 0; right: 0;
+	z-index: 1;
+	width: 100%;
+	background-color: #fff;
+	padding: 5px;
+	text-align: center;
+    font-size: 0;
+	cursor: pointer;
+}
+.picture-thumbs .slick-prev {
+    top: 0;
+}
+.picture-thumbs .slick-next {
+    bottom: 0;
+}
+.picture-thumbs .slick-prev:after,
+.picture-thumbs .slick-next:after {
+	display: block;
+    font-size: 12px;
+	color: #222;
+	transition: all 0.2s ease;
+}
+.picture-thumbs .slick-prev:after {
+    content: "\e911";
+}
+.picture-thumbs .slick-next:after {
+    content: "\e910";
+}
+.picture-thumbs .slick-prev:hover:after,
+.picture-thumbs .slick-next:hover:after {
+	color: #f61853;
+}
+.picture-thumbs .slick-prev.slick-disabled,
+.picture-thumbs .slick-next.slick-disabled {
+    opacity: 0.3;
+    cursor: default;
+}
+
+}

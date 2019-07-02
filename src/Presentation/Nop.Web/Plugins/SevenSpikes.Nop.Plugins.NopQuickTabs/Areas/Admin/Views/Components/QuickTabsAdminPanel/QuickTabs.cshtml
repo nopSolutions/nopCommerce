@@ -1,0 +1,250 @@
+﻿@using Nop.Services.Common;
+
+@model int
+
+@inject IWorkContext workContext
+@inject IGenericAttributeService genericAttributeService
+@inject AdminAreaSettings adminAreaSettings
+
+@{
+    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
+    var gridPageSizes = adminAreaSettings.GridPageSizes;
+
+    var productId = Model;
+
+    const string quickTabsBlockAttributeName = "ProductPage.SS.QuickTabs";
+    var hideQuickTabsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, quickTabsBlockAttributeName, defaultValue: true);
+}
+
+<nop-panel asp-name="product-quick-tabs" asp-icon="fa fa-link" asp-title="@T("SevenSpikes.NopQuickTabs.Admin.NopProductsTabTitle")" asp-hide-block-attribute-name="@quickTabsBlockAttributeName" asp-hide="@hideQuickTabsBlock" asp-advanced="false">
+    <div class="panel-body">
+        <div class="panel panel-default">
+            <div class="panel-body">
+
+                @if (productId > 0)
+                {
+                    <div class="content-header clearfix">
+                        <div class="pull-left">
+                            <input type="button" id="btnAddExistingProductAttachment" name="btnAddExistingProductAttachment"
+                                   value="@T("SevenSpikes.NopQuickTabs.Admin.NopProductsTabTitle.AddExistingTab")"
+                                   onclick="javascript:OpenWindow('@(Url.Action("AddExistingTabsPopup", "ProductTabAdmin", new { productId = productId, btnId = "btnRefreshGrid" }))', 800, 700, true); return false;"
+                                   class="btn bg-blue" />
+
+                            <input type="button" id="btnAddNewProductAttachment" name="btnAddNewProductAttachment"
+                                   value="@T("SevenSpikes.NopQuickTabs.Admin.NopProductsTabTitle.AddNewTab")"
+                                   onclick="javascript:OpenWindow('@(Url.Action("Create", "TabAdmin", new { productId = productId, IsPopup = true }))', 1080, 700, true); return false;"
+                                   class="btn bg-blue" />
+                        </div>
+                    </div>
+
+                    <div class="content">
+                        <div class="form-horizontal">
+                            <div class="panel-group">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        @T("SevenSpikes.NopQuickTabs.Admin.NopProductsTabTitle.ProductSpecificTabs")
+                                    </div>
+                                    <div class="panel-body">
+                                        <div id="product-specific-tabs-grid"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel-group">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        @T("SevenSpikes.NopQuickTabs.Admin.NopProductsTabTitle.SharedTabs")
+                                    </div>
+                                    <div class="panel-body">
+                                        <div id="shared-tabs-grid"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                
+                    <input type="submit" id="btnRefreshGrid" name="btnRefreshGrid" style="display: none" />
+
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            $('#btnRefreshGrid').click(function () {
+                                //refresh grid
+                                var optionsGrid = $("#product-specific-tabs-grid");
+                                optionsGrid.data('kendoGrid').dataSource.read();
+
+                                //return false to don't reload a page
+                                return false;
+                            });
+
+                            $("#product-specific-tabs-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("ListProductSpecificTabs", "ProductTabAdmin", new { productId = productId }))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        },
+                                        update:{
+                                            url: "@Html.Raw(Url.Action("UpdateTabs", "ProductTabAdmin", new { productId = productId }))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        },
+                                        destroy:{
+                                            url: "@Html.Raw(Url.Action("DeleteProductSpecificTabs", "ProductTabAdmin", new { productId = productId }))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors",
+                                        model: {
+                                            id: "Id",
+                                            fields: {
+                                                Id: { editable: false, type: "number" },
+                                                SystemName: { editable: false, type: "string" },
+                                                DisplayName: { editable: false, type: "string" },
+                                                DisplayOrder: {editable: true, type: "number"}
+                                            }
+                                        }
+                                    },
+                                    requestEnd: function (e) {
+                                        if (e.type == "update") {
+                                            this.read();
+                                        }
+                                    },
+                                    error: function (e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    pageSize: @(defaultGridPageSize),
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(gridPageSizes)]
+                                },
+                                editable: {
+                                    confirmation: false,
+                                    mode: "inline"
+                                },
+                                filterable: true,
+                                sortable: true,
+                                scrollable: false,
+                                columns: [{
+                                    field: "SystemName",
+                                    title: "@T("SevenSpikes.NopQuickTabs.Admin.Tabs.Fields.SystemName")",
+                                    template: "<a href='@Url.Content("~/Admin/TabAdmin/Edit/")#= Id #'>#= SystemName #</a>",
+                                    width: 500
+                                }, {
+                                    field: "DisplayName",
+                                    title: "@T("SevenSpikes.NopQuickTabs.Admin.Tabs.Fields.DisplayName")",
+                                    width: 500
+                                },{
+                                    field: "DisplayOrder",
+                                    title: "@T("SevenSpikes.NopQuickTabs.Admin.ProductTabs.Fields.DisplayOrder")",
+                                    width: 500
+                                }, {
+                                    command: [
+                                    {
+                                        name: 'edit',
+                                        text: "@T("Admin.Common.Edit")"
+                                    },
+                                    {
+                                        name: "destroy",
+                                        text: "@T("Admin.Common.Delete")"
+                                    }]
+                                }]
+                            });
+
+                            $("#shared-tabs-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("ListSharedTabs", "ProductTabAdmin", new { productId = productId }))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        },
+                                        update:{
+                                            url: "@Html.Raw(Url.Action("UpdateSharedTabs", "ProductTabAdmin", new { productId = productId }))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        },
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors",
+                                        model: {
+                                            id: "Id",
+                                            fields: {
+                                                Id: { editable: false, type: "number" },
+                                                SystemName: { editable: false, type: "string" },
+                                                DisplayName: { editable: false, type: "string" },
+                                                DisplayOrder: { editable: true, type: "number" }
+                                            }
+                                        }
+                                    },
+                                    requestEnd: function(e) {
+                                        if (e.type == "update") {
+                                            this.read();
+                                        }
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    pageSize: @(defaultGridPageSize),
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(gridPageSizes)]
+                                },
+                                editable: {
+                                    confirmation: false,
+                                    mode: "inline"
+                                },
+                                filterable: true,
+                                sortable: true,
+                                scrollable: false,
+                                columns: [
+                                {
+                                    field: "SystemName",
+                                    title: "@T("SevenSpikes.NopQuickTabs.Admin.Tabs.Fields.SystemName")",
+                                    template: "<a href='@Url.Content("~/Admin/TabAdmin/Edit/")#= Id #'>#= SystemName #</a>",
+                                    width: 500
+                                }, {
+                                    field: "DisplayName",
+                                    title: "@T("SevenSpikes.NopQuickTabs.Admin.Tabs.Fields.DisplayName")",
+                                    width: 500
+                                }, {
+                                    field: "DisplayOrder",
+                                    title: "@T("SevenSpikes.NopQuickTabs.Admin.ProductTabs.Fields.DisplayOrder")",
+                                    width: 500
+                                }, {
+                                    command: [
+                                    {
+                                        name: 'edit',
+                                        text: "@T("Admin.Common.Edit")"
+                                    }]
+                                }]
+                            });
+                        });
+                    </script> 
+                }
+                else
+                {
+                    @T("SevenSpikes.NopQuickTabs.Admin.NopProductsTabTitle.SaveBeforeEdit")
+                }
+            </div>
+        </div>
+    </div>
+</nop-panel>

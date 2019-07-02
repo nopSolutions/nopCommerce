@@ -1,0 +1,36 @@
+﻿@model FacebookCategoryModel
+@{
+    Layout = "Layout";
+}
+
+<div class="page category-page">
+    <h1 class="page-title">
+        <span class="title-text">@Model.Name</span>
+    </h1>
+    <div class="page-body">
+        @*description*@
+        @if (!String.IsNullOrWhiteSpace(Model.Description))
+        {
+            <div class="category-description">
+                @Html.Raw(Model.Description)
+            </div>
+        }
+
+        @*product list*@
+        @if (Model.Products.Count > 0)
+        {
+            <div class="product-grid">
+
+                @(Html.DataList7Spikes<ProductOverviewModel>(Model.Products, Model.NumbersOfProductsPerRow,
+                    @<div class="item-box">
+                        @await Html.PartialAsync("ProductBox", item)
+                    </div>
+                ))
+
+            </div>
+        }
+        <div class="pager">
+            @Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber")
+        </div>
+    </div>
+</div>

@@ -1,0 +1,38 @@
+﻿@using SevenSpikes.Nop.Framework.MVCExtensions
+@model SevenSpikes.Nop.Plugins.FacebookShop.Areas.Admin.Models.FacebookShopSettingsModel
+@{
+    Layout = AdminViewLocations.AdminLayoutViewPath;
+
+    Html.SetActiveMenuItemSystemName("SevenSpikes.FacebookShop.Admin.Submenus.Settings");
+}
+
+<form method="post">
+
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("SevenSpikes.FacebookShop.Admin.SettingsTitle")
+        </h1>
+        <div class="pull-right">
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="form-horizontal">
+            @Html.TrialMessage(Model.IsTrialVersion, Plugin.Name, Plugin.UrlInStore)
+            @await Component.InvokeAsync("StoreScopeConfiguration")
+
+            <nop-tabs id="nop-facebookshop-settings">
+                <nop-tab asp-name="tab-general-settings" asp-default="true" asp-title="@T("SevenSpikes.FacebookShop.Admin.TabTitle.GeneralSettings")">
+                    @await Html.PartialAsync(Views.GeneralSettings, @Model)
+                </nop-tab>
+                <nop-tab asp-name="tab-configuration-notes" asp-title="@T("SevenSpikes.FacebookShop.Admin.TabTitle.ConfigurationNotes")">
+                    @await Html.PartialAsync(Views.ConfigurationNotes, @Model)
+                </nop-tab>
+            </nop-tabs>
+        </div>
+    </div>
+</form>

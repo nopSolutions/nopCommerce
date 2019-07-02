@@ -1,0 +1,41 @@
+﻿@** Copyright 2017 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+    * http://www.nop-templates.com/t/licensinginfo
+*@
+
+@using Nop.Web.Models.Catalog
+@using SevenSpikes.Nop.Framework.MVCExtensions
+@using SevenSpikes.Nop.Plugins.MegaMenu.Models
+
+@model MenuItemManufacturerModel
+
+@{
+    var hasManufacturers = Model.Manufacturers.Count > 0;
+    var hasSublistClass = hasManufacturers ? "has-sublist" : string.Empty;
+    var withSubcategoriesClass = hasManufacturers ? "with-subcategories" : string.Empty;
+}
+
+<li class="@hasSublistClass with-dropdown-in-grid @Model.Item.CssClass">
+
+    <a class="@withSubcategoriesClass" href="@Url.RouteUrl("ManufacturerList")" title="@Model.Item.Title"><span>@Model.Item.Title</span></a>
+
+    @if (hasManufacturers)
+    {
+        <div class="dropdown manufacturers fullWidth boxes-@Model.Item.NumberOfBoxesPerRow">
+            <div class="row-wrapper">
+                @(Html.DataTable<ManufacturerModel>(Model.Manufacturers, Model.Item.NumberOfBoxesPerRow, "row", "box",
+                @<text>
+                <div class="title">
+                    <a class="manufacturer" href="@Url.RouteUrl("Manufacturer", new { item.SeName })" title="@item.Name"><span>@item.Name</span></a>
+                </div>
+                <div class="picture">
+                    <a class="manufacturer" href="@Url.RouteUrl("Manufacturer", new { item.SeName })" title="@item.Name">
+                        <img class="lazy" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+                             data-original="@item.PictureModel.ImageUrl" alt="@item.PictureModel.AlternateText" title="@item.PictureModel.AlternateText" />
+                    </a>
+                </div>
+                </text>
+                ))
+            </div>
+        </div>
+    }
+</li>

@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Settings>
+  <Setting Name="TabSettings.Enable">
+    <Value>true</Value>
+  </Setting>
+  <Setting Name="TabSettings.EnableProductFullDescriptionTab">
+    <Value>true</Value>
+  </Setting>
+  <Setting Name="TabSettings.ProductFullDescriptionTabDisplayOrder">
+    <Value>0</Value>
+  </Setting>
+  <Setting Name="TabSettings.EnableProductSpecificationsTab">
+    <Value>true</Value>
+  </Setting>
+  <Setting Name="TabSettings.ProductSpecificationsTabDisplayOrder">
+    <Value>1</Value>
+  </Setting>
+  <Setting Name="TabSettings.EnableProductReviewsTab">
+    <Value>true</Value>
+  </Setting>
+  <Setting Name="TabSettings.ProductReviewsTabDisplayOrder">
+    <Value>2</Value>
+  </Setting>
+  <Setting Name="TabSettings.EnableProductContactUsTab">
+    <Value>true</Value>
+  </Setting>
+  <Setting Name="TabSettings.ProductContactUsTabDisplayOrder">
+    <Value>3</Value>
+  </Setting>
+  <Setting Name="TabSettings.EnableProductAttachmentsTab">
+    <Value>false</Value>
+  </Setting>
+  <Setting Name="TabSettings.ProductAttachmentsTabDisplayOrder">
+    <Value>4</Value>
+  </Setting>
+  <Setting Name="TabSettings.EnableAjax">
+    <Value>false</Value>
+  </Setting>
+</Settings>

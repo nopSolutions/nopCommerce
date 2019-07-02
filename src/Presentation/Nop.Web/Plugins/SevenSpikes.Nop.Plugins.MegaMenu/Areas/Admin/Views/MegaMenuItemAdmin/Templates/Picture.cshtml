@@ -1,0 +1,37 @@
+﻿@model MenuItemModel
+
+@{
+    Layout = "";
+}
+
+<li id="menu-item-@Model.Id" class="menu-item menu-item-depth-@Model.DepthLevel menu-item-picture menu-item-edit-inactive"
+    data-menuItemId="@Model.Id">
+    <div class="menu-item-bar">
+        <div class="menu-item-handle ui-sortable-handle">
+            <span class="item-title">
+                <span class="item-type" data-itemtype="@((int)Model.Type)">@Model.TypeName</span>
+                @*<span class="is-submenu" style="display: none;">sub item</span>*@
+            </span>
+            <span class="item-controls">
+                <a class="item-edit glyphicon glyphicon-chevron-down" title="@T("Admin.Common.Edit")" href="#menu-item-settings-@Model.Id"></a>
+            </span>
+        </div>
+    </div>
+
+    <div class="menu-item-settings" id="menu-item-settings-@Model.Id">
+
+        <p class="field-entity-id description description-wide">
+            <label>
+                @Html.EditorFor(x => x.EntityId, "Picture")
+            </label>
+        </p>
+
+        <div class="menu-item-actions description-wide submitbox">
+            <a class="item-delete submitdelete deletion" id="menu-item-delete-@Model.Id">@T("SevenSpikes.MegaMenu.Admin.MenuItem.Remove")</a>
+            @*<span class="meta-sep hide-if-no-js"> | </span>
+                <a class="item-cancel submitcancel hide-if-no-js">@T("SevenSpikes.MegaMenu.Admin.MenuItem.Cancel")</a>*@
+        </div>
+    </div>
+
+    <ul class="menu-item-transport"></ul>
+</li>

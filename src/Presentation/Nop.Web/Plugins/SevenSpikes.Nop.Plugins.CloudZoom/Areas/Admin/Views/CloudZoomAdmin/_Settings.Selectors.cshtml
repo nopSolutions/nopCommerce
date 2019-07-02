@@ -1,0 +1,18 @@
+﻿@model SevenSpikes.Nop.Plugins.CloudZoom.Areas.Admin.Models.CloudZoomSettingsModel
+
+<div class="panel-group">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="DefaultImageContainerSelector_OverrideForStore" asp-input="DefaultImageContainerSelector" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="DefaultImageContainerSelector" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="DefaultImageContainerSelector" />
+                    <span asp-validation-for="DefaultImageContainerSelector"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

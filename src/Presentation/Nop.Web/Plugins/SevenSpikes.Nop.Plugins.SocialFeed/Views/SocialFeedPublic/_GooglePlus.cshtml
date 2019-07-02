@@ -1,0 +1,69 @@
+﻿@model GooglePlusModel
+
+@if (Model != null)
+{
+
+    @await Html.PartialAsync(ViewPathHelper.GetViewPath(Views.SocialNetworkScripts), SocialNetworkType.GooglePlus)
+
+    <div class="feed-body">
+        <div class="post-list-wrap">
+            <ul class="post-list">
+                @foreach (var feed in Model.GooglePlusFeed)
+                {
+                    <li class="post-item">
+
+                        @if (feed.ActorModel != null && !string.IsNullOrEmpty(feed.ActorModel.ProfileUrl) && !string.IsNullOrEmpty(feed.ActorModel.Name))
+                        {
+                            <div class="post-head">
+                                @if (!string.IsNullOrEmpty(feed.ActorModel.ImageUrl))
+                                {
+                                    <div class="avatar-wrap">
+                                        <a class="avatar-link" href="@feed.ActorModel.ProfileUrl" title="@feed.ActorModel.Name" target="_blank">
+                                            <img class="avatar-img" src="@feed.ActorModel.ImageUrl" alt="@feed.ActorModel.Name" />
+                                        </a>
+                                    </div>
+                                }
+                                <div class="author-date-wrap">
+                                    <div class="author-name">
+                                        <a class="author-name-link" href="@feed.ActorModel.ProfileUrl" title="@feed.ActorModel.Name" target="_blank">@feed.ActorModel.Name</a>
+                                    </div>
+                                    @if (feed.PublishedDate != null)
+                                    {
+                                        <div class="post-date-wrap">
+                                            <span class="post-date">@feed.PublishedDate.Value.ToString("dd/MM/yyyy")</span>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        }
+
+                        <div class="post-body">
+                            @if (feed.Attachment != null &&
+                                 !string.IsNullOrEmpty(feed.Attachment.Url) &&
+                                 !string.IsNullOrEmpty(feed.Attachment.ImageUrl))
+                            {
+                                bool isYouTubeVideo = feed.Attachment.Url.ToLower().Contains("youtube");
+
+                                <a class="post-img-link @( isYouTubeVideo ? "youtube-video" : string.Empty )" href="@feed.Attachment.Url" target="_blank">
+                                    <img class="post-img" src="@feed.Attachment.ImageUrl" />
+                                </a>
+                            }
+
+                            @if (!string.IsNullOrEmpty(feed.Content))
+                            {
+                                <p class="post-description">
+                                    @Html.Raw(feed.Content)
+                                </p>
+                            }
+                        </div>
+
+
+                        <div class="post-buttons">
+                            <a class="post-link-btn" target="_blank" href="@feed.Url" title="@T("SevenSpikes.SocialFeed.Public.SocialFeedGlobal.GoToPost")">@T("SevenSpikes.SocialFeed.Public.SocialFeedGlobal.GoToPost")</a>
+                        </div>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+}

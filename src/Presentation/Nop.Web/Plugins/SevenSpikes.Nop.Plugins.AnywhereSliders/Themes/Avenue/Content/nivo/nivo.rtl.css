@@ -1,0 +1,18 @@
+
+.nivo-directionNav a {
+	text-indent: 0 !important;
+}
+.nivo-directionNav a.nivo-prevNav {
+    right: 5%;
+	left: auto;
+}
+.nivo-directionNav a.nivo-nextNav {
+	right: auto;
+    left: 5%;
+}
+.nivo-directionNav a.nivo-prevNav:after {
+	content: "\e908";
+}
+.nivo-directionNav a.nivo-nextNav:after {
+	content: "\e907";
+}

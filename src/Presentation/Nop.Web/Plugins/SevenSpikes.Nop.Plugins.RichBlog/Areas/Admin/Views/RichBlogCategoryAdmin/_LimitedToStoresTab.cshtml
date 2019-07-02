@@ -1,0 +1,49 @@
+@model RichBlogCategoryAdminModel
+
+@if (Model.Id > 0)
+{
+    <div class="panel-group">
+        <div class="panel panel-default  advanced-setting">
+            <div class="panel-heading">
+                @T("SevenSpikes.Plugins.RichBlog.Admin.Settings.Mappings")
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="StoreMappingModel.SelectedStoreIds" />
+                    </div>
+                    <div class="col-md-9">
+                        <div class="row">
+                            <div class="col-md-4">
+                                @Html.EditorFor(model => model.StoreMappingModel.SelectedStoreIds, new { SelectList = Model.StoreMappingModel.AvailableStores })
+                                <script>
+                                            $(document).ready(function () {
+                                                var storesIdsInput = $('#@Html.IdFor(model => model.StoreMappingModel.SelectedStoreIds)').data("kendoMultiSelect");
+                                                storesIdsInput.setOptions({
+                                                    autoClose: false
+                                                });
+
+                                                @if (Model.StoreMappingModel.AvailableStores.Count == 0)
+                {
+                    <text>
+                                                storesIdsInput.setOptions({
+                                                    enable: false,
+                                                    placeholder: 'No stores available'
+                                                });
+                                                storesIdsInput._placeholder();
+                                                storesIdsInput._enable();
+                                                </text>
+                }
+                                            });
+                                </script>
+                            </div>
+                            <div class="col-md-8">
+                                @await Component.InvokeAsync("MultistoreDisabledWarning")
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

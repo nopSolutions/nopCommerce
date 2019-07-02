@@ -1,0 +1,19 @@
+@model TimeSpan?
+
+@{
+    var inputFieldName = ViewData.TemplateInfo.GetFullHtmlFieldName(string.Empty);
+}
+
+<input id="@inputFieldName" />
+
+<script>
+    $(document).ready(function () {
+        // create TimePicker from input HTML element
+        $("#@inputFieldName").kendoTimePicker(
+            {
+                format: "HH:mm",
+                value: "@(Model > TimeSpan.MinValue ? Model : null)"
+            }
+        );
+    });
+</script>

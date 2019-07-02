@@ -1,0 +1,19 @@
+﻿@model Nop.Web.Models.Catalog.ProductReviewHelpfulnessModel
+
+@{
+    var reviewId = Model.ProductReviewId;
+}
+
+<div class="product-review-helpfulness"
+     data-productReviewId="@reviewId"
+     data-productReviewVoteUrl="@Url.RouteUrl("SetProductReviewHelpfulness")">
+    <span class="question">@T("Reviews.Helpfulness.WasHelpful?")</span>
+    <span>
+        <span id="vote-yes-@reviewId" class="vote vote-yes">@T("Common.Yes")</span>
+        <span id="vote-no-@reviewId" class="vote vote-no">@T("Common.No")</span>
+    </span>
+    <span>
+        (<span id="helpfulness-vote-yes-@reviewId">@(Model.HelpfulYesTotal)</span>/<span id="helpfulness-vote-no-@reviewId">@(Model.HelpfulNoTotal)</span>)
+    </span>
+    <span id="helpfulness-vote-result-@reviewId" class="result"></span>
+</div>

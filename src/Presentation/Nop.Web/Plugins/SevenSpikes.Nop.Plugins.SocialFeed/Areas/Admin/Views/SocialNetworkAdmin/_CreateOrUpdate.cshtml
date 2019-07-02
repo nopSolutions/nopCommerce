@@ -1,0 +1,94 @@
+﻿@model SocialNetworkModel
+@inject IWorkContext workContext
+@inject LocalizationSettings localizationSettings
+@{
+    var supportRtl = workContext.WorkingLanguage.Rtl && !localizationSettings.IgnoreRtlPropertyForAdminArea;
+
+    if (supportRtl)
+    {
+        Html.AppendCssFileParts($"~/Plugins/{Plugin.FolderName}/Areas/Admin/Content/Styles/adminstyles.rtl.css");
+    }
+    Html.AppendCssFileParts($"~/Plugins/{Plugin.FolderName}/Areas/Admin/Content/Styles/adminstyles.css");
+}
+
+<div asp-validation-summary="All"></div>
+<input type="hidden" asp-for="@Model.Id" />
+
+<div class="content">
+    <div class="form-horizontal">
+        @Html.TrialMessage(Model.IsTrialVersion, Plugin.Name, Plugin.UrlInStore)
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="Name" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="Name" />
+                        <span asp-validation-for="Name"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="Type" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-select asp-for="Type" asp-items="Model.AvailableSocialNetworks" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="facebook-settings" class="social-network">
+            @{
+                var dataDictFacebook = new ViewDataDictionary(ViewData);
+                dataDictFacebook.TemplateInfo.HtmlFieldPrefix = "SettingModels.FacebookModel";
+                @await Html.PartialAsync(AdminViews.FacebookSettings, Model.SettingModels.FacebookModel, dataDictFacebook)
+            }
+        </div>
+        <div id="twitter-settings" class="social-network">
+            @{
+                var dataDictTwitter = new ViewDataDictionary(ViewData);
+                dataDictTwitter.TemplateInfo.HtmlFieldPrefix = "SettingModels.TwitterModel";
+                @await Html.PartialAsync(AdminViews.TwitterSettings, Model.SettingModels.TwitterModel, dataDictTwitter)
+            }
+        </div>
+        <div id="instagram-settings" class="social-network">
+            @{
+                var dataDictInstagram = new ViewDataDictionary(ViewData);
+                dataDictInstagram.TemplateInfo.HtmlFieldPrefix = "SettingModels.InstagramModel";
+                @await Html.PartialAsync(AdminViews.InstagramSettings, Model.SettingModels.InstagramModel, dataDictInstagram)
+            }
+        </div>
+        <div id="googleplus-settings" class="social-network">
+            @{
+                var dataDictGooglePlus = new ViewDataDictionary(ViewData);
+                dataDictGooglePlus.TemplateInfo.HtmlFieldPrefix = "SettingModels.GooglePlusModel";
+                @await Html.PartialAsync(AdminViews.GooglePlusSettings, Model.SettingModels.GooglePlusModel, dataDictGooglePlus)
+            }
+        </div>
+        <div id="pinterest-settings" class="social-network">
+            @{
+                var dataDictPinterest = new ViewDataDictionary(ViewData);
+                dataDictPinterest.TemplateInfo.HtmlFieldPrefix = "SettingModels.PinterestModel";
+                @await Html.PartialAsync(AdminViews.PinterestSettings, Model.SettingModels.PinterestModel, dataDictPinterest)
+            }
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    (function ($) {
+        var showHideSocialNetworks = function (networkName) {
+            $('.social-network').hide();
+            $('#' + networkName.toLowerCase() + '-settings').show();
+        };
+
+        $(document).ready(function () {
+            showHideSocialNetworks($('#Type option:selected').val());
+
+            $('#Type').change(function () {
+                showHideSocialNetworks($(this).val());
+            });
+        });
+    })(jQuery);
+</script>

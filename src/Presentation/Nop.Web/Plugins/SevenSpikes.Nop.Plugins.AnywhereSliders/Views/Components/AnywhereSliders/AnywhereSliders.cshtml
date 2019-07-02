@@ -1,0 +1,6 @@
+﻿@model List<SliderCachedModel>
+
+@foreach (var slider in Model)
+{
+    @await Component.InvokeAsync(slider.ViewComponentName, slider.GetAvailableModel());
+}

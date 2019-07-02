@@ -1,0 +1,27 @@
+﻿@model VendorModel
+@inject IViewComponentSelector viewComponentSelector
+
+<div class="vendor-item">
+    <h2 class="title">
+        <a href="@Url.RouteUrl("Vendor", new { SeName = Model.SeName })" title="@Model.PictureModel.Title">
+            @Model.Name
+        </a>
+    </h2>
+    <div class="picture">
+        <a href="@Url.RouteUrl("Vendor", new { SeName = Model.SeName })" title="@Model.PictureModel.Title">
+            @if (viewComponentSelector.SelectComponent("LazyLoadImage") != null)
+            {
+                @await Component.InvokeAsync("LazyLoadImage", new (string Key, string Value)[]
+                {
+                    ("src", Model.PictureModel.ImageUrl),
+                    ("alt", Model.PictureModel.AlternateText),
+                    ("title", Model.PictureModel.Title)
+                })
+            }
+            else
+            {
+                <img alt="@Model.PictureModel.AlternateText" src="@Model.PictureModel.ImageUrl" title="@Model.PictureModel.Title" />
+            }
+        </a>
+    </div>
+</div>

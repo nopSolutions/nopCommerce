@@ -1,0 +1,116 @@
+﻿@model SevenSpikes.Nop.Plugins.NewsletterPopup.Areas.Admin.Models.NewsletterPopupSettingsModel
+
+@{
+    Layout = AdminViewLocations.AdminLayoutViewPath;
+
+    Html.SetActiveMenuItemSystemName("SevenSpikes.NewsletterPopup.Admin.Submenus.Settings");
+}
+
+<form method="post">
+
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("SevenSpikes.NewsletterPopup.Admin.Settings.Common")
+        </h1>
+        <div class="pull-right">
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="form-horizontal">
+            @Html.TrialMessage(Model.IsTrialVersion, Plugin.Name, Plugin.UrlInStore)
+            @await Component.InvokeAsync("StoreScopeConfiguration")
+            <div class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="Enabled_OverrideForStore" asp-input="Enabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration"/>
+                                <nop-label asp-for="Enabled"/>
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="Enabled"/>
+                                <span asp-validation-for="Enabled"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="PreselectDoNotShowPopupCheckbox_OverrideForStore" asp-input="PreselectDoNotShowPopupCheckbox" asp-store-scope="@Model.ActiveStoreScopeConfiguration"/>
+                                <nop-label asp-for="PreselectDoNotShowPopupCheckbox"/>
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="PreselectDoNotShowPopupCheckbox"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="NewsletterPopupDelayedShow_OverrideForStore" asp-input="NewsletterPopupDelayedShow" asp-store-scope="@Model.ActiveStoreScopeConfiguration"/>
+                                <nop-label asp-for="NewsletterPopupDelayedShow"/>
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="NewsletterPopupDelayedShow" asp-postfix="@T("SevenSpikes.Plugins.Admin.InputStyles.Postfix.Milliseconds").Text"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="NewsletterPopupOpenerSelector_OverrideForStore" asp-input="NewsletterPopupOpenerSelector" asp-store-scope="@Model.ActiveStoreScopeConfiguration"/>
+                                <nop-label asp-for="NewsletterPopupOpenerSelector"/>
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="NewsletterPopupOpenerSelector"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group clearfix">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="NewsletterPopupBackgroundImageId_OverrideForStore" asp-input="NewsletterPopupBackgroundImageId" asp-store-scope="@Model.ActiveStoreScopeConfiguration"/>
+                                <nop-label asp-for="NewsletterPopupBackgroundImageId"/>
+                            </div>
+                            <div class="col-md-9">
+                                <div id="background-image">
+                                    <nop-editor asp-for="NewsletterPopupBackgroundImageId"/>
+                                    <span asp-validation-for="NewsletterPopupBackgroundImageId"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script type="text/javascript">
+        $(document).ready(function() {
+            var newsletterPopupBackgroundImageSelector = '@Html.IdFor(model => model.NewsletterPopupBackgroundImageId_OverrideForStore)';
+
+            $('#' + newsletterPopupBackgroundImageSelector).change(function () {
+                customFieldOverrideChangedShowOverlay(newsletterPopupBackgroundImageSelector, '#background-image');
+            });
+            customFieldOverrideChangedShowOverlay(newsletterPopupBackgroundImageSelector, '#background-image');
+
+            $('.store-scope-configuration .checkbox input').change(function() {
+                customFieldOverrideChangedShowOverlay(newsletterPopupBackgroundImageSelector, '#background-image');
+            });
+        });
+
+        function customFieldOverrideChangedShowOverlay(overrideSelector, parentOfOverlaySelector) {
+            if ($('#' + overrideSelector).length == 0) {
+                return;
+            }
+
+            if ($('#' + overrideSelector).is(':checked') == true) {
+                $('.overlay-for-' + overrideSelector).remove();
+            } else {
+                $(parentOfOverlaySelector).append('<div class="custom-fields-overlay overlay-for-' + overrideSelector + '"></div>');
+            }
+        }
+</script>

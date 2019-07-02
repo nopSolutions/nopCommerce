@@ -1,0 +1,19 @@
+﻿@using SevenSpikes.Nop.Framework.MVCExtensions
+@using Nop.Web.Models.Catalog;
+@using SevenSpikes.Nop.Plugins.FacebookShop.Models;
+
+@model FacebookRelatedProductsModel
+
+@if (Model.Products.Count > 0)
+{
+    <div class="related-products-grid product-grid">
+        <h2 class="grid-title">
+            <span class="title-text">@T("Products.RelatedProducts")</span>
+        </h2>
+        @(Html.DataList7Spikes<ProductOverviewModel>(Model.Products, Model.NumbersOfProductsPerRow,
+            @<div class="item-box">
+                @await Html.PartialAsync("ProductBox", item)
+            </div>
+        ))
+    </div>
+}

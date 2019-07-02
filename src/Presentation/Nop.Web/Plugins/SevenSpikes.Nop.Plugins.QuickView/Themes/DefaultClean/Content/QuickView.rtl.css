@@ -1,0 +1,133 @@
+﻿
+.quick-view-button a {
+
+    background-position: 92% center;
+    padding: 15px 35px 15px 15px;
+}
+
+.quickViewWindow .gallery {
+    float: right;
+}
+
+.quickViewWindow .gallery .thumbnails a,
+.quickViewWindow .gallery .thumbnails > img {
+	float: right;
+}
+
+.quickViewWindow .gallery .links-panel a {
+	padding-right: 15px;
+	padding-left: 0;
+	background: url(../../../styles/images/rtl-bullet-right.png) no-repeat right center;
+	text-align: right;
+}
+
+.quickView .k-window-titlebar.k-header {
+    left: 0;
+    right: inherit;
+}
+
+.quickView .k-window-titlebar.k-header .k-window-actions {
+    right: auto;
+    left: 14px;
+}
+.quickView .k-loading-mask {
+    right: 0;
+    left: inherit;
+}
+
+.quickView .k-loading-image {
+    right: 0;
+    left: inherit;
+}
+
+.k-overlay {
+    right: 0;
+    left: inherit;
+}
+
+.quickViewWindow .product-name {
+    padding: 12px 15px 12px 50px;
+    text-align: right;    
+}
+
+.quickViewWindow .overview {
+    float: left;
+}
+
+.quickViewWindow .overview #accordion > h3 {
+    text-align: right;
+}
+
+.quickViewWindow .overview #accordion > h3 span {
+	left: 8px;
+	right: inherit;
+}
+
+.quickViewWindow .overview .left {
+    float: right;
+}
+
+.quickViewWindow .overview .right {
+    float: left;
+}
+.quickViewWindow .overview .left, 
+.quickViewWindow .overview .right,
+.quickViewWindow .variant-grid-info .compare-products {
+    text-align: right;
+}
+.quickViewWindow .overview .attributes dl dt,
+.quickViewWindow .overview .attributes dl dd {
+    float: right;
+}
+
+.quickViewWindow .overview .attributes dl dt {
+    clear: right;
+    margin: 0 0 5px 10px;
+    text-align: right;
+}
+
+.quickViewWindow .overview #accordion .purchase-area .prices {
+    float: right;
+}
+.quickViewWindow .overview #accordion .purchase-area .add-to-cart {
+    float: left;
+}
+.quickViewWindow .overview #accordion .purchase-area .add-to-cart div * {
+    float: right;
+}
+
+.quickViewWindow .product-variant-list {
+    text-align: right;
+}
+.quickViewWindow .variant-picture {
+    float: right;
+}
+.quickViewWindow .variant-info {
+    float: left;
+}
+
+.quickViewWindow .variant-grid-info .manufacturers {
+    float: right;
+}
+
+.quickViewWindow .variant-grid-info .compare-products {
+    float: left;
+}
+
+.quickView .giftcard > div > * {
+    float: right;
+}
+
+.quickView .giftcard label {
+    margin-left: 10px;
+    margin-right: 0;
+}
+
+.quickView .giftcard dt {
+    float: right;
+    clear: right;
+}
+
+.quickViewWindow .product-grid .title {
+    text-align: right;
+}

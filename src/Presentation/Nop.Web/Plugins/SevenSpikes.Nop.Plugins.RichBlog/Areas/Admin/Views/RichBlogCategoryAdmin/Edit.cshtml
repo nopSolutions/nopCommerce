@@ -1,0 +1,83 @@
+@model RichBlogCategoryAdminModel
+@inject IWebHelper webHelper
+
+@{
+    Layout = AdminViewLocations.AdminLayoutViewPath;
+    var storeLocation = webHelper.GetStoreLocation().TrimEnd('/');
+
+    var formAction = storeLocation + "/Admin/RichBlogCategoryAdmin/Delete";
+
+    if (ViewBag.RefreshPage == true)
+    {
+        <script type="text/javascript">
+            try {
+                window.opener.document.location.reload();
+            }
+            catch (e) { }
+            window.close();
+        </script>
+
+        return;
+    }
+}
+
+<form method="post" id="rich-blog-category-form">
+
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("SevenSpikes.RichBlog.Admin.Category.EditCategoryDetails") - @Model.Name
+            <small>
+                <i class="fa fa-arrow-circle-left"></i>
+                <a asp-action="ManageRichBlogCategories">@T("SevenSpikes.RichBlog.Admin.Category.BackToList")</a>
+            </small>
+        </h1>
+        <div class="pull-right">
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
+            <button type="submit" name="save-continue" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.SaveContinue")
+            </button>
+            <span id="product-delete" class="btn bg-red">
+                <i class="fa fa-trash-o"></i>
+                @T("Admin.Common.Delete")
+            </span>
+        </div>
+    </div>
+    @await Html.PartialAsync(Views.CategoryCreateOrUpdate, Model)
+</form>
+
+@*TODO: UPGRADE 4.0 Change this?*@
+<div id="rich-blog-category-model-delete-confirmation" style="display:none;">
+    <form action="@formAction" method="GET" novalidate="novalidate">
+        <input type="hidden" name="categoryId" value="@Model.Id" />
+        <div>
+            <p>
+                Are you sure you want to delete this item?
+            </p>
+            <div class="form-actions">
+                <span id="" class="k-button" onclick="$('#rich-blog-category-model-delete-confirmation').data('kendoWindow').close();">No, cancel</span>
+                <input type="submit" class="k-button" value="Delete">
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#rich-blog-category-delete').click(function (e) {
+            e.preventDefault();
+            var window = $('#rich-blog-category-model-delete-confirmation');
+            if (!window.data('kendoWindow')) {
+                window.kendoWindow({
+                    modal: true,
+                    title: 'Are you sure?',
+                    actions: ['Close']
+                });
+            }
+            window.data('kendoWindow').center().open();
+        });
+    });
+</script>

@@ -1,0 +1,53 @@
+
+.post-relations li.separator {
+	margin-right: 0;
+	margin-left: 5px;
+}
+.post-navigation a + a {
+	margin-right: 5px;
+	margin-left: 0;
+}
+.post-navigation .prev:before {
+	content: "\e904";
+}
+.post-navigation .next:before {
+	content: "\e903";
+}
+.blog-search-box input.search-box-text {
+	padding-right: 0;
+	padding-left: 42px;
+}
+.blog-search-box .search-box-button {
+	right: auto;
+	left: 0;
+}
+.blog-search-box .search-box-button:after {
+	margin-right: 0;
+	margin-left: 3px;
+}
+
+
+@media all and (min-width: 769px) {
+
+	.rich-blog-homepage .blog-post {
+		float: right;
+	}
+	.blog-page .post-actions .read-more {
+		float: right;
+	}
+	.blog-page .post-actions .share-post {
+		float: left;
+	}
+}
+
+@media all and (min-width: 1201px) {
+
+	.blogpost-page .with-navigation {
+		padding-right: 0;
+		padding-left: 90px;
+	}
+	.blogpost-page .post-navigation {
+		right: auto;
+		left: 0;
+	}
+}

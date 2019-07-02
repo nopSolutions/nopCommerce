@@ -1,0 +1,22 @@
+﻿<div>
+    <h4>HTTPS requirement</h4>
+    <p>First of all the server has to be secure - it should have valid SSL Security Certificate for the domain under which it's hosted. This is required by Facebook. (As Facebook says: "Note that SSL support for your page tab app has been mandatory since October 1, 2011.")</p>
+    <h4>Facebook Developer Application</h4>
+    <ul>
+        <li>The first step is creating an application in Facebook. You can do this by going to <a href="https://developers.facebook.com/apps/" target="_blank">https://developers.facebook.com/apps/</a>. Click on the "Add a New App" button.</li>
+        <li>Go to the advanced setup. Choose a Name for your app. Next, choose a category. You should select "Apps For Pages". Click on the confirm button. Now you will be redirected to your app page.</li>
+        <li>Go to "Settings" from the left navigation. Click on the "Add Platform" button. Select "Page Tab" platform option. Now you will see a section called "Page Tab". </li>
+        <li>Enter the site of your shop in the Site URL field like this: "<strong>http://www.yourstore.com/facebook/store/</strong>". NOTE that the url should be with <strong>HTTPS</strong> and the suffix "<strong>/facebook/store</strong>".</li>
+        <li>By default the "Page Admin Control" and the "Wide Page Tab" are enabled. Leave them this way and save the changes.
+        <li>From the left navigation > App Details, you can add images and icons for your app.</li>
+    </ul>
+    <h4>Including your app on your Fan Page</h4>
+    <p>
+        Navigate to the following URL in your browser: https://www.facebook.com/dialog/pagetab?app_id=YOUR_APP_ID&redirect_uri=YOUR_URL
+        <br />
+        Replace "YOUR_APP_ID" with your App ID and "YOUR_URL" with your app's URL, both of which values are available in your app settings.
+        <br />
+        You'll see an "Add page tab" page. After selecting your Facebook page from the dropdown menu and clicking "Add Page Tab" your iFrame app should appear on your Fan Page. You can manage it from the Manage Tabs.
+    </p>
+    <p>For more information you can check the <a href="https://developers.facebook.com/docs/appsonfacebook/pagetabs" title="fb">Facebook documentation</a>.</p>
+</div>

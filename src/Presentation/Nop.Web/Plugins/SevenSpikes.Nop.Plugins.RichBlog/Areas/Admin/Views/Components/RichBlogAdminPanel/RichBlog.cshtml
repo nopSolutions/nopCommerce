@@ -1,0 +1,6 @@
+﻿@model Dictionary<string, object>
+
+@foreach (var viewComponent in Model)
+{
+    @await Component.InvokeAsync(viewComponent.Key, viewComponent.Value)
+}

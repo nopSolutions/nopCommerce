@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<SupportedWidgetZones>
+  <WidgetZone>left_side_column_blog_before</WidgetZone>
+  <WidgetZone>left_side_column_after_blog_archive</WidgetZone>
+  <WidgetZone>left_side_column_blog_after</WidgetZone>
+</SupportedWidgetZones>

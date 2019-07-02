@@ -1,0 +1,28 @@
+﻿@model NopAjaxCartSettingsModel
+
+<div class="panel-group">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="EnableNopAjaxCart_OverrideForStore" asp-input="EnableNopAjaxCart" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="EnableNopAjaxCart" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="EnableNopAjaxCart" />
+                    <span asp-validation-for="EnableNopAjaxCart"></span>
+                </div>
+            </div>
+            <div class="form-group hidden">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="EnableOnMobileDevices_OverrideForStore" asp-input="EnableOnMobileDevices" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="EnableOnMobileDevices" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="EnableOnMobileDevices" />
+                    <span asp-validation-for="EnableOnMobileDevices"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

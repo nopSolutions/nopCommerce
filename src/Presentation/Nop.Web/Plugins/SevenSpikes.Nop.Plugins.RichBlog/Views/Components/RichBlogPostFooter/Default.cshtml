@@ -1,0 +1,120 @@
+﻿@model RichBlogPostFooterModel
+@inject RichBlogSettings richBlogSettings
+
+<div class="post-footer">
+    @if (Model.Categories.Count > 0 || (Model.RelatedBlogPosts.Count > 0 && ViewBag.IsBlogDetailsPage))
+    {
+        <div class="post-relations">
+            @if (Model.Categories.Count > 0)
+            {
+                <div class="category-list">
+                    <label>@T("SevenSpikes.RichBlog.Public.Categories"):</label>
+                    <ul>
+                        @for (int i = 0; i < Model.Categories.Count; i++)
+                        {
+                            var category = Model.Categories[i];
+                        
+                            <li>
+                                <a href="@Url.RouteUrl("BlogByCategory", new { SeName = category.SEName })">@category.Name</a>
+                            </li>
+                        
+                            if (i != Model.Categories.Count - 1)
+                            {
+                                <li class="separator">,</li>
+                            }
+                        }
+                    </ul>
+                </div>
+            }
+        
+            @if (Model.RelatedBlogPosts.Count > 0 && ViewBag.IsBlogDetailsPage)
+            {
+                <div class="related-posts-list">
+                    <label>@T("SevenSpikes.RichBlog.Public.RelateBlogPosts"):</label>
+                    <ul>
+                        @for (int i = 0; i < Model.RelatedBlogPosts.Count; i++)
+                        {
+                            var blogPost = Model.RelatedBlogPosts[i];
+
+                            <li>
+                                <a href="@Url.RouteUrl("BlogPost", new { SeName = blogPost.RelatedBlogPostSEName })">@blogPost.RelatedBlogPostTitle</a>
+                            </li>
+
+                            if (i != Model.RelatedBlogPosts.Count - 1)
+                            {
+                                <li class="separator">,</li>
+                            }
+                        }
+                    </ul>
+                </div>
+            }
+        </div>
+    }
+
+    <div class="post-actions">
+        @if (!ViewBag.IsBlogDetailsPage) 
+        { 
+            <a href="@Url.RouteUrl("BlogPost", new { SeName = Model.BlogPostSEName })" class="read-more">@T("SevenSpikes.RichBlog.Public.ReadMore")</a>
+        }
+        
+        @if (richBlogSettings.ShowFacebookShare || richBlogSettings.ShowTwitterShare ||
+             richBlogSettings.ShowPinterestShare || richBlogSettings.ShowLinkedInShare ||
+             richBlogSettings.ShowGooglePlusShare)
+        {
+            var shareUrl = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Core.IWebHelper>().GetStoreLocation().TrimEnd('/') + Url.RouteUrl("BlogPost", new { SeName = Model.BlogPostSEName });
+
+            <ul class="share-post" id="share-buttons">
+                @if (richBlogSettings.ShowFacebookShare)
+                {
+                    <li class="facebook">
+                        <!-- Facebook -->
+                        <a href="javascript:openShareWindow('https://www.facebook.com/sharer.php?u=@shareUrl')"></a>
+                    </li>
+                }
+                @if (richBlogSettings.ShowTwitterShare)
+                {
+                    <li class="twitter">
+                        <!-- Twitter -->
+                        <a href="javascript:openShareWindow('https://twitter.com/share?url=@shareUrl')"></a>
+                    </li>
+                }
+                @if (richBlogSettings.ShowPinterestShare && !string.IsNullOrEmpty(Model.BlogPostImgUrl))
+                {
+                    <li class="pinterest">
+                        <!-- Pinterest -->
+                        <a data-pin-do="buttonPin" data-pin-custom="true" data-pin-description="@Model.BlogPostTitle"
+                           data-pin-media="@Model.BlogPostImgUrl" href="https://www.pinterest.com/pin/create/button/?url=@shareUrl"></a>
+                    </li>
+                }
+                @if (richBlogSettings.ShowLinkedInShare)
+                {
+                    <li class="linkedin">
+                        <!-- LinkedIn -->
+                        <a href="javascript:openShareWindow('https://www.linkedin.com/shareArticle?mini=true&url=@shareUrl')"></a>
+                    </li>
+                }
+                @if (richBlogSettings.ShowGooglePlusShare)
+                {
+                    <li class="google">
+                        <!-- Google+ -->
+                        <a href="javascript:openShareWindow('https://plus.google.com/share?url=@shareUrl')"></a>
+                    </li>
+                }
+            </ul>
+
+            <script>
+                function openShareWindow(url) {
+                    var winWidth = 520;
+                    var winHeight = 400;
+                    var winTop = (screen.height / 2) - (winHeight / 2);
+                    var winLeft = (screen.width / 2) - (winWidth / 2);
+
+                    window.open(url, 'sharer', 'top=' + winTop + ',left=' + winLeft + ',toolbar=0,status=0,width=' + winWidth + ',height=' + winHeight);
+                }
+
+                @*Pinterest scrit copied from: assets.pinterest.com/js/pinit.js*@
+                !function (a, b, c) { var d, e, f; d = "PIN_" + ~~((new Date).getTime() / 864e5), a[d] ? a[d] += 1 : (a[d] = 1, a.setTimeout(function () { e = b.getElementsByTagName("SCRIPT")[0], f = b.createElement("SCRIPT"), f.type = "text/javascript", f.async = !0, f.src = c.mainUrl + "?" + Math.random(), e.parentNode.insertBefore(f, e) }, 10)) }(window, document, { mainUrl: "//assets.pinterest.com/js/pinit_main.js" });
+            </script>
+        }
+    </div>
+</div>

@@ -1,0 +1,16 @@
+﻿@{
+    Layout = "_AdminLayout";
+}
+
+@{
+    Html.AddScriptParts("~/Plugins/SevenSpikes.Core/Areas/Admin/Content/Scripts/admin.core.min.js");
+
+    Html.AddCssFileParts("~/Plugins/SevenSpikes.Core/Areas/Admin/Content/Styles/adminstyles.css");
+}
+
+<div class="spikes-admin-wrapper">
+    <div class="seven-spikes-settings">
+        @RenderBody()
+    </div>
+</div>
+

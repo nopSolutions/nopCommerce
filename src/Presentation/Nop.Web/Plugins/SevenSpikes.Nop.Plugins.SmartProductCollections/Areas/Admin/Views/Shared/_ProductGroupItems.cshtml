@@ -1,0 +1,62 @@
+﻿@model ProductsGroupAdminModel
+
+@{
+    Layout = "";
+
+    Html.AddScriptParts("~/Plugins/SevenSpikes.Nop.Plugins.SmartProductCollections/Areas/Admin/Content/Scripts/SmartProductCollectionsAdmin.min.js");
+
+    string defaultItemTitle = T("SevenSpikes.SmartProductCollections.Public.DefaultGroupTitle.Default").ToString();
+    string addNewText = T("SevenSpikes.SmartProductCollections.Admin.ProductsGroupItem.AddNew").ToString();
+}
+
+<div class="fieldset-wrapper panel panel-default">
+    <div class="fieldset-title tab-builder-title panel-heading">@T("SevenSpikes.SmartProductCollections.Admin.CategorySettings.TabBuilder")</div>
+    <div class="visualized-tabs-wrapper panel-body"
+         data-creategroupitemurl="@Url.Action("CreateGroupItem", "CustomProductCollectionsAdmin")"
+         data-deletegroupitemurl="@Url.Action("DeleteGroupItem", "CustomProductCollectionsAdmin")"
+         data-reordergroupitemsurl="@Url.Action("ReorderItems", "CustomProductCollectionsAdmin")"
+         data-sourcetypechangeurl="@Url.Action("GetGroupItemTemplate", "CustomProductCollectionsAdmin")"
+         data-titlechangeurl="@Url.Action("ChangeTitle", "CustomProductCollectionsAdmin")"
+         data-activechangeurl="@Url.Action("ChangeActive", "CustomProductCollectionsAdmin")"
+         data-enablecategorycustomcollectionurl="@Url.Action("EnableCategoryCustomCollection", "CategoriesProductCollectionsAdmin")"
+         data-entityorsortmethodchangeurl="@Url.Action("ChangeEntityOrSortMethod", "CustomProductCollectionsAdmin")"
+         data-getproductsforsourcetypeurl="@Url.Action("GetProductsForItem", "CustomProductCollectionsAdmin")"
+         data-deleteproductfromcustomlisturl="@Url.Action("DeleteProductFromCustomList", "CustomProductCollectionsAdmin")"
+         data-reorderproductsincustomlisturl="@Url.Action("ReorderProductsInCustomList", "CustomProductCollectionsAdmin")"
+         data-defaultitemtitle="@defaultItemTitle">
+
+        <span class="add-new-group-item-button @if (Model.Items.Count > 0){<text>hidden</text>}">@T("SevenSpikes.SmartProductCollections.Admin.ProductsGroupItem.AddNewItem")</span>
+
+        <div class="no-product-items-available @if (Model.Items.Count > 0){<text>hidden</text>}">
+            <div class="border-element">@T("SevenSpikes.SmartProductCollections.Admin.ProductsGroupItem.NoItemsAvailable")</div>
+        </div>
+
+        <div class="callout bg-gray-light ss-info drag-and-drop-items-info @if (Model.Items.Count < 2){<text>hidden</text>}">
+            <i class="fa fa-exclamation-circle"></i>
+            @T("SevenSpikes.SmartProductCollections.Admin.ProductsGroupItem.DragAndDrop.Items")
+        </div>
+
+        <div id="tabstrip" @if (Model.Items.Count > 0) { <text> class="not-empty" </text>   }>
+            <ul class="nav nav-tabs tabs-anchors">
+                @foreach (var item in Model.Items)
+                {
+                    string title = item.Title;
+
+                    if (string.IsNullOrEmpty(title))
+                    {
+                        title = defaultItemTitle;
+                    }
+
+                    <li data-itemid="@item.Id">@title</li>
+                }
+                <li id="add-new-item-from-tabstrip-button">@addNewText</li>
+            </ul>
+
+            @foreach (var item in Model.Items)
+            {
+                @await Html.PartialAsync(AdminViews.ProductGroupHeaderTemplate, item)
+            }
+            <div class="tab-content k-content add-new-item-tabstrip-content">@addNewText</div>
+        </div>
+    </div>
+</div>

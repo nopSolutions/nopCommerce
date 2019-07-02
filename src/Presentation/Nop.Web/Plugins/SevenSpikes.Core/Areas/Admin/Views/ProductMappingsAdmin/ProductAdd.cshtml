@@ -1,0 +1,332 @@
+﻿@model ProductMappingListModel
+@inject AdminAreaSettings adminAreaSettings
+
+@{
+    Layout = "";
+
+    var popupGridPageSize = adminAreaSettings.PopupGridPageSize;
+
+    string productsGroupId = string.Format("products-grid-{0}", Model.EntityId);
+    string productsGroupSelector = string.Format("#{0}", productsGroupId);
+}
+
+<div class="panel panel-default" style="margin: 20px;" data-identity="product-mappings-@(Model.EntityType)-@(Model.EntityId)">
+    <div class="panel-heading">
+        @T("Admin.Catalog.Manufacturers.Products.AddNew")
+    </div>
+    <form action="@(Html.Raw(Url.Action("ProductAddPopup", "ProductMappingsAdmin", new { entityId = Model.EntityId, entityType = Model.EntityType })))" method="post">
+        @Html.AntiForgeryToken()
+        <div class="panel-body">
+
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="form-group">
+                        <div class="col-md-4">
+                            <div class="label-wrapper">
+                                <label class="control-label" for="" title="">
+                                    @T("Admin.Catalog.Products.List.SearchProductName")
+                                </label>
+                                <div class="ico-help" title="@T("Admin.Catalog.Products.List.SearchProductName.Hint")">
+                                    <i class="fa fa-question-circle"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <input class="form-control text-box single-line searchProductName" name="SearchProductName" type="text" value="@(Model.SearchProductName)">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-4">
+                            <div class="label-wrapper">
+                                <label class="control-label" for="" title="">
+                                    @T("SevenSpikes.Admin.Catalog.Products.List.VisibleIndividuallyOnly")
+                                </label>
+                                <div class="ico-help" title="@T("SevenSpikes.Admin.Catalog.Products.List.VisibleIndividuallyOnly.Hint")">
+                                    <i class="fa fa-question-circle"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <input class="check-box visibleIndividuallyOnly" name="VisibleIndividuallyOnly" type="checkbox" value="@Model.VisibleIndividuallyOnly">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-4">
+                            <div class="label-wrapper">
+                                <label class="control-label" for="" title="">
+                                    @T("Admin.Catalog.Products.List.SearchCategory")
+                                </label>
+                                <div class="ico-help" title="@T("Admin.Catalog.Products.List.SearchCategory.Hint")">
+                                    <i class="fa fa-question-circle"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <select class="searchCategoryId form-control" name="SearchCategoryId">
+                                @foreach (var category in Model.AvailableCategories)
+                                {
+                                    var isSelected = Model.SearchCategoryId == int.Parse(category.Value) ? "selected='selected'" : string.Empty;
+
+                                    <!option value="@category.Value" @Html.Raw(isSelected)>@category.Text</!option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-4">
+                            <div class="label-wrapper">
+                                <label class="control-label" for="" title="">
+                                    @T("Admin.Catalog.Products.List.SearchManufacturer")
+                                </label>
+                                <div class="ico-help" title="@T("Admin.Catalog.Products.List.SearchManufacturer.Hint")">
+                                    <i class="fa fa-question-circle"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <select class="searchManufacturerId form-control" name="SearchManufacturerId">
+                                @foreach (var manufacturer in Model.AvailableManufacturers)
+                                {
+                                    var isSelected = Model.SearchManufacturerId == int.Parse(manufacturer.Value) ? "selected='selected'" : string.Empty;
+
+                                    <!option value="@manufacturer.Value" @Html.Raw(isSelected)>@manufacturer.Text</!option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-4">
+                            <div class="label-wrapper">
+                                <label class="control-label" for="" title="">
+                                    @T("Admin.Catalog.Products.List.SearchVendor")
+                                </label>
+                                <div class="ico-help" title="@T("Admin.Catalog.Products.List.SearchVendor.Hint")">
+                                    <i class="fa fa-question-circle"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <select class="searchVendorId form-control" name="SearchVendorId">
+                                @foreach (var vendor in Model.AvailableVendors)
+                                {
+                                    var isSelected = Model.SearchVendorId == int.Parse(vendor.Value) ? "selected='selected'" : string.Empty;
+
+                                    <!option value="@vendor.Value" @Html.Raw(isSelected)>@vendor.Text</!option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-4">
+                            <div class="label-wrapper">
+                                <label class="control-label" for="" title="">
+                                    @T("Admin.Catalog.Products.List.SearchStore")
+                                </label>
+                                <div class="ico-help" title="@T("Admin.Catalog.Products.List.SearchStore.Hint")">
+                                    <i class="fa fa-question-circle"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <select class="searchStoreId form-control" name="SearchStoreId">
+                                @foreach (var store in Model.AvailableStores)
+                                {
+                                    var isSelected = Model.SearchStoreId == int.Parse(store.Value) ? "selected='selected'" : string.Empty;
+
+                                    <!option value="@store.Value" @Html.Raw(isSelected)>@store.Text</!option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-4">
+                            <div class="label-wrapper">
+                                <label class="control-label" for="" title="">
+                                    @T("Admin.Catalog.Products.List.SearchWarehouse")
+                                </label>
+                                <div class="ico-help" title="@T("Admin.Catalog.Products.List.SearchWarehouse.Hint")">
+                                    <i class="fa fa-question-circle"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <select class="searchWarehouseId form-control" name="SearchWarehouseId">
+                                @foreach (var warehouse in Model.AvailableWarehouses)
+                                {
+                                    var isSelected = Model.SearchWarehouseId == int.Parse(warehouse.Value) ? "selected='selected'" : string.Empty;
+
+                                    <!option value="@warehouse.Value" @Html.Raw(isSelected)>@warehouse.Text</!option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-4">
+                            <div class="label-wrapper">
+                                <label class="control-label" for="" title="">
+                                    @T("Admin.Catalog.Products.List.SearchProductType")
+                                </label>
+                                <div class="ico-help" title="@T("Admin.Catalog.Products.List.SearchProductType.Hint")">
+                                    <i class="fa fa-question-circle"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <select class="searchProductTypeId form-control" name="SearchProductTypeId">
+                                @foreach (var productType in Model.AvailableProductTypes)
+                                {
+                                    var isSelected = Model.SearchProductTypeId == int.Parse(productType.Value) ? "selected='selected'" : string.Empty;
+
+                                    <!option value="@productType.Value" @Html.Raw(isSelected)>@productType.Text</!option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-4">
+                            <div class="label-wrapper">
+                                <label class="control-label" for="" title="">
+                                    @T("Admin.Catalog.Products.List.SearchPublished")
+                                </label>
+                                <div class="ico-help" title="@T("SevenSpikes.Plugins.ProductMappings.Admin.Catalog.Products.List.SearchPublished.Hint")">
+                                    <i class="fa fa-question-circle"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <select class="searchPublishedId form-control" name="SearchPublishedId">
+                                @foreach (var published in Model.AvailablePublishedOptions)
+                                {
+                                    var isSelected = Model.SearchPublishedId == int.Parse(published.Value) ? "selected='selected'" : string.Empty;
+
+                                    <!option value="@published.Value" @Html.Raw(isSelected)>@published.Text</!option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12" style="text-align: center;">
+                        <button type="button" class="btn btn-primary btn-search search-products">
+                            <i class="fa fa-search"></i>
+                            @T("Admin.Common.Search")
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div id="@productsGroupId" class="homepage-products-mappings-grid"></div>
+
+                <script type="text/javascript">
+                    (function() {
+                        function additionalData() {
+                            var parentForm = $('@(productsGroupSelector)').closest('form');
+
+                            var data = {
+                                SearchProductName: parentForm.find('.searchProductName').val(),
+                                VisibleIndividuallyOnly: parentForm.find('.visibleIndividuallyOnly').is(':checked'),
+                                SearchCategoryId: parentForm.find('.searchCategoryId').val(),
+                                SearchManufacturerId: parentForm.find('.searchManufacturerId').val(),
+                                SearchVendorId: parentForm.find('.searchVendorId').val(),
+                                SearchStoreId: parentForm.find('.searchStoreId').val(),
+                                SearchWarehouseId: parentForm.find('.searchWarehouseId').val(),
+                                SearchProductTypeId: parentForm.find('.searchProductTypeId').val(),
+                                SearchPublishedId: parentForm.find('.searchPublishedId').val()
+                            };
+
+                            addAntiForgeryToken(data);
+
+                            return data;
+                        }
+
+                        $(document).ready(function() {
+                            $('.searchProductName').keydown(function(e) {
+                                if (e.keyCode === 13) {
+                                    $(this).closest('form').find('.search-products').click();
+                                    e.preventDefault();
+                                }
+                            });
+
+                            $('.search-products').click(function(e) {
+                                var grid = $(this).closest('form').find('@(productsGroupSelector)').data('kendoGrid');
+                                grid.dataSource.page(1); //new search. Set page size to 1
+                                grid.dataSource.read();
+                                e.preventDefault();
+                            });
+
+                            $('@(productsGroupSelector)').kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("ProductAddPopupList", "ProductMappingsAdmin", new {entityId = Model.EntityId, entityType = Model.EntityType}))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: additionalData
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    pageSize: @(popupGridPageSize),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true
+                                },
+                                editable: {
+                                    confirmation: false,
+                                    mode: "inline"
+                                },
+                                scrollable: false,
+                                columns: [
+                                    {
+                                        field: "ProductId",
+                                        title: "@T("Admin.Common.Check")",
+                                        template: "<input type='checkbox' name='SelectedProductIds' value='#=ProductId#' #= Selected ? checked='checked' : '' # />",
+                                        attributes: {
+                                            style: "text-align:center"
+                                        },
+                                        width: 50
+                                    }, {
+                                        field: "ProductName",
+                                        title: "@T("Admin.Catalog.Products.Fields.Name")"
+                                    }, {
+                                        field: "Published",
+                                        title: "@T("Admin.Catalog.Products.Fields.Published")",
+                                        width: 100,
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" },
+                                        template: '# if(Published) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
+                                    }
+                                ]
+                            });
+                        });
+                    })();
+                </script>
+            </div>
+            <button type="submit" name="save" class="btn bg-blue save-btn">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
+        </div>
+    </form>
+</div>

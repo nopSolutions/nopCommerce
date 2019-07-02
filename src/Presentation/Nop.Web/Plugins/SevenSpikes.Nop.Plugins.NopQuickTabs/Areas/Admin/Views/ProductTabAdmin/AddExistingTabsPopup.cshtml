@@ -1,0 +1,111 @@
+﻿@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminPopupLayout.cshtml";
+}
+
+@using Nop.Core.Infrastructure;
+@using Nop.Core.Domain.Common;
+@inject AdminAreaSettings adminAreaSettings;
+
+@model int
+
+
+@if (ViewBag.RefreshPage == true)
+{
+    <script type="text/javascript">
+        try {
+            var gridElement = window.opener.document.getElementById("btnRefreshGrid");
+            $(gridElement).click();
+        }
+        catch (e) { }
+        window.close();
+    </script>
+
+    return;
+}
+
+
+@{
+    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
+    var gridPageSizes = adminAreaSettings.GridPageSizes;
+}
+
+<form asp-action="AddExistingTabs" asp-controller="ProductTabAdmin">
+
+    <input type="hidden" value="@Model" name="id" />
+
+
+
+    <div class="content">
+        <div class="content-header clearfix">
+            <h1 class="pull-left">
+                @T("SevenSpikes.NopQuickTabs.Admin.NopProductsTabTitle.AddExistingTab")
+            </h1>
+        </div>
+        <div class="form-horizontal">
+            <div class="panel-group">
+                <div class="panel-body">
+                    <div id="existing-tab-grid">
+                    </div>
+                    <button type="submit" name="save" value="save" class="btn bg-blue">
+                        <i class="fa fa-floppy-o"></i>
+                        @T("Admin.Common.Save")
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+                    $(document).ready(function () {
+                        $("#existing-tab-grid").kendoGrid({
+                            dataSource: {
+                                type: "json",
+                                transport: {
+                                    read: {
+                                        url: "@Html.Raw(Url.Action("AddExistingTabsList", "ProductTabAdmin", new { id = Model }))",
+                                        type: "POST",
+                                        dataType: "json"
+                                        //anty-forgery does not work with this contentType for some reasons
+                                        //data: addAntiForgeryToken,
+                                    }
+                                },
+                                schema: {
+                                    data: "Data",
+                                    total: "Total",
+                                    errors: "Errors"
+                                },
+                                error: function(e) {
+                                    display_kendoui_grid_error(e);
+                                    // Cancel the changes
+                                    this.cancelChanges();
+                                },
+                                pageSize: @(defaultGridPageSize),
+                                serverPaging: true,
+                                serverFiltering: true,
+                                serverSorting: true
+                            },
+                            pageable: {
+                                refresh: true,
+                                pageSizes: [@(gridPageSizes)]
+                            },
+                            editable: {
+                                confirmation: false,
+                                mode: "inline"
+                            },
+                            scrollable: false,
+                            columns: [{
+                                field: "Id",
+                                title: "@T("Admin.Common.Check")",
+                                template: "<input type='checkbox' name='SelectedTabsIds' value='#=Id#' />",
+                                attributes: {
+                                    style: "text-align:center"
+                                },
+                                width: 50
+                            }, {
+                                field: "SystemName",
+                                title: "@T("SevenSpikes.NopQuickTabs.Admin.Tabs.Fields.SystemName")"
+                            }]
+                        });
+                    });
+    </script>
+</form>

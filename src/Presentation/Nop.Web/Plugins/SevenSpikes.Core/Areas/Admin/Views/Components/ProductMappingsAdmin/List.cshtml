@@ -1,0 +1,128 @@
+﻿@model ProductMappingListModel
+@inject AdminAreaSettings adminAreaSettings
+
+@{
+    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
+    var gridPageSizes = adminAreaSettings.GridPageSizes;
+}
+
+<div class="panel-group">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div id="products-grid"></div>
+
+            <script>
+                $(document).ready(function () {
+                    $("#products-grid").kendoGrid({
+                        dataSource: {
+                            type: "json",
+                            transport: {
+                                read: {
+                                    url: "@Html.Raw(Url.Action("GridList", "ProductMappingsAdmin", new { entityId = Model.EntityId, entityType = Model.EntityType }))",
+                                    type: "POST",
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
+                                },
+                                update: {
+                                    url: "@Html.Raw(Url.Action("Update", "ProductMappingsAdmin"))",
+                                    type: "POST",
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
+                                },
+                                destroy: {
+                                    url: "@Html.Raw(Url.Action("Delete", "ProductMappingsAdmin"))",
+                                    type: "POST",
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
+                                }
+                            },
+                            schema: {
+                                data: "Data",
+                                total: "Total",
+                                errors: "Errors",
+                                model: {
+                                    id: "Id",
+                                    fields: {
+                                        ProductName: { editable: false, type: "string" },
+                                        IsFeaturedProduct: { editable: true, type: "boolean" },
+                                        DisplayOrder: { editable: true, type: "number" },
+                                        ProductId: { editable: false, type: "number" }
+                                    }
+                                }
+                            },
+                            requestEnd: function (e) {
+                                if (e.type == "update") {
+                                    this.read();
+                                }
+                            },
+                            error: function (e) {
+                                display_kendoui_grid_error(e);
+                                // Cancel the changes
+                                this.cancelChanges();
+                            },
+                            pageSize: @(defaultGridPageSize),
+                            serverPaging: true,
+                            serverFiltering: true,
+                            serverSorting: true
+                        },
+                        pageable: {
+                            refresh: true,
+                            pageSizes: [@(gridPageSizes)]
+                        },
+                        editable: {
+                            confirmation: false,
+                            mode: "inline"
+                        },
+                        scrollable: false,
+                        columns: [{
+                            field: "ProductName",
+                            editable: false,
+                            type: "string",
+                            title: "@T("Admin.Catalog.Manufacturers.Products.Fields.Product")"
+                        }, {
+                            field: "DisplayOrder",
+                            title: "@T("Admin.Catalog.Manufacturers.Products.Fields.DisplayOrder")",
+                            //integer format
+                            format: "{0:0}",
+                            width: 150
+                        }, {
+                            field: "ProductId",
+                            title: "@T("Admin.Common.View")",
+                            width: 100,
+                            template: '<a href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#">@T("Admin.Common.View")</a>'
+                        }, {
+                            command: [{
+                                name: "edit",
+                                text: "@T("Admin.Common.Edit")"
+                            }, {
+                                name: "destroy",
+                                text: "@T("Admin.Common.Delete")"
+                            }],
+                            width: 200
+                        }]
+                    });
+                });
+            </script>
+        </div>
+        <div class="panel-footer">
+            <button type="submit" id="btnAddNewProduct"
+                    onclick="javascript:OpenWindow('@(Url.Action("ProductAddPopup", "ProductMappingsAdmin", new { entityId = Model.EntityId, entityType = Model.EntityType, btnId = "btnRefreshProductMappings" }))', 800, 800, true); return false;"
+                    class="btn btn-primary">
+                @T("Admin.Catalog.Manufacturers.Products.AddNew")
+            </button>
+            <input type="submit" id="btnRefreshProductMappings" name="btnRefreshProductMappings" style="display: none" />
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $('#btnRefreshProductMappings').click(function () {
+                        //refresh grid
+                        var grid = $("#products-grid").data('kendoGrid');
+                        grid.dataSource.read();
+
+                        //return false to don't reload a page
+                        return false;
+                    });
+                });
+            </script>
+        </div>
+    </div>
+</div>

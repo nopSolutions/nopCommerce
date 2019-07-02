@@ -1,0 +1,53 @@
+
+.quickView .k-window-actions {
+	right: auto;
+	left: 0;
+}
+.quickView .k-window-action:after {
+	padding: 0;
+}
+
+.quickView .popup-header {
+	right: 0;
+}
+
+.quickView .gallery {
+	float: right;
+}
+.quickView .thumbnails a {
+	float: right;
+	margin: 3% 3% 0 0;
+}
+.quickView .thumbnails a:nth-child(4n+1) {
+	margin-right: 0;
+}
+
+.quickView .links-panel a:after {
+	content: "\e90f";
+	display: inline-block;
+	margin-right: 8px;
+	margin-left: 0;
+}
+
+.quickView .overview {
+	float: left;
+}
+.ui-icon-circle-arrow-s + span:after,
+.ui-icon-circle-arrow-e + span:after {
+	display: inline-block;
+	margin-right: 8px;
+	margin-left: 0;
+}
+.quickView .variant-picture {
+	float: right;
+}
+.quickView .variant-info {
+	float: left;
+	text-align: right;
+}
+.variant-additional .manufacturers {
+	float: right;
+}
+.variant-additional .compare-products {
+	float: left;
+}

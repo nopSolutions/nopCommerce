@@ -1,0 +1,136 @@
+/*
+Skin Name: Nivo Slider Default Theme - modified for navigation inside
+Skin URI: http://nivo.dev7studios.com
+Description: The default skin for the Nivo Slider.
+Version: 1.3
+Author: Gilbert Pellegrom
+Author URI: http://dev7studios.com
+Supports Thumbs: true
+*/
+
+.nivoSlider {
+	position: relative;
+	z-index: 0;
+	background-color: #fff;
+}
+.nivoSlider:before {
+	content: "";
+	position: absolute;
+	top: 0; right: 0;
+	bottom: 0; left: 0;
+	width: 60px;
+	height: 60px;
+	margin: auto;
+	border: 1px solid #f61853;
+	border-top-color: transparent !important;
+	border-radius: 50%;
+	-webkit-animation: spin 0.5s linear infinite;
+	animation: spin 1s linear infinite;
+}
+	@-webkit-keyframes spin {
+	to { transform: rotate(360deg); }
+}
+	@keyframes spin {
+	to { transform: rotate(360deg); }
+}
+
+.nivoSlider a,
+.nivoSlider img {
+	display: block;
+}
+
+/* DIRECTIONAL NAVIGATION */
+
+.nivo-directionNav {
+	display: none;
+}
+.nivo-directionNav a {
+	position: absolute;
+    top: 50%;
+	margin-top: -15px;
+	text-align: center;
+	color: #222;
+	text-transform: uppercase;
+}
+.nivo-directionNav a.nivo-prevNav {
+	left: 5%;
+}
+.nivo-directionNav a.nivo-nextNav {
+	right: 5%;
+}
+.nivo-directionNav a:after {
+	display: block;
+	font-size: 12px;
+	color: #222;
+}
+.nivo-directionNav a.nivo-prevNav:after {
+	content: "\e907";
+}
+.nivo-directionNav a.nivo-nextNav:after {
+	content: "\e908";
+}
+.nivo-directionNav a:hover {
+	
+}
+
+/* BULLET NAVIGATION */
+
+.nivo-controlNav {
+    position: relative;
+	top: -40px;
+    z-index: 10;
+    padding: 0;
+	text-align: center;
+	font-size: 0;
+}
+.nivo-controlNav a {
+	display: inline-block;
+	width: 12px;
+	height: 12px;
+	margin: 0 8px;
+	border: 1px solid #222;
+	border-radius: 50%;
+	font-size: 0;
+}
+.nivo-controlNav a:hover,
+.nivo-controlNav a.active {
+	background-color: #222;
+}
+
+.nivo-thumbs-enabled {
+	top: 0;
+}
+.nivo-thumbs-enabled a {
+    width: 120px;
+    height: auto;
+	border: none;
+    margin: 10px 5px 0;
+    background-color: transparent;
+}
+
+/* CAPTION STYLES */
+
+.nivo-caption {
+    top: 0;
+    bottom: auto;
+	z-index: 10;
+    background-color: rgba(0,0,0,0.06);
+    padding: 15px;
+	text-align: center;
+	color: #222;
+}
+.nivo-caption p {
+	margin: 0;
+	padding: 0;
+}
+.nivo-caption:empty {
+	display: none !important;
+}
+
+
+@media all and (min-width: 1201px) {
+
+	.nivo-directionNav {
+		display: block;
+	}
+}

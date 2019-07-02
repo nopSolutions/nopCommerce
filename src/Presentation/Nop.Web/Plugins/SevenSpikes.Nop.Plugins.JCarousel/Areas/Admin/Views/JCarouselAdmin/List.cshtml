@@ -1,0 +1,127 @@
+﻿@inject AdminAreaSettings adminAreaSettings
+@{
+    Layout = AdminViewLocations.AdminLayoutViewPath;
+
+    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
+    var gridPageSizes = adminAreaSettings.GridPageSizes;
+
+    Html.SetActiveMenuItemSystemName("SevenSpikes.JCarousel.Admin.Submenus.ManageSettings");
+}
+
+<nop-antiforgery-token />
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        @T("SevenSpikes.Plugins.JCarousel.Admin.Menu.MenuName")
+    </h1>
+    <div class="pull-right">
+        <a href="Create" class="btn bg-blue">
+            <i class="fa fa-plus-square"></i>
+            @T("SevenSpikes.JCarousel.Admin.AddNew")
+        </a>
+    </div>
+</div>
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="jcarousel-grid"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script id="commands-template" type="text/x-kendo-template">
+        <a class="k-button" href="Edit/#: Id#" title="@T("Admin.Common.Edit")">
+            <span class="k-icon k-edit"></span>
+            @T("Admin.Common.Edit")
+        </a>
+    </script>
+
+    <script type="text/javascript">
+        $(document)
+            .ready(function() {
+                $("#jcarousel-grid").kendoGrid({
+                        dataSource: {
+                            type: "json",
+                            transport: {
+                                read: {
+                                    url: "@Html.Raw(Url.Action("List", "JCarouselAdmin"))",
+                                    type: "POST",
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
+                                },
+                                destroy: {
+                                    url: "@Html.Raw(Url.Action("DeleteCarousel", "JCarouselAdmin"))",
+                                    type: "POST",
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
+                                }
+                            },
+                            schema: {
+                                data: "Data",
+                                total: "Total",
+                                errors: "Errors",
+                                model: {
+                                    id: "Id",
+                                    fields: {
+                                        Id: { editable: false, type: "number" },
+                                        Name: { editable: false, type: "string" },
+                                        DataSourceType: { editable: false, type: "string" },
+                                        Skin: { editable: false, type: "string" }
+                                    }
+                                }
+                            },
+                            requestEnd: function(e) {
+                                if (e.type == "update") {
+                                    this.read();
+                                }
+                            },
+                            error: function(e) {
+                                display_kendoui_grid_error(e);
+                                // Cancel the changes
+                                this.cancelChanges();
+                            },
+                            pageSize: @(defaultGridPageSize),
+                        },
+                        pageable: {
+                            refresh: true,
+                            pageSizes: [@(gridPageSizes)]
+                        },
+                        editable: {
+                            confirmation: true,
+                            mode: "inline"
+                        },
+                        filterable: true,
+                        sortable: true,
+                        scrollable: false,
+                        columns: [
+                        {
+                            field: "Name",
+                            title: "@T("SevenSpikes.JCarousel.Admin.Settings.Name")"
+                        }, {
+                            field: "DataSourceType",
+                            title: "@T("SevenSpikes.JCarousel.Admin.Settings.DataSourceType")",
+                            filterable: false
+                        }, {
+                            field: "Skin",
+                            title: "@T("SevenSpikes.JCarousel.Admin.Settings.Skin")"
+                        }, {
+                            template: kendo.template($("#commands-template").html()),
+                            filterable: false,
+                            sortable: false
+                        }, {
+                            command: [
+                            {
+                                name: "destroy",
+                                text: "@T("Admin.Common.Delete")"
+                            }
+                            ],
+                            width: 200
+                        }
+                        ]
+                    });
+            });
+    </script>
+</div>

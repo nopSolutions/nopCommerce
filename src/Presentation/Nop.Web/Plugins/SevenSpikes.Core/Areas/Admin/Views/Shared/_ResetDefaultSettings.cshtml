@@ -1,0 +1,92 @@
+﻿@model string
+@inject IWebHelper webHelper
+@inject IHttpContextAccessor httpContextAccessor
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        function getStoreId() {
+            var storeId = 0;
+            var storeSelector = $('#store-scope-configuration');
+
+            if (storeSelector.length > 0) {
+                var splitted = storeSelector.val().split('?')[1];
+
+                if (splitted != 'undefined') {
+                    splitted = splitted.split('&')[0];
+
+                    if (splitted != 'undefined') {
+                        var parts = splitted.split('=');
+
+                        if (typeof parts[1] != 'undefined' && parts[0].toLowerCase() == 'storeid') {
+                            storeId = parseInt(parts[1]) || 0;
+                        }
+                    }
+                }
+            }
+
+            return storeId;
+        }
+
+        $('.reset-default-settings-button').on('click', function (e) {
+            e.preventDefault();
+
+            var formData = {
+                "storeId": getStoreId(),
+                "pluginFolderName": "@Model"
+            };
+            formData = addAntiForgeryToken(formData);
+
+            $.ajax({
+                cache: false,
+                type: "POST",
+                data: formData,
+                url: '@Url.Action("GetDefaultSettings", "DefaultSettingsAdmin")'
+            }).done(function(data) {
+                if (data == null || data == 'ERROR') {
+                    return;
+                }
+
+                var resetWindow = $('#reset-default-settings-confirmation');
+
+                resetWindow.empty().append(data);
+                
+                if (!resetWindow.data('kendoWindow')) {
+                    resetWindow.kendoWindow({
+                        modal: true,
+                        title: '@T("SevenSpikes.Plugins.Admin.ResetDefaultSettings.ConfirmPopupTitle")',
+                        actions: ['Close'],
+                        close: function() {
+                            // If we have some settings changed we should refresh(redirect) the page
+                            if ($('.default-settings-save-message.changed').length > 0) {
+                                var selectedStoreId = parseInt($('#default-settings-store-configuration').val()) || 0;
+                                var returnUrl = $('.reset-default-settings-button').attr('data-returnurl');
+                                var redirectUrl = '@Url.Action("ChangeStoreScopeConfigurationWithSuccessMessage", "DefaultSettingsAdmin")?selectedStoreId=' + selectedStoreId + '&returnUrl=' + returnUrl;
+
+                                location.href = redirectUrl;
+                                return;
+                            }
+                        },
+                        maxWidth: 1200
+                    });
+                    resetWindow.data('kendoWindow').wrapper.addClass("resetDefaultSettingsWindow");
+                }
+                resetWindow.data('kendoWindow').bind('activate', function () {
+                    $('.resetDefaultSettingsWindow').css("top", $(document).scrollTop() + 10);
+                });
+
+                resetWindow.data('kendoWindow').center().open();
+
+
+            });
+        });
+    });
+</script>
+
+<div id="reset-default-settings-drig-wrapper" style="display: none;"></div>
+
+<div id="reset-default-settings-confirmation" style="display: none;"></div>
+
+<span class="reset-default-settings-button btn bg-red" data-returnurl="@(WebUtility.UrlEncode(webHelper.GetRawUrl(httpContextAccessor.HttpContext.Request)))">
+<i class="fa fa-refresh"></i>
+@T("SevenSpikes.Plugins.Admin.ResetDefaultSettings")
+</span>

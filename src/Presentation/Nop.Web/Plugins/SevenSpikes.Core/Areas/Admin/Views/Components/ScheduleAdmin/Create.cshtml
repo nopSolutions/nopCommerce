@@ -1,0 +1,9 @@
+﻿@using SevenSpikes.Nop.Scheduling
+
+@model SevenSpikes.Nop.Scheduling.Areas.Admin.Models.ScheduleModel
+
+@{
+    Html.AddScriptParts("~/Plugins/SevenSpikes.Core/Areas/Admin/Content/Scripts/Scheduling.min.js");    
+}
+
+@await Html.PartialAsync(Constants.ViewAdminScheduleCreateOrUpdate, Model)

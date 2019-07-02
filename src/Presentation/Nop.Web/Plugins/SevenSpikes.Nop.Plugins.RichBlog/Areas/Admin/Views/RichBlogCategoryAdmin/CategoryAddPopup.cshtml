@@ -1,0 +1,166 @@
+﻿@model AddCategoryModel
+@inject AdminAreaSettings adminAreaSettings
+
+@{
+    Layout = "_AdminPopupLayout";
+
+    var gridPageSize = adminAreaSettings.DefaultGridPageSize;
+
+    //page title
+    ViewBag.Title = T("SevenSpikes.RichBlog.Admin.Category.AddNew").Text;
+
+    if (ViewBag.RefreshPage == true)
+    {
+        <script type="text/javascript">
+            try {window.opener.document.getElementById("@ViewBag.btnId").click();}
+            catch (e){}
+            window.close();
+        </script>
+    }
+}
+
+<form method="post">
+
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("SevenSpikes.RichBlog.Admin.BlogPost.AddNew")
+        </h1>
+    </div>
+
+    <div class="content">
+        <div class="form-horizontal">
+            <div class="panel-group">
+                <div class="panel panel-default panel-search-popup panel-popup">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <div class="col-sm-5">
+                                        <nop-label asp-for="SearchCategoryName" />
+                                    </div>
+                                    <div class="col-sm-7">
+                                        <nop-editor asp-for="SearchCategoryName" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <div class="col-sm-5">
+                                        <nop-label asp-for="SearchStoreId" />
+                                    </div>
+                                    <div class="col-sm-7">
+                                        <nop-select asp-for="SearchStoreId" asp-items="Model.AvailableStores" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <button type="button" id="search-blog-posts" class="btn btn-primary btn-search">
+                                    <i class="fa fa-search"></i>
+                                    @T("Admin.Common.Search")
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div id="categories-grid"></div>
+                    </div>
+                    <div class="panel-footer">
+                        <button type="submit" name="save" class="btn bg-blue">
+                            <i class="fa fa-floppy-o"></i>
+                            @T("Admin.Common.Save")
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script>
+        $(document).ready(function () {
+            $("#categories-grid").kendoGrid({
+                dataSource: {
+                    type: "json",
+                    transport: {
+                        read: {
+                            url: "@Html.Raw(Url.Action("ListCategories", "CategoriesToBlogPostsAdmin"))",
+                            type: "POST",
+                            dataType: "json",
+                            data: additionalData
+                        }
+                    },
+                    schema: {
+                        data: "Data",
+                        total: "Total",
+                        errors: "Errors"
+                    },
+                    error: function(e) {
+                        display_kendoui_grid_error(e);
+                        // Cancel the changes
+                        this.cancelChanges();
+                    },
+                    pageSize: @(gridPageSize),
+                },
+                pageable: {
+                    refresh: true
+                },
+                editable: {
+                    confirmation: false,
+                    mode: "inline"
+                },
+                scrollable: false,
+                columns: [{
+                    field: "Id",
+                    title: "@T("Admin.Common.Check")",
+                    template: "<input type='checkbox' name='SelectedCategoryIds' value='#=Id#' />",
+                    attributes: {
+                        style: "text-align:center"
+                    },
+                    width: 50
+                }, {
+                    field: "Name",
+                    title: "@T("SevenSpikes.RichBlog.Admin.Category.Name")"
+                }, {
+                    field: "Published",
+                    title: "@T("SevenSpikes.RichBlog.Admin.Category.Published")",
+                    width: 100,
+                    headerAttributes: { style: "text-align:center" },
+                    attributes: { style: "text-align:center" },
+                    template: '# if(Published) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
+                }]
+            });
+        });
+</script>
+
+<script type="text/javascript">
+        $(document).ready(function () {
+            $('#search-categories').click(function () {
+                var grid = $('#categories-grid').data('kendoGrid');
+                grid.dataSource.page(1); //new search. Set page size to 1
+                grid.dataSource.read();
+                return false;
+            });
+        });
+
+        $("#@Html.IdFor(model => model.SearchCategoryName)").keydown(function (event) {
+            if (event.keyCode == 13) {
+                $("#search-categories").click();
+                return false;
+            }
+        });
+
+        function additionalData() {
+            var data = {
+                SearchCategoryName: $('#@Html.IdFor(model => model.SearchCategoryName)').val(),
+                SearchStoreId: $('#SearchStoreId').val()
+            };
+
+            addAntiForgeryToken(data);
+
+            return data;
+        }
+</script>

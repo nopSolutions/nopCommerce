@@ -1,0 +1,33 @@
+﻿@model JCarouselSettingsModel
+<div asp-validation-summary="All"></div>
+<input type="hidden" asp-for="Id" />
+
+<div class="content">
+    <div class="form-horizontal">
+        @Html.TrialMessage(Model.IsTrialVersion, Plugin.Name, Plugin.UrlInStore)
+        @await Component.InvokeAsync("SettingMode")
+        <nop-tabs id="jcarousel-create-or-update">
+            <nop-tab asp-name="tab-settings" asp-default="true" asp-title="@T("SevenSpikes.JCarousel.Admin.Settings")">
+                @await Html.PartialAsync(Views.CreateOrUpdateSettings, Model)
+            </nop-tab>
+            @if (Model.Id > 0)
+            {
+                <nop-tab asp-name="tab-widgets" asp-title="@T("SevenSpikes.JCarousel.Admin.WidgetZones")">
+                    @await Component.InvokeAsync("WidgetMappingsAdmin", new { entityType = Plugin.EntityType, entityId = Model.Id, pluginFolderName = Plugin.FolderName })
+                </nop-tab>
+                <nop-tab asp-name="tab-product-mappings" class="advanced-setting" asp-title="@T("SevenSpikes.JCarousel.Admin.AdditionalProducts")">
+                    @await Component.InvokeAsync("ProductMappingsAdmin", new { entityId = Model.Id, entityType = Plugin.EntityType })
+                </nop-tab>
+                <nop-tab asp-name="tab-category-mappings" class="advanced-setting" asp-title="@T("SevenSpikes.JCarousel.Admin.AdditionalCategories")">
+                    @await Component.InvokeAsync("CategoryMappingsAdmin", new { entityId = Model.Id, entityType = Plugin.EntityType })
+                </nop-tab>
+                <nop-tab asp-name="tab-manufacturer-mappings" class="advanced-setting" asp-title="@T("SevenSpikes.JCarousel.Admin.AdditionalManufacturers")">
+                    @await Component.InvokeAsync("ManufacturerMappingsAdmin", new { entityId = Model.Id, entityType = Plugin.EntityType })
+                </nop-tab>
+                <nop-tab asp-name="tab-vendor-mappings" class="advanced-setting" asp-title="@T("SevenSpikes.JCarousel.Admin.AdditionalVendors")">
+                    @await Component.InvokeAsync("VendorMappingsAdmin", new { entityId = Model.Id, entityType = Plugin.EntityType })
+                </nop-tab>
+            }
+        </nop-tabs>
+    </div>
+</div>

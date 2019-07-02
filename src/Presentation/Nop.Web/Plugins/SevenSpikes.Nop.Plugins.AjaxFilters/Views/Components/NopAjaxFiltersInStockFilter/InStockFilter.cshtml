@@ -1,0 +1,50 @@
+﻿@** Copyright 2017 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+    * http://www.nop-templates.com/t/licensinginfo
+*@
+
+@model InStockFilterModel7Spikes
+
+@inject NopAjaxFiltersSettings nopAjaxFiltersSettings
+
+@{
+    Html.AddScriptParts(ResourceLocation.Footer, "~/Plugins/SevenSpikes.Nop.Plugins.AjaxFilters/Scripts/InStockFilter.min.js");
+
+    bool isUiModeUseCheckboxes = nopAjaxFiltersSettings.FiltersUIMode == FiltersUIMode.UseCheckboxes;
+    string filtersPanelClass = isUiModeUseCheckboxes ? "filtersCheckboxPanel" : "filtersDropDownPanel";
+
+    string toggleStateClass = "toggleControl";
+    string toggleStateStyles = string.Empty;
+
+    if (nopAjaxFiltersSettings.CloseInStockFilterBox)
+    {
+        toggleStateClass = "toggleControl closed";
+        toggleStateStyles = "display: none;";
+    }
+}
+
+<div class="block filter-block inStockFilterPanel7Spikes">
+    <div class="title">
+        <a class="@toggleStateClass">@T("SevenSpikes.NopAjaxFilters.Public.InStock")</a>
+        <a class="clearFilterOptions">@T("SevenSpikes.NopAjaxFilters.Client.Common.Clear")</a>
+    </div>
+    <div class="filtersGroupPanel @filtersPanelClass" style="@toggleStateStyles">
+        @if (isUiModeUseCheckboxes)
+        {
+            var inStockId = string.Format("in-stock-filter-{0}", Model.Id);
+
+            <ul class="checkbox-list">
+                <li class="checkbox-item">
+                    <input data-option-ids="@Model.Id" type="checkbox" id="@inStockId" />
+                    <label class="filter-item-name" for="@inStockId">@Model.Name</label>
+                </li>
+            </ul>
+        }
+        else
+        {
+            <select class="attribute-options-select" id="inStockFiltersDropDown">
+                <option value="0">@T("SevenSpikes.NopAjaxFilters.Client.Common.All")</option>
+                <option value="1" data-option-ids="@Model.Id">@Model.Name</option>
+            </select>
+        }
+    </div>
+</div>

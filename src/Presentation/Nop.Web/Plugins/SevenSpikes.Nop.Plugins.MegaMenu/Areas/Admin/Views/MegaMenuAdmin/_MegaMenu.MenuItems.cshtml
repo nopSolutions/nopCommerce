@@ -1,0 +1,472 @@
+﻿@using SevenSpikes.Nop.Plugins.MegaMenu.Domain.Enums
+@using Nop.Core
+@using Nop.Core.Domain.Localization
+@using Nop.Core.Infrastructure
+
+@inject IWorkContext workContext
+@inject LocalizationSettings localizationSettings
+
+@model MenuModel
+
+@{
+    var supportRtl = workContext.WorkingLanguage.Rtl && !localizationSettings.IgnoreRtlPropertyForAdminArea;
+
+    Html.SetActiveMenuItemSystemName("SevenSpikes.MegaMenu.Admin.Submenus.Menus");
+
+    Html.AppendCssFileParts("~/Plugins/SevenSpikes.Nop.Plugins.MegaMenu/Areas/Admin/Content/Styles/menuItemsStyles.css");
+
+    if (supportRtl)
+    {
+        Html.AddCssFileParts("~/Plugins/SevenSpikes.Nop.Plugins.MegaMenu/Areas/Admin/Content/Styles/menuItemsStyles.rtl.css");
+    }
+
+    Html.AddScriptParts("~/Plugins/SevenSpikes.Nop.Plugins.MegaMenu/Areas/Admin/Content/Scripts/MenuItemsScript.min.js");
+    Html.AddScriptParts("~/Plugins/SevenSpikes.Nop.Plugins.MegaMenu/Areas/Admin/Content/Scripts/MegaMenuAdmin.min.js");
+
+    Html.AddCssFileParts("~/lib/fineuploader/fine-uploader.min.css");
+    Html.AddScriptParts("~/lib/fineuploader/jquery.fine-uploader.min.js");
+}
+
+<div class="content menu-items-content clearfix" id="update-nav-menu">
+    <div class="pull-left">
+        <p class="panel-desc">
+            <span class="glyphicon glyphicon-info-sign"></span>
+            @T("SevenSpikes.MegaMenu.Admin.MenuItemTypeTitle.PanelTitle")
+        </p>
+        <div class="panel-group" id="menu-link-types-accordion" role="tablist" aria-multiselectable="true">
+            <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="menuLinksHeadingTwo">
+                    <h4 class="panel-title">
+                        <a role="button" data-toggle="collapse" data-parent="#menu-link-types-accordion" href="#menuLinksCollapseTwo" aria-expanded="true" aria-controls="menuLinksCollapseTwo">
+                            @T("SevenSpikes.MegaMenu.Admin.Accordion.Pages.PanelTitle")
+                        </a>
+                    </h4>
+                </div>
+                <div id="menuLinksCollapseTwo" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="menuLinksHeadingTwo">
+                    <div class="panel-body add-menu-item-form" id="add-page-link-form">
+                        <div class="form-group">
+                            <ul class="page-links-list">
+                                @foreach (var predefinedPage in Model.PredefinedPages)
+                                {
+                                    <li class="selectable-item-row">
+                                        <label>
+                                            <input type="checkbox" class="checkbox" value="@predefinedPage.Value" />
+                                            <span>@predefinedPage.Text</span>
+                                        </label>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                        <div class="clearfix">
+                            <button type="submit" class="btn bg-blue pull-left" id="SubmitPageLink">@T("SevenSpikes.MegaMenu.Admin.Accordion.AddToMenu")</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="menuLinksHeadingThree">
+                    <h4 class="panel-title">
+                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#menu-link-types-accordion" href="#menuLinksCollapseThree" aria-expanded="false" aria-controls="menuLinksCollapseThree">
+                            @T("SevenSpikes.MegaMenu.Admin.Accordion.Categories.PanelTitle")
+                        </a>
+                    </h4>
+                </div>
+                <div id="menuLinksCollapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="menuLinksHeadingThree">
+                    <div class="panel-body add-menu-item-form" id="add-category-link-form">
+                        <div class="form-group">
+                            <label>
+                                <input id="category-all-item" type="radio" name="category-type" value="@MenuItemType.Categories" checked="checked" />
+                                <span>@T("SevenSpikes.MegaMenu.Admin.Accordion.All")</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input id="category-specific-items" type="radio" name="category-type" value="1" />
+                                <span>@T("SevenSpikes.MegaMenu.Admin.Accordion.Categories.SpecificCategory")</span>
+                            </label>
+                            <div id="categories-grid" data-readurl="@Url.Action("GetCategories", "MegaMenuItemAdmin")"></div>
+
+                            <script type="text/x-kendo-tmpl" id="categoriesRowTemplate">
+                                <tr class="selectable-item-row category-row" data-itemid="#: Id #">
+                                    <td>
+                                        <label>
+                                            <input type="checkbox" class="checkbox" data-itemid="#: Id #" />
+                                            <span class="category-name">#: Name #</span>
+                                        </label>
+                                    </td>
+                                </tr>
+                            </script>
+                            <script type="text/x-kendo-template" id="categoriesGridToolbarTemplate">
+                                <div class="toolbar">
+                                    <input type="text" id="categories-autocomplete" />
+                                </div>
+                            </script>
+                        </div>
+                        <div class="clearfix">
+                            <button type="submit" class="btn bg-blue pull-left" id="SubmitCategoryLink">@T("SevenSpikes.MegaMenu.Admin.Accordion.AddToMenu")</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="menuLinksHeadingFive">
+                    <h4 class="panel-title">
+                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#menu-link-types-accordion" href="#menuLinksCollapseFive" aria-expanded="false" aria-controls="menuLinksCollapseFive">
+                            @T("SevenSpikes.MegaMenu.Admin.Accordion.Manufacturers.PanelTitle")
+                        </a>
+                    </h4>
+                </div>
+                <div id="menuLinksCollapseFive" class="panel-collapse collapse" role="tabpanel" aria-labelledby="menuLinksHeadingFive">
+                    <div class="panel-body add-menu-item-form" id="add-manufacturer-link-form">
+                        <div class="form-group">
+                            <label>
+                                <input id="manufacturer-all-item" type="radio" name="manufacturer-type" value="@MenuItemType.Manufacturers" checked="checked" />
+                                <span>@T("SevenSpikes.MegaMenu.Admin.Accordion.All")</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input id="manufacturer-specific-items" type="radio" name="manufacturer-type" value="1" />
+                                <span>@T("SevenSpikes.MegaMenu.Admin.Accordion.Manufacturers.SpecificManufacturer")</span>
+                            </label>
+                            <div id="manufacturers-grid" data-readurl="@Url.Action("GetManufacturers", "MegaMenuItemAdmin")"></div>
+
+                            <script type="text/x-kendo-tmpl" id="manufacturersRowTemplate">
+                                <tr class="selectable-item-row manufacturer-row" data-itemid="#: Id #">
+                                    <td>
+                                        <label>
+                                            <input type="checkbox" class="checkbox" data-itemid="#: Id #" />
+                                            <span class="category-name">#: Name #</span>
+                                        </label>
+                                    </td>
+                                </tr>
+                            </script>
+                            <script type="text/x-kendo-template" id="manufacturersGridToolbarTemplate">
+                                <div class="toolbar">
+                                    <input type="text" id="manufacturers-autocomplete" />
+                                </div>
+                            </script>
+                        </div>
+                        <div class="clearfix">
+                            <button type="submit" class="btn bg-blue pull-left" id="SubmitManufacturerLink">@T("SevenSpikes.MegaMenu.Admin.Accordion.AddToMenu")</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="menuLinksHeadingSix">
+                    <h4 class="panel-title">
+                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#menu-link-types-accordion" href="#menuLinksCollapseSix" aria-expanded="false" aria-controls="menuLinksCollapseSix">
+                            @T("SevenSpikes.MegaMenu.Admin.Accordion.Vendors.PanelTitle")
+                        </a>
+                    </h4>
+                </div>
+                <div id="menuLinksCollapseSix" class="panel-collapse collapse" role="tabpanel" aria-labelledby="menuLinksHeadingSix">
+                    <div class="panel-body add-menu-item-form" id="add-vendor-link-form">
+                        <div class="form-group">
+                            <label>
+                                <input id="vendor-all-item" type="radio" name="vendor-type" value="@MenuItemType.Vendors" checked="checked" />
+                                <span>@T("SevenSpikes.MegaMenu.Admin.Accordion.All")</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input id="vendor-specific-items" type="radio" name="vendor-type" value="1" />
+                                <span>@T("SevenSpikes.MegaMenu.Admin.Accordion.Vendors.SpecificVendor")</span>
+                            </label>
+                            <div id="vendors-grid" data-readurl="@Url.Action("GetVendors", "MegaMenuItemAdmin")"></div>
+
+                            <script type="text/x-kendo-tmpl" id="vendorsRowTemplate">
+                                <tr class="selectable-item-row vendor-row" data-itemid="#: Id #">
+                                    <td>
+                                        <label>
+                                            <input type="checkbox" class="checkbox" data-itemid="#: Id #" />
+                                            <span class="category-name">#: Name #</span>
+                                        </label>
+                                    </td>
+                                </tr>
+                            </script>
+                            <script type="text/x-kendo-template" id="vendorsGridToolbarTemplate">
+                                <div class="toolbar">
+                                    <input type="text" id="vendors-autocomplete" />
+                                </div>
+                            </script>
+                        </div>
+                        <div class="clearfix">
+                            <button type="submit" class="btn bg-blue pull-left" id="SubmitVendorLink">@T("SevenSpikes.MegaMenu.Admin.Accordion.AddToMenu")</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="menuLinksHeadingFour">
+                    <h4 class="panel-title">
+                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#menu-link-types-accordion" href="#menuLinksCollapseFour" aria-expanded="false" aria-controls="menuLinksCollapseFour">
+                            @T("SevenSpikes.MegaMenu.Admin.Accordion.Topics.PanelTitle")
+                        </a>
+                    </h4>
+                </div>
+                <div id="menuLinksCollapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="menuLinksHeadingFour">
+                    <div class="panel-body add-menu-item-form" id="add-topic-link-form">
+                        <div class="form-group">
+                            <label>
+                                <input id="topic-all-item" type="radio" name="topic-type" value="@MenuItemType.Topics" checked="checked" />
+                                <span>@T("SevenSpikes.MegaMenu.Admin.Accordion.All")</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input id="topic-specific-items" type="radio" name="topic-type" value="1" />
+                                <span>@T("SevenSpikes.MegaMenu.Admin.Accordion.Topics.SpecificTopic")</span>
+                            </label>
+                            <div id="topics-grid" data-readurl="@Url.Action("GetTopics", "MegaMenuItemAdmin")"></div>
+
+                            <script type="text/x-kendo-tmpl" id="topicsRowTemplate">
+                                <tr class="selectable-item-row topic-row" data-itemid="#: Id #">
+                                    <td>
+                                        <label>
+                                            <input type="checkbox" class="checkbox" data-itemid="#: Id #" />
+                                            <span class="category-name">#: Name #</span>
+                                        </label>
+                                    </td>
+                                </tr>
+                            </script>
+                            <script type="text/x-kendo-template" id="topicsGridToolbarTemplate">
+                                <div class="toolbar">
+                                    <input type="text" id="topics-autocomplete" />
+                                </div>
+                            </script>
+                        </div>
+                        <div class="clearfix">
+                            <button type="submit" class="btn bg-blue pull-left" id="SubmitTopicLink">@T("SevenSpikes.MegaMenu.Admin.Accordion.AddToMenu")</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="menuLinksHeadingSeven">
+                    <h4 class="panel-title">
+                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#menu-link-types-accordion" href="#menuLinksCollapseSeven" aria-expanded="false" aria-controls="menuLinksCollapseSeven">
+                            @T("SevenSpikes.MegaMenu.Admin.Accordion.ProductTags.PanelTitle")
+                        </a>
+                    </h4>
+                </div>
+                <div id="menuLinksCollapseSeven" class="panel-collapse collapse" role="tabpanel" aria-labelledby="menuLinksHeadingSeven">
+                    <div class="panel-body add-menu-item-form" id="add-product-tag-link-form">
+                        <div class="form-group">
+                            <label>
+                                <input id="product-tags-all-item" type="radio" name="product-tags-type" value="@MenuItemType.ProductTags" checked="checked" />
+                                <span>@T("SevenSpikes.MegaMenu.Admin.Accordion.All")</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input id="product-tags-specific-items" type="radio" name="product-tags-type" value="1" />
+                                <span>@T("SevenSpikes.MegaMenu.Admin.Accordion.ProductTags.SpecificProductTag")</span>
+                            </label>
+                            <div id="product-tags-grid" data-readurl="@Url.Action("GetProductTags", "MegaMenuItemAdmin")"></div>
+
+                            <script type="text/x-kendo-tmpl" id="productTagsRowTemplate">
+                                <tr class="selectable-item-row product-tag-row" data-itemid="#: Id #">
+                                    <td>
+                                        <label>
+                                            <input type="checkbox" class="checkbox" data-itemid="#: Id #" />
+                                            <span class="category-name">#: Name #</span>
+                                        </label>
+                                    </td>
+                                </tr>
+                            </script>
+                            <script type="text/x-kendo-template" id="productTagsGridToolbarTemplate">
+                                <div class="toolbar">
+                                    <input type="text" id="product-tags-autocomplete" />
+                                </div>
+                            </script>
+                        </div>
+                        <div class="clearfix">
+                            <button type="submit" class="btn bg-blue pull-left" id="SubmitProductTagsLink">@T("SevenSpikes.MegaMenu.Admin.Accordion.AddToMenu")</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="menuLinksHeadingOne">
+                    <h4 class="panel-title">
+                        <a role="button" data-toggle="collapse" data-parent="#menu-link-types-accordion" href="#menuLinksCollapseOne" aria-expanded="false" aria-controls="menuLinksCollapseOne">
+                            @T("SevenSpikes.MegaMenu.Admin.Accordion.CustomLinks.PanelTitle")
+                        </a>
+                    </h4>
+                </div>
+                <div id="menuLinksCollapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="menuLinksHeadingOne">
+                    <div class="panel-body add-menu-item-form" id="add-custom-link-form">
+                        <div class="form-group">
+                            <div class="col-md-4">
+                                <label class="control-label" for="CustomLinkTitle" title="@T("SevenSpikes.MegaMenu.Admin.Accordion.CustomLinks.Title.Hint")">@T("SevenSpikes.MegaMenu.Admin.Accordion.CustomLinks.Title")</label>
+                            </div>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control text-box single-line" id="CustomLinkTitle" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-4">
+                                <label class="control-label" for="CustomLinkUrl" title="@T("SevenSpikes.MegaMenu.Admin.Accordion.CustomLinks.Url.Hint")">@T("SevenSpikes.MegaMenu.Admin.Accordion.CustomLinks.Url")</label>
+                            </div>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control text-box single-line" id="CustomLinkUrl" />
+                            </div>
+                        </div>
+                        <div class="clearfix">
+                            <button type="submit" class="btn bg-blue pull-left" id="SubmitCustomLink">@T("SevenSpikes.MegaMenu.Admin.Accordion.AddToMenu")</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel panel-default" style="display: none;">
+                <div class="panel-heading" role="tab" id="menuLinksHeadingLayouts">
+                    <h4 class="panel-title">
+                        <a role="button" data-toggle="collapse" data-parent="#menu-link-types-accordion" href="#menuLinksCollapseLayouts" aria-expanded="false" aria-controls="menuLinksCollapseLayouts">
+                            @T("SevenSpikes.MegaMenu.Admin.Accordion.Layouts.PanelTitle")
+                        </a>
+                    </h4>
+                </div>
+                <div id="menuLinksCollapseLayouts" class="panel-collapse collapse" role="tabpanel" aria-labelledby="menuLinksHeadingLayouts">
+                    <div class="panel-body add-menu-item-form" id="add-columns-layout-form">
+
+                        <div class="form-group">
+                            <div class="col-md-4">
+                                <label class="control-label" for="LayoutType" title="@T("SevenSpikes.MegaMenu.Admin.Accordion.Layouts.Type.Hint")">@T("SevenSpikes.MegaMenu.Admin.Accordion.Layouts.Type")</label>
+                            </div>
+                            <div class="col-md-8">
+                                <select id="LayoutType" class="form-control">
+                                    <option value="@((int)MenuItemType.ColumnsLayout)">@T("SevenSpikes.MegaMenu.Admin.Accordion.Layouts.Type.ColumnsLayout")</option>
+                                    <option value="@((int)MenuItemType.RowsLayout)">@T("SevenSpikes.MegaMenu.Admin.Accordion.Layouts.Type.RowsLayout")</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-4">
+                                <label class="control-label" for="LayoutTitle" title="@T("SevenSpikes.MegaMenu.Admin.Accordion.Layouts.Title.Hint")">@T("SevenSpikes.MegaMenu.Admin.Accordion.Layouts.Title")</label>
+                            </div>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control text-box single-line" id="LayoutTitle"/>
+                            </div>
+                        </div>
+                        <div class="clearfix">
+                            <button type="submit" class="btn bg-blue pull-left" id="SubmitLayout">@T("SevenSpikes.MegaMenu.Admin.Accordion.AddToMenu")</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel panel-default" style="display: none;">
+                <div class="panel-heading" role="tab" id="menuLinksHeadingColumn">
+                    <h4 class="panel-title">
+                        <a role="button" data-toggle="collapse" data-parent="#menu-link-types-accordion" href="#menuLinksCollapseColumn" aria-expanded="false" aria-controls="menuLinksCollapseColumn">
+                            @T("SevenSpikes.MegaMenu.Admin.Accordion.Column.PanelTitle")
+                        </a>
+                    </h4>
+                </div>
+                <div id="menuLinksCollapseColumn" class="panel-collapse collapse" role="tabpanel" aria-labelledby="menuLinksHeadingColumn">
+                    <div class="panel-body add-menu-item-form" id="add-column-form">
+                        <div class="form-group no-column-layouts">
+                            @T("SevenSpikes.MegaMenu.Admin.Accordion.Column.NoSuitableElements")
+                        </div>
+                        <div class="form-group has-column-layouts">
+                            <div class="col-md-4">
+                                <label class="control-label" for="ParentColumnsLayout" title="@T("SevenSpikes.MegaMenu.Admin.Accordion.Column.Layout.Hint")">@T("SevenSpikes.MegaMenu.Admin.Accordion.Column.Layout")</label>
+                            </div>
+                            <div class="col-md-8">
+                                <select id="ParentColumnsLayout" class="form-control"></select>
+                            </div>
+                        </div>
+                        <div class="clearfix has-column-layouts">
+                            <button type="submit" class="btn bg-blue pull-left" id="SubmitColumn">@T("SevenSpikes.MegaMenu.Admin.Accordion.AddToMenu")</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel panel-default" style="display: none;">
+                <div class="panel-heading" role="tab" id="menuLinksHeadingRow">
+                    <h4 class="panel-title">
+                        <a role="button" data-toggle="collapse" data-parent="#menu-link-types-accordion" href="#menuLinksCollapseRow" aria-expanded="false" aria-controls="menuLinksCollapseRow">
+                            @T("SevenSpikes.MegaMenu.Admin.Accordion.Row.PanelTitle")
+                        </a>
+                    </h4>
+                </div>
+                <div id="menuLinksCollapseRow" class="panel-collapse collapse" role="tabpanel" aria-labelledby="menuLinksHeadingRow">
+                    <div class="panel-body add-menu-item-form" id="add-row-form">
+                        <div class="form-group no-row-layouts">
+                            @T("SevenSpikes.MegaMenu.Admin.Accordion.Row.NoSuitableElements")
+                        </div>
+                        <div class="form-group has-row-layouts">
+                            <div class="col-md-4">
+                                <label class="control-label" for="ParentRowsLayout" title="@T("SevenSpikes.MegaMenu.Admin.Accordion.Row.Layout.Hint")">@T("SevenSpikes.MegaMenu.Admin.Accordion.Row.Layout")</label>
+                            </div>
+                            <div class="col-md-8">
+                                <select id="ParentRowsLayout" class="form-control"></select>
+                            </div>
+                        </div>
+                        <div class="clearfix has-row-layouts">
+                            <button type="submit" class="btn bg-blue pull-left" id="SubmitRow">@T("SevenSpikes.MegaMenu.Admin.Accordion.AddToMenu")</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="panel panel-default" style="display: none;">
+                <div class="panel-heading" role="tab" id="menuLinksHeadingPicture">
+                    <h4 class="panel-title">
+                        <a role="button" data-toggle="collapse" data-parent="#menu-link-types-accordion" href="#menuLinksCollapsePicture" aria-expanded="false" aria-controls="menuLinksCollapsePicture">
+                            @T("SevenSpikes.MegaMenu.Admin.Accordion.Picture.PanelTitle")
+                        </a>
+                    </h4>
+                </div>
+                <div id="menuLinksCollapsePicture" class="panel-collapse collapse" role="tabpanel" aria-labelledby="menuLinksHeadingPicture">
+                    <div class="panel-body add-menu-item-form" id="add-picture-form">
+                        <div class="form-group no-columns">
+                            @T("SevenSpikes.MegaMenu.Admin.Accordion.Picture.NoSuitableElements")
+                        </div>
+                        <div class="form-group has-columns">
+                            <div class="col-md-4">
+                                <label class="control-label" for="ParentColumn" title="@T("SevenSpikes.MegaMenu.Admin.Accordion.Picture.Column.Hint")">@T("SevenSpikes.MegaMenu.Admin.Accordion.Picture.Column")</label>
+                            </div>
+                            <div class="col-md-8">
+                                <select id="ParentColumn" class="form-control"></select>
+                            </div>
+                        </div>
+                        <div class="clearfix has-columns">
+                            <button type="submit" class="btn bg-blue pull-left" id="SubmitPicture">@T("SevenSpikes.MegaMenu.Admin.Accordion.AddToMenu")</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="pull-right static-menu-parent">
+        <p class="panel-desc">
+            <span class="glyphicon glyphicon-info-sign"></span>
+            @T("SevenSpikes.MegaMenu.Admin.MenuItemTypeTitle.MenuItemsDescription")
+        </p>
+
+        @if (Model.ShowAclDisabledWarning)
+        {
+            <p class="panel-desc">
+                <span class="glyphicon glyphicon-info-sign"></span>
+                @T("SevenSpikes.MegaMenu.Admin.MenuItemTypeTitle.AclDisabledWarning")
+            </p>
+        }
+
+        <div class="menu-items-administration" data-addmenuitemurl="@Url.Action("AddMenuItem", "MegaMenuItemAdmin")" data-isRtl="@supportRtl.ToString().ToLowerInvariant()">
+            <div class="menu-items-wrapper">
+                <ul class="menu ui-sortable" id="menu-to-edit">
+                    @foreach (MenuItemModel menuItem in Model.Items)
+                    {
+                        menuItem.DepthLevel = 0;
+                        @await Html.PartialAsync(AdminViews.MenuItem, menuItem)
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

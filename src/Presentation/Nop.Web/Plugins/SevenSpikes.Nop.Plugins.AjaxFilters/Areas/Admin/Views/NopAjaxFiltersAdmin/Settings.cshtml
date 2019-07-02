@@ -1,0 +1,44 @@
+﻿@model NopAjaxFiltersSettingsModel
+
+@{
+    Layout = AdminViewLocations.AdminLayoutViewPath;
+
+    Html.SetActiveMenuItemSystemName("SevenSpikes.NopAjaxFilters.Admin.Submenus.Settings");
+}
+
+<form method="post">
+    <nop-antiforgery-token />
+    
+    @Html.HiddenFor(model => model.DisableDropdownNavigationWithAjaxWhenThereAreNoFilters)
+
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("SevenSpikes.NopAjaxFilters.Admin.Settings")
+        </h1>
+        <div class="pull-right">
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="form-horizontal">
+            @Html.TrialMessage(Model.IsTrialVersion, Plugin.Name, Plugin.UrlInStore)
+
+            @await Component.InvokeAsync("StoreScopeConfiguration")
+
+            @await Component.InvokeAsync("SettingMode")
+            
+            <nop-tabs id="nop-ajax-filters-settings">
+                <nop-tab asp-name="tab-general-settings" asp-default="true" asp-title="@T("SevenSpikes.NopAjaxFilters.Admin.GeneralSettings")">@await Html.PartialAsync("_Settings.General", Model)</nop-tab>
+                <nop-tab asp-name="tab-availability-settings" asp-title="@T("SevenSpikes.NopAjaxFilters.Admin.AjaxFiltersAvailabilitySettings")">@await Html.PartialAsync("_Settings.Availability", Model)</nop-tab>
+                <nop-tab asp-name="tab-integration-settings" asp-title="@T("SevenSpikes.NopAjaxFilters.Admin.AjaxFiltersIntegrationSettings")">@await Html.PartialAsync("_Settings.Integration", Model)</nop-tab>
+                <nop-tab asp-name="tab-selectors-settings" asp-title="@T("SevenSpikes.NopAjaxFilters.Admin.AjaxFiltersSelectorsSettings")">@await Html.PartialAsync("_Settings.Selectors", Model)</nop-tab>
+                <nop-tab asp-name="tab-product-attributes-settings" asp-title="@T("SevenSpikes.NopAjaxFilters.Admin.ProductAttributesSettings")">@await Html.PartialAsync("_Settings.ProductAttributes", Model)</nop-tab>
+                <nop-tab asp-name="tab-specification-attribute-sliders-settings" asp-title="@T("SevenSpikes.NopAjaxFilters.Admin.SpecificationAttributeSlidersSettings")">@await Html.PartialAsync("_Settings.SpecificationAttributeSliders", Model)</nop-tab>
+            </nop-tabs>
+        </div>
+    </div>
+</form>

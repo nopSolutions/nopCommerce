@@ -1,0 +1,135 @@
+﻿@model ProductsGroupAdminModel
+@{
+    Layout = AdminViewLocations.AdminLayoutViewPath;
+
+    Html.SetActiveMenuItemSystemName("SevenSpikes.SmartProductCollections.Admin.Submenus.ManageGroups");
+    Html.AppendCssFileParts("~/Plugins/SevenSpikes.Nop.Plugins.SmartProductCollections/Areas/Admin/Content/Styles/spc.adminstyles.css");
+
+    string titleInputPlaceholder = T("SevenSpikes.SmartProductCollections.Admin.ProductsGroup.Title.Placeholder").ToString();
+}
+
+<form method="post">
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("SevenSpikes.SmartProductCollections.admin.submenus.managegroups")
+            <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink("(" + T("SevenSpikes.SmartProductCollections.Admin.ProductGroup.BackToList") + ")", "ManageGroups")</small>
+        </h1>
+        <div class="pull-right">
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
+            <button type="submit" name="save-continue" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.SaveContinue")
+            </button>
+            @if (Model.Id > 0)
+            {
+                <span id="products-group-delete" class="btn bg-red">
+                    <i class="fa fa-trash-o"></i>
+                    @T("Admin.Common.Delete")
+                </span>
+            }
+        </div>
+    </div>
+
+    <div asp-validation-summary="All"></div>
+    <input type="hidden" asp-for="Id" />
+
+        <div class="content">
+            <div class="form-horizontal">
+                @Html.TrialMessage(Model.Settings.IsTrialVersion, Plugin.Name, Plugin.UrlInStore)
+                <div class="panel-group">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <div class="col-md-3">
+                                    <nop-label asp-for="Published" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="Published" />
+                                </div>
+                            </div>
+                            @(Html.LocalizedEditor<ProductsGroupAdminModel, ProductsGroupLocalizedAdminModel>("products-group-localized-title",
+                        @<text>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="Title" />
+                            </div>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(model => model.Locales[item].Title, new { @class = "k-textbox", placeholder = titleInputPlaceholder })
+                                <span asp-validation-for="@Model.Locales[item].Title"></span>
+                            </div>
+                        </div>
+                            <div>
+                                <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
+                            </div>
+                        </text>,
+                        @<text>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="Title" />
+                            </div>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(model => model.Title, new { @class = "k-textbox", placeholder = titleInputPlaceholder })
+                                <span asp-validation-for="Title"></span>
+                            </div>
+                        </div>
+                        </text>))
+
+                            <div class="form-group widget-zone-dropdown-wrapper">
+                                <div class="col-md-3">
+                                    <nop-label asp-for="WidgetZone" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-select asp-for="WidgetZone" asp-items="Model.SupportedWidgetZones" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-3">
+                                    <nop-label asp-for="Store" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-select asp-for="Store" asp-items="Model.AvailableStores" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-3">
+                                    <nop-label asp-for="NumberOfProductsPerItem" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="NumberOfProductsPerItem" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-3">
+                                    <nop-label asp-for="DisplayOrder" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="DisplayOrder" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</form>
+
+<div class="content custom-products-tab-builder-holder">
+    <div class="form-horizontal">
+        @if (Model.Id > 0)
+        {
+            <div class="product-collections-administration">
+                @await Html.PartialAsync(AdminViews.ProductGroupItems, Model)
+            </div>
+            <nop-delete-confirmation asp-model-id="@Model.Id" asp-button-id="products-group-delete" />
+        }
+        else
+        {
+            <div class="ss-info">
+                @T("SevenSpikes.SmartProductCollections.Admin.ProductGroup.SaveBeforeEdit")
+            </div>
+        }
+    </div>
+</div>

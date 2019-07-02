@@ -1,0 +1,444 @@
+﻿<?xml version="1.0" encoding="utf-16"?>
+<Language Name="English">
+
+  
+  <!-- main administration resources -->
+  
+  
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.Admin.Menu.MenuName">
+    <Value>Avenue</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Admin.SettingsSubmenu.Avenue">
+    <Value>Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="Sevenspikes.Themes.Admin.ManageResources.Avenue">
+    <Value>Manage Resources</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.Admin.Settings">
+    <Value>Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.Admin.Settings.ThemeSettings">
+    <Value>Avenue Theme Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.Admin.TabTitle.GeneralSettings">
+    <Value>General Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.Admin.TabTitle.AdditionalSettings">
+    <Value>Additional Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="sevenspikes.themes.avenue.admin.paneltitle.globalsettings">
+    <Value>Global Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="sevenspikes.themes.avenue.admin.paneltitle.footersettings">
+    <Value>Footer Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="sevenspikes.themes.avenue.admin.paneltitle.customheadstyles">
+    <Value>Custom CSS code</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.Admin.Settings.ThemeSettings.HomePageLayout">
+    <Value>Home Page Layout</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.Admin.Settings.ThemeSettings.HomePageLayout.Hint">
+    <Value>Select home page layout - choose between main image slider and featured categories section.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.Admin.Settings.ThemeSettings.SmartCategoriesLayout">
+    <Value>Category Collections Layout</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.Admin.Settings.ThemeSettings.SmartCategoriesLayout.Hint">
+    <Value>Select layout for Smart Category Collections plugin.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.Admin.Settings.ThemeSettings.CatalogPageLayout">
+    <Value>Catalog Page Layout</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.Admin.Settings.ThemeSettings.CatalogPageLayout.Hint">
+    <Value>Select layout for catalog pages.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.Admin.Settings.ThemeSettings.ProductPageLayout">
+    <Value>Product Pages Layout</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.Admin.Settings.ThemeSettings.ProductPageLayout.Hint">
+    <Value>Select layout for product pages.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.Admin.Settings.ThemeSettings.StickyProductDetails">
+    <Value>Static Product Details</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.Admin.Settings.ThemeSettings.StickyProductDetails.Hint">
+    <Value>On resolutions larger than 1500px, the details column on "Extended Gallery" product pages will be fixed to the top of the screen when the page is scrolling.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.Admin.Settings.ThemeSettings.FooterLogoImage">
+    <Value>Footer Image</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.Admin.Settings.ThemeSettings.FooterLogoImage.Hint">
+    <Value>Upload a footer image.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.Admin.Settings.ThemeSettings.PageTitleImageId">
+    <Value>Page Title Image</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.Admin.Settings.ThemeSettings.PageTitleImageId.Hint">
+    <Value>Upload a page title image. Applies to all page titles on the site.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.Admin.Settings.ThemeSettings.Preset">
+    <Value>Color presets</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.Admin.Settings.ThemeSettings.Preset.Hint">
+    <Value>Select a theme color preset or add your own theme color</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.Admin.Settings.GeneralSettings.SelectColorButton">
+    <Value>Select Color</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.Admin.Settings.ThemeSettings.FeaturedCategoriesColor1">
+    <Value>First Featured Category Color</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.Admin.Settings.ThemeSettings.FeaturedCategoriesColor1.Hint">
+    <Value>Select the first home page featured category background color.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.Admin.Settings.ThemeSettings.FeaturedCategoriesColor2">
+    <Value>Second Featured Category Color</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.Admin.Settings.ThemeSettings.FeaturedCategoriesColor2.Hint">
+    <Value>Select the second home page featured category background color.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.Admin.Settings.ThemeSettings.FeaturedCategoriesColor3">
+    <Value>Third Featured Category Color</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.Admin.Settings.ThemeSettings.FeaturedCategoriesColor3.Hint">
+    <Value>Select the third home page featured category background color.</Value>
+  </LocaleResource>
+  <LocaleResource Name="sevenspikes.themes.avenue.admin.paneltitle.infoboxsettings">
+    <Value>Info Panel Settings (home page)</Value>
+  </LocaleResource>
+  
+  
+  <!-- additional admin resources (InfoBox panel) -->
+  
+  
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.Admin.Settings.InfoBoxesWidgetZone">
+    <Value>Info Boxes Widget Zone</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.Admin.Settings.InfoBoxesWidgetZone.Hint">
+    <Value>Specifies the widget zone where the info boxes will show.</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.Admin.PanelOneTitle.InfoBoxSettings">
+    <Value>Info Panel 1 Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.Admin.Settings.EnableInfoBoxOne">
+    <Value>Enable Box 1</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.Admin.Settings.EnableInfoBoxOne.Hint">
+    <Value>Enable this info box</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.Admin.Settings.InfoBoxOneTitle">
+    <Value>Box 1 Title</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.Admin.Settings.InfoBoxOneTitle.Hint">
+    <Value>Title text</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.Admin.Settings.InfoBoxOneText">
+    <Value>Box 1 Text</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.Admin.Settings.InfoBoxOneText.Hint">
+    <Value>Description text</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.Admin.Settings.InfoBoxOneImageId">
+    <Value>Box 1 Image</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.Admin.Settings.InfoBoxOneImageId.Hint">
+    <Value>Upload image for this box</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.Admin.PanelTwoTitle.InfoBoxSettings">
+    <Value>Info Panel 2 Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.Admin.Settings.EnableInfoBoxTwo">
+    <Value>Enable Box 2</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.Admin.Settings.EnableInfoBoxTwo.Hint">
+    <Value>Enable this info box</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.Admin.Settings.InfoBoxTwoTitle">
+    <Value>Box 2 Title</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.Admin.Settings.InfoBoxTwoTitle.Hint">
+    <Value>Title text</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.Admin.Settings.InfoBoxTwoText">
+    <Value>Box 2 Text</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.Admin.Settings.InfoBoxTwoText.Hint">
+    <Value>Description text</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.Admin.Settings.InfoBoxTwoImageId">
+    <Value>Box 2 Image</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.Admin.Settings.InfoBoxTwoImageId.Hint">
+    <Value>Upload image for this box</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.Admin.PanelThreeTitle.InfoBoxSettings">
+    <Value>Info Panel 3 Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.Admin.Settings.EnableInfoBoxThree">
+    <Value>Enable Box 3</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.Admin.Settings.EnableInfoBoxThree.Hint">
+    <Value>Enable this info box</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.Admin.Settings.InfoBoxThreeTitle">
+    <Value>Box 3 Title</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.Admin.Settings.InfoBoxThreeTitle.Hint">
+    <Value>Title text</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.Admin.Settings.InfoBoxThreeText">
+    <Value>Box 3 Text</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.Admin.Settings.InfoBoxThreeText.Hint">
+    <Value>Description text</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.Admin.Settings.InfoBoxThreeImageId">
+    <Value>Box 3 Image</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.Admin.Settings.InfoBoxThreeImageId.Hint">
+    <Value>Upload image for this box</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.Admin.PanelFourTitle.InfoBoxSettings">
+    <Value>Info Panel 4 Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.Admin.Settings.EnableInfoBoxFour">
+    <Value>Enable Box 4</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.Admin.Settings.EnableInfoBoxFour.Hint">
+    <Value>Enable this info box</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.Admin.Settings.InfoBoxFourTitle">
+    <Value>Box 4 Title</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.Admin.Settings.InfoBoxFourTitle.Hint">
+    <Value>Title text</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.Admin.Settings.InfoBoxFourText">
+    <Value>Box 4 Text</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.Admin.Settings.InfoBoxFourText.Hint">
+    <Value>Description text</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.Admin.Settings.InfoBoxFourImageId">
+    <Value>Box 4 Image</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.Admin.Settings.InfoBoxFourImageId.Hint">
+    <Value>Upload image for this box</Value>
+  </LocaleResource>
+
+  
+  <!-- public store default resources -->
+  
+  
+  <LocaleResource Name="ShoppingCart">
+    <Value>Shopping cart</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.AddToCart">
+    <Value>Add to cart</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.AddToWishlist">
+    <Value>Add to wishlist</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.AddToCompareList">
+    <Value>Add to compare</Value>
+  </LocaleResource>
+  <LocaleResource Name="HomePage">
+    <Value>Home Page</Value>
+  </LocaleResource>
+  <LocaleResource Name="HomePage.Categories">
+    <Value>Featured Categories</Value>
+  </LocaleResource>
+  <LocaleResource Name="Wishlist.HeaderQuantity">
+    <Value>{0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.HeaderQuantity">
+    <Value>{0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="footer.taxshipping.excltax">
+    <Value>All prices exclude tax and shipping.</Value>
+  </LocaleResource>
+  <LocaleResource Name="footer.taxshipping.incltax">
+    <Value>All prices include tax and shipping.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.RecentlyViewedProducts">
+    <Value>Recently viewed</Value>
+  </LocaleResource>
+  <LocaleResource Name="Checkout.Button">
+    <Value>Checkout</Value>
+  </LocaleResource>
+  <LocaleResource Name="FlyoutCart.Checkout.Button">
+    <Value>Checkout</Value>
+  </LocaleResource>
+  <LocaleResource Name="account.impersonatedas.finish">
+    <Value>Finish session</Value>
+  </LocaleResource>
+  <LocaleResource Name="Vendors.ApplyAccount">
+    <Value>Apply for vendor</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.Shipments.ID">
+    <Value>Shipments ID</Value>
+  </LocaleResource>
+  <LocaleResource Name="Newsletter.Title">
+    <Value><![CDATA[Get The Latest News <span class="color">Delivered Daily!</span>]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Price.TaxShipping.InclTax">
+    <Value><![CDATA[incl.<a href="{0}">shipping</a>]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Price.TaxShipping.ExclTax">
+    <Value><![CDATA[excl.<a href="{0}">shipping</a>]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="products.enterproductprice.range">
+    <Value>from {0} to {1}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Common.OK">
+    <Value>Accept</Value>
+  </LocaleResource>
+  <LocaleResource Name="backinstocksubscriptions.popuptitle">
+    <Value>Email me when this arrives in stock</Value>
+  </LocaleResource>
+  <LocaleResource Name="backinstocksubscriptions.alreadysubscribed">
+    <Value><![CDATA[You're already subscribed<br />for this product]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.AssociatedExternalAuth.Or">
+    <Value>External Authentication</Value>
+  </LocaleResource>
+  <LocaleResource Name="ContactUs.Button">
+    <Value>Send message</Value>
+  </LocaleResource>
+  <LocaleResource Name="ContactVendor.Button">
+    <Value>Send message</Value>
+  </LocaleResource>
+  <LocaleResource Name="rewardpoints.currentbalance">
+    <Value><![CDATA[Your current balance is <strong class="balance">{0} reward points</strong> <span class="amount">{1}</span>]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="RewardPoints.Fields.PointsBalance">
+    <Value>Balance</Value>
+  </LocaleResource>
+  <LocaleResource Name="shoppingcart.crosssells">
+    <Value>Cross sells products</Value>
+  </LocaleResource>
+  <LocaleResource Name="shoppingcart.discountcouponcode.wrongdiscount">
+    <Value>The coupon code wasn't applied</Value>
+  </LocaleResource>
+  <LocaleResource Name="shoppingcart.giftcardcouponcode.wronggiftcard">
+    <Value>The gift card code wasn't applied</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.VendorName">
+    <Value>Vendor</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.Product(s).VendorName">
+    <Value>Vendor</Value>
+  </LocaleResource>
+  <LocaleResource Name="checkout.orenternewaddress">
+    <Value>Enter new address</Value>
+  </LocaleResource>
+  <LocaleResource Name="order.shipments.id">
+    <Value>ID</Value>
+  </LocaleResource>
+  <LocaleResource Name="search.includesubcategories">
+    <Value>Search in sub categories</Value>
+  </LocaleResource>
+  <LocaleResource Name="Search.PriceRange.From">
+    <Value>from</Value>
+  </LocaleResource>
+  <LocaleResource Name="Blog.CommentsLink">
+    <Value>{0:d} Comments</Value>
+  </LocaleResource>
+  <LocaleResource Name="News.CommentsLink">
+    <Value>{0:d} Comments</Value>
+  </LocaleResource>
+  <LocaleResource Name="privatemessages.inbox.markasunread">
+    <Value>Mark as unread</Value>
+  </LocaleResource>
+
+
+  <!-- public store custom resources (SevenSpikes) -->
+
+  
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.HeaderText">
+    <Value>Free Delivery And Returns For Every Order!</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.Profile">
+    <Value>Profile</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.FooterText">
+    <Value>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque egestas aliquam dolor quis ultrices. Sed quis dictum tortor, a semper diam...</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.FooterButton">
+    <Value>Read more</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.ProductShareLabel">
+    <Value>Social</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.ProductVariantsNumber">
+    <Value>types available</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.FeaturedCategoriesText">
+    <Value>Products</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.FeaturedCatgoriesButton">
+    <Value>Shop now</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.Wishlist.AddToCart">
+    <Value>Buy</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.Reviews.WriteReviewButton">
+    <Value>Write your own review</Value>
+  </LocaleResource>
+  <!--<LocaleResource Name="SevenSpikes.Themes.Avenue.Reviews.WriteReviewButton">
+    <Value><![CDATA[<span class="open">Write your own review</span><span class="close">Close</span>]]></Value>
+  </LocaleResource>-->
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.ShoppingCart.ClearCart">
+    <Value>Clear shopping cart</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.ShoppingCart.DiscountsAndVouchers">
+    <Value>Discounts and vouchers</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.Checkout.AddNewAddress">
+    <Value>Add new address</Value>
+  </LocaleResource>
+  <!--<LocaleResource Name="SevenSpikes.Themes.Avenue.Checkout.AddNewAddress">
+    <Value><![CDATA[<span class="open">Add new address</span><span class="close">Close</span>]]></Value>
+  </LocaleResource>-->
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.Checkout.ShippingMethod">
+    <Value>Shipping method</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.Checkout.PaymentMethod">
+    <Value>Payment method</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.Comments.LeaveCommentButton">
+    <Value>Write a comment</Value>
+  </LocaleResource>
+  <!--<LocaleResource Name="SevenSpikes.Themes.Avenue.Comments.LeaveCommentButton">
+    <Value><![CDATA[<span class="open">Write a comment</span><span class="close">Close</span>]]></Value>
+  </LocaleResource>-->
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.Comments.Title">
+    <Value>Comments</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.AnywhereSliders.PrevText">
+    <Value>Prev</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.AnywhereSliders.NextText">
+    <Value>Next</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxCart.ContinueShoppingButton">
+    <Value>Shop more</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Client.Common.FilterBy">
+    <Value>Filters</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.InstantSearch.AllResultsLink">
+    <Value>See all results</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SaleOfTheDay.Public.GoToProductPage">
+    <Value>View product page</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Avenue.SaleOfTheDay.AvailableOffers">
+    <Value>Available offers</Value>
+  </LocaleResource>
+</Language>

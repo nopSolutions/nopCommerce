@@ -1,0 +1,38 @@
+﻿@model SevenSpikes.Nop.Plugins.CloudZoom.Areas.Admin.Models.CloudZoomSettingsModel
+
+<div class="panel-group">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="form-group cloudZoomSettings">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="Enable_OverrideForStore" asp-input="Enable" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="Enable" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="Enable" />
+                    <span asp-validation-for="Enable"></span>
+                </div>
+            </div>
+            <div class="form-group cloudZoomSettings advanced-setting">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="EnableClickToZoom_OverrideForStore" asp-input="EnableClickToZoom" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="EnableClickToZoom" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="EnableClickToZoom" />
+                    <span asp-validation-for="EnableClickToZoom"></span>
+                </div>
+            </div>
+            <div class="form-group cloudZoomSettings advanced-setting">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="EnablePictureThumbnailsInCarousel_OverrideForStore" asp-input="EnablePictureThumbnailsInCarousel" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="EnablePictureThumbnailsInCarousel" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="EnablePictureThumbnailsInCarousel" />
+                    <span asp-validation-for="EnablePictureThumbnailsInCarousel"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

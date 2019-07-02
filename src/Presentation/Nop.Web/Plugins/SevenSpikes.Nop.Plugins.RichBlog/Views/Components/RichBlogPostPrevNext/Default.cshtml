@@ -1,0 +1,17 @@
+﻿@model RichBlogPrevNextModel
+
+@if (!string.IsNullOrEmpty(Model.PreviousBlogPostTitle) || !string.IsNullOrEmpty(Model.NextBlogPostTitle))
+{
+    <div class='post-navigation'>
+        @if (!string.IsNullOrEmpty(Model.PreviousBlogPostTitle))
+        {
+            <a href='@Url.RouteUrl("BlogPost", new { SeName = Model.PreviousBlogPostSeName })' title='@Model.PreviousBlogPostTitle' class='prev'>@Model.PreviousBlogPostTitle</a>
+        }
+
+
+        @if (!string.IsNullOrEmpty(Model.NextBlogPostTitle))
+        {
+            <a href='@Url.RouteUrl("BlogPost", new { SeName = Model.NextBlogPostSeName })' title='@Model.NextBlogPostTitle' class='next'>@Model.NextBlogPostTitle</a>
+        }
+    </div>
+}

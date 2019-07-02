@@ -1,0 +1,417 @@
+﻿/*
+* Copyright 2015 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+* http://www.nop-templates.com/t/licensinginfo
+*/
+
+.sale-of-the-day-offer {
+    margin: 0 -4% 50px;
+}
+.sale-of-the-day-offer .owl-item.active:after {
+    content: ""; /*fix for carousel items fraction width*/
+    position: absolute;
+    top: 0; right: -1px;
+    width: 2px;
+	height: 100%;
+    background-color: #fff;
+}
+
+/* NAVIGATION */ /*arrow navigation is emulated per slide in avenue.js; dots navigation is disabled because of bad UX with slides of a different height*/
+
+.sale-of-the-day-offer .owl-nav {
+	height: 0;
+	overflow: hidden;
+}
+.sale-of-the-day-offer .owl-prev,
+.sale-of-the-day-offer .owl-next {
+    position: absolute;
+    font-size: 0;
+}
+.sale-of-the-day-offer .owl-dots {
+	display: none !important;
+	position: relative;
+    margin-top: -50px;
+    text-align: center;
+    font-size: 0;
+	white-space: nowrap;
+}
+.sale-of-the-day-offer .owl-dot {
+    display: inline-block;
+    margin: 0 10px;
+}
+.sale-of-the-day-offer .owl-dot span {
+	display: block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+	background-color: #ebebeb;
+	font-size: 0;
+    transition: all 0.2s ease;
+}
+.sale-of-the-day-offer .owl-dot.active span,
+.sale-of-the-day-offer .owl-dot:hover span {
+    background-color: #222;
+}
+
+/* ITEM BOX */
+
+.sale-of-the-day-offer .sale-item {
+	position: relative;
+	overflow: hidden;
+}
+.sale-of-the-day-offer .item-gallery {
+	max-width: 600px;
+	margin: auto;
+}
+.sale-of-the-day-offer .item-picture {
+	position: relative;
+	margin: 0 0 25px;
+	overflow: hidden;
+	text-align: center;
+	font-size: 0;
+}
+.sale-of-the-day-offer .item-picture a {
+	display: inline-block;
+	max-width: 100%; /*Ie fix*/
+}
+
+.sale-of-the-day-offer .overview {
+	max-width: 600px;
+	margin: auto;
+	background: url('images/pattern.png') repeat;
+	padding: 20px;
+}
+.sale-of-the-day-offer .wrapper {
+	background: #fff;
+	padding: 40px 15px 45px;
+}
+
+.sale-of-the-day-offer .custom-nav {
+	display: none;
+	position: relative;
+	padding: 0 15%;
+    font-size: 14px;
+	color: #222;
+}
+.sale-of-the-day-offer .nav-text {
+	position: relative;
+	bottom: -3px;
+}
+.sale-of-the-day-offer .nav-text:after {
+	height: 1px;
+	bottom: -1px;
+	opacity: 0; /*hidden*/
+}
+.sale-of-the-day-offer .owl-item .custom-nav {
+	display: block;
+}
+.sale-of-the-day-offer .new-prev,
+.sale-of-the-day-offer .new-next {
+	position: absolute;
+	max-width: 10%;
+	overflow: hidden;
+	padding: 3px 0;
+	cursor: pointer;
+}
+.sale-of-the-day-offer .new-prev {
+	left: 0;
+}
+.sale-of-the-day-offer .new-next {
+	right: 0;
+	direction: rtl;
+}
+.sale-of-the-day-offer .new-prev:before,
+.sale-of-the-day-offer .new-next:after {
+	font-size: 10px;
+	color: #bcbcbc;
+	transition: all 0.2s ease;
+}
+.sale-of-the-day-offer .new-prev:before {
+	content: "\e907";
+}
+.sale-of-the-day-offer .new-next:after {
+	content: "\e908";
+}
+.sale-of-the-day-offer .new-prev:hover:before,
+.sale-of-the-day-offer .new-next:hover:after {
+	color: #f61853;
+}
+
+.sale-of-the-day-offer .product-name {
+	position: static;
+	margin: 0 0 30px;
+}
+.sale-of-the-day-offer .product-reviews {
+	margin: 7px 0 -14px;
+}
+
+.sale-of-the-day-offer .prices {
+	margin: 0 0 30px;
+}
+.sale-of-the-day-offer .product-price,
+.sale-of-the-day-offer .old-product-price {
+    margin: 0 5px;
+}
+
+.sale-of-the-day-offer .picture-thumbs {
+	max-width: 600px;
+	margin: 30px auto;
+	overflow: hidden;
+	text-align: center;
+	font-size: 0;
+}
+.sale-of-the-day-offer .thumb-item {
+	display: inline-block;
+    width: 80px;
+	height: 80px;
+	overflow: hidden;
+    margin: 0 5px 10px;
+    vertical-align: middle;
+}
+.sale-of-the-day-offer .thumb-item:nth-of-type(n+5) {
+    display: none;
+}
+
+.sale-of-the-day-offer .short-description {
+	margin: 30px 0;
+}
+
+.sale-of-the-day-offer .countdown-timer {
+	margin: 0 0 40px;
+	font-size: 0;
+}
+.sale-of-the-day-offer .timer-group {
+	display: inline-block;
+    width: 70px;
+	border: 1px solid #ebebeb;
+	text-align: center;
+	white-space: nowrap;
+}
+.sale-of-the-day-offer .timer-info-box {
+	display: block;
+	padding: 10px 0;
+    font-size: 30px;
+    font-weight: 800;
+	color: #222;
+}
+.sale-of-the-day-offer .timer-info-text {
+	display: block;
+	border-top: 1px solid #ebebeb;
+	padding: 5px 0;
+    font-size: 10px;
+	text-transform: uppercase;
+}
+
+.sale-of-the-day-offer .view-product {
+    display: inline-block;
+	min-width: 180px;
+	border: 1px solid #222;
+	outline: 1px solid transparent;
+	padding: 10px 20px;
+	font-size: 11px;
+	font-weight: 400;
+	color: #222222;
+	text-transform: uppercase;
+	transition: all 0.2s ease;
+}
+
+
+
+@media all and (min-width: 501px) {
+
+.sale-of-the-day-offer {
+	margin-left: -3%;
+	margin-right: -3%;
+}
+.sale-of-the-day-offer .overview {
+	padding: 25px;
+}
+.sale-of-the-day-offer .wrapper {
+	padding: 40px 20px;
+}
+.sale-of-the-day-offer .new-prev,
+.sale-of-the-day-offer .new-next {
+	max-width: none;
+}
+.sale-of-the-day-offer .custom-nav {
+	padding: 0 100px;
+}
+.sale-of-the-day-offer .thumb-item {
+	margin-bottom: 5px;
+}
+.sale-of-the-day-offer .timer-group {
+	margin: 0 5px;
+}
+
+}
+
+@media all and (min-width: 769px) {
+
+.sale-of-the-day-offer {
+	margin: 0 auto 60px;
+}
+.sale-of-the-day-offer .item-gallery {
+	max-width: 750px;
+}
+.sale-of-the-day-offer .overview {
+	max-width: 750px;
+	padding: 30px;
+}
+.sale-of-the-day-offer .wrapper {
+	padding: 60px;
+}
+
+}
+
+@media all and (min-width: 1201px) {
+
+.sale-of-the-day-offer {
+	margin: 50px auto 80px;
+}
+.sale-of-the-day-offer .sale-item {
+	display: table;
+	width: 100%;
+}
+.sale-of-the-day-offer .item-gallery {
+	display: table-cell;
+	position: relative;
+	width: 50%;
+	vertical-align: top;
+}
+.sale-of-the-day-offer .item-gallery:before {
+	content: "";
+	display: block;
+	padding-top: 100%;
+}
+.sale-of-the-day-offer .item-picture {
+	position: absolute;
+	top: 0; right: 0;
+	bottom: 0; left: 0;
+	/*max-width: 750px;*/
+	margin: auto;
+}
+.sale-of-the-day-offer .item-picture a {
+	display: block;
+	width: 100%;
+	height: 100%;
+}
+.sale-of-the-day-offer .item-picture img {
+	position: absolute;
+	top: 0; right: 0;
+	bottom: 0; left: 0;
+	width: auto !important;
+	max-width: none;
+	height: 100%;
+	margin: auto;
+}
+.sale-of-the-day-offer .overview {
+	display: table-cell;
+	position: relative;
+	float: none;
+	width: 50%;
+	vertical-align: top;
+}
+.sale-of-the-day-offer .overview:before {
+	content: "";
+	position: absolute;
+	top: 30px; right: 30px;
+	bottom: 30px; left: 30px;
+	background-color: #fff;
+}
+.sale-of-the-day-offer .wrapper {
+	position: relative;
+	overflow: hidden;
+	padding: 40px;
+}
+.sale-of-the-day-offer .new-prev,
+.sale-of-the-day-offer .new-next {
+	max-width: 10%;
+}
+.sale-of-the-day-offer .nav-text {
+	display: none;
+}
+.sale-of-the-day-offer .product-name {
+	padding: 0 15%;
+}
+.sale-of-the-day-offer .product-name h1 {
+	max-height: 55px;
+	margin-top: -35px;
+	overflow: hidden;
+}
+.sale-of-the-day-offer .short-description {
+	max-height: 75px /*50px*/;
+	overflow: hidden;
+}
+
+}
+
+@media all and (min-width: 1501px) {
+
+.sale-of-the-day-offer .wrapper {
+	padding: 60px;
+}
+.sale-of-the-day-offer .new-prev,
+.sale-of-the-day-offer .new-next {
+	max-width: none;
+}
+.sale-of-the-day-offer .product-name {
+	padding: 0 100px;
+}
+.sale-of-the-day-offer .product-name h1 {
+	max-height: 76px;
+	margin-top: -40px;
+	font-size: 28px;
+}
+.sale-of-the-day-offer .product-reviews {
+	margin: 20px 0 -10px;
+}
+.sale-of-the-day-offer .product-price {
+    font-size: 36px;
+}
+.sale-of-the-day-offer .old-product-price {
+    font-size: 18px;
+}
+.sale-of-the-day-offer .short-description {
+	margin: 40px 0;
+	font-size: 15px;
+}
+.sale-of-the-day-offer .countdown-timer {
+    margin-bottom: 50px;
+}
+.sale-of-the-day-offer .timer-group {
+    width: 80px;
+}
+.sale-of-the-day-offer .timer-info-box {
+    font-size: 36px;
+}
+.sale-of-the-day-offer .timer-info-text {
+    font-size: 11px;
+}
+
+}
+
+@media all and (min-width: 1701px) {
+
+.sale-of-the-day-offer {
+	max-width: 1700px;
+}
+.sale-of-the-day-offer .sale-item {
+	height: 700px; /*min-height replacement*/
+}
+.sale-of-the-day-offer .item-gallery:before {
+	display: none;
+}
+.sale-of-the-day-offer .item-picture img {
+	width: 100% !important;
+	height: auto;
+}
+.sale-of-the-day-offer .item-picture {
+	right: 30px;
+}
+.sale-of-the-day-offer .item-gallery {
+	width: 50.5%;
+}
+.sale-of-the-day-offer .overview {
+	width: 49.5%;
+}
+
+}

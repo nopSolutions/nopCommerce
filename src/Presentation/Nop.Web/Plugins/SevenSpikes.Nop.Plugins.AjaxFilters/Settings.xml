@@ -1,0 +1,138 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Settings>
+  <Setting Name="NopAjaxFiltersSettings.EnableAjaxFilters">
+    <Value>true</Value>
+  </Setting>
+  <Setting Name="NopAjaxFiltersSettings.FiltersUIMode">
+    <Value>UseCheckboxes</Value>
+  </Setting>
+  <Setting Name="NopAjaxFiltersSettings.ScrollToElementOnThePageAfterFiltration">
+    <Value>false</Value>
+  </Setting>
+  <Setting Name="NopAjaxFiltersSettings.ScrollToElementOnThePageAfterFiltrationMobile">
+    <Value>false</Value>
+  </Setting>
+  <Setting Name="NopAjaxFiltersSettings.ElementToScrollAfterFiltrationSelector">
+    <Value>.product-selectors</Value>
+  </Setting>
+  <Setting Name="NopAjaxFiltersSettings.WidgetZone">
+    <Value>left_side_column_before</Value>
+  </Setting>
+  <Setting Name="NopAjaxFiltersSettings.EnablePriceRangeFilter">
+    <Value>true</Value>
+  </Setting>
+  <Setting Name="NopAjaxFiltersSettings.ClosePriceRangeFilterBox">
+    <Value>false</Value>
+  </Setting>
+  <Setting Name="NopAjaxFiltersSettings.EnableSpecificationsFilter">
+    <Value>true</Value>
+  </Setting>
+  <Setting Name="NopAjaxFiltersSettings.CloseSpecificationsFilterBox">
+    <Value>false</Value>
+  </Setting>
+  <Setting Name="NopAjaxFiltersSettings.NumberOfSpecificationFilters">
+    <Value>15</Value>
+  </Setting>
+  <Setting Name="NopAjaxFiltersSettings.EnableAttributesFilter">
+    <Value>true</Value>
+  </Setting>
+  <Setting Name="NopAjaxFiltersSettings.CloseAttributesFilterBox">
+    <Value>false</Value>
+  </Setting>
+  <Setting Name="NopAjaxFiltersSettings.NumberOfAttributeFilters">
+    <Value>15</Value>
+  </Setting>
+  <Setting Name="NopAjaxFiltersSettings.EnableManufacturersFilter">
+    <Value>true</Value>
+  </Setting>
+  <Setting Name="NopAjaxFiltersSettings.CloseManufacturersFilterBox">
+    <Value>false</Value>
+  </Setting>
+  <Setting Name="NopAjaxFiltersSettings.EnableOnSaleFilter">
+    <Value>false</Value>
+  </Setting>
+  <Setting Name="NopAjaxFiltersSettings.CloseOnSaleFilterBox">
+    <Value>false</Value>
+  </Setting>
+  <Setting Name="NopAjaxFiltersSettings.EnableInStockFilter">
+    <Value>false</Value>
+  </Setting>
+  <Setting Name="NopAjaxFiltersSettings.CloseInStockFilterBox">
+    <Value>false</Value>
+  </Setting>
+  <Setting Name="NopAjaxFiltersSettings.EnableVendorsFilter">
+    <Value>true</Value>
+  </Setting>
+  <Setting Name="NopAjaxFiltersSettings.CloseVendorsFilterBox">
+    <Value>false</Value>
+  </Setting>
+  <Setting Name="NopAjaxFiltersSettings.ProductsListPanelSelector">
+    <Value>.product-list</Value>
+  </Setting>
+  <Setting Name="NopAjaxFiltersSettings.CategoriesWithoutFilters">
+    <Value></Value>
+  </Setting>
+  <Setting Name="NopAjaxFiltersSettings.ProductsGridPanelSelector">
+    <Value>.product-grid</Value>
+  </Setting>
+  <Setting Name="NopAjaxFiltersSettings.PagerPanelSelector">
+    <Value>.pager</Value>
+  </Setting>
+  <Setting Name="NopAjaxFiltersSettings.PagerPanelIntegrationSelector">
+    <Value>.product-grid, .product-list</Value>
+  </Setting>
+  <Setting Name="NopAjaxFiltersSettings.SortOptionsDropDownSelector">
+    <Value>#products-orderby</Value>
+  </Setting>
+  <Setting Name="NopAjaxFiltersSettings.ViewOptionsDropDownSelector">
+    <Value>.viewmode-icon, #products-viewmode</Value>
+  </Setting>
+  <Setting Name="NopAjaxFiltersSettings.ProductPageSizeDropDownSelector">
+    <Value>#products-pagesize</Value>
+  </Setting>
+  <Setting Name="NopAjaxFiltersSettings.DisableDropdownNavigationWithAjaxWhenThereAreNoFilters">
+    <Value>false</Value>
+  </Setting>
+  <Setting Name="NopAjaxFiltersSettings.ShowFiltersOnCategoryPage">
+    <Value>true</Value>
+  </Setting>
+  <Setting Name="NopAjaxFiltersSettings.ShowFiltersOnManufacturerPage">
+    <Value>true</Value>
+  </Setting>
+  <Setting Name="NopAjaxFiltersSettings.ShowFiltersOnVendorPage">
+    <Value>true</Value>
+  </Setting>
+  <Setting Name="NopAjaxFiltersSettings.ShowFiltersOnSearchPage">
+    <Value>true</Value>
+  </Setting>
+  <Setting Name="NopAjaxFiltersSettings.IncludeProductsFromSubcategories">
+    <Value>false</Value>
+  </Setting>
+  <Setting Name="NopAjaxFiltersSettings.ShowSelectedFiltersPanel">
+    <Value>false</Value>
+  </Setting>
+  <Setting Name="NopAjaxFiltersSettings.ShowNumberOfReturnedProducts">
+    <Value>false</Value>
+  </Setting>
+  <Setting Name="NopAjaxFiltersSettings.ShowNumberOfReturnedProductsSelector">
+    <Value>.product-viewmode</Value>
+  </Setting>
+  <Setting Name="NopAjaxFiltersSettings.EncryptedDatabaseHashKey">
+    <Value></Value>
+  </Setting>
+  <Setting Name="NopAjaxFiltersSettings.DropSortFunctionDuringUpdate">
+    <Value>true</Value>
+  </Setting>
+  <Setting Name="NopAjaxFiltersSettings.PrepareSpecificationAttributes">
+    <Value>false</Value>
+  </Setting>
+  <Setting Name="NopAjaxFiltersSettings.SearchInProductTags">
+    <Value>false</Value>
+  </Setting>
+  <Setting Name="NopAjaxFiltersSettings.CloseFiltersPanelAfterFiltrationInMobile">
+    <Value>true</Value>
+  </Setting>
+  <Setting Name="NopAjaxFiltersSettings.ScrolltoElementAfterFiltrationAdditionalOffset">
+    <Value>0</Value>
+  </Setting>
+</Settings>

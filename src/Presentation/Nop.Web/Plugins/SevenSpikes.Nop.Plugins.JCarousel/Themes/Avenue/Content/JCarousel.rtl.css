@@ -1,0 +1,15 @@
+
+.nop-jcarousel .slick-prev {
+    right: 0;
+	left: auto;
+}
+.nop-jcarousel .slick-next {
+	right: auto;
+    left: 0;
+}
+.nop-jcarousel .slick-prev:before {
+    content: "\e904";
+}
+.nop-jcarousel .slick-next:after {
+    content: "\e903";
+}

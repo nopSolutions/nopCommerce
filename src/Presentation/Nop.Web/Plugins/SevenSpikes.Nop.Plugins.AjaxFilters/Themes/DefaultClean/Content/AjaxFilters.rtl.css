@@ -1,0 +1,151 @@
+﻿/*
+* Copyright 2015 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+* http://www.nop-templates.com/t/licensinginfo
+*/
+
+.nopAjaxFilters7Spikes .block .title a.toggleControl {
+    padding: 12px 10px 12px 40px;
+}
+.nopAjaxFilters7Spikes .block .title a.toggleControl:after {
+	right: auto;
+	left: 14px;
+}
+.nopAjaxFilters7Spikes .block .title a.clearFilterOptions {
+    right: auto;
+    left: 40px;
+}
+
+
+
+/* search criteria */
+
+.selected-options-list > li span {
+    float: right;
+    padding: 6px 0 6px 14px;
+    margin: 0 0 0 20px;
+    background: url(images/filters-remove.png) left center no-repeat;
+}
+
+
+
+/* ui range slider */
+
+.priceRangeMinPanel, .currentMinPrice,
+.specification-min-panel, .current-min-value {
+    float: right;
+}
+.priceRangeMaxPanel, .currentMaxPrice,
+.specification-max-panel, .current-max-value {
+    float: left;
+}
+.nopAjaxFilters7Spikes .block .title a.clearPriceRangeFilter {
+    right: auto;
+	left: 40px;
+}
+
+
+
+/* checkbox mode */
+
+.nopAjaxFilters7Spikes .checkbox-list label {
+    padding: 9px 25px 9px 0;
+}
+.nopAjaxFilters7Spikes .imageOptions .checkbox-list label {
+    padding-right: 40px;
+    padding-left: 0;
+}
+.nopAjaxFilters7Spikes .checkbox-list label:before,
+.nopAjaxFilters7Spikes .checkbox-list .checked label:after {
+	right: 0;
+	left: auto;      
+}
+
+
+
+/* color squares */
+
+.nopAjaxFilters7Spikes .filtersGroupPanel.colorOptions .color {
+    right: 0;
+    left: auto;  
+}
+
+
+
+/* product selectors */
+
+.product-selectors .jDropDown {
+    float: right;
+}
+.product-page-size .jDropDown {
+    margin: 0 0 0 10px;
+}
+.product-sorting > span,
+.product-viewmode > span,
+.product-page-size > span {
+    float: right;
+    margin: 0 0 0 10px;
+}
+
+
+
+/* no result popup */
+
+.ajaxFilters.k-window {
+    text-align: right;
+}
+.ajaxFilters .k-window-titlebar {
+    padding: 12px 12px 12px 36px;
+}
+.ajaxFilters .k-window-actions {
+    right: auto;
+    left: 14px;
+}
+
+
+
+/* AJAX LOADER */
+
+.productPanelAjaxBusy {
+	position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #fff url('../../../images/ajaxLoader.gif') no-repeat 50% 50%;
+    filter: Alpha(opacity = 70);
+    opacity: 0.7;
+    z-index: 2;
+}
+.infinite-scroll-loader {
+    display: none;
+    height: 100px;
+    background: #fff url('../../../images/ajaxLoader.gif') no-repeat 50% 50%;
+    font-size: 0;
+    filter: Alpha(opacity = 70);
+    opacity: 0.7;
+    z-index: 2;
+    clear: both;
+}
+
+@media all and (min-width: 769px) {
+    
+    .number-of-returned-products.active {
+        float: left;
+    }
+
+}
+
+@media all and (min-width: 1001px) {
+
+    .product-sorting > span,
+    .product-viewmode > span,
+    .product-page-size > span {
+        float: right;
+        margin: 0 0 0 10px;
+    }
+    .jDropDown .filters-select-wrap,
+    .jDropDown .toplevel {
+        padding: 5px 12px 5px 32px;
+    }
+
+}

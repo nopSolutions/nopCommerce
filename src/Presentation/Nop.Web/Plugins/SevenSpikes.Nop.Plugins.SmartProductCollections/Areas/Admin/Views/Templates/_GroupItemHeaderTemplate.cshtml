@@ -1,0 +1,111 @@
+﻿@model ProductsGroupItemAdminModel
+@inject CatalogSettings catalogSettings
+
+<div class="tab-content k-content">
+    <input class="group-item-id" type="hidden" value="@Model.Id" data-defaulttitle="@Model.DefaultTitle" />
+    <div class="panel">
+        <div class="panel-body">
+            <div class="form-group remove-item-wrapper">
+                <div class="col-md-3">
+                    <div class="label-wrapper">
+                        <label class="control-label" for="" title="">
+                            @T("SevenSpikes.SmartProductCollections.Admin.ProductsGroupItem.RemoveItem.Label")
+                        </label>
+                        <div class="ico-help" title="@T("SevenSpikes.SmartProductCollections.Admin.ProductsGroupItem.RemoveItem.Hint")">
+                            <i class="fa fa-question-circle"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-9">
+                    <a class="remove-item" href="#" data-itemid="@Model.Id">
+                        <i class="fa fa-times" aria-hidden="true"></i>
+                        @T("SevenSpikes.SmartProductCollections.Admin.ProductsGroupItem.RemoveItem")
+                    </a>
+                </div>
+            </div>
+
+            <div class="form-group active-wrapper">
+                <div class="col-md-3">
+                    <div class="label-wrapper">
+                        <label class="control-label" for="" title="">
+                            @T("SevenSpikes.SmartProductCollections.Admin.ProductsGroupItem.Active")
+                        </label>
+                        <div class="ico-help" title="@T("SevenSpikes.SmartProductCollections.Admin.ProductsGroupItem.Active.Hint")">
+                            <i class="fa fa-question-circle"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-9">
+                    <input class="group-item-active-input" type="checkbox" @if (Model.Active) { <text> checked="checked" </text>    } data-itemid="@Model.Id" />
+                </div>
+            </div>
+
+            <div class="form-group source-type-wrapper">
+                <div class="col-md-3">
+                    <div class="label-wrapper">
+                        <label class="control-label" for="" title="">
+                            @T("SevenSpikes.SmartProductCollections.Admin.ProductsGroupItem.SourceType")
+                        </label>
+                        <div class="ico-help" title="@T("SevenSpikes.SmartProductCollections.Admin.ProductsGroupItem.SourceType.Hint")">
+                            <i class="fa fa-question-circle"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-9">
+                    <select class="itemSourceType form-control" name="itemSourceType">
+                        @foreach (var type in Model.AvailableSourceTypes)
+                        {
+                            <!option value="@(type.Value)" @if ((int)Model.SourceType == int.Parse(type.Value)) { <text> selected="selected" </text>     }>@type.Text</!option>
+                        }
+                    </select>
+                </div>
+            </div>
+
+            <div class="custom-item-content">
+                @if (!string.IsNullOrEmpty(Model.CustomViewName))
+                {
+                    @Html.Partial(Model.CustomViewName, Model)
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-default fieldset-wrapper">
+        <div class="panel-heading fieldset-title">@T("SevenSpikes.SmartProductCollections.Admin.CategorySettings.Preview")</div>
+        <div class="added-products-wrapper">
+            <div class="found-products-grid">
+                <div class="loader">
+                    <div class="spinner">
+                        <div class="rect1"></div>
+                        <div class="rect2"></div>
+                        <div class="rect3"></div>
+                        <div class="rect4"></div>
+                        <div class="rect5"></div>
+                    </div>
+                </div>
+
+                @if (!catalogSettings.IgnoreAcl)
+                {
+                    <div class="callout bg-gray-light ss-info products-vary-by-acl-message hidden">
+                        <i class="fa fa-exclamation-circle"></i>
+                        @T("SevenSpikes.SmartProductCollections.Admin.ProductGroup.ProductsMayVary")
+                    </div>
+                }
+
+                @if (Model.SourceType == ProductsSourceType.CustomList)
+                {
+                    <div class="callout bg-gray-light ss-info drag-and-drop-products-info">
+                        <i class="fa fa-exclamation-circle"></i>
+                        @T("SevenSpikes.SmartProductCollections.Admin.ProductsGroupItem.DragAndDrop.Products")
+                    </div>
+                }
+
+                <div class="products-grid">
+                    @await Component.InvokeAsync("ProductsForItem",  new { id = Model.Id })
+                </div>
+            </div>
+            <div class="custom-list-add-products">
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,109 @@
+@model RichBlogCategoryAdminModel
+
+<div class="panel-group">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div id="blog-posts-in-category-grid"></div>
+            <div class="panel-footer">
+                <div>
+                    <button type="submit" id="btnAddNewBlogPost"
+                            onclick="javascript:OpenWindow('@(Url.Action("AvailableBlogPosts", "BlogPostToCategoryAdmin", new { categoryId = Model.Id, refreshBtnId = "btnRefreshBlogPost" }))', 800, 800, true); return false;"
+                            class="btn btn-primary">
+                        @T("SevenSpikes.RichBlog.Admin.Category.AddNewBlogPost")
+                    </button>
+                    <input type="submit" id="btnRefreshBlogPost" name="btnRefreshBlogPost" style="display: none" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+
+        $("#blog-posts-in-category-grid").kendoGrid({
+            dataSource: {
+                type: "json",
+                transport: {
+                    read: {
+                        url: "@Html.Raw(Url.Action("List", "RichBlogAdmin", new {categoryId = Model.Id}))",
+                        type: "POST",
+                        dataType: "json",
+                        data: addAntiForgeryToken
+                    },
+                    destroy: {
+                        url: "@Html.Raw(Url.Action("Delete", "BlogPostToCategoryAdmin", new { categoryId = Model.Id }))",
+                        type: "POST",
+                        dataType: "json",
+                        data: addAntiForgeryToken
+                    }
+                },
+                schema: {
+                    data: "Data",
+                    total: "Total",
+                    errors: "Errors",
+                    model: {
+                        id: "Id",
+                        fields: {
+                            Title: { editable: false, type: "string" },
+                            Id: { editable: false, type: "number" },
+                            LanguageName: { editable: false, type: "string" }
+                        }
+                    }
+                },
+                requestEnd: function (e) {
+                    if (e.type == "create" || e.type == "update") {
+                        this.read();
+                    }
+                },
+                error: function (e) {
+                    display_kendoui_grid_error(e);
+                    // Cancel the changes
+                    this.cancelChanges();
+                },
+                serverPaging: true,
+                serverFiltering: true,
+                serverSorting: true
+            },
+            pageable: {
+                refresh: true,
+                numeric: false,
+                previousNext: false,
+                info: false
+            },
+            editable: {
+                confirmation: false,
+                mode: "inline"
+            },
+            scrollable: false,
+            columns: [{
+                field: "Title",
+                title: "@T("SevenSpikes.RichBlog.Admin.Post.Title")",
+            }, {
+                field: "LanguageName",
+                title: "@T("SevenSpikes.RichBlog.Admin.Category.LanguageId")",
+            }, {
+                command: [
+                    {
+                        name: "destroy",
+                        text: "@T("Admin.Common.Delete")"
+                    }
+                ],
+                width: 150
+            }]
+        });
+    });
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#btnRefreshBlogPost').click(function () {
+            //refresh grid
+            var optionsGrid = $("#blog-posts-in-category-grid").data('kendoGrid');
+            optionsGrid.dataSource.read();
+
+            //return false to don't reload a page
+            return false;
+        });
+    });
+</script>

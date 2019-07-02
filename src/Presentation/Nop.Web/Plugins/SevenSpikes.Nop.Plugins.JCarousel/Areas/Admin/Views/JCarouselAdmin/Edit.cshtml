@@ -1,0 +1,35 @@
+﻿@model JCarouselSettingsModel
+@{
+    Layout = AdminViewLocations.AdminLayoutViewPath;
+
+    Html.SetActiveMenuItemSystemName("SevenSpikes.JCarousel.Admin.Submenus.ManageSettings");
+}
+
+<form method="post">
+
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("SevenSpikes.JCarousel.Admin.EditJCarouselDetails")
+            <small><i class="fa fa-arrow-circle-left"></i><a asp-action="List">@T("SevenSpikes.JCarousel.Admin.BackToList")</a></small>
+        </h1>
+        <div class="pull-right">
+            <button type="submit" name="save" class="btn bg-blue save-settings-button">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
+            <button type="submit" name="save-continue" class="btn bg-blue save-settings-button">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.SaveContinue")
+            </button>
+            @if (Model.Id > 0)
+            {
+                <span id="carousel-delete" class="btn bg-red">
+                    <i class="fa fa-trash-o"></i>
+                    @T("Admin.Common.Delete")
+                </span>
+            }
+        </div>
+    </div>
+    @await Html.PartialAsync(Views.CreateOrUpdate, Model)
+</form>
+<nop-delete-confirmation asp-model-id="@Model.Id" asp-button-id="carousel-delete" />

@@ -1,0 +1,158 @@
+﻿@using System.Linq;
+@using SevenSpikes.Nop.Conditions.Domain;
+@inject AdminAreaSettings adminAreaSettings
+
+@{
+    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
+    var gridPageSizes = adminAreaSettings.GridPageSizes;
+}
+
+<div class="panel-group">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div id="customer-overrides-grid"></div>
+            <script>
+                $(document).ready(function () {
+                    $("#customer-overrides-grid").kendoGrid({
+                        dataSource: {
+                            type: "json",
+                            transport: {
+                                read: {
+                                    url: "@Html.Raw(Url.Action("CustomerOverridesList", "CustomerOverridesAdmin", new { entityType = Model.EntityType, entityId = Model.EntityId }))",
+                                    type: "POST",
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
+                                },
+                                update: {
+                                    url: "@Html.Raw(Url.Action("CustomerOverridesUpdate", "CustomerOverridesAdmin"))",
+                                    type: "POST",
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
+                                },
+                                destroy: {
+                                    url: "@Html.Raw(Url.Action("CustomerOverridesDelete", "CustomerOverridesAdmin"))",
+                                    type: "POST",
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
+                                }
+                            },
+                            schema: {
+                                data: "Data",
+                                total: "Total",
+                                errors: "Errors",
+                                model: {
+                                    id: "ConditionId",
+                                    fields: {
+                                        CustomerName: { editable: false, type: "string" },
+                                        CustomerEmail: { editable: false, type: "string" },
+                                        OverrideState: { editable: true, type: "string" },
+                                        OverrideStateId: { editable: true, type: "number" },
+                                    }
+                                }
+                            },
+                            requestEnd: function (e) {
+                                if (e.type == "update") {
+                                    this.read();
+                                }
+                            },
+                            error: function (e) {
+                                display_kendoui_grid_error(e);
+                                // Cancel the changes
+                                this.cancelChanges();
+                            },
+                            pageSize: @(defaultGridPageSize),
+                            serverPaging: true,
+                            serverFiltering: true,
+                            serverSorting: true
+                        },
+                        pageable: {
+                            refresh: true,
+                            pageSizes: [@(gridPageSizes)]
+                        },
+                        editable: {
+                            confirmation: false,
+                            mode: "inline"
+                        },
+                        scrollable: false,
+                        columns: [{
+                            field: "CustomerName",
+                            title: "@T("SevenSpikes.Conditions.Admin.CustomerOverrides.CustomerName")"
+                        }, {
+                            field: "CustomerEmail",
+                            title: "@T("SevenSpikes.Conditions.Admin.CustomerOverrides.CustomerEmail")"
+                        }, {
+                            field: "OverrideState",
+                            title: "@T("SevenSpikes.Conditions.Admin.CustomerOverrides.OverrideState")",
+                            editor: customerStateDropDownEditor,
+                            template: "#:OverrideState#",
+                            width: 200
+                        }, {
+                            command: [{
+                                name: "edit",
+                                text: "@T("Admin.Common.Edit")"
+                            }, {
+                                name: "destroy",
+                                text: "@T("Admin.Common.Delete")"
+                            }],
+                            width: 200
+                        }]
+                    });
+                });
+
+                //local datasource
+                var allStates = [
+                    @{
+                        var states = (from OverrideState productState in Enum.GetValues(typeof(OverrideState)) select productState.ToString()).ToList();
+                        var totalStates = states.Count;
+                    }
+
+                    @for (int i = 0; i < totalStates; i++)
+                    {
+                        var state = states[i];
+                        <text>
+                        {
+                            Id: @(i),
+                            Name: "@(state)"
+                        }
+                        </text>
+                        if (i != totalStates - 1)
+                        {
+                            <text>,</text>
+                        }
+                    }
+                ];
+
+                function customerStateDropDownEditor(container, options) {
+                    $('<input required data-text-field="Name" data-value-field="Id" data-bind="value:OverrideStateId"/>')
+                        .appendTo(container)
+                        .kendoDropDownList({
+                            autoBind: false,
+                            dataSource: allStates
+                        });
+                }
+            </script>
+        </div>
+        <div class="panel-footer">
+            <button type="submit" id="btnAddNewCustomer" name="btnAddNewCustomer"
+                    onclick="javascript:OpenWindow('@(Url.Action("CustomerOverridesPopup", "CustomerOverridesAdmin", new { entityType = Model.EntityType, entityId = Model.EntityId, btnId = "btnRefreshCustomers" }))', 800, 700, true); return false;"
+                    class="btn btn-primary">
+                @T("SevenSpikes.Conditions.Admin.CustomerOverrides.AddNew")
+            </button>
+            <input type="submit" id="btnRefreshCustomers" name="btnRefreshCustomers" style="display: none" />
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $('#btnRefreshCustomers').click(function () {
+                        //refresh grid
+                        var optionsGrid = $("#customer-overrides-grid");
+                        optionsGrid.data('kendoGrid').dataSource.read();
+
+                        //return false to don't reload a page
+                        return false;
+                    });
+                });
+            </script>
+        </div>
+    </div>
+</div>
+    
+

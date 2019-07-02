@@ -1,0 +1,107 @@
+/*
+ * jQuery Nivo Slider v3.2
+ * http://nivo.dev7studios.com
+ *
+ * Copyright 2012, Dev7studios
+ * Free to use and abuse under the MIT license.
+ * http://www.opensource.org/licenses/mit-license.php
+ */
+ 
+/* The Nivo Slider styles */
+.nivoSlider {
+	position:relative;
+	width:100%;
+	height:auto;
+	overflow:hidden;
+}
+.nivoSlider img {
+	position:absolute;
+	top:0;
+	left:0;
+	max-width:none;
+}
+.nivo-main-image {
+	display: block !important;
+	position: relative !important; 
+	width: 100% !important;
+}
+
+/* If an image is wrapped in a link */
+.nivoSlider a.nivo-imageLink {
+	display:none;
+	position:absolute;
+	/*z-index:6;*/
+	top:0;
+	left:0;
+	width:100%;
+	height:100%;
+	border:0;
+	margin:0;
+	padding:0;
+    background: white;
+    opacity: 0;
+}
+
+/* The slices and boxes in the Slider */
+.nivo-slice {
+	display:block;
+	position:absolute;
+	z-index:5;
+	top:0;
+	height:100%;
+}
+.nivo-box {
+	display:block;
+	position:absolute;
+	z-index:5;
+	overflow:hidden;
+}
+.nivo-box img {
+	display:block;}
+
+/* Caption styles */
+.nivo-caption {
+	display: none;
+	position:absolute;
+	z-index:8;
+	left:0;
+	bottom:0;
+	width:100%;
+	overflow:hidden;
+}
+.nivo-caption p {
+	margin:0;
+}
+.nivo-caption a {
+	display:inline !important;
+}
+.nivo-html-caption {
+    display:none;
+}
+
+/* Direction nav styles (e.g. Next & Prev) */
+.nivo-directionNav a {
+	position:absolute;
+	z-index:9;
+	top:45%;
+	overflow: hidden;
+	cursor:pointer;
+}
+.nivo-prevNav {
+	left:0;
+}
+.nivo-nextNav {
+	right:0;
+}
+
+/* Control nav styles (e.g. 1,2,3...) */
+.nivo-controlNav {
+	padding: 15px 0;
+	text-align:center;
+}
+.nivo-controlNav a {
+	overflow:hidden;
+	cursor:pointer;
+}
+.nivo-controlNav a.active {
+}

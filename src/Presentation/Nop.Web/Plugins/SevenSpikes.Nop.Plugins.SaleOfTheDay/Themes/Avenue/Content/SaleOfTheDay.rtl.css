@@ -1,0 +1,30 @@
+
+.sale-of-the-day-offer .owl-item.active:after {
+	right: auto;
+	left: -1px;
+}
+
+.sale-of-the-day-offer .new-prev {
+	right: 0;
+	left: auto;
+}
+.sale-of-the-day-offer .new-next {
+	right: auto;
+	left: 0;
+	direction: ltr;
+}
+.sale-of-the-day-offer .new-prev:before {
+	content: "\e908";
+}
+.sale-of-the-day-offer .new-next:after {
+	content: "\e907";
+}
+
+
+@media all and (min-width: 1701px) {
+
+	.sale-of-the-day-offer .item-picture {
+		right: 0;
+		left: 30px;
+	}
+}

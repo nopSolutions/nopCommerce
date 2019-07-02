@@ -1,0 +1,98 @@
+﻿@model SocialFeedModel
+
+@{
+    if(Model.SocialNetwork == null)
+    {
+        return;
+    }
+
+    string socialNetworkViewPath = string.Empty;
+    ISocialFeedModel socialNetworkModel = null;
+    string socialNetworkClass = string.Empty;
+    Type socialNetworkModelType = null;
+
+    switch (Model.SocialNetwork.Type)
+    {
+        case SocialNetworkType.Twitter:
+            socialNetworkViewPath = ViewPathHelper.GetViewPath(Views.TwitterFeeds);
+            socialNetworkModel = Model.SocialNetwork.ContentModels.TwitterModel;
+            socialNetworkModelType = typeof(TwitterModel);
+            socialNetworkClass = "twitter-feed";
+            break;
+        case SocialNetworkType.Instagram:
+            socialNetworkViewPath = ViewPathHelper.GetViewPath(Views.InstagramFeeds);
+            socialNetworkModel = Model.SocialNetwork.ContentModels.InstagramModel;
+            socialNetworkModelType = typeof(InstagramModel);
+            socialNetworkClass = "instagram-feed";
+            break;
+        case SocialNetworkType.Facebook:
+            socialNetworkViewPath = ViewPathHelper.GetViewPath(Views.FacebookFeeds);
+            socialNetworkModel = Model.SocialNetwork.ContentModels.FacebookModel;
+            socialNetworkModelType = typeof(FacebookModel);
+            socialNetworkClass = "facebook-feed";
+            break;
+        case SocialNetworkType.GooglePlus:
+            socialNetworkViewPath = ViewPathHelper.GetViewPath(Views.GooglePlusFeeds);
+            socialNetworkModel = Model.SocialNetwork.ContentModels.GooglePlusModel;
+            socialNetworkModelType = typeof(GooglePlusModel);
+            socialNetworkClass = "google-feed";
+            break;
+        case SocialNetworkType.Pinterest:
+            socialNetworkViewPath = ViewPathHelper.GetViewPath(Views.PinterestFeeds);
+            socialNetworkModel = Model.SocialNetwork.ContentModels.PinterestModel;
+            socialNetworkModelType = typeof(PinterestModel);
+            socialNetworkClass = "pinterest-feed";
+            break;
+    }
+
+    var userAgent = Url.ActionContext.HttpContext.Request.Headers["User-Agent"];
+    var oldIe = false;
+    if (!String.IsNullOrEmpty(userAgent) && userAgent.ToString().ToLower().IndexOf("MSIE 9.0", StringComparison.InvariantCultureIgnoreCase) > 0)
+    {
+        oldIe = true;
+    }
+
+    var supportRtl = this.ShouldUseRtlTheme();
+    var themeName = ThemeHelper.GetPluginTheme(Plugin.FolderName);
+
+    Html.AddCssFileParts("~/Plugins/SevenSpikes.Nop.Plugins.SocialFeed/Themes/" + themeName + "/Content/SocialFeed.css");
+
+    if (supportRtl)
+    {
+        Html.AddCssFileParts("~/Plugins/SevenSpikes.Nop.Plugins.SocialFeed/Themes/" + themeName + "/Content/SocialFeed.rtl.css");
+    }
+
+}   
+ 
+<div class="@socialNetworkClass social-feed @Model.Class" data-ieoldversion="@oldIe" data-rtl="@supportRtl">
+    @if (!string.IsNullOrEmpty(Model.Title))
+    {
+        <h2 class="title">
+            <span class="title-text">@Model.Title</span>
+        </h2>
+    }
+
+    @if (!string.IsNullOrEmpty(Model.SubtitleLabel))
+    {
+        <h3 class="sub-title">
+            @if (!string.IsNullOrEmpty(Model.SubtitleLabel))
+            {
+                <span class="sub-title-label">@Model.SubtitleLabel</span>
+            }
+
+            @if (!string.IsNullOrEmpty(Model.SubtitleLinkText) && !string.IsNullOrEmpty(Model.SubtitleUrl))
+            {
+                <a class="sub-title-link" href="@Model.SubtitleUrl" title="@Model.SubtitleLinkText" target="_blank">@Model.SubtitleLinkText</a>
+            }
+            else if (!string.IsNullOrEmpty(Model.Title))
+            {
+                <span class="sub-title-text">@Model.Title</span>
+            }
+        </h3>
+    }
+
+    @{
+        Html.RenderPartial(socialNetworkViewPath, Convert.ChangeType(socialNetworkModel, socialNetworkModelType));
+    }
+
+</div>

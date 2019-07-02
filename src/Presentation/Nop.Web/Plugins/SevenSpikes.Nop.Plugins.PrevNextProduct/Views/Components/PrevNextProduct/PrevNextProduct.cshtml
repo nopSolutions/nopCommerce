@@ -1,0 +1,24 @@
+@model PrevNextInfoModel
+@{
+    Html.AddCssFileParts("~/Plugins/SevenSpikes.Nop.Plugins.PrevNextProduct/Themes/" + Model.Theme + "/Content/prevnextproduct.css");
+
+    var supportRtl = this.ShouldUseRtlTheme();
+    if (supportRtl)
+    {
+        Html.AddCssFileParts("~/Plugins/SevenSpikes.Nop.Plugins.PrevNextProduct/Themes/" + Model.Theme + "/Content/prevnextproduct.rtl.css");
+    }
+}
+
+@if (!string.IsNullOrEmpty(Model.PrevProductSeName))
+{
+    <div class="previous-product">
+        <a href="@Url.RouteUrl("Product", new { SeName = Model.PrevProductSeName })" title="@Model.PrevProductName"><span class="previous-product-label">@T("SevenSpikes.Plugins.PrevNextProduct.PrevButtonText")</span><span class="previous-product-title">@Model.PrevProductName</span></a>
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(Model.NextProductSeName))
+{
+    <div class="next-product">
+        <a href="@Url.RouteUrl("Product", new { SeName = Model.NextProductSeName })" title="@Model.NextProductName"><span class="next-product-label">@T("SevenSpikes.Plugins.PrevNextProduct.NextButtonText")</span><span class="next-product-title">@Model.NextProductName</span></a>
+    </div>
+}

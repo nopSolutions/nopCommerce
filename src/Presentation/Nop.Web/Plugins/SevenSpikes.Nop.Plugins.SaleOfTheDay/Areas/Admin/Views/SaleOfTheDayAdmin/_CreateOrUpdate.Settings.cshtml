@@ -1,0 +1,45 @@
+﻿@model SaleOfTheDayOfferAdminModel
+
+<div class="panel-group">
+    <div class="panel" style="box-shadow: none;">
+        <div class="panel-body">
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-label asp-for="Published" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="Published" />
+                </div>
+            </div>
+
+            @(Html.LocalizedEditor<SaleOfTheDayOfferAdminModel, SaleOfTheDayOfferLocalizedModel>("offer-localized",
+                  @<text>
+                      <div class="form-group">
+                          <div class="col-md-3">
+                              <nop-label asp-for="Title" />
+                          </div>
+                          <div class="col-md-9">
+                              <nop-editor asp-for="@Model.Locales[item].Title" />
+                              <span asp-validation-for="@Model.Locales[item].Title"></span>
+                          </div>
+                      </div>
+                      <div>
+                          <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
+                      </div>
+                   </text>
+    ,
+                  @<text>
+                      <div class="form-group">
+                          <div class="col-md-3">
+                              <nop-label asp-for="Title" />
+                          </div>
+                          <div class="col-md-9">
+                              <nop-editor asp-for="Title" />
+                              <span asp-validation-for="Title"></span>
+                          </div>
+                      </div>
+                   </text>
+                  ))
+        </div>
+    </div>
+</div>

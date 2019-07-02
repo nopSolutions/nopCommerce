@@ -1,0 +1,17 @@
+﻿@model List<SevenSpikes.Theme.Avenue.Models.InfoBoxModel>
+
+@if (Model.Count > 0)
+{
+    <div class="information-panel">
+        @foreach (var infoBox in Model)
+        {
+            <div class="information-box">
+                <div class="image">
+                    <img src="@infoBox.PictureUrl" alt="" />
+                </div>
+                <div class="title">@infoBox.Title</div>
+                <div class="description">@infoBox.Text</div>
+            </div>
+        }
+    </div>
+}

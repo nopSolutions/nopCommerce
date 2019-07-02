@@ -1,0 +1,70 @@
+﻿@model NopAjaxFiltersSettingsModel
+
+<div class="panel-group">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="ShowFiltersOnCategoryPage_OverrideForStore" asp-input="ShowFiltersOnCategoryPage" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="ShowFiltersOnCategoryPage" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="ShowFiltersOnCategoryPage" />
+                    <span asp-validation-for="ShowFiltersOnCategoryPage"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="ShowFiltersOnManufacturerPage_OverrideForStore" asp-input="ShowFiltersOnManufacturerPage" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="ShowFiltersOnManufacturerPage" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="ShowFiltersOnManufacturerPage" />
+                    <span asp-validation-for="ShowFiltersOnManufacturerPage"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="ShowFiltersOnVendorPage_OverrideForStore" asp-input="ShowFiltersOnVendorPage" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="ShowFiltersOnVendorPage" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="ShowFiltersOnVendorPage" />
+                    <span asp-validation-for="ShowFiltersOnVendorPage"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="ShowFiltersOnSearchPage_OverrideForStore" asp-input="ShowFiltersOnSearchPage" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="ShowFiltersOnSearchPage" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="ShowFiltersOnSearchPage" />
+                    <span asp-validation-for="ShowFiltersOnSearchPage"></span>
+                </div>
+            </div>
+            <nop-nested-setting asp-for="ShowFiltersOnSearchPage" id="SearchInProductTagsPanel">
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="SearchInProductTags_OverrideForStore" asp-input="SearchInProductTags" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="SearchInProductTags" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="SearchInProductTags" />
+                        <span asp-validation-for="SearchInProductTags"></span>
+                    </div>
+                </div>
+            </nop-nested-setting>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    (function ($, ssAdminCore) {
+
+        $(document).ready(function () {
+            //Toggle Search In Product Tags setting
+            ssAdminCore.registerToggleEvents("#@Html.IdFor(model => model.ShowFiltersOnSearchPage)", "#SearchInProductTagsPanel");
+        });
+    })(jQuery, sevenSpikesAdminCore);
+</script>

@@ -1,0 +1,236 @@
+﻿@model NopAjaxFiltersSettingsModel
+
+<div class="panel-group">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="ShowSelectedFiltersPanel_OverrideForStore" asp-input="ShowSelectedFiltersPanel" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="ShowSelectedFiltersPanel" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="ShowSelectedFiltersPanel" />
+                    <span asp-validation-for="ShowSelectedFiltersPanel"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="ShowNumberOfReturnedProducts_OverrideForStore" asp-input="ShowNumberOfReturnedProducts" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="ShowNumberOfReturnedProducts" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="ShowNumberOfReturnedProducts" />
+                    <span asp-validation-for="ShowNumberOfReturnedProducts"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="EnablePriceRangeFilter_OverrideForStore" asp-input="EnablePriceRangeFilter" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="EnablePriceRangeFilter" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="EnablePriceRangeFilter" />
+                    <span asp-validation-for="EnablePriceRangeFilter"></span>
+                </div>
+            </div>
+            <nop-nested-setting asp-for="EnablePriceRangeFilter" id="ClosePriceRangeFilterBoxPanel">
+                <div class="form-group advanced-setting">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="ClosePriceRangeFilterBox_OverrideForStore" asp-input="ClosePriceRangeFilterBox" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="ClosePriceRangeFilterBox" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="ClosePriceRangeFilterBox" />
+                        <span asp-validation-for="ClosePriceRangeFilterBox"></span>
+                    </div>
+                </div>
+            </nop-nested-setting>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="EnableSpecificationsFilter_OverrideForStore" asp-input="EnableSpecificationsFilter" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="EnableSpecificationsFilter" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="EnableSpecificationsFilter" />
+                    <span asp-validation-for="EnableSpecificationsFilter"></span>
+                </div>
+            </div>
+            <nop-nested-setting asp-for="EnableSpecificationsFilter" id="CloseSpecificationsFilterBoxPanel">
+                <div class="form-group advanced-setting">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="CloseSpecificationsFilterBox_OverrideForStore" asp-input="CloseSpecificationsFilterBox" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="CloseSpecificationsFilterBox" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="CloseSpecificationsFilterBox" />
+                        <span asp-validation-for="CloseSpecificationsFilterBox"></span>
+                    </div>
+                </div>
+            </nop-nested-setting>
+            <nop-nested-setting asp-for="EnableSpecificationsFilter" id="NumberOfSpecificationFiltersPanel">
+                <div class="form-group advanced-setting">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="NumberOfSpecificationFilters_OverrideForStore" asp-input="NumberOfSpecificationFilters" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="NumberOfSpecificationFilters" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="NumberOfSpecificationFilters" />
+                        <span asp-validation-for="NumberOfSpecificationFilters"></span>
+                    </div>
+                </div>
+            </nop-nested-setting>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="EnableAttributesFilter_OverrideForStore" asp-input="EnableAttributesFilter" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="EnableAttributesFilter" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="EnableAttributesFilter" />
+                    <span asp-validation-for="EnableAttributesFilter"></span>
+                </div>
+            </div>
+            <nop-nested-setting asp-for="EnableAttributesFilter" id="CloseAttributesFilterBoxPanel">
+                <div class="form-group advanced-setting">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="CloseAttributesFilterBox_OverrideForStore" asp-input="CloseAttributesFilterBox" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="CloseAttributesFilterBox" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="CloseAttributesFilterBox" />
+                        <span asp-validation-for="CloseAttributesFilterBox"></span>
+                    </div>
+                </div>
+            </nop-nested-setting>
+            <nop-nested-setting asp-for="EnableAttributesFilter" id="NumberOfAttributeFiltersPanel">
+                <div class="form-group advanced-setting">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="NumberOfAttributeFilters_OverrideForStore" asp-input="NumberOfAttributeFilters" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="NumberOfAttributeFilters" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="NumberOfAttributeFilters" />
+                        <span asp-validation-for="NumberOfAttributeFilters"></span>
+                    </div>
+                </div>
+            </nop-nested-setting>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="EnableManufacturersFilter_OverrideForStore" asp-input="EnableManufacturersFilter" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="EnableManufacturersFilter" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="EnableManufacturersFilter" />
+                    <span asp-validation-for="EnableManufacturersFilter"></span>
+                </div>
+            </div>
+            <nop-nested-setting asp-for="EnableManufacturersFilter" id="CloseManufacturersFilterBoxPanel">
+                <div class="form-group advanced-setting">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="CloseManufacturersFilterBox_OverrideForStore" asp-input="CloseManufacturersFilterBox" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="CloseManufacturersFilterBox" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="CloseManufacturersFilterBox" />
+                        <span asp-validation-for="CloseManufacturersFilterBox"></span>
+                    </div>
+                </div>
+            </nop-nested-setting>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="EnableVendorsFilter_OverrideForStore" asp-input="EnableVendorsFilter" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="EnableVendorsFilter" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="EnableVendorsFilter" />
+                    <span asp-validation-for="EnableVendorsFilter"></span>
+                </div>
+            </div>
+            <nop-nested-setting asp-for="EnableVendorsFilter" id="CloseVendorsFilterBoxPanel">
+                <div class="form-group advanced-setting">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="CloseVendorsFilterBox_OverrideForStore" asp-input="CloseVendorsFilterBox" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="CloseVendorsFilterBox" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="CloseVendorsFilterBox" />
+                        <span asp-validation-for="CloseVendorsFilterBox"></span>
+                    </div>
+                </div>
+            </nop-nested-setting>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="EnableOnSaleFilter_OverrideForStore" asp-input="EnableOnSaleFilter" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="EnableOnSaleFilter" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="EnableOnSaleFilter" />
+                    <span asp-validation-for="EnableOnSaleFilter"></span>
+                </div>
+            </div>
+            <nop-nested-setting asp-for="EnableOnSaleFilter" id="CloseOnSaleFilterBoxPanel">
+                <div class="form-group advanced-setting">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="CloseOnSaleFilterBox_OverrideForStore" asp-input="CloseOnSaleFilterBox" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="CloseOnSaleFilterBox" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="CloseOnSaleFilterBox" />
+                        <span asp-validation-for="CloseOnSaleFilterBox"></span>
+                    </div>
+                </div>
+            </nop-nested-setting>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="EnableInStockFilter_OverrideForStore" asp-input="EnableInStockFilter" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="EnableInStockFilter" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="EnableInStockFilter" />
+                    <span asp-validation-for="EnableInStockFilter"></span>
+                </div>
+            </div>
+            <nop-nested-setting asp-for="EnableInStockFilter" id="CloseInStockFilterBoxPanel">
+                <div class="form-group advanced-setting">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="CloseInStockFilterBox_OverrideForStore" asp-input="CloseInStockFilterBox" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="CloseInStockFilterBox" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="CloseInStockFilterBox" />
+                        <span asp-validation-for="CloseInStockFilterBox"></span>
+                    </div>
+                </div>
+            </nop-nested-setting>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    (function ($, ssAdminCore) {
+
+        $(document).ready(function () {
+            //Toggle Close Price Range by default setting
+            ssAdminCore.registerToggleEvents("#@Html.IdFor(model => model.EnablePriceRangeFilter)", "#ClosePriceRangeFilterBoxPanel");
+
+            //Toggle Specification Filter by default setting
+            ssAdminCore.registerToggleEvents("#@Html.IdFor(model => model.EnableSpecificationsFilter)", "#CloseSpecificationsFilterBoxPanel");
+            ssAdminCore.registerToggleEvents("#@Html.IdFor(model => model.EnableSpecificationsFilter)", "#NumberOfSpecificationFiltersPanel");
+
+            //Toggle Attribute Filter by default setting
+            ssAdminCore.registerToggleEvents("#@Html.IdFor(model => model.EnableAttributesFilter)", "#CloseAttributesFilterBoxPanel");
+            ssAdminCore.registerToggleEvents("#@Html.IdFor(model => model.EnableAttributesFilter)", "#NumberOfAttributeFiltersPanel");
+
+            //Toggle Manufacturer Filter by default setting
+            ssAdminCore.registerToggleEvents("#@Html.IdFor(model => model.EnableManufacturersFilter)", "#CloseManufacturersFilterBoxPanel");
+
+            //Toggle Vendor Filter by default setting
+            ssAdminCore.registerToggleEvents("#@Html.IdFor(model => model.EnableVendorsFilter)", "#CloseVendorsFilterBoxPanel");
+
+            //Toggle On Sale Filter by default setting
+            ssAdminCore.registerToggleEvents("#@Html.IdFor(model => model.EnableOnSaleFilter)", "#CloseOnSaleFilterBoxPanel");
+
+            //Toggle In Stock Filter by default setting
+            ssAdminCore.registerToggleEvents("#@Html.IdFor(model => model.EnableInStockFilter)", "#CloseInStockFilterBoxPanel");
+        });
+    })(jQuery, sevenSpikesAdminCore);
+</script>

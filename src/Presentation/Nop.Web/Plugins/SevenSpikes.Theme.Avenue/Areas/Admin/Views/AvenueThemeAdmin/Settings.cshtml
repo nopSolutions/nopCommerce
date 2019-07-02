@@ -1,0 +1,126 @@
+﻿@model AvenueThemeSettingsModel
+
+@{
+    Layout = AdminViewLocations.AdminLayoutViewPath;
+
+    Html.AppendCssFileParts("~/Plugins/SevenSpikes.Theme.Avenue/Areas/Admin/Styles/adminstyles.css");
+    Html.AddScriptParts("~/Plugins/SevenSpikes.Core/Areas/Admin/Content/Scripts/custom.presets.min.js");
+    Html.AddScriptParts("~/Plugins/SevenSpikes.Theme.Avenue/Areas/Admin/Scripts/admin.min.js");
+    Html.SetActiveMenuItemSystemName("SevenSpikes.Themes.Admin.SettingsSubmenu.Avenue");
+}
+
+<form method="post">
+    <nop-antiforgery-token />
+
+    <script type="text/javascript">
+        $(document).ready(function ()
+        {
+            $("#@Html.IdFor(model => model.LogoImageId_OverrideForStore)").change(logoOverrideChanged);
+            $("#@Html.IdFor(model => model.Preset_OverrideForStore)").change(colorPreset);
+            $('.store-scope-configuration .checkbox input').change(function ()
+            {
+                logoOverrideChanged();
+                colorPreset();
+            });
+            logoOverrideChanged();
+            colorPreset();
+
+            var customerPresetObj = new CustomPreset('.theme-color .radionButton:last label', '.theme-color .radionButton label');
+            customerPresetObj.setPresetsBackgroundColor();
+            customerPresetObj.addKendoColorPickerToTheLastRadioButton();
+
+            var homePageLayoutSetting = $("#@Html.IdFor(model => model.HomePageLayout)");
+            checkHomePageLayoutSettingValue(homePageLayoutSetting.val());
+            homePageLayoutSetting.on('change', function (e)
+            {
+                var settingValue = $(this).val();
+                checkHomePageLayoutSettingValue(settingValue);
+            });
+
+            var productPageLayoutSetting = $("#@Html.IdFor(model => model.ProductPageLayout)");
+            checkProductPageLayoutSettingValue(productPageLayoutSetting.val());
+            productPageLayoutSetting.on('change', function (e)
+            {
+                var settingValue = $(this).val();
+                checkProductPageLayoutSettingValue(settingValue);
+            });
+        });
+
+        function checkHomePageLayoutSettingValue(settingValue)
+        {
+            var targetElement = $('.form-group.color-picker');
+            if (settingValue === "no-slider")
+            {
+                targetElement.css('display', 'block');
+            }
+            else
+            {
+                targetElement.css('display', 'none');
+            }
+        }
+
+        function checkProductPageLayoutSettingValue(settingValue)
+        {
+            var targetElement = $('.form-group.nested');
+            if (settingValue === "extended-gallery")
+            {
+                targetElement.css('display', 'block');
+            }
+            else
+            {
+                targetElement.css('display', 'none');
+            }
+        }
+
+        function logoOverrideChanged()
+        {
+            if ($('#@Html.IdFor(model => model.LogoImageId_OverrideForStore)').length == 0)
+            {
+                return;
+            }
+            if ($('#@Html.IdFor(model => model.LogoImageId_OverrideForStore)').is(':checked') == true)
+            {
+                $(".upload-image-overlay").remove();
+            }
+            else
+            {
+                $('#logo-image').append("<div class=\"upload-image-overlay\"></div>");
+            }
+        }
+
+        function colorPreset() {
+            if ($('#@Html.IdFor(model => model.Preset_OverrideForStore)').length == 0) {
+                return;
+            }
+
+            if ($('#@Html.IdFor(model => model.Preset_OverrideForStore)').is(':checked') == true) {
+                $(".theme-color .adminData .upload-image-overlay").remove();
+            } else {
+                $('.theme-color .adminData').append("<div class=\"upload-image-overlay\"></div>");
+            }
+        }
+    </script>
+
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("SevenSpikes.Themes.Avenue.Admin.Settings")
+        </h1>
+        <div class="pull-right">
+            @await Html.PartialAsync(AdminViewLocations.AdminResetDefaultSettingsViewPath, Plugin.FolderName)
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="form-horizontal">
+            @await Component.InvokeAsync("StoreScopeConfiguration")
+            <nop-tabs id="avenue-settings-edit">
+                <nop-tab asp-name="tab-info" asp-title="@T("SevenSpikes.Themes.Avenue.Admin.TabTitle.GeneralSettings")" asp-default="true">@await Html.PartialAsync("_Settings.General", Model)</nop-tab>
+                <nop-tab asp-name="tab-additional" asp-title="@T("SevenSpikes.Themes.Avenue.Admin.TabTitle.AdditionalSettings")">@await Html.PartialAsync("_Settings.Additional", Model)</nop-tab>
+            </nop-tabs>
+        </div>
+    </div>
+</form>

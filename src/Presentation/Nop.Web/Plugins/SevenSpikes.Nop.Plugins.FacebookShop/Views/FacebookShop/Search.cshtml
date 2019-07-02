@@ -1,0 +1,42 @@
+﻿@model FacebookSearchModel
+
+@{
+    Layout = "Layout";
+}
+
+<div class="page search-page">
+    <h1 class="page-title">
+        <span class="title-text">@T("Search")</span>
+    </h1>
+    <div class="page-body">
+        @if (!string.IsNullOrEmpty(Model.Warning))
+        {
+        <strong class="warning">
+            @Model.Warning
+        </strong>
+        }
+        <div class="search-results">
+            @if (Model.NoResults)
+            {
+                <strong class="no-result">
+                    @T("Search.NoResultsText")
+                </strong>
+            }
+            @if (Model.Products.Count > 0)
+            {
+               <div class="product-grid">
+
+                    @(Html.DataList7Spikes<ProductOverviewModel>(Model.Products, Model.NumbersOfProductsPerRow,
+                        @<div class="item-box">
+                            @await Html.PartialAsync("ProductBox", item)
+                        </div>
+                    ))
+
+            </div>
+            }
+            <div class="pager">
+                @Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber").BooleanParameterName("as").BooleanParameterName("isc").BooleanParameterName("sid")
+            </div>
+        </div>
+    </div>
+</div>

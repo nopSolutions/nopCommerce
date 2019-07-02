@@ -1,0 +1,56 @@
+﻿@using SevenSpikes.Nop.Plugins.SmartProductCollections.Domain
+@model Dictionary<string, object>
+@inject ISettingService settingService
+@inject IStoreContext storeContext
+@{
+    var supportRtl = this.ShouldUseRtlTheme();
+    var themeName = ThemeHelper.GetPluginTheme(Plugin.FolderName);
+
+    Html.AddCssFileParts("~/Plugins/SevenSpikes.Nop.Plugins.SmartProductCollections/Themes/" + themeName + "/Content/SmartProductCollections.css");
+
+    if (supportRtl)
+    {
+        Html.AddCssFileParts("~/Plugins/SevenSpikes.Nop.Plugins.SmartProductCollections/Themes/" + themeName + "/Content/SmartProductCollections.rtl.css");
+    }
+
+    Html.AddScriptParts(ResourceLocation.Footer, "~/Plugins/SevenSpikes.Nop.Plugins.SmartProductCollections/Scripts/Products.min.js");
+
+    var showItemsInCarouselSettingKey = string.Format(Plugin.ShowItemsInCarouselKey, themeName);
+    var showItemsInCarousel = settingService.GetSettingByKey(showItemsInCarouselSettingKey, false, storeContext.CurrentStore.Id, true);
+    var slickCategorySettings = settingService.GetSettingByKey(string.Format(Plugin.ThemeSlickCategorySettingsKey, themeName), string.Empty, storeContext.CurrentStore.Id, true);
+    if (string.IsNullOrEmpty(slickCategorySettings))
+    {
+        slickCategorySettings = settingService.GetSettingByKey(Plugin.SlickCategorySettingsKey, string.Empty, storeContext.CurrentStore.Id, true);
+    }
+
+    var slickProductSettings = settingService.GetSettingByKey(string.Format(Plugin.ThemeSlickProductSettingsKey, themeName), string.Empty, storeContext.CurrentStore.Id, true);
+    if (string.IsNullOrEmpty(slickCategorySettings))
+    {
+        slickProductSettings = settingService.GetSettingByKey(Plugin.SlickProductSettingsKey, string.Empty, storeContext.CurrentStore.Id, true);
+    }
+
+    var categoryResponsiveBreakpoints = settingService.GetSettingByKey(string.Format(Plugin.ThemeSlickCategoryResponsiveBreakpointsKey, themeName), string.Empty, storeContext.CurrentStore.Id, true);
+    if (string.IsNullOrEmpty(categoryResponsiveBreakpoints))
+    {
+        categoryResponsiveBreakpoints = settingService.GetSettingByKey(Plugin.SlickCategoryResponsiveBreakpointsKey, string.Empty, storeContext.CurrentStore.Id, true);
+    }
+
+    var productResponsiveBreakpoints = settingService.GetSettingByKey(string.Format(Plugin.ThemeSlickProductResponsiveBreakpointsKey, themeName), string.Empty, storeContext.CurrentStore.Id, true);
+    if (string.IsNullOrEmpty(productResponsiveBreakpoints))
+    {
+        productResponsiveBreakpoints = settingService.GetSettingByKey(Plugin.SlickProductResponsiveBreakpointsKey, string.Empty, storeContext.CurrentStore.Id, true);
+    }
+}
+@if (showItemsInCarousel)
+{
+    <input type="hidden" class="spc-slick-slider-settings" data-showitemsincarousel="@showItemsInCarousel.ToString().ToLowerInvariant()"
+         data-slickcategorysettings="@slickCategorySettings"
+         data-slickproductsettings="@slickProductSettings"
+         data-categoryresponsivebreakpoints="@categoryResponsiveBreakpoints"
+         data-productresponsivebreakpoints="@productResponsiveBreakpoints" />
+}
+
+@foreach (var viewComponent in Model)
+{
+    @await Component.InvokeAsync(viewComponent.Key, viewComponent.Value)
+}

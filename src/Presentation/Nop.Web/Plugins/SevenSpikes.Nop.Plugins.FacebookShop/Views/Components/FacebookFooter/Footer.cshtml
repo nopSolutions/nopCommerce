@@ -1,0 +1,7 @@
+﻿@using SevenSpikes.Nop.Plugins.FacebookShop.Models
+
+@model FacebookFooterModel
+
+<div class="footer">
+    @T("Content.CopyrightNotice", DateTime.Now.Year.ToString(), Model.StoreName)
+</div>

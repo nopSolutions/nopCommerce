@@ -1,0 +1,54 @@
+﻿@model RichBlogSettingsModel
+
+<div class="panel-group">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="Enabled_OverrideForStore" asp-input="Enabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="Enabled" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="Enabled" />
+                    <span asp-validation-for="Enabled"></span>
+                </div>
+            </div>
+            <div class="form-group advanced-setting">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="NumberOfCharactersInBlogPostPreviewOnHomePage_OverrideForStore" asp-input="NumberOfCharactersInBlogPostPreviewOnHomePage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="NumberOfCharactersInBlogPostPreviewOnHomePage" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="NumberOfCharactersInBlogPostPreviewOnHomePage" />
+                </div>
+            </div>
+            <div class="form-group advanced-setting">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="NumberOfCharactersInBlogPostPreviewOnBlogListPage_OverrideForStore" asp-input="NumberOfCharactersInBlogPostPreviewOnBlogListPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="NumberOfCharactersInBlogPostPreviewOnBlogListPage" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="NumberOfCharactersInBlogPostPreviewOnBlogListPage" />
+                </div>
+            </div>
+            <div class="form-group advanced-setting">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="ExcludedTags_OverrideForStore" asp-input="ExcludedTags" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="ExcludedTags" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="ExcludedTags" />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="ShowPrevNextNavigation_OverrideForStore" asp-input="ShowPrevNextNavigation" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="ShowPrevNextNavigation" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="ShowPrevNextNavigation" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

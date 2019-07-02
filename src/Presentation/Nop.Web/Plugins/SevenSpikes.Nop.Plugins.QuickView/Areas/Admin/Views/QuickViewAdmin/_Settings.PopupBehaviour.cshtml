@@ -1,0 +1,18 @@
+﻿@model QuickViewSettingsModel
+
+<div class="panel-group no-margin">
+    <div class="panel" style="box-shadow: none">
+        <div class="panel-body">
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="EnableQuickViewPopupOverlay_OverrideForStore" asp-input="EnableQuickViewPopupOverlay" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="EnableQuickViewPopupOverlay" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="EnableQuickViewPopupOverlay" />
+                    <span asp-validation-for="EnableQuickViewPopupOverlay"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

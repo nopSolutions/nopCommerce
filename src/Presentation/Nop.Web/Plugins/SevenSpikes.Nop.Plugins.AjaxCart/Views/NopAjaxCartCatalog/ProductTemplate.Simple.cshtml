@@ -1,0 +1,20 @@
+﻿@model global::Nop.Web.Models.Catalog.ProductDetailsModel
+@using Nop.Web.Models.Catalog;
+
+@if (!String.IsNullOrEmpty(Model.Name))
+{
+    <h1 class="product-name">
+        @Model.Name
+    </h1>
+}
+
+<div class="product-details-page">
+    <form asp-route="Product" asp-route-sename="@Model.SeName" method="post" id="product-details-form">
+        @{
+            var dataDictVariant = new ViewDataDictionary(ViewData) { new KeyValuePair<string, object>
+            ("ProductId", Model.Id) };
+            
+            @await Html.PartialAsync("_ProductVariantOverview", Model, dataDictVariant)
+        }
+    </form>
+</div>

@@ -1,0 +1,37 @@
+
+.newsletter-subscribe-popup {
+	background-position: left;
+}
+.newsletter-subscribe-popup .close-popup {
+	right: auto;
+	left: 0;
+}
+.newsletter-subscribe-popup .close-popup:after {
+	padding: 0;
+}
+
+
+@media (min-width: 850px) {
+
+	.newsletter-subscribe-popup {
+		padding-right: 7%;
+		padding-left: 30px;
+		text-align: right;
+	}
+	.newsletter-subscribe-popup-title,
+	.newsletter-subscribe-description-wrapper,
+	.newsletter-subscribe-popup .newsletter-validation,
+	.newsletter-subscribe-popup .newsletter-result,
+	.newsletter-gdpr-checkbox-content,
+	.newsletter-subscribe-checkbox-content {
+		margin-right: 0;
+		margin-left: auto;
+	}
+}
+
+@media (min-width: 1201px) {
+
+	.newsletter-subscribe-popup {
+		padding-right: 70px;
+	}
+}

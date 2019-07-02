@@ -1,0 +1,110 @@
+﻿@model PinterestModel
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        @await Html.PartialAsync(AdminViews.SocialNetworkSharedRedirectUrl, Url.RouteUrl("PinterestAuthenticate", null, Url.ActionContext.HttpContext.Request.Scheme))
+        <div class="form-group">
+            <div class="col-md-3">
+                <nop-label asp-for="ApplicationId" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="ApplicationId" />
+                <span asp-validation-for="ApplicationId"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-3">
+                <nop-label asp-for="ApplicationSecret" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="ApplicationSecret" />
+                <span asp-validation-for="ApplicationSecret"></span>
+            </div>
+        </div>
+        <div class="adminHint">
+            <div class="col-md-3">
+            </div>
+            <div class="col-md-9">
+                <ul>
+                    <li>To get your access token go to <a href="https://developers.pinterest.com/apps/" target="_blank">https://developers.pinterest.com/apps/</a> and create an app by clicking the <strong>Create app</strong> button. Enter name and description and click on the <strong>Create</strong> button.</li>
+                    <li>Copy the Redirect Uri value from this network to the Redirect URIs setting on your Pinterest app and click Enter. <strong>Note: Your store should have SSL enabled as Pinterest only accepts secure URIs.</strong></li>
+                    <li>Copy the App Id and App secret values from your Pinterest app and paste them in the appropriate settings in this social network.</li>
+                    <li>Save the settings and click on the Authorize button that appears to give the Social Feed plugin permissions to display posts from your boards.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div class="form-group">
+            <div class="col-md-3">
+                <nop-label asp-for="BoardName" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="BoardName" />
+                <span asp-validation-for="BoardName"></span>
+            </div>
+        </div>
+        <div class="adminHint">
+            <div class="col-md-3">
+            </div>
+            <div class="col-md-9">
+                <ul>
+                    <li>To get your pinterest board name go to your pinterest profile page, click on the <strong>board</strong> and the url will became something like <strong>https://www.pinterest.com/username/boardname</strong></li>
+                    <li>Copy the <strong>username/boardname</strong> part into the box above.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="authorization">
+    <div class="authorize">
+        @if (Model.SocialNetworkId > 0)
+        {
+            if (string.IsNullOrEmpty(Model.Token))
+            {
+                <button id="authorize-pinterest" class="not-authorized btn authorize-btn bg-red" type="button">
+                    <i class="fa fa-times" aria-hidden="true"></i>
+                    <span>@T("SevenSpikes.Plugins.SocialFeed.Admin.SocialNetwork.AuthorizeButton.NotAuthorized")</span>
+                </button>
+            }
+            else
+            {
+                <button id="authorize-pinterest" class="already-authorized btn authorize-btn bg-blue" type="button">
+                    <i class="fa fa-check" aria-hidden="true"></i>
+                    <span>@T("SevenSpikes.Plugins.SocialFeed.Admin.SocialNetwork.AuthorizeButton.Authorized")</span>
+                </button>
+            }
+        }
+        else
+        {
+            <div class="ss-info save-before-edit-network">
+                <i class="fa fa-info-circle" aria-hidden="true"></i>
+                <p>@T("SevenSpikes.Plugins.SocialFeed.Admin.SocialNetwork.SaveBeforeAuthorize")</p>
+                <span class="ss-info-arrow up"></span>
+            </div>
+        }
+    </div>
+
+    @if (Model.SocialNetworkId > 0 && string.IsNullOrEmpty(Model.Token))
+    {
+        <div class="authorize-descr">
+            <div class="ss-info save-before-edit-network">
+                <i class="fa fa-info-circle" aria-hidden="true"></i>
+                <p>By clicking on the button above a popup will be opened containing the Pinterest's authorize screen (this is the case when you haven't already authorize the app. If you have already authorize the app the popup will just close). There you will be asked if you are willing to provide certain rights to your Pinterest profile.</p>
+                <p>If you choose to authorize the app (by clicking the Authorize button) the popup will close and the Edit page will refresh. If the Authorize button is <strong>Green</strong> your autorization was successfull, if it is <strong>Red</strong> you haven't authorized the app.</p>
+                <span class="ss-info-arrow up"></span>
+            </div>
+        </div>
+    }
+</div>
+
+<script>
+    $('#authorize-pinterest').click(function () {
+        var url = '@Html.Raw(@Url.RouteUrl("PinterestAuthorization", new { Model.ApplicationId, Model.ApplicationSecret, Model.SocialNetworkId }, Url.ActionContext.HttpContext.Request.Scheme))';
+        Feeds.Utils.popitup(url, 'Pinterest authentication');
+    });
+</script>

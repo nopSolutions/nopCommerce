@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-16"?>
+<Language Name="English">
+  <LocaleResource Name="SevenSpikes.Plugins.PrevNextProduct.Admin.Menu.MenuName">
+    <Value>Prev-Next Product</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.PrevNextProduct.Admin.Settings">
+    <Value>Settings</Value>
+  </LocaleResource>  
+  <LocaleResource Name="SevenSpikes.Plugins.PrevNextProduct.Admin.Settings.Enabled">
+    <Value>Enable</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.PrevNextProduct.Admin.Settings.Enabled.Hint">
+    <Value>Enable the Nop Prev-Next plugin. This setting is store specific if you have multiple stores.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.PrevNextProduct.Admin.Settings.EnableProductLooping">
+    <Value>Enable product looping</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.PrevNextProduct.Admin.Settings.EnableProductLooping.Hint">
+    <Value>When you are on the last(first) product in a category the Next(Previous) button will lead you to the first(last) product in the same category.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.PrevNextProduct.Admin.Settings.ProductTitleLength">
+    <Value>Product Title Length</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.PrevNextProduct.Admin.Settings.ProductTitleLength.Hint">
+    <Value>Set the maximum number of characters to be displayed of the prev/next product name (in case you have too long product names).</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.PrevNextProduct.Admin.Settings.GeneralSettings">
+    <Value>General Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.PrevNextProduct.NextButtonText">
+    <Value>Next product</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.PrevNextProduct.PrevButtonText">
+    <Value>Previous product</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.PrevNextProduct.ProductNameEnding">
+    <Value>...</Value>
+  </LocaleResource>
+</Language>

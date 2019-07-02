@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Settings>
+  <Setting Name="NewsletterPopupSettings.Enabled">
+    <Value>true</Value>
+  </Setting>
+  <Setting Name="NewsletterPopupSettings.PreselectDoNotShowPopupCheckbox">
+    <Value>false</Value>
+  </Setting>
+  <Setting Name="NewsletterPopupSettings.NewsletterPopupDelayedShow">
+    <Value>3000</Value>
+  </Setting>
+  <Setting Name="NewsletterPopupSettings.NewsletterPopupOpenerSelector">
+    <Value>#newsletter-subscribe-button</Value>
+  </Setting>
+</Settings>

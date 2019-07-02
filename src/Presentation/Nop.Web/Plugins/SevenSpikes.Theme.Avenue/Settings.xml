@@ -1,0 +1,204 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Settings>
+
+  <!-- Global Settings -->
+  
+  <Setting Name="AvenueThemeSettings.HomePageLayout">
+    <Value>with-slider</Value>
+  </Setting>
+  <!--<Setting Name="AvenueThemeSettings.CatalogPageLayout">
+    <Value>two-columns</Value>
+  </Setting>-->
+  <Setting Name="AvenueThemeSettings.ProductPageLayout">
+    <Value>standard-gallery</Value>
+  </Setting>
+  <Setting Name="AvenueThemeSettings.StickyProductDetails">
+    <Value>true</Value>
+  </Setting>
+  <Setting Name="AvenueThemeSettings.SmartCategoriesLayout">
+    <Value>variant-1</Value>
+  </Setting>
+  <Setting Name="AvenueThemeSettings.InfoBoxesWidgetZone">
+    <Value>avenue_homepage_info_boxes</Value>
+  </Setting>
+  <Setting Name="AvenueThemeSettings.preset">
+    <Value>f61853</Value>
+  </Setting>
+  <Setting Name="AvenueThemeSettings.defaultpreset">
+    <Value>f61853</Value>
+  </Setting>
+
+  <!-- Media Settings -->
+  
+  <Setting Name="mediasettings.maximumimagesize">
+    <Value>1920</Value>
+  </Setting>
+  <Setting Name="mediasettings.categorythumbpicturesize">
+    <Value>600</Value>
+  </Setting>
+  <Setting Name="mediasettings.manufacturerthumbpicturesize">
+    <Value>300</Value>
+  </Setting>
+  <Setting Name="mediasettings.vendorthumbpicturesize">
+    <Value>300</Value>
+  </Setting>
+  <Setting Name="mediasettings.productthumbpicturesize">
+    <Value>400</Value>
+  </Setting>
+  <Setting Name="mediasettings.productdetailspicturesize">
+    <Value>750</Value>
+  </Setting>
+  <Setting Name="mediasettings.productthumbpicturesizeonproductdetailspage">
+    <Value>750</Value> <!-- large value because of "extended" gallery. original is 150 -->
+  </Setting>
+  <Setting Name="mediasettings.associatedproductpicturesize">
+    <Value>350</Value>
+  </Setting>
+  <Setting Name="mediasettings.cartthumbpicturesize">
+    <Value>90</Value>
+  </Setting>
+
+  <!-- Various Settings -->
+
+  <!--<Setting Name="avenuethemesettings.defaultproductimageproportion">
+    <Value>100</Value>
+  </Setting>
+  <Setting Name="avenuethemesettings.defaultcategoryimageproportion">
+    <Value>100</Value>
+  </Setting>
+  <Setting Name="avenuethemesettings.productimageproportion">
+    <Value>100</Value>
+  </Setting>
+  <Setting Name="avenuethemesettings.categoryimageproportion">
+    <Value>100</Value>
+  </Setting>-->
+  <Setting Name="catalogsettings.showcategoryproductnumber">
+    <Value>true</Value>
+  </Setting>
+  <Setting Name="catalogsettings.showcategoryproductnumberincludingsubcategories">
+    <Value>true</Value>
+  </Setting>
+  <Setting Name="catalogsettings.productsalsopurchasednumber">
+    <Value>5</Value>
+  </Setting>
+  <Setting Name="customersettings.enteringemailtwice">
+    <Value>false</Value>
+  </Setting>
+
+  <!-- Plugin Settings -->
+  
+  <Setting Name="NopAjaxCartSettings.EnableProductQuantityTextbox">
+    <Value>False</Value>
+  </Setting>
+  <Setting Name="NopAjaxCartSettings.ProductAddedToCartImageSize">
+    <Value>250</Value>
+  </Setting>
+  <Setting Name="NopAjaxCartSettings.MiniProductDetailsViewImageSize">
+    <Value>250</Value>
+  </Setting>
+  
+  <Setting Name="CloudZoomSettings.ZoomWidth">
+    <Value>500</Value>
+  </Setting>
+  <Setting Name="CloudZoomSettings.ZoomHeight">
+    <Value>500</Value>
+  </Setting>
+  <Setting Name="CloudZoomSettings.ZoomPosition">
+    <Value>inside</Value>
+  </Setting>
+  <Setting Name="CloudZoomSettings.ZoomAutoInside">
+    <Value>1200</Value>
+  </Setting>
+  <Setting Name="CloudZoomSettings.IsPictureThumbnailsCarouselVertical-Avenue">
+    <Value>true</Value>
+  </Setting>
+  <Setting Name="CloudZoomSettings.NumberOfPictureThumbnailsInCarousel-Avenue">
+    <Value>4</Value>
+  </Setting>
+  <Setting Name="CloudZoomSettings.EnableSliderArrows">
+    <Value>true</Value>
+  </Setting>
+  <Setting Name="CloudZoomSettings.EnableSliderDots">
+    <Value>false</Value>
+  </Setting>
+  <Setting Name="CloudZoomSettings.ResponsiveBreakpointsForThumbnailsCarousel-Avenue">
+    <Value>[{"breakpoint":1501,"settings":{"slidesToShow":4,"slidesToScroll":4,"arrows":false,"dots":true,"vertical":false}},{"breakpoint":769,"settings":{"slidesToShow":4,"slidesToScroll":4,"arrows":false,"dots":true,"vertical":false}}]</Value>
+  </Setting>
+
+  <Setting Name="InstantSearchSettings.NumberOfVisibleProducts">
+    <Value>2</Value>
+  </Setting>
+  <Setting Name="InstantSearchSettings.PictureSize">
+    <Value>80</Value>
+  </Setting>
+
+  <Setting Name="JCarouselGeneralSettings.ArrowsContainer-Avenue">
+    <Value>.slick-carousel.item-grid</Value>
+  </Setting>
+  <Setting Name="JCarouselGeneralSettings.ResponsiveBreakpointsForSlickSlider-Avenue">
+    <Value>[{"breakpoint":1424,"settings":{"slidesToShow":4,"arrows":true,"dots":false}},{"breakpoint":984,"settings":{"slidesToShow":3,"arrows":false,"dots":true}},{"breakpoint":470,"settings":{"slidesToShow":2,"arrows":false,"dots":true}}]</Value>
+  </Setting>
+  
+  <Setting Name="MegaMenuSettings.CategoriesImageSize">
+    <Value>260</Value>
+  </Setting>
+  <Setting Name="MegaMenuSettings.ManufacturerImageSize">
+    <Value>200</Value>
+  </Setting>
+  <Setting Name="MegaMenuSettings.VendorImageSize">
+    <Value>200</Value>
+  </Setting>
+  <Setting Name="MegaMenuSettings.NumberOfCategoriesPerRow">
+    <Value>4</Value>
+  </Setting>
+  <Setting Name="MegaMenuSettings.NumberOfManufacturersPerRow">
+    <Value>5</Value>
+  </Setting>
+  <Setting Name="MegaMenuSettings.NumberOfVendorsPerRow">
+    <Value>5</Value>
+  </Setting>
+  
+  <Setting Name="QuickViewSettings.ProductItemSelectorChild">
+    <Value>.buttons .wrap</Value>
+  </Setting>
+  <Setting Name="QuickViewSettings.ProductDetailsPictureSize">
+    <Value>400</Value>
+  </Setting>
+
+  <Setting Name="RichBlogSettings.NumberOfBlogPostsToShow">
+    <Value>3</Value>
+  </Setting>
+  <Setting Name="RichBlogSettings.HomePageImageSize">
+    <Value>600</Value>
+  </Setting>
+  <Setting Name="RichBlogSettings.BlogDetailsImageSize">
+    <Value>900</Value>
+  </Setting>
+  <Setting Name="RichBlogSettings.BlogDetailsPrevNextWidgetZone">
+    <Value>blogpost_navigation_avenue</Value>
+  </Setting>
+  
+  <Setting Name="SocialFeedSettings.EnableSocialPage">
+    <Value>false</Value>
+  </Setting>
+
+  <Setting Name="SmartProductCollectionsSettings.ShowItemsInCarousel-Avenue">
+    <Value>false</Value>
+  </Setting>
+  <Setting Name="SmartProductCollectionsSettings.SlickCategorySettings-Avenue"> <!-- "slidesToShow" should be set to 3 for SCC Variant 2 -->
+    <Value>{"infinite":true, "rows":1, "slidesToShow":4, "arrows":true, "dots":false, "easing":"swing", "draggable":true}</Value>
+  </Setting>
+  <Setting Name="SmartProductCollectionsSettings.SlickCategoryResponsiveBreakpoints-Avenue"> <!-- "slidesToShow" at 1501 breakpoint should be set to 2 for SCC Variant 2 -->
+    <Value>[{"breakpoint":1501, "settings": {"slidesToShow":3}}, {"breakpoint":1201, "settings": {"slidesToShow":4, "slidesToScroll":4, "arrows": false, "dots": true}}, {"breakpoint":1025, "settings": {"slidesToShow":3, "slidesToScroll":3, "arrows": false, "dots": true}}, {"breakpoint":501, "settings": {"slidesToShow":2, "slidesToScroll":2, "arrows": false, "dots": true}}]</Value>
+  </Setting>
+  <Setting Name="SmartProductCollectionsSettings.SlickProductSettings-Avenue">
+    <Value>{"infinite":true, "rows":1, "slidesToShow":5, "arrows":false, "dots":true, "easing":"swing", "draggable":true}</Value>
+  </Setting>
+  <Setting Name="SmartProductCollectionsSettings.SlickProductResponsiveBreakpoints-Avenue">
+    <Value>[{"breakpoint":1501, "settings": {"slidesToShow":4, "slidesToScroll":4, "arrows": false, "dots": true}}, {"breakpoint":1025, "settings": {"slidesToShow":3, "slidesToScroll":3, "arrows": false, "dots": true}}, {"breakpoint":501, "settings": {"slidesToShow":2, "slidesToScroll":2, "arrows": false, "dots": true}}]</Value>
+  </Setting>
+
+  <Setting Name="sevenspikescommonsettings.lazyloadimages">
+    <Value>True</Value>
+  </Setting>
+</Settings>

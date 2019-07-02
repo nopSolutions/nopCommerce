@@ -1,0 +1,132 @@
+﻿@model SevenSpikes.Nop.Plugins.AnywhereSliders.Areas.Admin.Models.Sliders.SliderImageModel
+
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+<input asp-for="SliderId" type="hidden" />
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default panel-popup">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <div class="col-sm-5">
+                            <nop-label asp-for="PictureId" />
+                        </div>
+                        <div class="col-sm-7">
+                            <nop-editor asp-for="PictureId" />
+                            <span asp-validation-for="PictureId"></span>
+                        </div>
+                    </div>                    
+                    <div class="form-group">
+                        <div class="col-sm-5">
+                            <nop-label asp-for="MobilePictureId" />
+                        </div>
+                        <div class="col-sm-7">
+                            <nop-editor asp-for="MobilePictureId" />
+                            <span asp-validation-for="MobilePictureId"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-5">
+                            <nop-label asp-for="Visible" />
+                        </div>
+                        <div class="col-sm-7">
+                            <input asp-for="Visible" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-5">
+                            <nop-label asp-for="DisplayOrder" />
+                        </div>
+                        <div class="col-sm-7">
+                            <nop-editor asp-for="DisplayOrder" />
+                            <span asp-validation-for="DisplayOrder"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @(Html.LocalizedEditor<SliderImageModel, SliderImageLocalizedModel>("slider-localized",
+        @<div class="panel-group">
+            <div class="panel panel-default panel-popup">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <div class="col-sm-5">
+                            <nop-label asp-for="Url" />
+                        </div>
+                        <div class="col-sm-7">
+                            <nop-editor asp-for="@Model.Locales[item].Url" />
+                            <span asp-validation-for="@Model.Locales[item].Url"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-5">
+                            <nop-label asp-for="Alt" />
+                        </div>
+                        <div class="col-sm-7">
+                            <nop-editor asp-for="@Model.Locales[item].Alt" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-5">
+                            <nop-label asp-for="DisplayText" />
+                        </div>
+                        <div class="col-sm-7">
+                            <nop-editor asp-for="@Model.Locales[item].DisplayText" asp-template="RichEditor" />
+                        </div>
+                        <div class="form-group">
+                            <div>
+                                <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+,
+        @<div class="panel-group">
+            <div class="panel panel-default panel-popup">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <div class="col-sm-5">
+                            <nop-label asp-for="Url" />
+                        </div>
+                        <div class="col-sm-7">
+                            <nop-editor asp-for="Url" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-5">
+                            <nop-label asp-for="Alt" />
+                        </div>
+                        <div class="col-sm-7">
+                            <nop-editor asp-for="Alt" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-5">
+                            <nop-label asp-for="DisplayText" />
+                        </div>
+                        <div class="col-sm-7">
+                            <nop-editor asp-for="DisplayText" asp-template="RichEditor" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      ))
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#btnRefreshImgs').on("click", function (e) {
+            //refresh grid
+            var optionsGrid = $("#slider-images-grid");
+            optionsGrid.data('kendoGrid').dataSource.read();
+            e.preventDefault(); //don't reload the page
+        });
+    });
+</script>

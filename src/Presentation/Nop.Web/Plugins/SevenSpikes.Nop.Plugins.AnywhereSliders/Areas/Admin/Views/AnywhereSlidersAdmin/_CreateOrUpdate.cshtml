@@ -1,0 +1,52 @@
+﻿@model SliderModel
+
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+<input asp-for="SettingsModel.CarouselSettingsModel.Id" type="hidden" />
+<input asp-for="SettingsModel.NivoSettingsModel.Id" type="hidden" />
+
+<div class="content">
+    <div class="form-horizontal">
+        @Html.TrialMessage(Model.SettingsModel.IsTrialVersion, Plugin.Name, Plugin.UrlInStore)
+        @await Component.InvokeAsync("SettingMode")
+        <nop-tabs id="anywhere-sliders-create-or-update">
+            <nop-tab asp-name="tab-settings" asp-default="true" asp-title="@T("SevenSpikes.Plugins.AnywhereSliders.Admin.Slider.TabTitle.Settings")">
+                @await Html.PartialAsync(Views.SliderSettings, @Model)
+            </nop-tab>
+            @if (Model.Id > 0)
+            {
+                <nop-tab asp-name="tab-images" asp-title="@T("SevenSpikes.Plugins.AnywhereSliders.Admin.Slider.TabTitle.Pictures")">
+                    @await Html.PartialAsync(Views.SliderImages, @Model)
+                </nop-tab>
+                <nop-tab asp-name="tab-widgets" asp-title="@T("SevenSpikes.Plugins.AnywhereSliders.Admin.Slider.TabTitle.Widgets")">
+                    @await Component.InvokeAsync("WidgetMappingsAdmin", new { entityType = Plugin.EntityType, entityId = Model.Id, pluginFolderName = Plugin.FolderName })
+                </nop-tab>
+                <nop-tab asp-name="tab-scheduling" class="advanced-setting" asp-title="@T("SevenSpikes.Scheduling.Admin.Schedule.TabTitle")">
+                    @await Component.InvokeAsync("ScheduleAdmin", new { entityType = Plugin.EntityType, entityId = Model.Id })
+                </nop-tab>
+                <nop-tab asp-name="tab-conditions" class="advanced-setting" asp-title="@T("SevenSpikes.Plugins.AnywhereSliders.Admin.Slider.TabTitle.Conditions")">
+                    @await Component.InvokeAsync("ConditionsAdmin", new { entityType = Plugin.EntityType, entityId = Model.Id, availableConditionTypes = Plugin.AvailableConditionTypes, active = true, defaultGroupState = true })
+                </nop-tab>
+                <nop-tab asp-name="tab-product" class="advanced-setting" asp-title="@T("SevenSpikes.Conditions.Admin.ProductOverrides.TabTitle")">
+                    @await Component.InvokeAsync("ProductOverridesAdmin", new { entityType = Plugin.EntityType, entityId = Model.Id })
+                </nop-tab>
+                <nop-tab asp-name="tab-customer" class="advanced-setting" asp-title="@T("SevenSpikes.Conditions.Admin.CustomerOverrides.TabTitle")">
+                    @await Component.InvokeAsync("CustomerOverridesAdmin", new { entityType = Plugin.EntityType, entityId = Model.Id })
+                </nop-tab>
+            }
+        </nop-tabs>
+    </div>
+</div>
+
+<input type="submit" id="btnRefreshImgs" name="btnRefreshImgs" style="display: none" />
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#btnRefreshImgs').on("click", function (e) {
+            //refresh grid
+            var optionsGrid = $("#slider-images-grid");
+            optionsGrid.data('kendoGrid').dataSource.read();
+
+            e.preventDefault(); //don't reload the page
+        });
+    });
+</script>

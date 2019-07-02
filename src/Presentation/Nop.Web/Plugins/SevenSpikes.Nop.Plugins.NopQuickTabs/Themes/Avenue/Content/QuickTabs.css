@@ -1,0 +1,32 @@
+﻿
+.product-no-reviews,
+.product-review-links {
+	display: block !important;
+}
+.ui-tabs .product-specs-box,
+.ui-tabs .product-reviews-page,
+.ui-tabs .full-description  {
+    display: block;
+}
+.ui-tabs .full-description,
+.ui-tabs .product-specs-box,
+.ui-tabs .data-table {
+	margin-bottom: 0;
+}
+.ui-tabs .product-specs-box,
+.ui-tabs .contact-page .form {
+	margin-top: 25px;
+}
+.ui-tabs .write-review {
+	margin-top: 35px;
+}
+.ui-tabs p:last-child {
+	margin-bottom: 0;
+}
+
+@media all and (min-width: 769px) {
+
+.ui-tabs .write-review {
+	margin-top: 50px;
+}
+}

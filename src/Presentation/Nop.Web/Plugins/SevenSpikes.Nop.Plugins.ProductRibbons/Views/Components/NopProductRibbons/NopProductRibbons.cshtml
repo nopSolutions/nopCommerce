@@ -1,0 +1,45 @@
+﻿@** Copyright 2014 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+* http://www.nop-templates.com/t/licensinginfo
+*@
+
+@inject ProductRibbonsSettings _productRibbonsSettings
+
+@{    
+    var productIdObject = Url.ActionContext.RouteData.Values.FirstOrDefault(x => x.Key.Equals("productid"));
+
+    var productId = 0;
+
+    if (productIdObject.Value != null)
+    {
+        int.TryParse(productIdObject.Value.ToString(), out productId);
+    }
+
+    Html.AddCssFileParts("~/Plugins/SevenSpikes.Nop.Plugins.ProductRibbons/Styles/Ribbons.common.css");
+
+    var supportRtl = ShouldUseRtlTheme();
+    if (supportRtl)
+    {
+        Html.AddCssFileParts("~/Plugins/SevenSpikes.Nop.Plugins.ProductRibbons/Styles/Ribbons.common.rtl.css");
+    }
+
+    var theme = ThemeHelper.GetPluginTheme(Plugin.FolderName);
+
+    Html.AddCssFileParts($"~/Plugins/SevenSpikes.Nop.Plugins.ProductRibbons/Themes/{theme}/Content/Ribbons.css");
+
+    if (supportRtl)
+    {
+        Html.AddCssFileParts($"~/Plugins/SevenSpikes.Nop.Plugins.ProductRibbons/Themes/{theme}/Content/Ribbons.rtl.css");
+    }
+
+    Html.AddScriptParts(ResourceLocation.Footer, "~/Plugins/SevenSpikes.Core/Scripts/jquery.json-2.4.min.js");
+    Html.AddScriptParts(ResourceLocation.Footer, "~/Plugins/SevenSpikes.Core/Scripts/sevenspikes.core.min.js");
+    Html.AddScriptParts(ResourceLocation.Footer, "~/Plugins/SevenSpikes.Nop.Plugins.ProductRibbons/Scripts/ProductRibbons.min.js");
+}
+
+<div id="product-ribbon-info" data-productid="@productId"
+     data-productboxselector="@_productRibbonsSettings.ProductBoxSelector"
+     data-productboxpicturecontainerselector="@_productRibbonsSettings.ProductBoxPictureContainerSelector"
+     data-productpagepicturesparentcontainerselector="@_productRibbonsSettings.ProductPagePicturesParentContainerSelector"
+     data-productpagebugpicturecontainerselector="@_productRibbonsSettings.ProductPageBugPictureContainerSelector"
+     data-retrieveproductribbonsurl="@Url.RouteUrl("RetrieveProductRibbons")">
+</div>

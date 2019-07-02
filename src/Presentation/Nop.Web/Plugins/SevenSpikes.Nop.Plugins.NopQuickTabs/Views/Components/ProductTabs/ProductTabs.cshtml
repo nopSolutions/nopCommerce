@@ -1,0 +1,44 @@
+﻿@using Nop.Core;
+
+@model TabUIModel
+    
+@inject TabSettings settings;
+@inject IWorkContext workContext;
+
+@{
+    var themeFolder = ThemeHelper.GetPluginTheme(Plugin.FolderName);
+
+    if (Model.Tabs.Count == 0)
+    {
+        return;
+    }
+
+    Html.AppendScriptParts(ResourceLocation.Footer, "~/lib/jquery-ui/jquery-ui-1.12.1.custom/jquery-ui.min.js");
+
+    Html.AddScriptParts(ResourceLocation.Footer, "~/Plugins/SevenSpikes.Nop.Plugins.NopQuickTabs/Scripts/ProductTabs.min.js");
+
+    Html.AddCssFileParts($"~/Plugins/{Plugin.FolderName}/Themes/{themeFolder}/Content/QuickTabs.css");
+
+    var supportRtl = workContext.WorkingLanguage.Rtl;
+    if (supportRtl)
+    {
+        Html.AddCssFileParts($"~/Plugins/{Plugin.FolderName}/Themes/{themeFolder}/Content/QuickTabs.rtl.css");
+    }
+
+    var additionalClass = "";
+    if (Model.Tabs.Any(x => x.TabKey == "picture"))
+    {
+        additionalClass = "withPicture";
+    }
+
+    var productTabsPartialViewName = settings.EnableAjax ? Views.WithAjaxPartial : Views.WithoutAjaxPartial;
+    string productTabsPartialView = $"~/Plugins/{Plugin.FolderName}/Views/Components/ProductTabs/{productTabsPartialViewName}.cshtml";
+
+    <div id="quickTabs" class="productTabs @additionalClass"
+         data-ajaxEnabled="@settings.EnableAjax.ToString().ToLowerInvariant()"
+         data-productReviewsAddNewUrl="@Url.Action("ProductReviewsTabAddNew", "ProductTab", new { id = Model.ProductId})"
+         data-productContactUsUrl="@Url.Action("ProductContactUsTabAddNew", "ProductTab", new { id = Model.ProductId})"
+         data-couldNotLoadTabErrorMessage="@T("SevenSpikes.NopQuickTabs.Client.Tabs.CouldNotLoadTabErrorMessage").ToString()">
+        @await Html.PartialAsync(productTabsPartialView)
+    </div>
+}

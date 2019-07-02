@@ -1,0 +1,223 @@
+﻿@model SevenSpikes.Nop.Plugins.FacebookShop.Areas.Admin.Models.HomePageProductsAdminModel
+@inject AdminAreaSettings adminAreaSettings
+
+@{
+    Layout = "_AdminPopupLayout";
+
+    if (ViewBag.RefreshPage == true)
+    {
+        <script type="text/javascript">
+            try {
+                var gridElement = window.opener.document.getElementById("@ViewBag.btnId");
+                $(gridElement).click();
+            } catch (e) {}
+            window.close();
+        </script>
+
+        return;
+    }
+
+    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
+    var gridPageSizes = adminAreaSettings.GridPageSizes;
+
+    //page title
+    ViewBag.Title = T("Admin.Catalog.Categories.Products.AddNew").Text;
+}
+
+<form method="post">
+
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.Catalog.Categories.Products.AddNew")
+        </h1>
+        <div class="pull-right">
+            &nbsp;
+        </div>
+    </div>
+
+    @if (ViewBag.RefreshPage == true)
+    {
+    <script type="text/javascript">
+            try {window.opener.document.forms['@(ViewBag.formId)'].@(ViewBag.btnId).click();}
+            catch (e){}
+            window.close();
+    </script>
+    }
+
+    <div class="content">
+        <div class="form-horizontal">
+            <div class="panel-group">
+                <div class="panel panel-default panel-search panel-search-popup">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <div class="col-sm-5">
+                                        <nop-label asp-for="SearchProductName" />
+                                    </div>
+                                    <div class="col-sm-7">
+                                        <nop-editor asp-for="SearchProductName" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-5">
+                                        <nop-label asp-for="SearchCategoryId" />
+                                    </div>
+                                    <div class="col-sm-7">
+                                        <nop-select asp-for="SearchCategoryId" asp-items="Model.AvailableCategories" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-5">
+                                        <nop-label asp-for="SearchManufacturerId" />
+                                    </div>
+                                    <div class="col-sm-7">
+                                        <nop-select asp-for="SearchManufacturerId" asp-items="Model.AvailableManufacturers" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <div class="col-sm-5">
+                                        <nop-label asp-for="SearchStoreId" />
+                                    </div>
+                                    <div class="col-sm-7">
+                                        <nop-select asp-for="SearchStoreId" asp-items="Model.AvailableStores" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-5">
+                                        <nop-label asp-for="SearchVendorId" />
+                                    </div>
+                                    <div class="col-sm-7">
+                                        <nop-select asp-for="SearchVendorId" asp-items="Model.AvailableVendors" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-5">
+                                        <nop-label asp-for="SearchProductTypeId" />
+                                    </div>
+                                    <div class="col-sm-7">
+                                        <nop-select asp-for="SearchProductTypeId" asp-items="Model.AvailableProductTypes" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <button type="button" id="search-products" class="btn btn-primary btn-search">
+                                    <i class="fa fa-search"></i>
+                                    @T("Admin.Common.Search")
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel">
+                <div class="panel-body">
+                    <div id="products-grid"></div>
+
+                    <script>
+                        $(document).ready(function () {
+                            $("#products-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("ProductAddPopupList", "FacebookShopAdmin"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: additionalData
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    pageSize: @(defaultGridPageSize),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(gridPageSizes)]
+                                },
+                                editable: {
+                                    confirmation: false,
+                                    mode: "inline"
+                                },
+                                scrollable: false,
+                                columns: [{
+                                    field: "Id",
+                                    title: "@T("Admin.Common.Check")",
+                                    template: "<input type='checkbox' name='SelectedProductIds' value='#=Id#' #= Selected ? checked='checked' : '' #/>",
+                                    attributes: {
+                                        style: "text-align:center"
+                                    },
+                                    width: 50
+                                }, {
+                                    field: "Name",
+                                    title: "@T("Admin.Catalog.Products.Fields.Name")"
+                                }, {
+                                    field: "Published",
+                                    title: "@T("Admin.Catalog.Products.Fields.Published")",
+                                    width: 100,
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" },
+                                    template: '# if(Published) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
+                                }]
+                            });
+                        });
+                    </script>
+
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            $('#search-products').click(function () {
+                                var grid = $('#products-grid').data('kendoGrid');
+                                grid.dataSource.page(1); //new search. Set page size to 1
+                                //grid.dataSource.read(); we already loaded the grid above using "page" function
+                                return false;
+                            });
+                        });
+
+                        $("#@Html.IdFor(model => model.SearchProductName)").keydown(function (event) {
+                            if (event.keyCode == 13) {
+                                $("#search-products").click();
+                                return false;
+                            }
+                        });
+
+                        function additionalData() {
+                            var data = {
+                                SearchProductName: $('#@Html.IdFor(model => model.SearchProductName)').val(),
+                                SearchCategoryId: $('#SearchCategoryId').val(),
+                                SearchManufacturerId: $('#SearchManufacturerId').val(),
+                                SearchStoreId: $('#SearchStoreId').val(),
+                                SearchVendorId: $('#SearchVendorId').val(),
+                                SearchProductTypeId: $('#SearchProductTypeId').val()
+                            };
+
+                            addAntiForgeryToken(data);
+
+                            return data;
+                        }
+                    </script>
+                </div>
+                <div class="panel-footer">
+                    <button type="submit" name="save" class="btn bg-blue">
+                        <i class="fa fa-floppy-o"></i>
+                        @T("Admin.Common.Save")
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

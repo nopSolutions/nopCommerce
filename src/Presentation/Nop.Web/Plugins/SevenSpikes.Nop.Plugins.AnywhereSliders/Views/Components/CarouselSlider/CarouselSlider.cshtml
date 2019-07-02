@@ -1,0 +1,39 @@
+﻿@model CarouselModel
+
+@{
+    Layout = null;
+
+
+    Html.AppendCssFileParts("~/Plugins/SevenSpikes.Nop.Plugins.AnywhereSliders/Styles/coinSlider/coin-slider-styles.css");
+    Html.AddScriptParts(ResourceLocation.Footer, "~/Plugins/SevenSpikes.Nop.Plugins.AnywhereSliders/Scripts/coinSlider/coin-slider.min.js");
+    Html.AddScriptParts(ResourceLocation.Footer, "~/Plugins/SevenSpikes.Core/Scripts/swipeEvents.min.js");
+    Html.AddScriptParts(ResourceLocation.Footer, "~/Plugins/SevenSpikes.Nop.Plugins.AnywhereSliders/Scripts/AnywhereSliders.min.js");
+}
+
+<div class="anywhere-sliders-carousel2d-slider" id="@Model.SliderHtmlElementId"
+     data-sliderHtmlElementId="@Model.SliderHtmlElementId"
+     data-width="@Model.Settings.Width"
+     data-height="@Model.Settings.Height"
+     data-navigation="@Model.Settings.Navigation.ToString().ToLowerInvariant()"
+     data-delay="@Model.Settings.AutoSlideInterval"
+     data-links="@Model.Settings.Links.ToString().ToLowerInvariant()"
+     data-hoverPause="@Model.Settings.HoverPause.ToString().ToLowerInvariant()">
+
+    @foreach (var sliderImage in Model.SliderImages)
+            {
+                var url = "#";
+                if (!string.IsNullOrWhiteSpace(sliderImage.Url))
+                {
+                    url = sliderImage.Url;
+                }
+                <a href="@url">
+                    <img width="@Model.Settings.Width" height="@Model.Settings.Height" alt="@sliderImage.Alt" src="@sliderImage.PicturePath" />
+                    @if (Model.Settings.ShowTitle)
+                    {
+                        <span>
+                            @sliderImage.DisplayText
+                        </span>
+                    }
+                </a>
+    }
+</div>

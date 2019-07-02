@@ -1,0 +1,30 @@
+﻿@** Copyright 2016 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+    * http://www.nop-templates.com/t/licensinginfo
+*@
+
+@model ProductsModel
+
+<div id="nopAjaxFiltersNoProductsDialog" title="@T("SevenSpikes.NopAjaxFilters.Client.Common.NoResultsFoundTitle")">
+    <p>@T("SevenSpikes.NopAjaxFilters.Client.Common.NoResultsFoundMessage")</p>
+</div>
+
+@if (Model.Products.Any())
+{
+    @await Html.PartialAsync("_AjaxFIlters.ProductsInGridOrLines", Model)
+}
+
+@Html.Hidden("specificationFilterModel7SpikesJson", Model.SpecificationFilterModel7SpikesJson)
+@Html.Hidden("attributeFilterModel7SpikesJson", Model.AttributeFilterModel7SpikesJson)
+@Html.Hidden("manufacturerFilterModel7SpikesJson", Model.ManufacturerFilterModel7SpikesJson)
+@Html.Hidden("vendorFilterModel7SpikesJson", Model.VendorFilterModel7SpikesJson)
+@Html.Hidden("onSaleFilterModel7SpikesJson", Model.OnSaleFilterModel7SpikesJson)
+@Html.Hidden("inStockFilterModel7SpikesJson", Model.InStockFilterModel7SpikesJson)
+
+@Html.Hidden("urlHashQuery", Model.HashQuery)
+@Html.Hidden("currentPageSizeJson", Model.CurrentPageSizeJson)
+@Html.Hidden("currentViewModeJson", Model.CurrentViewModeJson)
+@Html.Hidden("currentOrderByJson", Model.CurrentOrderByJson)
+@Html.Hidden("currentPageNumberJson", Model.CurrentPageNumberJson)
+@Html.Hidden("priceRangeFromJson", Model.PriceRangeFromJson)
+@Html.Hidden("priceRangeToJson", Model.PriceRangeToJson)
+@Html.Hidden("totalCount", Model.TotalCount)

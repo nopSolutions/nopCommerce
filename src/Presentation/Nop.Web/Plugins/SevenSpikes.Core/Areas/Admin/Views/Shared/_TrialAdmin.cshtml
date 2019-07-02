@@ -1,0 +1,117 @@
+﻿@using SevenSpikes.Nop.Framework.Trial
+
+@model TrialData
+
+@{
+    var supportRtl = this.ShouldUseRtlTheme();
+}
+
+@if (supportRtl)
+{
+    <div class="panel-group" style="margin-bottom: 10px;
+                                    margin-top: -10px;">
+        <div>
+            <div class="row">
+                <div class="panel-body" style="display: inline-block">
+                    <div style="background-color:white;
+                                padding: 8px 0px 5px 10px;
+                                margin-right: 0px;
+                                width: 100%;
+                                margin-bottom: 5px">
+                        <div >
+                            <div style="margin-right: 10px;">
+                                <i class="fa fa-exclamation-circle" style="color: red;"></i>
+                                You are running a trial version of
+                                <b>@Model.PluginName</b>
+                            </div>
+                        </div>
+                    </div>
+                    @if (Model.AdditionalMessage != null)
+                    {
+                        <div style="background-color:white;
+                                    padding: 8px 0px 5px 10px;
+                                    margin-right: 0px;
+                                    width: 100%;
+                                    margin-bottom: 5px">
+                            <div>
+                                <div style="margin-right: 10px;">
+                                    <i class="fa fa-exclamation-circle" style="color: red;"></i>
+                                    @Model.AdditionalMessage
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    <div  style="margin: 0px;">
+                        <button class="btn bg-red" type="button" onclick="OpenInNewTab('@Model.PluginUrlInStore')">
+                            <i class="fa fa-shopping-cart"></i>
+                            Buy Full Version
+                        </button>
+                        <button class="btn bg-blue" type="button" onclick="OpenInNewTab('https://www.nop-templates.com/nopcommerce-plugin-collections')">
+                            <i class="fa fa-shopping-cart"></i>
+                            Buy Nop Ultimate Plugin Collection
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="panel-group" style="margin-bottom: 10px;
+                                    margin-top: -10px;">
+        <div>
+            <div class="row">
+                <div class="panel-body" style="display: inline-block">
+                    <div style="background-color:white;
+                                padding: 8px 10px 5px 0px;
+                                margin-left: 0px;
+                                width: 100%;
+                                margin-bottom: 5px">
+                        <div>
+                            <div style="margin-left: 10px;">
+                                <i class="fa fa-exclamation-circle" style="color: red;"></i>
+                                You are running a trial version of
+                                <b>@Model.PluginName</b>
+                            </div>
+                        </div>
+                    </div>
+                    @if (Model.AdditionalMessage != null)
+                    {
+                        <div style="background-color:white;
+                                    padding: 8px 25px 5px 0px;
+                                    margin-left: 0px;
+                                    width: 100%;
+                                    margin-bottom: 5px">
+                            <div>
+                                <div style="margin-left: 10px;">
+                                    <i class="fa fa-exclamation-circle" style="color: red;"></i>
+                                    @Model.AdditionalMessage
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    <div style="margin: 0px;">
+                        <button class="btn bg-red" type="button" onclick="OpenInNewTab('@Model.PluginUrlInStore')">
+                            <i class="fa fa-shopping-cart"></i>
+                            Buy Full Version
+                        </button>
+                        <button class="btn bg-blue" type="button" onclick="OpenInNewTab('https://www.nop-templates.com/nopcommerce-plugin-collections')">
+                            <i class="fa fa-shopping-cart"></i>
+                            Buy Nop Ultimate Plugin Collection
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<script type="text/javascript">
+
+    function OpenInNewTab(url) {
+        var win = window.open(url, '_blank');
+        win.focus();
+    }
+
+</script>

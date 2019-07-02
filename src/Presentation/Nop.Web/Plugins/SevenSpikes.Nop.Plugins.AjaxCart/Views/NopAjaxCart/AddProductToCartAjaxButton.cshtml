@@ -1,0 +1,51 @@
+﻿@inject NopAjaxCartSettings nopAjaxCartSettingsModel
+
+@model SevenSpikes.Nop.Plugins.AjaxCart.Models.AjaxCartButtonsModel
+
+@if (Model.AddProductToCartAjaxButtonModels.Count > 0)
+{
+    bool isThereAnyProductsWithAllowedQuantities = false;    
+
+    for (var i = 0; i < Model.AddProductToCartAjaxButtonModels.Count; i++)
+    {
+        var button = Model.AddProductToCartAjaxButtonModels[i];
+
+        <div class="ajax-cart-button-wrapper @(nopAjaxCartSettingsModel.EnableProductQuantityTextBox ? Html.Raw("qty-enabled") : null)" data-productid="@button.ProductId" data-isproductpage="@button.IsProductPage.ToString().ToLowerInvariant()">
+            @if (button.IsProductPage)
+            {
+                <input type="button" id="add-to-cart-button-@button.ProductId" value="@button.ButtonValue" class="button-1 add-to-cart-button nopAjaxCartProductVariantAddToCartButton" data-productid="@button.ProductId" />
+            }
+            else
+            {
+                if (nopAjaxCartSettingsModel.EnableProductQuantityTextBox)
+                {
+                    if (button.AllowedQuantities.Count > 0)
+                    {
+                        isThereAnyProductsWithAllowedQuantities = true;
+
+                        <select data-quantityproductid="@button.ProductId" class="productQuantityDropdown">
+                            @foreach (var allowedQuantity in button.AllowedQuantities)
+                            {
+                                <option value="@allowedQuantity.Value">@allowedQuantity.Text</option>
+                            }
+                        </select>
+
+                        <input class="@string.Concat("productQuantityChanged", button.ProductId)" type="hidden" value="no" />
+                    }
+                    else
+                    {
+                        <input type="text" data-quantityproductid="@button.ProductId" class="productQuantityTextBox" value="@button.DefaultProductMinimumQuantity" />
+                    }
+                }
+
+                <input type="button" value="@button.ButtonValue" class="button-2 product-box-add-to-cart-button nopAjaxCartProductListAddToCartButton" data-productid="@button.ProductId" />
+            }
+                      
+
+            @if (isThereAnyProductsWithAllowedQuantities && i == Model.AddProductToCartAjaxButtonModels.Count - 1)
+            {
+                <input type="hidden" class="ajaxCartAllowedQuantitesHover" data-productItemSelector="nopAjaxCartSettingsModel.ProductBoxProductItemElementSelector" />
+            }
+        </div>
+    }
+}

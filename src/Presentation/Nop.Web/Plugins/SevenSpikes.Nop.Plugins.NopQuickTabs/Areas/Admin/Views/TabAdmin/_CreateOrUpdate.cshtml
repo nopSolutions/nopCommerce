@@ -1,0 +1,67 @@
+﻿@using SevenSpikes.Nop.Framework.MVCExtensions
+
+@model TabModel
+<div asp-validation-summary="All"></div>
+<input type="hidden" asp-for="Id" />
+
+@if (!ViewBag.isPopup)
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#@Html.IdFor(model => model.TabMode)").change(showAppropriateTabs);
+
+            showAppropriateTabs();
+        });
+
+            var conditionsSelector = '#tab-edit > ul.k-tabstrip-items li:nth-child(2)';
+            var productMappingsSelector = '#tab-edit > ul.k-tabstrip-items li:nth-child(3)';
+            var productOverridesMappingsSelector = '#tab-edit > ul.k-tabstrip-items li:nth-child(4)';
+            var displayOrderSelector = '.tabDisplayOrder';
+
+            $(productMappingsSelector).hide();
+            $(conditionsSelector).hide();
+            $(productOverridesMappingsSelector).hide();
+            $(displayOrderSelector).hide();
+
+            function showAppropriateTabs(element) {
+                //Mappings
+                if ($('#@Html.IdFor(model => model.TabMode)').val() === "5") {
+                    $('a[data-tab-name="tab-conditions"]').parent().hide();
+                    $('a[data-tab-name="tab-products"]').parent().show();
+                    $('a[data-tab-name="tab-product-overrides"]').parent().hide();
+                    $(displayOrderSelector).hide();
+                //Conditions
+                } else if ($('#@Html.IdFor(model => model.TabMode)').val() === "10") {
+                    $('a[data-tab-name="tab-products"]').parent().hide();
+                    $('a[data-tab-name="tab-conditions"]').parent().show();
+                    $('a[data-tab-name="tab-product-overrides"]').parent().show();
+                    $(displayOrderSelector).show();
+                }
+            }
+    </script>
+}
+
+<div class="content">
+    <div class="form-horizontal">
+        @Html.TrialMessage(Model.IsTrialVersion, Plugin.Name, Plugin.UrlInStore)
+        @await Component.InvokeAsync("SettingMode")
+        <nop-tabs id="product-tab-edit">
+            <nop-tab asp-name="tab-info" asp-title="@T("SevenSpikes.NopQuickTabs.Admin.Tabs.InfoTab")" asp-default="true">
+                @await Html.PartialAsync(AdminViews.ViewAdminTabsCreateOrUpdateInfoPartial, Model)
+            </nop-tab>
+            @if (!ViewBag.isPopup && Model.Id > 0)
+            {
+                <nop-tab asp-name="tab-conditions" asp-title="@T("SevenSpikes.NopQuickTabs.Admin.Tabs.Conditions")" class="advanced-setting">
+                    @await Component.InvokeAsync("ConditionsAdmin", new { entityType = Plugin.EntityType, entityId = Model.Id, availableConditionTypes = Plugin.AvailableConditionTypes, active = true, defaultGroupState = true })
+                </nop-tab>
+                <nop-tab asp-name="tab-products" asp-title="@T("SevenSpikes.NopQuickTabs.Admin.Tabs.Products")" class="advanced-setting">
+                    <p>@String.Format(T("SevenSpikes.NopQuickTabs.Admin.Tabs.Products.HowMappingWorks").ToString(), Model.SystemName)</p>
+                    @await Component.InvokeAsync("ProductMappingsAdmin", new { entityType = Plugin.EntityType, entityId = Model.Id, availableConditionTypes = Plugin.AvailableConditionTypes, active = true, defaultGroupState = true })
+                </nop-tab>
+                <nop-tab asp-name="tab-product-overrides" asp-title="@T("SevenSpikes.NopQuickTabs.Admin.Tabs.ProductOverrides")" class="advanced-setting">
+                    @await Component.InvokeAsync("ProductOverridesAdmin", new { entityType = Plugin.EntityType, entityId = Model.Id })
+                </nop-tab>
+            }
+        </nop-tabs>
+    </div>
+</div>

@@ -1,0 +1,155 @@
+﻿@using Nop.Services.Common;
+
+@model int
+
+@inject IWebHelper webHelper
+@inject IWorkContext workContext
+@inject IGenericAttributeService genericAttributeService
+@inject AdminAreaSettings adminAreaSettings
+
+@{
+    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
+    var gridPageSizes = adminAreaSettings.GridPageSizes;
+
+    var productId = Model;
+
+    var storeLocation = webHelper.GetStoreLocation().TrimEnd('/');
+
+    const string richBlogRelatedBlogPostsBlockAttributeName = "ProductPage.SS.RichBlogRelatedBlogPosts";
+    var hideRichBlogRelatedBlogPostsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, richBlogRelatedBlogPostsBlockAttributeName, defaultValue: true);
+}
+
+<nop-panel asp-name="product-rich-blog-related-blog-posts" asp-icon="fa fa-link" asp-title="@T("SevenSpikes.RichBlog.Admin.Submenus.RelatedBlogPosts")" asp-hide-block-attribute-name="@richBlogRelatedBlogPostsBlockAttributeName" asp-hide="@hideRichBlogRelatedBlogPostsBlock" asp-advanced="false">
+    <div class="panel-body">
+        <div class="panel panel-default">
+            <div class="panel-body">
+
+                @if (productId > 0)
+                {
+                    <div class="content-header clearfix">
+                        <div class="pull-left">
+                            <input type="submit" id="btnAddNewRelatedBlogPost" name="btnAddNewRelatedBlogPost" value="@T("SevenSpikes.RichBlog.Admin.RelatedBlogPost.AddNew")" class="btn bg-blue"
+                                   onclick="javascript: OpenWindow('@(Url.Action("RelatedBlogPosts", "RelatedBlogPostAdmin", new {blogPostId = Model, btnId = "btnRefreshRelatedBlogPosts"}))', 800, 800, true); return false;" />
+                        </div>
+                    </div>
+
+                    <div class="content">
+                        <div class="form-horizontal">
+                            <div class="panel-group">
+                                <div class="panel panel-default">
+                                    <div class="panel-body">
+                                        <div id="related-blog-posts-grid"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <input type="submit" id="btnRefreshRelatedBlogPosts" name="btnRefreshRelatedBlogPosts" style="display: none" />
+
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            $('#btnRefreshRelatedBlogPosts').click(function () {
+								//refresh grid
+								var optionsGrid = $("#related-blog-posts-grid").data('kendoGrid');
+								optionsGrid.dataSource.read();
+
+								//return false to don't reload a page
+								return false;
+							});
+
+                            $("#related-blog-posts-grid").kendoGrid({
+								dataSource: {
+									type: "json",
+									transport: {
+										read: {
+											url: "@Html.Raw(Url.Action("List", "RelatedBlogPostAdmin", new { blogPostId = Model }))",
+											type: "POST",
+											dataType: "json",
+											data: addAntiForgeryToken
+										},
+										update: {
+											url: "@Html.Raw(Url.Action("Edit", "RelatedBlogPostAdmin"))",
+											type: "POST",
+											dataType: "json",
+											data: addAntiForgeryToken
+										},
+										destroy: {
+											url: "@Html.Raw(Url.Action("Delete", "RelatedBlogPostAdmin"))",
+											type: "POST",
+											dataType: "json",
+											data: addAntiForgeryToken
+										}
+									},
+									schema: {
+										data: "Data",
+										total: "Total",
+										errors: "Errors",
+										model: {
+											id: "Id",
+											fields: {
+												Id: { editable: false, type: "number" },
+												RelatedBlogPostId: { editable: false, type: "number" },
+												RelatedBlogPostTitle: { editable: false, type: "string" },
+												DisplayOrder: { editable: true, type: "number" }
+											}
+										}
+									},
+									requestEnd: function (e) {
+										if (e.type == "create" || e.type == "update") {
+											this.read();
+										}
+									},
+									error: function (e) {
+										display_kendoui_grid_error(e);
+										// Cancel the changes
+										this.cancelChanges();
+									},
+									serverPaging: true,
+									serverFiltering: true,
+									serverSorting: true
+								},
+								pageable: {
+									refresh: true,
+									numeric: false,
+									previousNext: false,
+									info: false
+								},
+								editable: {
+									confirmation: false,
+									mode: "inline"
+								},
+								scrollable: false,
+								columns: [{
+									field: "RelatedBlogPostTitle",
+									title: "@T("SevenSpikes.RichBlog.Admin.RelatedBlogPost.Title")",
+									template: '<a href="@Url.Content("~/Admin/Blog/Edit/")#=RelatedBlogPostId#">#=RelatedBlogPostTitle#</a>',
+									width: 200,
+								}, {
+									field: "DisplayOrder",
+									title: "@T("SevenSpikes.RichBlog.Admin.RelatedBlogPost.DisplayOrder")",
+									width: 200,
+									//integer format
+									format: "{0:0}"
+								}, {
+									command: [{
+										name: "edit",
+										text: "@T("Admin.Common.Edit")"
+									}, {
+										name: "destroy",
+										text: "@T("Admin.Common.Delete")"
+									}],
+									width: 200
+								}]
+							});
+                        });
+                    </script>
+                }
+                else
+                {
+                    @T("SevenSpikes.RichBlog.Admin.RelatedBlogPost.SaveBeforeEdit")
+                }
+            </div>
+        </div>
+    </div>
+</nop-panel>

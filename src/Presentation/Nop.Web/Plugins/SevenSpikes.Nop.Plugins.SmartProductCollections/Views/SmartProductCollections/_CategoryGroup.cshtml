@@ -1,0 +1,69 @@
+﻿@model CategoryGroupModel
+
+<div class="spc-header">
+    <ul class="navigation">
+        @foreach (var tab in Model.Tabs)
+        {
+            <li class="tab" data-tabId="@tab.Id" notloaded>
+                <span>@tab.Title</span>
+            </li>
+        }
+    </ul>
+</div>
+
+<div class="spc-body">
+    <div class="category-info">
+        <div class="category-details">
+            <h2 class="category-title">
+                <a href="@Url.RouteUrl("Category", new {SeName = Model.SeName})" title="@Model.Name">@Model.Name</a>
+            </h2>
+
+            <div class="mobile-navigation category-mobile-navigation">
+                <select class="category-mobile-navigation-select">
+                    @foreach (var tab in Model.Tabs)
+                    {
+                        <option class="tab" value="@tab.Id" data-tabId="@tab.Id">@tab.Title</option>
+                    }
+                </select>
+            </div>
+
+            @if (Model.SubCategories.Count > 0)
+            {
+                <ul class="category-sublist">
+                    @foreach (var subcategory in Model.SubCategories)
+                    {
+                        <li>
+                            <a href="@Url.RouteUrl("Category", new {SeName = subcategory.SeName})" title="@subcategory.Name">@subcategory.Name</a>
+                        </li>
+                    }
+                    @if (Model.DisplayViewAllSubcategoriesLink)
+                    {
+                        <li>
+                            <a class="view-all" href="@Url.RouteUrl("Category", new {SeName = Model.SeName})" title="@Model.Name">
+                                @T("SevenSpikes.Nop.Plugins.SmartProductCollections.Categories.ViewAll")
+                            </a>
+                        </li>
+                    }
+                </ul>
+            }
+        </div>
+        <div class="category-picture">
+            <a href="@Url.RouteUrl("Category", new {SeName = Model.SeName})" title="@Model.Name">
+                <img src="@Model.PictureModel.FullSizeImageUrl" alt="@Model.PictureModel.Title" />
+            </a>
+        </div>
+    </div>
+    <div class="category-products">
+        @foreach (var tab in Model.Tabs)
+        {
+            <div class="product-grid" data-tabId="@tab.Id">
+                <div class="item-grid">
+                    @await Html.PartialAsync("_Grid", tab.Products)
+                </div>
+            </div>
+        }
+        <div class="loading-overlay">
+            <span>@T("SevenSpikes.SmartProductCollections.Public.Loading")</span>
+        </div>
+    </div>
+</div>

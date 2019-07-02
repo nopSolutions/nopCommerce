@@ -1,0 +1,151 @@
+﻿@model ManageResourcesGridModel
+
+@{
+    Layout = AdminViewLocations.AdminLayoutViewPath;
+    
+    Html.SetActiveMenuItemSystemName(Model.ActiveMenuItemSystemName);
+}
+
+<nop-antiforgery-token />
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        @T("SevenSpikes.Plugins.Admin.ManageResources")
+    </h1>
+</div>
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">            
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="col-md-4">
+                                <div class="label-wrapper">
+                                    <label class="control-label" for="default-resources-languages">@T("SevenSpikes.Plugins.Admin.ManageResources.SelectLanguage")</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <nop-select asp-for-name="default-resources-languages" asp-items="Model.AvailableLanguages" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-4">
+                                <div class="label-wrapper">
+                                    <label class="control-label" for="include-admin-resources-checkbox">@T("SevenSpikes.Plugins.Admin.ManageResources.IncludeAdminResources")</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <input type="checkbox" id="include-admin-resources-checkbox" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="default-resources-grid"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+                        $(document).ready(function () {
+                            function getlanguageAndAntiforgeryToken() {
+                                var data = {
+                                    "languageId": parseInt($('#default-resources-languages').val()) || 0,
+                                    "includeAdminResources": $('#include-admin-resources-checkbox').is(':checked')
+                                };
+                                data = addAntiForgeryToken(data);
+                                return data;
+                            }
+
+                            $("#default-resources-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("ManageResourcesRead", "ManageResourcesAdmin", new { pluginFolderName = Model.PluginFolderName }))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: getlanguageAndAntiforgeryToken
+                                        },
+                                        update: {
+                                            url: "@Html.Raw(Url.Action("ManageResourcesUpdate", "ManageResourcesAdmin"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: getlanguageAndAntiforgeryToken
+                                        },
+                                        destroy: {
+                                            url: "@Html.Raw(Url.Action("ManageResourcesDelete", "ManageResourcesAdmin"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: getlanguageAndAntiforgeryToken
+                                        }
+                                    },
+                                    sort: { field: "Key", dir: "asc" },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors",
+                                        model: {
+                                            id: "Key",
+                                            fields: {
+                                                Key: { editable: false, type: "string" },
+                                                CurrentValue: { editable: true, type: "string" },
+                                                DefaultValue: { editable: false, type: "string" }
+                                            }
+                                        }
+                                    },
+                                    requestEnd: function (e) {
+                                        if (e.type == "update") {
+                                            this.read();
+                                        }
+                                    },
+                                    error: function (e) {
+                                        display_kendoui_grid_error(e);
+                                        this.cancelChanges();
+                                    }
+                                },
+                                editable: {
+                                    confirmation: true,
+                                    mode: "inline"
+                                },
+                                filterable: {
+                                    extra: false,
+                                    operators: {
+                                        string: {
+                                            contains: "Contains",
+                                            eq: "Is equal to",
+                                            startswith: "Starts with"
+                                        }
+                                    }
+                                },
+                                sortable: true,
+                                scrollable: false,
+                                columns: [{
+                                    field: "Key",
+                                    title: "@T("admin.configuration.languages.resources.fields.name")"
+                                }, {
+                                    field: "CurrentValue",
+                                    title: "@T("admin.configuration.languages.resources.fields.value")",
+                                    editable: true
+                                }, {
+                                    command: [{
+                                        name: "edit",
+                                        text: "@T("Admin.Common.Edit")"
+                                    }@*, {
+                                name: "destroy",
+                                text: "@T("Admin.Common.Delete")"
+                            }*@],
+                                    filterable: false,
+                                    width: 200
+                                }]
+                            });
+
+                            $('#default-resources-languages, #include-admin-resources-checkbox').on('change', function () {
+                                $('#default-resources-grid').data('kendoGrid').dataSource.read();
+                            });
+                        });
+</script>

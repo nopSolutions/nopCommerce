@@ -1,0 +1,24 @@
+﻿@model ProductRibbonsPublicModel
+
+@if (Model.ProductRibbonModels.Count > 0)
+{
+    foreach (var productRibbon in Model.ProductRibbonModels)
+    {
+        if (productRibbon.CategoryPageRibbon != null && productRibbon.CategoryPageRibbon.Enabled)
+        {
+            <a href="@Url.RouteUrl("Product", new { SeName = productRibbon.CategoryPageRibbon.ProductSeName })" class="ribbon-position @productRibbon.CategoryPageRibbon.Position" data-productribbonid="@productRibbon.CategoryPageRibbon.ProductRibbonId" data-productid="@productRibbon.CategoryPageRibbon.ProductId">
+                <div class="product-ribbon" style="@productRibbon.CategoryPageRibbon.ContainerStyle">
+                    @await Html.PartialAsync("_BasePageRibbonHtml", productRibbon.CategoryPageRibbon)
+                </div>
+            </a>
+        }
+        if (productRibbon.ProductPageRibbon != null && productRibbon.ProductPageRibbon.Enabled)
+        {
+            <div class="ribbon-position @productRibbon.ProductPageRibbon.Position" data-productribbonid="@productRibbon.ProductPageRibbon.ProductRibbonId" data-productid="@productRibbon.ProductPageRibbon.ProductId">
+                <div class="product-ribbon" style="@productRibbon.ProductPageRibbon.ContainerStyle">
+                    @await Html.PartialAsync("_BasePageRibbonHtml", productRibbon.ProductPageRibbon)
+                </div>
+            </div>
+        }
+    }
+}

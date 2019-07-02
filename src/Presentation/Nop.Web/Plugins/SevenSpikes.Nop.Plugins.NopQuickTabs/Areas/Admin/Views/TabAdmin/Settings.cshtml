@@ -1,0 +1,248 @@
+﻿@model TabSettingsModel
+
+@{
+    Layout = AdminViewLocations.AdminLayoutViewPath;
+
+    Html.SetActiveMenuItemSystemName("SevenSpikes.NopQuickTabs.Admin.Submenus.Settings");
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var productFullDescription = "#@Html.IdFor(model => model.EnableProductFullDescriptionTab)";
+        var productFullDescriptionClass = ".fullDescription";
+
+        var productSpecifications = "#@Html.IdFor(model => model.EnableProductSpecificationsTab)";
+        var productSpecificationsClass = ".specifications";
+
+        var productReviews = "#@Html.IdFor(model => model.EnableProductReviewsTab)";
+        var productReviewsClass = ".reviews";
+
+        var contactUs = "#@Html.IdFor(model => model.EnableProductContactUsTab)";
+        var contactUsClass = ".contactUs";
+
+        var sendToVendorEmail = "#@Html.IdFor(model => model.SendEmailToProductVendor)";
+        var sendToVendorClass = ".sendToVendor";
+
+        var attachmentsEnabled = "#@Html.IdFor(model => model.EnableProductAttachmentsTab)";
+        var attachmentsClass = ".attachmentsTab";
+
+        $(productFullDescription).change(function () {
+            toggleSetting(productFullDescription, productFullDescriptionClass);
+        });
+
+        $(productSpecifications).change(function () {
+            toggleSetting(productSpecifications, productSpecificationsClass);
+        });
+
+        $(productReviews).change(function () {
+            toggleSetting(productReviews, productReviewsClass);
+        });
+
+        $(contactUs).change(function () {
+            toggleSetting(contactUs, contactUsClass);
+            toggleSetting(sendToVendorEmail, sendToVendorClass);
+
+            if ($(contactUs).is(':checked') == false) {
+                $(sendToVendorClass).addClass('closed').removeClass('opened').hide();
+            }
+
+        });
+
+        $(sendToVendorEmail).change(function () {
+            toggleSetting(sendToVendorEmail, sendToVendorClass);
+        });
+
+        $(attachmentsEnabled).change(function () {
+            toggleSetting(attachmentsEnabled, attachmentsClass);
+        });
+
+        $(sendToVendorClass).addClass('closed').removeClass('opened').hide();
+
+        toggleSetting(productFullDescription, productFullDescriptionClass);
+        toggleSetting(productSpecifications, productSpecificationsClass);
+        toggleSetting(productReviews, productReviewsClass);
+        toggleSetting(contactUs, contactUsClass);
+        toggleSetting(attachmentsEnabled, attachmentsClass);
+
+        if ($(contactUs).is(':checked')) {
+            toggleSetting(sendToVendorEmail, sendToVendorClass);
+        }
+    });
+
+    function toggleSetting(setting, element) {
+        if ($(setting).is(':checked') == true) {
+            $(element).addClass('opened').removeClass('closed').show();
+        } else {
+            $(element).addClass('closed').removeClass('opened').hide();
+        }
+    }
+</script>
+
+<form method="post">
+
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("SevenSpikes.NopQuickTabs.Admin.Tabs.Settings.Common")
+        </h1>
+        <div class="pull-right">
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="form-horizontal">
+            @Html.TrialMessage(Model.IsTrialVersion, Plugin.Name, Plugin.UrlInStore)
+            @await Component.InvokeAsync("StoreScopeConfiguration")
+
+            <div class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="Enable_OverrideForStore" asp-input="Enable" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="Enable" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="Enable" />
+                                <span asp-validation-for="Enable"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="EnableAjax_OverrideForStore" asp-input="EnableAjax" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="EnableAjax" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="EnableAjax" />
+                                <span asp-validation-for="EnableAjax"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="EnableProductFullDescriptionTab_OverrideForStore" asp-input="EnableProductFullDescriptionTab" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="EnableProductFullDescriptionTab" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="EnableProductFullDescriptionTab" />
+                                <span asp-validation-for="EnableProductFullDescriptionTab"></span>
+                            </div>
+                        </div>
+                        <div class="form-group fullDescription">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="ProductFullDescriptionTabDisplayOrder_OverrideForStore" asp-input="ProductFullDescriptionTabDisplayOrder" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="ProductFullDescriptionTabDisplayOrder" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="ProductFullDescriptionTabDisplayOrder" />
+                                <span asp-validation-for="ProductFullDescriptionTabDisplayOrder"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="EnableProductSpecificationsTab_OverrideForStore" asp-input="EnableProductSpecificationsTab" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="EnableProductSpecificationsTab" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="EnableProductSpecificationsTab" />
+                                <span asp-validation-for="EnableProductSpecificationsTab"></span>
+                            </div>
+                        </div>
+                        <div class="form-group specifications">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="ProductSpecificationsTabDisplayOrder_OverrideForStore" asp-input="ProductSpecificationsTabDisplayOrder" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="ProductSpecificationsTabDisplayOrder" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="ProductSpecificationsTabDisplayOrder" />
+                                <span asp-validation-for="ProductSpecificationsTabDisplayOrder"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="EnableProductReviewsTab_OverrideForStore" asp-input="EnableProductReviewsTab" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="EnableProductReviewsTab" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="EnableProductReviewsTab" />
+                                <span asp-validation-for="EnableProductReviewsTab"></span>
+                            </div>
+                        </div>
+                        <div class="form-group reviews">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="ProductReviewsTabDisplayOrder_OverrideForStore" asp-input="ProductReviewsTabDisplayOrder" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="ProductReviewsTabDisplayOrder" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="ProductReviewsTabDisplayOrder" />
+                                <span asp-validation-for="ProductReviewsTabDisplayOrder"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="EnableProductContactUsTab_OverrideForStore" asp-input="EnableProductContactUsTab" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="EnableProductContactUsTab" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="EnableProductContactUsTab" />
+                                <span asp-validation-for="EnableProductContactUsTab"></span>
+                            </div>
+                        </div>
+                        <div class="form-group contactUs">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="SendEmailToProductVendor_OverrideForStore" asp-input="SendEmailToProductVendor" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="SendEmailToProductVendor" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="SendEmailToProductVendor" />
+                                <span asp-validation-for="SendEmailToProductVendor"></span>
+                            </div>
+                        </div>
+                        <div class="form-group sendToVendor">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="IncludeStoreOwnerInBcc_OverrideForStore" asp-input="IncludeStoreOwnerInBcc" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="IncludeStoreOwnerInBcc" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="IncludeStoreOwnerInBcc" />
+                                <span asp-validation-for="IncludeStoreOwnerInBcc"></span>
+                            </div>
+                        </div>
+                        <div class="form-group contactUs">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="ProductContactUsTabDisplayOrder_OverrideForStore" asp-input="ProductContactUsTabDisplayOrder" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="ProductContactUsTabDisplayOrder" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="ProductContactUsTabDisplayOrder" />
+                                <span asp-validation-for="ProductContactUsTabDisplayOrder"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="EnableProductAttachmentsTab_OverrideForStore" asp-input="EnableProductAttachmentsTab" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="EnableProductAttachmentsTab" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="EnableProductAttachmentsTab" />
+                                <span asp-validation-for="EnableProductAttachmentsTab"></span>
+                            </div>
+                        </div>
+                        <div class="form-group attachmentsTab">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="ProductAttachmentsTabDisplayOrder_OverrideForStore" asp-input="ProductAttachmentsTabDisplayOrder" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="ProductAttachmentsTabDisplayOrder" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="ProductAttachmentsTabDisplayOrder" />
+                                <span asp-validation-for="ProductAttachmentsTabDisplayOrder"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

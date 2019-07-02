@@ -1,0 +1,98 @@
+﻿@model NopAjaxFiltersSettingsModel
+
+<div class="panel-group">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="ProductsListPanelSelector_OverrideForStore" asp-input="ProductsListPanelSelector" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="ProductsListPanelSelector" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="ProductsListPanelSelector" />
+                    <span asp-validation-for="ProductsListPanelSelector"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="ProductsGridPanelSelector_OverrideForStore" asp-input="ProductsGridPanelSelector" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="ProductsGridPanelSelector" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="ProductsGridPanelSelector" />
+                    <span asp-validation-for="ProductsGridPanelSelector"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="PagerPanelSelector_OverrideForStore" asp-input="PagerPanelSelector" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="PagerPanelSelector" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="PagerPanelSelector" />
+                    <span asp-validation-for="PagerPanelSelector"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="PagerPanelIntegrationSelector_OverrideForStore" asp-input="PagerPanelIntegrationSelector" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="PagerPanelIntegrationSelector" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="PagerPanelIntegrationSelector" />
+                    <span asp-validation-for="PagerPanelIntegrationSelector"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="SortOptionsDropDownSelector_OverrideForStore" asp-input="SortOptionsDropDownSelector" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="SortOptionsDropDownSelector" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="SortOptionsDropDownSelector" />
+                    <span asp-validation-for="SortOptionsDropDownSelector"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="ViewOptionsDropDownSelector_OverrideForStore" asp-input="ViewOptionsDropDownSelector" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="ViewOptionsDropDownSelector" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="ViewOptionsDropDownSelector" />
+                    <span asp-validation-for="ViewOptionsDropDownSelector"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="ProductPageSizeDropDownSelector_OverrideForStore" asp-input="ProductPageSizeDropDownSelector" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="ProductPageSizeDropDownSelector" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="ProductPageSizeDropDownSelector" />
+                    <span asp-validation-for="ProductPageSizeDropDownSelector"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="ElementToScrollAfterFiltrationSelector_OverrideForStore" asp-input="ElementToScrollAfterFiltrationSelector" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="ElementToScrollAfterFiltrationSelector" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="ElementToScrollAfterFiltrationSelector" />
+                    <span asp-validation-for="ElementToScrollAfterFiltrationSelector"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="ShowNumberOfReturnedProductsSelector_OverrideForStore" asp-input="ShowNumberOfReturnedProductsSelector" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="ShowNumberOfReturnedProductsSelector" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="ShowNumberOfReturnedProductsSelector" />
+                    <span asp-validation-for="ShowNumberOfReturnedProductsSelector"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

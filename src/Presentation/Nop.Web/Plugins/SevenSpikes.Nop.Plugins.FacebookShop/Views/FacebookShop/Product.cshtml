@@ -1,0 +1,88 @@
+﻿@model FacebookProductDetailsModel
+@{
+    Layout = "Layout";
+
+    string productUrl = Url.RouteUrl("Product", new { SeName = Model.SeName }, this.Url.ActionContext.HttpContext.Request.Scheme);
+}
+
+<div class="page product-page">
+    <div class="back-to-category-wrap">
+        @if (!String.IsNullOrEmpty(Model.BackLink))
+        {
+            <a class="back-to-category-link" href="@Model.BackLink" title="@Model.BackLinkText">@Model.BackLinkText</a>
+        }
+    </div>
+    <div class="gallery">
+        <div class="picture">
+            <img class="picture-img" alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" />
+        </div>
+
+        @if (Model.PictureModels.Count > 1)
+        {
+            <div class="picture-thumbs">
+                @foreach (var picture in Model.PictureModels)
+                {
+                    // FullSizeImareUrl is used for href of the link, so that when clicked it will replace the main image with the bigger image size of the thumb
+                    <a class="thumb-link" href="@picture.FullSizeImageUrl" title="@Model.Name">
+                        <img class="thumb-img" src="@picture.ImageUrl" alt="@picture.AlternateText" title="@picture.Title" />
+                    </a>
+                }
+            </div>
+            <script type="text/javascript" asp-location="Footer">
+                $('.thumb-link').on('click', function (e) {
+                    e.preventDefault();
+                    $('.gallery .picture-img').attr('src', $(this).attr('href'));
+                });
+            </script>
+        }
+    </div>
+
+    <div class="overview">
+        @if(Model.Category.Id > 0)
+        {
+            <h3 class="category-title">@Model.Category.Name</h3>    
+        }
+        
+        <h1 class="page-title">
+            <span class="title-text">@Model.Name</span>
+        </h1>
+
+        @if (!String.IsNullOrEmpty(Model.ShortDescription))
+        {
+            <div class="short-description">
+                @Html.Raw(Model.ShortDescription)
+            </div>
+        }
+
+        @if (Model.Manufacturer.Id > 0)
+        {
+            <div class="manufacturer-wrap">
+                <label class="manufacturer-label">@T("SevenSpikes.FacebookShop.Public.ProductPage.Manufacturer")</label>
+                <a class="manufacturer-value" href="@Url.RouteUrl("SevenSpikes.Nop.Plugins.FacebookShop.Manufacturer", new {manufacturerId = Model.Manufacturer.Id})" title="@Model.Manufacturer.Name">@Model.Manufacturer.Name</a>
+            </div>
+        }
+
+        <div class="prices">
+            @if (!String.IsNullOrEmpty(Model.ProductPrice.OldPrice))
+            {
+                <span class="price old-price">@Model.ProductPrice.OldPrice</span>
+            }
+            <span class="price actual-price">@Model.ProductPrice.Price</span>
+        </div>
+
+        <div class="buttons-wrap">
+            <a class="button-link details" href="@productUrl" title="@Model.Name" target="_blank">@T("Products.Details")</a>
+            <!-- Facebook -->
+            <a class="button-link fb-share" href="https://www.facebook.com/sharer.php?u=@productUrl">@T("SevenSpikes.FacebookShop.Public.ProductBox.ShareToFacebook")</a>
+        </div>
+    </div>
+
+    @if (!String.IsNullOrEmpty(Model.FullDescription))
+    {
+        <div class="full-description">
+            @Html.Raw(Model.FullDescription)
+        </div>
+    }
+</div>
+
+@await Component.InvokeAsync("FacebookRelatedProducts", new {productId = Model.Id})

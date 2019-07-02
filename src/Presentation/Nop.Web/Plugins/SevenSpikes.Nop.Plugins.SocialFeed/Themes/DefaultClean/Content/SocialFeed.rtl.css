@@ -1,0 +1,134 @@
+﻿.social-feed .title {
+	padding: 15px 42px 15px 0;
+	text-align: right;
+}
+.social-feed .sub-title {
+	padding: 12px 21px 12px 0;
+	background-position: right 1px center;
+	text-align: right;
+}
+.social-feed .sub-title-link {
+    display: inline-block;
+}
+.social-feed .avatar-wrap {
+	float: right;
+}
+.social-feed .author-date-wrap {
+	margin: 0 60px 0 0;
+	text-align: right;
+}
+.social-feed .post-date {
+	padding: 0 14px 0 0;
+    background-position: right center;
+}
+.social-feed .post-description {
+	text-align: right;
+}
+.social-feed .youtube-video:before {
+	right: 0;
+	left: 0;
+}
+.social-feed .post-link-btn {
+	padding: 10px 35px 10px 20px;
+	background-position: 15px center;
+	text-align: right;
+}
+.social-feed .post-link-btn::after {
+	right: 0;
+	left: auto;
+}
+.facebook-feed .title {
+	background-position: right 4px center;
+}
+.twitter-feed .title {
+	background-position: right 4px center;
+}
+.twitter-feed .post-text {
+	text-align: right;
+}
+.instagram-feed .title {
+	background-position: right 4px center;
+}
+.pinterest-feed .title {
+	background-position: right 4px center;
+}
+.pinterest-feed .author-board-wrap {
+	margin: 0 50px 0 0;
+	text-align: right;
+}
+.google-feed .title {
+	background-position: right 4px center;
+}
+
+@media all and (min-width: 769px) {
+	.center-1 .social-feed .sub-title,
+    .center-2 .social-feed .sub-title {
+		left: 0;
+		right: auto;
+	}
+}
+
+.feeds-page .page-body:before {
+	right: -100%;
+	left: -100%;
+}
+.feeds-page .author-info {
+	margin-right: 10px;
+	margin-left: 0;
+}
+.feeds-page .post-date {
+	padding: 0 14px 0 0;
+}
+.feeds-page .youtube-video .attachment-img-link:before {
+	right: 0;
+	left: 0;
+}
+.feeds-page .post-text {
+	text-align: right;
+}
+.feeds-page .post-link-btn {
+	padding: 0 35px 0 0;
+}
+.feeds-page .facebook-item .post-link-btn {
+	background-position: right 9px top 8px;
+}
+.feeds-page .twitter-item .post-link-btn {
+	background-position: right 8px center;
+}
+.feeds-page .instagram-item .post-link-btn {
+	background-position: right 11px center;
+}
+.feeds-page .pinterest-item .post-link-btn {
+	background-position: right 11px center;
+}
+.feeds-page .googleplus-item .post-link-btn {
+	background-position: right 6px center;
+}
+
+@media all and (min-width: 1001px) {
+	.feeds-page .feeds-nav-item span {
+		padding: 0 35px 0 0;
+	}
+	.feeds-page .feeds-nav-item.all-tab span {
+		background-position: right 0 top 15px;
+	}
+	.feeds-page .feeds-nav-item.facebook-tab span {
+		background-position: right 0 top 13px;
+	}
+	.feeds-page .feeds-nav-item.twitter-tab span {
+		background-position: right 0 top 15px;
+	}
+	.feeds-page .feeds-nav-item.instagram-tab span {
+		background-position: right 0 top 15px;
+	}
+	.feeds-page .feeds-nav-item.googleplus-tab span {
+		background-position: right 0 top 12px;
+	}
+	.feeds-page .feeds-nav-item.pinterest-tab span {
+		background-position: right 0 top 13px;
+	}
+	.feeds-page .feeds-nav-item.active:before {
+		right: 0;
+		left: 0;
+	}
+}

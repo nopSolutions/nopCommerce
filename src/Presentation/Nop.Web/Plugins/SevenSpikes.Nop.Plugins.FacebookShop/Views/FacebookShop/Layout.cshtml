@@ -1,0 +1,82 @@
+﻿@inject FacebookShopSettings facebookShopSettings
+
+@{
+    var themeName = ThemeHelper.GetPluginTheme(Plugin.FolderName);
+    
+    string itemBoxesPerRowClass = $"items-per-row-{facebookShopSettings.NumberOfItemBoxesPerRow}";
+    
+    Html.AddCssFileParts("~/Plugins/SevenSpikes.Nop.Plugins.FacebookShop/Themes/" + themeName + "/Content/css/styles.css");
+
+    var supportRtl = this.ShouldUseRtlTheme();
+    if (supportRtl)
+    {
+        Html.AddCssFileParts("~/Plugins/SevenSpikes.Nop.Plugins.FacebookShop/Themes/" + themeName + "/Content/css/styles.rtl.css");
+    }
+}
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>@T("SevenSpikes.FacebookShop.Public.ShopTitle")</title>
+
+        <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+
+        <link href='https://fonts.googleapis.com/css?family=Open+Sans:700,400' rel='stylesheet' type='text/css'>
+
+        @Html.NopCssFiles(this.Url, ResourceLocation.Head)
+
+        <script src="@Url.Content("~/lib/jquery/jquery-3.3.1.min.js")"></script>
+
+        @Html.NopScripts(this.Url, ResourceLocation.Head)
+    </head>
+    <body class="@itemBoxesPerRowClass">
+        <div class="master-wrapper-page">
+            @if (IsSectionDefined("HomePage"))
+            {
+                @RenderSection("HomePage")
+                @await Component.InvokeAsync("FacebookMainBannerImage", new { isHomePage = true })
+            }
+            else
+            { 
+                @await Component.InvokeAsync("FacebookMainBannerImage", new { isHomePage = false })
+            }
+
+            <div class="header-menu">
+                @await Component.InvokeAsync("FacebookMainNavigation")
+            </div>
+            <div class="master-wrapper-main">
+                @RenderBody()
+            </div>
+            @await Component.InvokeAsync("FacebookFooter")
+        </div>
+        @Html.NopCssFiles(this.Url, ResourceLocation.Footer)
+        @Html.NopScripts(this.Url, ResourceLocation.Footer)
+
+        <div id="fb-root"></div>
+        <script type="text/javascript" src="//connect.facebook.net/en_US/all.js"></script>
+        <script type="text/javascript" charset="utf-8">
+            
+            window.onload = function () {
+                FB.init();
+                var masterWrapperPageHeight = $('body').height() + 5;
+                FB.Canvas.setSize({ height: masterWrapperPageHeight });
+            };
+
+            function openShareWindow(url) {
+                var winWidth = 520;
+                var winHeight = 400;
+                var winTop = (screen.height / 2) - (winHeight / 2);
+                var winLeft = (screen.width / 2) - (winWidth / 2);
+
+                window.open(url, 'sharer', 'top=' + winTop + ',left=' + winLeft + ',toolbar=0,status=0,width=' + winWidth + ',height=' + winHeight);
+            }
+
+            $('.fb-share-link, .button-link.fb-share').on('click', function (e) {
+                e.preventDefault();
+
+                openShareWindow($(this).attr('href'));
+            });
+        </script>
+
+    </body>
+</html>

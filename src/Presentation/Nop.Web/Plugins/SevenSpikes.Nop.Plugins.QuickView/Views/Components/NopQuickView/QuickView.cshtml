@@ -1,0 +1,48 @@
+﻿@using Nop.Core;
+
+@inject QuickViewSettings quickViewSettings;
+@inject IWorkContext workContext;
+
+@{
+    var themeFolder = ThemeHelper.GetPluginTheme(Plugin.FolderName);
+
+    Html.AddCssFileParts($"~/Plugins/SevenSpikes.Nop.Plugins.QuickView/Themes/{themeFolder}/Content/QuickView.css");
+
+    var supportRtl = workContext.WorkingLanguage.Rtl;
+    if (supportRtl)
+    {
+        Html.AddCssFileParts($"~/Plugins/SevenSpikes.Nop.Plugins.QuickView/Themes/{themeFolder}/Content/QuickView.rtl.css");
+    }
+
+    Html.AddCssFileParts("~/lib/fineuploader/fine-uploader.min.css");
+
+    var kendoVersion = "2014.1.318";
+
+    /*
+        We usually use AddScriptParts but in this case, we need to use AppendScriptParts and reverse the order of adding the kendo js files in order for other plugins such as HelpDesk,
+        which includes kendo.web.min.js to work properly.
+    */
+
+    Html.AppendScriptParts(ResourceLocation.Footer, $"~/lib/kendo/{kendoVersion}/kendo.window.min.js");
+    Html.AppendScriptParts(ResourceLocation.Footer, $"~/lib/kendo/{kendoVersion}/kendo.draganddrop.min.js");
+    Html.AppendScriptParts(ResourceLocation.Footer, $"~/lib/kendo/{kendoVersion}/kendo.userevents.min.js");
+    Html.AppendScriptParts(ResourceLocation.Footer, $"~/lib/kendo/{kendoVersion}/kendo.core.min.js");
+
+    Html.AddScriptParts(ResourceLocation.Footer, "~/lib/fineuploader/jquery.fine-uploader.min.js");
+
+    Html.AddScriptParts(ResourceLocation.Footer, "~/Plugins/SevenSpikes.Core/Scripts/sevenspikes.core.min.js");
+    Html.AddScriptParts(ResourceLocation.Footer, "~/Plugins/SevenSpikes.Core/Scripts/jquery.json-2.4.min.js");
+    Html.AddScriptParts(ResourceLocation.Footer, "~/Plugins/SevenSpikes.Nop.Plugins.QuickView/Scripts/QuickView.min.js");
+    Html.AddScriptParts(ResourceLocation.Footer, "~/Plugins/SevenSpikes.Core/Scripts/cloudzoom.core.min.js");
+}
+
+<div class="quickViewData" data-productselector="@quickViewSettings.ProductItemSelector"
+     data-productselectorchild="@quickViewSettings.ProductItemSelectorChild"
+     data-retrievequickviewurl="@Url.RouteUrl("QuickViewData")"
+     data-quickviewbuttontext="@T("SevenSpikes.QuickView.Admin.Settings.QuickViewButtonText")"
+     data-quickviewbuttontitle="@T("SevenSpikes.QuickView.Admin.Settings.QuickViewButtonTitle")"
+     data-isquickviewpopupdraggable="@quickViewSettings.MakeQuickViewPopupDraggable"
+     data-enablequickviewpopupoverlay="@quickViewSettings.EnableQuickViewPopupOverlay"
+     data-accordionpanelsheightstyle="@quickViewSettings.AccordionPanelsHeightStyle"
+     data-getquickviewbuttonroute="@Url.RouteUrl("QuickViewButton")">
+</div>

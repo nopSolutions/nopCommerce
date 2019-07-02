@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<SupportedWidgetZones>
+  <WidgetZone>head_html_tag_after_css_files_avenue</WidgetZone>
+  <WidgetZone>avenue_theme_logo</WidgetZone>
+  <WidgetZone>avenue_homepage_subcategories</WidgetZone>
+  <WidgetZone>avenue_category_box_products_count</WidgetZone>
+  <WidgetZone>avenue_homepage_info_boxes</WidgetZone>
+  <WidgetZone>avenue_footer_logo</WidgetZone>
+  <WidgetZone>home_page_before_best_sellers</WidgetZone>
+  <WidgetZone>home_page_before_categories</WidgetZone>
+  <WidgetZone>home_page_before_news</WidgetZone>
+  <WidgetZone>home_page_before_poll</WidgetZone>
+  <WidgetZone>home_page_before_products</WidgetZone>
+  <WidgetZone>home_page_bottom</WidgetZone>
+  <WidgetZone>home_page_top</WidgetZone>
+</SupportedWidgetZones>

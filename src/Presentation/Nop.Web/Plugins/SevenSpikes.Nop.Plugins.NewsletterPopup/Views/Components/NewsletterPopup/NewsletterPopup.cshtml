@@ -1,0 +1,97 @@
+﻿@model SevenSpikes.Nop.Plugins.NewsletterPopup.Models.NewsletterBoxPopupModel
+
+@{
+    Html.AddCssFileParts(ResourceLocation.Head, "~/Plugins/SevenSpikes.Nop.Plugins.NewsletterPopup/Themes/" + Model.Theme + "/Content/NewsletterPopup.css");
+
+    var supportRtlClass = string.Empty;
+
+    var supportRtl = ShouldUseRtlTheme();
+    if (supportRtl)
+    {
+        Html.AddCssFileParts(ResourceLocation.Head, "~/Plugins/SevenSpikes.Nop.Plugins.NewsletterPopup/Themes/" + Model.Theme + "/Content/NewsletterPopup.rtl.css");
+
+        supportRtlClass = "support-rtl";
+    }
+
+    Html.AddScriptParts(ResourceLocation.Footer, "~/Plugins/SevenSpikes.Core/Scripts/cookiehelper.min.js");
+    Html.AddScriptParts(ResourceLocation.Footer, "~/Plugins/SevenSpikes.Nop.Plugins.NewsletterPopup/Scripts/NewsletterPopup.min.js");
+
+    var newsletterUniqueIdentifier = "newsletter-plugin";
+
+    var newsletterEmailId = $"newsletter-email-{newsletterUniqueIdentifier}";
+    var newsletterSubscribeId = $"newsletter_subscribe-{newsletterUniqueIdentifier}";
+    var newsletterUnsubscribeId = $"newsletter_unsubscribe-{newsletterUniqueIdentifier}";
+    var newsletterDoNotShowId = $"newsletter_do-not-show-{newsletterUniqueIdentifier}";
+    var newsletterGdprId = $"newsletter_gdpr-notice-{newsletterUniqueIdentifier}";
+    
+    var popupBackgroundImage = string.IsNullOrEmpty(Model.BackgroundImageUrl) ? string.Empty : $"background-image: url({Model.BackgroundImageUrl});";
+}
+
+<div class="newsletter-subscribe-popup-overlay"
+     data-newsLetterSubscribeUrl="@(Url.RouteUrl("SubscribeNewsletter"))"
+     data-newsLetterLogNewsletterGdprConsentUrl="@(Url.RouteUrl("LogNewsletterGdprConsent"))"
+     data-showPopupDelay="@Model.Settings.NewsletterPopupDelayedShow"
+     data-allowToUnsubscribe="@Model.AllowToUnsubscribe.ToString()"
+     data-popupOpenerSelector="@Model.Settings.NewsletterPopupOpenerSelector">
+    <div class="newsletter-subscribe-popup @supportRtlClass" style="@Html.Raw(popupBackgroundImage)">
+        <h3 class="newsletter-subscribe-popup-title">
+            <span>@T("SevenSpikes.NewsletterPopup.Public.Popup.Title")</span>
+        </h3>
+        <div class="newsletter-subscribe-description-wrapper">
+            <p class="newsletter-subscribe-popup-description">@T("SevenSpikes.NewsletterPopup.Public.Popup.Description")</p>
+        </div>
+
+        <form>
+            <div class="newsletter-subscribe newsletter-subscribe-block">
+                <div class="newsletter-email">
+                    <input type="email" id="@newsletterEmailId" class="newsletter-subscribe-text" placeholder="@T("Newsletter.Email.Placeholder")"/>
+                    <button type="button" class="button-1 newsletter-subscribe-button">@T(Model.AllowToUnsubscribe ? "Newsletter.Options.Send" : "Newsletter.Options.Subscribe")</button>
+                </div> 
+                <style type="text/css">
+                    .consent-error {
+                        text-align: center;
+                        color: red;
+                        font-size: 14px;
+                        margin: 10px 0;
+                        display: none;
+                    }
+                </style>
+                <div class="consent-error">@T("SevenSpikes.NewsletterPopup.Public.Popup.ConsentError")</div>
+                @if (Model.AllowToUnsubscribe)
+                {
+                    <div class="options">
+                        <span class="subscribe">
+                            <input id="@newsletterSubscribeId" class="newsletter_subscribe" type="radio" value="newsletter_subscribe" name="newsletter_block" checked="checked" />
+                            <label for="@newsletterSubscribeId">@T("Newsletter.Options.Subscribe")</label>
+                        </span>
+                        <span class="unsubscribe">
+                            <input id="@newsletterUnsubscribeId" class="newsletter_unsubscribe" type="radio" value="newsletter_unsubscribe" name="newsletter_block" />
+                            <label for="@newsletterUnsubscribeId">@T("Newsletter.Options.Unsubscribe")</label>
+                        </span>
+                    </div>
+                }
+                <div class="newsletter-validation">
+                    <span style="display: none;" class="subscribe-loading-progress please-wait">@T("Common.Wait...")</span>
+                    <span class="field-validation-valid" data-valmsg-for="@newsletterEmailId" data-valmsg-replace="true"></span>
+                </div>
+                <div class="newsletter-result newsletter-result-block"></div>
+            </div>
+        </form>
+
+        <div class="newspetter-popup-inputs">
+            @if (Model.ShouldShowGdprConfirmation)
+            {
+                <div class="newsletter-gdpr-checkbox-content">
+                    <input class="newsletter-gdpr-consent-checkbox" type="checkbox" id="@newsletterGdprId" />
+                    <label for="@newsletterGdprId">@T("SevenSpikes.NewsletterPopup.Public.Popup.GdprCheckbox")</label>
+                </div>
+            }
+
+            <div class="newsletter-subscribe-checkbox-content">
+                <input class="newsletter-subscribe-popup-checkbox" type="checkbox" id="@newsletterDoNotShowId" @if (Model.Settings.PreselectDoNotShowPopupCheckbox) { <text> checked="checked" </text> } />
+                <label for="@newsletterDoNotShowId">@T("SevenSpikes.NewsletterPopup.Public.Popup.DontShow")</label>
+            </div>
+        </div>
+        <a class="close-popup" href="#">@T("SevenSpikes.NewsletterPopup.Public.Popup.Close")</a>
+    </div>
+</div>

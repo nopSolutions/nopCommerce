@@ -1,0 +1,382 @@
+<?xml version="1.0" encoding="utf-16"?>
+<Language Name="English">
+  <LocaleResource Name="SevenSpikes.Plugins.AjaxFilters.Admin.Menu.MenuName">
+    <Value>Ajax Filters</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin">
+    <Value>Nop Ajax Filters</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.AjaxFiltersAvailabilitySettings">
+    <Value>Availability Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.AjaxFiltersSelectorsSettings">
+    <Value>Selectors Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.CategoriesWithoutFilters">
+    <Value>Category Ids (split by comma)</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.CategoriesWithoutFilters.Hint">
+    <Value>Enter the ids, split by comma, of all the categories in which you don't want filters to be shown.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.ClickToConfigure">
+    <Value>To configure the plugin either click HERE or go to Plugins -&gt; Nop Ajax Filters -&gt; Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.CloseAttributesFilterBox">
+    <Value>Close Attributes Filter Boxes By Default</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.CloseAttributesFilterBox.Hint">
+    <Value>Check if you want the attributes filter boxes to be closed by default.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.NumberOfAttributeFilters">
+    <Value>Maximum number of product attributes</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.NumberOfAttributeFilters.Hint">
+    <Value>Specify the maximum number of product attributes to be shown on catalog pages.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.CloseManufacturersFilterBox">
+    <Value>Close Manufacturers Filter Boxes By Default</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.CloseManufacturersFilterBox.Hint">
+    <Value>Check if you want the manufacturers filter boxes to be closed by default.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.CloseOnSaleFilterBox">
+    <Value>Close OnSale Filter Boxes By Default</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Public.OnSale">
+    <Value>On Sale</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Public.OnSale.Option">
+    <Value>On Sale</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Public.InStock">
+    <Value>In Stock</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Public.InStock.Option">
+    <Value>In Stock</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.CloseOnSaleFilterBox.Hint">
+    <Value>Check if you want the OnSale filter boxes to be closed by default.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.ClosePriceRangeFilterBox">
+    <Value>Close Price Range Filter Box By Default</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.ClosePriceRangeFilterBox.Hint">
+    <Value>Check if you want the price range filter box to be closed by default.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.CloseSpecificationsFilterBox">
+    <Value>Close Specifications Filter Boxes By Default</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.CloseSpecificationsFilterBox.Hint">
+    <Value>Check if you want the specifications filter boxes to be closed by default.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.NumberOfSpecificationFilters">
+    <Value>Maximum number of specification attributes</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.NumberOfSpecificationFilters.Hint">
+    <Value>Specify the maximum number of specification attributes to be shown on catalog pages.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.CloseVendorsFilterBox">
+    <Value>Close Vendors Filter Boxes By Default</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.CloseVendorsFilterBox.Hint">
+    <Value>Check if you want the vendors filter boxes to be closed by default.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.CreateOrUpdate">
+    <Value>Create or Update</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.ElementToScrollAfterFiltrationSelector">
+    <Value>Scroll To This Element After Filtration</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.ElementToScrollAfterFiltrationSelector.Hint">
+    <Value>Here you can list your element selectors, divided by commas. We scroll to the first found element. Default behaviour is scroll to .product-selectors.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.EnableAjaxFilters">
+    <Value>Enable Ajax Filters</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.EnableAjaxFilters.Hint">
+    <Value>Enable the Ajax Filters.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.EnableAttributesFilter">
+    <Value>Enable Attributes Filter</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.EnableAttributesFilter.Hint">
+    <Value>Enable filtering based on product attributes.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.EnableManufacturersFilter">
+    <Value>Enable Manufacturers Filter</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.EnableManufacturersFilter.Hint">
+    <Value>Enable filtering based on product manufacturers.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.EnableOnSaleFilter">
+    <Value>Enable OnSale Filter</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.EnableOnSaleFilter.Hint">
+    <Value>Enable filtering based on product with different old and new prices.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.EnablePriceRangeFilter">
+    <Value>Enable Price Range Filter</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.EnablePriceRangeFilter.Hint">
+    <Value>Enable filtering based on product price.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.EnableSpecificationsFilter">
+    <Value>Enable Specifications Filter</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.EnableSpecificationsFilter.Hint">
+    <Value>Enable filtering based on product specifications. </Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.EnableVendorsFilter">
+    <Value>Enable Vendors Filter</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.EnableVendorsFilter.Hint">
+    <Value>Enable filtering based on product vendors.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.EnableInStockFilter">
+    <Value>Enable In Stock Filter</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.EnableInStockFilter.Hint">
+    <Value>Enable filtering based on products which are in stock.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.CloseInStockFilterBox">
+    <Value>Close In Stock Filter Boxes By Default</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.CloseInStockFilterBox.Hint">
+    <Value>Check if you want the InStock filter boxes to be closed by default.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.FiltersUIMode">
+    <Value>Filters UI Mode</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.FiltersUIMode.Hint">
+    <Value>The user interface mode of the Ajax Filters (checkboxes or dropdowns).</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.GeneralSettings">
+    <Value>General Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.PagerPanelSelector">
+    <Value>Pager Panel Selector</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.PagerPanelSelector.Hint">
+    <Value>Html selector for the panel that contains the paging.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.PagerPanelIntegrationSelector">
+    <Value>Pager Panel Integration Selector</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.PagerPanelIntegrationSelector.Hint">
+    <Value>Html selector for the element after which the panel that contains the paging will be shown. This setting is applied only in the cases when initially there is no pager and afterwards it is necessary to be added.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.ProductPageSizeDropDownSelector">
+    <Value>Product Page Size Dropdown Selector</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.ProductPageSizeDropDownSelector.Hint">
+    <Value>Html selector for the panel that contains the product page size dropdown.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.ProductsGridPanelSelector">
+    <Value>Products Grid Panel Selector</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.ProductsGridPanelSelector.Hint">
+    <Value>Html selector for the panel that contains the product grid.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.ProductsListPanelSelector">
+    <Value>Products List Panel Selector</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.ProductsListPanelSelector.Hint">
+    <Value>Html selector for the panel that contains the product list.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.EnableInfiniteScroll">
+    <Value>Enable Infinite Scrolling</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.EnableInfiniteScroll.Hint">
+    <Value>Enabling the infinite scroll will remove the pager and load more products on scroll.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.ScrollToElementOnThePageAfterFiltration">
+    <Value>Scroll To Element On The Page After Filtration (Desktop)</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.ScrollToElementOnThePageAfterFiltration.Hint">
+    <Value>If you enable this setting, after each filtration the page will be scrolled to the element specified below only on dektop devices.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.ScrollToElementOnThePageAfterFiltrationMobile">
+    <Value>Scroll To Element On The Page After Filtration (Mobile)</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.ScrollToElementOnThePageAfterFiltrationMobile.Hint">
+    <Value>If you enable this setting, after each filtration the page will be scrolled to the element specified below only on mobile devices.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.CloseFiltersPanelAfterFiltrationInMobile">
+    <Value>Close Filters Panel After Filtration (Mobile)</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.CloseFiltersPanelAfterFiltrationInMobile.Hint">
+    <Value>If you enable this setting, after each filtration the filters panel will be closed on mobile devices.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.Settings">
+    <Value>Nop Ajax Filters Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.ShowFiltersOnCategoryPage">
+    <Value>Show Ajax Filters on Category Page</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.ShowFiltersOnCategoryPage.Hint">
+    <Value>Show Ajax Filters on Category Page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.ShowFiltersOnManufacturerPage">
+    <Value>Show Ajax Filters on Manufacturer Page</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.ShowFiltersOnManufacturerPage.Hint">
+    <Value>Show Ajax Filters on Manufacturer Page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.ShowFiltersOnVendorPage">
+    <Value>Show Ajax Filters on Vendor Page</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.ShowFiltersOnVendorPage.Hint">
+    <Value>Show Ajax Filters on Vendor Page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.ShowFiltersOnSearchPage">
+    <Value>Show Ajax Filters on Search Page</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.ShowFiltersOnSearchPage.Hint">
+    <Value>Show Ajax Filters on Search Page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.ShowSelectedFiltersPanel">
+    <Value>Show Selected Filters Panel</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.ShowSelectedFiltersPanel.Hint">
+    <Value>Shows a panel with all chosen filters (clicking the filter name removes the filter).</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.ShowNumberOfReturnedProducts">
+    <Value>Show Number Of Returned Products</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.ShowNumberOfReturnedProducts.Hint">
+    <Value>This setting enables showing information for the products that are visible out of all available, matching the filter criteria in format e.g. "5 showing from 20".</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.ShowNumberOfReturnedProductsSelector">
+    <Value>Number Of Returned Products Selector</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.ShowNumberOfReturnedProductsSelector.Hint">
+    <Value>Html selector for the element after which the panel with number of returned products will be shown. If the element is not present the panel will be shown inside .product-selectors element.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.SortOptionsDropDownSelector">
+    <Value>Sort Options Dropdown Selector</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.SortOptionsDropDownSelector.Hint">
+    <Value>Html selector for the panel that contains the sorted options for the dropdown list.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.Submenus">
+    <Value>Submenu names</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.Submenus.Settings">
+    <Value>Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.SystemSettingsInfo">
+    <Value>System Settings (please do not edit unless you have css style names for the product or pager panels different from the default):</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.Theme">
+    <Value>Theme</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.Theme.Hint">
+    <Value>The theme for the filters. The theme name correponds to the name of a folder inside the Themes folder. </Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.ViewOptionsDropDownSelector">
+    <Value>View Options Dropdown Selector</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.ViewOptionsDropDownSelector.Hint">
+    <Value>Html selector for the panel that contains the view options for the dropdown (grid or list).</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.WidgetZone">
+    <Value>Widget Zone</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.WidgetZone.Hint">
+    <Value>The names of the widget zone in which the Ajax Filters can be added. NOTE: The Ajax Filters can be added only to one widget zone.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.SearchInProductTags">
+    <Value>Enable search in product tags</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.SearchInProductTags.Hint">
+    <Value>Set to search in product tags.</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.ProductAttributesSettings">
+    <Value>Product Attribute Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.ProductAttributes.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.ProductAttributes.DisplayOrder">
+    <Value>Display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.ProductAttributes.SelectProductAttribute">
+    <Value>Select product attribute...</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.ProductAttributes.NoResults">
+    <Value>No results</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.SpecificationAttributeSlidersSettings">
+    <Value>Specification Attribute Slider Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.SpecificationAttributeSliders.Info">
+    <Value>In this tab, you can select which specifications would appear as a slider! Please note that the specification option values must be either whole numbers (integers) or decimals.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.SpecificationAttributeSliders.SelectSpecificationAttribute">
+    <Value>Select specification attribute...</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.SpecificationAttributeSliders.NoResults">
+    <Value>No results</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Client.Common.All">
+    <Value>All</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Client.Common.Clear">
+    <Value>Clear</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Client.Common.ClearAll">
+    <Value>Clear All</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Client.Common.FilterBy">
+    <Value>Filter by</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Client.Common.NoResultsFoundMessage">
+    <Value>There are no products for the filters that you selected. Please widen your search criteria.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Client.Common.NoResultsFoundTitle">
+    <Value>No results found</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Client.Common.LoadingMoreProducts">
+    <Value>Loading more products ...</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Client.Common.NumberOfReturnedProducts.Show">
+    <Value>Showing</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Client.Common.NumberOfReturnedProducts.Of">
+    <Value>of</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Client.Common.NumberOfReturnedProducts.Results">
+    <Value>results</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Client.PriceRangeFilter.Max">
+    <Value>Max</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Client.PriceRangeFilter.Min">
+    <Value>Min</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Client.PriceRangeFilter.Title">
+    <Value>Price range</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.TrailingZeroesSeparator">
+    <Value>Trailing Zeroes Separator</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.TrailingZeroesSeparator.Hint">
+    <Value>This setting is used to remove trailing zeroes from min/max price in price range filter. For example if you have min or max price like 12.350,00 and you like to get rid of the last two zeroes you can specify ',' as value of the setting. If you want to specify several separators keep in mind that you need to list them without separating them - for example if you need dot and a comma as your separators write them like this '.,'.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.Admin.AjaxFiltersIntegrationSettings">
+    <Value>Integration Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFilters.SelectedOptions.PanelTitle">
+    <Value>Selected Options</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.AjaxFilters.Domain.FiltersUIMode.UseCheckboxes">
+    <Value>Use Checkboxes</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.AjaxFilters.Domain.FiltersUIMode.UserDropdowns">
+    <Value>Use Dropdowns</Value>
+  </LocaleResource>
+</Language>
+

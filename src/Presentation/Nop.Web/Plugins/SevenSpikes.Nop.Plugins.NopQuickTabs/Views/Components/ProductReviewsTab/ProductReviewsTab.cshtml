@@ -1,0 +1,176 @@
+﻿@model Nop.Web.Models.Catalog.ProductReviewsModel
+<div id="updateTargetId" class="product-reviews-page">
+    @if (Model.AddProductReview.SuccessfullyAdded)
+    {
+        <div class="submitReviewResult result">
+            @Model.AddProductReview.Result
+        </div>
+    }
+    else
+    {
+        <div class="write-review" id="review-form">
+            <div class="title">
+                <strong>@T("Reviews.Write")</strong>
+            </div>
+            <div asp-validation-summary="ModelOnly" class="message-error"></div>
+            <div class="form-fields">
+                <div class="inputs">
+                    <label asp-for="AddProductReview.Title" asp-postfix=":"></label>
+                    <input asp-for="AddProductReview.Title" class="review-title" asp-disabled="@(!Model.AddProductReview.CanCurrentCustomerLeaveReview)" />
+                    <nop-required />
+                    <span asp-validation-for="AddProductReview.Title"></span>
+                </div>
+                <div class="inputs">
+                    <label asp-for="AddProductReview.ReviewText" asp-postfix=":"></label>
+                    <textarea asp-for="AddProductReview.ReviewText" class="review-text" asp-disabled="@(!Model.AddProductReview.CanCurrentCustomerLeaveReview)"></textarea>
+                    <nop-required />
+                    <span asp-validation-for="AddProductReview.ReviewText"></span>
+                </div>
+                <div class="review-rating">
+                        <div class="name-description">
+                            <label asp-for="AddProductReview.Rating" asp-postfix=":"></label>
+                        </div>
+                        <div class="rating-wrapper">
+                            <div class="label first">@T("Reviews.Fields.Rating.Bad")</div>
+                            <div class="rating-options">
+                                <input asp-for="AddProductReview.Rating" value="1" type="radio" id="addproductrating_1" />
+                                <input asp-for="AddProductReview.Rating" value="2" type="radio" id="addproductrating_2" />
+                                <input asp-for="AddProductReview.Rating" value="3" type="radio" id="addproductrating_3" />
+                                <input asp-for="AddProductReview.Rating" value="4" type="radio" id="addproductrating_4" />
+                                <input asp-for="AddProductReview.Rating" value="5" type="radio" id="addproductrating_5" />
+                            </div>
+                            <div class="label last">@T("Reviews.Fields.Rating.Excellent")</div>
+                        </div>
+                </div>
+		@if (Model.ReviewTypeList.Count > 0)
+	            {
+	                foreach (var additionalReview in Model.AddAdditionalProductReviewList.OrderBy(ob => ob.DisplayOrder).ToList())
+	                {
+	                    var curAdditionalReview = Model.AddAdditionalProductReviewList.IndexOf(additionalReview);
+	                    <div class="review-rating">
+	                        <div class="name-description">
+	                            <div class="tooltip">
+	                                @Html.Raw(additionalReview.Name):
+	                                <span class="tooltiptext">@Html.Raw(additionalReview.Description)</span>
+	                            </div>
+	                        </div>
+	                        <div class="rating-wrapper">
+	                            <div class="label first">@T("Reviews.Fields.Rating.Bad")</div>
+	                            <div class="rating-options">
+	                                <input asp-for="@Model.AddAdditionalProductReviewList[curAdditionalReview].ReviewTypeId" value="@(additionalReview.ReviewTypeId)" type="hidden" />
+	                                <input asp-for="@Model.AddAdditionalProductReviewList[curAdditionalReview].Name" value="@(additionalReview.Name)" type="hidden" />
+	                                <input asp-for="@Model.AddAdditionalProductReviewList[curAdditionalReview].Description" value="@(additionalReview.Description)" type="hidden" />
+	                                <input asp-for="@Model.AddAdditionalProductReviewList[curAdditionalReview].DisplayOrder" value="@(additionalReview.DisplayOrder)" type="hidden" />
+	                                <input asp-for="@Model.AddAdditionalProductReviewList[curAdditionalReview].IsRequired" value="@(additionalReview.IsRequired)" type="hidden" />
+
+	                                <input asp-for="@Model.AddAdditionalProductReviewList[curAdditionalReview].Rating" value="0" type="radio" id="addproductratingext_0_@(additionalReview.ReviewTypeId)" style="display: none;" />
+	                                <input asp-for="@Model.AddAdditionalProductReviewList[curAdditionalReview].Rating" value="1" type="radio" id="addproductratingext_1_@(additionalReview.ReviewTypeId)" />
+	                                <input asp-for="@Model.AddAdditionalProductReviewList[curAdditionalReview].Rating" value="2" type="radio" id="addproductratingext_2_@(additionalReview.ReviewTypeId)" />
+	                                <input asp-for="@Model.AddAdditionalProductReviewList[curAdditionalReview].Rating" value="3" type="radio" id="addproductratingext_3_@(additionalReview.ReviewTypeId)" />
+	                                <input asp-for="@Model.AddAdditionalProductReviewList[curAdditionalReview].Rating" value="4" type="radio" id="addproductratingext_4_@(additionalReview.ReviewTypeId)" />
+	                                <input asp-for="@Model.AddAdditionalProductReviewList[curAdditionalReview].Rating" value="5" type="radio" id="addproductratingext_5_@(additionalReview.ReviewTypeId)" />
+	                            </div>
+	                            <div class="label last">@T("Reviews.Fields.Rating.Excellent")</div>
+	                        </div>
+	                    </div>
+	                }
+	            }
+                @*@if (Model.AddProductReview.DisplayCaptcha)
+                    {
+                        <div class="captcha-box">
+                             <nop-captcha />
+                        </div>
+                    }*@
+            </div>
+            <div class="buttons">
+                @if (Model.AddProductReview.CanCurrentCustomerLeaveReview)
+                {
+                    <input type="button" id="add-review" name="add-review" class="button-1 write-product-review-button" value="@T("Reviews.SubmitButton")" />
+                }
+                else
+                {
+                    <input type="button" id="add-review" disabled="disabled" name="add-review" class="button-1 write-product-review-button" value="@T("Reviews.SubmitButton")" />
+                }
+            </div>
+
+        </div>
+    }
+    @if (Model.Items.Count > 0)
+    {
+        <div class="product-review-list">
+            <div class="title">
+                <strong>@T("Reviews.ExistingReviews")</strong>
+            </div>
+            @foreach (var review in Model.Items)
+            {
+                var ratingPercent = review.Rating * 20;
+
+                <div class="product-review-item">
+                    <div class="review-item-head">
+                        <div class="review-title">
+                            <strong>@review.Title</strong>
+                        </div>
+                        <div class="product-review-box">
+                            <div class="rating">
+                                <div style="width: @(ratingPercent)%">
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="review-text">
+                        @Html.Raw(Nop.Core.Html.HtmlHelper.FormatText(review.ReviewText, false, true, false, false, false, false))
+                    </div>
+                    @foreach (var reviewType in review.AdditionalProductReviewList.Where(x => x.Rating > 0 && x.VisibleToAllCustomers))
+                    {
+                        var ratingExtPercent = reviewType.Rating * 20;
+                        <div class="review-type-rating-ext">
+                            <div class="review-title">
+                                <i>@reviewType.Name</i>
+                            </div>
+                            <div class="product-review-box">
+                                <div class="rating">
+                                    <div style="width: @(ratingExtPercent)%">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br /><br />
+                    }
+                    <div class="review-info">
+                        <span class="user">
+                            <strong>@T("Reviews.From"):</strong>
+                            @if (review.AllowViewingProfiles)
+                            {
+                                <a href="@Url.RouteUrl("CustomerProfile", new { id = review.CustomerId })">@(review.CustomerName)</a>
+                            }
+                            else
+                            {
+                                @review.CustomerName
+                            }
+                        </span>
+                        <span class="separator">|</span>
+
+                        <span class="date">
+                            <strong>@T("Reviews.Date"):</strong>
+                            @review.WrittenOnStr
+                        </span>
+                    </div>
+                    @await Component.InvokeAsync(Components.ProductReviewHelpfulnessTab, review.Helpfulness)
+                    @await Component.InvokeAsync("Widget", new { widgetZone = "productreviews_page_inside_review", additionalData = review.Id })
+                    @if (!string.IsNullOrEmpty(review.ReplyText))
+                    {
+                        <div class="reply">
+                            <div class="reply-header">
+                                @T("Reviews.Reply")
+                            </div>
+                            <div class="reply-text">
+                                @Html.Raw(Nop.Core.Html.HtmlHelper.FormatText(review.ReplyText, false, true, false, false, false, false))
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    }
+</div>

@@ -1,0 +1,275 @@
+﻿@model SevenSpikes.Nop.Plugins.AnywhereSliders.Areas.Admin.Models.Sliders.SliderModel
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        toggleSliderSettings();
+
+        $("#@Html.IdFor(model => model.SliderType)").change(toggleSliderSettings);
+    });
+
+    function toggleSliderSettings() {
+        if ($('#@Html.IdFor(model => model.SliderType)').val() == 'Carousel2D') {
+            $('.slider-2d-setting').show();
+            $('.nivo-slider-setting').hide();
+        } else {
+            $('.nivo-slider-setting').show();
+            $('.slider-2d-setting').hide();
+        }
+    }
+</script>
+
+<div class="raw clearfix">
+    <div class="content">
+        <div class="form-horizontal">
+            <div class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        &nbsp;
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="SystemName" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="SystemName" />
+                                <span asp-validation-for="SystemName"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="SliderType" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-select asp-for="SliderType" asp-items="Model.SliderTypes" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="Language" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-select asp-for="Language" asp-items="Model.Languages" />
+                            </div>
+                        </div>
+                        <div class="form-group nivo-slider-setting">
+                            <div class="col-md-3">
+                                <nop-label asp-for="SettingsModel.NivoSettingsModel.Effect" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-select asp-for="SettingsModel.NivoSettingsModel.Effect" asp-items="Model.SettingsModel.NivoSettingsModel.AvailableEffects" />
+                            </div>
+                        </div>
+                        <div class="form-group nivo-slider-setting advanced-setting">
+                            <div class="col-md-3">
+                                <nop-label asp-for="SettingsModel.NivoSettingsModel.Theme" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="SettingsModel.NivoSettingsModel.Theme" />
+                            </div>
+                        </div>
+                        <div class="form-group nivo-slider-setting advanced-setting">
+                            <div class="col-md-3">
+                                <nop-label asp-for="SettingsModel.NivoSettingsModel.AutoSlideInterval" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="SettingsModel.NivoSettingsModel.AutoSlideInterval" asp-postfix="@T("SevenSpikes.Plugins.Admin.InputStyles.Postfix.Milliseconds").Text"/>
+                            </div>
+                        </div>
+                        <div class="form-group nivo-slider-setting advanced-setting">
+                            <div class="col-md-3">
+                                <nop-label asp-for="SettingsModel.NivoSettingsModel.AnimationSpeed" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="SettingsModel.NivoSettingsModel.AnimationSpeed" asp-postfix="@T("SevenSpikes.Plugins.Admin.InputStyles.Postfix.Milliseconds").Text"/>
+                            </div>
+                        </div>
+                        <div class="form-group nivo-slider-setting advanced-setting">
+                            <div class="col-md-3">
+                                <nop-label asp-for="SettingsModel.NivoSettingsModel.EnableDirectionNavigation" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="SettingsModel.NivoSettingsModel.EnableDirectionNavigation" />
+                            </div>
+                        </div>
+                        <div class="form-group nivo-slider-setting advanced-setting">
+                            <div class="col-md-3">
+                                <nop-label asp-for="SettingsModel.NivoSettingsModel.EnableControlNavigation" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="SettingsModel.NivoSettingsModel.EnableControlNavigation" />
+                            </div>
+                        </div>
+                        <div class="form-group nivo-slider-setting advanced-setting">
+                            <div class="col-md-3">
+                                <nop-label asp-for="SettingsModel.NivoSettingsModel.EnableControlNavigationThumbs" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="SettingsModel.NivoSettingsModel.EnableControlNavigationThumbs" />
+                            </div>
+                        </div>
+                        <div class="form-group nivo-slider-setting advanced-setting">
+                            <div class="col-md-3">
+                                <nop-label asp-for="SettingsModel.NivoSettingsModel.RandomStart" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="SettingsModel.NivoSettingsModel.RandomStart" />
+                            </div>
+                        </div>
+                        <div class="form-group nivo-slider-setting advanced-setting">
+                            <div class="col-md-3">
+                                <nop-label asp-for="SettingsModel.NivoSettingsModel.Links" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="SettingsModel.NivoSettingsModel.Links" />
+                            </div>
+                        </div>
+                        <div class="form-group nivo-slider-setting advanced-setting">
+                            <div class="col-md-3">
+                                <nop-label asp-for="SettingsModel.NivoSettingsModel.PauseOnHover" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="SettingsModel.NivoSettingsModel.PauseOnHover" />
+                            </div>
+                        </div>
+                        <div class="form-group nivo-slider-setting advanced-setting">
+                            <div class="col-md-3">
+                                <nop-label asp-for="SettingsModel.NivoSettingsModel.ShowCaption" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="SettingsModel.NivoSettingsModel.ShowCaption" />
+                            </div>
+                        </div>
+                        <div class="form-group nivo-slider-setting advanced-setting">
+                            <div class="col-md-3">
+                                <nop-label asp-for="SettingsModel.NivoSettingsModel.Slices" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="SettingsModel.NivoSettingsModel.Slices" />
+                            </div>
+                        </div>
+                        <div class="form-group nivo-slider-setting advanced-setting">
+                            <div class="col-md-3">
+                                <nop-label asp-for="SettingsModel.NivoSettingsModel.BoxCols" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="SettingsModel.NivoSettingsModel.BoxCols" />
+                            </div>
+                        </div>
+                        <div class="form-group nivo-slider-setting advanced-setting">
+                            <div class="col-md-3">
+                                <nop-label asp-for="SettingsModel.NivoSettingsModel.BoxRows" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="SettingsModel.NivoSettingsModel.BoxRows" />
+                            </div>
+                        </div>
+                        <div class="form-group slider-2d-setting advanced-setting">
+                            <div class="col-md-3">
+                                <nop-label asp-for="SettingsModel.CarouselSettingsModel.AutoSlideInterval" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="SettingsModel.CarouselSettingsModel.AutoSlideInterval" asp-postfix="@T("SevenSpikes.Plugins.Admin.InputStyles.Postfix.Milliseconds").Text"/>
+                            </div>
+                        </div>
+                        <div class="form-group slider-2d-setting advanced-setting">
+                            <div class="col-md-3">
+                                <nop-label asp-for="SettingsModel.CarouselSettingsModel.Width" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="SettingsModel.CarouselSettingsModel.Width" />
+                            </div>
+                        </div>
+                        <div class="form-group slider-2d-setting advanced-setting">
+                            <div class="col-md-3">
+                                <nop-label asp-for="SettingsModel.CarouselSettingsModel.Height" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="SettingsModel.CarouselSettingsModel.Height" />
+                            </div>
+                        </div>
+                        <div class="form-group slider-2d-setting advanced-setting">
+                            <div class="col-md-3">
+                                <nop-label asp-for="SettingsModel.CarouselSettingsModel.Navigation" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="SettingsModel.CarouselSettingsModel.Navigation" />
+                            </div>
+                        </div>
+                        <div class="form-group slider-2d-setting advanced-setting">
+                            <div class="col-md-3">
+                                <nop-label asp-for="SettingsModel.CarouselSettingsModel.Links" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="SettingsModel.CarouselSettingsModel.Links" />
+                            </div>
+                        </div>
+                        <div class="form-group slider-2d-setting advanced-setting">
+                            <div class="col-md-3">
+                                <nop-label asp-for="SettingsModel.CarouselSettingsModel.HoverPause" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="SettingsModel.CarouselSettingsModel.HoverPause" />
+                            </div>
+                        </div>
+                        <div class="form-group slider-2d-setting advanced-setting">
+                            <div class="col-md-3">
+                                <nop-label asp-for="SettingsModel.CarouselSettingsModel.ShowTitle" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="SettingsModel.CarouselSettingsModel.ShowTitle" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @if (Model.Id > 0)
+            {
+                <div class="panel-group">
+                    <div class="panel panel-default  advanced-setting">
+                        <div class="panel-heading">
+                            @T("SevenSpikes.Plugins.AnywhereSliders.Admin.Settings.Mappings")
+                        </div>
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <div class="col-md-3">
+                                    <nop-label asp-for="StoreMappingModel.SelectedStoreIds" />
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <nop-select asp-for="StoreMappingModel.SelectedStoreIds" asp-items="Model.StoreMappingModel.AvailableStores" asp-multiple="true"/>
+                                            <script>
+                                                $(document).ready(function() {
+                                                    var storesIdsInput = $('#@Html.IdFor(model => model.StoreMappingModel.SelectedStoreIds)').data("kendoMultiSelect");
+                                                    storesIdsInput.setOptions({
+                                                        autoClose: false
+                                                    });
+
+                                                    @if (Model.StoreMappingModel.AvailableStores.Count == 0)
+                                                    {
+                                                        <text>
+                                                            storesIdsInput.setOptions({
+                                                                enable: false,
+                                                                placeholder: 'No stores available'
+                                                            });
+                                                            storesIdsInput._placeholder();
+                                                            storesIdsInput._enable();
+                                                        </text>
+                                                    }
+                                                });
+                                            </script>
+                                        </div>
+                                        <div class="col-md-8">
+                                            @await Component.InvokeAsync("MultistoreDisabledWarning")
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

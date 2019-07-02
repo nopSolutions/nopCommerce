@@ -1,0 +1,158 @@
+﻿@model CategorySettingsAdminModel
+
+@{
+    Layout = AdminViewLocations.AdminLayoutViewPath;
+
+    Html.AppendCssFileParts("~/Plugins/SevenSpikes.Nop.Plugins.SmartProductCollections/Areas/Admin/Content/Styles/spc.adminstyles.css");
+    Html.AddScriptParts("~/Plugins/SevenSpikes.Nop.Plugins.SmartProductCollections/Areas/Admin/Content/Scripts/SmartProductCollectionsAdmin.min.js");
+    Html.AddScriptParts("~/Plugins/SevenSpikes.Nop.Plugins.SmartProductCollections/Areas/Admin/Content/Scripts/SmartProductCollectionsCategoriesAdmin.min.js");
+    Html.SetActiveMenuItemSystemName("SevenSpikes.SmartProductCollections.Admin.Submenus.ManageCategories");
+}
+
+<form method="post">
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("SevenSpikes.SmartProductCollections.Admin.Settings.CategorySettings")
+        </h1>
+        <div class="pull-right">
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="form-horizontal">
+            @Html.TrialMessage(Model.IsTrialVersion, Plugin.Name, Plugin.UrlInStore)
+            @await Component.InvokeAsync("StoreScopeConfiguration")
+            <div class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="Enabled_OverrideForStore" asp-input="Enabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="Enabled" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="Enabled" />
+                                <span asp-validation-for="Enabled"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="WidgetZone_OverrideForStore" asp-input="WidgetZone" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="WidgetZone" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-select asp-for="WidgetZone" asp-items="Model.SupportedWidgetZones" />
+                                <span asp-validation-for="WidgetZone"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="ShowProductsFromSubcategories_OverrideForStore" asp-input="ShowProductsFromSubcategories" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="ShowProductsFromSubcategories" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="ShowProductsFromSubcategories" />
+                                <span asp-validation-for="ShowProductsFromSubcategories"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="NumberOfSubcategoriesToShow_OverrideForStore" asp-input="NumberOfSubcategoriesToShow" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="NumberOfSubcategoriesToShow" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="NumberOfSubcategoriesToShow" />
+                                <span asp-validation-for="NumberOfSubcategoriesToShow"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="CategoryImagesOrientation_OverrideForStore" asp-input="CategoryImagesOrientation" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="CategoryImagesOrientation" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-select asp-for="CategoryImagesOrientation" asp-items="Model.SupportedCategoryImagesOrientations" />
+                                <span asp-validation-for="CategoryImagesOrientation"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="NumberOfProducts_OverrideForStore" asp-input="NumberOfProducts" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="NumberOfProducts" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="NumberOfProducts" />
+                                <span asp-validation-for="NumberOfProducts"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="CategoryGroupIds_OverrideForStore" asp-input="CategoryGroupIds" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="CategoryGroupIds" />
+                            </div>
+                            <div class="col-md-9">
+                                <div>
+                                    <input type="hidden" asp-for="CategoryGroupIds" />
+                                    <div class="choosed-categories-holder">
+                                        <script id="categoriesSortingTemplate" type="text/x-kendo-template">
+                                            <span data-categoryid="#: id #">
+                                                <span>#: name #</span>
+                                            </span>
+                                        </script>
+                                        <div class="category-autocomplete-wrapper"
+                                             data-createproductsgroupurl="@Url.Action("CreateProductsGroup", "CategoriesProductCollectionsAdmin")"
+                                             data-getproductsgrouptabsurl="@Url.Action("GetProductsGroupTabs", "CategoriesProductCollectionsAdmin")"
+                                             data-savecategorygroupidssettingurl="@Url.Action("SaveCategoryGroupIdsSetting", "CategoriesProductCollectionsAdmin")"
+                                             data-getcategoriesurl="@Url.Action("GetAllCategories", "CategoriesProductCollectionsAdmin")">
+                                            <div>
+                                                <input type="text" id="choose-category-autocomplete" placeholder="@T("SevenSpikes.SmartProductCollections.Admin.CategorySettings.SearchHere")" />
+                                            </div>
+                                        </div>
+                                        <div class="categories-sortable-list smart-product-collections-sortable-list">
+                                            @foreach (var category in Model.Categories)
+                                            {
+                                                <span class="sortable" data-categoryid="@category.Id" data-productgroupid="@category.ProductGroupId">
+                                                    <span>@category.Name</span>
+                                                    <span class="edit-item-button" title="Edit">
+                                                        <i class="fa fa-pencil" aria-hidden="true"></i>
+                                                    </span>
+                                                    <span class="remove-category-item remove-item-button" title="Remove">
+                                                        <i class="fa fa-times" aria-hidden="true"></i>
+                                                    </span>
+                                                </span>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="category-tabs-editor-wrapper">
+                <div class="category-tabs-editor">
+
+                </div>
+                <div class="loader">
+                    <div class="spinner">
+                        <div class="rect1"></div>
+                        <div class="rect2"></div>
+                        <div class="rect3"></div>
+                        <div class="rect4"></div>
+                        <div class="rect5"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

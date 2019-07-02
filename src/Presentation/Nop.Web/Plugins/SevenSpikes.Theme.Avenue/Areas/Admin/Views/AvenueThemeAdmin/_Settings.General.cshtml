@@ -1,0 +1,244 @@
+﻿@model AvenueThemeSettingsModel
+
+<input type="hidden" id="avenueSettingIds" 
+       data-featuredCategoriesColorInput1="@Html.IdFor(x => x.FeaturedCategoriesColor1)" 
+       data-featuredCategoriesColorInput2="@Html.IdFor(x => x.FeaturedCategoriesColor2)" 
+       data-featuredCategoriesColorInput3="@Html.IdFor(x => x.FeaturedCategoriesColor3)"
+       data-featuredCategoriesColor1="#featuredCategoriesColorPicker1" 
+       data-featuredCategoriesColor2="#featuredCategoriesColorPicker2" 
+       data-featuredCategoriesColor3="#featuredCategoriesColorPicker3" />
+
+<div class="panel-group">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            @T("SevenSpikes.Themes.Avenue.Admin.PanelTitle.GlobalSettings")
+        </div>
+        <div class="panel-body">
+            <div class="form-group theme-color">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="Preset_OverrideForStore" asp-input="Preset" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="Preset" />
+                </div>
+                <div class="col-md-9 adminData">
+                    @Html.NopRadioButtonsForPresets(Model.Presets, Model.Preset)
+                </div>
+            </div>
+            <div class="form-group logo-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="LogoImageId_OverrideForStore" asp-input="LogoImageId" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="LogoImageId" />
+                </div>
+                <div class="col-md-9">
+                    <div id="logo-image">
+                        <nop-editor asp-for="LogoImageId" />
+                        <span asp-validation-for="LogoImageId"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="HomePageLayout_OverrideForStore" asp-input="HomePageLayout" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="HomePageLayout" />
+                </div>
+                <div class="col-md-9">
+                    <nop-select asp-for="HomePageLayout" asp-items="Model.HomePageLayoutList" />
+                </div>
+            </div>
+            <div class="form-group color-picker" style="display:none">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="FeaturedCategoriesColor1_OverrideForStore" asp-input="FeaturedCategoriesColor1" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="FeaturedCategoriesColor1" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="FeaturedCategoriesColor1" />
+                    <input id="featuredCategoriesColorPicker1" />
+                    <span class="btn bg-blue open-button" style="display:none;">@T("SevenSpikes.Themes.Avenue.Admin.Settings.GeneralSettings.SelectColorButton")</span>
+                    <span class="k-select close-select" style="display:none;">
+                        <span class="k-icon k-i-close" unselectable="on"></span>
+                    </span>
+                </div>
+            </div>
+            <div class="form-group color-picker" style="display:none">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="FeaturedCategoriesColor2_OverrideForStore" asp-input="FeaturedCategoriesColor2" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="FeaturedCategoriesColor2" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="FeaturedCategoriesColor2" />
+                    <input id="featuredCategoriesColorPicker2" />
+                    <span class="btn bg-blue open-button" style="display:none;">@T("SevenSpikes.Themes.Avenue.Admin.Settings.GeneralSettings.SelectColorButton")</span>
+                    <span class="k-select close-select" style="display:none;">
+                        <span class="k-icon k-i-close" unselectable="on"></span>
+                    </span>
+                </div>
+            </div>
+            <div class="form-group color-picker" style="display:none">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="FeaturedCategoriesColor3_OverrideForStore" asp-input="FeaturedCategoriesColor3" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="FeaturedCategoriesColor3" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="FeaturedCategoriesColor3" />
+                    <input id="featuredCategoriesColorPicker3" />
+                    <span class="btn bg-blue open-button" style="display:none;">@T("SevenSpikes.Themes.Avenue.Admin.Settings.GeneralSettings.SelectColorButton")</span>
+                    <span class="k-select close-select" style="display:none;">
+                        <span class="k-icon k-i-close" unselectable="on"></span>
+                    </span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="SmartCategoriesLayout_OverrideForStore" asp-input="SmartCategoriesLayout" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="SmartCategoriesLayout" />
+                </div>
+                <div class="col-md-9">
+                    <nop-select asp-for="SmartCategoriesLayout" asp-items="Model.SmartCategoriesLayoutList" />
+                </div>
+            </div>
+            @*<div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="CatalogPageLayout_OverrideForStore" asp-input="CatalogPageLayout" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="CatalogPageLayout" />
+                </div>
+                <div class="col-md-9">
+                    <nop-select asp-for="CatalogPageLayout" asp-items="Model.CatalogPageLayoutList" />
+                </div>
+            </div>*@
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="ProductPageLayout_OverrideForStore" asp-input="ProductPageLayout" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="ProductPageLayout" />
+                </div>
+                <div class="col-md-9">
+                    <nop-select asp-for="ProductPageLayout" asp-items="Model.ProductPageLayoutList" />
+                </div>
+            </div>
+            <div class="form-group nested" style="display:none">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="StickyProductDetails_OverrideForStore" asp-input="StickyProductDetails" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="StickyProductDetails" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="StickyProductDetails" />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="PageTitleImageId_OverrideForStore" asp-input="PageTitleImageId" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="PageTitleImageId" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="PageTitleImageId" />
+                    <span asp-validation-for="PageTitleImageId"></span>
+                </div>
+            </div>
+            @*<div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="ProductImageProportion_OverrideForStore" asp-input="ProductImageProportion" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="ProductImageProportion" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="ProductImageProportion" />
+                    <span asp-validation-for="ProductImageProportion"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="CategoryImageProportion_OverrideForStore" asp-input="CategoryImageProportion" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="CategoryImageProportion" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="CategoryImageProportion" />
+                    <span asp-validation-for="CategoryImageProportion"></span>
+                </div>
+            </div>*@
+        </div>
+    </div>
+</div>
+
+<div class="panel-group">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            @T("SevenSpikes.Themes.Avenue.Admin.PanelTitle.FooterSettings")
+        </div>
+        <div class="panel-body">
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="FooterLogoImage_OverrideForStore" asp-input="FooterLogoImage" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="FooterLogoImage" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="FooterLogoImage" />
+                    <span asp-validation-for="FooterLogoImage"></span>
+                </div>
+            </div>
+            <div class="form-group">
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="PinterestUrl_OverrideForStore" asp-input="PinterestUrl" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="PinterestUrl" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="PinterestUrl" />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="InstagramUrl_OverrideForStore" asp-input="InstagramUrl" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="InstagramUrl" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="InstagramUrl" />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="VimeoUrl_OverrideForStore" asp-input="VimeoUrl" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="VimeoUrl" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="VimeoUrl" />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="RemoveCopyright_OverrideForStore" asp-input="RemoveCopyright" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="RemoveCopyright" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="RemoveCopyright" />
+                    <p><em>@T("SevenSpikes.Themes.Admin.Settings.RemoveCopyright.Hint.Link")</em></p>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="RemoveDesignedBy_OverrideForStore" asp-input="RemoveDesignedBy" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="RemoveDesignedBy" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="RemoveDesignedBy" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="panel-group">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            @T("SevenSpikes.Themes.Avenue.Admin.PanelTitle.CustomHeadStyles")
+        </div>
+        <div class="panel-body">
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="CustomHeadStyles_OverrideForStore" asp-input="CustomHeadStyles" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="CustomHeadStyles" />
+                </div>
+                <div class="col-md-9">
+                    <nop-textarea asp-for="CustomHeadStyles" style="height: 450px;" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

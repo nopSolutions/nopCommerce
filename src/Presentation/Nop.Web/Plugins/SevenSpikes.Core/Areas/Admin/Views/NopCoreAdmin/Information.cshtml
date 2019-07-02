@@ -1,0 +1,58 @@
+﻿@model IEnumerable<SystemInfoModel.LoadedAssembly>
+
+@{
+    Layout = AdminViewLocations.AdminLayoutViewPath;
+
+    //page title
+    ViewBag.Title = T("Admin.System.SystemInfo").Text;
+    Html.SetActiveMenuItemSystemName("7Spikes Information");
+}
+
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        @T("SevenSpikes.Plugins.Admin.Information.Title")
+    </h1>
+</div>
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="pnlLoadedAssemblies">
+                        <ul>
+                            @foreach (var assembly in Model)
+                            {
+                                <li>
+                                    <div>
+                                        <strong>@assembly.FullName</strong>
+                                        @if (assembly.IsDebug)
+                                        {
+                                            <span class="label label-warning">Debug</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="label label-success">Release</span>
+                                        }
+                                    </div>
+                                    @if (!String.IsNullOrEmpty(assembly.Location))
+                                    {
+                                        <div style="white-space: nowrap;">
+                                            <em>@assembly.Location</em>
+                                        </div>
+                                    }
+                                    @if (assembly.BuildDate.HasValue)
+                                    {
+                                        <div>
+                                            @assembly.BuildDate.Value.ToString("s")
+                                        </div>
+                                    }
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

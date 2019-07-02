@@ -1,0 +1,143 @@
+﻿@using Nop.Core.Domain.Common
+@using Nop.Core.Infrastructure
+@using SevenSpikes.Nop.Framework
+@using SevenSpikes.Nop.Framework.MVCExtensions
+@using SevenSpikes.Nop.Plugins.MegaMenu
+
+@inject AdminAreaSettings adminAreaSettings
+
+@{
+    Layout = AdminViewLocations.AdminLayoutViewPath;
+
+    // Active menu item (system name)
+    Html.SetActiveMenuItemSystemName("SevenSpikes.MegaMenu.Admin.Submenus.Menus");
+
+    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
+    var gridPageSizes = adminAreaSettings.GridPageSizes;
+}
+
+@model bool
+
+<nop-antiforgery-token />
+
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        @T("SevenSpikes.MegaMenu.Admin.Menus")
+    </h1>
+    <div class="pull-right">
+        <a href="@Url.Action("MenuCreate")" class="btn bg-blue">
+            <i class="fa fa-plus-square"></i>
+            @T("Admin.Common.AddNew")
+        </a>
+    </div>
+</div>
+
+<div class="content">
+    <div class="form-horizontal">
+        @Html.TrialMessage(Model, Plugin.Name, Plugin.UrlInStore)
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="menus-grid"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script id="commands-template" type="text/x-kendo-template">
+        <a class="k-button" href="MenuEdit/#: Id#" title="@T("Admin.Common.Edit")">
+            <span class="k-icon k-edit"></span>
+            @T("Admin.Common.Edit")
+        </a>
+    </script>
+
+    <script type="text/javascript">
+    $(document).ready(function() {
+        $("#menus-grid").kendoGrid({
+            dataSource: {
+                type: "json",
+                transport: {
+                    read: {
+                        url: "@Html.Raw(Url.Action("MenuList", "MegaMenuAdmin"))",
+                        type: "POST",
+                        dataType: "json",
+                        data: addAntiForgeryToken
+                    },
+                    destroy: {
+                        url: "@Html.Raw(Url.Action("MenuDelete", "MegaMenuAdmin"))",
+                        type: "POST",
+                        dataType: "json",
+                        data: addAntiForgeryToken
+                    }
+                },
+                schema: {
+                    data: "Data",
+                    total: "Total",
+                    errors: "Errors",
+                    model: {
+                        id: "Id",
+                        fields: {
+                            Name: { editable: false, type: "string" },
+                            CssClass: { editable: false, type: "string" },
+                            Enabled: { editable: true, type: "boolean" }
+                        }
+                    }
+                },
+                requestEnd: function(e) {
+                    if (e.type === "update") {
+                        this.read();
+                    }
+                },
+                error: function(e) {
+                    display_kendoui_grid_error(e);
+                    // Cancel the changes
+                    this.cancelChanges();
+                },
+                pageSize: @defaultGridPageSize
+                },
+            pageable: {
+                refresh: true,
+                pageSizes: [@(gridPageSizes)]
+            },
+            editable: {
+                confirmation: true,
+                mode: "inline"
+            },
+            filterable: false,
+            sortable: true,
+            scrollable: false,
+            columns: [
+            {
+                field: "Name",
+                title: "@T("SevenSpikes.MegaMenu.Admin.Menu.Name")"
+            }, {
+                field: "CssClass",
+                title: "@T("SevenSpikes.MegaMenu.Admin.Menu.CssClass")"
+            }, {
+                field: "Enabled",
+                title: "@T("SevenSpikes.MegaMenu.Admin.Menu.Enabled")",
+                width: 100,
+                headerAttributes: { style: "text-align:center" },
+                attributes: { style: "text-align:center" },
+                template: '# if(Enabled) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
+            }, {
+                title: "@T("Admin.Common.Edit")",
+                template: kendo.template($("#commands-template").html()),
+                filterable: false,
+                sortable: false,
+                width: 100
+            }, {
+                title: "@T("Admin.Common.Delete")",
+                command: [
+                {
+                    name: "destroy",
+                    text: "@T("Admin.Common.Delete")"
+                }
+                ],
+                width: 100
+            }
+            ]
+        });
+    });
+    </script>
+</div>

@@ -1,0 +1,173 @@
+﻿@model RibbonPictureModel
+
+@inject AdminAreaSettings _adminAreaSettings
+
+@{
+    Layout = AdminViewLocations.AdminLayoutViewPath;
+
+    Html.AddCssFileParts("~/Plugins/SevenSpikes.Nop.Plugins.ProductRibbons/Areas/Admin/Content/Styles/adminstyles.css");
+
+    Html.SetActiveMenuItemSystemName("SevenSpikes.ProductRibbons.Admin.Submenus.RibbonImages");
+
+    var defaultGridPageSize = _adminAreaSettings.DefaultGridPageSize;
+    var gridPageSizes = _adminAreaSettings.GridPageSizes;
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#quickAddRibbonImage').click(function () {
+            var pictureId = $("#@Html.IdFor(model => model.PictureId)").val();
+
+            if (pictureId == 0) {
+                alert('Upload picture first');
+                return;
+            }
+
+            var headers = {};
+
+            addAntiForgeryToken(headers);
+
+            $('#quickAddRibbonImage').attr('disabled', true);
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: "@Url.Action("RibbonPictureAdd", "ProductRibbonsAdmin")",
+                data: "pictureId=" + pictureId,
+                headers: headers,
+                success: function (data) {
+                    $("#ribbonimages-grid").data('kendoGrid').dataSource.read();
+
+                    $('#quickAddRibbonImage').attr('disabled', false);
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert('Failed to add ribbon image.');
+                    $('#quickAddRibbonImage').attr('disabled', false);
+                }
+            });
+        });
+    });
+</script>
+
+<nop-antiforgery-token />
+
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        @T("SevenSpikes.ProductRibbons.Admin.RibbonPicture")
+    </h1>
+</div>
+
+
+<div class="content">
+    <div class="form-horizontal">
+        @Html.TrialMessage(Model.IsTrialVersion, Plugin.Name, Plugin.UrlInStore)
+        
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="PictureId" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="PictureId" />
+                            <span asp-validation-for="PictureId"></span>
+                            <button type="button" name="quickAddRibbonImage" id="quickAddRibbonImage" class="btn btn-primary margin-t-5">@T("SevenSpikes.ProductRibbons.Admin.RibbonPicture.AddPicture")</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="ribbonimages-grid"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#ribbonimages-grid").kendoGrid({
+            dataSource: {
+                type: "json",
+                transport: {
+                    read: {
+                        url: "@Html.Raw(Url.Action("RibbonPicturesList", "ProductRibbonsAdmin"))",
+                        type: "POST",
+                        dataType: "json",
+                        data: addAntiForgeryToken
+                    },
+                    destroy:{
+                        url: "@Html.Raw(Url.Action("RibbonPictureDelete", "ProductRibbonsAdmin"))",
+                        type: "POST",
+                        dataType: "json",
+                        data: addAntiForgeryToken
+                    }
+                },
+                schema: {
+                    data: "Data",
+                    total: "Total",
+                    errors: "Errors",
+                    model: {
+                        id: "Id",
+                        fields: {
+                            Id: { editable: false, type: "number" },
+                            PictureUrl: { editable: false, type: "string" },
+                            PictureHeight: { editable: false, type: "string" },
+                            PictureWidth: { editable: false, type: "string" }
+                        }
+                    }
+                },
+                requestEnd: function (e) {
+                    if (e.type == "update") {
+                        this.read();
+                    }
+                },
+                error: function (e) {
+                    display_kendoui_grid_error(e);
+                    // Cancel the changes
+                    this.cancelChanges();
+                },
+                pageSize: @(defaultGridPageSize),
+            },
+            pageable: {
+                refresh: true,
+                pageSizes: [@(gridPageSizes)]
+            },
+            editable: {
+                confirmation: true,
+                mode: "inline"
+            },
+            filterable: true,
+            sortable: true,
+            scrollable: false,
+            columns: [{
+                field: "PictureUrl",
+                title: "@T("SevenSpikes.ProductRibbons.Admin.RibbonPicture.PictureUrl")",
+                template: "<img alt='#= Id #' src='#= PictureUrl #' />",
+                width: 100
+            }, {
+                field: "PictureHeight",
+                title: "@T("SevenSpikes.ProductRibbons.Admin.RibbonPicture.PictureHeight")",
+                width: 100
+            }, {
+                field: "PictureWidth",
+                title: "@T("SevenSpikes.ProductRibbons.Admin.RibbonPicture.PictureWidth")",
+                width: 100
+            }, {
+                command: [{
+                    name: "destroy",
+                    text: "@T("Admin.Common.Delete")"
+                }],
+                width: 30
+            }]
+        });
+    });
+</script>

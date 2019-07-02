@@ -1,0 +1,52 @@
+﻿@model GooglePlusModel
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div class="form-group">
+            <div class="col-md-3">
+                <nop-label asp-for="ApiKey" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="ApiKey" />
+                <span asp-validation-for="ApiKey"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-3">
+                <nop-label asp-for="Source" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="Source" />
+                <span asp-validation-for="Source"></span>
+            </div>
+        </div>
+        <div class="adminHint">
+            <div class="col-md-3">
+            </div>
+            <div class="col-md-9">
+                <div class="summary">To obtain your <strong>Api Key</strong> do the following:</div>
+                <ul>
+                    <li>Go to <a href="https://console.developers.google.com" target="_blank">https://console.developers.google.com</a>.</li>
+                    <li>Create new project by clicking the <strong>Create project</strong> button and entering your choosen project name in the popup.</li>
+                    <li>Next you will be redirected to your project Dashboard. Choose the <strong>Api Manager</strong> from the menu (you can open it by clicking the menu icon at top left).</li>
+                    <li>From the Api Manager page choose <strong>Credentials</strong> from left menu.</li>
+                    <li>You will see something like a popup at the center of your screen. Click on the <strong>Create credentials</strong> dropdown and select <strong>API key</strong>.</li>
+                    <li>Choose <strong>Server key</strong>, specify your key name and if you want to restrict access to your key you can specify your site IP address (this is optional).</li>
+                    <li>When you click the <strong>Create</strong> button you will see a popup and your <strong>API key</strong> will be there.</li>
+                </ul>
+            </div>
+        </div>
+        <div class="adminHint">
+            <div class="col-md-3">
+            </div>
+            <div class="col-md-9">
+                <div class="summary">You will need to turn your Google+ API on:</div>
+                <ul>
+                    <li>Go to <a href="https://console.developers.google.com/apis/library" target="_blank">https://console.developers.google.com/apis/library</a>.</li>
+                    <li>Click on Google+ Api, that should send you to this <a href="https://console.developers.google.com/apis/api/plus" target="_blank">page</a>.</li>
+                    <li>Click on <strong>Enable API</strong> button</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,213 @@
+/*
+* Copyright 2012 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+* http://www.nop-templates.com/t/licensinginfo
+*/
+
+.jCarouselMainWrapper {
+	margin-bottom: 20px;
+}
+.jCarouselMainWrapper:first-child {
+	margin-top: 0 !important;
+}
+.jCarouselMainWrapper:last-child {
+	margin-bottom: 0 !important;
+}
+
+.nop-jcarousel .carousel-title {
+	margin: 0 0 35px;
+	text-align: center;
+	font-size: 21px;
+	letter-spacing: 1.5px;
+	text-transform: uppercase;
+	color: #222;
+}
+.nop-jcarousel .carousel-title strong {
+    position: relative;
+	font-weight: 800;
+}
+.nop-jcarousel .carousel-title strong:after {
+    content: "";
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: -2px;
+	height: 2px;
+	background-color: #222;
+}
+
+.nop-jcarousel .slick-list {
+    margin: 0 -1.85vw;
+}
+.nop-jcarousel .item-grid {
+	position: relative;
+	overflow: hidden;
+}
+
+.nop-jcarousel .carousel-item {
+    padding: 0 1.85vw; /*defines the distance between the carousel item boxes*/
+}
+.nop-jcarousel .carousel-item .item-box {
+    width: 100% !important;
+    margin-left: 0 !important;
+	margin-right: 0 !important;
+	text-align: center;
+}
+.nop-jcarousel .carousel-item .product-title {
+	height: auto !important; /*overrides the core script "equalizer", which erroneously sets titles' height to 0*/
+}
+.nop-jcarousel .carousel-item .category-title {
+	font-weight: 800;
+	text-transform: uppercase;
+}
+
+/* TWO COLUMNS */
+
+.side-2 .jCarouselMainWrapper {
+	display: none;
+}
+.center-2 div ~ .jCarouselMainWrapper {
+	margin-top: 40px;
+}
+.pager + .jCarouselMainWrapper {
+	margin-top: 60px !important;
+}
+
+/* NAVIGATION */
+
+.nop-jcarousel .slick-prev,
+.nop-jcarousel .slick-next {
+    position: absolute;
+    top: 50%;
+	z-index: 1;
+    width: 40px;
+    height: 40px;
+	margin-top: -20px;
+    background-color: #222;
+    font-size: 0;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.nop-jcarousel .slick-prev {
+    left: 0;
+}
+.nop-jcarousel .slick-next {
+    right: 0;
+}
+.nop-jcarousel .slick-prev:before,
+.nop-jcarousel .slick-next:after {
+	display: block;
+	font-size: 13px;
+	color: #fff;
+}
+.nop-jcarousel .slick-prev:before {
+    content: "\e903";
+}
+.nop-jcarousel .slick-next:after {
+    content: "\e904";
+}
+.nop-jcarousel .slick-prev:hover,
+.nop-jcarousel .slick-next:hover {
+	
+}
+
+.nop-jcarousel .slick-disabled,
+.nop-jcarousel .slick-disabled:hover {
+    opacity: 0.3;
+    cursor: default;
+}
+
+.nop-jcarousel .slick-dots {
+    margin: 0 0 55px;
+    text-align: center;
+    font-size: 0;
+	white-space: nowrap;
+}
+.nop-jcarousel .slick-dots li {
+    display: inline-block;
+    margin: 0 10px;
+}
+.nop-jcarousel .slick-dots button {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+	background-color: #ebebeb;
+	font-size: 0;
+    transition: all 0.2s ease;
+}
+.nop-jcarousel .slick-dots .slick-active button,
+.nop-jcarousel .slick-dots button:hover {
+    background-color: #222;
+}
+
+/* MANUFACTURERS */
+
+.manufacturer-grid .slick-list {
+	margin-bottom: 30px !important;
+	background: url('images/pattern.png') repeat;
+	padding: 0 3.7vw;
+}
+.manufacturer-grid .slick-list .item-box {
+	margin-bottom: 0;
+}
+.manufacturer-grid .slick-list .picture {
+	padding: 20px 0;
+}
+.manufacturer-grid .slick-list .picture a {
+	background-color: #fff;
+}
+.nop-jcarousel.manufacturer-grid .slick-prev,
+.nop-jcarousel.manufacturer-grid .slick-next {
+	margin-top: 0;
+}
+.nop-jcarousel.manufacturer-grid .slick-dots {
+	margin: 30px 0 50px;
+}
+
+
+
+@media all and (min-width: 501px) {
+
+	.nop-jcarousel .slick-list {
+		margin: 0 -1.25vw;
+	}
+	.nop-jcarousel .carousel-item {
+		padding: 0 1.25vw;
+	}
+	.manufacturer-grid .slick-list {
+		padding: 0 2.5vw;
+	}
+}
+
+@media all and (min-width: 1025px) {
+
+	.nop-jcarousel .slick-list {
+		margin: 0 -1vw;
+	}
+	.nop-jcarousel .carousel-item {
+		padding: 0 1vw;
+	}
+	.manufacturer-grid .slick-list {
+		margin-bottom: 45px !important;
+		padding: 0 1.7vw;
+	}
+	.manufacturer-grid .carousel-item {
+		padding: 0 0.85vw;
+	}
+}
+
+@media all and (min-width: 1201px) {
+
+	.jCarouselMainWrapper {
+		margin-bottom: 35px;
+	}
+}
+
+@media all and (min-width: 1501px) {
+
+	.manufacturer-grid .slick-list {
+		padding: 0 1.4vw;
+	}
+	.manufacturer-grid .carousel-item {
+		padding: 0 0.7vw;
+	}
+}

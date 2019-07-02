@@ -1,0 +1,19 @@
+
+.previous-product {
+    right: 0;
+	left: auto;
+    text-align: right;
+    direction: rtl;
+}
+.next-product {
+	right: auto;
+    left: 0;
+    text-align: left;
+    direction: ltr;
+}
+.previous-product-label:before {
+	content: "\e908";
+}
+.next-product-label:after {
+	content: "\e907";
+}

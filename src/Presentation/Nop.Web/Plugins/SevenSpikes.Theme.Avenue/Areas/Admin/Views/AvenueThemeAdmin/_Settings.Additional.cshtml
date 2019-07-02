@@ -1,0 +1,296 @@
+﻿@model AvenueThemeSettingsModel
+    
+<div class="panel-group">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="InfoBoxesWidgetZone_OverrideForStore" asp-input="InfoBoxesWidgetZone" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="InfoBoxesWidgetZone" />
+                </div>
+                <div class="col-md-9">
+                    <nop-select asp-for="InfoBoxesWidgetZone" asp-items="Model.SupportedItemBoxWidgetZones" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            @T("SevenSpikes.Themes.Avenue.Admin.PanelOneTitle.InfoBoxSettings")
+        </div>
+        <div class="panel-body">
+
+            <!-- Info Box 1 -->
+
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="EnableInfoBoxOne_OverrideForStore" asp-input="EnableInfoBoxOne" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="EnableInfoBoxOne" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="EnableInfoBoxOne" />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="InfoBoxOneImageId_OverrideForStore" asp-input="InfoBoxOneImageId" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="InfoBoxOneImageId" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="InfoBoxOneImageId" />
+                </div>
+            </div>
+            @(Html.LocalizedEditor<AvenueThemeSettingsModel, AvenueThemeSettingsLocalizedModel>("avenue-localized-info-box-one",
+                    @<div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="InfoBoxOneTitle" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="@Model.Locales[item].InfoBoxOneTitle" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="InfoBoxOneText" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="@Model.Locales[item].InfoBoxOneText" />
+                            </div>
+                        </div>
+                        <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
+                    </div>
+                                        ,
+                                        @<div>
+                                            <div class="form-group">
+                                                <div class="col-md-3">
+                                                    <nop-label asp-for="InfoBoxOneTitle" />
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <nop-editor asp-for="InfoBoxOneTitle" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="col-md-3">
+                                                    <nop-label asp-for="InfoBoxOneText" />
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <nop-editor asp-for="InfoBoxOneText" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                                                        ))
+
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            @T("SevenSpikes.Themes.Avenue.Admin.PanelTwoTitle.InfoBoxSettings")
+        </div>
+        <div class="panel-body">
+
+            <!-- Info Box 2 -->
+
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="EnableInfoBoxTwo_OverrideForStore" asp-input="EnableInfoBoxTwo" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="EnableInfoBoxTwo" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="EnableInfoBoxTwo" />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="InfoBoxTwoImageId_OverrideForStore" asp-input="InfoBoxTwoImageId" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="InfoBoxTwoImageId" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="InfoBoxTwoImageId" />
+                </div>
+            </div>
+            @(Html.LocalizedEditor<AvenueThemeSettingsModel, AvenueThemeSettingsLocalizedModel>("avenue-localized-info-box-two",
+                    @<div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="InfoBoxTwoTitle" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="@Model.Locales[item].InfoBoxTwoTitle" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="InfoBoxTwoText" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="@Model.Locales[item].InfoBoxTwoText" />
+                            </div>
+                        </div>
+                        <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
+                    </div>
+                                ,
+                                @<div>
+                                    <div class="form-group">
+                                        <div class="col-md-3">
+                                            <nop-label asp-for="InfoBoxTwoTitle" />
+                                        </div>
+                                        <div class="col-md-9">
+                                            <nop-editor asp-for="InfoBoxTwoTitle" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-3">
+                                            <nop-label asp-for="InfoBoxTwoText" />
+                                        </div>
+                                        <div class="col-md-9">
+                                            <nop-editor asp-for="InfoBoxTwoText" />
+                                        </div>
+                                    </div>
+                                </div>
+                                            ))
+
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            @T("SevenSpikes.Themes.Avenue.Admin.PanelThreeTitle.InfoBoxSettings")
+        </div>
+        <div class="panel-body">
+
+            <!-- Info Box 3 -->
+
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="EnableInfoBoxThree_OverrideForStore" asp-input="EnableInfoBoxThree" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="EnableInfoBoxThree" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="EnableInfoBoxThree" />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="InfoBoxThreeImageId_OverrideForStore" asp-input="InfoBoxThreeImageId" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="InfoBoxThreeImageId" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="InfoBoxThreeImageId" />
+                </div>
+            </div>
+            @(Html.LocalizedEditor<AvenueThemeSettingsModel, AvenueThemeSettingsLocalizedModel>("avenue-localized-info-box-three",
+                    @<div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="InfoBoxThreeTitle" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="@Model.Locales[item].InfoBoxThreeTitle" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="InfoBoxThreeText" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="@Model.Locales[item].InfoBoxThreeText" />
+                            </div>
+                        </div>
+                        <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
+                    </div>
+                                ,
+                                @<div>
+                                    <div class="form-group">
+                                        <div class="col-md-3">
+                                            <nop-label asp-for="InfoBoxThreeTitle" />
+                                        </div>
+                                        <div class="col-md-9">
+                                            <nop-editor asp-for="InfoBoxThreeTitle" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-3">
+                                            <nop-label asp-for="InfoBoxThreeText" />
+                                        </div>
+                                        <div class="col-md-9">
+                                            <nop-editor asp-for="InfoBoxThreeText" />
+                                        </div>
+                                    </div>
+                                </div>
+                                            ))
+
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            @T("SevenSpikes.Themes.Avenue.Admin.PanelFourTitle.InfoBoxSettings")
+        </div>
+        <div class="panel-body">
+
+            <!-- Info Box 4 -->
+
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="EnableInfoBoxFour_OverrideForStore" asp-input="EnableInfoBoxFour" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="EnableInfoBoxFour" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="EnableInfoBoxFour" />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="InfoBoxFourImageId_OverrideForStore" asp-input="InfoBoxFourImageId" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="InfoBoxFourImageId" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="InfoBoxFourImageId" />
+                </div>
+            </div>
+            @(Html.LocalizedEditor<AvenueThemeSettingsModel, AvenueThemeSettingsLocalizedModel>("avenue-localized-info-box-four",
+                    @<div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="InfoBoxFourTitle" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="@Model.Locales[item].InfoBoxFourTitle" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="InfoBoxFourText" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="@Model.Locales[item].InfoBoxFourText" />
+                            </div>
+                        </div>
+                        <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
+                    </div>
+                                ,
+                                @<div>
+                                    <div class="form-group">
+                                        <div class="col-md-3">
+                                            <nop-label asp-for="InfoBoxFourTitle" />
+                                        </div>
+                                        <div class="col-md-9">
+                                            <nop-editor asp-for="InfoBoxFourTitle" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-3">
+                                            <nop-label asp-for="InfoBoxFourText" />
+                                        </div>
+                                        <div class="col-md-9">
+                                            <nop-editor asp-for="InfoBoxFourText" />
+                                        </div>
+                                    </div>
+                                </div>
+                                            ))
+
+        </div>
+    </div>
+</div>

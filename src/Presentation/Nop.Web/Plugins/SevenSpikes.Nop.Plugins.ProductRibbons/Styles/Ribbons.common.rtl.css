@@ -1,0 +1,8 @@
+
+@media all and (min-width: 769px) {
+	
+.product-list .ribbon-wrapper {
+    float: right; /*should not be applied on smaller resolutions where the product list looks like a grid*/
+}
+
+}

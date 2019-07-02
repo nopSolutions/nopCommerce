@@ -1,0 +1,219 @@
+﻿@model DefaultSettingsGridModel
+
+<div class="stores-wrapper reset-default-settings" style="margin: 5px 0 10px;">
+    <div class="form-group">
+        @* The available stores could be: All Stores, Store 1, Store 2 etc. so if we have only one store there is no need to show the Multistore configuration  *@
+        @if (Model.AvailableStores.Count > 2)
+        {
+            <div class="multistore-configuration">
+                <div class="label-wrapper">
+                    <label class="title">@T("Admin.Configuration.Settings.StoreScope")</label>
+                </div>
+                <div>
+                    <nop-select asp-for-name="default-settings-store-configuration" asp-items="Model.AvailableStores" />
+                </div>
+            </div>
+        }
+        <div class="buttons-wrapper">
+            <div class="form-actions">
+                <div class="default-settings-save-message"></div>
+                <button type="submit" name="save" class="submit-default-settings-keys-button btn bg-red">
+                    <i class="fa fa-refresh"></i>
+                    @T("SevenSpikes.Plugins.Admin.ResetDefaultSettings.Confirm")
+                </button>
+                <span class="cancel btn bg-blue">@T("SevenSpikes.Plugins.Admin.ResetDefaultSettings.Cancel")</span>
+            </div>
+        </div>
+    </div>
+    <div style="margin: 0 0 10px; clear: both;">
+        @{
+            const string themePrefix = "sevenspikes.theme.";
+
+            if (Model.PluginFolderName.StartsWith(themePrefix, StringComparison.InvariantCultureIgnoreCase))
+            {
+                var themeName = Regex.Replace(Model.PluginFolderName, themePrefix, "", RegexOptions.IgnoreCase);
+
+                <div class="callout bg-gray-light no-margin  ">
+                    <p class="current-value">@Html.Raw(T("SevenSpikes.Plugins.Admin.ResetDefaultSettings.MessageForPlugins.CurrentValueHint"))</p>
+                    <p class="default-value">@Html.Raw(string.Format(T("SevenSpikes.Plugins.Admin.ResetDefaultSettings.MessageForThemes.DefaultValueHint").ToString(), themeName))</p>
+                </div>
+            }
+            else
+            {
+                <div class="callout bg-gray-light no-margin">
+                    <p class="current-value">@Html.Raw(T("SevenSpikes.Plugins.Admin.ResetDefaultSettings.MessageForPlugins.CurrentValueHint"))</p>
+                    <p class="default-value">@Html.Raw(T("SevenSpikes.Plugins.Admin.ResetDefaultSettings.MessageForPlugins.DefaultValueHint"))</p>
+                </div>
+            }
+        }
+    </div>
+</div>
+<div>
+    <form class="submit-default-settings-keys-form" action="@Html.Raw(Url.Action("ResetSettingsByIds", "DefaultSettingsAdmin", new { pluginFolderName = Model.PluginFolderName }))" method="POST" novalidate="novalidate">
+        <nop-antiforgery-token />
+        <table class="adminContent">
+            <tr>
+                <td>
+                    <div id="default-settings-grid"></div>
+                </td>
+            </tr>
+        </table>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $("#default-settings-grid").kendoGrid({
+                    dataSource: {
+                        type: "json",
+                        transport: {
+                            read: {
+                                url: "@Html.Raw(Url.Action("GetDefaultSettingsRead", "DefaultSettingsAdmin", new { pluginFolderName = Model.PluginFolderName }))",
+                                type: "POST",
+                                dataType: "json",
+                                data: function () {
+                                    var data = {
+                                        "storeId": parseInt($('#default-settings-store-configuration').val()) || 0
+                                    };
+                                    data = addAntiForgeryToken(data);
+                                    return data;
+                                }
+                            }
+                        },
+                        sort: { field: "Key", dir: "asc" },
+                        schema: {
+                            data: "Data",
+                            total: "Total",
+                            errors: "Errors",
+                            model: {
+                                id: "Key",
+                                fields: {
+                                    Key: { editable: false, type: "string" },
+                                    CurrentValue: { editable: false, type: "string" },
+                                    DefaultValue: { editable: false, type: "string" }
+                                }
+                            }
+                        },
+                        requestEnd: function (e) {
+                            if (e.type == "update") {
+                                this.read();
+                            }
+                        },
+                        error: function (e) {
+                            display_kendoui_grid_error(e);
+                            // Cancel the changes
+                            this.cancelChanges();
+                        }
+                    },
+                    editable: {
+                        confirmation: true,
+                        mode: "inline"
+                    },
+                    filterable: false,
+                    sortable: true,
+                    scrollable: false,
+                    dataBound: function (e) {
+                        if (e.sender._data.length == 0) {
+                            return;
+                        }
+
+                        $('#reset-default-settings-confirmation').data('kendoWindow').center();
+                        $('.resetDefaultSettingsWindow').css("top", $(document).scrollTop() + 10);
+
+                        var grid = $('#default-settings-grid').data('kendoGrid');
+                        $('#default-settings-grid tr').each(function () {
+                            var dataItem = grid.dataItem(this);
+                            if (dataItem.CurrentValue.toLowerCase() !== dataItem.DefaultValue.toLowerCase()) {
+                                var childTds = $(this).children('td');
+                                childTds.eq(2).addClass('current-value');
+                                childTds.eq(3).addClass('default-value');
+
+                                $(this).find('.checkboxGroups').attr('checked', 'checked');
+                            }
+                        });
+                    },
+                    columns: [{
+                        field: "Id",
+                        headerTemplate: '<input class="default-settings-grid-mastercheckbox" type="checkbox" />',
+                        headerAttributes: { style: "text-align:center" },
+                        template: '<input type="checkbox" name="SelectedSettingsKeys" value="#=Key#" class="checkboxGroups" />',
+                        attributes: { style: "text-align:center" },
+                        width: 50,
+                        sortable: false
+                    }, {
+                        field: "Key",
+                        title: "@T("SevenSpikes.Plugins.Admin.SettingKey")",
+                    }, {
+                        field: "CurrentValue",
+                        title: "@T("SevenSpikes.Plugins.Admin.SettingCurrentValue")",
+                    }, {
+                        field: "DefaultValue",
+                        title: "@T("SevenSpikes.Plugins.Admin.SettingDefaultValue")",
+                    }]
+                });
+
+                // Wire up checkboxes
+                $('.default-settings-grid-mastercheckbox').click(function () {
+                    $('.checkboxGroups').attr('checked', $(this).is(':checked')).change();
+                });
+
+                $('#default-settings-grid').on('change', 'input[type=checkbox][class!=default-settings-grid-mastercheckbox]', function (e) {
+                    var numChkBoxes = $('#default-settings-grid input[type=checkbox][class!=default-settings-grid-mastercheckbox]').length;
+                    var numChkBoxesChecked = $('#default-settings-grid input[type=checkbox][class!=default-settings-grid-mastercheckbox]:checked').length;
+                    $('.default-settings-grid-mastercheckbox').attr('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
+                });
+
+                // Reset Button
+                $('.submit-default-settings-keys-button').on('click', function (e) {
+                    e.preventDefault();
+
+                    $('.default-settings-save-message').hide();
+
+                    var form = $('.submit-default-settings-keys-form');
+
+                    var settingKeysArray = new Array();
+
+                    var selectedSettingsForUpdate = form.find('[name="SelectedSettingsKeys"]:checked');
+
+                    if (selectedSettingsForUpdate.length < 1) {
+                        $('.default-settings-save-message').html('@T("SevenSpikes.Plugins.Admin.ResetDefaultSettings.NoSettingsSelected")').fadeIn();
+
+                        return;
+                    }
+
+                    selectedSettingsForUpdate.each(function () {
+                        settingKeysArray.push($(this).val());
+                    });
+
+                    var formData = {
+                        "save": "save",
+                        "storeId": parseInt($('#default-settings-store-configuration').val()) || 0,
+                        'selectedSettingsKeys[]': settingKeysArray
+                    };
+                    formData = addAntiForgeryToken(formData);
+
+                    $.ajax({
+                        cache: false,
+                        type: form.attr('method'),
+                        data: formData,
+                        url: form.attr('action')
+                    }).done(function () {
+                        var selectedStoreId = parseInt($('#default-settings-store-configuration').val()) || 0;
+                        var returnUrl = $('.reset-default-settings-button').attr('data-returnurl');
+                        var redirectUrl = '@Url.Action("ChangeStoreScopeConfigurationWithSuccessMessage", "DefaultSettingsAdmin")?selectedStoreId=' + selectedStoreId + '&returnUrl=' + returnUrl;
+
+                        location.href = redirectUrl;
+                        return;
+                    });
+                });
+
+                $('#reset-default-settings-confirmation .form-actions .cancel').on('click', function (e) {
+                    e.preventDefault();
+
+                    $('#reset-default-settings-confirmation').data('kendoWindow').close();
+                });
+
+                $('#default-settings-store-configuration').on('change', function () {
+                    $('#default-settings-grid').data('kendoGrid').dataSource.read();
+                });
+            });
+        </script>
+    </form>
+</div>

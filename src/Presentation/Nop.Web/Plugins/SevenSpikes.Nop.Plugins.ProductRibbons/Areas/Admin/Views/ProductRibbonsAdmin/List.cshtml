@@ -1,0 +1,158 @@
+﻿@{
+    Layout = AdminViewLocations.AdminLayoutViewPath;
+}
+
+@using SevenSpikes.Nop.Plugins.ProductRibbons.Models
+@using SevenSpikes.Nop.Framework
+@using Nop.Core.Domain.Common;
+@using Nop.Core.Infrastructure;
+
+@{
+    var defaultGridPageSize = EngineContext.Current.Resolve<AdminAreaSettings>().DefaultGridPageSize;
+    var gridPageSizes = EngineContext.Current.Resolve<AdminAreaSettings>().GridPageSizes;
+
+    Html.SetActiveMenuItemSystemName("SevenSpikes.ProductRibbons.Admin.Submenus.ProductRibbons");
+}
+
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        @T("SevenSpikes.Plugins.ProductRibbons.Admin.Menu.MenuName")
+    </h1>
+    <div class="pull-right">
+
+        <a href="Create" class="btn bg-blue">
+            <i class="fa fa-plus-square"></i>
+            @T("SevenSpikes.ProductRibbons.Admin.AddNew")
+        </a>
+
+    </div>
+</div>
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="product-ribbons-grid"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@Html.AntiForgeryToken()
+
+<script>
+    $(document)
+        .ready(function() {
+            $("#product-ribbons-grid")
+                .kendoGrid({
+                    dataSource: {
+                        type: "json",
+                        transport: {
+                            read: {
+                                url: "@Html.Raw(Url.Action("ListCommand", "ProductRibbonsAdmin"))",
+                                type: "POST",
+                                dataType: "json",
+                                data: addAntiForgeryToken
+                            },
+                            destroy: {
+                                url: "@Html.Raw(Url.Action("DeleteRibbon", "ProductRibbonsAdmin"))",
+                                type: "POST",
+                                dataType: "json",
+                                data: addAntiForgeryToken
+                            }
+                        },
+                        schema: {
+                            data: "Data",
+                            total: "Total",
+                            errors: "Errors",
+                            model: {
+                                id: "Id",
+                                fields: {
+                                    Id: { editable: false, type: "number" },
+                                    "RibbonGeneralInformation.Name": { editable: false, type: "string" },
+                                    "RibbonGeneralInformation.Enabled": { editable: false, type: "boolean" },
+                                    "CategoryPageRibbon.Text": { editable: false, type: "string" },
+                                    "ProductPageRibbon.Text": { editable: false, type: "string" },
+                                    "RibbonGeneralInformation.Priority": { editable: false, type: "number" },
+                                }
+                            }
+                        },
+                        requestEnd: function(e) {
+                            if (e.type == "update") {
+                                this.read();
+                            }
+                        },
+                        error: function(e) {
+                            display_kendoui_grid_error(e);
+                            // Cancel the changes
+                            this.cancelChanges();
+                        },
+                        pageSize: @(defaultGridPageSize),
+                    },
+                    pageable: {
+                        refresh: true,
+                        pageSizes: [@(gridPageSizes)]
+                    },
+                    editable: {
+                        confirmation: true,
+                        mode: "inline"
+                    },
+                    filterable: true,
+                    sortable: true,
+                    scrollable: false,
+                    columns: [
+                    {
+                        field: "RibbonGeneralInformation.Name",
+                        title: "@T("Sevenspikes.ProductRibbons.Admin.Settings.ProductRibbon.ProductRibbonGeneralInformation.Name")",
+                        width: 100
+                    }, {
+                        field: "CategoryPageRibbon.Text",
+                        title: "@T("Sevenspikes.ProductRibbons.Admin.Settings.ProductRibbon.ProductRibbonGeneralInformation.CategoryRibbonText")",
+                        width: 100
+                    }, {
+                        field: "ProductPageRibbon.Text",
+                        title: "@T("Sevenspikes.ProductRibbons.Admin.Settings.ProductRibbon.ProductRibbonGeneralInformation.ProductRibbonText")",
+                        width: 100
+                    }, {
+                        field: "RibbonGeneralInformation.Priority",
+                        title: "@T("Sevenspikes.Productribbons.Admin.Settings.Productribbon.ProductRibbonGeneralInformation.Priority")",
+                        headerAttributes: { style: "text-align:center" },
+                        attributes: { style: "text-align:center" },
+                        width: 30
+                    }, {
+                        field: "RibbonGeneralInformation.Enabled",
+                        title: "@T("Sevenspikes.ProductRibbons.Admin.Settings.ProductRibbon.ProductRibbonGeneralInformation.Enabled")",
+                        width: 30,
+                        headerAttributes: { style: "text-align:center" },
+                        attributes: { style: "text-align:center" },
+                        template:'# if(RibbonGeneralInformation.Enabled) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #',
+                        filterable: false
+                    }, {
+                        template: kendo.template($("#commands-template").html()),
+                        width: 30,
+                        headerAttributes: { style: "text-align:center" },
+                        attributes: { style: "text-align:center" },
+                        filterable: false,
+                        sortable: false
+                    }, {
+                        command: [
+                        {
+                            name: "destroy",
+                            text: "@T("Admin.Common.Delete")"
+                        }
+                        ],
+                        width: 30
+                    }
+                    ]
+                });
+        });
+</script>
+
+<script id="commands-template" type="text/x-kendo-template">
+    <a class="k-button" href="Edit/#: Id#" title="@T("Admin.Common.Edit")">
+        <span class="k-icon k-edit"></span>
+        @T("Admin.Common.Edit")
+    </a>
+</script>

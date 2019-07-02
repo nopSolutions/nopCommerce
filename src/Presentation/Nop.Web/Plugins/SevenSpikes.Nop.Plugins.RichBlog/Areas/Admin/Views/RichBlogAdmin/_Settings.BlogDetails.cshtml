@@ -1,0 +1,44 @@
+﻿@model RichBlogSettingsModel
+
+<div class="panel-group">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="ShowImageOnBlogPostPage_OverrideForStore" asp-input="ShowImageOnBlogPostPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="ShowImageOnBlogPostPage" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="ShowImageOnBlogPostPage" />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="BlogDetailsImageWidgetZone_OverrideForStore" asp-input="BlogDetailsImageWidgetZone" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="BlogDetailsImageWidgetZone" />
+                </div>
+                <div class="col-md-9">
+                    <nop-select asp-for="BlogDetailsImageWidgetZone" asp-items="Model.AvailableBlogDetailsImageWidgetZones" />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="BlogDetailsPrevNextWidgetZone_OverrideForStore" asp-input="BlogDetailsPrevNextWidgetZone" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="BlogDetailsPrevNextWidgetZone" />
+                </div>
+                <div class="col-md-9">
+                    <nop-select asp-for="BlogDetailsPrevNextWidgetZone" asp-items="Model.AvailableBlogDetailsPrevNextWidgetZones" />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="BlogDetailsImageSize_OverrideForStore" asp-input="BlogDetailsImageSize" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="BlogDetailsImageSize" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="BlogDetailsImageSize" asp-postfix="@T("SevenSpikes.Plugins.Admin.InputStyles.Postfix.Pixels").Text"/>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

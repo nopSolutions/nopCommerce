@@ -1,0 +1,86 @@
+﻿
+.clearFilterOptionsAll {
+	float: left;
+	margin-right: 0;
+	margin-left: -13px;
+}
+
+.filter-block {
+	margin: 0 0 10px 0;
+}
+.filter-block .toggleControl:before {
+	right: 0;
+	left: auto;
+}
+.filter-block .clearFilterOptions,
+.filter-block .clearPriceRangeFilter {
+	float: left;
+}
+
+.selected-options-list .option:after {
+	float: left;
+}
+
+.priceRangeMinPanel,
+.specification-min-panel {
+	float: right;
+}
+.priceRangeMaxPanel,
+.specification-max-panel {
+	float: left;
+}
+.currentMinPrice, .current-min-value {
+	float: right;
+}
+.currentMaxPrice, .current-max-value {
+	float: left;
+}
+
+.filtersGroupPanel .checkbox-item input {
+	right: 0;
+	left: auto;
+}
+.filtersGroupPanel .checkbox-item label {
+	padding: 10px 25px 10px 0;
+}
+
+.colorOptions .color {
+	right: auto;
+	left: 0;
+}
+
+.ajaxFilters .k-window-actions {
+	right: auto;
+	left: 0;
+}
+.ajaxFilters .k-window-action:after {
+	padding: 0;
+}
+
+
+@media all and (max-width: 1200px) {
+	
+	.filtersHead:before {
+		display: inline-block;
+	}
+}
+
+@media all and (min-width: 769px) {
+
+	.number-of-returned-products {
+		right: auto;
+		left: 20px;
+	}
+}
+
+@media all and (min-width: 1201px) {
+
+	.clearFilterOptionsAll {
+		margin-left: 0;
+	}
+	.one-column .product-selectors
+	.number-of-returned-products {
+		right: auto;
+		left: 10px;
+	}
+}

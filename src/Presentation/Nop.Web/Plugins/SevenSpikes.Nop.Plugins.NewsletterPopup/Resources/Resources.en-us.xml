@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-16"?>
+<Language Name="English">
+  <LocaleResource Name="SevenSpikes.Plugins.NewsletterPopup.Admin.Menu.MenuName">
+    <Value>Newsletter Popup</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NewsletterPopup.Admin.Settings.Common">
+    <Value>Newsletter Popup Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NewsletterPopup.admin.submenus.settings">
+    <Value>Settings</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="SevenSpikes.NewsletterPopup.Admin.Settings.Common.generalsettings">
+    <Value>General Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NewsletterPopup.admin.Settings.Enabled">
+    <Value>Enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NewsletterPopup.admin.Settings.Enabled.Hint">
+    <Value>If checked the Newsletter plugin will be enabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NewsletterPopup.Admin.Settings.PreselectDoNotShowPopupCheckbox">
+    <Value>Automatically preselect the "Do not show popup again" checkbox</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NewsletterPopup.Admin.Settings.PreselectDoNotShowPopupCheckbox.Hint">
+    <Value>If checked the "Do not show popup again" checkbox will be automatically preselected.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NewsletterPopup.admin.Settings.NewsletterPopupDelayedShow">
+    <Value>Newsletter Popup Delayed Show</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NewsletterPopup.admin.Settings.NewsletterPopupDelayedShow.Hint">
+    <Value>The number of milliseconds after which the popup will show up (1 second = 1000ms). Set to negative if you do not want the popup to show automatically.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NewsletterPopup.admin.Settings.NewsletterPopupOpenerSelector">
+    <Value>Newsletter Popup Opener Selector</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NewsletterPopup.admin.Settings.NewsletterPopupOpenerSelector.Hint">
+    <Value>Set the selector for the element(s) that will open the newsletter subscribe popup on click.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NewsletterPopup.Admin.Settings.NewsletterPopupBackgroundImageId">
+    <Value>Newsletter Popup Background Image</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NewsletterPopup.Admin.Settings.NewsletterPopupBackgroundImageId.Hint">
+    <Value>The image which will be shown as popup background</Value>
+  </LocaleResource>
+  
+  <LocaleResource Name="SevenSpikes.NewsletterPopup.Public.Popup.Title">
+    <Value>Newsletter Subscription</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NewsletterPopup.Public.Popup.Description">
+    <Value>Subscribe to our newsletter to be informed about our latest products and promotions</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NewsletterPopup.Public.Popup.GdprCheckbox">
+    <Value>I consent to having my email kept on file for newsletter purposes</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NewsletterPopup.Public.Popup.DontShow">
+    <Value>Do not show this popup again</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NewsletterPopup.Public.Popup.Close">
+    <Value>Close</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NewsletterPopup.Public.Popup.ConsentError">
+    <Value>Please check the GDPR consent checkbox before continuing</Value>
+  </LocaleResource>
+</Language>

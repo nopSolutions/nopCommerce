@@ -1,0 +1,17 @@
+﻿@model  IList<RichBlogCategoryModel>
+
+<div class="block blog-category-navigation">
+    <div class="title">
+        <strong>@T("SevenSpikes.RichBlog.Public.Category.Tab.Title")</strong>
+    </div>
+    <div class="listbox">
+        <ul class="list">
+            @foreach (var category in Model)
+            {
+                <li class="category">
+                    <a href="@Url.RouteUrl("BlogByCategory", new {SeName = category.SEName })">@category.Name (@category.NumberOfBlogPosts)</a>
+                </li>
+            }
+        </ul>
+    </div>
+</div>

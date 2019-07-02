@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<SupportedWidgetZones>
+  <WidgetZone>header_menu_after</WidgetZone>
+  <WidgetZone>mob_header_menu_after</WidgetZone>
+  <WidgetZone>header_menu_before</WidgetZone>
+  <WidgetZone>mob_header_menu_before</WidgetZone>
+</SupportedWidgetZones>

@@ -1,0 +1,14 @@
+﻿@model ProductDetailsModel
+
+@{
+
+    var cloudZoom = await Component.InvokeAsync("Widget", new { widgetZone = "sevenspikes_cloud_zoom" });
+    if (!string.IsNullOrEmpty(cloudZoom.ToHtmlString()))
+    {
+        @cloudZoom
+    }
+    else
+    {        
+        @await Html.PartialAsync("_ProductDetailsPictures", Model)
+    }
+}

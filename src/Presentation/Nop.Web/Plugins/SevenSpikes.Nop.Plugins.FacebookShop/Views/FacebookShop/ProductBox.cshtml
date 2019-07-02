@@ -1,0 +1,57 @@
+﻿@model ProductOverviewModel
+
+@{    
+    string realProductUrl = Url.RouteUrl("Product", new { SeName = Model.SeName }, this.Url.ActionContext.HttpContext.Request.Scheme);
+
+    string productUrl = Url.RouteUrl("SevenSpikes.Nop.Plugins.FacebookShop.Product", new { productId = Model.Id });
+    
+    if (Url.ActionContext.RouteData.Values["controller"].ToString().Equals("facebookshop", StringComparison.InvariantCultureIgnoreCase) &&
+        Url.ActionContext.RouteData.Values["action"].ToString().Equals("category", StringComparison.InvariantCultureIgnoreCase))
+    {
+        var currentCategoryId = Convert.ToInt32(Url.ActionContext.RouteData.Values["categoryId"].ToString());
+
+        productUrl = productUrl + "?referral=" + (int)ReferralPage.Category + "&referralvalue=" + currentCategoryId;
+    }
+    else if (Url.ActionContext.RouteData.Values["controller"].ToString().Equals("facebookshop", StringComparison.InvariantCultureIgnoreCase) &&
+            Url.ActionContext.RouteData.Values["action"].ToString().Equals("manufacturer", StringComparison.InvariantCultureIgnoreCase))
+    {
+        var currentManufacturerId = Convert.ToInt32(Url.ActionContext.RouteData.Values["manufacturerId"].ToString());
+
+        productUrl = productUrl + "?referral=" + (int)ReferralPage.Manufacturer + "&referralvalue=" + currentManufacturerId;
+    }
+    else if (Url.ActionContext.RouteData.Values["controller"].ToString().Equals("facebookshop", StringComparison.InvariantCultureIgnoreCase) &&
+            Url.ActionContext.RouteData.Values["action"].ToString().Equals("search", StringComparison.InvariantCultureIgnoreCase))
+    {
+        string q = Context.Request.Query["q"];
+        productUrl = productUrl + "?referral=" + (int)ReferralPage.Search + "&referralvalue=" + q;
+    }
+    else
+    {
+        productUrl = productUrl + "?referral=" + (int)ReferralPage.Home; 
+    }
+}
+
+<div class="product-item">
+    <div class="picture">
+        <a class="picture-link" href="@productUrl" title="@Model.DefaultPictureModel.Title">
+            <img class="picture-img" alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" />
+        </a>
+    </div>
+    <div class="details">
+        <h2 class="product-title">
+            <a class="product-link" href="@productUrl">@Model.Name</a>
+        </h2>
+        <div class="prices">
+            @if (!String.IsNullOrEmpty(Model.ProductPrice.OldPrice))
+            {
+                <span class="price old-price">@Model.ProductPrice.OldPrice</span>
+            }
+            <span class="price actual-price">@Model.ProductPrice.Price</span>
+        </div>
+        <div class="social-panel">
+            <a class="add-to-cart" href="@realProductUrl" target="_blank">@Model.Name</a>
+            <!-- Facebook -->
+            <a class="fb-share-link" href="https://www.facebook.com/sharer.php?u=@realProductUrl">@T("SevenSpikes.FacebookShop.Public.ProductBox.ShareToFacebook")</a>
+        </div>
+    </div>
+</div>

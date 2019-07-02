@@ -1,0 +1,460 @@
+﻿@model SevenSpikes.Nop.Plugins.FacebookShop.Areas.Admin.Models.FacebookShopSettingsModel
+@inject AdminAreaSettings adminAreaSettings
+
+@{
+    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
+    var gridPageSizes = adminAreaSettings.GridPageSizes;
+}
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        var mainBannerSelector = '@Html.IdFor(model => model.MainBannerImageId_OverrideForStore)';
+        var menuCategorieSelector = '@Html.IdFor(model => model.MainMenuCategoriesIds_OverrideForStore)';
+        var numberOfItemBoxesSelector = '@Html.IdFor(model => model.NumberOfItemBoxesPerRow_OverrideForStore)';
+        var homePageProductsSelector = '@Html.IdFor(model => model.HomePageProductIds_OverrideForStore)';
+
+        $('#' + homePageProductsSelector).change(function() {
+            customFieldOverrideChangedShowOverlay(homePageProductsSelector, '#home-page-products-grid');
+        });
+        customFieldOverrideChangedShowOverlay(homePageProductsSelector, '#home-page-products-grid');
+
+        $('#' + mainBannerSelector).change(function() {
+            customFieldOverrideChangedShowOverlay(mainBannerSelector, '#logo-image');
+        });
+        customFieldOverrideChangedShowOverlay(mainBannerSelector, '#logo-image');
+
+        $('#' + menuCategorieSelector).change(function() {
+            customFieldOverrideChangedShowOverlay(menuCategorieSelector, '#categories-grid');
+        });
+        customFieldOverrideChangedShowOverlay(menuCategorieSelector, '#categories-grid');
+
+        $('#' + numberOfItemBoxesSelector).change(function() {
+            customFieldOverrideChangedShowOverlay(numberOfItemBoxesSelector, '#number-of-item-boxes-holder');
+        });
+        customFieldOverrideChangedShowOverlay(numberOfItemBoxesSelector, '#number-of-item-boxes-holder');
+
+        $('.store-scope-configuration .checkbox input').change(function() {
+            customFieldOverrideChangedShowOverlay(homePageProductsSelector, '#home-page-products-grid');
+            customFieldOverrideChangedShowOverlay(mainBannerSelector, '#logo-image');
+            customFieldOverrideChangedShowOverlay(menuCategorieSelector, '#categories-grid');
+            customFieldOverrideChangedShowOverlay(numberOfItemBoxesSelector, '#number-of-item-boxes-holder');
+        });
+    });
+
+    function customFieldOverrideChangedShowOverlay(overrideSelector, parentOfOverlaySelector) {
+        if ($('#' + overrideSelector).length == 0) {
+            return;
+        }
+
+        if ($('#' + overrideSelector).is(':checked') == true) {
+            $('.overlay-for-' + overrideSelector).remove();
+        } else {
+            $(parentOfOverlaySelector).append('<div class="custom-fields-overlay overlay-for-' + overrideSelector + '"></div>');
+        }
+    }
+
+</script>
+
+<div class="panel-group">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="form-group clearfix">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="HomePageProductIds_OverrideForStore" asp-input="HomePageProductIds" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="HomePageProductIds" />
+                </div>
+                <div class="col-md-9">
+                    @Html.HiddenFor(model => model.HomePageProductIds)
+                    <div style="position: relative;" class="home-page-products">
+                        <div id="home-page-products-grid"></div>
+
+                        <script type="text/x-kendo-template" id="add-new-product-template">
+                            <input type="submit" id="btnAddNewProduct" name="btnAddNewProduct" value="@T("SevenSpikes.FacebookShop.Admin.Products.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("HomePageProductsPopup", "FacebookShopAdmin", new { btnId = "btnRefreshProducts" }))', 800, 700, true); return false;" class="k-button" />
+                        </script>
+
+                        <script type="text/javascript">
+                                $(document).ready(function () {
+                                    $("#home-page-products-grid").kendoGrid({
+                                        dataSource: {
+                                            type: "json",
+                                            transport: {
+                                                read: {
+                                                    url: "@Html.Raw(Url.Action("HomePageProductsList", "FacebookShopAdmin"))",
+                                                    type: "POST",
+                                                    dataType: "json",
+                                                    data: additionalData,
+                                                    complete: updateHomepageProductIds
+                                                },
+                                                update: {
+                                                    url: "@Html.Raw(Url.Action("HomePageProductUpdate", "FacebookShopAdmin"))",
+                                                    type: "POST",
+                                                    dataType: "json",
+                                                    data: additionalData,
+                                                    complete: updateHomepageProductIds
+                                                },
+                                                destroy: {
+                                                    url: "@Html.Raw(Url.Action("HomePageProductDelete", "FacebookShopAdmin"))",
+                                                    type: "POST",
+                                                    dataType: "json",
+                                                    data: additionalData,
+                                                    complete: updateHomepageProductIds
+                                                }
+                                            },
+                                            schema: {
+                                                data: "Data",
+                                                total: "Total",
+                                                errors: "Errors",
+                                                model: {
+                                                    id: "Id",
+                                                    fields: {
+                                                        Name: { editable: false, type: "string" },
+                                                        DisplayOrder: { editable: true, type: "number" }
+                                                    }
+                                                }
+                                            },
+                                            requestEnd: function(e) {
+                                                if (e.type == "update") {
+                                                    this.read();
+                                                }
+                                            },
+                                            error: function(e) {
+                                                display_kendoui_grid_error(e);
+                                                this.cancelChanges();
+                                            },
+                                            pageSize: @(defaultGridPageSize),
+                                        },
+                                        pageable: {
+                                            refresh: true,
+                                            pageSizes: [@(gridPageSizes)]
+                                        },
+                                        editable: {
+                                            confirmation: true,
+                                            mode: "inline"
+                                        },
+                                        scrollable: false,
+                                        toolbar: kendo.template($("#add-new-product-template").html()),
+                                        edit: function(e) {
+                                            if (!e.model.isNew()) {
+                                                e.container.find('.k-widget.k-dropdown.k-header').replaceWith(e.model.Name);
+                                            }
+                                        },
+                                        columns: [
+                                            {
+                                                field: "Name",
+                                                title: "@T("SevenSpikes.FacebookShop.Admin.Product.Name")"
+                                            }, {
+                                                field: "DisplayOrder",
+                                                title: "@T("SevenSpikes.FacebookShop.Admin.DisplayOrder")"
+                                            }, {
+                                                command: [
+                                                    {
+                                                        name: "edit",
+                                                        text: "@T("Admin.Common.Edit")"
+                                                    }, {
+                                                        name: "destroy",
+                                                        text: "@T("Admin.Common.Delete")"
+                                                    }
+                                                ],
+                                                width: 200
+                                            }
+                                        ]
+                                    });
+
+                                    $('#btnRefreshProducts').on('click', function () {
+                                        $('#home-page-products-grid').data('kendoGrid').dataSource.read();
+                                        return false;
+                                    });
+                                });
+
+                                function updateHomepageProductIds(data) {
+                                    data.success(function(datas) {
+                                        $("#@Html.IdFor(model => model.HomePageProductIds)").val(datas.ExtraData);
+                                    });
+                                }
+
+                                function additionalData() {
+                                    var data = {
+                                        storeId: getStoreId()
+                                    };
+
+                                    addAntiForgeryToken(data);
+
+                                    return data;
+                                }
+                        </script>
+
+                        <input type="submit" id="btnRefreshProducts" name="btnRefreshProducts" style="display: none" />
+                    </div>
+                </div>
+            </div>
+            <div class="form-group clearfix">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="NumberOfItemBoxesPerRow_OverrideForStore" asp-input="NumberOfItemBoxesPerRow" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="NumberOfItemBoxesPerRow" />
+                </div>
+                <div class="col-md-9">
+                    <nop-select asp-for="NumberOfItemBoxesPerRow" asp-items="Model.ItemBoxesPerRowOptions" />
+                </div>
+            </div>
+            <div class="form-group clearfix">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="CategoryPageSize_OverrideForStore" asp-input="CategoryPageSize" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="CategoryPageSize" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="CategoryPageSize" />
+                    <span asp-validation-for="CategoryPageSize"></span>
+                </div>
+            </div>
+            <div class="form-group clearfix">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="MainBannerImageId_OverrideForStore" asp-input="MainBannerImageId" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="MainBannerImageId" />
+                </div>
+                <div class="col-md-9">
+                    <div id="logo-image">
+                        <nop-editor asp-for="MainBannerImageId" />
+                        <span asp-validation-for="MainBannerImageId"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group clearfix">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="ShowMainBannerOnAllPages_OverrideForStore" asp-input="ShowMainBannerOnAllPages" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="ShowMainBannerOnAllPages" />
+                </div>
+                <div class="col-md-9">
+                    <div id="logo-image">
+                        <nop-editor asp-for="ShowMainBannerOnAllPages" />
+                    </div>
+                </div>
+            </div>
+            <div class="form-group clearfix">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="MainMenuCategoriesIds_OverrideForStore" asp-input="MainMenuCategoriesIds" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="MainMenuCategoriesIds" />
+                </div>
+                <div class="col-md-9">
+                    @Html.HiddenFor(model => model.MainMenuCategoriesIds)
+                    <div style="position: relative;" class="main-menu-categories">
+                        <div id="categories-grid"></div>
+
+                        <script>
+                                $(document).ready(function() {
+                                    $("#categories-grid").kendoGrid({
+                                        dataSource: {
+                                            type: "json",
+                                            transport: {
+                                                read: {
+                                                    url: "@Html.Raw(Url.Action("MainMenuCategoriesList", "FacebookShopAdmin"))",
+                                                    type: "POST",
+                                                    dataType: "json",
+                                                    data: additionalData,
+                                                    complete: updateHomepageCategoriesIds
+                                                },
+                                                update: {
+                                                    url: "@Html.Raw(Url.Action("MainMenuCategoryUpdate", "FacebookShopAdmin"))",
+                                                    type: "POST",
+                                                    dataType: "json",
+                                                    data: additionalData,
+                                                    complete: updateHomepageCategoriesIds
+                                                },
+                                                destroy: {
+                                                    url: "@Html.Raw(Url.Action("MainMenuCategoryDelete", "FacebookShopAdmin"))",
+                                                    type: "POST",
+                                                    dataType: "json",
+                                                    data: additionalData,
+                                                    complete: updateHomepageCategoriesIds
+                                                },
+                                                create: {
+                                                    url: "@Html.Raw(Url.Action("MainMenuCategoryCreate", "FacebookShopAdmin"))",
+                                                    type: "POST",
+                                                    dataType: "json",
+                                                    data: additionalData,
+                                                    complete: function(data) {
+                                                        data.success(function(datas) {
+                                                            $("#@Html.IdFor(model => model.MainMenuCategoriesIds)").val(datas.ExtraData);
+                                                        });
+
+                                                        $("#categories-grid").data("kendoGrid").dataSource.read();
+                                                    }
+                                                }
+                                            },
+                                            schema: {
+                                                data: "Data",
+                                                total: "Total",
+                                                errors: "Errors",
+                                                model: {
+                                                    id: "Id",
+                                                    fields: {
+                                                        Name: { editable: true, type: "string" },
+                                                        DisplayOrder: { editable: true, type: "number" }
+                                                    }
+                                                }
+                                            },
+                                            requestEnd: function(e) {
+                                                if (e.type == "update") {
+                                                    this.read();
+                                                }
+                                            },
+                                            error: function(e) {
+                                                display_kendoui_grid_error(e);
+                                                // Cancel the changes
+                                                this.cancelChanges();
+                                            },
+                                            pageSize: @(defaultGridPageSize),
+                                        },
+                                        pageable: {
+                                            refresh: true,
+                                            pageSizes: [@(gridPageSizes)]
+                                        },
+                                        editable: {
+                                            confirmation: true,
+                                            mode: "popup",
+                                            createAt: "bottom",
+                                            window: {
+                                                animation: false,
+                                                width: 480
+                                            }
+                                        },
+                                        scrollable: false,
+                                        toolbar: ["create"],
+                                        edit: function(e) {
+                                            if (!e.model.isNew()) {
+                                                //replacing the whole dropdown with the specification name
+                                                var dropdown = e.container.find('.k-widget.k-dropdown.k-header').replaceWith(e.model.Name);
+                                            }
+                                        },
+                                        columns: [
+                                            {
+                                                field: "Name",
+                                                title: "@T("SevenSpikes.FacebookShop.Admin.Catalog.Name")",
+                                                editor: categoriesEditor
+                                            }, {
+                                                field: "DisplayOrder",
+                                                title: "@T("SevenSpikes.FacebookShop.Admin.DisplayOrder")"
+                                            }, {
+                                                command: [
+                                                    {
+                                                        name: "edit",
+                                                        text: "@T("Admin.Common.Edit")"
+                                                    }, {
+                                                        name: "destroy",
+                                                        text: "@T("Admin.Common.Delete")"
+                                                    }
+                                                ],
+                                                width: 200
+                                            }
+                                        ]
+                                    });
+                                });
+
+                                function categoriesEditor(container) {
+                                    $('<select style="width: 100%" required data-bind="value: Id" />')
+                                        .appendTo(container)
+                                        .kendoDropDownList({
+                                            dataTextField: "Text",
+                                            dataValueField: "Value",
+                                            optionLabel: "@T("SevenSpikes.FacebookShop.Admin.Catalog.Categories")",
+                                            autoBind: false,
+                                            select: function(e) {
+                                                if (e.item.text() == "@T("SevenSpikes.FacebookShop.Admin.NoResults")") {
+                                                    e.preventDefault();
+                                                }
+                                            },
+                                            dataSource: {
+                                                transport: {
+                                                    read: {
+                                                        url: "@Html.Raw(Url.Action("MainMenuGetCategories", "FacebookShopAdmin"))",
+                                                        data: additionalData
+                                                    }
+                                                },
+                                                requestEnd: function (e) {
+                                                    if (!e.response.length) {
+                                                        e.response.push({ Text: "@T("SevenSpikes.FacebookShop.Admin.NoResults")", Value: 0 });
+                                                    }
+                                                }
+                                            }
+                                        });
+                                }
+
+                                function updateHomepageCategoriesIds(data) {
+                                    data.success(function(datas) {
+                                        $("#@Html.IdFor(model => model.MainMenuCategoriesIds)").val(datas.ExtraData);
+                                    });
+                                }
+
+                                function getStoreId() {
+                                    var storeId = 0;
+                                    var storeSelector = $('#store-scope-configuration');
+
+                                    if (storeSelector.length > 0) {
+                                        var splitted = storeSelector.val().split('?')[1];
+
+                                        if (splitted != 'undefined') {
+                                            splitted = splitted.split('&')[0];
+
+                                            if (splitted != 'undefined') {
+                                                var parts = splitted.split('=');
+
+                                                if (typeof parts[1] != 'undefined' && parts[0].toLowerCase() == 'storeid') {
+                                                    storeId = parseInt(parts[1]);
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    return storeId;
+                                }
+                        </script>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group clearfix">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="NumberOfMainMenuCategoryItems_OverrideForStore" asp-input="NumberOfMainMenuCategoryItems" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="NumberOfMainMenuCategoryItems" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="NumberOfMainMenuCategoryItems" />
+                </div>
+            </div>
+            <div class="form-group clearfix">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="IncludeManufacturersItemInMainMenu_OverrideForStore" asp-input="IncludeManufacturersItemInMainMenu" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="IncludeManufacturersItemInMainMenu" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="IncludeManufacturersItemInMainMenu" />
+                </div>
+            </div>
+            <div class="form-group clearfix">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="ShowShortDescription_OverrideForStore" asp-input="ShowShortDescription" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="ShowShortDescription" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="ShowShortDescription" />
+                </div>
+            </div>
+            <div class="form-group clearfix">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="ShowFullDescription_OverrideForStore" asp-input="ShowFullDescription" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="ShowFullDescription" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="ShowFullDescription" />
+                </div>
+            </div>
+            <div class="form-group clearfix">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="NumberOfRelatedProducts_OverrideForStore" asp-input="NumberOfRelatedProducts" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="NumberOfRelatedProducts" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="NumberOfRelatedProducts" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,18 @@
+
+@media all and (min-width: 1201px) {
+
+    .mega-menu .row-wrapper {
+        text-align: right;
+    }
+    .mega-menu .box {
+        float: right;
+    }
+    .mega-menu .subcategories a {
+        padding: 8px 15px 8px 0;
+    }
+    .mega-menu .subcategories a:before {
+		content: "\e90f";
+        right: 0;
+		left: auto;
+    }
+}

@@ -1,0 +1,134 @@
+﻿@model SliderModel
+@inject AdminAreaSettings adminAreaSettings
+
+@{
+    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
+    var gridPageSizes = adminAreaSettings.GridPageSizes;
+
+    var pictureDimensionsString = T("SevenSpikes.Plugins.AnywhereSliders.Admin.SliderImage.PictureDimensionsString").Text;
+}
+
+<div class="panel-group no-margin">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div id="slider-images-grid">
+            </div>
+        </div>
+        <div class="panel-footer">
+            <input type="submit" id="btnAddNewImg" name="btnAddNewImg" value="@T("SevenSpikes.Plugins.AnywhereSliders.Admin.SliderImage.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("CreateSliderImage", "AnywhereSlidersAdmin", new {sliderId = Model.Id}))',
+    1050,    850,    true); return false;" class="btn btn-primary" />
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#slider-images-grid").kendoGrid({
+            dataSource: {
+                type: "json",
+                transport: {
+                    read: {
+                        url: "@Html.Raw(Url.Action("SliderImageList", "AnywhereSlidersAdmin", new { sliderId = Model.Id }))",
+                        type: "POST",
+                        dataType: "json",
+                        data: addAntiForgeryToken
+                    },
+                    update: {
+                        url: "@Html.Raw(Url.Action("SliderImageUpdate", "AnywhereSlidersAdmin"))",
+                        type: "POST",
+                        dataType: "json",
+                        data: addAntiForgeryToken
+                    },
+                    destroy: {
+                        url: "@Html.Raw(Url.Action("SliderImageDelete", "AnywhereSlidersAdmin"))",
+                        type: "POST",
+                        dataType: "json",
+                        data: addAntiForgeryToken
+                    }
+                },
+                schema: {
+                    data: "Data",
+                    total: "Total",
+                    errors: "Errors",
+                    model: {
+                        id: "Id",
+                        fields: {
+                            PictureId: { editable: false, type: "number" },
+                            PictureUrl: { editable: true, type: "string" },
+                            PictureHeight: { editable: false, type: "string" },
+                            PictureWidth: { editable: false, type: "string" },
+                            DisplayOrder: { editable: true, type: "number" },
+                            Visible: { editable: true, type: "boolean" }
+                        }
+                    }
+                },
+                requestEnd: function (e) {
+                    if (e.type == "update") {
+                        this.read();
+                    }
+                },
+                error: function (e) {
+                    display_kendoui_grid_error(e);
+                    // Cancel the changes
+                    this.cancelChanges();
+                },
+                pageSize: @(defaultGridPageSize)
+                },
+            pageable: {
+                refresh: true,
+                pageSizes: [@(gridPageSizes)]
+            },
+            editable: {
+                confirmation: true,
+                mode: "popup"
+            },
+            filterable: false,
+            sortable: true,
+            scrollable: false,
+            columns: [{
+                field: "PictureUrl",
+                title: "@T("SevenSpikes.Plugins.AnywhereSliders.Admin.SliderImage.Picture")",
+                template: "<img alt='#= Id #' src='#= PictureUrl #' />"
+            }, {
+                field: "PictureDimensions",
+                title: "@T("SevenSpikes.Plugins.AnywhereSliders.Admin.SliderImage.PictureDimensions")",
+                template: "@Html.Raw(string.Format(pictureDimensionsString, "PictureHeight", "PictureWidth"))"
+            }, {
+                field: "PictureUrl",
+                title: "@T("SevenSpikes.Plugins.AnywhereSliders.Admin.SliderImage.MobilePicture")",
+                template: "<img alt='#= Id #' src='#= MobilePictureUrl #' />"
+            },  {
+                field: "MobilePictureDimensions",
+                title: "@T("SevenSpikes.Plugins.AnywhereSliders.Admin.SliderImage.MobilePictureDimensions")",
+                template: "@Html.Raw(string.Format(pictureDimensionsString, "MobilePictureHeight", "MobilePictureWidth"))"
+            }, {
+                field: "DisplayOrder",
+                title: "@T("SevenSpikes.Plugins.AnywhereSliders.Admin.SliderImage.DisplayOrder")",
+                format: "{0:0}"
+            }, {
+                field: "Visible",
+                title: "@T("SevenSpikes.Plugins.AnywhereSliders.Admin.SliderImage.Visible")",
+                template: '# if(Visible) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
+            }, {
+                command: [{
+                    name: "editImg",
+                    text: "@T("Admin.Common.Edit")",
+                    imageClass: "k-icon k-edit",
+                    click: function(e) {
+                        // Recommended way by Kendo to get the Id
+                        var tr = $(e.target).closest("tr");
+                        var data = this.dataItem(tr);
+                        OpenWindow('@Url.Action("EditSliderImage", "AnywhereSlidersAdmin")/' + data.id, 800, 700, true);
+                    }
+                }],
+                width: 140
+            }, {
+                command: [{
+                    name: "destroy",
+                    text: "@T("Admin.Common.Delete")"
+                }],
+                width: 140
+            }]
+        });
+    });
+</script>

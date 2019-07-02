@@ -1,0 +1,26 @@
+﻿@model InstagramModel
+
+@if (Model != null)
+{
+    @await Html.PartialAsync(ViewPathHelper.GetViewPath(Views.SocialNetworkScripts), SocialNetworkType.Instagram)
+
+    <div class="feed-body">
+        <div class="post-list-wrap">
+            <ul class="post-list">
+                @foreach (var media in Model.InstagramMedia)
+                {
+                    if (!string.IsNullOrEmpty(media.Link) &&
+                        !string.IsNullOrEmpty(media.MediaUrl))
+                    {
+                        <li class="post-item">
+                            <a class="post-link" href="@media.Link" target="_blank">
+                                <img class="post-img" src="@media.MediaUrl" />
+                            </a>
+                        </li>
+                    }
+                }
+            </ul>
+        </div>
+    </div>
+
+}

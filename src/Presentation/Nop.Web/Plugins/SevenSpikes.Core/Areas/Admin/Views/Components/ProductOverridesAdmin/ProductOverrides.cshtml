@@ -1,0 +1,162 @@
+﻿@using System.Linq;
+@using SevenSpikes.Nop.Conditions.Domain;
+@inject AdminAreaSettings adminAreaSettings
+
+@{
+    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
+    var gridPageSizes = adminAreaSettings.GridPageSizes;
+}
+
+<div class="panel-group">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div id="product-overrides-grid"></div>
+            <script>
+            $(document).ready(function () {
+                $("#product-overrides-grid").kendoGrid({
+                    dataSource: {
+                        type: "json",
+                        transport: {
+                            read: {
+                                url: "@Html.Raw(Url.Action("ProductOverridesList", "ProductOverridesAdmin", new { entityType = Model.EntityType, entityId = Model.EntityId }))",
+                                type: "POST",
+                                dataType: "json",
+                                data: addAntiForgeryToken
+                            },
+                            update: {
+                                url: "@Html.Raw(Url.Action("ProductOverridesUpdate", "ProductOverridesAdmin"))",
+                                type: "POST",
+                                dataType: "json",
+                                data: addAntiForgeryToken
+                            },
+                            destroy: {
+                                url: "@Html.Raw(Url.Action("ProductOverridesDelete", "ProductOverridesAdmin"))",
+                                type: "POST",
+                                dataType: "json",
+                                data: addAntiForgeryToken
+                            }
+                        },
+                        schema: {
+                            data: "Data",
+                            total: "Total",
+                            errors: "Errors",
+                            model: {
+                                id: "ConditionId",
+                                fields: {
+                                    ProductName: { editable: false, type: "string" },
+                                    ProductState: { editable: true, type: "string" },
+                                    ProductStateId: { editable: true, type: "number" },
+                                }
+                            }
+                        },
+                        requestEnd: function (e) {
+                            if (e.type == "update") {
+                                this.read();
+                            }
+                        },
+                        error: function (e) {
+                            display_kendoui_grid_error(e);
+                            // Cancel the changes
+                            this.cancelChanges();
+                        },
+                        pageSize: @(defaultGridPageSize),
+                        serverPaging: true,
+                        serverFiltering: true,
+                        serverSorting: true
+                    },
+                    pageable: {
+                        refresh: true,
+                        pageSizes: [@(gridPageSizes)]
+                    },
+                    editable: {
+                        confirmation: false,
+                        mode: "inline"
+                    },
+                    scrollable: false,
+                    columns: [{
+                        field: "ProductName",
+                        title: "@T("SevenSpikes.Conditions.Admin.ProductOverrides.ProductName")"
+                    }, {
+                        field: "ProductState",
+                        title: "@T("SevenSpikes.Conditions.Admin.ProductOverrides.ProductState")",
+                        editor: productStateDropDownEditor,
+                        template: "#:ProductState#",
+                        width: 200
+                    }, {
+                        command: [{
+                            name: "edit",
+                            text: "@T("Admin.Common.Edit")"
+                        }, {
+                            name: "destroy",
+                            text: "@T("Admin.Common.Delete")"
+                        }],
+                        width: 200
+                    }]
+                });
+            });
+
+            //local datasource
+            var allStates = [
+                @{
+                        var states = (from OverrideState productState in Enum.GetValues(typeof(OverrideState)) select productState.ToString()).ToList();
+                        var totalStates = states.Count;
+                    }
+
+                @for (int i = 0; i < totalStates; i++)
+                    {
+                        var state = states[i];
+                        <text>
+                    {
+                        Id: @(i),
+                        Name: "@(state)"
+                    }
+                    </text>
+                        if (i != totalStates - 1)
+                        {
+                            <text>,</text>
+                        }
+                    }
+            ];
+
+            function productStateDropDownEditor(container, options) {
+                $('<input required data-text-field="Name" data-value-field="Id" data-bind="value:ProductStateId"/>')
+                    .appendTo(container)
+                    .kendoDropDownList({
+                        autoBind: false,
+                        dataSource: allStates
+                    });
+            }
+            </script>
+        </div>
+
+        <div class="panel-footer">
+            <button type="submit" id="btnAddNewProduct" name="btnAddNewProduct"
+                    onclick="javascript:OpenWindow('@(Url.Action("ProductOverridesPopup", "ProductOverridesAdmin", new { entityType = Model.EntityType, entityId = Model.EntityId, btnId = "btnRefreshProducts" }))', 800, 700, true); return false;"
+                    class="btn btn-primary">
+                @T("SevenSpikes.Conditions.Admin.ProductOverrides.AddNew")
+            </button>
+            <input type="submit" id="btnRefreshProducts" name="btnRefreshProducts" style="display: none" />
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $('#btnRefreshProducts').click(function () {
+                        //refresh grid
+                        var optionsGrid = $("#product-overrides-grid");
+                        optionsGrid.data('kendoGrid').dataSource.read();
+
+                        //return false to don't reload a page
+                        return false;
+                    });
+                });
+            </script>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/x-kendo-template" id="add-new-product-template">
+    <input value="@T("SevenSpikes.Conditions.Admin.ProductOverrides.AddNew")"
+           class="k-button" />
+</script>
+
+
+

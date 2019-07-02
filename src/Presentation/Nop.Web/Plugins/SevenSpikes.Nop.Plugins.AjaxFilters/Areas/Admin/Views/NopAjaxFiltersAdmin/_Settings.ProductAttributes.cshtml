@@ -1,0 +1,147 @@
+﻿@model NopAjaxFiltersSettingsModel
+
+@inject AdminAreaSettings adminAreaSettings
+
+@{
+    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
+    var gridPageSizes = adminAreaSettings.GridPageSizes;
+}
+
+<div class="panel-group">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div id="product-attributes-grid"></div>
+
+            <script type="text/javascript">
+					$(document).ready(function() {
+					    $("#product-attributes-grid").kendoGrid({
+							dataSource: {
+								type: "json",
+								transport: {
+									read: {
+										url: "@Html.Raw(Url.Action("GridList", "NopAjaxFiltersAdmin"))",
+										type: "POST",
+										dataType: "json",
+										data: addAntiForgeryToken
+									},
+									update: {
+										url: "@Html.Raw(Url.Action("Update", "NopAjaxFiltersAdmin"))",
+										type: "POST",
+										dataType: "json",
+										data: addAntiForgeryToken
+									},
+									destroy: {
+										url: "@Html.Raw(Url.Action("Delete", "NopAjaxFiltersAdmin"))",
+										type: "POST",
+										dataType: "json",
+										data: addAntiForgeryToken
+									},
+									create: {
+										url: "@Html.Raw(Url.Action("Create", "NopAjaxFiltersAdmin"))",
+										type: "POST",
+										dataType: "json",
+										data: addAntiForgeryToken,
+										complete: function(e) {
+										    $("#product-attributes-grid").data("kendoGrid").dataSource.read();
+										}
+									}
+								},
+								schema: {
+									data: "Data",
+									total: "Total",
+									errors: "Errors",
+									model: {
+										id: "Id",
+										fields: {
+											Name: { editable: true, type: "string" },
+											DisplayOrder: { editable: true, type: "number" }
+										}
+									}
+								},
+								requestEnd: function(e) {
+									if (e.type == "update") {
+										this.read();
+									}
+								},
+								error: function(e) {
+									display_kendoui_grid_error(e);
+									// Cancel the changes
+									this.cancelChanges();
+								},
+								pageSize: @(defaultGridPageSize),
+							},
+							pageable: {
+								refresh: true,
+								pageSizes: [@(gridPageSizes)]
+							},
+							editable: {
+								confirmation: true,
+								mode: "popup",
+								createAt: "bottom",
+								window: {
+									animation: false,
+									width: 480
+								}
+							},
+							scrollable: false,
+							toolbar: ["create"],
+							edit: function(e) {
+								if (!e.model.isNew()) {
+									//replacing the whole dropdown with the specification name
+									e.container.find('.k-widget.k-dropdown.k-header').replaceWith(e.model.Name);
+								}
+							},
+							columns: [
+							{
+								field: "Name",
+								title: "@T("SevenSpikes.NopAjaxFilters.Admin.ProductAttributes.Name")",
+							    editor: productAttributeEditor
+							}, {
+								field: "DisplayOrder",
+								title: "@T("SevenSpikes.NopAjaxFilters.Admin.ProductAttributes.DisplayOrder")"
+							}, {
+								command: [
+								{
+									name: "edit",
+									text: "@T("Admin.Common.Edit")"
+								}, {
+									name: "destroy",
+									text: "@T("Admin.Common.Delete")"
+										}
+									],
+									width: 200
+								}
+							]
+						});
+					});
+
+					function productAttributeEditor(container, options) {
+						$('<select style="width: 100%" required data-bind="value: ' + options.field + '" />')
+							.appendTo(container)
+							.kendoDropDownList({
+								dataTextField: "Text",
+								dataValueField: "Text",
+								optionLabel: "@T("SevenSpikes.NopAjaxFilters.Admin.ProductAttributes.SelectProductAttribute")",
+								autoBind: false,
+								select: function(e) {
+									if (e.item.text() == "@T("SevenSpikes.NopAjaxFilters.Admin.ProductAttributes.NoResults")") {
+										e.preventDefault();
+									}
+								},
+								dataSource: {
+									transport: {
+										read: "@Html.Raw(Url.Action("GetProductAttributes", "NopAjaxFiltersAdmin"))"
+									},
+									requestEnd: function(e) {
+										if (!e.response.length) {
+											e.response.push({ Text: "@T("SevenSpikes.NopAjaxFilters.Admin.ProductAttributes.NoResults")", Value: 0 });
+										}
+									}
+								}
+							});
+
+					}
+            </script>
+        </div>
+    </div>
+</div>

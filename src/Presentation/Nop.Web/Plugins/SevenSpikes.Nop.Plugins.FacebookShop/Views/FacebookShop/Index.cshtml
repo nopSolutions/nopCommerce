@@ -1,0 +1,32 @@
+﻿@model FacebookShopModel
+
+@{
+    Layout = "Layout.cshtml";
+}
+
+@section HomePage{ }
+
+<div class="page home-page">
+    <div class="page-body">
+        @if (Model.HomePageProducts.Products.Count > 0)
+        {
+            <h1 class="page-title">
+                <span class="title-text">@T("SevenSpikes.FacebookShop.Public.HomePageProducts.Title")</span>
+            </h1>
+            
+           <div class="product-grid">
+
+                @(Html.DataList7Spikes<ProductOverviewModel>(Model.HomePageProducts.Products, Model.NumbersOfProductsPerRow,
+                    @<div class="item-box">
+                        @await Html.PartialAsync("ProductBox", item)
+                    </div>
+                ))
+
+            </div>
+            
+            <div class="pager">
+                @Html.Pager(Model.HomePageProducts.PagingFilteringContext).QueryParam("pagenumber")
+            </div>
+        }
+    </div>
+</div>

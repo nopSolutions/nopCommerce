@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<SupportedWidgetZones>
+  <WidgetZone>home_page_main_slider</WidgetZone>
+  <WidgetZone>home_page_right_banner_1</WidgetZone>  
+  <WidgetZone>content_before</WidgetZone>
+  <WidgetZone>content_after</WidgetZone>  
+  <WidgetZone>main_column_before</WidgetZone>
+  <WidgetZone>main_column_after</WidgetZone>
+  <WidgetZone>left_side_column_before</WidgetZone>
+  <WidgetZone>left_side_column_after_category_navigation</WidgetZone>
+  <WidgetZone>left_side_column_after</WidgetZone>
+  <WidgetZone>home_page_before_best_sellers</WidgetZone>
+  <WidgetZone>home_page_before_categories</WidgetZone>
+  <WidgetZone>home_page_before_news</WidgetZone>
+  <WidgetZone>home_page_before_poll</WidgetZone>
+  <WidgetZone>home_page_before_products</WidgetZone>
+  <WidgetZone>home_page_top</WidgetZone>
+  <WidgetZone>home_page_bottom</WidgetZone>
+  <WidgetZone>categorydetails_top</WidgetZone>
+  <WidgetZone>categorydetails_after_breadcrumb</WidgetZone>
+  <WidgetZone>categorydetails_before_subcategories</WidgetZone>
+  <WidgetZone>categorydetails_before_featured_products</WidgetZone>
+  <WidgetZone>categorydetails_after_featured_products</WidgetZone>
+  <WidgetZone>categorydetails_before_filters</WidgetZone>
+  <WidgetZone>categorydetails_before_product_list</WidgetZone>
+  <WidgetZone>categorydetails_bottom</WidgetZone>
+  <WidgetZone>productdetails_top</WidgetZone>
+  <WidgetZone>productdetails_bottom</WidgetZone>
+  <WidgetZone>productdetails_before_pictures</WidgetZone>
+  <WidgetZone>productdetails_after_pictures</WidgetZone>
+  <WidgetZone>productdetails_overview_top</WidgetZone>
+  <WidgetZone>productdetails_overview_bottom</WidgetZone>
+  <WidgetZone>manufacturerdetails_top</WidgetZone>
+  <WidgetZone>mega_menu_categories_before_dropdown_end</WidgetZone>
+  <WidgetZone>mega_menu_categories_before_dropdown_end_1</WidgetZone>
+  <WidgetZone>mega_menu_categories_before_dropdown_end_2</WidgetZone>
+  <WidgetZone>mega_menu_categories_before_dropdown_end_3</WidgetZone>
+  <WidgetZone>mega_menu_categories_before_dropdown_end_4</WidgetZone>
+  <WidgetZone>mega_menu_categories_before_dropdown_end_5</WidgetZone>
+  <WidgetZone>mega_menu_categories_before_dropdown_end_6</WidgetZone>
+  <WidgetZone>mega_menu_categories_before_dropdown_end_7</WidgetZone>
+</SupportedWidgetZones>

@@ -1,0 +1,36 @@
+﻿@model SocialNetworkType
+
+@{
+    switch (Model)
+    {
+        case SocialNetworkType.Facebook:
+
+            @*Include scripts specific for Facebook Feed*@
+            
+            break;
+        case SocialNetworkType.Twitter:
+        
+            @*Include scripts specific for Twitter Feed*@
+
+            break;
+        case SocialNetworkType.GooglePlus:
+
+            @*Include scripts specific for Google Plus Feed*@
+        
+            break;
+        case SocialNetworkType.Pinterest:
+
+            @*Include scripts specific for Pinterest Feed*@
+            
+            break;
+        case SocialNetworkType.Instagram:
+
+            @*Include scripts specific for Instagram Feed*@
+
+            break;
+            
+    }
+
+    Html.AddScriptParts(ResourceLocation.Footer, string.Format("~/Plugins/SevenSpikes.Nop.Plugins.SocialFeed/Themes/DefaultClean/Content/scripts/{0}", "socialfeed.js"));
+    Html.AddScriptParts(ResourceLocation.Footer, string.Format("~/Plugins/SevenSpikes.Nop.Plugins.SocialFeed/Scripts/{0}", "masonry.pkgd.min.js"));
+}

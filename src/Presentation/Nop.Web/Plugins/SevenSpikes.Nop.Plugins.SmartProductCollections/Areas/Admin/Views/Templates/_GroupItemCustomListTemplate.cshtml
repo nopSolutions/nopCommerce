@@ -1,0 +1,50 @@
+﻿@model ProductsGroupItemAdminModel
+@(Html.LocalizedEditor<ProductsGroupItemAdminModel, ProductsGroupItemLocalizedAdminModel>(string.Format("products-group-item-localized-title-{0}", Model.Id),
+    @<div class="form-group">
+        <div class="col-md-3">
+            <nop-label asp-for="@Model.Locales[item].Title" />
+        </div>
+        <div class="col-md-9">
+            @Html.TextBoxFor(model => model.Locales[item].Title, new { @class = "group-item-title k-textbox" })
+            <span asp-validation-for="@Model.Locales[item].Title"></span>
+        </div>
+        <div>
+            <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
+        </div>
+    </div>
+    ,
+      @<div class="form-group">
+          <div class="col-md-3">
+              <nop-label asp-for="Title" />
+          </div>
+          <div class="col-md-9">
+              @Html.TextBoxFor(model => model.Title, new { @class = "group-item-title k-textbox" } )
+              <span asp-validation-for="Title"></span>
+          </div>
+      </div>
+    ))
+
+<script type="text/javascript">
+    (function () {
+        $(document).ready(function () {
+            var tabContentId = $('#tabstrip .tabs-anchors li[data-itemId="@(Model.Id)"]').attr('aria-controls');
+            var tabContent = $('#' + tabContentId);
+
+            $('.visualized-tabs-wrapper').trigger('customListProductsLoaded', { tabContent: tabContent });
+
+            $.ajax({
+                url: '@(Html.Raw(Url.Action("ProductMappingsAdd", "ProductMappingsAdmin", new { entityId = Model.Id, entityType = Plugin.EntityType })))'
+            }).done(function (dataString) {
+                var data = $(dataString);
+
+                var storeIdFilter = data.find('.searchStoreId');
+
+                storeIdFilter.closest('tr').hide();
+
+                storeIdFilter.val($('#Store').val());
+
+                tabContent.find('.custom-list-add-products').html(data).show();
+            });
+        });
+    })();
+</script>

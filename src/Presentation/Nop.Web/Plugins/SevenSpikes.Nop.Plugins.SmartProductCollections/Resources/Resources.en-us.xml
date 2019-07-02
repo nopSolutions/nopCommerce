@@ -1,0 +1,359 @@
+﻿<?xml version="1.0" encoding="utf-16"?>
+<Language Name="English">
+  <LocaleResource Name="SevenSpikes.Plugins.SmartProductCollections.Admin.Menu.MenuName">
+    <Value>Smart Product Collections</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.Admin.Settings.Common">
+    <Value>Smart Product Collections Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.Admin.Settings.CategorySettings">
+    <Value>Category Product Collections</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.admin.submenus.settings">
+    <Value>Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.Admin.Submenus.ManageCategories">
+    <Value>Category Product Collections</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.admin.submenus.managegroups">
+    <Value>Custom Product Collections</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.Admin.ProductGroup.ManageGroupsPageTitle">
+    <Value>Custom Product Collections</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.Admin.ProductGroup.NoGroupsMessage">
+    <Value>You still do not have any product collections added.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.Admin.ProductGroup.BackToList">
+    <Value>back to product collections list</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.Admin.ProductGroup.SaveBeforeEdit">
+    <Value>You must save the product collection before you can add product tabs to it.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.Admin.ProductGroup.NoTitle">
+    <Value>&lt;No Title&gt;</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.Admin.ProductGroup.ProductsMayVary">
+    <Value>Products in public site may vary according to ACL</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.Admin.ProductsGroupItem.NewItem">
+    <Value>Products Tab</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.Admin.ProductsGroupItem.AddNewItem">
+    <Value>Add New Products Tab</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.Admin.ProductsGroupItem.AddNew">
+    <Value>Add New</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.Admin.ProductsGroupItem.NoItemsAvailable">
+    <Value>No product tabs available.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.Admin.ProductsGroupItem.DragAndDrop.Products">
+    <Value>You can drag and drop products to change their order.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.Admin.ProductsGroupItem.DragAndDrop.Items">
+    <Value>You can drag and drop tabs to change their order.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.Admin.NotSelected">
+    <Value>Not selected</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.admin.Settings.Enabled">
+    <Value>Enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.admin.Settings.Enabled.Hint">
+    <Value>If checked the Nop Smart Product Collections plugin will be enabled.</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.Admin.ProductsGroup.Published">
+    <Value>Published</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.Admin.ProductsGroup.Published.Hint">
+    <Value>Set the product collection to be visible or not in the public site.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.Admin.ProductsGroup.Title">
+    <Value>Title</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.Admin.ProductsGroup.Title.Hint">
+    <Value>Set the title of the product collection.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.Admin.ProductsGroup.Title.Placeholder">
+    <Value>Enter title...</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.Admin.ProductsGroup.NumberOfProductsPerItem">
+    <Value>Number Of Products Per Tab</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.Admin.ProductsGroup.NumberOfProductsPerItem.Hint">
+    <Value>Set the number of products loaded in each products tab.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.Admin.ProductsGroup.WidgetZone">
+    <Value>Widget Zone</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.Admin.ProductsGroup.WidgetZone.Hint">
+    <Value>Select the widget zone, where the product collection will appear.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.Admin.ProductsGroup.Store">
+    <Value>Store</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.Admin.ProductsGroup.Store.Hint">
+    <Value>Select the store for which the products collection will be shown.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.Admin.ProductsGroup.Store.ProductsHint">
+    <Value>The products below are shown based on this setting after it is saved.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.Admin.ProductsGroup.DisplayOrder">
+    <Value>Display Order</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.Admin.ProductsGroup.DisplayOrder.Hint">
+    <Value>Set the display order in which the product collections will be ordered if they are in the same widget zone.</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.Admin.ProductsGroupItem.Active">
+    <Value>Active</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.Admin.ProductsGroupItem.Active.Hint">
+    <Value>Set the products tab to be visible or not.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.Admin.ProductsGroupItem.Title">
+    <Value>Tab Title</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.Admin.ProductsGroupItem.Title.Hint">
+    <Value>This is the tab title shown in the public site.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.Admin.ProductsGroupItem.SourceType">
+    <Value>Source Type</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.Admin.ProductsGroupItem.SourceType.Hint">
+    <Value>Set the source of the products.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.Admin.ProductsGroupItem.EntityId">
+    <Value>Entity</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.Admin.ProductsGroupItem.EntityId.Hint">
+    <Value>Set the entity of the chosen source type.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.Admin.ProductsGroupItem.SortMethod">
+    <Value>Sort Method</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.Admin.ProductsGroupItem.SortMethod.Hint">
+    <Value>Set the sort criteria.</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.Admin.ProductsGroupItem.Category">
+    <Value>Category</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.Admin.ProductsGroupItem.Manufacturer">
+    <Value>Manufacturer</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.Admin.ProductsGroupItem.Vendor">
+    <Value>Vendor</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.Admin.ProductsGroupItem.RemoveItem">
+    <Value>Remove</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.Admin.ProductsGroupItem.RemoveItem.Label">
+    <Value>Remove Products Tab</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.Admin.ProductsGroupItem.RemoveItem.Hint">
+    <Value>Remove this products tab. This action can not be undone.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.Admin.ProductsGroupItem.EnableCategoryCustomCollection">
+    <Value>Custom List</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.Admin.ProductsGroupItem.EnableCategoryCustomCollection.Hint">
+    <Value>You can manually map products to the collection and change their order.</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.Admin.ProductsGroup.Created">
+    <Value>The product collection has been successfully created.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.Admin.ProductsGroup.Updated">
+    <Value>The product collection has been successfully updated.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.Admin.ProductsGroup.Deleted">
+    <Value>The product collection has been successfully deleted.</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.Admin.CategorySettings.Enabled">
+    <Value>Enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.Admin.CategorySettings.Enabled.Hint">
+    <Value>Check to show the categories collections</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.Admin.CategorySettings.WidgetZone">
+    <Value>Widget Zone</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.Admin.CategorySettings.WidgetZone.Hint">
+    <Value>Choose the widget zone in which the category collections will be integrated</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.Admin.CategorySettings.ShowProductsFromSubcategories">
+    <Value>Show Products From Subcategories</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.Admin.CategorySettings.ShowProductsFromSubcategories.Hint">
+    <Value>Check to show category products including those from subcategories</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.Admin.CategorySettings.CategoryImagesOrientation">
+    <Value>Category Images Orientation</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.Admin.CategorySettings.CategoryImagesOrientation.Hint">
+    <Value>Please select portrait if your category images are portrait or square and landscape if your category images are landscape.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.Admin.CategorySettings.NumberOfProducts">
+    <Value>Number Of Products</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.Admin.CategorySettings.NumberOfProducts.Hint">
+    <Value>Set the number of products to show</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.Admin.CategorySettings.NumberOfSubcategoriesToShow">
+    <Value>Number Of Subcategories To Show</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.Admin.CategorySettings.NumberOfSubcategoriesToShow.Hint">
+    <Value>Set the number of subcategories to show for each category collection displayed.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.Admin.CategorySettings.CategoryIds">
+    <Value>Categories</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.Admin.CategorySettings.CategoryIds.Hint">
+    <Value>Choose the categories you want to show</Value>
+  </LocaleResource>
+  
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.Admin.CategorySettings.SearchHere">
+    <Value>Search here...</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.Admin.CategorySettings.TabBuilder">
+    <Value>Tab Builder</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.Admin.CategorySettings.GeneralSettings">
+    <Value>General Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.Admin.CategorySettings.Preview">
+    <Value>Preview</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.Admin.Trial.NoMoreGroupsAllowed">
+    <Value>You are running a trial version. You can not have more than one collection.</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.Public.Loading">
+    <Value>Loading...</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.Public.NoProductsAvailable">
+    <Value>No Products Available.</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.Public.DefaultGroupTitle.Default">
+    <Value>&lt;No Title&gt;</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.Public.DefaultGroupTitle.Featured">
+    <Value>Featured</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.Public.DefaultGroupTitle.BestSellers">
+    <Value>Bestsellers</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.Public.DefaultGroupTitle.NewProducts">
+    <Value>New Products</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.Public.DefaultGroupTitle.MarkedAsNew">
+    <Value>Marked As New</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SmartProductCollections.Public.DefaultGroupTitle.CustomList">
+    <Value>Custom List</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.SmartProductCollections.Domain.Enums.ProductsSourceType.NotSelected">
+    <Value>Not selected</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.SmartProductCollections.Domain.Enums.ProductsSourceType.FeaturedProducts">
+    <Value>Featured Products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.SmartProductCollections.Domain.Enums.ProductsSourceType.BestSellers">
+    <Value>Best Sellers</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.SmartProductCollections.Domain.Enums.ProductsSourceType.NewProducts">
+    <Value>New Products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.SmartProductCollections.Domain.Enums.ProductsSourceType.Category">
+    <Value>Category</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.SmartProductCollections.Domain.Enums.ProductsSourceType.Manufacturer">
+    <Value>Manufacturer</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.SmartProductCollections.Domain.Enums.ProductsSourceType.Vendor">
+    <Value>Vendor</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.SmartProductCollections.Domain.Enums.ProductsSourceType.CustomList">
+    <Value>Custom List</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.SmartProductCollections.Domain.Enums.ProductsSortMethod.DefaultOrder">
+    <Value>Default Order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.SmartProductCollections.Domain.Enums.ProductsSortMethod.NameAscending">
+    <Value>Name Ascending</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.SmartProductCollections.Domain.Enums.ProductsSortMethod.NameDescending">
+    <Value>Name Descending</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.SmartProductCollections.Domain.Enums.ProductsSortMethod.PriceAscending">
+    <Value>Price Ascending</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.SmartProductCollections.Domain.Enums.ProductsSortMethod.PriceDescending">
+    <Value>Price Descending</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.SmartProductCollections.Domain.Enums.ProductsSortMethod.Newest">
+    <Value>Newest</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.SmartProductCollections.Domain.Enums.ProductsSortMethod.MarkedAsNew">
+    <Value>Marked As New (sorted by date created)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.SmartProductCollections.Domain.Enums.ProductsSortMethod.Bestsellers">
+    <Value>Best Sellers (sorted by quantity)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.SmartProductCollections.Domain.Enums.ProductsSortMethod.Featured">
+    <Value>Featured (sorted by display order)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.SmartProductCollections.Domain.Enums.ProductsSortMethod.OnSale">
+    <Value>On Sale (sorted by highest price difference)</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="SevenSpikes.Nop.Plugins.SmartProductCollections.Categories.ProductsSourceTypeTitle.DefaultOrder">
+    <Value>Default</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Nop.Plugins.SmartProductCollections.Categories.ProductsSourceTypeTitle.NameAscending">
+    <Value>Name Asc</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Nop.Plugins.SmartProductCollections.Categories.ProductsSourceTypeTitle.NameDescending">
+    <Value>Name Desc</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Nop.Plugins.SmartProductCollections.Categories.ProductsSourceTypeTitle.PriceAscending">
+    <Value>Price Asc</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Nop.Plugins.SmartProductCollections.Categories.ProductsSourceTypeTitle.PriceDescending">
+    <Value>Price Desc</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Nop.Plugins.SmartProductCollections.Categories.ProductsSourceTypeTitle.NewProducts">
+    <Value>New Products</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Nop.Plugins.SmartProductCollections.Categories.ProductsSourceTypeTitle.MarkedAsNewProducts">
+    <Value>Trending</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Nop.Plugins.SmartProductCollections.Categories.ProductsSourceTypeTitle.FeaturedProducts">
+    <Value>Featured Products</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Nop.Plugins.SmartProductCollections.Categories.ProductsSourceTypeTitle.Bestsellers">
+    <Value>Best Sellers</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Nop.Plugins.SmartProductCollections.Categories.ProductsSourceTypeTitle.OnSale">
+    <Value>On Sale</Value>
+  </LocaleResource>  
+  <LocaleResource Name="SevenSpikes.Nop.Plugins.SmartProductCollections.Categories.ProductsSourceTypeTitle.CategoryCustomList">
+    <Value>Custom List</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="SevenSpikes.Nop.Plugins.SmartProductCollections.Categories.ViewAll">
+    <Value>View All</Value>
+  </LocaleResource>
+  
+</Language>

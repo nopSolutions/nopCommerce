@@ -1,0 +1,266 @@
+﻿@{
+    Layout = "_AdminPopupLayout";
+}
+
+@model CustomerOverridesModel
+@inject AdminAreaSettings adminAreaSettings
+
+@{
+    if (ViewBag.RefreshPage == true)
+    {
+        <script type="text/javascript">
+            try
+            {
+                var gridElement = window.opener.document.getElementById("@ViewBag.btnId");
+                $(gridElement).click();
+            }
+            catch (e){}
+            window.close();
+        </script>
+
+        return;
+    }
+
+    var popupGridPageSize = adminAreaSettings.PopupGridPageSize;
+}
+
+<form method="post">
+    <nop-antiforgery-token />
+    <input type="hidden" asp-for="ConditionId" />
+
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("SevenSpikes.Conditions.Admin.CustomerOverrides.AddNew")
+        </h1>
+        <div class="pull-right">
+            &nbsp;
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="form-horizontal">
+            <div class="panel-group">
+                <div class="panel panel-default panel-search panel-search-popup">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <div class="col-sm-5">
+                                        <nop-label asp-for="SearchCustomerRoleIds" />
+                                    </div>
+                                    <div class="col-sm-7">
+                                        @foreach (var customerRole in Model.AvailableCustomerRoles)
+                                        {
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" name="SearchCustomerRoleIds" value="@customerRole.Id"
+                                                           @if (Model.SearchCustomerRoleIds != null && Model.SearchCustomerRoleIds.Contains(customerRole.Id)) {  <text> checked="checked" </text>           } />@customerRole.Name
+                                                    </label>
+                                                </div>
+                                        }
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="col-sm-6">
+                                <div>
+                                    <div class="col-sm-5">
+                                        <nop-label asp-for="SearchEmail" />
+                                    </div>
+                                    <div class="col-sm-7">
+                                        <nop-editor asp-for="SearchEmail" />
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="col-sm-5">
+                                        <nop-label asp-for="SearchFirstName" />
+                                    </div>
+                                    <div class="col-sm-7">
+                                        <nop-editor asp-for="SearchFirstName" />
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="col-sm-5">
+                                        <nop-label asp-for="SearchLastName" />
+                                    </div>
+                                    <div class="col-sm-7">
+                                        <nop-editor asp-for="SearchLastName" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-12" style="text-align: center">
+                                <button type="submit" id="search-customers" value="search-customers" class="btn btn-primary btn-search">
+                                    <i class="fa fa-search"></i>
+                                    @T("Admin.Common.Search")
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="customers-grid"></div>
+
+                    <script>
+                        var selectedIds = [];
+                $(document).ready(function () {
+                    $("#customers-grid").kendoGrid({
+                        dataSource: {
+                            type: "json",
+                            transport: {
+                                read: {
+                                    url: "@Html.Raw(Url.Action("CustomerOverridesPopupList", "CustomerOverridesAdmin", new { conditionId = Model.ConditionId }))",
+                                    type: "POST",
+                                    dataType: "json",
+                                    data: additionalCustomerData,
+                                }
+                            },
+                            schema: {
+                                data: "Data",
+                                total: "Total",
+                                errors: "Errors"
+                            },
+                            error: function(e) {
+                                display_kendoui_grid_error(e);
+                                // Cancel the changes
+                                this.cancelChanges();
+                            },
+                            pageSize: @(popupGridPageSize),
+                            serverPaging: true,
+                            serverFiltering: true,
+                            serverSorting: true
+                        },
+                        pageable: {
+                            refresh: true
+                        },
+                        editable: {
+                            confirmation: false,
+                            mode: "inline"
+                        },
+                        scrollable: false,
+                        dataBound: onDataBound,
+                        onSubmitChanges: onSubmitChanges,
+                        columns: [{
+                            field: "Id",
+                            headerTemplate: "<input id='mastercheckbox' type='checkbox'/>",
+                            headerAttributes: { style: "text-align:center" },
+                            template: "<input type='checkbox' name='SelectedCustomerIds' value='#=CustomerId#' #= Selected ? checked='checked' : '' #  class='checkboxGroups' />",
+                            attributes: {
+                                style: "text-align:center"
+                            },
+                            width: 50
+                        }, {
+                            field: "CustomerName",
+                            title: "@T("SevenSpikes.Conditions.Admin.CustomerOverrides.CustomerName")"
+                        }, {
+                            field: "CustomerEmail",
+                            title: "@T("SevenSpikes.Conditions.Admin.CustomerOverrides.CustomerEmail")"
+                        }, {
+                            field: "CustomerRoleNames",
+                            title: "@T("Admin.Customers.Customers.Fields.CustomerRoles")"
+                        }, {
+                            field: "Active",
+                            title: "@T("Admin.Customers.Customers.Fields.Active")",
+                            template: '# if(Active) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #',
+                            attributes: {
+                                style: "text-align:center"
+                            },
+                        }]
+                    });
+                });
+
+                $(document).ready(function () {
+                    $('#search-customers').click(function () {
+                        var grid = $('#customers-grid').data('kendoGrid');
+                        grid.dataSource.page(1); //new search. Set page size to 1
+                        grid.dataSource.read();
+                        return false;
+                    });
+
+                    $('#mastercheckbox').click(function () {
+                        $('.checkboxGroups').attr('checked', $(this).is(':checked')).change();
+                    });
+
+                    //wire up checkboxes.
+                    $('#customers-grid').on('change', 'input[type=checkbox][id!=mastercheckbox]', function (e) {
+                        var $check = $(this);
+                        if ($check.is(":checked") == true) {
+                            var checked = jQuery.inArray($check.val(), selectedIds);
+                            if (checked == -1) {
+                                //add id to selectedIds.
+                                selectedIds.push($check.val());
+                            }
+                        }
+                        else {
+                            var checked = jQuery.inArray($check.val(), selectedIds);
+                            if (checked > -1) {
+                                //remove id from selectedIds.
+                                selectedIds = $.grep(selectedIds, function (item, index) {
+                                    return item != $check.val();
+                                });
+                            }
+                        }
+                        updateMasterCheckbox();
+                    });
+                });
+
+                function onDataBound(e) {
+                    $('#customers-grid input[type=checkbox][id!=mastercheckbox]').each(function () {
+                        var currentId = $(this).val();
+                        var checked = jQuery.inArray(currentId, selectedIds);
+                        //set checked based on if current checkbox's value is in selectedIds.
+                        $(this).attr('checked', checked > -1);
+                    });
+
+                    updateMasterCheckbox();
+                }
+
+                function updateMasterCheckbox() {
+                    var numChkBoxes = $('#customers-grid input[type=checkbox][id!=mastercheckbox]').length;
+                    var numChkBoxesChecked = $('#customers-grid input[type=checkbox][id!=mastercheckbox]:checked').length;
+                    $('#mastercheckbox').attr('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
+                }
+
+                function additionalCustomerData() {
+                    var customerRoleIds = [];
+                    $('[name=SearchCustomerRoleIds]:checked').each(function () {
+                        customerRoleIds.push($(this).val());
+                    });
+
+                    var data = {
+                        SearchCustomerRoleIds: customerRoleIds.join(","),
+                        SearchEmail: $('#@Html.IdFor(model => model.SearchEmail)').val(),
+                        SearchFirstName: $('#@Html.IdFor(model => model.SearchFirstName)').val(),
+                        SearchLastName: $('#@Html.IdFor(model => model.SearchLastName)').val(),
+                    };
+
+                    addAntiForgeryToken(data);
+
+                    return data;
+                }
+
+                function onSubmitChanges(e) {
+                    var customerRoleIds = [];
+                    $('[name=SearchCustomerRoleIds]:checked').each(function () {
+                        customerRoleIds.push($(this).val());
+                    });
+
+                    e.values.SearchCustomerRoleIds = customerRoleIds.join(",");
+                }
+                    </script>
+                </div>
+                <div class="panel-footer">
+                    <button type="submit" name="save" class="btn bg-blue">
+                        <i class="fa fa-floppy-o"></i>
+                        @T("Admin.Common.Save")
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

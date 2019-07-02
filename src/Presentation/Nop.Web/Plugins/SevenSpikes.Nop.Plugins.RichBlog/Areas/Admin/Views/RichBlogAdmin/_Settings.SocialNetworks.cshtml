@@ -1,0 +1,53 @@
+﻿@model RichBlogSettingsModel
+
+<div class="panel-group">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="ShowFacebookShare_OverrideForStore" asp-input="ShowFacebookShare" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="ShowFacebookShare" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="ShowFacebookShare" />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="ShowTwitterShare_OverrideForStore" asp-input="ShowTwitterShare" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="ShowTwitterShare" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="ShowTwitterShare" />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="ShowPinterestShare_OverrideForStore" asp-input="ShowPinterestShare" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="ShowPinterestShare" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="ShowPinterestShare" />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="ShowLinkedInShare_OverrideForStore" asp-input="ShowLinkedInShare" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="ShowLinkedInShare" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="ShowLinkedInShare" />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="ShowGooglePlusShare_OverrideForStore" asp-input="ShowGooglePlusShare" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="ShowGooglePlusShare" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="ShowGooglePlusShare" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

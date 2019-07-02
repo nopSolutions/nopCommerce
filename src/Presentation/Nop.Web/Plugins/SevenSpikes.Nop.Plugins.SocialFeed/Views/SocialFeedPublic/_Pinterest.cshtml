@@ -1,0 +1,62 @@
+﻿@model PinterestModel
+
+@if (Model != null)
+{
+
+    @await Html.PartialAsync(ViewPathHelper.GetViewPath(Views.SocialNetworkScripts), SocialNetworkType.Pinterest)
+
+    <div class="feed-body">
+        <div class="post-list-wrap">
+            <ul class="post-list">
+                @foreach (var pin in Model.PinterestPins)
+                {
+                    <li class="post-item">
+                        @if (!string.IsNullOrEmpty(pin.PinUrl) &&
+                    !string.IsNullOrEmpty(pin.ImageUrl))
+                        {
+                            <div class="post-img-wrap">
+                                <a class="post-img-link" href="@pin.PinUrl" target="_blank">
+                                    <img class="post-img" src="@pin.ImageUrl" />
+                                </a>
+                            </div>
+                        }
+
+                        @if (pin.CreatorModel != null || pin.BoardModel != null)
+                        {
+                            <div class="post-info-wrap">
+                                <div class="avatar-wrap">
+                                    <a class="avatar-link" target="_blank" href="@pin.CreatorModel.Url">
+                                        <img class="avatar-img" src="@pin.CreatorModel.ImageUrl" />
+                                    </a>
+                                </div>
+                                <div class="author-board-wrap">
+                                    @if (pin.CreatorModel != null &&
+                                        !string.IsNullOrEmpty(pin.CreatorModel.Url) &&
+                                            !string.IsNullOrEmpty(pin.CreatorModel.FirstName) &&
+                                                !string.IsNullOrEmpty(pin.CreatorModel.LastName))
+                                    {
+                                        <h4 class="author-title">
+                                            <a class="author-title-link" href="@pin.CreatorModel.Url" title="@pin.CreatorModel.FirstName @pin.CreatorModel.LastName" target="_blank">
+                                                @pin.CreatorModel.FirstName @pin.CreatorModel.LastName
+                                            </a>
+                                        </h4>
+
+                                    }
+
+                                    @if (pin.BoardModel != null &&
+                                        !string.IsNullOrEmpty(pin.BoardModel.Url) &&
+                                            !string.IsNullOrEmpty(pin.BoardModel.Name))
+                                    {
+                                        <div class="board-name">
+                                            <a class="board-name-link" href="@pin.BoardModel.Url" title="@pin.BoardModel.Name" target="_blank">@pin.BoardModel.Name</a>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+}

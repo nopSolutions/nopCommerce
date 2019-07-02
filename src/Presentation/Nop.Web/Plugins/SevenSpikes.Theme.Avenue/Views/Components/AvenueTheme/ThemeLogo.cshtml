@@ -1,0 +1,9 @@
+﻿@model string
+@inject IStoreContext storeContext
+@inject Nop.Services.Localization.ILocalizationService localizationService
+
+@{
+    string storeName = localizationService.GetLocalized(storeContext.CurrentStore, x => x.Name);
+}
+
+<img alt="@storeName" src="@Model" />

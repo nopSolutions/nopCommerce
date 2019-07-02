@@ -1,0 +1,64 @@
+@model SevenSpikes.Nop.Plugins.PrevNextProduct.Areas.Admin.Models.PrevNextProductSettingsModel
+@{
+    Layout = AdminViewLocations.AdminLayoutViewPath;
+
+    Html.SetActiveMenuItemSystemName("SevenSpikes.Plugins.PrevNextProduct.Admin.Settings");
+}
+
+<form method="post">
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("SevenSpikes.Plugins.PrevNextProduct.Admin.Settings.GeneralSettings")
+        </h1>
+        <div class="pull-right">
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="form-horizontal">
+            @Html.TrialMessage(Model.IsTrialVersion, Plugin.Name, Plugin.UrlInStore)
+            @await Component.InvokeAsync("StoreScopeConfiguration")
+
+            <div class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="EnablePrevNextProduct_OverrideForStore" asp-input="EnablePrevNextProduct" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="EnablePrevNextProduct"/>
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="EnablePrevNextProduct" />
+                                <span asp-validation-for="EnablePrevNextProduct"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="EnableProductLooping_OverrideForStore" asp-input="EnableProductLooping" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="EnableProductLooping"/>
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="EnableProductLooping" />
+                                <span asp-validation-for="EnableProductLooping"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="ProductTitleLength_OverrideForStore" asp-input="ProductTitleLength" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="ProductTitleLength"/>
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="ProductTitleLength" />
+                                <span asp-validation-for="ProductTitleLength"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

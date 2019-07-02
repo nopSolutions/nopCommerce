@@ -1,0 +1,415 @@
+﻿<?xml version="1.0" encoding="utf-16"?>
+<Language Name="English">
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.Menu.MenuName">
+    <Value>Social Feed</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialNetwork.List">
+    <Value>Manage Social Networks</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialNetwork.NoAvailableSocialNetworks">
+    <Value>No Social Networks Available</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialNetwork.SelectSocialNetwork">
+    <Value>Select Social Network</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialNetwork.AddNew">
+    <Value>Add new</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialNetwork.EditDetails">
+    <Value>Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialNetwork.Type">
+    <Value>Social Network</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialNetwork.Type.Hint">
+    <Value>The social network you want to pull feeds from</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialNetwork.RedirectUrl">
+    <Value>Redirect Url</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialNetwork.RedirectUrl.Hint">
+    <Value>Use this url when your social network application asks for redirect url</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialNetwork.Panels.Configuration">
+    <Value>Configuration</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialNetwork.FacebookSettings.ClientId">
+    <Value>App id</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialNetwork.FacebookSettings.ClientId.Hint">
+    <Value>App id</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialNetwork.FacebookSettings.ClientSecret">
+    <Value>App Secret</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialNetwork.FacebookSettings.ClientSecret.Hint">
+    <Value>App Secret</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialNetwork.FacebookSettings.PageName">
+    <Value>Page Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialNetwork.FacebookSettings.PageName.Hint">
+    <Value>Here you can specify a page name from which to get posts. If you don't specify page name the "me" endpoint will be used, which will get the posts of the user that have authorized the facebook app.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialNetwork.FacebookSettings.PostSource">
+    <Value>Post Source</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialNetwork.FacebookSettings.PostSource.Hint">
+    <Value>Post source is the place from where the posts will be pulled. For now the available options are "Me" and "Page". Me means that the posts will be pulled from the profile of the user who authorized the app. Page gives you the ability to pull posts from certain page, by giving the page name. The Page name is part of the page link i.e. <strong>https://www.facebook.com/NopTemplates</strong> In this link NopTemplates is the page name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.SocialNetwork.FacebookSettings.Fields.Name.IsRequired">
+    <Value>App id is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.SocialNetwork.FacebookSettings.Fields.ClientId.IsRequired">
+    <Value>App id is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.SocialNetwork.FacebookSettings.Fields.ClientSecret.IsRequired">
+    <Value>App secret is required</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialNetwork.GooglePlusSettings.ApiKey">
+    <Value>Api key</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.SocialNetwork.GooglePlusSettings.Fields.ApiKey.IsRequired">
+    <Value>Api key is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialNetwork.GooglePlusSettings.Source">
+    <Value>Source</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialNetwork.GooglePlusSettings.Source.Hint">
+    <Value>Source is your user id in Google+ or page id. You can get your User id or Page id by going to the user or page at Google plus and the id will be in the url. For example if you go to Nop-Templates Page, the url will be https://plus.google.com/100054470244946055009 the id is 100054470244946055009. There are another type of ids in Google+, for example https://plus.google.com/+ThisiswhyicodeBlogspot, the id here is +ThisiswhyicodeBlogspot</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.SocialNetwork.GooglePlusSettings.Fields.Source.IsRequired">
+    <Value>Source is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Public.SocialNetwork.GooglePlus.GoToPost">
+    <Value>Go to post</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialNetwork.PinterestSettings.AccessToken">
+    <Value>Access Token</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.SocialNetwork.PinterestSettings.Fields.AccessToken.IsRequired">
+    <Value>Access Token is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialNetwork.PinterestSettings.ApplicationId">
+    <Value>App Id</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.SocialNetwork.PinterestSettings.Fields.ApplicationId.IsRequired">
+    <Value>App Id is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialNetwork.PinterestSettings.ApplicationSecret">
+    <Value>App Secret</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.SocialNetwork.PinterestSettings.Fields.ApplicationSecret.IsRequired">
+    <Value>App Secret is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialNetwork.PinterestSettings.BoardName">
+    <Value>Board Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.SocialNetwork.PinterestSettings.Fields.BoardName.IsRequired">
+    <Value>Board is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Public.SocialNetwork.Pinterest.Source">
+    <Value>Source</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialNetwork.InstagramSettings.ClientId">
+    <Value>Client id</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialNetwork.InstagramSettings.ClientSecret">
+    <Value>Client secret</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialNetwork.InstagramSettings.ImageType">
+    <Value>Images Type</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialNetwork.InstagramSettings.Resolution">
+    <Value>Resolution</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialNetwork.InstagramSettings.SortBy">
+    <Value>Sort By</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialNetwork.InstagramSettings.IdToSpecifyTheImageType">
+    <Value>Value to specify the image type</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialNetwork.InstagramSettings.ImageTypeId.Location.Hint">
+    <Value>Unique id of a location to get</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialNetwork.InstagramSettings.ImageTypeId.TagName.Hint">
+    <Value>Name of the tag to get</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialNetwork.InstagramSettings.ImageTypeId.User.Hint">
+    <Value>Unique id of a user to get. userId corresponds to your Instagram account ID (eg: 4385108), not your username. If you do not know your account ID, Google "What is my Instagram account ID?". There are several free tools available online that will look it up for you.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.SocialNetwork.InstagramSettings.Fields.IdToSpecifyTheImageType.IsRequired">
+    <Value>Image type is required</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialNetwork.SaveBeforeAuthorize">
+    <Value>You need to save the social network before you can authorize your app!</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialNetwork.AuthorizeButton.NotAuthorized">
+    <Value>Authorize</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialNetwork.AuthorizeButton.Authorized">
+    <Value>Authorized</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialNetwork.ErrorOnAuthorize">
+    <Value>Something went wrong - ({0}). Please ensure you have everything saved before clicking on the Authorization button!!! Also, please double check your ClientId and ClientSecret!!!</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialNetwork.AuthorizationSuccessfull">
+    <Value>You have authorize the app successfully</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.SocialNetwork.InstagramSettings.Fields.ClientId.IsRequired">
+    <Value>Client Id is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.SocialNetwork.InstagramSettings.Fields.ClientSecret.IsRequired">
+    <Value>Client Id is required</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialNetwork.TwitterSettings.ClientId">
+    <Value>Consumer Key</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialNetwork.TwitterSettings.ClientSecret">
+    <Value>Consumer Secret</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialNetwork.TwitterSettings.ClientId.IsRequired">
+    <Value>Consumer Key is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialNetwork.TwitterSettings.ClientSecret.IsRequired">
+    <Value>Consumer Secret is required</Value>
+  </LocaleResource>
+  
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialNetwork.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialNetwork.Name.Hint">
+    <Value>This is the name of your social network source</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialNetwork.TabTitle.Settings">
+    <Value>General Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialNetwork.BackToList">
+    <Value>Back to list</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialNetwork.Created">
+    <Value>Social Network successfully created</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialNetwork.Edited">
+    <Value>Social Network successfully edited</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialNetwork.Deleted">
+    <Value>Social Network successfully deleted</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.SocialNetwork.Fields.Name.IsRequired">
+    <Value>Social network source name is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.SocialNetwork.Fields.Type.IsRequired">
+    <Value>Please select social network</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SocialFeed.Admin.Settings.EnableSocialFeed">
+    <Value>Enable</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SocialFeed.Admin.Settings.EnableSocialFeed.Hint">
+    <Value>Enable social feed</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SocialFeed.Admin.Settings.EnableSocialPage">
+    <Value>Enable social page</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SocialFeed.Admin.Settings.EnableSocialPage.Hint">
+    <Value>Social page is place where you can see all your social feeds in one place</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SocialFeed.Admin.Settings.SocialNetwork.SelectSocialNetwork">
+    <Value>Select Social Network</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SocialFeed.Admin.Submenus.Settings">
+    <Value>Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SocialFeed.Admin.Submenus.SocialNetworks">
+    <Value>Configure Social Networks</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialFeed">
+    <Value>Manage Social Feeds</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialFeed.Published">
+    <Value>Published</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialFeed.Published.Hint">
+    <Value>This setting determines if the feeds from the social networks mapped to this feed will be visible in the public area</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialFeed.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialFeed.Name.Hint">
+    <Value>The name of your feed, used only in the administration</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialFeed.Title">
+    <Value>Title</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialFeed.Title.Hint">
+    <Value>Social network title - i.e. Social network name</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialFeed.SubtitleLabel">
+    <Value>Subtitle Label</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialFeed.SubtitleLabel.Hint">
+    <Value>Social network subtitle label - i.e. Follow us, Like us, etc.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialFeed.SubtitleLinkText">
+    <Value>Subtitle link text</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialFeed.SubtitleLinkText.Hint">
+    <Value>Social network profile/source name</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialFeed.DefaultSubtitleLinkText">
+    <Value>N/A</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialFeed.SubtitleUrl">
+    <Value>Subtitle Url</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialFeed.Class">
+    <Value>Custom class</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialFeed.Class.Hint">
+    <Value>Will be applied to the social feed panel. Can be used for styling purposes.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialFeed.NumberOfPosts">
+    <Value>Number of posts</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialFeed.NumberOfPosts.Hint">
+    <Value>Number of posts/feeds/tweets/etc you want to be pulled from your social network sources mapped to this feed</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialFeed.SocialNetworks">
+    <Value>Social Networks</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialFeed.SocialNetworks.Hint">
+    <Value>Select all your social network sources from which the posts/feeds/tweets/etc will be generated for this feed</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialFeed.Store">
+    <Value>Store</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialFeed.Store.Hint">
+    <Value>Select for which store the feed will be available</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialFeed.Fields.Name.IsRequired">
+    <Value>Social feed name is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialFeed.Fields.NumberOfPosts.IsRequired">
+    <Value>Number of posts is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialFeed.Fields.NumberOfPosts.ExceedsMaxValue">
+    <Value>Please enter a number between 1 and 100</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialFeed.Fields.StoreId.IsRequired">
+    <Value>Store is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialNetwork.DefaultSocialNetworkTypeName">
+    <Value>Social Network</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialFeed.DefaultSubtitleLabel">
+    <Value>Follow us</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.ManageSocialFeed.TabTitle.Settings">
+    <Value>Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.ManageSocialFeed.TabTitle.Widgets">
+    <Value>Widget Zones</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.Widget.SaveBeforeEdit">
+    <Value>You need to save the social feed before adding any widget zones</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialFeed.EditDetails">
+    <Value>Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialFeed.AddNew">
+    <Value>Add new</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialFeed.SocialNetworkToFeed">
+    <Value>Social Network</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialFeed.SocialNetwork">
+    <Value>Social Network</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialFeed.SocialNetwork.Hint">
+    <Value>Social network source from where the feeds will be taken</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialFeed.NoSocialNetworksSelected">
+    <Value>No social networks selected</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialFeed.Edited">
+    <Value>Social Feed edited successfully</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialFeed.Created">
+    <Value>Social Feed created successfully</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialFeed.BackToList">
+    <Value>Back to list</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SocialFeed.Admin.Submenus.SocialFeed">
+    <Value>Manage Social Feeds</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SocialFeed.Admin.SocialFeed.Deleted">
+    <Value>Social feed deleted successfully</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="SevenSpikes.SocialFeed.Public.SocialFeedPage.Title">
+    <Value>Social Feed Page</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SocialFeed.Public.SocialFeedPage.MetaDescription">
+    <Value>This is social feed page, a place where every social feed from the store feeds is displayed</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SocialFeed.Public.SocialFeedPage.MetaKeywords">
+    <Value>Social Feed, Feed, Social, Social Page, Facebook, Twitter, Instagram, Google Plus, Pinterest</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SocialFeed.Public.SocialFeedPage.PageTitle">
+    <Value>Social Media</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SocialFeed.Public.SocialFeedPage.SocialNetworksNavigation.All">
+    <Value>All</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SocialFeed.Public.SocialFeedPage.SocialNetworksNavigation.Facebook">
+    <Value>Facebook</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SocialFeed.Public.SocialFeedPage.SocialNetworksNavigation.Twitter">
+    <Value>Twitter</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SocialFeed.Public.SocialFeedPage.SocialNetworksNavigation.Instagram">
+    <Value>Instagram</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SocialFeed.Public.SocialFeedPage.SocialNetworksNavigation.GooglePlus">
+    <Value>Google+</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SocialFeed.Public.SocialFeedPage.SocialNetworksNavigation.Pinterest">
+    <Value>Pinterest</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SocialFeed.Public.SocialFeedPage.NoFeeds">
+    <Value>There are no activated feeds at the moment.</Value>
+  </LocaleResource>  
+  <LocaleResource Name="SevenSpikes.SocialFeed.Public.SocialFeedGlobal.GoToPost">
+    <Value>Go to post</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SocialFeed.Public.SocialFeedGlobal.Loading">
+    <Value>Loading ...</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="SevenSpikes.SocialFeed.Admin.Settings.HeaderMenuIntegration">
+    <Value>Header Menu Integration</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SocialFeed.Admin.Settings.HeaderMenuIntegration.Hint">
+    <Value>Choose where to show the Social Feed in the main menu. This will provide link to the Social Feed page where all of the available social networks will be shown. Choose "None" if you do not want to show the Social Feed page link in the menu.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SocialFeed.Admin.Settings.WidgetZones.None">
+    <Value>None</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SocialFeed.Public.SocialPage.PageTitle">
+    <Value>Social Feed</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SocialFeed.Public.Instagram.FollowUsTitle">
+    <Value>Follow us:</Value>
+  </LocaleResource>
+
+</Language>

@@ -1,0 +1,107 @@
+﻿/*
+* Copyright 2014 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+* http://www.nop-templates.com/t/licensinginfo
+*/
+
+.ribbon-wrapper {
+    position: relative;
+}
+@media all and (min-width: 769px) {
+.product-list .ribbon-wrapper {
+    float: left; /*should not be applied on smaller resolutions where the product list looks like a grid*/
+}
+}
+
+/* ribbon positioning */
+
+.ribbon-position {
+	font-size: 0;
+	line-height: 0;
+	position: absolute;
+	z-index: 1;
+	-webkit-transition: all .15s ease-in-out;
+	-moz-transition: all .15s ease-in-out;
+	-o-transition: all .15s ease-in-out;
+	transition: all .15s ease-in-out;
+}
+.ribbon-position.top-left {
+	top: 0;
+	left: 0;
+}
+.ribbon-position.top-right {
+	top: 0;
+	right: 0;
+}
+.ribbon-position.bottom-left {
+	bottom: 0;
+	left: 0;
+}
+.ribbon-position.bottom-right {
+	bottom: 0;
+	right: 0;
+}
+.ribbon-position.top-middle {
+	top: 0;
+	left: 0;
+	right: 0;
+	text-align: center;
+}
+.ribbon-position.right-middle {
+	top: 0;
+	right: 0;
+	bottom: 0;
+	text-align: right;
+}
+.ribbon-position.bottom-middle {
+	bottom: 0;
+	left: 0;
+	right: 0;
+	text-align: center;
+}
+.ribbon-position.left-middle {
+	top: 0;
+	bottom: 0;
+	left: 0;
+	text-align: left;
+}
+.ribbon-position.center {
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	text-align: center;
+}
+.ribbon-position.right-middle:before,
+.ribbon-position.left-middle:before,
+.ribbon-position.center:before {
+	content: "";
+	display: inline-block;
+	height: 100%;
+	width: 0;
+	vertical-align: middle;
+}
+
+/* ribbon wrapping element */
+
+.product-ribbon {
+	display: inline-block;
+	vertical-align: middle;
+	position: relative;
+}
+
+/* ribbon label without image*/
+
+.ribbon-text {
+	font-size: 12px;
+	line-height: normal;
+}
+
+/* ribbon label with image */
+
+.ribbon-image-text {
+	font-size: 12px;
+	line-height: normal;
+	position: absolute;
+	top: 0;
+	left: 0;
+}

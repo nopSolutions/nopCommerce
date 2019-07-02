@@ -1,0 +1,161 @@
+﻿@using Nop.Core.Domain.Orders
+
+@inject QuickViewSettings quickViewSettings
+@model ProductDetailsModel
+@*The script is copied from the _BackInStockSubscription.cshtml
+    because the script is in the footer so it is not loaded in the QuickView.*@
+@{
+    if (Model.DisplayBackInStockSubscription)
+    {
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $("#back-in-stock-subscribe-@Model.Id").on('click', function() {
+                    displayPopupContentFromUrl('@Url.RouteUrl("BackInStockSubscribePopup", new { productId = Model.Id })', '@T("BackInStockSubscriptions.NotifyMeWhenAvailable")');
+
+                    // Close the Quick View window.
+                    var kwindow = $(".quickViewWindow").data("kendoWindow");
+
+                    if (kwindow != undefined && kwindow.content() !== "") {
+                        kwindow.close();
+                    }
+                });
+            });
+        </script>
+    }
+}
+
+<input id="add-to-cart-details" type="hidden"
+       data-productid="@Model.Id"
+       data-url="@Url.RouteUrl("AddProductToCart-Details", new { productId = Model.Id, shoppingCartTypeId = (int)ShoppingCartType.ShoppingCart })" />
+
+<input id="add-to-wishlist-details" type="hidden"
+       data-productid="@Model.Id"
+       data-url="@Url.RouteUrl("AddProductToCart-Details", new { productId = Model.Id, shoppingCartTypeId = (int)ShoppingCartType.Wishlist })" />
+
+<div class="product-essential">
+    <form asp-route="Product" asp-route-sename="@Model.SeName" method="post" id="product-details-form">
+
+        <div class="popup-header">
+            <h1 class="product-name">
+                @Model.Name
+            </h1>
+        </div>
+        <div class="product-content">
+            <div class="gallery">
+                <!--product pictures-->
+                @await Component.InvokeAsync("NopQuickViewProductPictures", new { model = Model })
+
+                <div class="links-panel">
+                    <a href="@Url.RouteUrl("Product", new { SeName = Model.SeName })" class="link-to-product-page">@T("SevenSpikes.QuickView.Public.GoToProductPageLink")</a>
+                </div>
+            </div>
+            <div class="overview">
+                <div id="accordion">
+                    <h3><span>@T("SevenSpikes.QuickView.Public.ProductDetails")</span></h3>
+                    <div class="product-details">
+                        @{
+                            var dataDictPrice = new ViewDataDictionary(ViewData);
+                            dataDictPrice.TemplateInfo.HtmlFieldPrefix = $"price_{Model.Id}";
+                            @await Html.PartialAsync("_ProductPrice", Model.ProductPrice, dataDictPrice)
+                        }
+                        <!--manufacturers-->
+                        @await Html.PartialAsync("_ProductManufacturers", Model.ProductManufacturers)
+                        <!--SKU, MAN, GTIN, vendor-->
+                        @await Html.PartialAsync("_SKU_Man_GTIN_Ven", Model)
+                        <!--delivery-->
+                        @await Html.PartialAsync("_DeliveryInfo", Model)
+                        <!--sample download-->
+                        @await Html.PartialAsync("_DownloadSample", Model)
+                        <!--attributes-->
+                        @{
+                            var dataDictAttributes = new ViewDataDictionary(ViewData);
+                            dataDictAttributes.TemplateInfo.HtmlFieldPrefix = $"attributes_{Model.Id}";
+                            @await Html.PartialAsync("_QuickViewProductAttributes", Model.ProductAttributes, dataDictAttributes)
+                        }
+                        <!--gift card-->
+                        @{
+                            var dataDictGiftCard = new ViewDataDictionary(ViewData);
+                            dataDictGiftCard.TemplateInfo.HtmlFieldPrefix = $"giftcard_{Model.Id}";
+                            @await Html.PartialAsync("_GiftCardInfo", Model.GiftCard, dataDictGiftCard)
+                        }
+                        <!--rental info-->
+                        @if (Model.IsRental)
+                        {
+                            @await Html.PartialAsync("_QuickViewRentalInfo", Model)
+                        }
+                        <!--product tier prices-->
+                        @await Html.PartialAsync("_ProductTierPrices", Model.TierPrices)
+                        <div class="cart-buttons-wrapper">
+                            @{
+                                var dataDictAddToCart = new ViewDataDictionary(ViewData);
+                                dataDictAddToCart.TemplateInfo.HtmlFieldPrefix = $"addtocart_{Model.Id}";
+                                @await Html.PartialAsync("_AddToCart", Model.AddToCart, dataDictAddToCart)
+                            }
+                            <div class="overview-buttons">
+                                @if (!Model.AddToCart.DisableWishlistButton && quickViewSettings.ShowAddToWishlistButton)
+                                {
+                                    <div class="add-to-wishlist">
+                                        <button type="button" class="button-2 add-to-wishlist-button" value="@T("ShoppingCart.AddToWishlist")" data-productid="@Model.AddToCart.ProductId" onclick="AjaxCart.addproducttocart_details('@Url.RouteUrl("AddProductToCart-Details", new { productId = Model.AddToCart.ProductId, shoppingCartTypeId = (int)ShoppingCartType.Wishlist })', '#product-details-form');return false;"><span>@T("ShoppingCart.AddToWishlist")</span></button>
+                                    </div>
+                                }
+                                @if (quickViewSettings.ShowCompareProductsButton)
+                                {
+                                    @await Html.PartialAsync("_CompareProductsButton", Model)
+                                }
+                            </div>
+                        </div>
+                        <!--availability-->
+                        @await Html.PartialAsync("_Availability", Model)
+                    </div>
+
+                    @if (quickViewSettings.ShowShortProductDescription || quickViewSettings.ShowFullProductDescription)
+                    {
+                        if (!String.IsNullOrEmpty(Model.ShortDescription) || !String.IsNullOrEmpty(Model.FullDescription))
+                        {
+                            <h3><span>@T("SevenSpikes.QuickView.Public.ProductDescription")</span></h3>
+                            <div class="product-details descriptions">
+                                @if (quickViewSettings.ShowShortProductDescription)
+                                {
+                                    <div class="short-description">
+                                        @Html.Raw(Model.ShortDescription)
+                                    </div>
+                                }
+
+                                @if (quickViewSettings.ShowFullProductDescription)
+                                {
+                                    <div class="full-description">
+                                        @Html.Raw(Model.FullDescription)
+                                    </div>
+                                }
+                            </div>
+                        }
+                    }
+
+                    @if (quickViewSettings.ShowProductSpecification)
+                    {
+                        var productSpecificationsContent = await @Html.PartialAsync("_ProductSpecifications", Model.ProductSpecifications);
+
+                        if (!string.IsNullOrEmpty(productSpecificationsContent.ToHtmlString()))
+                        {
+                            <h3><span>@T("SevenSpikes.QuickView.Public.ProductSpecifications")</span></h3>
+                            <div class="product-details specifications">
+                                @productSpecificationsContent
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+
+        @if (quickViewSettings.ShowRelatedProducts)
+        {
+            @await Component.InvokeAsync("RelatedProducts", new { productId = Model.Id })
+        }
+
+        @if (quickViewSettings.ShowProductsAlsoPurchased)
+        {
+            @await Component.InvokeAsync("ProductsAlsoPurchased", new { productId = Model.Id })
+        }
+
+    </form>
+</div>

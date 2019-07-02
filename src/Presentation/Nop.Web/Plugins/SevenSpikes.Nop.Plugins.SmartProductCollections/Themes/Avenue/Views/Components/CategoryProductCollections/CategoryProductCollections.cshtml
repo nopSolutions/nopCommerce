@@ -1,0 +1,34 @@
+﻿@model CategoryCollectionsModel
+@inject ISettingService settingService
+@inject IStoreContext storeContext
+
+@{
+    var storeId = storeContext.CurrentStore.Id;
+    var numberOfProductsClass = "products-" + Model.Settings.NumberOfProducts;
+    var CategoryCollectionsLayout = settingService.GetSettingByKey("AvenueThemeSettings.SmartCategoriesLayout", "variant-1", storeId, true);
+
+    var themeName = ThemeHelper.GetPluginTheme(Plugin.FolderName);
+    var showItemsInCarouselSettingKey = string.Format(Plugin.ShowItemsInCarouselKey, themeName);
+    var showItemsInCarousel = settingService.GetSettingByKey(showItemsInCarouselSettingKey, false, storeContext.CurrentStore.Id, true);
+
+    var isCarouselEnabled = string.Empty;
+    if (showItemsInCarousel)
+    {
+        isCarouselEnabled = "carousel-enabled";
+    }
+}
+
+<div class="spc-category-section @CategoryCollectionsLayout @isCarouselEnabled">
+    @foreach (var categoryGroup in Model.CategoryGroups)
+    {
+        <div class="spc spc-categories @Model.Settings.CategoryImagesOrientation @numberOfProductsClass"
+             notloaded
+             data-categorygroupid="@categoryGroup.Id"
+             data-getcategorygroupinfourl="@Url.RouteUrl("PrepareCategoryGroupSPC")"
+             data-getItemProductsUrl="@Url.RouteUrl("GetProductsForItemSPC")">
+            <div class="loading-overlay">
+                <span>@T("SevenSpikes.SmartProductCollections.Public.Loading")</span>
+            </div>
+        </div>
+    }
+</div>

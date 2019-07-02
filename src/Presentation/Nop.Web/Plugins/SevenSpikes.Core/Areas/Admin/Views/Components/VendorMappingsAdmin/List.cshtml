@@ -1,0 +1,129 @@
+﻿@model VendorMappingListModel
+@inject AdminAreaSettings adminAreaSettings
+
+@{
+    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
+    var gridPageSizes = adminAreaSettings.GridPageSizes;
+}
+
+<div class="panel-group">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div id="vendors-grid"></div>
+
+            <script>
+                $(document).ready(function () {
+                    $("#vendors-grid").kendoGrid({
+                        dataSource: {
+                            type: "json",
+                            transport: {
+                                read: {
+                                    url: "@Html.Raw(Url.Action("GridList", "VendorMappingsAdmin", new { entityId = Model.EntityId, entityType = Model.EntityType }))",
+                                    type: "POST",
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
+                                },
+                                update: {
+                                    url: "@Html.Raw(Url.Action("Update", "VendorMappingsAdmin"))",
+                                    type: "POST",
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
+                                },
+                                destroy: {
+                                    url: "@Html.Raw(Url.Action("Delete", "VendorMappingsAdmin"))",
+                                    type: "POST",
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
+                                }
+                            },
+                            schema: {
+                                data: "Data",
+                                total: "Total",
+                                errors: "Errors",
+                                model: {
+                                    id: "Id",
+                                    fields: {
+                                        VendorName: { editable: false, type: "string" },
+                                        DisplayOrder: { editable: true, type: "number" },
+                                        VendorId: { editable: false, type: "number" }
+                                    }
+                                }
+                            },
+                            requestEnd: function (e) {
+                                if (e.type == "update") {
+                                    this.read();
+                                }
+                            },
+                            error: function (e) {
+                                display_kendoui_grid_error(e);
+                                // Cancel the changes
+                                this.cancelChanges();
+                            },
+                            pageSize: @(defaultGridPageSize),
+                            serverPaging: true,
+                            serverFiltering: true,
+                            serverSorting: true
+                        },
+                        pageable: {
+                            refresh: true,
+                            pageSizes: [@(gridPageSizes)]
+                        },
+                        editable: {
+                            confirmation: false,
+                            mode: "inline"
+                        },
+                        scrollable: false,
+                        columns: [{
+                            field: "VendorName",
+                            editable: false,
+                            type: "string",
+                            title: "@T("Admin.Vendors.Fields.Name")"
+                        },
+                        {
+                            field: "DisplayOrder",
+                            title: "@T("SevenSpikes.Mappings.AdditionalVendors.DisplayOrder")",
+                            //integer format
+                            format: "{0:0}",
+                            width: 150
+                        },
+                        {
+                            field: "VendorId",
+                            title: "@T("Admin.Common.View")",
+                            width: 100,
+                            template: '<a href="@Url.Content("~/Admin/Vendor/Edit/")#=VendorId#">@T("Admin.Common.View")</a>'
+                        }, {
+                            command: [{
+                                name: "edit",
+                                text: "@T("Admin.Common.Edit")"
+                            }, {
+                                name: "destroy",
+                                text: "@T("Admin.Common.Delete")"
+                            }],
+                            width: 200
+                        }]
+                    });
+                });
+            </script>
+        </div>
+        <div class="panel-footer">
+            <button type="submit" id="btnAddNewVendor"
+                    onclick="javascript:OpenWindow('@(Url.Action("VendorAddPopup", "VendorMappingsAdmin", new { entityId = Model.EntityId, entityType = Model.EntityType, btnId = "btnRefreshVendorMappings" }))', 800, 800, true); return false;"
+                    class="btn btn-primary">
+                @T("Admin.Common.AddNew")
+            </button>
+            <input type="submit" id="btnRefreshVendorMappings" style="display: none" />
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $('#btnRefreshVendorMappings').click(function () {
+                        //refresh grid
+                        var grid = $("#vendors-grid").data('kendoGrid');
+                        grid.dataSource.read();
+
+                        //return false to don't reload a page
+                        return false;
+                    });
+                });
+            </script>
+        </div>
+    </div>
+</div>

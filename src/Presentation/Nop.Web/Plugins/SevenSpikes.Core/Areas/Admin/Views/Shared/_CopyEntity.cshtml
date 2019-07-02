@@ -1,0 +1,68 @@
+﻿@model CopyModel
+
+<div id="copyentity-window" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="copyentity-window-title">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="copyentity-window-title">@T("SevenSpikes.Plugins.Admin.Copy")</h4>
+            </div>
+            <form asp-action="@Model.ActionName" asp-controller="@Model.ControllerName" method="post">
+                <input type="hidden" asp-for="@Model.Id" />
+                <div class="form-horizontal">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <div class="col-md-4">
+                                <nop-label asp-for="Name" />
+                            </div>
+                            <div class="col-md-8">
+                                <nop-editor asp-for="Name" />
+                            </div>
+                        </div>
+
+                        @if (Model.SupportCopyConditions)
+                        {
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    <nop-label asp-for="CopyConditions" />
+                                </div>
+                                <div class="col-md-8">
+                                    <nop-editor asp-for="CopyConditions" />
+                                </div>
+                            </div>
+                        }
+
+                        @if (Model.SupportCopyMappings)
+                        {
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    <nop-label asp-for="CopyMappings" />
+                                </div>
+                                <div class="col-md-8">
+                                    <nop-editor asp-for="CopyMappings" />
+                                </div>
+                            </div>
+                        }
+
+                        @if (Model.SupportCopyScheduling)
+                        {
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    <nop-label asp-for="CopyScheduling" />
+                                </div>
+                                <div class="col-md-8">
+                                    <nop-editor asp-for="CopyScheduling" />
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">
+                            @T("SevenSpikes.Plugins.Admin.Copy")
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,101 @@
+﻿
+@model QuickViewSettingsModel
+
+<div class="panel-group no-margin">
+    <div class="panel" style="box-shadow: none">
+        <div class="panel-body">
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="EnableCloudZoom_OverrideForStore" asp-input="EnableCloudZoom" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="EnableCloudZoom" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="EnableCloudZoom" />
+                    <span asp-validation-for="EnableCloudZoom"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="ShowShortProductDescription_OverrideForStore" asp-input="ShowShortProductDescription" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="ShowShortProductDescription" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="ShowShortProductDescription" />
+                    <span asp-validation-for="ShowShortProductDescription"></span>
+
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="ShowFullProductDescription_OverrideForStore" asp-input="ShowFullProductDescription" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="ShowFullProductDescription" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="ShowFullProductDescription" />
+                    <span asp-validation-for="ShowFullProductDescription"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="ShowProductSpecification_OverrideForStore" asp-input="ShowProductSpecification" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="ShowProductSpecification" />
+                </div>
+                <div class="col-md-9 ribbon-image">
+                    <nop-editor asp-for="ShowProductSpecification" />
+                    <span asp-validation-for="ShowProductSpecification"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="ShowProductsAlsoPurchased_OverrideForStore" asp-input="ShowProductsAlsoPurchased" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="ShowProductsAlsoPurchased" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="ShowProductsAlsoPurchased" />
+                    <span asp-validation-for="ShowProductsAlsoPurchased"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="ShowRelatedProducts_OverrideForStore" asp-input="ShowRelatedProducts" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="ShowRelatedProducts" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="ShowRelatedProducts" />
+                    <span asp-validation-for="ShowRelatedProducts"></span>
+
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="ShowAddToWishlistButton_OverrideForStore" asp-input="ShowAddToWishlistButton" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="ShowAddToWishlistButton" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="ShowAddToWishlistButton" />
+                    <span asp-validation-for="ShowAddToWishlistButton"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="ShowCompareProductsButton_OverrideForStore" asp-input="ShowCompareProductsButton" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="ShowCompareProductsButton" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="ShowCompareProductsButton" />
+                    <span asp-validation-for="ShowCompareProductsButton"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="AccordionPanelsHeightStyle_OverrideForStore" asp-input="AccordionPanelsHeightStyle" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="AccordionPanelsHeightStyle" />
+                </div>
+                <div class="col-md-9">
+                    <nop-select asp-for="AccordionPanelsHeightStyle" asp-items="Model.AvailableAccordionPanelsHeightStyles" />
+                    <span asp-validation-for="AccordionPanelsHeightStyle"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

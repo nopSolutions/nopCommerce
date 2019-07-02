@@ -1,0 +1,56 @@
+﻿@{
+    var layout = AdminViewLocations.AdminLayoutViewPath;
+
+    @if (ViewBag.isPopup)
+    {
+        layout = "~/Areas/Admin/Views/Shared/_AdminPopupLayout.cshtml";
+    }
+
+    Layout = layout;
+
+    Html.SetActiveMenuItemSystemName("SevenSpikes.NopQuickTabs.Admin.Submenus.ManageTabs");
+}
+
+@model TabModel
+
+<form method="post" id="product-tab-form">
+
+    @if (ViewBag.isPopup)
+    {
+        <input type="hidden" name="productId" id="productId" value="@ViewBag.productId" />
+        <input type="hidden" name="isPopup" id="isPopup" value="@ViewBag.isPopup.ToString()" />
+    }
+
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("SevenSpikes.NopQuickTabs.Admin.Tabs.AddNew")
+            <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink("(" + T("SevenSpikes.NopQuickTabs.Admin.Tabs.BackToList") + ")", "List")</small>
+        </h1>
+        <div class="pull-right">
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
+            <button type="submit" name="save-continue" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.SaveContinue")
+            </button>
+        </div>
+    </div>
+
+    @await Html.PartialAsync(AdminViews.ViewAdminTabsCreateOrUpdatePartial, Model)
+
+    @if (ViewBag.isPopup)
+    {
+        <script type="text/javascript">
+            $(window).unload(function () {
+                try {
+                    var gridElement = window.opener.document.getElementById("btnRefreshGrid");
+                    $(gridElement).click();
+                }
+                catch (e) { }
+            });
+        </script>
+    }
+
+</form>

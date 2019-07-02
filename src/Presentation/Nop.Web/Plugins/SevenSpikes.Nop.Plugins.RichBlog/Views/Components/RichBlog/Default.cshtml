@@ -1,0 +1,16 @@
+﻿@model Dictionary<string, object>
+@{
+    var supportRtl = this.ShouldUseRtlTheme();
+    var themeName = ThemeHelper.GetPluginTheme(Plugin.FolderName);
+
+    Html.AddCssFileParts("~/Plugins/SevenSpikes.Nop.Plugins.RichBlog/Themes/" + themeName + "/Content/RichBlog.css");
+    if (supportRtl)
+    {
+        Html.AddCssFileParts("~/Plugins/SevenSpikes.Nop.Plugins.RichBlog/Themes/" + themeName + "/Content/RichBlog.rtl.css");
+    }
+}
+
+@foreach (var viewComponent in Model)
+{
+    @await Component.InvokeAsync(viewComponent.Key, viewComponent.Value)
+}

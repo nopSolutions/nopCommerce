@@ -1,0 +1,52 @@
+﻿@model ProductPageRibbonModel
+
+<div class="page-ribbon-settings" data-ribbontype="product">
+    <div class="panel-group">
+        <div class="panel">
+            <div class="panel-body">
+                <div class="advanced-setting">
+                    <p>@T("SevenSpikes.ProductRibbons.Admin.Settings.ProductRibbon.ProductPageRibbon.ProductPageRibbonSettings")</p>
+                </div>
+                <div>
+                    @(Html.LocalizedEditor<ProductPageRibbonModel, BasePageRibbonLocalizedModel>("productPageRibbon-localized",
+                    @<div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="Text" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="@Model.Locales[item].Text" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-9 col-md-offset-3">
+                                @await Html.PartialAsync("_ProductTokens")
+                            </div>
+                        </div>
+                        <div>
+                            <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
+                        </div>
+                    </div>
+                    ,
+                    @<div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="Text" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="Text" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-9 col-md-offset-3">
+                                @await Html.PartialAsync("_ProductTokens")
+                            </div>
+                        </div>
+                    </div>
+                    ))
+                    @await Html.PartialAsync("_BasePageRibbon", Model)
+                </div>      
+            </div>
+        </div>
+    </div>
+</div>

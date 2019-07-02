@@ -1,0 +1,39 @@
+﻿@model QuickViewSettingsModel
+
+<div class="panel-group no-margin">
+    <div class="panel" style="box-shadow: none">
+        <div class="panel-body">
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="Enabled_OverrideForStore" asp-input="Enabled" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="Enabled" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="Enabled" />
+                    <span asp-validation-for="Enabled"></span>
+                </div>
+            </div>
+            <div class="form-group advanced-setting">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="ProductItemSelector_OverrideForStore" asp-input="ProductItemSelector" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="ProductItemSelector" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="ProductItemSelector" />
+                    <span asp-validation-for="ProductItemSelector"></span>
+                </div>
+            </div>
+            <div class="form-group advanced-setting">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="ProductItemSelectorChild_OverrideForStore" asp-input="ProductItemSelectorChild" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="ProductItemSelectorChild" />
+                </div>
+                <div class="col-md-9 ribbon-image">
+                    <nop-editor asp-for="ProductItemSelectorChild" />
+                    <span asp-validation-for="ProductItemSelectorChild"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

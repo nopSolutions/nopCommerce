@@ -1,0 +1,156 @@
+﻿@model WidgetMappingModel
+@inject AdminAreaSettings adminAreaSettings
+
+@{
+    Html.AddScriptParts("~/Plugins/SevenSpikes.Core/Scripts/jquery.livequery.min.js");
+
+    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
+    var gridPageSizes = adminAreaSettings.GridPageSizes;
+
+    var widgetZones = (from SelectListItem item in Model.SupportedWidgetZones select item.Text).ToList();
+    var totalWidgetZones = widgetZones.Count;
+}
+
+<div class="panel-group">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div id="widgets-grid"></div>
+
+            <script type="text/javascript">
+                (function($) {
+
+                    // local datasource
+                    var allWidgetZones = [
+                        @for (int i = 0; i < totalWidgetZones; i++)
+                        {
+                            var widgetZone = widgetZones[i];
+
+                            <text>
+                            {
+                                text: "@(widgetZone)",
+                                value: "@(widgetZone)"
+                            }
+                            </text>
+
+                            if (i != totalWidgetZones - 1)
+                            {
+                                <text>,</text>
+                            }
+                        }
+                    ];
+
+                    function widgetZoneEditor(container, options) {
+                        $('<input style="width: 100%" required data-text-field="text" data-value-field="value" data-bind="value: ' + options.field + '" />')
+                        .appendTo(container)
+                        .kendoDropDownList({
+                            optionLabel: "Select widget zone...",
+                            autoBind: false,
+                            dataSource: allWidgetZones
+                        });
+                    }
+
+                    $('.k-edit-form-container').livequery(function() {
+                        $(this).css('width', 'auto');
+                    });
+
+                    $(document).ready(function () {
+                        $("#widgets-grid").kendoGrid({
+                            dataSource: {
+                                type: "json",
+                                transport: {
+                                    read: {
+                                        url: "@Html.Raw(Url.Action("GridList", "WidgetMappingsAdmin", new { entityId = Model.EntityId, entityType = Model.EntityType }))",
+                                        type: "POST",
+                                        dataType: "json",
+                                        data: addAntiForgeryToken
+                                    },
+                                    update: {
+                                        url: "@Html.Raw(Url.Action("Update", "WidgetMappingsAdmin"))",
+                                        type: "POST",
+                                        dataType: "json",
+                                        data: addAntiForgeryToken
+                                    },
+                                    destroy: {
+                                        url: "@Html.Raw(Url.Action("Delete", "WidgetMappingsAdmin"))",
+                                        type: "POST",
+                                        dataType: "json",
+                                        data: addAntiForgeryToken
+                                    },
+                                    create: {
+                                        url: "@Html.Raw(Url.Action("Create", "WidgetMappingsAdmin", new { entityId = Model.EntityId, entityType = Model.EntityType }))",
+                                        type: "POST",
+                                        dataType: "json",
+                                        data: addAntiForgeryToken
+                                    }
+                                },
+                                schema: {
+                                    data: "Data",
+                                    total: "Total",
+                                    errors: "Errors",
+                                    model: {
+                                        id: "Id",
+                                        fields: {
+                                            WidgetZone: { editable: true, type: "string" },
+                                            DisplayOrder: { editable: true, type: "number" },
+                                        }
+                                    }
+                                },
+                                requestEnd: function (e) {
+                                    if (e.type === 'create' || e.type === 'update') {
+                                        this.read();
+                                    }
+                                },
+                                error: function (e) {
+                                    display_kendoui_grid_error(e);
+                                    // Cancel the changes
+                                    this.cancelChanges();
+                                },
+                                pageSize: @(defaultGridPageSize),
+                                serverPaging: true,
+                                serverFiltering: true,
+                                serverSorting: true
+                            },
+                            pageable: {
+                                refresh: true,
+                                pageSizes: [@(gridPageSizes)]
+                            },
+                            editable: {
+                                confirmation: true,
+                                mode: "popup",
+                                createAt: "bottom",
+                                window: {
+                                    animation: false,
+                                    width: 480
+                                }
+                            },
+                            scrollable: false,
+                            toolbar: ["create"],
+                            columns: [{
+                                field: "WidgetZone",
+                                editable: false,
+                                type: "string",
+                                title: "@T("SevenSpikes.Mappings.WidgetZones.Name")",
+                                editor: widgetZoneEditor
+                            }, {
+                                field: "DisplayOrder",
+                                title: "@T("SevenSpikes.Mappings.WidgetZones.DisplayOrder")",
+                                // integer format
+                                format: "{0:0}",
+                                width: 250
+                            }, {
+                                command: [{
+                                    name: "edit",
+                                    text: "@T("Admin.Common.Edit")"
+                                }, {
+                                    name: "destroy",
+                                    text: "@T("Admin.Common.Delete")"
+                                }],
+                                width: 200
+                            }]
+                        });
+                    });
+                })(jQuery);
+            </script>
+        </div>
+    </div>
+</div>

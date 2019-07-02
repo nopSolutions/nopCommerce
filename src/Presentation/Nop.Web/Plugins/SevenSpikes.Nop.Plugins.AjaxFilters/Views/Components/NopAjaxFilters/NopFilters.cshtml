@@ -1,0 +1,205 @@
+﻿@inject NopAjaxFiltersSettings nopAjaxFiltersSettings
+@inject Nop.Services.Helpers.IUserAgentHelper userAgentHelper
+
+@model NopAjaxFiltersModel
+
+@{
+    if (nopAjaxFiltersSettings.EnablePriceRangeFilter ||
+        nopAjaxFiltersSettings.EnableAttributesFilter ||
+        nopAjaxFiltersSettings.EnableSpecificationsFilter ||
+        nopAjaxFiltersSettings.EnableManufacturersFilter ||
+        nopAjaxFiltersSettings.EnableOnSaleFilter ||
+        nopAjaxFiltersSettings.EnableVendorsFilter)
+    {
+        Html.AddScriptParts(ResourceLocation.Footer, "~/lib/kendo/2014.1.318/kendo.core.min.js");
+        Html.AddScriptParts(ResourceLocation.Footer, "~/lib/kendo/2014.1.318/kendo.userevents.min.js");
+        Html.AddScriptParts(ResourceLocation.Footer, "~/lib/kendo/2014.1.318/kendo.draganddrop.min.js");
+        Html.AddScriptParts(ResourceLocation.Footer, "~/lib/kendo/2014.1.318/kendo.window.min.js");
+
+        Html.AddScriptParts(ResourceLocation.Footer, "~/Plugins/SevenSpikes.Core/Scripts/jquery.json-2.4.min.js");
+        Html.AddScriptParts(ResourceLocation.Footer, "~/Plugins/SevenSpikes.Core/Scripts/sevenspikes.core.min.js");
+
+        Html.AddScriptParts(ResourceLocation.Footer, "~/Plugins/SevenSpikes.Nop.Plugins.AjaxFilters/Scripts/jquery.address-1.6.min.js");
+
+        if (nopAjaxFiltersSettings.EnableInfiniteScroll)
+        {
+            Html.AddScriptParts(ResourceLocation.Footer, "~/Plugins/SevenSpikes.Nop.Plugins.AjaxFilters/Scripts/ReverseInfiniteScroll.min.js");
+        }
+
+        Html.AddScriptParts(ResourceLocation.Footer, "~/Plugins/SevenSpikes.Nop.Plugins.AjaxFilters/Scripts/HistoryState.min.js");
+        Html.AddScriptParts(ResourceLocation.Footer, "~/Plugins/SevenSpikes.Nop.Plugins.AjaxFilters/Scripts/Filters.min.js");
+    }
+    else
+    {
+        // no filters enabled, so simply return
+        return;
+    }
+
+    IHtmlContent priceRangeFilter = HtmlString.Empty;
+    IHtmlContent specificationsFilter = HtmlString.Empty;
+    IHtmlContent attributesFilter = HtmlString.Empty;
+    IHtmlContent manufacturersFilter = HtmlString.Empty;
+    IHtmlContent vendorsFilter = HtmlString.Empty;
+    IHtmlContent onSaleFilter = HtmlString.Empty;
+    IHtmlContent inStockFilter = HtmlString.Empty;
+
+    if (nopAjaxFiltersSettings.EnablePriceRangeFilter)
+    {
+        priceRangeFilter = await Component.InvokeAsync("NopAjaxFiltersPriceRangeFilter", new { categoryId = Model.CategoryId, manufacturerId = Model.ManufacturerId, vendorId = Model.VendorId });
+    }
+
+    if (nopAjaxFiltersSettings.EnableSpecificationsFilter)
+    {
+        specificationsFilter = await Component.InvokeAsync("NopAjaxFiltersSpecificationFilters", new { categoryId = Model.CategoryId, manufacturerId = Model.ManufacturerId, vendorId = Model.VendorId });
+    }
+
+    if (nopAjaxFiltersSettings.EnableAttributesFilter)
+    {
+        attributesFilter = await Component.InvokeAsync("NopAjaxFiltersAttributeFilters", new { categoryId = Model.CategoryId, manufacturerId = Model.ManufacturerId, vendorId = Model.VendorId });
+    }
+
+    if (nopAjaxFiltersSettings.EnableManufacturersFilter)
+    {
+        manufacturersFilter = await Component.InvokeAsync("NopAjaxFiltersManufacturerFilters", new { categoryId = Model.CategoryId, vendorId = Model.VendorId });
+    }
+
+    if (nopAjaxFiltersSettings.EnableVendorsFilter && Model.CategoryId > 0)
+    {
+        if (Model.CategoryId > 0)
+        {
+            vendorsFilter = await Component.InvokeAsync("NopAjaxFiltersVendorFilters", new { categoryId = Model.CategoryId, manufacturerId = 0 });
+        }
+        else if (Model.ManufacturerId > 0)
+        {
+            vendorsFilter = await Component.InvokeAsync("NopAjaxFiltersVendorFilters", new { categoryId = 0, manufacturerId = Model.ManufacturerId });
+        }
+    }
+
+    if (nopAjaxFiltersSettings.EnableOnSaleFilter)
+    {
+        onSaleFilter = await Component.InvokeAsync("NopAjaxFilterOnSaleFilter", new { categoryId = Model.CategoryId, manufacturerId = Model.ManufacturerId, vendorId = Model.VendorId });
+    }
+
+    if (nopAjaxFiltersSettings.EnableInStockFilter)
+    {
+        inStockFilter = await Component.InvokeAsync("NopAjaxFiltersInStockFilter", new { categoryId = Model.CategoryId, manufacturerId = Model.ManufacturerId, vendorId = Model.VendorId });
+    }
+
+    bool noFilters = string.IsNullOrEmpty(priceRangeFilter.ToHtmlString()) &&
+        string.IsNullOrEmpty(specificationsFilter.ToHtmlString()) &&
+        string.IsNullOrEmpty(attributesFilter.ToHtmlString()) &&
+        string.IsNullOrEmpty(manufacturersFilter.ToHtmlString()) &&
+        string.IsNullOrEmpty(vendorsFilter.ToHtmlString()) &&
+        string.IsNullOrEmpty(onSaleFilter.ToHtmlString()) &&
+        string.IsNullOrEmpty(inStockFilter.ToHtmlString());
+
+    if (noFilters && nopAjaxFiltersSettings.DisableDropdownNavigationWithAjaxWhenThereAreNoFilters)
+    {
+        return;
+    }
+
+    // Include css files only if there are products for filtering and at least one of the filter panel is visible
+    var theme = ThemeHelper.GetPluginTheme(Plugin.FolderName);
+
+    Html.AddCssFileParts("~/Plugins/SevenSpikes.Nop.Plugins.AjaxFilters/Themes/" + theme + "/Content/AjaxFilters.css");
+
+    var supportRtl = EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.Rtl;
+    if (supportRtl)
+    {
+        Html.AddCssFileParts("~/Plugins/SevenSpikes.Nop.Plugins.AjaxFilters/Themes/" + theme + "/Content/AjaxFilters.rtl.css");
+    }
+
+    Html.AddScriptParts(ResourceLocation.Footer, "~/Plugins/SevenSpikes.Nop.Plugins.AjaxFilters/Scripts/FiltersQuery.min.js");
+
+    var isMobileDevice = userAgentHelper.IsMobileDevice();
+
+    var isScrollToElementEnabled = (isMobileDevice && nopAjaxFiltersSettings.ScrollToElementOnThePageAfterFiltrationMobile) ||
+        (!isMobileDevice && nopAjaxFiltersSettings.ScrollToElementOnThePageAfterFiltration);
+
+    string numberOfReturnedProductsSelector = nopAjaxFiltersSettings.ShowNumberOfReturnedProductsSelector;
+
+    if (!nopAjaxFiltersSettings.ShowNumberOfReturnedProducts)
+    {
+        numberOfReturnedProductsSelector = "false";
+    }
+}
+
+<div class="nopAjaxFilters7Spikes"
+     data-categoryid="@Model.CategoryId"
+     data-manufacturerid="@Model.ManufacturerId"
+     data-vendorid="@Model.VendorId"
+     data-isonsearchpage="@Model.SearchQueryStringParameters.IsOnSearchPage"
+     data-searchkeyword="@Model.SearchQueryStringParameters.Keyword"
+     data-searchcategoryid="@Model.SearchQueryStringParameters.SearchCategoryId"
+     data-searchmanufacturerid="@Model.SearchQueryStringParameters.SearchManufacturerId"
+     data-searchvendorid ="@Model.SearchQueryStringParameters.SearchVendorId"
+     data-searchpricefrom="@Model.SearchQueryStringParameters.PriceFrom"
+     data-searchpriceto="@Model.SearchQueryStringParameters.PriceTo"
+     data-searchincludesubcategories="@Model.SearchQueryStringParameters.IncludeSubcategories"
+     data-searchinproductdescriptions="@Model.SearchQueryStringParameters.SearchInProductDescriptions"
+     data-searchadvancedsearch="@Model.SearchQueryStringParameters.AdvancedSearch"
+     data-getfilteredproductsurl="@Url.RouteUrl("GetFilteredProducts")"
+     data-productslistpanelselector="@nopAjaxFiltersSettings.ProductsListPanelSelector"
+     data-productsgridpanelselector="@nopAjaxFiltersSettings.ProductsGridPanelSelector"
+     data-pagerpanelselector="@nopAjaxFiltersSettings.PagerPanelSelector"
+     data-pagerpanelintegrationselector="@nopAjaxFiltersSettings.PagerPanelIntegrationSelector"
+     data-sortoptionsdropdownselector="@nopAjaxFiltersSettings.SortOptionsDropDownSelector"
+     data-viewoptionsdropdownselector="@nopAjaxFiltersSettings.ViewOptionsDropDownSelector"
+     data-productspagesizedropdownselector="@nopAjaxFiltersSettings.ProductPageSizeDropDownSelector"
+     data-filtersuimode="@nopAjaxFiltersSettings.FiltersUIMode.ToString().ToLower()"
+     data-defaultviewmode="@Model.DefaultViewMode"
+     data-enableinfinitescroll="@nopAjaxFiltersSettings.EnableInfiniteScroll"
+     data-infinitescrollloadertext="@T("SevenSpikes.NopAjaxFilters.Client.Common.LoadingMoreProducts")"
+     data-scrolltoelement="@isScrollToElementEnabled"
+     data-scrolltoelementselector="@nopAjaxFiltersSettings.ElementToScrollAfterFiltrationSelector"
+     data-scrolltoelementadditionaloffset="@nopAjaxFiltersSettings.ScrolltoElementAfterFiltrationAdditionalOffset"
+     data-showselectedfilterspanel="@nopAjaxFiltersSettings.ShowSelectedFiltersPanel"
+     data-numberofreturnedproductsselector="@numberOfReturnedProductsSelector"
+     data-selectedOptionsTargetSelector=".nopAjaxFilters7Spikes .filtersPanel:first"
+     data-selectedOptionsTargetAction="prependTo"
+     data-isRTL="@supportRtl.ToString().ToLowerInvariant()"
+     data-closeFiltersPanelAfterFiltrationInMobile="@nopAjaxFiltersSettings.CloseFiltersPanelAfterFiltrationInMobile.ToString().ToLowerInvariant()"
+     data-no-products-window-title="@T("SevenSpikes.NopAjaxFilters.Client.Common.NoResultsFoundTitle")"
+     data-no-products-window-message="@T("SevenSpikes.NopAjaxFilters.Client.Common.NoResultsFoundMessage")">
+    
+    @if (!noFilters)
+    {
+        <div class="filtersTitlePanel">
+            <p class="filtersTitle">@T("SevenSpikes.NopAjaxFilters.Client.Common.FilterBy"):</p>
+            <a class="clearFilterOptionsAll">@T("SevenSpikes.NopAjaxFilters.Client.Common.ClearAll")</a>
+        </div>
+        <div class="filtersPanel">
+            @priceRangeFilter
+            @onSaleFilter
+            @inStockFilter
+            @specificationsFilter
+            @attributesFilter
+            @manufacturersFilter
+            @vendorsFilter
+        </div>
+
+        <div class="block filter-block selected-options" style="display: none;">
+            <div class="title">
+                <a class="toggleControl">@T("SevenSpikes.NopAjaxFilters.SelectedOptions.PanelTitle")</a>
+            </div>
+            <div class="filtersGroupPanel">
+                <ul class="selected-options-list"></ul>
+            </div>
+        </div>
+        <div class="number-of-returned-products sample-element" style="display: none;">
+            <span class="showing-text">@T("SevenSpikes.NopAjaxFilters.Client.Common.NumberOfReturnedProducts.Show")</span>
+            <span class="productsPerPage"></span>
+            <span class="of-text">@T("SevenSpikes.NopAjaxFilters.Client.Common.NumberOfReturnedProducts.Of")</span>
+            <span class="allProductsReturned"></span>
+            <span class="results-text">@T("SevenSpikes.NopAjaxFilters.Client.Common.NumberOfReturnedProducts.Results")</span>
+        </div>
+        //Number of returned products after filtration. Should be visible only on mobile.
+        <div class="returned-products-filters-panel" style="display: none;">
+            <span class="allProductsReturned"></span>
+        </div>
+    }
+</div>
+
+@Html.Hidden("availableSortOptionsJson", Model.AvailableSortOptionsJson)
+@Html.Hidden("availableViewModesJson", Model.AvailableViewModesJson)
+@Html.Hidden("availablePageSizesJson", Model.AvailablePageSizesJson)

@@ -1,0 +1,32 @@
+
+.ajaxCart .k-window-actions {
+	right: auto;
+	left: 0;
+}
+.ajaxCart .k-window-action:after {
+	padding: 0;
+}
+
+.productAddedToCartWindowImage {
+	float: right;
+}
+.productAddedToCartWindowDescription {
+	float: left;
+}
+.productAddedToCartWindowDescription .button-1 {
+	margin-right: 10px;
+}
+
+.miniProductDetailsView .gallery {
+	float: right;
+}
+.miniProductDetailsView .overview {
+	float: left;
+	text-align: right;
+}
+.miniProductDetailsView .enter-price-input {
+	text-align: right;
+}
+.miniProductDetailsView .message-error {
+	text-align: right;
+}

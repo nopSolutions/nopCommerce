@@ -1,0 +1,17 @@
+﻿@model RichBlogSettingsModel
+
+<div class="panel-group">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="BlogCategoryNavigationWidgetZone_OverrideForStore" asp-input="BlogCategoryNavigationWidgetZone" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="BlogCategoryNavigationWidgetZone"/>
+                </div>
+                <div class="col-md-9">
+                    <nop-select asp-for="BlogCategoryNavigationWidgetZone" asp-items="Model.AvailableBlogCategoryNavigationWidgetZones" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

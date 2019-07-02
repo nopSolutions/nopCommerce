@@ -1,0 +1,70 @@
+﻿@model ProductsGroupItemAdminModel
+
+<div class="form-group entity-id-wrapper">
+    <div class="col-md-3">
+        <div class="label-wrapper">
+            <label class="control-label" for="" title="">
+                @T("SevenSpikes.SmartProductCollections.Admin.ProductsGroupItem.Vendor")
+            </label>
+            <div class="ico-help" title="@T("SevenSpikes.SmartProductCollections.Admin.ProductsGroupItem.EntityId.Hint")">
+                <i class="fa fa-question-circle"></i>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-9">
+        <select class="itemEntityId form-control" name="itemEntityId">
+            @foreach (var type in Model.AvailableEntities)
+            {
+                <!option value="@(type.Value)" @if (Model.EntityId == int.Parse(type.Value)) { <text> selected="selected" </text> }>@type.Text</!option>
+            }
+        </select>
+    </div>
+</div>
+
+<div class="form-group sort-method-wrapper">
+    <div class="col-md-3">
+        <div class="label-wrapper">
+            <label class="control-label" for="" title="">
+                @T("SevenSpikes.SmartProductCollections.Admin.ProductsGroupItem.SortMethod")
+            </label>
+            <div class="ico-help" title="@T("SevenSpikes.SmartProductCollections.Admin.ProductsGroupItem.SortMethod.Hint")">
+                <i class="fa fa-question-circle"></i>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-9">
+        <select class="itemSortMethod form-control" name="itemSortMethod">
+            @foreach (var type in Model.AvailableSortMethods)
+            {
+                <!option value="@(type.Value)" @if ((int)Model.SortMethod == int.Parse(type.Value)) { <text> selected="selected" </text> }>@type.Text</!option>
+            }
+        </select>
+    </div>
+</div>
+
+<div class="vendor-group-tab-title-wrapper">
+    @(Html.LocalizedEditor<ProductsGroupItemAdminModel, ProductsGroupItemLocalizedAdminModel>(string.Format("vendor-group-item-localized-title-{0}", Model.Id),
+    @<div class="form-group">
+         <div class="col-md-3">
+             <nop-label asp-for="@Model.Locales[item].Title" />
+         </div>
+         <div class="col-md-9">
+             @Html.TextBoxFor(model => model.Locales[item].Title, new { @class = "group-item-title k-textbox" })
+             <span asp-validation-for="@Model.Locales[item].Title"></span>
+         </div>
+         <div>
+             <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
+         </div>
+    </div>
+    ,
+    @<div class="form-group">
+        <div class="col-md-3">
+            <nop-label asp-for="Title" />
+        </div>
+        <div class="col-md-9">
+            @Html.TextBoxFor(model => model.Title, new { @class = "group-item-title k-textbox" })
+            <span asp-validation-for="Title"></span>
+        </div>
+        </div>
+    ))
+</div>

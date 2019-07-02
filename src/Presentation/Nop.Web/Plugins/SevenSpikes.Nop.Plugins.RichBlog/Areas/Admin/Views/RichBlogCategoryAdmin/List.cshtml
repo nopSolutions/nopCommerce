@@ -1,0 +1,125 @@
+@{
+    Layout = AdminViewLocations.AdminLayoutViewPath;
+    Html.SetActiveMenuItemSystemName("SevenSpikes.RichBlog.Admin.Submenus.ManageCategories");
+}
+
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        @T("SevenSpikes.RichBlog.Admin.ManageCategories.Title")
+    </h1>
+    <div class="pull-right">
+
+        <a href="Create" class="btn bg-blue">
+            <i class="fa fa-plus-square"></i>
+            @T("Admin.Common.AddNew")
+        </a>
+
+    </div>
+</div>
+
+<nop-antiforgery-token />
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="rich-blog-categories-grid"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+        $(document).ready(function () {
+            $("#rich-blog-categories-grid").kendoGrid({
+                dataSource: {
+                    type: "json",
+                    transport: {
+                        read: {
+                            url: "@Html.Raw(Url.Action("List", "RichBlogCategoryAdmin"))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        }
+                    },
+                    schema: {
+                        data: "Data",
+                        total: "Total",
+                        errors: "Errors",
+                        model: {
+                            id: "Id",
+                            fields: {
+                                Id: { editable: false, type: "number" },
+                                Name: { editable: false, type: "string" },
+                                DisplayOrder: { editable: false, type: "number" },
+                                LanguageName: { editable: false, type: "string" }
+                            }
+                        }
+                    },
+                    requestEnd: function (e) {
+                        if (e.type == "create" || e.type == "update") {
+                            this.read();
+                        }
+                    },
+                    error: function (e) {
+                        display_kendoui_grid_error(e);
+                        // Cancel the changes
+                        this.cancelChanges();
+                    },
+                    serverPaging: true,
+                    serverFiltering: true,
+                    serverSorting: true
+                },
+                pageable: {
+                    refresh: true,
+                    numeric: false,
+                    previousNext: false,
+                    info: false
+                },
+                scrollable: false,
+                columns: [{
+                    field: "Name",
+                    title: "@T("SevenSpikes.RichBlog.Admin.Category.Name")",
+                    width: 200,
+                }, {
+                    field: "LanguageName",
+                    title: "@T("SevenSpikes.RichBlog.Admin.Category.LanguageId")",
+                    width: 100,
+                }, {
+                    field: "DisplayOrder",
+                    title: "@T("SevenSpikes.RichBlog.Admin.Category.DisplayOrder")",
+                    width: 200,
+                    //integer format
+                    format: "{0:0}"
+                }, {
+                    field: "edit",
+                    title: "Command",
+                    template: kendo.template($("#edit-template").html()),
+                    width: 50,
+                    filterable: false,
+                    sortable: false
+                }, {
+                    field: "delete",
+                    title: "Command",
+                    template: kendo.template($("#delete-template").html()),
+                    width: 50,
+                    filterable: false,
+                    sortable: false
+                }]
+            });
+        });
+</script>
+
+<script id="edit-template" type="text/x-kendo-template">
+    <a class="k-button" href="Edit?categoryId=#: Id#">
+        <span class="k-icon k-update"></span> @T("Admin.Common.Edit")
+    </a>
+</script>
+
+<script id="delete-template" type="text/x-kendo-template">
+    <a class="k-button" href="Delete?categoryId=#: Id#">
+        <span class="k-icon k-delete"></span> @T("Admin.Common.Delete")
+    </a>
+</script>
