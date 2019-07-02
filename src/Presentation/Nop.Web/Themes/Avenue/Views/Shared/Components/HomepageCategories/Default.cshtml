@@ -1,0 +1,100 @@
+﻿@model IList<CategoryModel>
+
+@using Nop.Core
+@using Nop.Services.Configuration
+
+@inject ISettingService settingService
+@inject IStoreContext storeContext
+@inject IViewComponentSelector viewComponentSelector
+
+@{
+    var storeId = storeContext.CurrentStore.Id;
+    var HomePageLayout = settingService.GetSettingByKey("AvenueThemeSettings.HomePageLayout", "with-slider", storeId, true);
+}
+
+@if (Model.Count > 0)
+{
+    if (HomePageLayout == "with-slider")
+    {
+        <div class="featured-categories default">
+            <div class="item-grid">
+                @foreach (var item in Model)
+                {
+                    <div class="item-box">
+                        <div class="category-item wrapper">
+                            <div class="details">
+                                <span class="text">@await Component.InvokeAsync("Widget", new { widgetZone = "avenue_category_box_products_count", additionalData = item.Id }) @T("SevenSpikes.Themes.Avenue.FeaturedCategoriesText")</span>
+                                <h2 class="title">
+                                    <a href="@Url.RouteUrl("Category", new { SeName = item.SeName })" title="@item.PictureModel.Title">
+                                        @item.Name
+                                    </a>
+                                </h2>
+                                <a class="button" href="@Url.RouteUrl("Category", new { SeName = item.SeName })">@T("SevenSpikes.Themes.Avenue.FeaturedCatgoriesButton")</a>
+                            </div>
+                            <div class="picture">
+                                <a href="@Url.RouteUrl("Category", new { SeName = item.SeName })" title="@item.PictureModel.Title">
+                                    @if (viewComponentSelector.SelectComponent("LazyLoadImage") != null)
+                                    {
+                                        @await Component.InvokeAsync("LazyLoadImage", new (string Key, string Value)[]
+                                        {
+                                            ("src", item.PictureModel.ImageUrl),
+                                            ("alt", item.PictureModel.AlternateText),
+                                            ("title", item.PictureModel.Title)
+                                        })
+                                    }
+                                    else
+                                    {
+                                        <img alt="@item.PictureModel.AlternateText" src="@item.PictureModel.ImageUrl" title="@item.PictureModel.Title" />
+                                    }
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+    if (HomePageLayout == "no-slider")
+    {
+        <div class="featured-categories in-header">
+            <div class="item-grid">
+                @foreach (var item in Model)
+                {
+                    <div class="item-box">
+                        <div class="category-item wrapper">
+                            <div class="details">
+                                <div class="table">
+                                    <div class="table-cell">
+                                        <h2 class="title">
+                                            <a href="@Url.RouteUrl("Category", new { SeName = item.SeName })" title="@item.PictureModel.Title">
+                                                @item.Name
+                                            </a>
+                                        </h2>
+                                        @await Component.InvokeAsync("Widget", new { widgetZone = "avenue_homepage_subcategories", additionalData = item.Id })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="picture">
+                                <a href="@Url.RouteUrl("Category", new { SeName = item.SeName })" title="@item.PictureModel.Title">
+									@if (viewComponentSelector.SelectComponent("LazyLoadImage") != null)
+                                    {
+                                        @await Component.InvokeAsync("LazyLoadImage", new (string Key, string Value)[]
+                                        {
+                                            ("src", item.PictureModel.ImageUrl),
+                                            ("alt", item.PictureModel.AlternateText),
+                                            ("title", item.PictureModel.Title)
+                                        })
+                                    }
+                                    else
+                                    {
+										<img alt="@item.PictureModel.AlternateText" src="@item.PictureModel.ImageUrl" title="@item.PictureModel.Title" />
+                                    }
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+}

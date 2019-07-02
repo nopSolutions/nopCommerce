@@ -1,0 +1,52 @@
+﻿@model CategoryNavigationModel
+
+@using Nop.Core
+@using Nop.Services.Configuration
+@inject ISettingService settingService
+@inject IStoreContext storeContext
+
+@{
+    var storeId = storeContext.CurrentStore.Id;
+    var CatalogPageLayout = settingService.GetSettingByKey("AvenueThemeSettings.CatalogPageLayout", "two-columns", storeId, true);
+}
+
+@if (Model.Categories.Count > 0)
+{
+    if (ViewBag.isCategoryNavigationList)
+    {
+        <div class="block block-category-navigation">
+            <div class="title">
+                <strong>@T("Categories")</strong>
+            </div>
+            <div class="listbox">
+                <ul class="list">
+                    @foreach (var category in Model.Categories)
+                    {
+                        var categoryLineModel = new CategoryNavigationModel.CategoryLineModel
+                        {
+                            CurrentCategoryId = Model.CurrentCategoryId,
+                            Category = category
+                        };
+                        @await Html.PartialAsync("_CategoryLine.Navigation", categoryLineModel)
+                    }
+                </ul>
+            </div>
+        </div>
+    }
+    else if (CatalogPageLayout == "one-column")
+    {
+        <div class="product-select-block add category-navigation">
+            <select>
+                @foreach (var category in Model.Categories)
+                {
+                    var categoryLineModel = new CategoryNavigationModel.CategoryLineModel
+                    {
+                        CurrentCategoryId = Model.CurrentCategoryId,
+                        Category = category
+                    };
+                    <option>@await Html.PartialAsync("_CategoryLine.Navigation", categoryLineModel)</option>
+                }
+            </select>
+        </div>
+    }
+}

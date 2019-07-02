@@ -1,0 +1,98 @@
+﻿@model CustomerProductReviewsModel
+@{
+    Layout = "_ColumnsTwo";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.CustomerProductReviews").Text);
+    //page class
+    Html.AppendPageCssClassParts("html-account-page");
+    Html.AppendPageCssClassParts("html-my-product-reviews-list-page");
+}
+@section AccountNavigation
+{
+    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.ProductReviews })
+}
+<div class="page account-page customer-reviews-page">
+    <div class="page-title">
+        <h1>@T("Account.CustomerProductReviews")</h1>
+    </div>
+    <div class="page-body">
+        @if (Model.ProductReviews.Count > 0)
+        {
+            <div class="customer-reviews-list">
+                @foreach (var review in Model.ProductReviews)
+                {
+                    var ratingPercent = review.Rating * 20;
+                    <div class="product-review-item">
+                        <div class="review-item-head">
+                            <div class="review-title">
+                                <strong class="title-text">@review.Title</strong>@(!string.IsNullOrEmpty(review.ApprovalStatus) ? $" - {review.ApprovalStatus}" : null)
+                            </div>
+                            <div class="rating-box">
+                                <div class="rating-icons">
+                                    <div class="rating" style="width: @(ratingPercent)%">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="review-content">
+                            <div class="review-text">
+                                @Html.Raw(Nop.Core.Html.HtmlHelper.FormatText(review.ReviewText, false, true, false, false, false, false))
+                            </div>
+                            @*@foreach (var reviewType in review.AdditionalProductReviewList.Where(x => x.Rating > 0))
+                            {
+                                var ratingExtPercent = reviewType.Rating * 20;
+                                <div class="review-type-rating-ext">
+                                    <div class="review-title">
+                                        <i>@reviewType.Name</i>
+                                    </div>
+                                    <div class="rating-box">
+                                        <div class="rating-icons">
+                                            <div class="rating" style="width: @(ratingExtPercent)%">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }*@
+                            <div class="review-info">
+                                <span class="user">
+                                    <label>@T("Account.CustomerProductReviews.ProductReviewFor"):</label>
+                                    <a class="product-name" href="@Url.RouteUrl("Product", new {SeName = review.ProductSeName})">@review.ProductName</a>
+                                </span>
+                                <span class="separator">|</span>
+                                <span class="date">
+                                    <label>@T("Reviews.Date"):</label>
+                                    <span>@review.WrittenOnStr</span>
+                                </span>
+                            </div>
+                            @if (!string.IsNullOrEmpty(review.ReplyText))
+                            {
+                                <div class="reply">
+                                    <div class="reply-header">
+                                        @T("Reviews.Reply")
+                                    </div>
+                                    <div class="reply-text">
+                                        @Html.Raw(Nop.Core.Html.HtmlHelper.FormatText(review.ReplyText, false, true, false, false, false, false))
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+            var pager = Html.Pager(Model.PagerModel);
+            if (!string.IsNullOrEmpty(pager.ToHtmlString()))
+            {
+                <div class="pager">
+                    @pager
+                </div>
+            }
+        }
+        else
+        {
+            <div class="no-data">
+                @T("Account.CustomerProductReviews.NoRecords")
+            </div>
+        }
+    </div>
+</div>

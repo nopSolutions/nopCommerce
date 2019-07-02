@@ -1,0 +1,54 @@
+
+/* IE10 & IE11 styles */
+
+@media all and (min-width: 1025px) {
+
+.ie10 .default.featured-categories .details,
+.ie11 .default.featured-categories .details {
+	position: static;
+}
+.ie10 .featured-categories.default .title,
+.ie11 .featured-categories.default .title,
+.ie10 .featured-categories.default .text,
+.ie11 .featured-categories.default .text,
+.ie10 .featured-categories.default .button,
+.ie11 .featured-categories.default .button {
+	right: calc(50% - 20px);
+}
+}
+
+@media all and (min-width: 1201px) {
+
+.ie10 .sale-of-the-day-offer .item-gallery,
+.ie11 .sale-of-the-day-offer .item-gallery {
+	position: static;
+}
+.ie10 .sale-of-the-day-offer .item-picture,
+.ie11 .sale-of-the-day-offer .item-picture {
+	right: 50%;
+}
+}
+
+@media all and (min-width: 1701px) {
+
+.ie10 .sale-of-the-day-offer .item-picture,
+.ie11 .sale-of-the-day-offer .item-picture {
+	right: calc(50% + 15px);
+}
+}
+
+@-moz-document url-prefix() {
+  /* CSS specific to Firefox */ 
+.overview .add-to-cart-button:before,
+.variant-overview .add-to-cart-button:before {
+    top: -2px;
+}
+}
+
+@supports (-webkit-overflow-scrolling: touch) {
+  /* CSS specific to iOS devices */ 
+.overview .add-to-cart-button:before,
+.variant-overview .add-to-cart-button:before {
+    top: -3px;
+}
+}

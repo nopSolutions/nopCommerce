@@ -1,0 +1,11 @@
+﻿@model List<ExternalAuthenticationMethodModel>
+@if (Model.Any())
+{
+    <div class="title">
+        <strong>@T("Account.AssociatedExternalAuth.Or")</strong>
+    </div>
+}
+@foreach (var authenticationMethod in Model)
+{
+    @await Component.InvokeAsync(authenticationMethod.ViewComponentName)
+}

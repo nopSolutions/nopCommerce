@@ -1,0 +1,84 @@
+﻿
+/* FOOTABLE CUSTOM CSS */
+
+.footable-first-column {
+	text-align: center;
+}
+td.footable-first-column {
+	position: relative;
+}
+.footable-first-column .item-count {
+	display: none;
+	font-size: 13px !important;
+}
+.footable.breakpoint .footable-toggle {
+	position: absolute;
+	top: 0; right: 0;
+	bottom: 0; left: 10px;
+	width: 21px; height: 21px;
+	margin: auto;
+	overflow: hidden;
+	border: 1px solid #222;
+	border-radius: 50%;
+	background-color: #fff;
+	background-position: center;
+	background-repeat: no-repeat;
+	box-shadow: inset 0 0 0 5px #fff;
+	cursor: pointer;
+}
+.footable-row-detail {
+	text-align: left;
+}
+.footable-row-detail-cell {
+	text-align: left !important;
+}
+.footable-row-detail-row {
+    display: table-row;
+}
+.footable-row-detail-name {
+    display: table-cell;
+    padding: 5px 10px;
+}
+.footable-row-detail-value {
+    display: table-cell;
+	padding: 5px 10px;
+	color: #222;
+}
+
+.footable-toggle {
+	background-image: url('../img/table-plus.png');
+}
+.footable-detail-show .footable-toggle {
+	background-image: url('../img/table-minus.png');
+}
+.footable-toggle:before {
+	display: none !important;
+}
+
+
+@media all and (min-width: 512px) {
+	
+	.return-request-page
+	.footable-element {
+		display: none !important;
+	}
+}
+@media all and (min-width: 1024px) {
+	
+	.footable-element {
+		display: none !important;
+	}
+}
+/*@media all and (min-width: 769px) {
+	
+	.forum-table .footable-element,
+	.private-messages .footable-element {
+		display: none !important;
+	}
+}*/
+@media all and (min-width: 1501px) {
+	
+	.lt-footable-element {
+		display: none !important;
+	}
+}

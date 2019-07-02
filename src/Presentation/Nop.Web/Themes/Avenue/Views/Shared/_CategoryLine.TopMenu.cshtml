@@ -1,0 +1,40 @@
+﻿@model TopMenuModel.CategoryLineModel
+
+
+@if (Model.Category.SubCategories.Count > 0)
+{
+    <li class="has-sublist">
+        <a class="with-subcategories" href="@Url.RouteUrl("Category", new { SeName = Model.Category.SeName })">@Model.Category.Name</a>
+        <button class="trigger plus-button"></button>
+        <div class="sublist-wrap">
+            <div class="responsive-nav-head back-button">
+                <span class="text"><button>@T("SevenSpikes.Themes.Common.BackSublist")</button></span>
+            </div>
+            <ul class="sublist">
+                @foreach (var subCategory in Model.Category.SubCategories)
+                {
+                    var categoryLineModel = new TopMenuModel.CategoryLineModel
+                    {
+                        Category = subCategory,
+                        Level = Model.Level + 1,
+                        ResponsiveMobileMenu = Model.ResponsiveMobileMenu
+                    };
+                    @await Html.PartialAsync("_CategoryLine.TopMenu", categoryLineModel)
+                }
+            </ul>
+        </div>
+    </li>
+}
+else
+{
+    <li>
+        @if (Model.Category.NumberOfProducts.HasValue)
+        {
+            <a href="@Url.RouteUrl("Category", new { SeName = Model.Category.SeName })">@Model.Category.Name <span class="number">@T("Categories.TotalProducts", Model.Category.NumberOfProducts.Value)</span></a>
+        }
+        else
+        {
+            <a href="@Url.RouteUrl("Category", new { SeName = Model.Category.SeName })">@Model.Category.Name</a>
+        }
+    </li>
+}

@@ -1,0 +1,80 @@
+﻿@using Nop.Core
+@using Nop.Services.Configuration
+@inject ISettingService settingService
+@inject IStoreContext storeContext
+
+@{
+    Layout = "_Root.Head";
+
+    var storeId = storeContext.CurrentStore.Id;
+    var controllerName = Url.ActionContext.RouteData.Values["controller"].ToString();
+    var actionName = Url.ActionContext.RouteData.Values["action"].ToString();
+
+    var isHomePage = controllerName.Equals("home", StringComparison.InvariantCultureIgnoreCase);
+    var isCatalogPage = (controllerName.Equals("catalog", StringComparison.InvariantCultureIgnoreCase)
+                        || controllerName.Equals("product", StringComparison.InvariantCultureIgnoreCase))
+
+                        && actionName.Equals("category", StringComparison.InvariantCultureIgnoreCase)
+                        || actionName.Equals("manufacturer", StringComparison.InvariantCultureIgnoreCase)
+                        || actionName.Equals("manufacturerall", StringComparison.InvariantCultureIgnoreCase)
+                        || actionName.Equals("vendor", StringComparison.InvariantCultureIgnoreCase)
+                        || actionName.Equals("vendorall", StringComparison.InvariantCultureIgnoreCase)
+                        || actionName.Equals("productsbytag", StringComparison.InvariantCultureIgnoreCase)
+                        || actionName.Equals("newproducts", StringComparison.InvariantCultureIgnoreCase)
+                        || actionName.Equals("recentlyviewedproducts", StringComparison.InvariantCultureIgnoreCase);
+    var isProductPage = controllerName.Equals("product", StringComparison.InvariantCultureIgnoreCase)
+                        && actionName.Equals("productdetails", StringComparison.InvariantCultureIgnoreCase);
+
+    var HomePageLayout = string.Empty;
+    var CatalogPageLayout = string.Empty;
+    var ProductPageLayout = string.Empty;
+
+    if (isHomePage) {
+        HomePageLayout = settingService.GetSettingByKey("AvenueThemeSettings.HomePageLayout", "with-slider", storeId, true);
+    }
+    if (isCatalogPage)
+    {
+        CatalogPageLayout = settingService.GetSettingByKey("AvenueThemeSettings.CatalogPageLayout", "two-columns", storeId, true);
+    }
+    if (isProductPage)
+    {
+        ProductPageLayout = settingService.GetSettingByKey("AvenueThemeSettings.ProductPageLayout", "standard-gallery", storeId, true);
+    }
+}
+
+@await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BodyStartHtmlTagAfter })
+@await Html.PartialAsync("_Notifications")
+@await Html.PartialAsync("_JavaScriptDisabledWarning")
+@await Html.PartialAsync("_OldInternetExplorerWarning")
+
+<div class="master-wrapper-page @HomePageLayout @CatalogPageLayout @ProductPageLayout">
+    <script asp-location="Footer">
+        AjaxCart.init(false, '.cart-qty', '.wishlist-qty', '#flyout-cart');
+    </script>
+    <div class="overlayOffCanvas"></div>
+    <div class="header-wrapper">
+        @await Html.PartialAsync("_Header")
+    </div>
+    @if (isHomePage && HomePageLayout == "with-slider")
+    {
+        @await Component.InvokeAsync("Widget", new { widgetZone = "home_page_main_slider" })
+    }
+    @if (isHomePage && HomePageLayout == "no-slider")
+    {
+        @await Component.InvokeAsync("HomepageCategories")
+    }
+    @if (IsSectionDefined("Breadcrumb"))
+    {
+        @RenderSection("Breadcrumb")
+    }
+    <div class="master-wrapper-content">
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ContentBefore })
+        <div class="master-column-wrapper">
+            @RenderBody()
+        </div>
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ContentAfter })
+    </div>
+    @await Component.InvokeAsync("Footer")
+</div>
+@await Component.InvokeAsync("EuCookieLaw")
+@await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BodyEndHtmlTagBefore })
