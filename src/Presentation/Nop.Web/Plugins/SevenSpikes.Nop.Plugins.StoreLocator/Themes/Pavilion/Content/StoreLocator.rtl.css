@@ -1,0 +1,111 @@
+﻿
+.map-controls-panel {
+	text-align: right;
+}
+.getUserGeoLocation {
+	margin: 0 0 0 10px;
+	padding: 10px 35px 10px 15px;
+	background-position: right center;
+}
+.directions-panel {
+	text-align: right;
+}
+.radiusFilterWrapper span.units {
+	margin: 0 0 0 -25px;
+}
+.clear-filtered-shops {
+	background-position: right center;
+	padding: 10px 15px 10px 0;
+}
+.shops-item .show-directions {
+	background-position: right center;
+	padding: 10px 35px 10px 20px;
+}
+.shops-item .tag-item:after,
+.shop-page .tag-item:after {
+	margin: 0 0 0 5px;
+}
+.shop-page .back-to-all-shops a:before {
+	margin: 0 -10px 0 5px;
+	background-image: url('images/arrow-right.png');
+}
+.all-shop-images li {
+	margin: 0 5% 5% 0;
+}
+.all-shop-images li:nth-child(3n+1) {
+	margin-right: 0;
+	margin-left: 0;
+}
+.shop-map-images .get-directions-to-shop:after {
+	margin: 0 5px 0 -10px;
+	background-image: url('images/arrow-left.png');
+}
+.shop-info table td {
+	text-align: right;
+}
+.shop-info ul {
+	padding: 0 36px 0 0;
+}
+.shop-info ol {
+	padding: 0 36px 0 0;
+}
+
+
+
+@media all and (min-width: 769px) {
+	
+.directions-panel.directions-shown {
+	float: right;
+}
+.map-wrapper.directions-shown {
+	float: left;
+}
+.shops-sorting-filtering-wrapper label {
+	text-align: right;
+}
+.radiusFilterWrapper span.units {
+	margin: 0;
+	text-align: left;
+}
+.clear-filtered-shops {
+	background-position: right 5px;
+	padding: 0 15px 5px 0;
+}
+.shops-item .picture-wrap {
+	float: right;
+}
+.shops-item .info-wrap {
+	float: left;
+	text-align: right;
+}
+.shop-map-images {
+	float: right;
+}
+.shop-map-images + .shop-info {
+	float: left;
+	text-align: right;
+}
+}
+
+@media all and (min-width: 1025px) {
+	
+.shops-sorting-filtering-wrapper > div:last-child {
+	float: left;
+}
+.shops-sorting-filtering-wrapper label {
+	margin: 0 0 0 5px;
+}
+.shops-sorting-filtering-wrapper .clear-filtered-shops {
+	margin: 0 0 0 10px;
+}
+.shop-page .back-to-all-shops a:before {
+	margin: 0 0 0 5px;
+}
+}
+
+@media all and (min-width: 1281px) {
+
+.shops-sorting-filtering-wrapper > div {
+	margin: 0 0 0 30px;
+}
+}

@@ -1,0 +1,23 @@
+﻿@model HeaderMenuModel
+
+<li class="has-sublist store-locator">
+    <div class="openSublistWrapper">
+        <span class="show-submenu left"></span>
+        <a class="with-subcategories" href="@Url.RouteUrl(Plugin.AllShopsRouteName)" title="@T("SevenSpikes.StoreLocator.Public.AllShops.PageTitle")">@T("SevenSpikes.StoreLocator.Public.AllShops.LinkTitle")</a>
+        <span class="show-submenu right"></span>
+    </div>
+    <div class="plus-button"></div>
+    <div class="sublist-wrap">
+        <ul class="sublist">
+            <li class="back-button">
+                <span>@T("SevenSpikes.StoreLocator.Public.MenuBackButton")</span>
+            </li>
+            @foreach (var shop in Model.ShopModels)
+            {
+                <li>
+                    <a href="@Url.RouteUrl("HomePage")@shop.SeName" title="@shop.Name">@shop.Name</a>
+                </li>
+            }
+        </ul>
+    </div>
+</li>

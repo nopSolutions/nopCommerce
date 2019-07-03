@@ -1,0 +1,51 @@
+﻿@model IList<ShopModel>
+@inject StoreLocatorSettings storeLocatorSettings
+@inject IWebHelper webHelper
+@{
+    string units = (storeLocatorSettings.UnitsSystem == UnitsSystems.Metric ? T("SevenSpikes.StoreLocator.Public.Units.Kilometers") : T("SevenSpikes.StoreLocator.Public.Units.Miles")).ToString();
+}
+@foreach (var shop in Model)
+{
+    <li class="shops-item visible" data-shopid="@shop.Id" data-shop-display-order="@shop.DisplayOrder">
+        @if (shop.DefaultShopImage != null)
+        {
+            <div class="picture-wrap">
+                <a class="picture-link" href="@Url.RouteUrl("StoreLocatorShop", new { SeName = shop.SeName })" title="@shop.Name">
+                    <img class="picture-img" src="@shop.DefaultShopImage.PictureSrc" alt="@shop.DefaultShopImage.Alt" title="@shop.DefaultShopImage.Alt" />
+                </a>
+            </div>
+        }
+        <div class="info-wrap">
+            <h2 class="shop-name">
+                <a class="shop-link" href="@Url.RouteUrl("StoreLocatorShop", new { SeName = shop.SeName })" title="@shop.Name">@shop.Name</a>
+            </h2>
+            <input type="hidden" class="distanceToShopValue" value="0" />
+            <div class="distance-line">
+                <label class="distance-label">@T("SevenSpikes.StoreLocator.Public.SortMethod.Distance"):</label>
+                <span class="distance-value">@shop.Distance @units</span>
+            </div>
+            <a data-shopid="@shop.Id" data-latitude="@shop.Latitude" data-longitude="@shop.Longitude" class="show-directions">@T("SevenSpikes.StoreLocator.Public.ShowDirections")</a>
+
+            @if (!string.IsNullOrWhiteSpace(shop.ShortDescription))
+            {
+                <div class="short-description">
+                    @Html.Raw(shop.ShortDescription)
+                </div>
+            }
+
+            @if (shop.TagsList.Count > 0)
+            {
+                <div class="tags">
+                    <label class="tags-label">@T("SevenSpikes.StoreLocator.Public.TagsTitle")</label>
+                    <ul class="tag-list">
+                        @foreach (var tag in shop.TagsList)
+                        {
+                            <li class="tag-item">@tag</li>
+                        }
+                    </ul>
+                </div>
+            }
+            <a class="read-more" href="@Url.RouteUrl("StoreLocatorShop", new { SeName = shop.SeName })" title="@shop.Name">@T("SevenSpikes.StoreLocator.Public.ReadMore")</a>
+        </div>
+    </li>
+}

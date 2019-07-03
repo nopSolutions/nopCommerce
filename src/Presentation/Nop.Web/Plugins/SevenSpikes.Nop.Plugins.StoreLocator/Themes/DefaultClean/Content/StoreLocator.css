@@ -1,0 +1,480 @@
+﻿
+/* ANYWHERE PAGE MAP */
+
+.anywhere-page-map {
+    margin: 10px 0 30px;
+}
+.anywhere-page-map .map-title {
+    margin: 0 0 30px;
+    border-bottom: 1px solid #ddd;
+    padding: 0 0 15px;
+    font-size: 30px;
+    color: #444;
+    text-align: center;
+}
+.anywhere-page-map .map-title strong {
+    font-weight: normal;
+}
+.anywhere-page-map .map-wrapper {
+    margin: 0 0 10px;
+}
+.anywhere-page-map img {
+    max-width: none;
+    max-height: none;
+}
+.align-map-button {
+    margin: 0 0 0 20px;
+    cursor: pointer;
+}
+.anywhere-page-map .additional-info {
+    margin: 0 0 0 20px;
+}
+
+
+
+/* ALL SHOPS PAGE */
+
+.directions-wrapper {
+    display: none;
+    height: 300px;
+}
+.directions-shown {
+    display: block;
+}
+.directions-panel {
+    height: 100%;
+    overflow-y: auto;
+    padding: 10px;
+	text-align: left;
+}
+.current-location-wrap {
+    padding: 0 10px;
+    margin: 0 0 15px;
+}
+.getUserGeoLocation {
+    cursor: pointer;
+    display: inline-block;
+    padding: 0 0 0 25px;
+    color: #4ab2f1;
+    text-decoration: underline;
+    background: url(images/icon-current-location.png) no-repeat left center;
+}
+.current-location-wrap .additional-info {
+    color: #aaa;
+}
+
+.store-locator-map-holder {
+    height: 300px;
+}
+#shop-address-input {
+    top: 10px !important;
+	width: 160px;
+	height: 30px;
+	border: none;
+	border-radius: 2px;
+	box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
+	font-size: 11px;
+}
+
+/* filter sorting */
+
+.shops-sorting-filtering-wrapper {
+    background: #f9f9f9;
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    overflow: hidden;
+    padding: 15px;
+    margin: 0 0 30px;
+}
+.shops-sorting-options label {
+    margin: 0 10px 0 0;
+}
+.shops-sorting-options select {
+    height: 30px;
+}
+.radiusFilterWrapper {
+    margin: 17px 0;
+}
+.radiusFilterWrapper input[type=number] {
+    width: 130px;
+    height: 30px;
+    border: 1px solid #ddd;
+    padding: 6px;
+    vertical-align: middle;
+}
+.searchbytags-wrapper {
+    margin: 17px 0;      
+}
+.searchbytags-wrapper label {
+    margin: 0 10px 0 0;
+}
+.searchbytags-wrapper input[type=text] {
+    height: 30px;
+    padding: 6px;
+    width: 110px;
+}
+a#clearShopFilters {
+    display: none;
+    background: url(images/icon-close.png) no-repeat left center;
+    padding-left: 15px;
+}
+.shops-sorting-filtering-wrapper .button-wrap {
+    margin: 15px 0 0;
+}
+button#searchForFilteredShops {
+    background: #4ab2f1;
+    font-size: 14px;
+    line-height: 15px;
+    text-transform: uppercase;
+    color: #fff;
+    border: 0;
+    padding: 10px 21px;
+}
+
+
+
+/* shops list */
+
+.shops-list {
+	margin: 30px 0 0;
+}
+.shops-item {
+    margin: 0 0 50px;
+}
+.shops-item .picture-link {
+    display: block;
+    line-height: 0;
+}
+.shops-item .picture-img {
+    max-width: 100%;
+}
+.shops-item .info-wrap {
+    padding: 10px 0 0;
+}
+.shops-item .shop-name {
+    text-transform: uppercase;
+    font-size: 18px;
+    margin: 0 0 5px;
+}
+.shops-item .distance-line {
+    color: #666;
+    margin: 0 0 7px;
+}
+.shops-item .show-directions {
+    display: inline-block;
+    color: #4ab2f1;
+    padding-left: 16px;
+    background: url(images/icon-location.png) no-repeat left center;
+    margin: 0 0 7px;
+}
+.shops-item .short-description {
+    margin: 0 0 7px;
+    line-height: 1.6;
+}
+.shops-item .tags,
+.shop-page .tags {
+    margin: 0 0 10px;
+}
+.shops-item .tags-label,
+.shop-page .tags-label {
+    display: inline-block;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin: 0 0 5px;
+}
+.shops-item .tag-item,
+.shop-page .tag-item {
+    display: inline-block;
+    color: #4ab2f1;
+    margin: 0 0 5px 2px;
+}
+.shops-item .tag-item:before,
+.shop-page .tag-item:before {
+    content: ',';
+    margin-right: 5px;
+    color: #777;
+}
+.shops-item .tag-item:first-child,
+.shop-page .tag-item:first-child {
+    margin: 0 0 5px;
+}
+.shops-item .tag-item:first-child:before,
+.shop-page .tag-item:first-child:before {
+    display: none;
+}
+.shops-item .read-more {
+    display: inline-block;
+    background: #aaa;
+    text-transform: uppercase;
+    color: #fff;
+    line-height: 1;
+    padding: 11px 13px;
+}
+.no-shops-after-filtering {
+    display: none;
+}
+
+/* AJAX LOADER */
+.shops-list-wrapper {
+    position: relative;
+}
+.all-shops-page .shops-list-loader {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #fff url('../../../images/ajaxLoader.gif') no-repeat 50% 100px;
+    filter: Alpha(opacity = 70);
+    opacity: 0.7;
+    z-index: 2;
+}
+.all-shops-page .infinite-scroll-loader {
+    display: none;
+    height: 100px;
+    background: #fff url('../../../images/ajaxLoader.gif') no-repeat 50% 50%;
+    font-size: 0;
+    filter: Alpha(opacity = 70);
+    opacity: 0.7;
+    z-index: 2;
+    clear: both;
+}
+
+/* SHOP PAGE */
+
+.shop-page .back-to-all-shops {
+    margin: 0 0 15px;
+}
+.shop-page .back-to-all-shops a {
+    color: #4ab2f1;
+    font-size: 14px;
+}
+
+.shop-map-images {
+	max-width: 480px;
+	margin: 0 auto 30px;
+}
+.shop-page .main-picture {
+    margin: 0 0 20px;
+}
+.shop-page .main-picture-link {
+    display: block;
+    line-height: 0;
+}
+.shop-page .main-picture-img {
+    max-width: 100%;
+}
+.all-shop-images {
+    margin: 0 0 30px;
+}
+.all-shop-images:after {
+	content: "";
+	display: block;
+	clear: both;
+}
+.all-shop-images li {
+    float: left;
+    margin: 0 0 5% 5%;
+    width: 30%;
+}
+.all-shop-images li:nth-child(3n+1) {
+    margin-left: 0;
+}
+.all-shop-images a {
+    display: block;
+    font-size: 0;
+}
+.all-shop-images img {
+    max-width: 100%;
+    max-height: 100%;
+}
+#shop-map-holder {
+    margin-bottom: 10px;
+    height: 450px;
+}
+.get-directions-to-shop {
+    color: #4ab2f1;
+    font-size: 14px;    
+}
+.shop-map-images .directions-wrapper {
+	float: none;
+    width: 100%;
+}
+.shop-full-description {
+    margin: 0 0 30px;
+}
+
+.shop-info {
+    margin: 0 0 20px;
+}
+.shop-info table {
+	background-color: #fff;
+}
+.shop-info table td {
+	border: 1px solid #fff;
+	background-color: #f6f6f6;
+	padding: 10px 15px;
+	text-align: left;
+}
+.shop-info ul {
+	margin: 12px 0;
+	padding: 0 0 0 36px;
+	list-style: disc;
+}
+.shop-info ol {
+	margin: 12px 0;
+	padding: 0 0 0 36px;
+	list-style: decimal;
+}
+.shop-info p {
+	margin: 10px 0;
+}
+
+.shop-info .tag-list {
+    margin: 0;
+    list-style: none;
+    padding: 0;
+}
+
+
+
+@media all and (min-width: 481px) {
+	
+	.map-wrapper #shop-address-input {
+		width: 200px;
+	}
+
+}
+
+@media all and (min-width: 651px) {
+
+    /* shops list */
+
+    .shops-item .picture-wrap {
+        float: left;
+        width: 350px;
+    }
+    .shops-item .info-wrap {
+      margin: 0 0 0 370px;
+      text-align: left;
+    }
+
+}
+
+@media all and (min-width: 769px) {
+
+    .directions-wrapper {
+        float: left;
+        width: 40%;
+    }
+    .map-wrapper.directions-shown {
+        float: right;
+        width: 60%;
+    }
+
+    /* SHOP PAGE */
+
+    .shop-map-images {
+        float: left;
+        width: 40%;
+		margin-bottom: 0;
+		text-align: left;
+    }
+    .shop-map-images + .shop-info {
+        float: right;
+        width: 56%;
+		text-align: left;
+    }
+
+}
+
+@media all and (min-width: 1001px) {
+
+    .shops-sorting-options {
+        float: left;
+        margin: 2px 0;
+    }
+    div#searchRadiusWrapper {
+        float: left;
+        margin: 2px 25px;
+    }
+    .searchbytags-wrapper {
+        float: left;
+        margin: 2px 0;
+    }	
+	.shops-filtering-buttons {
+        float: right;
+        clear: none;
+        padding: 0;
+		text-align: center;
+    }
+    .shops-filtering-buttons #clearShopFilters {
+        float: left;
+        margin: 10px 10px 9px 0;
+    }
+    .shops-filtering-buttons .button-wrap {
+        margin: 0;
+        float: right;
+    }
+
+    /* shops list */
+
+    .shops-list:after {
+        content: '';
+        display: block;
+        clear: both;
+    }
+    .shops-item {
+        float: left;
+        width: 49%;
+        margin: 0 0 4% 2%;
+    }
+    .shops-item:nth-child(2n+1) {
+        margin-left: 0;
+        clear: both;
+    }
+    .shops-item .picture-wrap {
+        width: 250px;
+    }
+    .shops-item .info-wrap {
+      margin: 0 0 0 270px;
+    }
+
+
+/* shop page */
+
+    .shop-page .page-body {
+        padding: 0 10px;
+    }
+
+}
+
+@media all and (min-width: 1367px) {
+
+    .shops-sorting-filtering-wrapper {
+        padding: 18px 25px;
+    }
+    .shops-sorting-options {
+        position: relative;
+        margin: 2px 60px 2px 0;
+    }
+    .shops-sorting-options:after {
+        content: '';
+        position: absolute;
+        top: -21px;
+        right: -30px;
+        width: 1px;
+        height: 73px;
+        background: #ddd;
+    }
+    div#searchRadiusWrapper {
+        margin: 2px 25px 2px 0;
+    }
+    .searchbytags-wrapper input[type=text] {
+        width: 130px;
+    }
+	.shop-map-images + .shop-info {
+		width: 57%;
+	}
+
+}

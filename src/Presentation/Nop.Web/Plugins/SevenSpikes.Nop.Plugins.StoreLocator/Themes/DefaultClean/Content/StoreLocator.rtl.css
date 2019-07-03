@@ -1,0 +1,146 @@
+﻿/* ALL SHOPS PAGE */
+
+.getUserGeoLocation {
+    padding: 0 25px 0 0;
+    background: url(images/icon-current-location.png) no-repeat right center;
+}
+
+/* filter sorting */
+
+.shops-sorting-options label {
+    margin: 0 0 0 10px;
+}
+.searchbytags-wrapper label {
+    margin: 0 0 0 10px;
+}
+a#clearShopFilters {
+    background: url(images/icon-close.png) no-repeat right center;
+    padding-left: 0;
+    padding-right: 15px;
+}
+
+
+
+/* shops list */
+
+
+.shops-item .show-directions {
+    padding-right: 16px;
+    padding-left: 0;
+    background: url(images/icon-location.png) no-repeat right center;
+}
+
+div#searchRadiusWrapper span {
+  display: inline-block;
+}
+
+.shops-item .tag-item,
+.shop-page .tag-item {
+    margin: 0 2px 5px 0;
+}
+.shops-item .tag-item:before,
+.shop-page .tag-item:before {
+    margin-right: 0;
+    margin-left: 5px;
+}
+
+
+.anywhere-page-map .additional-info {
+    margin: 0 20px 0 0;
+}
+
+/* SHOP PAGE */
+
+.all-shop-images li {
+    float: right;
+    margin: 0 5% 5% 0;
+}
+    .all-shop-images li:nth-child(3n+1) {
+        margin-right: 0;
+    }
+
+.shop-info ul,
+.shop-info ol {
+	padding: 0 36px 0 0;
+}
+
+
+
+@media all and (min-width: 651px) {
+
+/* shops list */
+
+.shops-item .picture-wrap {
+    float: right;
+}
+.shops-item .info-wrap {
+  margin: 0 370px 0 0;
+  text-align: right;
+}
+
+}
+
+@media all and (min-width: 769px) {
+    
+
+
+/* SHOP PAGE */
+
+    .shop-map-images { 
+        float: right;
+		text-align: right;
+    }
+    .shop-map-images + .shop-info {
+        float: left;
+		text-align: right;
+    }
+
+}
+
+@media all and (min-width: 1001px) {
+
+.shops-sorting-options,
+div#searchRadiusWrapper,
+.searchbytags-wrapper {
+    float: right;
+}
+
+/* shops list */
+
+    .shops-item {
+        float: right;
+        margin: 0 2% 4% 0;
+    }
+        .shops-item:nth-child(2n+1) {
+            margin-right: 0;
+        }
+    .shops-item .info-wrap {
+      margin: 0 270px 0 0;
+    }
+
+}
+
+@media all and (min-width: 1367px) {
+
+    .shops-sorting-options {
+        margin: 2px 0 2px 60px;
+    }
+        .shops-sorting-options:after {
+            left: -30px;
+            right: auto;
+        }
+    div#searchRadiusWrapper {
+        margin: 2px 0 2px 25px;
+    }
+    .shops-sorting-filtering-wrapper .shops-filtering-buttons {
+        float: left;
+    }
+    .shops-sorting-filtering-wrapper a#clearShopFilters {
+        float: right;
+        margin: 10px 0 9px 10px;
+    }
+    .shops-sorting-filtering-wrapper .button-wrap {
+        float: left;
+    }
+
+}

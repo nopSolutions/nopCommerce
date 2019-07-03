@@ -1,0 +1,22 @@
+﻿#chooseLocationMap {
+    margin: 10px 0 20px;
+    height: 400px;
+}
+#shop-address-input {
+    display: none;
+    top: 28px !important;
+    padding: 6px 10px;
+    width: 270px;
+}
+.adminHint {
+    padding: 15px 0 !important;
+    color: #666;
+    line-height: 25px;
+    overflow: hidden;
+}
+.adminHint .summary {
+    margin: 0 0 15px;
+} 
+.adminHint ul {
+    padding-left: 15px !important;
+}

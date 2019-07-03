@@ -1,0 +1,16 @@
+﻿div.shops-filtering-buttons:last-child {
+    float: left;
+}
+.shop-map-images .map-controls .get-directions-to-shop:before {
+    margin: 0 0 0 10px;
+}
+
+@media (min-width: 769px) {
+    .shop-map-images + .shop-info {
+        float: left;
+    }
+    .shop-map-images {
+        float: right;
+    }
+
+}

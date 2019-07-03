@@ -1,0 +1,87 @@
+﻿.theme-color input.multi-store-override-option {
+    display: inline-block;
+}
+.theme-color .adminData {
+    position: relative;
+}
+.theme-color .upload-image-overlay {
+    position: absolute !important;
+}
+.theme-color .upload-image-overlay:before {
+    display: none !important;
+}
+.theme-color .upload-image-overlay:hover {
+    cursor: auto;
+}
+.theme-color .adminData div {
+    float: left;
+    margin: 10px 5px;
+    font-size: 0;
+    position: relative;
+    cursor: pointer;
+}
+.theme-color .adminData div label {
+    display: block;
+    width: 45px;
+    height: 45px;
+    cursor: pointer;
+    border-radius: 5px;
+    padding: 0;
+}
+.theme-color .adminData div:last-child label:before {
+    content: "";
+    position: absolute;
+    right: -15px;
+    bottom: 7px;
+    width: 31px;
+    height: 31px;
+    background: url('images/color-picker.png') no-repeat;
+}
+.theme-color .adminData div:last-child .k-widget {
+    visibility: hidden; /*kendo fix*/
+}
+
+.theme-color .adminData div span.before {
+    content: " ";
+    position: absolute;
+    width: 0;
+    height: 0;
+    top: 50%;
+    left: 50%;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    -webkit-transition: all .15s ease-in-out;
+    -moz-transition: all .15s ease-in-out;
+    transition: all .15s ease-in-out;
+}
+.theme-color .adminData div.active span.before,
+.theme-color .adminData div:hover span.before {
+    width: 53px;
+    height: 53px;
+    top: -4px;
+    left: -4px;
+    border-color: #999;
+}
+.theme-color .adminData div .k-widget {
+    width: 0!important;
+    height: 0;
+}
+.theme-color .adminData div .k-picker-wrap.k-state-default {
+    height: auto;
+}
+.k-selected-color-display .k-color-value {
+    font-size:  13px;
+}
+
+.theme-color input {
+    display: none;
+}
+
+.theme-color .adminData label {
+    display: block;
+    width: 45px;
+    height: 45px;
+    cursor: pointer;
+    border-radius: 5px;
+    padding: 0;
+}

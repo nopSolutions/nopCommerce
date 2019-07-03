@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Settings>
+  <Setting Name="StoreLocatorSettings.Enabled">
+    <Value>true</Value>
+  </Setting>
+  <Setting Name="StoreLocatorSettings.HeaderMenuIntegration">
+    <Value>header_menu_after</Value>
+  </Setting>
+  <Setting Name="StoreLocatorSettings.ShopsListPageSize">
+    <Value>20</Value>
+  </Setting> 
+  <Setting Name="StoreLocatorSettings.UnitsSystem">
+    <Value>Metric</Value>
+  </Setting>
+  <Setting Name="StoreLocatorSettings.DefaultDistanceRadius">
+    <Value>1000</Value>
+  </Setting>
+  <Setting Name="StoreLocatorSettings.GoogleApiKey">
+    <Value></Value>
+  </Setting>
+  <Setting Name="StoreLocatorSettings.NumberOfStoresOnInitialLoad">
+    <Value>20</Value>
+  </Setting> 
+  <Setting Name="StoreLocatorSettings.MapZoomLevel">
+    <Value>15</Value>
+  </Setting>
+  <Setting Name="StoreLocatorSettings.AllShopsPageImageSize">
+    <Value>400</Value>
+  </Setting>
+  <Setting Name="StoreLocatorSettings.ShopDetailsPageImageSize">
+    <Value>800</Value>
+  </Setting>
+</Settings>
