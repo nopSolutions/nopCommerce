@@ -1,0 +1,38 @@
+﻿
+@media all and (min-width: 1025px) {
+	
+.desktop-device.scrollYRemove {
+	margin: 0 !important;
+}
+.desktop-device.scrollYRemove
+.desktop-nav-wrapper.stick {
+	width: 100%;
+}
+.air-theme.variant-2 .header-menu:before {
+	background: url(../img/shadow.png) top repeat-x;
+}
+.store-search-box {
+	top: 0 !important;
+	width: 100% !important;
+	z-index: 9999;
+	background-color: #fff;
+}
+.air-theme.variant-2 .search-box.static {
+	width: 980px !important;
+}
+.item-box button:before {
+	height: 39px;
+}
+.quick-view-button:before {
+	height: 39px !important;
+}
+
+}
+
+@media all and (min-width: 1321px) {
+
+.air-theme.variant-2 .search-box.static {
+	width: 1280px !important;
+}
+
+}

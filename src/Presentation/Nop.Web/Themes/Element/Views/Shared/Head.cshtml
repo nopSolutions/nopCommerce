@@ -1,0 +1,49 @@
+﻿@using Nop.Core
+
+@inject IWorkContext workContext
+
+@{
+    var supportRtl = workContext.WorkingLanguage.Rtl;
+
+    var userAgent = Url.ActionContext.HttpContext.Request.Headers["User-Agent"];
+    var isIe9 = false;
+    if (!String.IsNullOrEmpty(userAgent) && userAgent.ToString().ToLower().IndexOf("MSIE 9.0", StringComparison.InvariantCultureIgnoreCase) > 0)
+    {
+        isIe9 = true;
+    }
+
+    if (isIe9)
+    {
+        Html.AppendCssFileParts("~/Themes/Element/Content/css/ie9-fix.css");
+    }
+
+    Html.AppendCssFileParts("~/Plugins/SevenSpikes.Core/Styles/perfect-scrollbar.min.css");
+
+    if (supportRtl)
+    {
+        Html.AppendCssFileParts("~/Themes/Element/Content/CSS/1320.rtl.css");
+        Html.AppendCssFileParts("~/Themes/Element/Content/CSS/1000.rtl.css");
+        Html.AppendCssFileParts("~/Themes/Element/Content/CSS/720.rtl.css");
+        Html.AppendCssFileParts("~/Themes/Element/Content/CSS/480.rtl.css");
+        Html.AppendCssFileParts("~/Themes/Element/Content/CSS/mobile-only.rtl.css");
+        Html.AppendCssFileParts("~/Themes/Element/Content/CSS/tables.rtl.css");
+        Html.AppendCssFileParts("~/Themes/Element/Content/CSS/styles.rtl.css");
+    }
+    else
+    {
+        Html.AppendCssFileParts("~/Themes/Element/Content/CSS/1320.css");
+        Html.AppendCssFileParts("~/Themes/Element/Content/CSS/1000.css");
+        Html.AppendCssFileParts("~/Themes/Element/Content/CSS/720.css");
+        Html.AppendCssFileParts("~/Themes/Element/Content/CSS/480.css");
+        Html.AppendCssFileParts("~/Themes/Element/Content/CSS/mobile-only.css");
+        Html.AppendCssFileParts("~/Themes/Element/Content/CSS/tables.css");
+        Html.AppendCssFileParts("~/Themes/Element/Content/CSS/styles.css");
+    }
+
+    Html.AddScriptParts(ResourceLocation.Footer, "~/Plugins/SevenSpikes.Core/Scripts/footable.min.js");
+    Html.AddScriptParts(ResourceLocation.Footer, "~/Plugins/SevenSpikes.Core/Scripts/perfect-scrollbar.min.js");
+    Html.AddScriptParts(ResourceLocation.Footer, "~/Plugins/SevenSpikes.Core/Scripts/sevenspikes.core.min.js");
+    Html.AddScriptParts(ResourceLocation.Footer, "~/Plugins/SevenSpikes.Core/Scripts/sevenspikes.theme.ex.min.js");
+
+    Html.AddScriptParts(ResourceLocation.Footer, "~/Themes/Element/Content/scripts/element.js");
+}

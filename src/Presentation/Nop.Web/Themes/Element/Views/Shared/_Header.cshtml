@@ -1,0 +1,27 @@
+﻿<div class="header">
+    @await Component.InvokeAsync("Widget", new { widgetZone = "header" })
+    <div class="header-logo">
+        @await Component.InvokeAsync("Logo")
+    </div>
+
+    @if (!(ViewBag.LayoutDesign == "air-theme" && ViewBag.LayoutVariant == "variant-2" && ViewBag.IsHomePage))
+    {
+        <div class="search-box store-search-box">
+            @await Component.InvokeAsync("SearchBox")
+            <span class="close">&nbsp;</span>
+        </div>
+    }
+
+    <div class="header-options">
+        <div class="header-selectors-wrapper">
+            @await Component.InvokeAsync("TaxTypeSelector")
+            @await Component.InvokeAsync("CurrencySelector")
+            @await Component.InvokeAsync("LanguageSelector")
+            @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HeaderSelectors })
+        </div>
+        <div class="header-links-wrapper">
+            @await Component.InvokeAsync("HeaderLinks")
+        </div>
+    </div>
+    @await Component.InvokeAsync("FlyoutShoppingCart")
+</div>

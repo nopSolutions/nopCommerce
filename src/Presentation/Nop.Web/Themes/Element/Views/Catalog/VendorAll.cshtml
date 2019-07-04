@@ -1,0 +1,52 @@
+﻿@model IList<VendorModel>
+
+@inject IViewComponentSelector viewComponentSelector
+
+@{
+    Layout = "_ColumnsTwo";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.Vendors").Text);
+    //page class
+    Html.AppendPageCssClassParts("html-vendor-list-page");
+}
+<div class="page vendor-list-page">
+    <div class="page-title">
+        <h1>@T("Vendors.List")</h1>
+    </div>
+    <div class="page-body">
+        <div class="vendor-grid">
+            <div class="item-grid">
+                @foreach (var item in Model)
+                {
+                    <div class="item-box">
+                        <div class="vendor-item">
+                            <div class="picture">
+                                <a href="@Url.RouteUrl("Vendor", new { SeName = item.SeName })" title="@item.PictureModel.Title">
+                                    @if (viewComponentSelector.SelectComponent("LazyLoadImage") != null)
+                                    {
+                                        @await Component.InvokeAsync("LazyLoadImage", new(string Key, string Value)[] 
+                                        {
+                                            ("src", item.PictureModel.ImageUrl),
+                                            ("alt", item.PictureModel.AlternateText),
+                                            ("title", item.PictureModel.Title)
+                                        })
+                                    }
+                                    else
+                                    {
+                                        <img alt="@item.PictureModel.AlternateText" src="@item.PictureModel.ImageUrl" title="@item.PictureModel.Title" />
+                                    }
+                                </a>
+                            </div>
+                            <h2 class="title">
+                                <a href="@Url.RouteUrl("Vendor", new { SeName = item.SeName })" title="@item.PictureModel.Title">
+                                    @item.Name
+                                </a>
+                            </h2>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
