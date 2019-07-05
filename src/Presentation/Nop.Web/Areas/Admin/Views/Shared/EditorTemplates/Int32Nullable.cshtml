@@ -1,0 +1,24 @@
+﻿@model Int32?
+<input asp-for="@Model"/>
+@{
+    var postfix = "";
+    if (ViewData.ContainsKey("postfix") && ViewData["postfix"] != null)
+    {
+        postfix = ViewData["postfix"].ToString();
+    }
+}
+<script>
+    $(document).ready(function() {
+        $("#@Html.IdForModel()").TouchSpin({
+            min: @Html.Raw(int.MinValue),
+            max: @Html.Raw(int.MaxValue),
+            decimals: 0,
+            verticalbuttons: true,
+            verticalupclass: "glyphicon glyphicon-chevron-up",
+            verticaldownclass: "glyphicon glyphicon-chevron-down",
+            buttondown_class: "btn",
+            buttonup_class: "btn",
+            postfix: "@postfix"
+        });
+    });
+</script>

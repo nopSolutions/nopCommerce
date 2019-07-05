@@ -1,10 +1,9 @@
 ﻿@model NewsItemModel
-@using Nop.Web.Models.News;
 @{
-    Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
+    Layout = "_ColumnsTwo";
 
     //title
-    Html.AddTitleParts(!String.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Title);
+    Html.AddTitleParts(!string.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Title);
     //meta
     Html.AddMetaDescriptionParts(Model.MetaDescription);
     Html.AddMetaKeywordParts(Model.MetaKeywords);
@@ -19,11 +18,11 @@
         <div class="news-date">
             @Model.CreatedOn.ToString("D")
         </div>
-        @Html.Widget("newsitem_page_before_body", Model.Id)
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.NewsItemPageBeforeBody, additionalData = Model })
         <div class="news-body">
             @Html.Raw(Model.Full)
         </div>
-        @Html.Widget("newsitem_page_before_comments", Model.Id)
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.NewsItemPageBeforeComments, additionalData = Model })
         @if (Model.AllowComments)
         {
             <div class="fieldset new-comment" id="comments">
@@ -31,46 +30,38 @@
                     <strong>@T("News.Comments.LeaveYourComment")</strong>
                 </div>
                 <div class="notifications">
-                    @{
-                        var validationSummary = Html.ValidationSummary(true);
-                    }
-                    @if (!MvcHtmlString.IsNullOrEmpty(validationSummary))
-                    {
-                        <div class="message-error">@validationSummary</div>
-                    }
+                    <div asp-validation-summary="ModelOnly" class="message-error"></div>
                     @{
                         var result = TempData["nop.news.addcomment.result"] as string;
                     }
-                    @if (!String.IsNullOrEmpty(result))
+                    @if (!string.IsNullOrEmpty(result))
                     {
                         <div class="result">@result</div>
                     }
                 </div>
-                @using (Html.BeginForm())
-                {
-                    @Html.AntiForgeryToken()
+                <form asp-route="NewsItem" asp-route-sename="@Model.SeName" method="post">
                     <div class="form-fields">
                         <div class="inputs">
-                            @Html.LabelFor(model => model.AddNewComment.CommentTitle, new { }, ":")
-                            @Html.TextBoxFor(model => model.AddNewComment.CommentTitle, new { @class = "enter-comment-title" })
-                            @Html.ValidationMessageFor(model => model.AddNewComment.CommentTitle)
+                            <label asp-for="AddNewComment.CommentTitle" asp-postfix=":"></label>
+                            <input asp-for="AddNewComment.CommentTitle" class="enter-comment-title"/>
+                            <span asp-validation-for="AddNewComment.CommentTitle"></span>
                         </div>
                         <div class="inputs">
-                            @Html.LabelFor(model => model.AddNewComment.CommentText, new { }, ":")
-                            @Html.TextAreaFor(model => model.AddNewComment.CommentText, new { @class = "enter-comment-text" })
-                            @Html.ValidationMessageFor(model => model.AddNewComment.CommentText)
+                            <label asp-for="AddNewComment.CommentText" asp-postfix=":"></label>
+                            <textarea asp-for="AddNewComment.CommentText" class="enter-comment-text"></textarea>
+                            <span asp-validation-for="AddNewComment.CommentText"></span>
                         </div>
                         @if (Model.AddNewComment.DisplayCaptcha)
                         {
                             <div class="captcha-box">
-                                @Html.Raw(Html.GenerateCaptcha())
+                                <nop-captcha />
                             </div>
                         }
                     </div>
                     <div class="buttons">
                         <input type="submit" name="add-comment" class="button-1 news-item-add-comment-button" value="@T("News.Comments.SubmitButton")" />
                     </div>
-                }
+                </form>
             </div>
             if (Model.Comments.Count > 0)
             {
@@ -93,7 +84,7 @@
                                             <span class="username">@(comment.CustomerName)</span>
                                         }
 
-                                        @if (!String.IsNullOrEmpty(comment.CustomerAvatarUrl))
+                                        @if (!string.IsNullOrEmpty(comment.CustomerAvatarUrl))
                                         {
                                             <div class="avatar">
                                                 @if (comment.AllowViewingProfiles)
@@ -122,13 +113,13 @@
                                         <p class="comment-text">@Html.Raw(Nop.Core.Html.HtmlHelper.FormatText(comment.CommentText, false, true, false, false, false, false))</p>
                                     </div>
                                 </div>
-                                @Html.Widget("newsitem_page_inside_comment", comment.Id)
+                                @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.NewsItemPageInsideComment, additionalData = comment })
                             </div>
                         }
                     </div>
                 </div>
             }
         }
-        @Html.Widget("newsitem_page_after_comments", Model.Id)
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.NewsItemPageAfterComments, additionalData = Model })
     </div>
 </div>

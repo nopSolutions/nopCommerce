@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Models;
 using Nop.Web.Models.Media;
 
 namespace Nop.Web.Models.ShoppingCart
@@ -19,7 +19,6 @@ namespace Nop.Web.Models.ShoppingCart
         public bool CurrentCustomerIsGuest { get; set; }
         public bool AnonymousCheckoutAllowed { get; set; }
         public bool ShowProductImages { get; set; }
-
 
         #region Nested Classes
 

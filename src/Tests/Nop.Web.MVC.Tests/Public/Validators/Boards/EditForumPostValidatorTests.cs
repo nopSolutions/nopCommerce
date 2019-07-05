@@ -19,8 +19,10 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Boards
         [Test]
         public void Should_have_error_when_text_is_null_or_empty()
         {
-            var model = new EditForumPostModel();
-            model.Text = null;
+            var model = new EditForumPostModel
+            {
+                Text = null
+            };
             _validator.ShouldHaveValidationErrorFor(x => x.Text, model);
             model.Text = "";
             _validator.ShouldHaveValidationErrorFor(x => x.Text, model);
@@ -29,8 +31,10 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Boards
         [Test]
         public void Should_not_have_error_when_text_is_specified()
         {
-            var model = new EditForumPostModel();
-            model.Text = "some comment";
+            var model = new EditForumPostModel
+            {
+                Text = "some comment"
+            };
             _validator.ShouldNotHaveValidationErrorFor(x => x.Text, model);
         }
     }

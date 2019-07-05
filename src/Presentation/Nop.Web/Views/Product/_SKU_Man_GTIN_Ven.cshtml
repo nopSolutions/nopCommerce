@@ -1,7 +1,5 @@
 ﻿@model ProductDetailsModel
 @using Nop.Core.Domain.Catalog
-@using Nop.Web.Models.Catalog
-
 <div class="additional-details">
     @*SKU*@
     @if ((!string.IsNullOrWhiteSpace(Model.Sku) || Model.ManageInventoryMethod == ManageInventoryMethod.ManageStockByAttributes) && Model.ShowSku )

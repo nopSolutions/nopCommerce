@@ -14,23 +14,18 @@ namespace Nop.Services.Topics
     {
         #region Fields
 
-        private readonly IRepository<TopicTemplate> _topicTemplateRepository;
         private readonly IEventPublisher _eventPublisher;
+        private readonly IRepository<TopicTemplate> _topicTemplateRepository;
 
         #endregion
-        
+
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="topicTemplateRepository">Topic template repository</param>
-        /// <param name="eventPublisher">Event published</param>
-        public TopicTemplateService(IRepository<TopicTemplate> topicTemplateRepository, 
-            IEventPublisher eventPublisher)
+        public TopicTemplateService(IEventPublisher eventPublisher,
+            IRepository<TopicTemplate> topicTemplateRepository)
         {
-            this._topicTemplateRepository = topicTemplateRepository;
-            this._eventPublisher = eventPublisher;
+            _eventPublisher = eventPublisher;
+            _topicTemplateRepository = topicTemplateRepository;
         }
 
         #endregion
@@ -44,7 +39,7 @@ namespace Nop.Services.Topics
         public virtual void DeleteTopicTemplate(TopicTemplate topicTemplate)
         {
             if (topicTemplate == null)
-                throw new ArgumentNullException("topicTemplate");
+                throw new ArgumentNullException(nameof(topicTemplate));
 
             _topicTemplateRepository.Delete(topicTemplate);
 
@@ -65,7 +60,7 @@ namespace Nop.Services.Topics
             var templates = query.ToList();
             return templates;
         }
- 
+
         /// <summary>
         /// Gets a topic template
         /// </summary>
@@ -86,7 +81,7 @@ namespace Nop.Services.Topics
         public virtual void InsertTopicTemplate(TopicTemplate topicTemplate)
         {
             if (topicTemplate == null)
-                throw new ArgumentNullException("topicTemplate");
+                throw new ArgumentNullException(nameof(topicTemplate));
 
             _topicTemplateRepository.Insert(topicTemplate);
 
@@ -101,14 +96,14 @@ namespace Nop.Services.Topics
         public virtual void UpdateTopicTemplate(TopicTemplate topicTemplate)
         {
             if (topicTemplate == null)
-                throw new ArgumentNullException("topicTemplate");
+                throw new ArgumentNullException(nameof(topicTemplate));
 
             _topicTemplateRepository.Update(topicTemplate);
 
             //event notification
             _eventPublisher.EntityUpdated(topicTemplate);
         }
-        
+
         #endregion
     }
 }

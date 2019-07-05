@@ -23,7 +23,7 @@ namespace Nop.Services.Catalog
                 productAttributeMapping.AttributeControlType == AttributeControlType.FileUpload)
                 return false;
 
-            //other attribute controle types support values
+            //other attribute control types support values
             return true;
         }
 
@@ -44,7 +44,7 @@ namespace Nop.Services.Catalog
                 productAttributeMapping.AttributeControlType == AttributeControlType.FileUpload)
                 return false;
 
-            //other attribute controle types support it
+            //other attribute control types support it
             return true;
         }
 
@@ -63,7 +63,7 @@ namespace Nop.Services.Catalog
                 productAttributeMapping.AttributeControlType == AttributeControlType.FileUpload)
                 return true;
 
-            //other attribute controle types does not have validation
+            //other attribute control types does not have validation
             return false;
         }
 
@@ -76,7 +76,7 @@ namespace Nop.Services.Catalog
         {
             //When you have a product with several attributes it may well be that some are combinable,
             //whose combination may form a new SKU with its own inventory,
-            //and some non-combinable are more used to add accesories
+            //and some non-combinable are more used to add accessories
 
             if (productAttributeMapping == null)
                 return false;

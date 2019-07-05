@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ServiceModel.Syndication;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
+using Nop.Core.Domain.Security;
+using Nop.Core.Rss;
 using Nop.Services.Blogs;
 using Nop.Services.Events;
 using Nop.Services.Localization;
@@ -17,139 +18,149 @@ using Nop.Services.Stores;
 using Nop.Web.Factories;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Framework.Security;
 using Nop.Web.Framework.Security.Captcha;
 using Nop.Web.Models.Blogs;
 
 namespace Nop.Web.Controllers
 {
-    [NopHttpsRequirement(SslRequirement.No)]
+    [HttpsRequirement(SslRequirement.No)]
     public partial class BlogController : BasePublicController
     {
         #region Fields
 
-        private readonly IBlogService _blogService;
-        private readonly IWorkContext _workContext;
-        private readonly IStoreContext _storeContext;
-        private readonly ILocalizationService _localizationService;
-        private readonly IWorkflowMessageService _workflowMessageService;
-        private readonly IWebHelper _webHelper;
-        private readonly ICustomerActivityService _customerActivityService;
-        private readonly IStoreMappingService _storeMappingService;
-        private readonly IPermissionService _permissionService;
-        private readonly IBlogModelFactory _blogModelFactory;
-        private readonly IEventPublisher _eventPublisher;
-
         private readonly BlogSettings _blogSettings;
-        private readonly LocalizationSettings _localizationSettings;
         private readonly CaptchaSettings _captchaSettings;
+        private readonly IBlogModelFactory _blogModelFactory;
+        private readonly IBlogService _blogService;
+        private readonly ICustomerActivityService _customerActivityService;
+        private readonly IEventPublisher _eventPublisher;
+        private readonly ILocalizationService _localizationService;
+        private readonly IPermissionService _permissionService;
+        private readonly IStoreContext _storeContext;
+        private readonly IStoreMappingService _storeMappingService;
+        private readonly IUrlRecordService _urlRecordService;
+        private readonly IWebHelper _webHelper;
+        private readonly IWorkContext _workContext;
+        private readonly IWorkflowMessageService _workflowMessageService;
+        private readonly LocalizationSettings _localizationSettings;
 
         #endregion
 
-        #region Constructors
+        #region Ctor
 
-        public BlogController(IBlogService blogService,
-            IWorkContext workContext,
-            IStoreContext storeContext,
-            ILocalizationService localizationService,
-            IWorkflowMessageService workflowMessageService,
-            IWebHelper webHelper,
-            ICustomerActivityService customerActivityService,
-            IStoreMappingService storeMappingService,
-            IPermissionService permissionService,
+        public BlogController(BlogSettings blogSettings,
+            CaptchaSettings captchaSettings,
             IBlogModelFactory blogModelFactory,
+            IBlogService blogService,
+            ICustomerActivityService customerActivityService,
             IEventPublisher eventPublisher,
-            BlogSettings blogSettings,
-            LocalizationSettings localizationSettings,
-            CaptchaSettings captchaSettings)
+            ILocalizationService localizationService,
+            IPermissionService permissionService,
+            IStoreContext storeContext,
+            IStoreMappingService storeMappingService,
+            IUrlRecordService urlRecordService,
+            IWebHelper webHelper,
+            IWorkContext workContext,
+            IWorkflowMessageService workflowMessageService,
+            LocalizationSettings localizationSettings)
         {
-            this._blogService = blogService;
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._localizationService = localizationService;
-            this._workflowMessageService = workflowMessageService;
-            this._webHelper = webHelper;
-            this._customerActivityService = customerActivityService;
-            this._storeMappingService = storeMappingService;
-            this._permissionService = permissionService;
-            this._blogModelFactory = blogModelFactory;
-            this._eventPublisher = eventPublisher;
-
-            this._blogSettings = blogSettings;
-            this._localizationSettings = localizationSettings;
-            this._captchaSettings = captchaSettings;
+            _blogSettings = blogSettings;
+            _captchaSettings = captchaSettings;
+            _blogModelFactory = blogModelFactory;
+            _blogService = blogService;
+            _customerActivityService = customerActivityService;
+            _eventPublisher = eventPublisher;
+            _localizationService = localizationService;
+            _permissionService = permissionService;
+            _storeContext = storeContext;
+            _storeMappingService = storeMappingService;
+            _urlRecordService = urlRecordService;
+            _webHelper = webHelper;
+            _workContext = workContext;
+            _workflowMessageService = workflowMessageService;
+            _localizationSettings = localizationSettings;
         }
 
         #endregion
 
         #region Methods
 
-        public virtual ActionResult List(BlogPagingFilteringModel command)
+        public virtual IActionResult List(BlogPagingFilteringModel command)
         {
             if (!_blogSettings.Enabled)
-                return RedirectToRoute("HomePage");
-
-            var model = _blogModelFactory.PrepareBlogPostListModel(command);
-            return View("List", model);
-        }
-        public virtual ActionResult BlogByTag(BlogPagingFilteringModel command)
-        {
-            if (!_blogSettings.Enabled)
-                return RedirectToRoute("HomePage");
-
-            var model = _blogModelFactory.PrepareBlogPostListModel(command);
-            return View("List", model);
-        }
-        public virtual ActionResult BlogByMonth(BlogPagingFilteringModel command)
-        {
-            if (!_blogSettings.Enabled)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             var model = _blogModelFactory.PrepareBlogPostListModel(command);
             return View("List", model);
         }
 
-        public virtual ActionResult ListRss(int languageId)
+        public virtual IActionResult BlogByTag(BlogPagingFilteringModel command)
         {
-            var feed = new SyndicationFeed(
-                string.Format("{0}: Blog", _storeContext.CurrentStore.GetLocalized(x => x.Name)),
+            if (!_blogSettings.Enabled)
+                return RedirectToRoute("Homepage");
+
+            var model = _blogModelFactory.PrepareBlogPostListModel(command);
+            return View("List", model);
+        }
+
+        public virtual IActionResult BlogByMonth(BlogPagingFilteringModel command)
+        {
+            if (!_blogSettings.Enabled)
+                return RedirectToRoute("Homepage");
+
+            var model = _blogModelFactory.PrepareBlogPostListModel(command);
+            return View("List", model);
+        }
+
+        public virtual IActionResult ListRss(int languageId)
+        {
+            var feed = new RssFeed(
+                $"{_localizationService.GetLocalized(_storeContext.CurrentStore, x => x.Name)}: Blog",
                 "Blog",
-                new Uri(_webHelper.GetStoreLocation(false)),
-                string.Format("urn:store:{0}:blog", _storeContext.CurrentStore.Id),
+                new Uri(_webHelper.GetStoreLocation()),
                 DateTime.UtcNow);
 
             if (!_blogSettings.Enabled)
                 return new RssActionResult(feed, _webHelper.GetThisPageUrl(false));
 
-            var items = new List<SyndicationItem>();
+            var items = new List<RssItem>();
             var blogPosts = _blogService.GetAllBlogPosts(_storeContext.CurrentStore.Id, languageId);
             foreach (var blogPost in blogPosts)
             {
-                string blogPostUrl = Url.RouteUrl("BlogPost", new { SeName = blogPost.GetSeName(blogPost.LanguageId, ensureTwoPublishedLanguages: false) }, _webHelper.IsCurrentConnectionSecured() ? "https" : "http");
-                items.Add(new SyndicationItem(blogPost.Title, blogPost.Body, new Uri(blogPostUrl), String.Format("urn:store:{0}:blog:post:{1}", _storeContext.CurrentStore.Id, blogPost.Id), blogPost.CreatedOnUtc));
+                var blogPostUrl = Url.RouteUrl("BlogPost", new { SeName = _urlRecordService.GetSeName(blogPost, blogPost.LanguageId, ensureTwoPublishedLanguages: false) }, _webHelper.CurrentRequestProtocol);
+                items.Add(new RssItem(blogPost.Title, blogPost.Body, new Uri(blogPostUrl),
+                    $"urn:store:{_storeContext.CurrentStore.Id}:blog:post:{blogPost.Id}", blogPost.CreatedOnUtc));
             }
             feed.Items = items;
             return new RssActionResult(feed, _webHelper.GetThisPageUrl(false));
         }
 
-        public virtual ActionResult BlogPost(int blogPostId)
+        public virtual IActionResult BlogPost(int blogPostId)
         {
             if (!_blogSettings.Enabled)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             var blogPost = _blogService.GetBlogPostById(blogPostId);
-            if (blogPost == null ||
-                (blogPost.StartDateUtc.HasValue && blogPost.StartDateUtc.Value >= DateTime.UtcNow) ||
-                (blogPost.EndDateUtc.HasValue && blogPost.EndDateUtc.Value <= DateTime.UtcNow))
-                return RedirectToRoute("HomePage");
-
-            //Store mapping
-            if (!_storeMappingService.Authorize(blogPost))
+            if (blogPost == null)
                 return InvokeHttp404();
-            
+
+            var notAvailable =
+                //availability dates
+                !_blogService.BlogPostIsAvailable(blogPost) ||
+                //Store mapping
+                !_storeMappingService.Authorize(blogPost);
+            //Check whether the current user has a "Manage blog" permission (usually a store owner)
+            //We should allows him (her) to use "Preview" functionality
+            var hasAdminAccess = _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && _permissionService.Authorize(StandardPermissionProvider.ManageBlog);
+            if (notAvailable && !hasAdminAccess)
+                return InvokeHttp404();
+
             //display "edit" (manage) link
-            if (_permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && _permissionService.Authorize(StandardPermissionProvider.ManageBlog))
-                DisplayEditLink(Url.Action("Edit", "Blog", new { id = blogPost.Id, area = "Admin" }));
+            if (hasAdminAccess)
+                DisplayEditLink(Url.Action("BlogPostEdit", "Blog", new { id = blogPost.Id, area = AreaNames.Admin }));
 
             var model = new BlogPostModel();
             _blogModelFactory.PrepareBlogPostModel(model, blogPost, true);
@@ -160,15 +171,15 @@ namespace Nop.Web.Controllers
         [HttpPost, ActionName("BlogPost")]
         [PublicAntiForgery]
         [FormValueRequired("add-comment")]
-        [CaptchaValidator]
-        public virtual ActionResult BlogCommentAdd(int blogPostId, BlogPostModel model, bool captchaValid)
+        [ValidateCaptcha]
+        public virtual IActionResult BlogCommentAdd(int blogPostId, BlogPostModel model, bool captchaValid)
         {
             if (!_blogSettings.Enabled)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             var blogPost = _blogService.GetBlogPostById(blogPostId);
             if (blogPost == null || !blogPost.AllowComments)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             if (_workContext.CurrentCustomer.IsGuest() && !_blogSettings.AllowNotRegisteredUsersToLeaveComments)
             {
@@ -178,7 +189,7 @@ namespace Nop.Web.Controllers
             //validate CAPTCHA
             if (_captchaSettings.Enabled && _captchaSettings.ShowOnBlogCommentPage && !captchaValid)
             {
-                ModelState.AddModelError("", _captchaSettings.GetWrongCaptchaMessage(_localizationService));
+                ModelState.AddModelError("", _localizationService.GetResource("Common.WrongCaptchaMessage"));
             }
 
             if (ModelState.IsValid)
@@ -200,7 +211,8 @@ namespace Nop.Web.Controllers
                     _workflowMessageService.SendBlogCommentNotificationMessage(comment, _localizationSettings.DefaultAdminLanguageId);
 
                 //activity log
-                _customerActivityService.InsertActivity("PublicStore.AddBlogComment", _localizationService.GetResource("ActivityLog.PublicStore.AddBlogComment"));
+                _customerActivityService.InsertActivity("PublicStore.AddBlogComment",
+                    _localizationService.GetResource("ActivityLog.PublicStore.AddBlogComment"), comment);
 
                 //raise event
                 if (comment.IsApproved)
@@ -211,7 +223,7 @@ namespace Nop.Web.Controllers
                 TempData["nop.blog.addcomment.result"] = comment.IsApproved
                     ? _localizationService.GetResource("Blog.Comments.SuccessfullyAdded")
                     : _localizationService.GetResource("Blog.Comments.SeeAfterApproving");
-                return RedirectToRoute("BlogPost", new { SeName = blogPost.GetSeName(blogPost.LanguageId, ensureTwoPublishedLanguages: false) });
+                return RedirectToRoute("BlogPost", new { SeName = _urlRecordService.GetSeName(blogPost, blogPost.LanguageId, ensureTwoPublishedLanguages: false) });
             }
 
             //If we got this far, something failed, redisplay form
@@ -219,37 +231,6 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        [ChildActionOnly]
-        public virtual ActionResult BlogTags()
-        {
-            if (!_blogSettings.Enabled)
-                return Content("");
-
-            var model = _blogModelFactory.PrepareBlogPostTagListModel();
-            return PartialView(model);
-        }
-
-        [ChildActionOnly]
-        public virtual ActionResult BlogMonths()
-        {
-            if (!_blogSettings.Enabled)
-                return Content("");
-
-            var model = _blogModelFactory.PrepareBlogPostYearModel();
-            return PartialView(model);
-        }
-
-        [ChildActionOnly]
-        public virtual ActionResult RssHeaderLink()
-        {
-            if (!_blogSettings.Enabled || !_blogSettings.ShowHeaderRssUrl)
-                return Content("");
-
-            string link = string.Format("<link href=\"{0}\" rel=\"alternate\" type=\"{1}\" title=\"{2}: Blog\" />",
-                Url.RouteUrl("BlogRSS", new { languageId = _workContext.WorkingLanguage.Id }, _webHelper.IsCurrentConnectionSecured() ? "https" : "http"), MimeTypes.ApplicationRssXml, _storeContext.CurrentStore.GetLocalized(x => x.Name));
-
-            return Content(link);
-        }
         #endregion
     }
 }

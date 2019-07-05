@@ -22,47 +22,50 @@ namespace Nop.Web.Factories
     /// </summary>
     public partial class ReturnRequestModelFactory : IReturnRequestModelFactory
     {
-		#region Fields
+        #region Fields
 
-        private readonly IReturnRequestService _returnRequestService;
-        private readonly IOrderService _orderService;
-        private readonly IWorkContext _workContext;
-        private readonly IStoreContext _storeContext;
         private readonly ICurrencyService _currencyService;
-        private readonly IPriceFormatter _priceFormatter;
-        private readonly ILocalizationService _localizationService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IDownloadService _downloadService;
+        private readonly ILocalizationService _localizationService;
+        private readonly IOrderService _orderService;
+        private readonly IPriceFormatter _priceFormatter;
+        private readonly IReturnRequestService _returnRequestService;
+        private readonly IStaticCacheManager _cacheManager;
+        private readonly IStoreContext _storeContext;
+        private readonly IUrlRecordService _urlRecordService;
+        private readonly IWorkContext _workContext;
         private readonly OrderSettings _orderSettings;
-        private readonly ICacheManager _cacheManager;
 
         #endregion
 
-        #region Constructors
+        #region Ctor
 
-        public ReturnRequestModelFactory(IReturnRequestService returnRequestService,
-            IOrderService orderService, 
-            IWorkContext workContext, 
-            IStoreContext storeContext,
-            ICurrencyService currencyService, 
-            IPriceFormatter priceFormatter,
-            ILocalizationService localizationService,
+        public ReturnRequestModelFactory(ICurrencyService currencyService,
             IDateTimeHelper dateTimeHelper,
-            IDownloadService downloadService, 
-            OrderSettings orderSettings,
-            ICacheManager cacheManager)
+            IDownloadService downloadService,
+            ILocalizationService localizationService,
+            IOrderService orderService,
+            IPriceFormatter priceFormatter,
+            IReturnRequestService returnRequestService,
+            IStaticCacheManager cacheManager,
+            IStoreContext storeContext,
+            IUrlRecordService urlRecordService,
+            IWorkContext workContext,
+            OrderSettings orderSettings)
         {
-            this._returnRequestService = returnRequestService;
-            this._orderService = orderService;
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._currencyService = currencyService;
-            this._priceFormatter = priceFormatter;
-            this._localizationService = localizationService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._downloadService = downloadService;
-            this._orderSettings = orderSettings;
-            this._cacheManager = cacheManager;
+            _currencyService = currencyService;
+            _dateTimeHelper = dateTimeHelper;
+            _downloadService = downloadService;
+            _localizationService = localizationService;
+            _orderService = orderService;
+            _priceFormatter = priceFormatter;
+            _returnRequestService = returnRequestService;
+            _cacheManager = cacheManager;
+            _storeContext = storeContext;
+            _urlRecordService = urlRecordService;
+            _workContext = workContext;
+            _orderSettings = orderSettings;
         }
 
         #endregion
@@ -77,7 +80,7 @@ namespace Nop.Web.Factories
         public virtual SubmitReturnRequestModel.OrderItemModel PrepareSubmitReturnRequestOrderItemModel(OrderItem orderItem)
         {
             if (orderItem == null)
-                throw new ArgumentNullException("orderItem");
+                throw new ArgumentNullException(nameof(orderItem));
 
             var order = orderItem.Order;
 
@@ -85,8 +88,8 @@ namespace Nop.Web.Factories
             {
                 Id = orderItem.Id,
                 ProductId = orderItem.Product.Id,
-                ProductName = orderItem.Product.GetLocalized(x => x.Name),
-                ProductSeName = orderItem.Product.GetSeName(),
+                ProductName = _localizationService.GetLocalized(orderItem.Product, x => x.Name),
+                ProductSeName = _urlRecordService.GetSeName(orderItem.Product),
                 AttributeInfo = orderItem.AttributeDescription,
                 Quantity = orderItem.Quantity
             };
@@ -117,17 +120,17 @@ namespace Nop.Web.Factories
         public virtual SubmitReturnRequestModel PrepareSubmitReturnRequestModel(SubmitReturnRequestModel model, Order order)
         {
             if (order == null)
-                throw new ArgumentNullException("order");
+                throw new ArgumentNullException(nameof(order));
 
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             model.OrderId = order.Id;
             model.AllowFiles = _orderSettings.ReturnRequestsAllowFiles;
             model.CustomOrderNumber = order.CustomOrderNumber;
 
             //return reasons
-            model.AvailableReturnReasons = _cacheManager.Get(string.Format(ModelCacheEventConsumer.RETURNREQUESTREASONS_MODEL_KEY, _workContext.WorkingLanguage.Id),
+            model.AvailableReturnReasons = _cacheManager.Get(string.Format(NopModelCacheDefaults.ReturnRequestReasonsModelKey, _workContext.WorkingLanguage.Id),
                 () =>
                 {
                     var reasons = new List<SubmitReturnRequestModel.ReturnRequestReasonModel>();
@@ -135,13 +138,13 @@ namespace Nop.Web.Factories
                         reasons.Add(new SubmitReturnRequestModel.ReturnRequestReasonModel
                         {
                             Id = rrr.Id,
-                            Name = rrr.GetLocalized(x => x.Name)
+                            Name = _localizationService.GetLocalized(rrr, x => x.Name)
                         });
                     return reasons;
                 });
 
             //return actions
-            model.AvailableReturnActions = _cacheManager.Get(string.Format(ModelCacheEventConsumer.RETURNREQUESTACTIONS_MODEL_KEY, _workContext.WorkingLanguage.Id),
+            model.AvailableReturnActions = _cacheManager.Get(string.Format(NopModelCacheDefaults.ReturnRequestActionsModelKey, _workContext.WorkingLanguage.Id),
                 () =>
                 {
                     var actions = new List<SubmitReturnRequestModel.ReturnRequestActionModel>();
@@ -149,7 +152,7 @@ namespace Nop.Web.Factories
                         actions.Add(new SubmitReturnRequestModel.ReturnRequestActionModel
                         {
                             Id = rra.Id,
-                            Name = rra.GetLocalized(x => x.Name)
+                            Name = _localizationService.GetLocalized(rra, x => x.Name)
                         });
                     return actions;
                 });
@@ -186,10 +189,10 @@ namespace Nop.Web.Factories
                     {
                         Id = returnRequest.Id,
                         CustomNumber = returnRequest.CustomNumber,
-                        ReturnRequestStatus = returnRequest.ReturnRequestStatus.GetLocalizedEnum(_localizationService, _workContext),
+                        ReturnRequestStatus = _localizationService.GetLocalizedEnum(returnRequest.ReturnRequestStatus),
                         ProductId = product.Id,
-                        ProductName = product.GetLocalized(x => x.Name),
-                        ProductSeName = product.GetSeName(),
+                        ProductName = _localizationService.GetLocalized(product, x => x.Name),
+                        ProductSeName = _urlRecordService.GetSeName(product),
                         Quantity = returnRequest.Quantity,
                         ReturnAction = returnRequest.RequestedAction,
                         ReturnReason = returnRequest.ReasonForReturn,
@@ -203,7 +206,7 @@ namespace Nop.Web.Factories
 
             return model;
         }
-        
+
         #endregion
     }
 }

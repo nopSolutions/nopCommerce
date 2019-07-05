@@ -1,0 +1,37 @@
+@model GdprConsentModel
+
+@{
+    //page title
+    ViewBag.Title = T("Admin.Configuration.Settings.Gdpr.Consent.Edit").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("GDPR settings");
+}
+
+<form asp-controller="Setting" asp-action="EditGdprConsent" method="post">
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.Configuration.Settings.Gdpr.Consent.Edit")
+            <small>
+                <i class="fa fa-arrow-circle-left"></i>
+                <a asp-action="Gdpr">@T("Admin.Configuration.Settings.Gdpr.Consent.BackToList")</a>
+            </small>
+        </h1>
+        <div class="pull-right">
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
+            <button type="submit" name="save-continue" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.SaveContinue")
+            </button>
+            <span id="gdprconsent-delete" class="btn bg-red">
+                <i class="fa fa-trash-o"></i>
+                @T("Admin.Common.Delete")
+            </span>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.GdprConsentDetailsButtons, additionalData = Model })
+        </div>
+    </div>
+    @await Html.PartialAsync("_CreateOrUpdateGdprConsent", Model)
+</form>
+<nop-delete-confirmation asp-model-id="@Model.Id" asp-button-id="gdprconsent-delete" asp-action="DeleteGdprConsent" />

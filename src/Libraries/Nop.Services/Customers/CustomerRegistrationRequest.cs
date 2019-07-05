@@ -7,7 +7,6 @@ namespace Nop.Services.Customers
     /// </summary>
     public class CustomerRegistrationRequest
     {
-
         /// <summary>
         /// Ctor
         /// </summary>
@@ -24,39 +23,45 @@ namespace Nop.Services.Customers
             int storeId,
             bool isApproved = true)
         {
-            this.Customer = customer;
-            this.Email = email;
-            this.Username = username;
-            this.Password = password;
-            this.PasswordFormat = passwordFormat;
-            this.StoreId = storeId;
-            this.IsApproved = isApproved;
+            Customer = customer;
+            Email = email;
+            Username = username;
+            Password = password;
+            PasswordFormat = passwordFormat;
+            StoreId = storeId;
+            IsApproved = isApproved;
         }
 
         /// <summary>
         /// Customer
         /// </summary>
         public Customer Customer { get; set; }
+
         /// <summary>
         /// Email
         /// </summary>
         public string Email { get; set; }
+
         /// <summary>
         /// Username
         /// </summary>
         public string Username { get; set; }
+
         /// <summary>
         /// Password
         /// </summary>
         public string Password { get; set; }
+
         /// <summary>
         /// Password format
         /// </summary>
         public PasswordFormat PasswordFormat { get; set; }
+
         /// <summary>
         /// Store identifier
         /// </summary>
         public int StoreId { get; set; }
+
         /// <summary>
         /// Is approved
         /// </summary>

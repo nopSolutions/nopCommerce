@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.Checkout
 {
@@ -29,6 +29,7 @@ namespace Nop.Web.Models.Checkout
             public bool Selected { get; set; }
             public string LogoUrl { get; set; }
         }
+
         #endregion
     }
 }

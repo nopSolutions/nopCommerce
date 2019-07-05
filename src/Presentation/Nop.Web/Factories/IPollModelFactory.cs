@@ -28,6 +28,6 @@ namespace Nop.Web.Factories
         /// Prepare the home page poll models
         /// </summary>
         /// <returns>List of the poll model</returns>
-        List<PollModel> PrepareHomePagePollModels();
+        List<PollModel> PrepareHomepagePollModels();
     }
 }

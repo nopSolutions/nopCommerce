@@ -1,0 +1,30 @@
+@model AffiliateModel
+<div class="panel-body">
+    @await Html.PartialAsync("Table", new DataTablesModel
+    {
+        Name = "customers-grid",
+        UrlRead = new DataUrl("AffiliatedCustomerList", "Affiliate", new RouteValueDictionary { [nameof(Model.AffiliatedCustomerSearchModel.AffliateId)] = Model.AffiliatedCustomerSearchModel.AffliateId }),
+        Length = Model.AffiliatedCustomerSearchModel.PageSize,
+        LengthMenu = Model.AffiliatedCustomerSearchModel.AvailablePageSizes,
+        ColumnCollection = new List<ColumnProperty>
+        {
+            new ColumnProperty(nameof(AffiliatedCustomerModel.Id))
+            {
+                Title = "ID",
+                Width = "50"
+            },
+            new ColumnProperty(nameof(AffiliatedCustomerModel.Name))
+            {
+                Title = T("Admin.Affiliates.Customers.Name").Text,
+                Width = "200"
+            },
+            new ColumnProperty(nameof(AffiliatedCustomerModel.Id))
+            {
+                Title = T("Admin.Common.View").Text,
+                Width = "150",
+                ClassName = NopColumnClassDefaults.Button,
+                Render = new RenderButtonView(new DataUrl("~/Admin/Customer/Edit/", nameof(AffiliatedCustomerModel.Id)))
+            }
+        }
+    })
+</div>

@@ -25,14 +25,14 @@ namespace Nop.Services.Helpers
         /// <summary>
         /// Converts the date and time to current user date and time
         /// </summary>
-        /// <param name="dt">The date and time (respesents local system time or UTC time) to convert.</param>
+        /// <param name="dt">The date and time (represents local system time or UTC time) to convert.</param>
         /// <returns>A DateTime value that represents time that corresponds to the dateTime parameter in customer time zone.</returns>
         DateTime ConvertToUserTime(DateTime dt);
 
         /// <summary>
         /// Converts the date and time to current user date and time
         /// </summary>
-        /// <param name="dt">The date and time (respesents local system time or UTC time) to convert.</param>
+        /// <param name="dt">The date and time (represents local system time or UTC time) to convert.</param>
         /// <param name="sourceDateTimeKind">The source datetimekind</param>
         /// <returns>A DateTime value that represents time that corresponds to the dateTime parameter in customer time zone.</returns>
         DateTime ConvertToUserTime(DateTime dt, DateTimeKind sourceDateTimeKind);
@@ -57,14 +57,14 @@ namespace Nop.Services.Helpers
         /// <summary>
         /// Converts the date and time to Coordinated Universal Time (UTC)
         /// </summary>
-        /// <param name="dt">The date and time (respesents local system time or UTC time) to convert.</param>
+        /// <param name="dt">The date and time (represents local system time or UTC time) to convert.</param>
         /// <returns>A DateTime value that represents the Coordinated Universal Time (UTC) that corresponds to the dateTime parameter. The DateTime value's Kind property is always set to DateTimeKind.Utc.</returns>
         DateTime ConvertToUtcTime(DateTime dt);
 
         /// <summary>
         /// Converts the date and time to Coordinated Universal Time (UTC)
         /// </summary>
-        /// <param name="dt">The date and time (respesents local system time or UTC time) to convert.</param>
+        /// <param name="dt">The date and time (represents local system time or UTC time) to convert.</param>
         /// <param name="sourceDateTimeKind">The source datetimekind</param>
         /// <returns>A DateTime value that represents the Coordinated Universal Time (UTC) that corresponds to the dateTime parameter. The DateTime value's Kind property is always set to DateTimeKind.Utc.</returns>
         DateTime ConvertToUtcTime(DateTime dt, DateTimeKind sourceDateTimeKind);

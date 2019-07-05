@@ -1,0 +1,26 @@
+@model StateProvinceModel
+
+@{
+    Layout = "_AdminPopupLayout";
+
+    //page title
+    ViewBag.Title = T("Admin.Configuration.Countries.States.EditStateDetails").Text;
+}
+
+<form asp-controller="Country" asp-action="StateEditPopup"
+      asp-route-btnId="@Context.Request.Query["btnId"]"
+      asp-route-formId="@Context.Request.Query["formId"]">
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.Configuration.Countries.States.EditStateDetails")
+        </h1>
+        <div class="pull-right">
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CountryStateDetailsButtons, additionalData = Model })
+        </div>
+    </div>
+    @await Html.PartialAsync("_CreateOrUpdateState", Model)
+</form>

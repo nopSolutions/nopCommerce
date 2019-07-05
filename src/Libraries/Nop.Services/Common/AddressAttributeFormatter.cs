@@ -1,6 +1,5 @@
-using System;
+using System.Net;
 using System.Text;
-using System.Web;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Html;
@@ -13,52 +12,65 @@ namespace Nop.Services.Common
     /// </summary>
     public partial class AddressAttributeFormatter : IAddressAttributeFormatter
     {
-        private readonly IWorkContext _workContext;
-        private readonly IAddressAttributeService _addressAttributeService;
-        private readonly IAddressAttributeParser _addressAttributeParser;
+        #region Fields
 
-        public AddressAttributeFormatter(IWorkContext workContext,
-            IAddressAttributeService addressAttributeService,
-            IAddressAttributeParser addressAttributeParser)
+        private readonly IAddressAttributeParser _addressAttributeParser;
+        private readonly IAddressAttributeService _addressAttributeService;
+        private readonly ILocalizationService _localizationService;
+        private readonly IWorkContext _workContext;
+
+        #endregion
+
+        #region Ctor
+
+        public AddressAttributeFormatter(IAddressAttributeParser addressAttributeParser,
+            IAddressAttributeService addressAttributeService,            
+            ILocalizationService localizationService,
+            IWorkContext workContext)
         {
-            this._workContext = workContext;
-            this._addressAttributeService = addressAttributeService;
-            this._addressAttributeParser = addressAttributeParser;
+            _addressAttributeParser = addressAttributeParser;
+            _addressAttributeService = addressAttributeService;
+            _localizationService = localizationService;
+            _workContext = workContext;
         }
-        
+
+        #endregion
+
+        #region Methods
+
         /// <summary>
         /// Formats attributes
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
-        /// <param name="serapator">Serapator</param>
+        /// <param name="separator">Separator</param>
         /// <param name="htmlEncode">A value indicating whether to encode (HTML) values</param>
         /// <returns>Attributes</returns>
         public virtual string FormatAttributes(string attributesXml,
-            string serapator = "<br />", 
+            string separator = "<br />",
             bool htmlEncode = true)
         {
             var result = new StringBuilder();
 
             var attributes = _addressAttributeParser.ParseAddressAttributes(attributesXml);
-            for (int i = 0; i < attributes.Count; i++)
+            for (var i = 0; i < attributes.Count; i++)
             {
                 var attribute = attributes[i];
                 var valuesStr = _addressAttributeParser.ParseValues(attributesXml, attribute.Id);
-                for (int j = 0; j < valuesStr.Count; j++)
+                for (var j = 0; j < valuesStr.Count; j++)
                 {
-                    string valueStr = valuesStr[j];
-                    string formattedAttribute = "";
+                    var valueStr = valuesStr[j];
+                    var formattedAttribute = string.Empty;
                     if (!attribute.ShouldHaveValues())
                     {
                         //no values
                         if (attribute.AttributeControlType == AttributeControlType.MultilineTextbox)
                         {
                             //multiline textbox
-                            var attributeName = attribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id);
+                            var attributeName = _localizationService.GetLocalized(attribute, a => a.Name, _workContext.WorkingLanguage.Id);
                             //encode (if required)
                             if (htmlEncode)
-                                attributeName = HttpUtility.HtmlEncode(attributeName);
-                            formattedAttribute = string.Format("{0}: {1}", attributeName, HtmlHelper.FormatText(valueStr, false, true, false, false, false, false));
+                                attributeName = WebUtility.HtmlEncode(attributeName);
+                            formattedAttribute = $"{attributeName}: {HtmlHelper.FormatText(valueStr, false, true, false, false, false, false)}";
                             //we never encode multiline textbox input
                         }
                         else if (attribute.AttributeControlType == AttributeControlType.FileUpload)
@@ -69,38 +81,40 @@ namespace Nop.Services.Common
                         else
                         {
                             //other attributes (textbox, datepicker)
-                            formattedAttribute = string.Format("{0}: {1}", attribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id), valueStr);
+                            formattedAttribute = $"{_localizationService.GetLocalized(attribute, a => a.Name, _workContext.WorkingLanguage.Id)}: {valueStr}";
                             //encode (if required)
                             if (htmlEncode)
-                                formattedAttribute = HttpUtility.HtmlEncode(formattedAttribute);
+                                formattedAttribute = WebUtility.HtmlEncode(formattedAttribute);
                         }
                     }
                     else
                     {
-                        int attributeValueId;
-                        if (int.TryParse(valueStr, out attributeValueId))
+                        if (int.TryParse(valueStr, out var attributeValueId))
                         {
                             var attributeValue = _addressAttributeService.GetAddressAttributeValueById(attributeValueId);
                             if (attributeValue != null)
                             {
-                                formattedAttribute = string.Format("{0}: {1}", attribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id), attributeValue.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id));
+                                formattedAttribute = $"{_localizationService.GetLocalized(attribute, a => a.Name, _workContext.WorkingLanguage.Id)}: {_localizationService.GetLocalized(attributeValue, a => a.Name, _workContext.WorkingLanguage.Id)}";
                             }
                             //encode (if required)
                             if (htmlEncode)
-                                formattedAttribute = HttpUtility.HtmlEncode(formattedAttribute);
+                                formattedAttribute = WebUtility.HtmlEncode(formattedAttribute);
                         }
                     }
 
-                    if (!String.IsNullOrEmpty(formattedAttribute))
-                    {
-                        if (i != 0 || j != 0)
-                            result.Append(serapator);
-                        result.Append(formattedAttribute);
-                    }
+                    if (string.IsNullOrEmpty(formattedAttribute)) 
+                        continue;
+
+                    if (i != 0 || j != 0)
+                        result.Append(separator);
+
+                    result.Append(formattedAttribute);
                 }
             }
 
             return result.ToString();
         }
+
+        #endregion
     }
 }

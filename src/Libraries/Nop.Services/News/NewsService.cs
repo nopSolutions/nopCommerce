@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
@@ -17,27 +17,27 @@ namespace Nop.Services.News
     {
         #region Fields
 
-        private readonly IRepository<NewsItem> _newsItemRepository;
-        private readonly IRepository<NewsComment> _newsCommentRepository;
-        private readonly IRepository<StoreMapping> _storeMappingRepository;
         private readonly CatalogSettings _catalogSettings;
         private readonly IEventPublisher _eventPublisher;
+        private readonly IRepository<NewsComment> _newsCommentRepository;
+        private readonly IRepository<NewsItem> _newsItemRepository;
+        private readonly IRepository<StoreMapping> _storeMappingRepository;
 
         #endregion
 
         #region Ctor
 
-        public NewsService(IRepository<NewsItem> newsItemRepository, 
+        public NewsService(CatalogSettings catalogSettings,
+            IEventPublisher eventPublisher,
             IRepository<NewsComment> newsCommentRepository,
-            IRepository<StoreMapping> storeMappingRepository,
-            CatalogSettings catalogSettings,
-            IEventPublisher eventPublisher)
+            IRepository<NewsItem> newsItemRepository,
+            IRepository<StoreMapping> storeMappingRepository)
         {
-            this._newsItemRepository = newsItemRepository;
-            this._newsCommentRepository = newsCommentRepository;
-            this._storeMappingRepository = storeMappingRepository;
-            this._catalogSettings = catalogSettings;
-            this._eventPublisher = eventPublisher;
+            _catalogSettings = catalogSettings;
+            _eventPublisher = eventPublisher;
+            _newsCommentRepository = newsCommentRepository;
+            _newsItemRepository = newsItemRepository;
+            _storeMappingRepository = storeMappingRepository;
         }
 
         #endregion
@@ -53,10 +53,10 @@ namespace Nop.Services.News
         public virtual void DeleteNews(NewsItem newsItem)
         {
             if (newsItem == null)
-                throw new ArgumentNullException("newsItem");
+                throw new ArgumentNullException(nameof(newsItem));
 
             _newsItemRepository.Delete(newsItem);
-            
+
             //event notification
             _eventPublisher.EntityDeleted(newsItem);
         }
@@ -107,6 +107,7 @@ namespace Nop.Services.News
                 query = query.Where(n => !n.StartDateUtc.HasValue || n.StartDateUtc <= utcNow);
                 query = query.Where(n => !n.EndDateUtc.HasValue || n.EndDateUtc >= utcNow);
             }
+
             query = query.OrderByDescending(n => n.StartDateUtc ?? n.CreatedOnUtc);
 
             //Store mapping
@@ -114,18 +115,12 @@ namespace Nop.Services.News
             {
                 query = from n in query
                         join sm in _storeMappingRepository.Table
-                        on new { c1 = n.Id, c2 = "NewsItem" } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into n_sm
+                        on new { c1 = n.Id, c2 = nameof(NewsItem) } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into n_sm
                         from sm in n_sm.DefaultIfEmpty()
                         where !n.LimitedToStores || storeId == sm.StoreId
                         select n;
 
-                //only distinct items (group by ID)
-                query = from n in query
-                        group n by n.Id
-                        into nGroup
-                        orderby nGroup.Key
-                        select nGroup.FirstOrDefault();
-                query = query.OrderByDescending(n => n.StartDateUtc ?? n.CreatedOnUtc);
+                query = query.Distinct().OrderByDescending(n => n.StartDateUtc ?? n.CreatedOnUtc);
             }
 
             var news = new PagedList<NewsItem>(query, pageIndex, pageSize);
@@ -139,7 +134,7 @@ namespace Nop.Services.News
         public virtual void InsertNews(NewsItem news)
         {
             if (news == null)
-                throw new ArgumentNullException("news");
+                throw new ArgumentNullException(nameof(news));
 
             _newsItemRepository.Insert(news);
 
@@ -154,14 +149,33 @@ namespace Nop.Services.News
         public virtual void UpdateNews(NewsItem news)
         {
             if (news == null)
-                throw new ArgumentNullException("news");
+                throw new ArgumentNullException(nameof(news));
 
             _newsItemRepository.Update(news);
-            
+
             //event notification
             _eventPublisher.EntityUpdated(news);
         }
 
+        /// <summary>
+        /// Get a value indicating whether a news item is available now (availability dates)
+        /// </summary>
+        /// <param name="newsItem">News item</param>
+        /// <param name="dateTime">Datetime to check; pass null to use current date</param>
+        /// <returns>Result</returns>
+        public virtual bool IsNewsAvailable(NewsItem newsItem, DateTime? dateTime = null)
+        {
+            if (newsItem == null)
+                throw new ArgumentNullException(nameof(newsItem));
+
+            if (newsItem.StartDateUtc.HasValue && newsItem.StartDateUtc.Value >= dateTime)
+                return false;
+
+            if (newsItem.EndDateUtc.HasValue && newsItem.EndDateUtc.Value <= dateTime)
+                return false;
+
+            return true;
+        }
         #endregion
 
         #region News comments
@@ -237,12 +251,13 @@ namespace Nop.Services.News
             var comments = query.ToList();
             //sort by passed identifiers
             var sortedComments = new List<NewsComment>();
-            foreach (int id in commentIds)
+            foreach (var id in commentIds)
             {
                 var comment = comments.Find(x => x.Id == id);
                 if (comment != null)
                     sortedComments.Add(comment);
             }
+
             return sortedComments;
         }
 
@@ -273,7 +288,7 @@ namespace Nop.Services.News
         public virtual void DeleteNewsComment(NewsComment newsComment)
         {
             if (newsComment == null)
-                throw new ArgumentNullException("newsComment");
+                throw new ArgumentNullException(nameof(newsComment));
 
             _newsCommentRepository.Delete(newsComment);
 
@@ -288,14 +303,14 @@ namespace Nop.Services.News
         public virtual void DeleteNewsComments(IList<NewsComment> newsComments)
         {
             if (newsComments == null)
-                throw new ArgumentNullException("newsComments");
+                throw new ArgumentNullException(nameof(newsComments));
 
             foreach (var newsComment in newsComments)
             {
                 DeleteNewsComment(newsComment);
             }
         }
-        
+
         #endregion
 
         #endregion

@@ -19,6 +19,11 @@ namespace Nop.Core.Domain.Blogs
         public int LanguageId { get; set; }
 
         /// <summary>
+        /// Gets or sets the value indicating whether this blog post should be included in sitemap
+        /// </summary>
+        public bool IncludeInSitemap { get; set; }
+
+        /// <summary>
         /// Gets or sets the blog post title
         /// </summary>
         public string Title { get; set; }
@@ -83,8 +88,8 @@ namespace Nop.Core.Domain.Blogs
         /// </summary>
         public virtual ICollection<BlogComment> BlogComments
         {
-            get { return _blogComments ?? (_blogComments = new List<BlogComment>()); }
-            protected set { _blogComments = value; }
+            get => _blogComments ?? (_blogComments = new List<BlogComment>());
+            protected set => _blogComments = value;
         }
         
         /// <summary>

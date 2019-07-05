@@ -1,0 +1,34 @@
+@model GeneralCommonSettingsModel
+
+<div class="panel-body">
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="StoreInformationSettings.FacebookLink_OverrideForStore" asp-input="StoreInformationSettings.FacebookLink" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="StoreInformationSettings.FacebookLink" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="StoreInformationSettings.FacebookLink" />
+            <span asp-validation-for="StoreInformationSettings.FacebookLink"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="StoreInformationSettings.TwitterLink_OverrideForStore" asp-input="StoreInformationSettings.TwitterLink" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="StoreInformationSettings.TwitterLink" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="StoreInformationSettings.TwitterLink" />
+            <span asp-validation-for="StoreInformationSettings.TwitterLink"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="StoreInformationSettings.YoutubeLink_OverrideForStore" asp-input="StoreInformationSettings.YoutubeLink" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="StoreInformationSettings.YoutubeLink" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="StoreInformationSettings.YoutubeLink" />
+            <span asp-validation-for="StoreInformationSettings.YoutubeLink"></span>
+        </div>
+    </div>
+</div>

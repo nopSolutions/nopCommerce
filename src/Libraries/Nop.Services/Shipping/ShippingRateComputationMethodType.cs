@@ -1,4 +1,3 @@
-
 namespace Nop.Services.Shipping
 {
     /// <summary>
@@ -10,6 +9,7 @@ namespace Nop.Services.Shipping
         /// Offline
         /// </summary>
         Offline = 10,
+
         /// <summary>
         /// Realtime
         /// </summary>

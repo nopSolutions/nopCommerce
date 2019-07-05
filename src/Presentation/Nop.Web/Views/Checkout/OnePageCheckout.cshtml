@@ -1,14 +1,14 @@
 ﻿@model OnePageCheckoutModel
-@using Nop.Web.Models.Checkout;
-@using Nop.Core.Infrastructure;
+@using Nop.Core
+@inject IWebHelper webHelper
 @{
-    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+    Layout = "_ColumnsOne";
 
     //scripts
-    Html.AddScriptParts("~/Scripts/public.accordion.js");
-    Html.AddScriptParts("~/Scripts/public.onepagecheckout.js");
+    Html.AddScriptParts(ResourceLocation.Footer, "~/js/public.accordion.js");
+    Html.AddScriptParts(ResourceLocation.Footer, "~/js/public.onepagecheckout.js");
 
-    var storeLocation = EngineContext.Current.Resolve<Nop.Core.IWebHelper>().GetStoreLocation();
+    var storeLocation = webHelper.GetStoreLocation();
 
     //title
     Html.AddTitleParts(T("PageTitle.Checkout").Text);
@@ -17,12 +17,12 @@
 }
 @{
     //step numbers
-    int billingAddressStepNumber = 1;
-    int shippingAddressStepNumber = 2;
-    int shippingMethodStepNumber = 3;
-    int paymentMethodStepNumber = 4;
-    int paymentInfoStepNumber = 5;
-    int confirmOrderStepNumber = 6;
+    var billingAddressStepNumber = 1;
+    var shippingAddressStepNumber = 2;
+    var shippingMethodStepNumber = 3;
+    var paymentMethodStepNumber = 4;
+    var paymentInfoStepNumber = 5;
+    var confirmOrderStepNumber = 6;
     if (!Model.ShippingRequired)
     {
         paymentMethodStepNumber = paymentMethodStepNumber - 2;
@@ -43,7 +43,7 @@
         <h1>@T("Checkout")</h1>
     </div>
     <div class="page-body checkout-data">
-        @Html.Widget("opc_content_before")
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OpcContentBefore })
         <ol class="opc" id="checkout-steps">
             <li id="opc-billing" class="tab-section allow">
                 <div class="step-title">
@@ -53,11 +53,11 @@
                 <div id="checkout-step-billing" class="step a-item" style="display: none;">
                     <form id="co-billing-form" action="">
                         <div id="checkout-billing-load">
-                            @Html.Action("OpcBillingForm", "Checkout")
+                            @await Html.PartialAsync("OpcBillingAddress", Model.BillingAddress)
                             @*billing address content will be loaded here*@
                         </div>
                     </form>
-                    <script type="text/javascript">
+                    <script asp-location="Footer">
                         Billing.init('#co-billing-form', '@(storeLocation)checkout/OpcSaveBilling/', @(Model.DisableBillingAddressCheckoutStep.ToString().ToLowerInvariant()));
                         if ($("#billing-address-select").length > 0) {
                             Billing.newAddress(!$('#billing-address-select').val());
@@ -82,7 +82,7 @@
                                 @*shipping address content will be loaded here*@
                             </div>
                         </form>
-                        <script type="text/javascript">
+                        <script asp-location="Footer">
                             Shipping.init('#co-shipping-form', '@(storeLocation)checkout/OpcSaveShipping/');
                             if ($("#shipping-address-select").length > 0) {
                                 Shipping.newAddress(!$('#shipping-address-select').val());
@@ -110,7 +110,7 @@
                             <div id="checkout-shipping-method-load">
                                 @*shipping methods content will be loaded here*@
                             </div>
-                            <script type="text/javascript">
+                            <script asp-location="Footer">
                                 ShippingMethod.init('#co-shipping-method-form', '@(storeLocation)checkout/OpcSaveShippingMethod/');
                             </script>
                             <div class="buttons" id="shipping-method-buttons-container">
@@ -134,7 +134,7 @@
                             @*payment methods content will be loaded here*@ Payment is not required
                         </div>
                     </form>
-                    <script type="text/javascript">
+                    <script asp-location="Footer">
                         PaymentMethod.init('#co-payment-method-form', '@(storeLocation)checkout/OpcSavePaymentMethod/');
                     </script>
                     <div class="buttons" id="payment-method-buttons-container">
@@ -156,7 +156,7 @@
                             @*payment info content will be loaded here*@ Payment is not required
                         </div>
                     </form>
-                    <script type="text/javascript">
+                    <script asp-location="Footer">
                         PaymentInfo.init('#co-payment-info-form', '@(storeLocation)checkout/OpcSavePaymentInfo/');
                     </script>
                     <div class="buttons" id="payment-info-buttons-container">
@@ -176,7 +176,7 @@
                     <div id="checkout-confirm-order-load">
                         @*confirm order content will be loaded here*@
                     </div>
-                    <script type="text/javascript">
+                    <script asp-location="Footer">
                         ConfirmOrder.init('@(storeLocation)checkout/OpcConfirmOrder/', '@(storeLocation)checkout/completed/');
                     </script>
                     <div class="buttons" id="confirm-order-buttons-container">
@@ -188,9 +188,9 @@
                 </div>
             </li>
         </ol>
-        @Html.Widget("opc_content_after")
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OpcContentAfter })
     </div>
-    <script type="text/javascript">
+    <script asp-location="Footer">
         Accordion.init('checkout-steps', '.step-title', true);
         Accordion.openSection('#opc-billing');
         Checkout.init('@(storeLocation)cart/');

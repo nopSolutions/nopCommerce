@@ -18,7 +18,7 @@ namespace Nop.Services.Payments
         public decimal AmountToRefund { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether it's a partial refund; otherwize, full refund
+        /// Gets or sets a value indicating whether it's a partial refund; otherwise, full refund
         /// </summary>
         public bool IsPartialRefund { get; set; }
     }

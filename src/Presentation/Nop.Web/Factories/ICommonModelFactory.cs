@@ -1,5 +1,4 @@
-﻿using System.Web.Mvc;
-using Nop.Core.Domain.Vendors;
+﻿using Nop.Core.Domain.Vendors;
 using Nop.Web.Models.Common;
 
 namespace Nop.Web.Factories
@@ -78,16 +77,16 @@ namespace Nop.Web.Factories
         /// <summary>
         /// Prepare the sitemap model
         /// </summary>
+        /// <param name="pageModel">Sitemap page model</param>
         /// <returns>Sitemap model</returns>
-        SitemapModel PrepareSitemapModel();
+        SitemapModel PrepareSitemapModel(SitemapPageModel pageModel);
 
         /// <summary>
         /// Get the sitemap in XML format
         /// </summary>
-        /// <param name="url">URL helper</param>
         /// <param name="id">Sitemap identifier; pass null to load the first sitemap or sitemap index file</param>
         /// <returns>Sitemap as string in XML format</returns>
-        string PrepareSitemapXml(UrlHelper url, int? id);
+        string PrepareSitemapXml( int? id);
 
         /// <summary>
         /// Prepare the store theme selector model
@@ -99,7 +98,7 @@ namespace Nop.Web.Factories
         /// Prepare the favicon model
         /// </summary>
         /// <returns>Favicon model</returns>
-        FaviconModel PrepareFaviconModel();
+        FaviconAndAppIconsModel PrepareFaviconAndAppIconsModel();
 
         /// <summary>
         /// Get robots.txt file

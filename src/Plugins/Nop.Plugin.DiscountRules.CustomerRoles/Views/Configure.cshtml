@@ -1,13 +1,12 @@
-﻿@{
+﻿@model Nop.Plugin.DiscountRules.CustomerRoles.Models.RequirementModel
+@{
     Layout = "";
 }
-@model Nop.Plugin.DiscountRules.CustomerRoles.Models.RequirementModel
-@using Nop.Web.Framework;
 
-<script type="text/javascript">
+<script>
     $(document).ready(function () {
         $('#savecustomerrolesrequirement@(Model.RequirementId)').click(function () {
-            var customerRoleId = $("#@Html.FieldIdFor(model => model.CustomerRoleId)").val();
+            var customerRoleId = $("#@Html.IdFor(model => model.CustomerRoleId)").val();
             var discountId = @Model.DiscountId;
             var requirementId = @Model.RequirementId;
 
@@ -19,11 +18,11 @@
             addAntiForgeryToken(postData);
 
             $.ajax({
-                cache:false,
+                cache: false,
                 type: "POST",
                 url: "@(Url.Action("Configure", "DiscountRulesCustomerRoles"))",
                 data: postData,
-                success: function (data) {
+                success: function (data, textStatus, jqXHR) {
                     $('#pnl-save-requirement-result@(Model.RequirementId)').fadeIn("slow").delay(1000).fadeOut("slow");
                     //notify parent if it's a new requirement
                     @if (Model.RequirementId == 0)
@@ -31,8 +30,8 @@
                         <text>$("#discountRequirementContainer").trigger('nopnewdiscountruleadded', [data.NewRequirementId]);</text>
                     }
                 },
-                error:function (xhr, ajaxOptions, thrownError){
-                    alert('@Html.Raw(HttpUtility.JavaScriptStringEncode(T("Admin.Promotions.Discounts.Requirements.FailedToSave").Text))');
+                error: function (jqXHR, textStatus, errorThrown) {
+                    $("#savecustomerrolesrequirementAlert").click();
                 }
             });
         });
@@ -41,11 +40,11 @@
 
 <div class="form-group">
     <div class="col-md-3 requirement-label-col">
-        @Html.NopLabelFor(model => model.CustomerRoleId)
+        <nop-label asp-for="CustomerRoleId" />
     </div>
     <div class="col-md-9 requirement-data-col">
         <div class="requirement-data-input">
-            @Html.NopDropDownListFor(model => model.CustomerRoleId, Model.AvailableCustomerRoles)
+            <nop-select asp-for="CustomerRoleId" asp-items="Model.AvailableCustomerRoles" />
         </div>
         <div class="requirement-data-buttons">
             <input type="button" id="savecustomerrolesrequirement@(Model.RequirementId)" class="btn btn-primary" value="@T("Admin.Common.Save")"/>
@@ -59,3 +58,4 @@
         </div>
     </div>
 </div>
+<nop-alert asp-alert-id="savecustomerrolesrequirementAlert" asp-alert-message="@T("Admin.Promotions.Discounts.Requirements.FailedToSave")" />

@@ -1,14 +1,16 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Web.Routing;
+using System.Linq;
+using Microsoft.AspNetCore.Http;
+using Nop.Core;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
-using Nop.Core.Plugins;
-using Nop.Plugin.Payments.Manual.Controllers;
+using Nop.Plugin.Payments.Manual.Models;
+using Nop.Plugin.Payments.Manual.Validators;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
-using Nop.Services.Orders;
 using Nop.Services.Payments;
+using Nop.Services.Plugins;
 
 namespace Nop.Plugin.Payments.Manual
 {
@@ -20,8 +22,9 @@ namespace Nop.Plugin.Payments.Manual
         #region Fields
 
         private readonly ILocalizationService _localizationService;
-        private readonly IOrderTotalCalculationService _orderTotalCalculationService;
+        private readonly IPaymentService _paymentService;
         private readonly ISettingService _settingService;
+        private readonly IWebHelper _webHelper;
         private readonly ManualPaymentSettings _manualPaymentSettings;
 
         #endregion
@@ -29,20 +32,22 @@ namespace Nop.Plugin.Payments.Manual
         #region Ctor
 
         public ManualPaymentProcessor(ILocalizationService localizationService,
-            IOrderTotalCalculationService orderTotalCalculationService,
+            IPaymentService paymentService,
             ISettingService settingService,
+            IWebHelper webHelper,
             ManualPaymentSettings manualPaymentSettings)
         {
-            this._localizationService = localizationService;
-            this._orderTotalCalculationService = orderTotalCalculationService;
-            this._settingService = settingService;
-            this._manualPaymentSettings = manualPaymentSettings;
+            _localizationService = localizationService;
+            _paymentService = paymentService;
+            _settingService = settingService;
+            _webHelper = webHelper;
+            _manualPaymentSettings = manualPaymentSettings;
         }
 
         #endregion
 
         #region Methods
-        
+
         /// <summary>
         /// Process a payment
         /// </summary>
@@ -50,9 +55,10 @@ namespace Nop.Plugin.Payments.Manual
         /// <returns>Process payment result</returns>
         public ProcessPaymentResult ProcessPayment(ProcessPaymentRequest processPaymentRequest)
         {
-            var result = new ProcessPaymentResult();
-
-            result.AllowStoringCreditCardNumber = true;
+            var result = new ProcessPaymentResult
+            {
+                AllowStoringCreditCardNumber = true
+            };
             switch (_manualPaymentSettings.TransactMode)
             {
                 case TransactMode.Pending:
@@ -65,10 +71,8 @@ namespace Nop.Plugin.Payments.Manual
                     result.NewPaymentStatus = PaymentStatus.Paid;
                     break;
                 default:
-                    {
-                        result.AddError("Not supported transaction type");
-                        return result;
-                    }
+                    result.AddError("Not supported transaction type");
+                    break;
             }
 
             return result;
@@ -86,7 +90,7 @@ namespace Nop.Plugin.Payments.Manual
         /// <summary>
         /// Returns a value indicating whether payment method should be hidden during checkout
         /// </summary>
-        /// <param name="cart">Shoping cart</param>
+        /// <param name="cart">Shopping cart</param>
         /// <returns>true - hide; false - display.</returns>
         public bool HidePaymentMethod(IList<ShoppingCartItem> cart)
         {
@@ -102,9 +106,8 @@ namespace Nop.Plugin.Payments.Manual
         /// <returns>Additional handling fee</returns>
         public decimal GetAdditionalHandlingFee(IList<ShoppingCartItem> cart)
         {
-            var result = this.CalculateAdditionalFee(_orderTotalCalculationService,  cart,
+            return _paymentService.CalculateAdditionalFee(cart,
                 _manualPaymentSettings.AdditionalFee, _manualPaymentSettings.AdditionalFeePercentage);
-            return result;
         }
 
         /// <summary>
@@ -114,9 +117,7 @@ namespace Nop.Plugin.Payments.Manual
         /// <returns>Capture payment result</returns>
         public CapturePaymentResult Capture(CapturePaymentRequest capturePaymentRequest)
         {
-            var result = new CapturePaymentResult();
-            result.AddError("Capture method not supported");
-            return result;
+            return new CapturePaymentResult { Errors = new[] { "Capture method not supported" } };
         }
 
         /// <summary>
@@ -126,9 +127,7 @@ namespace Nop.Plugin.Payments.Manual
         /// <returns>Result</returns>
         public RefundPaymentResult Refund(RefundPaymentRequest refundPaymentRequest)
         {
-            var result = new RefundPaymentResult();
-            result.AddError("Refund method not supported");
-            return result;
+            return new RefundPaymentResult { Errors = new[] { "Refund method not supported" } };
         }
 
         /// <summary>
@@ -138,9 +137,7 @@ namespace Nop.Plugin.Payments.Manual
         /// <returns>Result</returns>
         public VoidPaymentResult Void(VoidPaymentRequest voidPaymentRequest)
         {
-            var result = new VoidPaymentResult();
-            result.AddError("Void method not supported");
-            return result;
+            return new VoidPaymentResult { Errors = new[] { "Void method not supported" } };
         }
 
         /// <summary>
@@ -150,9 +147,10 @@ namespace Nop.Plugin.Payments.Manual
         /// <returns>Process payment result</returns>
         public ProcessPaymentResult ProcessRecurringPayment(ProcessPaymentRequest processPaymentRequest)
         {
-            var result = new ProcessPaymentResult();
-
-            result.AllowStoringCreditCardNumber = true;
+            var result = new ProcessPaymentResult
+            {
+                AllowStoringCreditCardNumber = true
+            };
             switch (_manualPaymentSettings.TransactMode)
             {
                 case TransactMode.Pending:
@@ -165,10 +163,8 @@ namespace Nop.Plugin.Payments.Manual
                     result.NewPaymentStatus = PaymentStatus.Paid;
                     break;
                 default:
-                    {
-                        result.AddError("Not supported transaction type");
-                        return result;
-                    }
+                    result.AddError("Not supported transaction type");
+                    break;
             }
 
             return result;
@@ -193,45 +189,71 @@ namespace Nop.Plugin.Payments.Manual
         public bool CanRePostProcessPayment(Order order)
         {
             if (order == null)
-                throw new ArgumentNullException("order");
+                throw new ArgumentNullException(nameof(order));
 
             //it's not a redirection payment method. So we always return false
             return false;
         }
 
         /// <summary>
-        /// Gets a route for provider configuration
+        /// Validate payment form
         /// </summary>
-        /// <param name="actionName">Action name</param>
-        /// <param name="controllerName">Controller name</param>
-        /// <param name="routeValues">Route values</param>
-        public void GetConfigurationRoute(out string actionName, out string controllerName, out RouteValueDictionary routeValues)
+        /// <param name="form">The parsed form values</param>
+        /// <returns>List of validating errors</returns>
+        public IList<string> ValidatePaymentForm(IFormCollection form)
         {
-            actionName = "Configure";
-            controllerName = "PaymentManual";
-            routeValues = new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Payments.Manual.Controllers" }, { "area", null } };
+            var warnings = new List<string>();
+
+            //validate
+            var validator = new PaymentInfoValidator(_localizationService);
+            var model = new PaymentInfoModel
+            {
+                CardholderName = form["CardholderName"],
+                CardNumber = form["CardNumber"],
+                CardCode = form["CardCode"],
+                ExpireMonth = form["ExpireMonth"],
+                ExpireYear = form["ExpireYear"]
+            };
+            var validationResult = validator.Validate(model);
+            if (!validationResult.IsValid)
+                warnings.AddRange(validationResult.Errors.Select(error => error.ErrorMessage));
+
+            return warnings;
         }
 
         /// <summary>
-        /// Gets a route for payment info
+        /// Get payment information
         /// </summary>
-        /// <param name="actionName">Action name</param>
-        /// <param name="controllerName">Controller name</param>
-        /// <param name="routeValues">Route values</param>
-        public void GetPaymentInfoRoute(out string actionName, out string controllerName, out RouteValueDictionary routeValues)
+        /// <param name="form">The parsed form values</param>
+        /// <returns>Payment info holder</returns>
+        public ProcessPaymentRequest GetPaymentInfo(IFormCollection form)
         {
-            actionName = "PaymentInfo";
-            controllerName = "PaymentManual";
-            routeValues = new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Payments.Manual.Controllers" }, { "area", null } };
+            return new ProcessPaymentRequest
+            {
+                CreditCardType = form["CreditCardType"],
+                CreditCardName = form["CardholderName"],
+                CreditCardNumber = form["CardNumber"],
+                CreditCardExpireMonth = int.Parse(form["ExpireMonth"]),
+                CreditCardExpireYear = int.Parse(form["ExpireYear"]),
+                CreditCardCvv2 = form["CardCode"]
+            };
         }
 
         /// <summary>
-        /// Get the type of controller
+        /// Gets a configuration page URL
         /// </summary>
-        /// <returns>Type</returns>
-        public Type GetControllerType()
+        public override string GetConfigurationPageUrl()
         {
-            return typeof(PaymentManualController);
+            return $"{_webHelper.GetStoreLocation()}Admin/PaymentManual/Configure";
+        }
+
+        /// <summary>
+        /// Gets a name of a view component for displaying plugin in public store ("payment info" checkout step)
+        /// </summary>
+        /// <returns>View component name</returns>
+        public string GetPublicViewComponentName()
+        {
+            return "PaymentManual";
         }
 
         /// <summary>
@@ -247,13 +269,14 @@ namespace Nop.Plugin.Payments.Manual
             _settingService.SaveSetting(settings);
 
             //locales
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Manual.Fields.AdditionalFee", "Additional fee");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Manual.Fields.AdditionalFee.Hint", "Enter additional fee to charge your customers.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Manual.Fields.AdditionalFeePercentage", "Additional fee. Use percentage");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Manual.Fields.AdditionalFeePercentage.Hint", "Determines whether to apply a percentage additional fee to the order total. If not enabled, a fixed value is used.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Manual.Fields.TransactMode", "After checkout mark payment as");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Manual.Fields.TransactMode.Hint", "Specify transaction mode.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Manual.PaymentMethodDescription", "Pay by credit / debit card");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Manual.Instructions", "This payment method stores credit card information in database (it's not sent to any third-party processor). In order to store credit card information, you must be PCI compliant.");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Manual.Fields.AdditionalFee", "Additional fee");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Manual.Fields.AdditionalFee.Hint", "Enter additional fee to charge your customers.");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Manual.Fields.AdditionalFeePercentage", "Additional fee. Use percentage");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Manual.Fields.AdditionalFeePercentage.Hint", "Determines whether to apply a percentage additional fee to the order total. If not enabled, a fixed value is used.");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Manual.Fields.TransactMode", "After checkout mark payment as");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Manual.Fields.TransactMode.Hint", "Specify transaction mode.");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Manual.PaymentMethodDescription", "Pay by credit / debit card");
 
             base.Install();
         }
@@ -267,13 +290,14 @@ namespace Nop.Plugin.Payments.Manual
             _settingService.DeleteSetting<ManualPaymentSettings>();
 
             //locales
-            this.DeletePluginLocaleResource("Plugins.Payments.Manual.Fields.AdditionalFee");
-            this.DeletePluginLocaleResource("Plugins.Payments.Manual.Fields.AdditionalFee.Hint");
-            this.DeletePluginLocaleResource("Plugins.Payments.Manual.Fields.AdditionalFeePercentage");
-            this.DeletePluginLocaleResource("Plugins.Payments.Manual.Fields.AdditionalFeePercentage.Hint");
-            this.DeletePluginLocaleResource("Plugins.Payments.Manual.Fields.TransactMode");
-            this.DeletePluginLocaleResource("Plugins.Payments.Manual.Fields.TransactMode.Hint");
-            this.DeletePluginLocaleResource("Plugins.Payments.Manual.PaymentMethodDescription");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Manual.Instructions");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Manual.Fields.AdditionalFee");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Manual.Fields.AdditionalFee.Hint");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Manual.Fields.AdditionalFeePercentage");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Manual.Fields.AdditionalFeePercentage.Hint");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Manual.Fields.TransactMode");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Manual.Fields.TransactMode.Hint");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Manual.PaymentMethodDescription");
 
             base.Uninstall();
         }
@@ -329,7 +353,7 @@ namespace Nop.Plugin.Payments.Manual
         {
             get { return PaymentMethodType.Standard; }
         }
-        
+
         /// <summary>
         /// Gets a value indicating whether we should display a payment information page for this plugin
         /// </summary>

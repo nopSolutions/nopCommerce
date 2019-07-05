@@ -1,7 +1,6 @@
 ﻿@model ProfileIndexModel
-@using Nop.Web.Models.Profile;
 @{    
-    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+    Layout = "_ColumnsOne";
 
     //title
     Html.AddTitleParts(T("PageTitle.Profile").Text);
@@ -16,7 +15,7 @@
         @{
             var selectPostsTab = Model.ForumsEnabled && Model.PagingPosts ? ".tabs( 'option', 'active', 1 )" : "";
         }
-        <script type="text/javascript">
+        <script asp-location="Footer">
             $(document).ready(function () {
                 $("#tabs").tabs()@Html.Raw(selectPostsTab);
             });
@@ -30,12 +29,12 @@
                 }
             </ul>
             <div id="tabs-1" class="tab-content">
-                @Html.Action("info", new { customerProfileId = Model.CustomerProfileId })
+                @await Component.InvokeAsync("ProfileInfo", new { customerProfileId = Model.CustomerProfileId })
             </div>
             @if (Model.ForumsEnabled)
             {
                 <div id="tabs-2" class="tab-content">
-                    @Html.Action("posts", new { customerProfileId = Model.CustomerProfileId, page = Model.PostsPage })
+                    @await Component.InvokeAsync("ProfilePosts", new { customerProfileId = Model.CustomerProfileId, pageNumber = Model.PostsPage })
                 </div>
             }
         </div>

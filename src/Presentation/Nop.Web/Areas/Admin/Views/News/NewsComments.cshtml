@@ -1,0 +1,278 @@
+@model NewsCommentSearchModel
+
+@inject IStoreService storeService
+@using Nop.Services.Stores
+@{
+    //page title
+    ViewBag.Title = T("Admin.ContentManagement.News.Comments").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("News comments");
+}
+
+@{
+    const string hideSearchBlockAttributeName = "NewsCommentsPage.HideSearchBlock";
+    var hideSearchBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSearchBlockAttributeName);
+}
+
+<nop-antiforgery-token />
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        @T("Admin.ContentManagement.News.Comments")
+    </h1>
+    <div class="pull-right">
+        <button type="button" id="approve-selected" class="btn bg-green">
+            <i class="fa fa-check-square-o"></i>
+            @T("Admin.ContentManagement.News.Comments.ApproveSelected")
+        </button>
+        <button type="button" id="disapprove-selected" class="btn bg-navy">
+            <i class="fa fa-minus-square-o"></i>
+            @T("Admin.ContentManagement.News.Comments.DisapproveSelected")
+        </button>
+        <button type="button" id="delete-selected" class="btn bg-red">
+            <i class="fa fa-trash-o"></i>
+            @T("Admin.ContentManagement.News.Comments.DeleteSelected")
+        </button>
+        <nop-action-confirmation asp-button-id="delete-selected" />
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.NewsCommentListButtons })
+    </div>
+</div>
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default panel-search">
+                <div class="panel-body">
+                    <div class="row search-row @(!hideSearchBlock ? "opened" : "")" data-hideAttribute="@hideSearchBlockAttributeName">
+                        <div class="search-text">@T("Admin.Common.Search")</div>
+                        <div class="icon-search"><i class="fa fa-search" aria-hidden="true"></i></div>
+                        <div class="icon-collapse"><i class="fa fa-angle-down" aria-hidden="true"></i></div>
+                    </div>
+
+                    <div class="search-body @(hideSearchBlock ? "closed" : "")">
+                        <div class="row">
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="CreatedOnFrom" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-editor asp-for="CreatedOnFrom" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="CreatedOnTo" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-editor asp-for="CreatedOnTo" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-7">
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="SearchApprovedId" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-select asp-for="SearchApprovedId" asp-items="Model.AvailableApprovedOptions" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="SearchText" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-editor asp-for="SearchText" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-7 col-md-offset-5">
+                                <button type="button" id="search-comments" class="btn btn-primary btn-search">
+                                    <i class="fa fa-search"></i>
+                                    @T("Admin.Common.Search")
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    @await Html.PartialAsync("Table", new DataTablesModel
+                    {
+                        Name = "comments-grid",
+                        SearchButtonId = "search-comments",
+                        UrlRead = new DataUrl("Comments", "News", new RouteValueDictionary { [nameof(Model.NewsItemId)] = Model.NewsItemId }),
+                        UrlDelete = new DataUrl("CommentDelete", "News", null),
+                        UrlUpdate = new DataUrl("CommentUpdate", "News", null),
+                        Length = Model.PageSize,
+                        LengthMenu = Model.AvailablePageSizes,
+                        Filters = new List<FilterParameter>
+                        {
+                            new FilterParameter(nameof(Model.CreatedOnFrom)),
+                            new FilterParameter(nameof(Model.CreatedOnTo)),
+                            new FilterParameter(nameof(Model.SearchText)),
+                            new FilterParameter(nameof(Model.SearchApprovedId))
+                        },
+                        ColumnCollection = new List<ColumnProperty>
+                        {
+                            new ColumnProperty(nameof(NewsCommentModel.Id))
+                            {
+                                IsMasterCheckBox = true,
+                                Render = new RenderCheckBox("checkbox_comments"),
+                                ClassName =  NopColumnClassDefaults.CenterAll,
+                                Width = "50",
+                            },
+                            new ColumnProperty(nameof(NewsCommentModel.NewsItemTitle))
+                            {
+                                Title = T("Admin.ContentManagement.News.Comments.Fields.NewsItem").Text,
+                                Width = "200",
+                                Render = new RenderLink(new DataUrl("~/Admin/News/NewsItemEdit/", nameof(NewsCommentModel.NewsItemId)))
+                            },
+                            new ColumnProperty(nameof(NewsCommentModel.StoreName))
+                            {
+                                Title = T("Admin.ContentManagement.News.Comments.Fields.StoreName").Text,
+                                Width = "100",
+                                Visible = storeService.GetAllStores().Count > 1
+                            },
+                            new ColumnProperty(nameof(NewsCommentModel.CustomerInfo))
+                            {
+                                Title = T("Admin.ContentManagement.News.Comments.Fields.Customer").Text,
+                                Width = "100",
+                                Render = new RenderLink(new DataUrl("~/Admin/Customer/Edit/", nameof(NewsCommentModel.CustomerId)))
+                            },
+                            new ColumnProperty(nameof(NewsCommentModel.CommentTitle))
+                            {
+                                Title = T("Admin.ContentManagement.News.Comments.Fields.CommentTitle").Text,
+                                Width = "200"
+                            },
+                            new ColumnProperty(nameof(NewsCommentModel.CommentText))
+                            {
+                                Title = T("Admin.ContentManagement.News.Comments.Fields.CommentText").Text,
+                                Width = "200",
+                                Encode = false
+                            },
+                            new ColumnProperty(nameof(NewsCommentModel.IsApproved))
+                            {
+                                Title = T("Admin.ContentManagement.News.Comments.Fields.IsApproved").Text,
+                                Width = "100",
+                                ClassName = NopColumnClassDefaults.CenterAll,
+                                Render = new RenderBoolean(),
+                                Editable = true,
+                                EditType = EditType.Checkbox
+                            },
+                            new ColumnProperty(nameof(NewsCommentModel.CreatedOn))
+                            {
+                                Title = T("Admin.ContentManagement.News.Comments.Fields.CreatedOn").Text,
+                                Width = "200",
+                                ClassName =  NopColumnClassDefaults.Button,
+                                Render = new RenderDate()
+                            },
+                            new ColumnProperty(nameof(NewsCommentModel.Id))
+                            {
+                                Title = T("Admin.Common.Edit").Text,
+                                Width = "200",
+                                ClassName =  NopColumnClassDefaults.Button,
+                                Render = new RenderButtonsInlineEdit()
+                            },
+                            new ColumnProperty(nameof(NewsCommentModel.Id))
+                            {
+                                Title = T("Admin.Common.Delete").Text,
+                                Width = "100",
+                                Render = new RenderButtonRemove(T("Admin.Common.Delete").Text),
+                                ClassName = NopColumnClassDefaults.Button
+                            }
+                        }
+                    })
+
+                    <script>
+                        $(document).ready(function() {
+                            //"delete selected" button
+                            $("#delete-selected-action-confirmation-submit-button").bind("click",
+                                function() {
+                                    var postData = {
+                                        selectedIds: selectedIds
+                                    };
+                                    addAntiForgeryToken(postData);
+                                    $.ajax({
+                                        cache: false,
+                                        type: "POST",
+                                        url: "@(Url.Action("DeleteSelectedComments", "News"))",
+                                        data: postData,
+                                        traditional: true,
+                                        error: function (jqXHR, textStatus, errorThrown) {
+                                            $('#deleteSelectedCommentsFailed-info').text(errorThrown);
+                                            $("#deleteSelectedCommentsFailed").click();
+                                        },
+                                        complete: function (jqXHR, textStatus) {
+                                            updateTable('#comments-grid');
+                                        }
+                                    });
+                                    $('#delete-selected-action-confirmation').modal('toggle');
+                                    return false;
+                                });
+
+                            //"approve selected" button
+                            $('#approve-selected').click(function(e) {
+                                    e.preventDefault();
+
+                                    var postData = {
+                                        selectedIds: selectedIds
+                                    };
+                                    addAntiForgeryToken(postData);
+
+                                    $.ajax({
+                                        cache: false,
+                                        type: "POST",
+                                        url: "@(Url.Action("ApproveSelected", "News"))",
+                                        data: postData,
+                                        traditional: true,
+                                        error: function (jqXHR, textStatus, errorThrown) {
+                                            $('#approveSelectedFailed-info').text(errorThrown);
+                                            $("#approveSelectedFailed").click();
+                                        },
+                                        complete: function (jqXHR, textStatus) {
+                                            updateTable('#comments-grid');
+                                        }
+                                    });
+                                    return false;
+                                });
+
+                            //"disapprove selected" button
+                            $('#disapprove-selected').click(function(e) {
+                                    e.preventDefault();
+
+                                    var postData = {
+                                        selectedIds: selectedIds
+                                    };
+                                    addAntiForgeryToken(postData);
+
+                                    $.ajax({
+                                        cache: false,
+                                        type: "POST",
+                                        url: "@(Url.Action("DisapproveSelected", "News"))",
+                                        data: postData,
+                                        traditional: true,
+                                        error: function (jqXHR, textStatus, errorThrown) {
+                                            $('#disapproveSelectedFailed-info').text(errorThrown);
+                                            $("#disapproveSelectedFailed").click();
+                                        },
+                                        complete: function (jqXHR, textStatus) {
+                                            updateTable('#comments-grid');
+                                        }
+                                    });
+                                    return false;
+                                });
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<nop-alert asp-alert-id="deleteSelectedCommentsFailed" />
+<nop-alert asp-alert-id="approveSelectedFailed" />
+<nop-alert asp-alert-id="disapproveSelectedFailed" />

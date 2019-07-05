@@ -1,12 +1,8 @@
-﻿using System;
-using System.ComponentModel;
-using System.Globalization;
-using System.IO;
-using System.Text;
-using System.Xml.Serialization;
-
-namespace Nop.Core.Domain.Shipping
+﻿namespace Nop.Core.Domain.Shipping
 {
+    /// <summary>
+    /// Pickup point
+    /// </summary>
     public partial class PickupPoint
     {
         /// <summary>
@@ -40,6 +36,11 @@ namespace Nop.Core.Domain.Shipping
         public string City { get; set; }
 
         /// <summary>
+        /// Gets or sets a county
+        /// </summary>
+        public string County { get; set; }
+
+        /// <summary>
         /// Gets or sets a state abbreviation
         /// </summary>
         public string StateAbbreviation { get; set; }
@@ -70,65 +71,13 @@ namespace Nop.Core.Domain.Shipping
         public decimal PickupFee { get; set; }
 
         /// <summary>
-        /// Gets or sets an oppening hours
+        /// Gets or sets an opening hours
         /// </summary>
         public string OpeningHours { get; set; }
-    }
 
-    public class PickupPointTypeConverter : TypeConverter
-    {
-        public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
-        {
-            if (sourceType == typeof(string))
-                return true;
-
-            return base.CanConvertFrom(context, sourceType);
-        }
-
-        public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
-        {
-            if (value is string)
-            {
-                PickupPoint pickupPoint = null;
-                var valueStr = value as string;
-                if (!string.IsNullOrEmpty(valueStr))
-                {
-                    try
-                    {
-                        using (var tr = new StringReader(valueStr))
-                        {
-                            pickupPoint = (PickupPoint)(new XmlSerializer(typeof(PickupPoint)).Deserialize(tr));
-                        }
-                    }
-                    catch { }
-                }
-
-                return pickupPoint;
-            }
-
-            return base.ConvertFrom(context, culture, value);
-        }
-
-        public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
-        {
-            if (destinationType == typeof(string))
-            {
-                var pickupPoint = value as PickupPoint;
-                if (pickupPoint != null)
-                {
-                    var sb = new StringBuilder();
-                    using (var tw = new StringWriter(sb))
-                    {
-                        new XmlSerializer(typeof(PickupPoint)).Serialize(tw, value);
-
-                        return sb.ToString();
-                    }
-                }
-
-                return string.Empty;
-            }
-
-            return base.ConvertTo(context, culture, value, destinationType);
-        }
+        /// <summary>
+        /// Gets or sets the display order
+        /// </summary>
+        public int DisplayOrder { get; set; }
     }
 }

@@ -1,7 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using System.Net.Http;
 using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
+using Nop.Core;
+using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Tasks;
+using Nop.Core.Http;
+using Nop.Core.Infrastructure;
+using Nop.Services.Localization;
+using Nop.Services.Logging;
 
 namespace Nop.Services.Tasks
 {
@@ -10,57 +19,115 @@ namespace Nop.Services.Tasks
     /// </summary>
     public partial class TaskThread : IDisposable
     {
+        #region Fields
+
+        private static readonly string _scheduleTaskUrl;
+        private static readonly int? _timeout;
+
+        private readonly Dictionary<string, string> _tasks;
         private Timer _timer;
         private bool _disposed;
-        private readonly Dictionary<string, Task> _tasks;
+
+        #endregion
+
+        #region Ctor
+
+        static TaskThread()
+        {
+            _scheduleTaskUrl = $"{EngineContext.Current.Resolve<IStoreContext>().CurrentStore.Url}{NopTaskDefaults.ScheduleTaskPath}";
+            _timeout = EngineContext.Current.Resolve<CommonSettings>().ScheduleTaskRunTimeout;
+        }
 
         internal TaskThread()
         {
-            this._tasks = new Dictionary<string, Task>();
-            this.Seconds = 10 * 60;
+            _tasks = new Dictionary<string, string>();
+            Seconds = 10 * 60;
         }
+
+        #endregion
+
+        #region Utilities
 
         private void Run()
         {
             if (Seconds <= 0)
                 return;
 
-            this.StartedUtc = DateTime.UtcNow;
-            this.IsRunning = true;
-            foreach (Task task in this._tasks.Values)
+            StartedUtc = DateTime.UtcNow;
+            IsRunning = true;
+
+            foreach (var taskName in _tasks.Keys)
             {
-                task.Execute();
+                var taskType = _tasks[taskName];
+                try
+                {
+                    //create and configure client
+                    var client = EngineContext.Current.Resolve<IHttpClientFactory>().CreateClient(NopHttpDefaults.DefaultHttpClient);
+                    if (_timeout.HasValue)
+                        client.Timeout = TimeSpan.FromMilliseconds(_timeout.Value);
+
+                    //send post data
+                    var data = new FormUrlEncodedContent(new[] { new KeyValuePair<string, string>(nameof(taskType), taskType) });
+                    client.PostAsync(_scheduleTaskUrl, data).Wait();
+                }
+                catch (Exception ex)
+                {
+                    var _serviceScopeFactory = EngineContext.Current.Resolve<IServiceScopeFactory>();
+                    using (var scope = _serviceScopeFactory.CreateScope())
+                    {
+                        // Resolve
+                        var logger = scope.ServiceProvider.GetRequiredService<ILogger>();
+                        var localizationService = scope.ServiceProvider.GetRequiredService<ILocalizationService>();
+                        var storeContext = scope.ServiceProvider.GetRequiredService<IStoreContext>();
+
+                        var message = ex.InnerException?.GetType() == typeof(TaskCanceledException) ? localizationService.GetResource("ScheduleTasks.TimeoutError") : ex.Message;
+
+                        message = string.Format(localizationService.GetResource("ScheduleTasks.Error"), taskName,
+                            message, taskType, storeContext.CurrentStore.Name, _scheduleTaskUrl);
+
+                        logger.Error(message, ex);
+                    }
+                }
             }
-            this.IsRunning = false;
+
+            IsRunning = false;
         }
 
         private void TimerHandler(object state)
         {
-            this._timer.Change(-1, -1);
-            this.Run();
-            if (this.RunOnlyOnce)
+            try
             {
-                this.Dispose();
+                _timer.Change(-1, -1);
+                Run();
+
+                if (RunOnlyOnce)
+                    Dispose();
+                else
+                    _timer.Change(Interval, Interval);
             }
-            else
+            catch
             {
-                this._timer.Change(this.Interval, this.Interval);
+                // ignore
             }
         }
+
+        #endregion
+
+        #region Methods
 
         /// <summary>
         /// Disposes the instance
         /// </summary>
         public void Dispose()
         {
-            if ((this._timer != null) && !this._disposed)
+            if (_timer == null || _disposed)
+                return;
+
+            lock (this)
             {
-                lock (this)
-                {
-                    this._timer.Dispose();
-                    this._timer = null;
-                    this._disposed = true;
-                }
+                _timer.Dispose();
+                _timer = null;
+                _disposed = true;
             }
         }
 
@@ -69,29 +136,33 @@ namespace Nop.Services.Tasks
         /// </summary>
         public void InitTimer()
         {
-            if (this._timer == null)
-            {
-                this._timer = new Timer(new TimerCallback(this.TimerHandler), null, this.Interval, this.Interval);
-            }
+            if (_timer == null)
+                _timer = new Timer(TimerHandler, null, InitInterval, Interval);
         }
 
         /// <summary>
         /// Adds a task to the thread
         /// </summary>
         /// <param name="task">The task to be added</param>
-        public void AddTask(Task task)
+        public void AddTask(ScheduleTask task)
         {
-            if (!this._tasks.ContainsKey(task.Name))
-            {
-                this._tasks.Add(task.Name, task);
-            }
+            if (!_tasks.ContainsKey(task.Name))
+                _tasks.Add(task.Name, task.Type);
         }
 
+        #endregion
+
+        #region Properties
 
         /// <summary>
         /// Gets or sets the interval in seconds at which to run the tasks
         /// </summary>
         public int Seconds { get; set; }
+
+        /// <summary>
+        /// Get or set the interval before timer first start 
+        /// </summary>
+        public int InitSeconds { get; set; }
 
         /// <summary>
         /// Get or sets a datetime when thread has been started
@@ -104,30 +175,14 @@ namespace Nop.Services.Tasks
         public bool IsRunning { get; private set; }
 
         /// <summary>
-        /// Get a list of tasks
-        /// </summary>
-        public IList<Task> Tasks
-        {
-            get
-            {
-                var list = new List<Task>();
-                foreach (var task in this._tasks.Values)
-                {
-                    list.Add(task);
-                }
-                return new ReadOnlyCollection<Task>(list);
-            }
-        }
-
-        /// <summary>
         /// Gets the interval (in milliseconds) at which to run the task
         /// </summary>
         public int Interval
         {
             get
             {
-                //if somobody entered more than "2147483" seconds, then an exception could be thrown (exceeds int.MaxValue)
-                int interval = this.Seconds * 1000;
+                //if somebody entered more than "2147483" seconds, then an exception could be thrown (exceeds int.MaxValue)
+                var interval = Seconds * 1000;
                 if (interval <= 0)
                     interval = int.MaxValue;
                 return interval;
@@ -135,8 +190,25 @@ namespace Nop.Services.Tasks
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the thread whould be run only once (per appliction start)
+        /// Gets the due time interval (in milliseconds) at which to begin start the task
+        /// </summary>
+        public int InitInterval
+        {
+            get
+            {
+                //if somebody entered less than "0" seconds, then an exception could be thrown
+                var interval = InitSeconds * 1000;
+                if (interval <= 0)
+                    interval = 0;
+                return interval;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the thread would be run only once (on application start)
         /// </summary>
         public bool RunOnlyOnce { get; set; }
+
+        #endregion
     }
 }

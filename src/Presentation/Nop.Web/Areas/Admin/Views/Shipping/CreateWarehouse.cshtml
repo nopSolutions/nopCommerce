@@ -1,0 +1,32 @@
+@model WarehouseModel
+
+@{
+    //page title
+    ViewBag.Title = T("Admin.Configuration.Shipping.Warehouses.AddNew").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Warehouses");
+}
+
+<form asp-controller="Shipping" asp-action="CreateWarehouse" method="post">
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.Configuration.Shipping.Warehouses.AddNew")
+            <small>
+                <i class="fa fa-arrow-circle-left"></i>
+                <a asp-action="Warehouses">@T("Admin.Configuration.Shipping.Warehouses.BackToList")</a>
+            </small>
+        </h1>
+        <div class="pull-right">
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
+            <button type="submit" name="save-continue" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.SaveContinue")
+            </button>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.WarehouseDetailsButtons })
+        </div>
+    </div>
+    @await Html.PartialAsync("_CreateOrUpdateWarehouse", Model)
+</form>

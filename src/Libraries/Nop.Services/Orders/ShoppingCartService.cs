@@ -1,6 +1,10 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
@@ -14,6 +18,8 @@ using Nop.Services.Events;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Security;
+using Nop.Services.Seo;
+using Nop.Services.Shipping;
 using Nop.Services.Shipping.Date;
 using Nop.Services.Stores;
 
@@ -26,95 +32,150 @@ namespace Nop.Services.Orders
     {
         #region Fields
 
-        private readonly IRepository<ShoppingCartItem> _sciRepository;
-        private readonly IWorkContext _workContext;
-        private readonly IStoreContext _storeContext;
-        private readonly ICurrencyService _currencyService;
-        private readonly IProductService _productService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IProductAttributeParser _productAttributeParser;
-        private readonly ICheckoutAttributeService _checkoutAttributeService;
-        private readonly ICheckoutAttributeParser _checkoutAttributeParser;
-        private readonly IPriceFormatter _priceFormatter;
-        private readonly ICustomerService _customerService;
-        private readonly ShoppingCartSettings _shoppingCartSettings;
-        private readonly IEventPublisher _eventPublisher;
-        private readonly IPermissionService _permissionService;
+        private readonly CatalogSettings _catalogSettings;
         private readonly IAclService _aclService;
+        private readonly IActionContextAccessor _actionContextAccessor;
+        private readonly ICheckoutAttributeParser _checkoutAttributeParser;
+        private readonly ICheckoutAttributeService _checkoutAttributeService;
+        private readonly ICurrencyService _currencyService;
+        private readonly ICustomerService _customerService;
         private readonly IDateRangeService _dateRangeService;
-        private readonly IStoreMappingService _storeMappingService;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly IProductAttributeService _productAttributeService;
         private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly IEventPublisher _eventPublisher;
+        private readonly IGenericAttributeService _genericAttributeService;
+        private readonly ILocalizationService _localizationService;
+        private readonly IPermissionService _permissionService;
+        private readonly IPriceFormatter _priceFormatter;
+        private readonly IProductAttributeParser _productAttributeParser;
+        private readonly IProductAttributeService _productAttributeService;
+        private readonly IProductService _productService;
+        private readonly IRepository<ShoppingCartItem> _sciRepository;
+        private readonly IShippingService _shippingService;
+        private readonly IStoreContext _storeContext;
+        private readonly IStoreMappingService _storeMappingService;
+        private readonly IUrlHelperFactory _urlHelperFactory;
+        private readonly IUrlRecordService _urlRecordService;
+        private readonly IWorkContext _workContext;
+        private readonly OrderSettings _orderSettings;
+        private readonly ShoppingCartSettings _shoppingCartSettings;
 
         #endregion
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="sciRepository">Shopping cart repository</param>
-        /// <param name="workContext">Work context</param>
-        /// <param name="storeContext">Store context</param>
-        /// <param name="currencyService">Currency service</param>
-        /// <param name="productService">Product settings</param>
-        /// <param name="localizationService">Localization service</param>
-        /// <param name="productAttributeParser">Product attribute parser</param>
-        /// <param name="checkoutAttributeService">Checkout attribute service</param>
-        /// <param name="checkoutAttributeParser">Checkout attribute parser</param>
-        /// <param name="priceFormatter">Price formatter</param>
-        /// <param name="customerService">Customer service</param>
-        /// <param name="shoppingCartSettings">Shopping cart settings</param>
-        /// <param name="eventPublisher">Event publisher</param>
-        /// <param name="permissionService">Permission service</param>
-        /// <param name="aclService">ACL service</param>
-        /// <param name="dateRangeService">Date range service</param>
-        /// <param name="storeMappingService">Store mapping service</param>
-        /// <param name="genericAttributeService">Generic attribute service</param>
-        /// <param name="productAttributeService">Product attribute service</param>
-        /// <param name="dateTimeHelper">Datetime helper</param>
-        public ShoppingCartService(IRepository<ShoppingCartItem> sciRepository,
-            IWorkContext workContext, 
-            IStoreContext storeContext,
-            ICurrencyService currencyService,
-            IProductService productService,
-            ILocalizationService localizationService,
-            IProductAttributeParser productAttributeParser,
-            ICheckoutAttributeService checkoutAttributeService,
-            ICheckoutAttributeParser checkoutAttributeParser,
-            IPriceFormatter priceFormatter,
-            ICustomerService customerService,
-            ShoppingCartSettings shoppingCartSettings,
-            IEventPublisher eventPublisher,
-            IPermissionService permissionService, 
+        public ShoppingCartService(CatalogSettings catalogSettings,
             IAclService aclService,
+            IActionContextAccessor actionContextAccessor,
+            ICheckoutAttributeParser checkoutAttributeParser,
+            ICheckoutAttributeService checkoutAttributeService,
+            ICurrencyService currencyService,
+            ICustomerService customerService,
             IDateRangeService dateRangeService,
-            IStoreMappingService storeMappingService,
+            IDateTimeHelper dateTimeHelper,
+            IEventPublisher eventPublisher,
             IGenericAttributeService genericAttributeService,
+            ILocalizationService localizationService,
+            IPermissionService permissionService,
+            IPriceFormatter priceFormatter,
+            IProductAttributeParser productAttributeParser,
             IProductAttributeService productAttributeService,
-            IDateTimeHelper dateTimeHelper)
+            IProductService productService,
+            IRepository<ShoppingCartItem> sciRepository,
+            IShippingService shippingService,
+            IStoreContext storeContext,
+            IStoreMappingService storeMappingService,
+            IUrlHelperFactory urlHelperFactory,
+            IUrlRecordService urlRecordService,
+            IWorkContext workContext,
+            OrderSettings orderSettings,
+            ShoppingCartSettings shoppingCartSettings)
         {
-            this._sciRepository = sciRepository;
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._currencyService = currencyService;
-            this._productService = productService;
-            this._localizationService = localizationService;
-            this._productAttributeParser = productAttributeParser;
-            this._checkoutAttributeService = checkoutAttributeService;
-            this._checkoutAttributeParser = checkoutAttributeParser;
-            this._priceFormatter = priceFormatter;
-            this._customerService = customerService;
-            this._shoppingCartSettings = shoppingCartSettings;
-            this._eventPublisher = eventPublisher;
-            this._permissionService = permissionService;
-            this._aclService = aclService;
-            this._dateRangeService = dateRangeService;
-            this._storeMappingService = storeMappingService;
-            this._genericAttributeService = genericAttributeService;
-            this._productAttributeService = productAttributeService;
-            this._dateTimeHelper = dateTimeHelper;
+            _catalogSettings = catalogSettings;
+            _aclService = aclService;
+            _actionContextAccessor = actionContextAccessor;
+            _checkoutAttributeParser = checkoutAttributeParser;
+            _checkoutAttributeService = checkoutAttributeService;
+            _currencyService = currencyService;
+            _customerService = customerService;
+            _dateRangeService = dateRangeService;
+            _dateTimeHelper = dateTimeHelper;
+            _eventPublisher = eventPublisher;
+            _genericAttributeService = genericAttributeService;
+            _localizationService = localizationService;
+            _permissionService = permissionService;
+            _priceFormatter = priceFormatter;
+            _productAttributeParser = productAttributeParser;
+            _productAttributeService = productAttributeService;
+            _productService = productService;
+            _sciRepository = sciRepository;
+            _shippingService = shippingService;
+            _storeContext = storeContext;
+            _storeMappingService = storeMappingService;
+            _urlHelperFactory = urlHelperFactory;
+            _urlRecordService = urlRecordService;
+            _workContext = workContext;
+            _orderSettings = orderSettings;
+            _shoppingCartSettings = shoppingCartSettings;
+        }
+
+        #endregion
+
+        #region Utilities
+
+        /// <summary>
+        /// Determine if the shopping cart item is the same as the one being compared
+        /// </summary>
+        /// <param name="shoppingCartItem">Shopping cart item</param>
+        /// <param name="product">Product</param>
+        /// <param name="attributesXml">Attributes in XML format</param>
+        /// <param name="customerEnteredPrice">Price entered by a customer</param>
+        /// <param name="rentalStartDate">Rental start date</param>
+        /// <param name="rentalEndDate">Rental end date</param>
+        /// <returns>Shopping cart item is equal</returns>
+        protected virtual bool ShoppingCartItemIsEqual(ShoppingCartItem shoppingCartItem,
+            Product product,
+            string attributesXml,
+            decimal customerEnteredPrice,
+            DateTime? rentalStartDate,
+            DateTime? rentalEndDate)
+        {
+            if (shoppingCartItem.ProductId != product.Id)
+                return false;
+
+            //attributes
+            var attributesEqual = _productAttributeParser.AreProductAttributesEqual(shoppingCartItem.AttributesXml, attributesXml, false, false);
+            if (!attributesEqual)
+                return false;
+
+            //gift cards
+            if (shoppingCartItem.Product.IsGiftCard)
+            {
+                _productAttributeParser.GetGiftCardAttribute(attributesXml, out var giftCardRecipientName1, out var _, out var giftCardSenderName1, out var _, out var _);
+
+                _productAttributeParser.GetGiftCardAttribute(shoppingCartItem.AttributesXml, out var giftCardRecipientName2, out var _, out var giftCardSenderName2, out var _, out var _);
+
+                var giftCardsAreEqual = giftCardRecipientName1.Equals(giftCardRecipientName2, StringComparison.InvariantCultureIgnoreCase)
+                    && giftCardSenderName1.Equals(giftCardSenderName2, StringComparison.InvariantCultureIgnoreCase);
+                if (!giftCardsAreEqual)
+                    return false;
+            }
+
+            //price is the same (for products which require customers to enter a price)
+            if (shoppingCartItem.Product.CustomerEntersPrice)
+            {
+                //TODO should we use PriceCalculationService.RoundPrice here?
+                var customerEnteredPricesEqual = Math.Round(shoppingCartItem.CustomerEnteredPrice, 2) == Math.Round(customerEnteredPrice, 2);
+                if (!customerEnteredPricesEqual)
+                    return false;
+            }
+            
+            if (!shoppingCartItem.Product.IsRental) 
+                return true;
+
+            //rental products
+            var rentalInfoEqual = shoppingCartItem.RentalStartDateUtc == rentalStartDate && shoppingCartItem.RentalEndDateUtc == rentalEndDate;
+            
+            return rentalInfoEqual;
         }
 
         #endregion
@@ -127,11 +188,11 @@ namespace Nop.Services.Orders
         /// <param name="shoppingCartItem">Shopping cart item</param>
         /// <param name="resetCheckoutData">A value indicating whether to reset checkout data</param>
         /// <param name="ensureOnlyActiveCheckoutAttributes">A value indicating whether to ensure that only active checkout attributes are attached to the current customer</param>
-        public virtual void DeleteShoppingCartItem(ShoppingCartItem shoppingCartItem, bool resetCheckoutData = true, 
+        public virtual void DeleteShoppingCartItem(ShoppingCartItem shoppingCartItem, bool resetCheckoutData = true,
             bool ensureOnlyActiveCheckoutAttributes = false)
         {
             if (shoppingCartItem == null)
-                throw new ArgumentNullException("shoppingCartItem");
+                throw new ArgumentNullException(nameof(shoppingCartItem));
 
             var customer = shoppingCartItem.Customer;
             var storeId = shoppingCartItem.StoreId;
@@ -154,18 +215,52 @@ namespace Nop.Services.Orders
                 //only for shopping cart items (ignore wishlist)
                 shoppingCartItem.ShoppingCartType == ShoppingCartType.ShoppingCart)
             {
-                var cart = customer.ShoppingCartItems
-                    .Where(x => x.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                    .LimitPerStore(storeId)
-                    .ToList();
+                var cart = GetShoppingCart(customer, ShoppingCartType.ShoppingCart, storeId);
 
-                var checkoutAttributesXml = customer.GetAttribute<string>(SystemCustomerAttributeNames.CheckoutAttributes, _genericAttributeService, storeId);
+                var checkoutAttributesXml = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.CheckoutAttributes, storeId);
                 checkoutAttributesXml = _checkoutAttributeParser.EnsureOnlyActiveAttributes(checkoutAttributesXml, cart);
-                _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.CheckoutAttributes, checkoutAttributesXml, storeId);
+                _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.CheckoutAttributes, checkoutAttributesXml, storeId);
             }
 
             //event notification
             _eventPublisher.EntityDeleted(shoppingCartItem);
+
+            if (!_catalogSettings.RemoveRequiredProducts)
+                return;
+
+            var product = _productService.GetProductById(shoppingCartItem.ProductId);
+            if (!product?.RequireOtherProducts ?? true)
+                return;
+
+            var requiredProductIds = _productService.ParseRequiredProductIds(product);
+            var requiredShoppingCartItems = customer.ShoppingCartItems
+                .Where(x => x.ShoppingCartType == shoppingCartItem.ShoppingCartType)
+                .Where(item => requiredProductIds.Any(id => id == item.ProductId))
+                .ToList();
+
+            //update quantity of required products in the cart if the main one is removed
+            foreach (var cartItem in requiredShoppingCartItems)
+            {
+                //at now we ignore quantities of required products and use 1
+                var requiredProductQuantity = 1;
+
+                UpdateShoppingCartItem(customer, cartItem.Id, cartItem.AttributesXml, cartItem.CustomerEnteredPrice,
+                    quantity: cartItem.Quantity - shoppingCartItem.Quantity * requiredProductQuantity, resetCheckoutData: false);
+            }
+        }
+
+        /// <summary>
+        /// Delete shopping cart item
+        /// </summary>
+        /// <param name="shoppingCartItemId">Shopping cart item ID</param>
+        /// <param name="resetCheckoutData">A value indicating whether to reset checkout data</param>
+        /// <param name="ensureOnlyActiveCheckoutAttributes">A value indicating whether to ensure that only active checkout attributes are attached to the current customer</param>
+        public virtual void DeleteShoppingCartItem(int shoppingCartItemId, bool resetCheckoutData = true,
+            bool ensureOnlyActiveCheckoutAttributes = false)
+        {
+            var shoppingCartItem = _sciRepository.Table.FirstOrDefault(sci => sci.Id == shoppingCartItemId);
+            if (shoppingCartItem != null)
+                DeleteShoppingCartItem(shoppingCartItem, resetCheckoutData, ensureOnlyActiveCheckoutAttributes);
         }
 
         /// <summary>
@@ -176,8 +271,8 @@ namespace Nop.Services.Orders
         public virtual int DeleteExpiredShoppingCartItems(DateTime olderThanUtc)
         {
             var query = from sci in _sciRepository.Table
-                           where sci.UpdatedOnUtc < olderThanUtc
-                           select sci;
+                        where sci.UpdatedOnUtc < olderThanUtc
+                        select sci;
 
             var cartItems = query.ToList();
             foreach (var cartItem in cartItems)
@@ -192,87 +287,83 @@ namespace Nop.Services.Orders
         /// <param name="shoppingCartType">Shopping cart type</param>
         /// <param name="product">Product</param>
         /// <param name="storeId">Store identifier</param>
-        /// <param name="automaticallyAddRequiredProductsIfEnabled">Automatically add required products if enabled</param>
+        /// <param name="quantity">Quantity</param>
+        /// <param name="addRequiredProducts">Whether to add required products</param>
+        /// <param name="shoppingCartItemId">Shopping cart identifier; pass 0 if it's a new item</param>
         /// <returns>Warnings</returns>
-        public virtual IList<string> GetRequiredProductWarnings(Customer customer,
-            ShoppingCartType shoppingCartType, Product product,
-            int storeId, bool automaticallyAddRequiredProductsIfEnabled)
+        public virtual IList<string> GetRequiredProductWarnings(Customer customer, ShoppingCartType shoppingCartType, Product product,
+            int storeId, int quantity, bool addRequiredProducts, int shoppingCartItemId)
         {
             if (customer == null)
-                throw new ArgumentNullException("customer");
+                throw new ArgumentNullException(nameof(customer));
 
             if (product == null)
-                throw new ArgumentNullException("product");
-
-            var cart = customer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == shoppingCartType)
-                .LimitPerStore(storeId)
-                .ToList();
+                throw new ArgumentNullException(nameof(product));
 
             var warnings = new List<string>();
 
-            if (product.RequireOtherProducts)
+            //at now we ignore quantities of required products and use 1
+            var requiredProductQuantity = 1;
+
+            //get customer shopping cart
+            var cart = GetShoppingCart(customer, shoppingCartType, storeId);
+
+            //whether other cart items require the passed product
+            var passedProductRequiredQuantity = cart
+                .Where(item => item.Product.RequireOtherProducts && _productService.ParseRequiredProductIds(item.Product).Contains(product.Id))
+                .Sum(item => item.Quantity * requiredProductQuantity);
+            if (passedProductRequiredQuantity > quantity)
+                warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.RequiredProductUpdateWarning"), passedProductRequiredQuantity));
+
+            //whether the passed product requires other products
+            if (!product.RequireOtherProducts)
+                return warnings;
+
+            //get these required products
+            var requiredProducts = _productService.GetProductsByIds(_productService.ParseRequiredProductIds(product));
+            if (!requiredProducts.Any())
+                return warnings;
+
+            //get warnings
+            var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
+            var warningLocale = _localizationService.GetResource("ShoppingCart.RequiredProductWarning");
+            foreach (var requiredProduct in requiredProducts)
             {
-                var requiredProducts = new List<Product>();
-                foreach (var id in product.ParseRequiredProductIds())
-                {
-                    var rp = _productService.GetProductById(id);
-                    if (rp != null)
-                        requiredProducts.Add(rp);
-                }
-                
-                foreach (var rp in requiredProducts)
-                {
-                    //ensure that product is in the cart
-                    bool alreadyInTheCart = false;
-                    foreach (var sci in cart)
-                    {
-                        if (sci.ProductId == rp.Id)
-                        {
-                            alreadyInTheCart = true;
-                            break;
-                        }
-                    }
-                    //not in the cart
-                    if (!alreadyInTheCart)
-                    {
+                //get the required quantity of the required product
+                var requiredProductRequiredQuantity = quantity * requiredProductQuantity + cart
+                    .Where(item => item.Product.RequireOtherProducts && _productService.ParseRequiredProductIds(item.Product).Contains(requiredProduct.Id))
+                    .Where(item => item.Id != shoppingCartItemId)
+                    .Sum(item => item.Quantity * requiredProductQuantity);
 
-                        if (product.AutomaticallyAddRequiredProducts)
-                        {
-                            //add to cart (if possible)
-                            if (automaticallyAddRequiredProductsIfEnabled)
-                            {
-                                //pass 'false' for 'automaticallyAddRequiredProductsIfEnabled' to prevent circular references
-                                var addToCartWarnings = AddToCart(customer: customer,
-                                    product: rp, 
-                                    shoppingCartType: shoppingCartType,
-                                    storeId: storeId,
-                                    automaticallyAddRequiredProductsIfEnabled: false);
-                                if (addToCartWarnings.Any())
-                                {
-                                    //a product wasn't atomatically added for some reasons
+                //whether required product is already in the cart in the required quantity
+                var quantityToAdd = requiredProductRequiredQuantity - (cart.FirstOrDefault(item => item.ProductId == requiredProduct.Id)?.Quantity ?? 0);
+                if (quantityToAdd <= 0)
+                    continue;
 
-                                    //don't display specific errors from 'addToCartWarnings' variable
-                                    //display only generic error
-                                    warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.RequiredProductWarning"), rp.GetLocalized(x => x.Name)));
-                                }
-                            }
-                            else
-                            {
-                                warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.RequiredProductWarning"), rp.GetLocalized(x => x.Name)));
-                            }
-                        }
-                        else
-                        {
-                            warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.RequiredProductWarning"), rp.GetLocalized(x => x.Name)));
-                        }
-                    }
+                //prepare warning message
+                var requiredProductName = WebUtility.HtmlEncode(_localizationService.GetLocalized(requiredProduct, x => x.Name));
+                var requiredProductWarning = _catalogSettings.UseLinksInRequiredProductWarnings
+                    ? string.Format(warningLocale, $"<a href=\"{urlHelper.RouteUrl(nameof(Product), new { SeName = _urlRecordService.GetSeName(requiredProduct) })}\">{requiredProductName}</a>", requiredProductRequiredQuantity)
+                    : string.Format(warningLocale, requiredProductName, requiredProductRequiredQuantity);
+
+                //add to cart (if possible)
+                if (addRequiredProducts && product.AutomaticallyAddRequiredProducts)
+                {
+                    //do not add required products to prevent circular references
+                    var addToCartWarnings = AddToCart(customer, requiredProduct, shoppingCartType, storeId,
+                        quantity: quantityToAdd, addRequiredProducts: false);
+
+                    //don't display all specific errors only the generic one
+                    if (addToCartWarnings.Any())
+                        warnings.Add(requiredProductWarning);
                 }
+                else
+                    warnings.Add(requiredProductWarning);
             }
 
             return warnings;
         }
-        
+
         /// <summary>
         /// Validates a product for standard properties
         /// </summary>
@@ -288,10 +379,10 @@ namespace Nop.Services.Orders
             int quantity)
         {
             if (customer == null)
-                throw new ArgumentNullException("customer");
+                throw new ArgumentNullException(nameof(customer));
 
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
             var warnings = new List<string>();
 
@@ -313,7 +404,7 @@ namespace Nop.Services.Orders
             {
                 warnings.Add("This is not simple product");
             }
-            
+
             //ACL
             if (!_aclService.Authorize(product, customer))
             {
@@ -339,7 +430,9 @@ namespace Nop.Services.Orders
             }
 
             //call for price
-            if (shoppingCartType == ShoppingCartType.ShoppingCart && product.CallForPrice)
+            if (shoppingCartType == ShoppingCartType.ShoppingCart && product.CallForPrice &&
+                //also check whether the current user is impersonated
+                (!_orderSettings.AllowAdminsToBuyCallForPriceProducts || _workContext.OriginalCustomerIfImpersonated == null))
             {
                 warnings.Add(_localizationService.GetResource("Products.CallForPrice"));
             }
@@ -350,8 +443,8 @@ namespace Nop.Services.Orders
                 if (customerEnteredPrice < product.MinimumCustomerEnteredPrice ||
                     customerEnteredPrice > product.MaximumCustomerEnteredPrice)
                 {
-                    decimal minimumCustomerEnteredPrice = _currencyService.ConvertFromPrimaryStoreCurrency(product.MinimumCustomerEnteredPrice, _workContext.WorkingCurrency);
-                    decimal maximumCustomerEnteredPrice = _currencyService.ConvertFromPrimaryStoreCurrency(product.MaximumCustomerEnteredPrice, _workContext.WorkingCurrency);
+                    var minimumCustomerEnteredPrice = _currencyService.ConvertFromPrimaryStoreCurrency(product.MinimumCustomerEnteredPrice, _workContext.WorkingCurrency);
+                    var maximumCustomerEnteredPrice = _currencyService.ConvertFromPrimaryStoreCurrency(product.MaximumCustomerEnteredPrice, _workContext.WorkingCurrency);
                     warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.CustomerEnteredPrice.RangeError"),
                         _priceFormatter.FormatPrice(minimumCustomerEnteredPrice, false, false),
                         _priceFormatter.FormatPrice(maximumCustomerEnteredPrice, false, false)));
@@ -365,12 +458,14 @@ namespace Nop.Services.Orders
                 warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.MinimumQuantity"), product.OrderMinimumQuantity));
                 hasQtyWarnings = true;
             }
+
             if (quantity > product.OrderMaximumQuantity)
             {
                 warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.MaximumQuantity"), product.OrderMaximumQuantity));
                 hasQtyWarnings = true;
             }
-            var allowedQuantities = product.ParseAllowedQuantities();
+
+            var allowedQuantities = _productService.ParseAllowedQuantities(product);
             if (allowedQuantities.Length > 0 && !allowedQuantities.Contains(quantity))
             {
                 warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.AllowedQuantities"), string.Join(", ", allowedQuantities)));
@@ -382,69 +477,65 @@ namespace Nop.Services.Orders
                 switch (product.ManageInventoryMethod)
                 {
                     case ManageInventoryMethod.DontManageStock:
-                        {
-                            //do nothing
-                        }
+                        //do nothing
                         break;
                     case ManageInventoryMethod.ManageStock:
+                        if (product.BackorderMode == BackorderMode.NoBackorders)
                         {
-                            if (product.BackorderMode == BackorderMode.NoBackorders)
+                            var maximumQuantityCanBeAdded = _productService.GetTotalStockQuantity(product);
+                            if (maximumQuantityCanBeAdded < quantity)
                             {
-                                int maximumQuantityCanBeAdded = product.GetTotalStockQuantity();
-                                if (maximumQuantityCanBeAdded < quantity)
+                                if (maximumQuantityCanBeAdded <= 0)
                                 {
-                                    if (maximumQuantityCanBeAdded <= 0)
-                                    {
-                                        var productAvailabilityRange = _dateRangeService.GetProductAvailabilityRangeById(product.ProductAvailabilityRangeId);
-                                        var warning = productAvailabilityRange == null ? _localizationService.GetResource("ShoppingCart.OutOfStock")
-                                            : string.Format(_localizationService.GetResource("ShoppingCart.AvailabilityRange"),
-                                                productAvailabilityRange.GetLocalized(range => range.Name));
-                                        warnings.Add(warning);
-                                    }
-                                    else
-                                        warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.QuantityExceedsStock"), maximumQuantityCanBeAdded));
-                                }
-                            }
-                        }
-                        break;
-                    case ManageInventoryMethod.ManageStockByAttributes:
-                        {
-                            var combination = _productAttributeParser.FindProductAttributeCombination(product, attributesXml);
-                            if (combination != null)
-                            {
-                                //combination exists
-                                //let's check stock level
-                                if (!combination.AllowOutOfStockOrders && combination.StockQuantity < quantity)
-                                {
-                                    int maximumQuantityCanBeAdded = combination.StockQuantity;
-                                    if (maximumQuantityCanBeAdded <= 0)
-                                    {
-                                        var productAvailabilityRange = _dateRangeService.GetProductAvailabilityRangeById(product.ProductAvailabilityRangeId);
-                                        var warning = productAvailabilityRange == null ? _localizationService.GetResource("ShoppingCart.OutOfStock")
-                                            : string.Format(_localizationService.GetResource("ShoppingCart.AvailabilityRange"),
-                                                productAvailabilityRange.GetLocalized(range => range.Name));
-                                        warnings.Add(warning);
-                                    }
-                                    else
-                                    {
-                                        warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.QuantityExceedsStock"), maximumQuantityCanBeAdded));
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                //combination doesn't exist
-                                if (product.AllowAddingOnlyExistingAttributeCombinations)
-                                {
-                                    //maybe, is it better  to display something like "No such product/combination" message?
                                     var productAvailabilityRange = _dateRangeService.GetProductAvailabilityRangeById(product.ProductAvailabilityRangeId);
                                     var warning = productAvailabilityRange == null ? _localizationService.GetResource("ShoppingCart.OutOfStock")
                                         : string.Format(_localizationService.GetResource("ShoppingCart.AvailabilityRange"),
-                                            productAvailabilityRange.GetLocalized(range => range.Name));
+                                            _localizationService.GetLocalized(productAvailabilityRange, range => range.Name));
                                     warnings.Add(warning);
+                                }
+                                else
+                                    warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.QuantityExceedsStock"), maximumQuantityCanBeAdded));
+                            }
+                        }
+
+                        break;
+                    case ManageInventoryMethod.ManageStockByAttributes:
+                        var combination = _productAttributeParser.FindProductAttributeCombination(product, attributesXml);
+                        if (combination != null)
+                        {
+                            //combination exists
+                            //let's check stock level
+                            if (!combination.AllowOutOfStockOrders && combination.StockQuantity < quantity)
+                            {
+                                var maximumQuantityCanBeAdded = combination.StockQuantity;
+                                if (maximumQuantityCanBeAdded <= 0)
+                                {
+                                    var productAvailabilityRange = _dateRangeService.GetProductAvailabilityRangeById(product.ProductAvailabilityRangeId);
+                                    var warning = productAvailabilityRange == null ? _localizationService.GetResource("ShoppingCart.OutOfStock")
+                                        : string.Format(_localizationService.GetResource("ShoppingCart.AvailabilityRange"),
+                                            _localizationService.GetLocalized(productAvailabilityRange, range => range.Name));
+                                    warnings.Add(warning);
+                                }
+                                else
+                                {
+                                    warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.QuantityExceedsStock"), maximumQuantityCanBeAdded));
                                 }
                             }
                         }
+                        else
+                        {
+                            //combination doesn't exist
+                            if (product.AllowAddingOnlyExistingAttributeCombinations)
+                            {
+                                //maybe, is it better  to display something like "No such product/combination" message?
+                                var productAvailabilityRange = _dateRangeService.GetProductAvailabilityRangeById(product.ProductAvailabilityRangeId);
+                                var warning = productAvailabilityRange == null ? _localizationService.GetResource("ShoppingCart.OutOfStock")
+                                    : string.Format(_localizationService.GetResource("ShoppingCart.AvailabilityRange"),
+                                        _localizationService.GetLocalized(productAvailabilityRange, range => range.Name));
+                                warnings.Add(warning);
+                            }
+                        }
+
                         break;
                     default:
                         break;
@@ -452,27 +543,66 @@ namespace Nop.Services.Orders
             }
 
             //availability dates
-            bool availableStartDateError = false;
+            var availableStartDateError = false;
             if (product.AvailableStartDateTimeUtc.HasValue)
             {
-                DateTime now = DateTime.UtcNow;
-                DateTime availableStartDateTime = DateTime.SpecifyKind(product.AvailableStartDateTimeUtc.Value, DateTimeKind.Utc);
-                if (availableStartDateTime.CompareTo(now) > 0)
+                var availableStartDateTime = DateTime.SpecifyKind(product.AvailableStartDateTimeUtc.Value, DateTimeKind.Utc);
+                if (availableStartDateTime.CompareTo(DateTime.UtcNow) > 0)
                 {
                     warnings.Add(_localizationService.GetResource("ShoppingCart.NotAvailable"));
                     availableStartDateError = true;
                 }
             }
-            if (product.AvailableEndDateTimeUtc.HasValue && !availableStartDateError)
+
+            if (!product.AvailableEndDateTimeUtc.HasValue || availableStartDateError)
+                return warnings;
+
+            var availableEndDateTime = DateTime.SpecifyKind(product.AvailableEndDateTimeUtc.Value, DateTimeKind.Utc);
+            if (availableEndDateTime.CompareTo(DateTime.UtcNow) < 0)
             {
-                DateTime now = DateTime.UtcNow;
-                DateTime availableEndDateTime = DateTime.SpecifyKind(product.AvailableEndDateTimeUtc.Value, DateTimeKind.Utc);
-                if (availableEndDateTime.CompareTo(now) < 0)
-                {
-                    warnings.Add(_localizationService.GetResource("ShoppingCart.NotAvailable"));
-                }
+                warnings.Add(_localizationService.GetResource("ShoppingCart.NotAvailable"));
             }
+
             return warnings;
+        }
+
+        /// <summary>
+        /// Gets shopping cart
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="shoppingCartType">Shopping cart type; pass null to load all records</param>
+        /// <param name="storeId">Store identifier; pass 0 to load all records</param>
+        /// <param name="productId">Product identifier; pass null to load all records</param>
+        /// <param name="createdFromUtc">Created date from (UTC); pass null to load all records</param>
+        /// <param name="createdToUtc">Created date to (UTC); pass null to load all records</param>
+        /// <returns>Shopping Cart</returns>
+        public virtual IList<ShoppingCartItem> GetShoppingCart(Customer customer, ShoppingCartType? shoppingCartType = null,
+            int storeId = 0, int? productId = null, DateTime? createdFromUtc = null, DateTime? createdToUtc = null)
+        {
+            if (customer == null)
+                throw new ArgumentNullException(nameof(customer));
+
+            var items = customer.ShoppingCartItems.AsEnumerable();
+
+            //filter by type
+            if (shoppingCartType.HasValue)
+                items = items.Where(item => item.ShoppingCartType == shoppingCartType.Value);
+
+            //filter shopping cart items by store
+            if (storeId > 0 && !_shoppingCartSettings.CartsSharedBetweenStores)
+                items = items.Where(item => item.StoreId == storeId);
+
+            //filter shopping cart items by product
+            if (productId > 0)
+                items = items.Where(item => item.ProductId == productId);
+
+            //filter shopping cart items by date
+            if (createdFromUtc.HasValue)
+                items = items.Where(item => createdFromUtc.Value <= item.CreatedOnUtc);
+            if (createdToUtc.HasValue)
+                items = items.Where(item => createdToUtc.Value >= item.CreatedOnUtc);
+
+            return items.ToList();
         }
 
         /// <summary>
@@ -484,16 +614,18 @@ namespace Nop.Services.Orders
         /// <param name="quantity">Quantity</param>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <param name="ignoreNonCombinableAttributes">A value indicating whether we should ignore non-combinable attributes</param>
+        /// <param name="ignoreConditionMet">A value indicating whether we should ignore filtering by "is condition met" property</param>
         /// <returns>Warnings</returns>
-        public virtual IList<string> GetShoppingCartItemAttributeWarnings(Customer customer, 
+        public virtual IList<string> GetShoppingCartItemAttributeWarnings(Customer customer,
             ShoppingCartType shoppingCartType,
-            Product product, 
+            Product product,
             int quantity = 1,
             string attributesXml = "",
-            bool ignoreNonCombinableAttributes = false)
+            bool ignoreNonCombinableAttributes = false,
+            bool ignoreConditionMet = false)
         {
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
             var warnings = new List<string>();
 
@@ -503,6 +635,7 @@ namespace Nop.Services.Orders
             {
                 attributes1 = attributes1.Where(x => !x.IsNonCombinable()).ToList();
             }
+
             foreach (var attribute in attributes1)
             {
                 if (attribute.Product != null)
@@ -525,62 +658,69 @@ namespace Nop.Services.Orders
             {
                 attributes2 = attributes2.Where(x => !x.IsNonCombinable()).ToList();
             }
+
             //validate conditional attributes only (if specified)
-            attributes2 = attributes2.Where(x =>
+            if (!ignoreConditionMet)
             {
-                var conditionMet = _productAttributeParser.IsConditionMet(x, attributesXml);
-                return !conditionMet.HasValue || conditionMet.Value;
-            }).ToList();
+                attributes2 = attributes2.Where(x =>
+                {
+                    var conditionMet = _productAttributeParser.IsConditionMet(x, attributesXml);
+                    return !conditionMet.HasValue || conditionMet.Value;
+                }).ToList();
+            }
+
             foreach (var a2 in attributes2)
             {
                 if (a2.IsRequired)
                 {
-                    bool found = false;
+                    var found = false;
                     //selected product attributes
                     foreach (var a1 in attributes1)
                     {
-                        if (a1.Id == a2.Id)
+                        if (a1.Id != a2.Id)
+                            continue;
+
+                        var attributeValuesStr = _productAttributeParser.ParseValues(attributesXml, a1.Id);
+
+                        foreach (var str1 in attributeValuesStr)
                         {
-                            var attributeValuesStr = _productAttributeParser.ParseValues(attributesXml, a1.Id);
-                            foreach (string str1 in attributeValuesStr)
-                            {
-                                if (!String.IsNullOrEmpty(str1.Trim()))
-                                {
-                                    found = true;
-                                    break;
-                                }
-                            }
+                            if (string.IsNullOrEmpty(str1.Trim()))
+                                continue;
+
+                            found = true;
+                            break;
                         }
                     }
 
                     //if not found
                     if (!found)
                     {
-                        var notFoundWarning = !string.IsNullOrEmpty(a2.TextPrompt) ?
-                            a2.TextPrompt : 
-                            string.Format(_localizationService.GetResource("ShoppingCart.SelectAttribute"), a2.ProductAttribute.GetLocalized(a => a.Name));
-                        
+                        var textPrompt = _localizationService.GetLocalized(a2, x => x.TextPrompt);
+                        var notFoundWarning = !string.IsNullOrEmpty(textPrompt) ?
+                            textPrompt :
+                            string.Format(_localizationService.GetResource("ShoppingCart.SelectAttribute"), _localizationService.GetLocalized(a2.ProductAttribute, a => a.Name));
+
                         warnings.Add(notFoundWarning);
                     }
                 }
 
-                if (a2.AttributeControlType == AttributeControlType.ReadonlyCheckboxes)
+                if (a2.AttributeControlType != AttributeControlType.ReadonlyCheckboxes)
+                    continue;
+
+                //customers cannot edit read-only attributes
+                var allowedReadOnlyValueIds = _productAttributeService.GetProductAttributeValues(a2.Id)
+                    .Where(x => x.IsPreSelected)
+                    .Select(x => x.Id)
+                    .ToArray();
+
+                var selectedReadOnlyValueIds = _productAttributeParser.ParseProductAttributeValues(attributesXml)
+                    .Where(x => x.ProductAttributeMappingId == a2.Id)
+                    .Select(x => x.Id)
+                    .ToArray();
+
+                if (!CommonHelper.ArraysEqual(allowedReadOnlyValueIds, selectedReadOnlyValueIds))
                 {
-                    //customers cannot edit read-only attributes
-                    var allowedReadOnlyValueIds = _productAttributeService.GetProductAttributeValues(a2.Id)
-                        .Where(x => x.IsPreSelected)
-                        .Select(x => x.Id)
-                        .ToArray();
-
-                    var selectedReadOnlyValueIds = _productAttributeParser.ParseProductAttributeValues(attributesXml)
-                        .Where(x => x.ProductAttributeMappingId == a2.Id)
-                        .Select(x => x.Id)
-                        .ToArray();
-
-                    if (!CommonHelper.ArraysEqual(allowedReadOnlyValueIds, selectedReadOnlyValueIds))
-                    {
-                        warnings.Add("You cannot change read-only values");
-                    }
+                    warnings.Add("You cannot change read-only values");
                 }
             }
 
@@ -589,39 +729,39 @@ namespace Nop.Services.Orders
             {
                 if (!pam.ValidationRulesAllowed())
                     continue;
-                
+
+                string enteredText;
+                int enteredTextLength;
+
                 //minimum length
                 if (pam.ValidationMinLength.HasValue)
                 {
                     if (pam.AttributeControlType == AttributeControlType.TextBox ||
                         pam.AttributeControlType == AttributeControlType.MultilineTextbox)
                     {
-                        var valuesStr = _productAttributeParser.ParseValues(attributesXml, pam.Id);
-                        var enteredText = valuesStr.FirstOrDefault();
-                        int enteredTextLength = String.IsNullOrEmpty(enteredText) ? 0 : enteredText.Length;
+                        enteredText = _productAttributeParser.ParseValues(attributesXml, pam.Id).FirstOrDefault();
+                        enteredTextLength = string.IsNullOrEmpty(enteredText) ? 0 : enteredText.Length;
 
                         if (pam.ValidationMinLength.Value > enteredTextLength)
                         {
-                            warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.TextboxMinimumLength"), pam.ProductAttribute.GetLocalized(a => a.Name), pam.ValidationMinLength.Value));
+                            warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.TextboxMinimumLength"), _localizationService.GetLocalized(pam.ProductAttribute, a => a.Name), pam.ValidationMinLength.Value));
                         }
                     }
                 }
 
                 //maximum length
-                if (pam.ValidationMaxLength.HasValue)
-                {
-                    if (pam.AttributeControlType == AttributeControlType.TextBox ||
-                        pam.AttributeControlType == AttributeControlType.MultilineTextbox)
-                    {
-                        var valuesStr = _productAttributeParser.ParseValues(attributesXml, pam.Id);
-                        var enteredText = valuesStr.FirstOrDefault();
-                        int enteredTextLength = String.IsNullOrEmpty(enteredText) ? 0 : enteredText.Length;
+                if (!pam.ValidationMaxLength.HasValue)
+                    continue;
 
-                        if (pam.ValidationMaxLength.Value < enteredTextLength)
-                        {
-                            warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.TextboxMaximumLength"), pam.ProductAttribute.GetLocalized(a => a.Name), pam.ValidationMaxLength.Value));
-                        }
-                    }
+                if (pam.AttributeControlType != AttributeControlType.TextBox && pam.AttributeControlType != AttributeControlType.MultilineTextbox)
+                    continue;
+
+                enteredText = _productAttributeParser.ParseValues(attributesXml, pam.Id).FirstOrDefault();
+                enteredTextLength = string.IsNullOrEmpty(enteredText) ? 0 : enteredText.Length;
+
+                if (pam.ValidationMaxLength.Value < enteredTextLength)
+                {
+                    warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.TextboxMaximumLength"), _localizationService.GetLocalized(pam.ProductAttribute, a => a.Name), pam.ValidationMaxLength.Value));
                 }
             }
 
@@ -632,32 +772,32 @@ namespace Nop.Services.Orders
             var attributeValues = _productAttributeParser.ParseProductAttributeValues(attributesXml);
             foreach (var attributeValue in attributeValues)
             {
-                if (attributeValue.AttributeValueType == AttributeValueType.AssociatedToProduct)
-                {
-                    if (ignoreNonCombinableAttributes && attributeValue.ProductAttributeMapping.IsNonCombinable())
-                        continue;
+                if (attributeValue.AttributeValueType != AttributeValueType.AssociatedToProduct)
+                    continue;
 
-                    //associated product (bundle)
-                    var associatedProduct = _productService.GetProductById(attributeValue.AssociatedProductId);
-                    if (associatedProduct != null)
+                if (ignoreNonCombinableAttributes && attributeValue.ProductAttributeMapping.IsNonCombinable())
+                    continue;
+
+                //associated product (bundle)
+                var associatedProduct = _productService.GetProductById(attributeValue.AssociatedProductId);
+                if (associatedProduct != null)
+                {
+                    var totalQty = quantity * attributeValue.Quantity;
+                    var associatedProductWarnings = GetShoppingCartItemWarnings(customer,
+                        shoppingCartType, associatedProduct, _storeContext.CurrentStore.Id,
+                        string.Empty, decimal.Zero, null, null, totalQty, false);
+                    foreach (var associatedProductWarning in associatedProductWarnings)
                     {
-                        var totalQty = quantity * attributeValue.Quantity;
-                        var associatedProductWarnings = GetShoppingCartItemWarnings(customer,
-                            shoppingCartType, associatedProduct, _storeContext.CurrentStore.Id,
-                            "", decimal.Zero, null, null, totalQty, false);
-                        foreach (var associatedProductWarning in associatedProductWarnings)
-                        {
-                            var attributeName = attributeValue.ProductAttributeMapping.ProductAttribute.GetLocalized(a => a.Name);
-                            var attributeValueName = attributeValue.GetLocalized(a => a.Name);
-                            warnings.Add(string.Format(
-                                _localizationService.GetResource("ShoppingCart.AssociatedAttributeWarning"), 
-                                attributeName, attributeValueName, associatedProductWarning));
-                        }
+                        var attributeName = _localizationService.GetLocalized(attributeValue.ProductAttributeMapping.ProductAttribute, a => a.Name);
+                        var attributeValueName = _localizationService.GetLocalized(attributeValue, a => a.Name);
+                        warnings.Add(string.Format(
+                            _localizationService.GetResource("ShoppingCart.AssociatedAttributeWarning"),
+                            attributeName, attributeValueName, associatedProductWarning));
                     }
-                    else
-                    {
-                        warnings.Add(string.Format("Associated product cannot be loaded - {0}", attributeValue.AssociatedProductId));
-                    }
+                }
+                else
+                {
+                    warnings.Add($"Associated product cannot be loaded - {attributeValue.AssociatedProductId}");
                 }
             }
 
@@ -675,42 +815,35 @@ namespace Nop.Services.Orders
             Product product, string attributesXml)
         {
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
             var warnings = new List<string>();
 
             //gift cards
-            if (product.IsGiftCard)
+            if (!product.IsGiftCard)
+                return warnings;
+
+            _productAttributeParser.GetGiftCardAttribute(attributesXml, out var giftCardRecipientName, out var giftCardRecipientEmail, out var giftCardSenderName, out var giftCardSenderEmail, out var _);
+
+            if (string.IsNullOrEmpty(giftCardRecipientName))
+                warnings.Add(_localizationService.GetResource("ShoppingCart.RecipientNameError"));
+
+            if (product.GiftCardType == GiftCardType.Virtual)
             {
-                string giftCardRecipientName;
-                string giftCardRecipientEmail;
-                string giftCardSenderName;
-                string giftCardSenderEmail;
-                string giftCardMessage;
-                _productAttributeParser.GetGiftCardAttribute(attributesXml,
-                    out giftCardRecipientName, out giftCardRecipientEmail,
-                    out giftCardSenderName, out giftCardSenderEmail, out giftCardMessage);
-
-                if (String.IsNullOrEmpty(giftCardRecipientName))
-                    warnings.Add(_localizationService.GetResource("ShoppingCart.RecipientNameError"));
-
-                if (product.GiftCardType == GiftCardType.Virtual)
-                {
-                    //validate for virtual gift cards only
-                    if (String.IsNullOrEmpty(giftCardRecipientEmail) || !CommonHelper.IsValidEmail(giftCardRecipientEmail))
-                        warnings.Add(_localizationService.GetResource("ShoppingCart.RecipientEmailError"));
-                }
-
-                if (String.IsNullOrEmpty(giftCardSenderName))
-                    warnings.Add(_localizationService.GetResource("ShoppingCart.SenderNameError"));
-
-                if (product.GiftCardType == GiftCardType.Virtual)
-                {
-                    //validate for virtual gift cards only
-                    if (String.IsNullOrEmpty(giftCardSenderEmail) || !CommonHelper.IsValidEmail(giftCardSenderEmail))
-                        warnings.Add(_localizationService.GetResource("ShoppingCart.SenderEmailError"));
-                }
+                //validate for virtual gift cards only
+                if (string.IsNullOrEmpty(giftCardRecipientEmail) || !CommonHelper.IsValidEmail(giftCardRecipientEmail))
+                    warnings.Add(_localizationService.GetResource("ShoppingCart.RecipientEmailError"));
             }
+
+            if (string.IsNullOrEmpty(giftCardSenderName))
+                warnings.Add(_localizationService.GetResource("ShoppingCart.SenderNameError"));
+
+            if (product.GiftCardType != GiftCardType.Virtual)
+                return warnings;
+
+            //validate for virtual gift cards only
+            if (string.IsNullOrEmpty(giftCardSenderEmail) || !CommonHelper.IsValidEmail(giftCardSenderEmail))
+                warnings.Add(_localizationService.GetResource("ShoppingCart.SenderEmailError"));
 
             return warnings;
         }
@@ -726,8 +859,8 @@ namespace Nop.Services.Orders
             DateTime? rentalStartDate = null, DateTime? rentalEndDate = null)
         {
             if (product == null)
-                throw new ArgumentNullException("product");
-            
+                throw new ArgumentNullException(nameof(product));
+
             var warnings = new List<string>();
 
             if (!product.IsRental)
@@ -738,11 +871,13 @@ namespace Nop.Services.Orders
                 warnings.Add(_localizationService.GetResource("ShoppingCart.Rental.EnterStartDate"));
                 return warnings;
             }
+
             if (!rentalEndDate.HasValue)
             {
                 warnings.Add(_localizationService.GetResource("ShoppingCart.Rental.EnterEndDate"));
                 return warnings;
             }
+
             if (rentalStartDate.Value.CompareTo(rentalEndDate.Value) > 0)
             {
                 warnings.Add(_localizationService.GetResource("ShoppingCart.Rental.StartDateLessEndDate"));
@@ -754,22 +889,19 @@ namespace Nop.Services.Orders
             //but we what if a store works in distinct timezones? how we should handle it? skip it for now
             //we also ignore hours (anyway not supported yet)
             //today
-            DateTime nowDtInStoreTimeZone = _dateTimeHelper.ConvertToUserTime(DateTime.Now, TimeZoneInfo.Local, _dateTimeHelper.DefaultStoreTimeZone);
+            var nowDtInStoreTimeZone = _dateTimeHelper.ConvertToUserTime(DateTime.Now, TimeZoneInfo.Local, _dateTimeHelper.DefaultStoreTimeZone);
             var todayDt = new DateTime(nowDtInStoreTimeZone.Year, nowDtInStoreTimeZone.Month, nowDtInStoreTimeZone.Day);
-            DateTime todayDtUtc = _dateTimeHelper.ConvertToUtcTime(todayDt, _dateTimeHelper.DefaultStoreTimeZone);
+            var todayDtUtc = _dateTimeHelper.ConvertToUtcTime(todayDt, _dateTimeHelper.DefaultStoreTimeZone);
             //dates are entered in store timezone (e.g. like in hotels)
-            DateTime startDateUtc = _dateTimeHelper.ConvertToUtcTime(rentalStartDate.Value, _dateTimeHelper.DefaultStoreTimeZone);
+            var startDateUtc = _dateTimeHelper.ConvertToUtcTime(rentalStartDate.Value, _dateTimeHelper.DefaultStoreTimeZone);
             //but we what if dates should be entered in a customer timezone?
             //DateTime startDateUtc = _dateTimeHelper.ConvertToUtcTime(rentalStartDate.Value, _dateTimeHelper.CurrentTimeZone);
-            if (todayDtUtc.CompareTo(startDateUtc) > 0)
-            {
-                warnings.Add(_localizationService.GetResource("ShoppingCart.Rental.StartDateShouldBeFuture"));
+            if (todayDtUtc.CompareTo(startDateUtc) <= 0)
                 return warnings;
-            }
 
+            warnings.Add(_localizationService.GetResource("ShoppingCart.Rental.StartDateShouldBeFuture"));
             return warnings;
         }
-
 
         /// <summary>
         /// Validates shopping cart item
@@ -783,7 +915,8 @@ namespace Nop.Services.Orders
         /// <param name="rentalStartDate">Rental start date</param>
         /// <param name="rentalEndDate">Rental end date</param>
         /// <param name="quantity">Quantity</param>
-        /// <param name="automaticallyAddRequiredProductsIfEnabled">Automatically add required products if enabled</param>
+        /// <param name="addRequiredProducts">Whether to add required products</param>
+        /// <param name="shoppingCartItemId">Shopping cart identifier; pass 0 if it's a new item</param>
         /// <param name="getStandardWarnings">A value indicating whether we should validate a product for standard properties</param>
         /// <param name="getAttributesWarnings">A value indicating whether we should validate product attributes</param>
         /// <param name="getGiftCardWarnings">A value indicating whether we should validate gift card properties</param>
@@ -794,16 +927,16 @@ namespace Nop.Services.Orders
             Product product, int storeId,
             string attributesXml, decimal customerEnteredPrice,
             DateTime? rentalStartDate = null, DateTime? rentalEndDate = null,
-            int quantity = 1, bool automaticallyAddRequiredProductsIfEnabled = true,
+            int quantity = 1, bool addRequiredProducts = true, int shoppingCartItemId = 0,
             bool getStandardWarnings = true, bool getAttributesWarnings = true,
             bool getGiftCardWarnings = true, bool getRequiredProductWarnings = true,
             bool getRentalWarnings = true)
         {
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
             var warnings = new List<string>();
-            
+
             //standard properties
             if (getStandardWarnings)
                 warnings.AddRange(GetStandardWarnings(customer, shoppingCartType, product, attributesXml, customerEnteredPrice, quantity));
@@ -818,12 +951,12 @@ namespace Nop.Services.Orders
 
             //required products
             if (getRequiredProductWarnings)
-                warnings.AddRange(GetRequiredProductWarnings(customer, shoppingCartType, product, storeId, automaticallyAddRequiredProductsIfEnabled));
+                warnings.AddRange(GetRequiredProductWarnings(customer, shoppingCartType, product, storeId, quantity, addRequiredProducts, shoppingCartItemId));
 
             //rental products
             if (getRentalWarnings)
                 warnings.AddRange(GetRentalProductWarnings(product, rentalStartDate, rentalEndDate));
-            
+
             return warnings;
         }
 
@@ -834,13 +967,13 @@ namespace Nop.Services.Orders
         /// <param name="checkoutAttributesXml">Checkout attributes in XML format</param>
         /// <param name="validateCheckoutAttributes">A value indicating whether to validate checkout attributes</param>
         /// <returns>Warnings</returns>
-        public virtual IList<string> GetShoppingCartWarnings(IList<ShoppingCartItem> shoppingCart, 
+        public virtual IList<string> GetShoppingCartWarnings(IList<ShoppingCartItem> shoppingCart,
             string checkoutAttributesXml, bool validateCheckoutAttributes)
         {
             var warnings = new List<string>();
 
-            bool hasStandartProducts = false;
-            bool hasRecurringProducts = false;
+            var hasStandartProducts = false;
+            var hasRecurringProducts = false;
 
             foreach (var sci in shoppingCart)
             {
@@ -864,11 +997,7 @@ namespace Nop.Services.Orders
             //recurring cart validation
             if (hasRecurringProducts)
             {
-                int cycleLength;
-                RecurringProductCyclePeriod cyclePeriod;
-                int totalCycles;
-                string cyclesError = shoppingCart.GetRecurringCycleInfo(_localizationService,
-                    out cycleLength, out cyclePeriod, out totalCycles);
+                var cyclesError = GetRecurringCycleInfo(shoppingCart, out var _, out var _, out var _);
                 if (!string.IsNullOrEmpty(cyclesError))
                 {
                     warnings.Add(cyclesError);
@@ -877,89 +1006,90 @@ namespace Nop.Services.Orders
             }
 
             //validate checkout attributes
-            if (validateCheckoutAttributes)
+            if (!validateCheckoutAttributes)
+                return warnings;
+
+            //selected attributes
+            var attributes1 = _checkoutAttributeParser.ParseCheckoutAttributes(checkoutAttributesXml);
+
+            //existing checkout attributes
+            var excludeShippableAttributes = !ShoppingCartRequiresShipping(shoppingCart);
+            var attributes2 = _checkoutAttributeService.GetAllCheckoutAttributes(_storeContext.CurrentStore.Id, excludeShippableAttributes);
+
+            //validate conditional attributes only (if specified)
+            attributes2 = attributes2.Where(x =>
             {
-                //selected attributes
-                var attributes1 = _checkoutAttributeParser.ParseCheckoutAttributes(checkoutAttributesXml);
+                var conditionMet = _checkoutAttributeParser.IsConditionMet(x, checkoutAttributesXml);
+                return !conditionMet.HasValue || conditionMet.Value;
+            }).ToList();
 
-                //existing checkout attributes
-                var attributes2 = _checkoutAttributeService.GetAllCheckoutAttributes(_storeContext.CurrentStore.Id, !shoppingCart.RequiresShipping());
+            foreach (var a2 in attributes2)
+            {
+                if (!a2.IsRequired)
+                    continue;
 
-                //validate conditional attributes only (if specified)
-                attributes2 = attributes2.Where(x =>
+                var found = false;
+                //selected checkout attributes
+                foreach (var a1 in attributes1)
                 {
-                    var conditionMet = _checkoutAttributeParser.IsConditionMet(x, checkoutAttributesXml);
-                    return !conditionMet.HasValue || conditionMet.Value;
-                }).ToList();
+                    if (a1.Id != a2.Id)
+                        continue;
 
-                foreach (var a2 in attributes2)
-                {
-                    if (a2.IsRequired)
-                    {
-                        bool found = false;
-                        //selected checkout attributes
-                        foreach (var a1 in attributes1)
+                    var attributeValuesStr = _checkoutAttributeParser.ParseValues(checkoutAttributesXml, a1.Id);
+                    foreach (var str1 in attributeValuesStr)
+                        if (!string.IsNullOrEmpty(str1.Trim()))
                         {
-                            if (a1.Id == a2.Id)
-                            {
-                                var attributeValuesStr = _checkoutAttributeParser.ParseValues(checkoutAttributesXml, a1.Id);
-                                foreach (string str1 in attributeValuesStr)
-                                    if (!String.IsNullOrEmpty(str1.Trim()))
-                                    {
-                                        found = true;
-                                        break;
-                                    }
-                            }
+                            found = true;
+                            break;
                         }
+                }
 
-                        //if not found
-                        if (!found)
+                if (found)
+                    continue;
+
+                //if not found
+                warnings.Add(!string.IsNullOrEmpty(_localizationService.GetLocalized(a2, a => a.TextPrompt))
+                    ? _localizationService.GetLocalized(a2, a => a.TextPrompt)
+                    : string.Format(_localizationService.GetResource("ShoppingCart.SelectAttribute"),
+                        _localizationService.GetLocalized(a2, a => a.Name)));
+            }
+
+            //now validation rules
+
+            //minimum length
+            foreach (var ca in attributes2)
+            {
+                string enteredText;
+                int enteredTextLength;
+
+                if (ca.ValidationMinLength.HasValue)
+                {
+                    if (ca.AttributeControlType == AttributeControlType.TextBox ||
+                        ca.AttributeControlType == AttributeControlType.MultilineTextbox)
+                    {
+                        enteredText = _checkoutAttributeParser.ParseValues(checkoutAttributesXml, ca.Id).FirstOrDefault();
+                        enteredTextLength = string.IsNullOrEmpty(enteredText) ? 0 : enteredText.Length;
+
+                        if (ca.ValidationMinLength.Value > enteredTextLength)
                         {
-                            if (!string.IsNullOrEmpty(a2.GetLocalized(a => a.TextPrompt)))
-                                warnings.Add(a2.GetLocalized(a => a.TextPrompt));
-                            else
-                                warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.SelectAttribute"), a2.GetLocalized(a => a.Name)));
+                            warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.TextboxMinimumLength"), _localizationService.GetLocalized(ca, a => a.Name), ca.ValidationMinLength.Value));
                         }
                     }
                 }
 
-                //now validation rules
+                //maximum length
+                if (!ca.ValidationMaxLength.HasValue)
+                    continue;
 
-                //minimum length
-                foreach (var ca in attributes2)
+                if (ca.AttributeControlType != AttributeControlType.TextBox && ca.AttributeControlType != AttributeControlType.MultilineTextbox)
+                    continue;
+
+                enteredText = _checkoutAttributeParser.ParseValues(checkoutAttributesXml, ca.Id).FirstOrDefault();
+                enteredTextLength = string.IsNullOrEmpty(enteredText) ? 0 : enteredText.Length;
+
+                if (ca.ValidationMaxLength.Value < enteredTextLength)
                 {
-                    if (ca.ValidationMinLength.HasValue)
-                    {
-                        if (ca.AttributeControlType == AttributeControlType.TextBox ||
-                            ca.AttributeControlType == AttributeControlType.MultilineTextbox)
-                        {
-                            var valuesStr = _checkoutAttributeParser.ParseValues(checkoutAttributesXml, ca.Id);
-                            var enteredText = valuesStr.FirstOrDefault();
-                            int enteredTextLength = String.IsNullOrEmpty(enteredText) ? 0 : enteredText.Length;
-
-                            if (ca.ValidationMinLength.Value > enteredTextLength)
-                            {
-                                warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.TextboxMinimumLength"), ca.GetLocalized(a => a.Name), ca.ValidationMinLength.Value));
-                            }
-                        }
-                    }
-
-                    //maximum length
-                    if (ca.ValidationMaxLength.HasValue)
-                    {
-                        if (ca.AttributeControlType == AttributeControlType.TextBox ||
-                            ca.AttributeControlType == AttributeControlType.MultilineTextbox)
-                        {
-                            var valuesStr = _checkoutAttributeParser.ParseValues(checkoutAttributesXml, ca.Id);
-                            var enteredText = valuesStr.FirstOrDefault();
-                            int enteredTextLength = String.IsNullOrEmpty(enteredText) ? 0 : enteredText.Length;
-
-                            if (ca.ValidationMaxLength.Value < enteredTextLength)
-                            {
-                                warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.TextboxMaximumLength"), ca.GetLocalized(a => a.Name), ca.ValidationMaxLength.Value));
-                            }
-                        }
-                    }
+                    warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.TextboxMaximumLength"), _localizationService.GetLocalized(ca, a => a.Name), ca.ValidationMaxLength.Value));
                 }
             }
 
@@ -982,70 +1112,17 @@ namespace Nop.Services.Orders
             Product product,
             string attributesXml = "",
             decimal customerEnteredPrice = decimal.Zero,
-            DateTime? rentalStartDate = null, 
+            DateTime? rentalStartDate = null,
             DateTime? rentalEndDate = null)
         {
             if (shoppingCart == null)
-                throw new ArgumentNullException("shoppingCart");
+                throw new ArgumentNullException(nameof(shoppingCart));
 
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
-            foreach (var sci in shoppingCart.Where(a => a.ShoppingCartType == shoppingCartType))
-            {
-                if (sci.ProductId == product.Id)
-                {
-                    //attributes
-                    bool attributesEqual = _productAttributeParser.AreProductAttributesEqual(sci.AttributesXml, attributesXml, false, false);
-
-                    //gift cards
-                    bool giftCardInfoSame = true;
-                    if (sci.Product.IsGiftCard)
-                    {
-                        string giftCardRecipientName1;
-                        string giftCardRecipientEmail1;
-                        string giftCardSenderName1;
-                        string giftCardSenderEmail1;
-                        string giftCardMessage1;
-                        _productAttributeParser.GetGiftCardAttribute(attributesXml,
-                            out giftCardRecipientName1, out giftCardRecipientEmail1,
-                            out giftCardSenderName1, out giftCardSenderEmail1, out giftCardMessage1);
-
-                        string giftCardRecipientName2;
-                        string giftCardRecipientEmail2;
-                        string giftCardSenderName2;
-                        string giftCardSenderEmail2;
-                        string giftCardMessage2;
-                        _productAttributeParser.GetGiftCardAttribute(sci.AttributesXml,
-                            out giftCardRecipientName2, out giftCardRecipientEmail2,
-                            out giftCardSenderName2, out giftCardSenderEmail2, out giftCardMessage2);
-
-
-                        if (giftCardRecipientName1.ToLowerInvariant() != giftCardRecipientName2.ToLowerInvariant() ||
-                            giftCardSenderName1.ToLowerInvariant() != giftCardSenderName2.ToLowerInvariant())
-                            giftCardInfoSame = false;
-                    }
-
-                    //price is the same (for products which require customers to enter a price)
-                    bool customerEnteredPricesEqual = true;
-                    if (sci.Product.CustomerEntersPrice)
-                        //TODO should we use RoundingHelper.RoundPrice here?
-                        customerEnteredPricesEqual = Math.Round(sci.CustomerEnteredPrice, 2) == Math.Round(customerEnteredPrice, 2);
-
-                    //rental products
-                    bool rentalInfoEqual = true;
-                    if (sci.Product.IsRental)
-                    {
-                        rentalInfoEqual = sci.RentalStartDateUtc == rentalStartDate && sci.RentalEndDateUtc == rentalEndDate;
-                    }
-
-                    //found?
-                    if (attributesEqual && giftCardInfoSame && customerEnteredPricesEqual && rentalInfoEqual)
-                        return sci;
-                }
-            }
-
-            return null;
+            return shoppingCart.Where(sci => sci.ShoppingCartType == shoppingCartType)
+                .FirstOrDefault(sci => ShoppingCartItemIsEqual(sci, product, attributesXml, customerEnteredPrice, rentalStartDate, rentalEndDate));
         }
 
         /// <summary>
@@ -1060,19 +1137,19 @@ namespace Nop.Services.Orders
         /// <param name="rentalStartDate">Rental start date</param>
         /// <param name="rentalEndDate">Rental end date</param>
         /// <param name="quantity">Quantity</param>
-        /// <param name="automaticallyAddRequiredProductsIfEnabled">Automatically add required products if enabled</param>
+        /// <param name="addRequiredProducts">Whether to add required products</param>
         /// <returns>Warnings</returns>
         public virtual IList<string> AddToCart(Customer customer, Product product,
             ShoppingCartType shoppingCartType, int storeId, string attributesXml = null,
             decimal customerEnteredPrice = decimal.Zero,
             DateTime? rentalStartDate = null, DateTime? rentalEndDate = null,
-            int quantity = 1, bool automaticallyAddRequiredProductsIfEnabled = true)
+            int quantity = 1, bool addRequiredProducts = true)
         {
             if (customer == null)
-                throw new ArgumentNullException("customer");
+                throw new ArgumentNullException(nameof(customer));
 
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
             var warnings = new List<string>();
             if (shoppingCartType == ShoppingCartType.ShoppingCart && !_permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart, customer))
@@ -1080,11 +1157,13 @@ namespace Nop.Services.Orders
                 warnings.Add("Shopping cart is disabled");
                 return warnings;
             }
+
             if (shoppingCartType == ShoppingCartType.Wishlist && !_permissionService.Authorize(StandardPermissionProvider.EnableWishlist, customer))
             {
                 warnings.Add("Wishlist is disabled");
                 return warnings;
             }
+
             if (customer.IsSearchEngineAccount())
             {
                 warnings.Add("Search engine can't add to cart");
@@ -1100,10 +1179,7 @@ namespace Nop.Services.Orders
             //reset checkout info
             _customerService.ResetCheckoutData(customer, storeId);
 
-            var cart = customer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == shoppingCartType)
-                .LimitPerStore(storeId)
-                .ToList();
+            var cart = GetShoppingCart(customer, shoppingCartType, storeId);
 
             var shoppingCartItem = FindShoppingCartItemInTheCart(cart,
                 shoppingCartType, product, attributesXml, customerEnteredPrice,
@@ -1112,82 +1188,80 @@ namespace Nop.Services.Orders
             if (shoppingCartItem != null)
             {
                 //update existing shopping cart item
-                int newQuantity = shoppingCartItem.Quantity + quantity;
+                var newQuantity = shoppingCartItem.Quantity + quantity;
                 warnings.AddRange(GetShoppingCartItemWarnings(customer, shoppingCartType, product,
-                    storeId, attributesXml, 
+                    storeId, attributesXml,
                     customerEnteredPrice, rentalStartDate, rentalEndDate,
-                    newQuantity, automaticallyAddRequiredProductsIfEnabled));
+                    newQuantity, addRequiredProducts, shoppingCartItem.Id));
 
-                if (!warnings.Any())
-                {
-                    shoppingCartItem.AttributesXml = attributesXml;
-                    shoppingCartItem.Quantity = newQuantity;
-                    shoppingCartItem.UpdatedOnUtc = DateTime.UtcNow;
-                    _customerService.UpdateCustomer(customer);
+                if (warnings.Any())
+                    return warnings;
 
-                    //event notification
-                    _eventPublisher.EntityUpdated(shoppingCartItem);
-                }
+                shoppingCartItem.AttributesXml = attributesXml;
+                shoppingCartItem.Quantity = newQuantity;
+                shoppingCartItem.UpdatedOnUtc = DateTime.UtcNow;
+                _customerService.UpdateCustomer(customer);
+
+                //event notification
+                _eventPublisher.EntityUpdated(shoppingCartItem);
             }
             else
             {
                 //new shopping cart item
                 warnings.AddRange(GetShoppingCartItemWarnings(customer, shoppingCartType, product,
                     storeId, attributesXml, customerEnteredPrice,
-                    rentalStartDate, rentalEndDate, 
-                    quantity, automaticallyAddRequiredProductsIfEnabled));
-                if (!warnings.Any())
+                    rentalStartDate, rentalEndDate,
+                    quantity, addRequiredProducts));
+
+                if (warnings.Any())
+                    return warnings;
+
+                //maximum items validation
+                switch (shoppingCartType)
                 {
-                    //maximum items validation
-                    switch (shoppingCartType)
-                    {
-                        case ShoppingCartType.ShoppingCart:
-                            {
-                                if (cart.Count >= _shoppingCartSettings.MaximumShoppingCartItems)
-                                {
-                                    warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.MaximumShoppingCartItems"), _shoppingCartSettings.MaximumShoppingCartItems));
-                                    return warnings;
-                                }
-                            }
-                            break;
-                        case ShoppingCartType.Wishlist:
-                            {
-                                if (cart.Count >= _shoppingCartSettings.MaximumWishlistItems)
-                                {
-                                    warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.MaximumWishlistItems"), _shoppingCartSettings.MaximumWishlistItems));
-                                    return warnings;
-                                }
-                            }
-                            break;
-                        default:
-                            break;
-                    }
+                    case ShoppingCartType.ShoppingCart:
+                        if (cart.Count >= _shoppingCartSettings.MaximumShoppingCartItems)
+                        {
+                            warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.MaximumShoppingCartItems"), _shoppingCartSettings.MaximumShoppingCartItems));
+                            return warnings;
+                        }
 
-                    DateTime now = DateTime.UtcNow;
-                    shoppingCartItem = new ShoppingCartItem
-                    {
-                        ShoppingCartType = shoppingCartType,
-                        StoreId = storeId,
-                        Product = product,
-                        AttributesXml = attributesXml,
-                        CustomerEnteredPrice = customerEnteredPrice,
-                        Quantity = quantity,
-                        RentalStartDateUtc = rentalStartDate,
-                        RentalEndDateUtc = rentalEndDate,
-                        CreatedOnUtc = now,
-                        UpdatedOnUtc = now
-                    };
-                    customer.ShoppingCartItems.Add(shoppingCartItem);
-                    _customerService.UpdateCustomer(customer);
+                        break;
+                    case ShoppingCartType.Wishlist:
+                        if (cart.Count >= _shoppingCartSettings.MaximumWishlistItems)
+                        {
+                            warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.MaximumWishlistItems"), _shoppingCartSettings.MaximumWishlistItems));
+                            return warnings;
+                        }
 
-
-                    //updated "HasShoppingCartItems" property used for performance optimization
-                    customer.HasShoppingCartItems = customer.ShoppingCartItems.Any();
-                    _customerService.UpdateCustomer(customer);
-
-                    //event notification
-                    _eventPublisher.EntityInserted(shoppingCartItem);
+                        break;
+                    default:
+                        break;
                 }
+
+                var now = DateTime.UtcNow;
+                shoppingCartItem = new ShoppingCartItem
+                {
+                    ShoppingCartType = shoppingCartType,
+                    StoreId = storeId,
+                    Product = product,
+                    AttributesXml = attributesXml,
+                    CustomerEnteredPrice = customerEnteredPrice,
+                    Quantity = quantity,
+                    RentalStartDateUtc = rentalStartDate,
+                    RentalEndDateUtc = rentalEndDate,
+                    CreatedOnUtc = now,
+                    UpdatedOnUtc = now
+                };
+                customer.ShoppingCartItems.Add(shoppingCartItem);
+                _customerService.UpdateCustomer(customer);
+
+                //updated "HasShoppingCartItems" property used for performance optimization
+                customer.HasShoppingCartItems = customer.ShoppingCartItems.Any();
+                _customerService.UpdateCustomer(customer);
+
+                //event notification
+                _eventPublisher.EntityInserted(shoppingCartItem);
             }
 
             return warnings;
@@ -1208,54 +1282,61 @@ namespace Nop.Services.Orders
         public virtual IList<string> UpdateShoppingCartItem(Customer customer,
             int shoppingCartItemId, string attributesXml,
             decimal customerEnteredPrice,
-            DateTime? rentalStartDate = null, DateTime? rentalEndDate = null, 
+            DateTime? rentalStartDate = null, DateTime? rentalEndDate = null,
             int quantity = 1, bool resetCheckoutData = true)
         {
             if (customer == null)
-                throw new ArgumentNullException("customer");
+                throw new ArgumentNullException(nameof(customer));
 
             var warnings = new List<string>();
 
             var shoppingCartItem = customer.ShoppingCartItems.FirstOrDefault(sci => sci.Id == shoppingCartItemId);
-            if (shoppingCartItem != null)
-            {
-                if (resetCheckoutData)
-                {
-                    //reset checkout data
-                    _customerService.ResetCheckoutData(customer, shoppingCartItem.StoreId);
-                }
-                if (quantity > 0)
-                {
-                    //check warnings
-                    warnings.AddRange(GetShoppingCartItemWarnings(customer, shoppingCartItem.ShoppingCartType,
-                        shoppingCartItem.Product, shoppingCartItem.StoreId,
-                        attributesXml, customerEnteredPrice, 
-                        rentalStartDate, rentalEndDate, quantity, false));
-                    if (!warnings.Any())
-                    {
-                        //if everything is OK, then update a shopping cart item
-                        shoppingCartItem.Quantity = quantity;
-                        shoppingCartItem.AttributesXml = attributesXml;
-                        shoppingCartItem.CustomerEnteredPrice = customerEnteredPrice;
-                        shoppingCartItem.RentalStartDateUtc = rentalStartDate;
-                        shoppingCartItem.RentalEndDateUtc = rentalEndDate;
-                        shoppingCartItem.UpdatedOnUtc = DateTime.UtcNow;
-                        _customerService.UpdateCustomer(customer);
+            if (shoppingCartItem == null)
+                return warnings;
 
-                        //event notification
-                        _eventPublisher.EntityUpdated(shoppingCartItem);
-                    }
-                }
-                else
-                {
-                    //delete a shopping cart item
-                    DeleteShoppingCartItem(shoppingCartItem, resetCheckoutData, true);
-                }
+            if (resetCheckoutData)
+            {
+                //reset checkout data
+                _customerService.ResetCheckoutData(customer, shoppingCartItem.StoreId);
+            }
+
+            if (quantity > 0)
+            {
+                //check warnings
+                warnings.AddRange(GetShoppingCartItemWarnings(customer, shoppingCartItem.ShoppingCartType,
+                    shoppingCartItem.Product, shoppingCartItem.StoreId,
+                    attributesXml, customerEnteredPrice,
+                    rentalStartDate, rentalEndDate, quantity, false, shoppingCartItemId));
+                if (warnings.Any())
+                    return warnings;
+
+                //if everything is OK, then update a shopping cart item
+                shoppingCartItem.Quantity = quantity;
+                shoppingCartItem.AttributesXml = attributesXml;
+                shoppingCartItem.CustomerEnteredPrice = customerEnteredPrice;
+                shoppingCartItem.RentalStartDateUtc = rentalStartDate;
+                shoppingCartItem.RentalEndDateUtc = rentalEndDate;
+                shoppingCartItem.UpdatedOnUtc = DateTime.UtcNow;
+                _customerService.UpdateCustomer(customer);
+
+                //event notification
+                _eventPublisher.EntityUpdated(shoppingCartItem);
+            }
+            else
+            {
+                //check warnings for required products
+                warnings.AddRange(GetRequiredProductWarnings(customer, shoppingCartItem.ShoppingCartType,
+                    shoppingCartItem.Product, shoppingCartItem.StoreId, quantity, false, shoppingCartItemId));
+                if (warnings.Any())
+                    return warnings;
+
+                //delete a shopping cart item
+                DeleteShoppingCartItem(shoppingCartItem, resetCheckoutData, true);
             }
 
             return warnings;
         }
-        
+
         /// <summary>
         /// Migrate shopping cart
         /// </summary>
@@ -1265,23 +1346,24 @@ namespace Nop.Services.Orders
         public virtual void MigrateShoppingCart(Customer fromCustomer, Customer toCustomer, bool includeCouponCodes)
         {
             if (fromCustomer == null)
-                throw new ArgumentNullException("fromCustomer");
+                throw new ArgumentNullException(nameof(fromCustomer));
             if (toCustomer == null)
-                throw new ArgumentNullException("toCustomer");
+                throw new ArgumentNullException(nameof(toCustomer));
 
             if (fromCustomer.Id == toCustomer.Id)
                 return; //the same customer
 
             //shopping cart items
             var fromCart = fromCustomer.ShoppingCartItems.ToList();
-            for (int i = 0; i < fromCart.Count; i++)
+            for (var i = 0; i < fromCart.Count; i++)
             {
                 var sci = fromCart[i];
-                AddToCart(toCustomer, sci.Product, sci.ShoppingCartType, sci.StoreId, 
+                AddToCart(toCustomer, sci.Product, sci.ShoppingCartType, sci.StoreId,
                     sci.AttributesXml, sci.CustomerEnteredPrice,
                     sci.RentalStartDateUtc, sci.RentalEndDateUtc, sci.Quantity, false);
             }
-            for (int i = 0; i < fromCart.Count; i++)
+
+            for (var i = 0; i < fromCart.Count; i++)
             {
                 var sci = fromCart[i];
                 DeleteShoppingCartItem(sci);
@@ -1291,17 +1373,98 @@ namespace Nop.Services.Orders
             if (includeCouponCodes)
             {
                 //discount
-                foreach (var code in fromCustomer.ParseAppliedDiscountCouponCodes())
-                    toCustomer.ApplyDiscountCouponCode(code);
+                foreach (var code in _customerService.ParseAppliedDiscountCouponCodes(fromCustomer))
+                    _customerService.ApplyDiscountCouponCode(toCustomer, code);
 
                 //gift card
-                foreach (var code in fromCustomer.ParseAppliedGiftCardCouponCodes())
-                    toCustomer.ApplyGiftCardCouponCode(code);
+                foreach (var code in _customerService.ParseAppliedGiftCardCouponCodes(fromCustomer))
+                    _customerService.ApplyGiftCardCouponCode(toCustomer, code);
 
                 //save customer
                 _customerService.UpdateCustomer(toCustomer);
-                 
             }
+
+            //move selected checkout attributes
+            var checkoutAttributesXml = _genericAttributeService.GetAttribute<string>(fromCustomer, NopCustomerDefaults.CheckoutAttributes, _storeContext.CurrentStore.Id);
+            _genericAttributeService.SaveAttribute(toCustomer, NopCustomerDefaults.CheckoutAttributes, checkoutAttributesXml, _storeContext.CurrentStore.Id);
+        }
+
+        /// <summary>
+        /// Indicates whether the shopping cart requires shipping
+        /// </summary>
+        /// <param name="shoppingCart">Shopping cart</param>
+        /// <returns>True if the shopping cart requires shipping; otherwise, false.</returns>
+        public virtual bool ShoppingCartRequiresShipping(IList<ShoppingCartItem> shoppingCart)
+        {
+            return shoppingCart.Any(shoppingCartItem => _shippingService.IsShipEnabled(shoppingCartItem));
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether shopping cart is recurring
+        /// </summary>
+        /// <param name="shoppingCart">Shopping cart</param>
+        /// <returns>Result</returns>
+        public virtual bool ShoppingCartIsRecurring(IList<ShoppingCartItem> shoppingCart)
+        {
+            return shoppingCart.Any(item => item.Product?.IsRecurring ?? false);
+        }
+
+        /// <summary>
+        /// Get a recurring cycle information
+        /// </summary>
+        /// <param name="shoppingCart">Shopping cart</param>
+        /// <param name="cycleLength">Cycle length</param>
+        /// <param name="cyclePeriod">Cycle period</param>
+        /// <param name="totalCycles">Total cycles</param>
+        /// <returns>Error (if exists); otherwise, empty string</returns>
+        public virtual string GetRecurringCycleInfo(IList<ShoppingCartItem> shoppingCart,
+            out int cycleLength, out RecurringProductCyclePeriod cyclePeriod, out int totalCycles)
+        {
+            cycleLength = 0;
+            cyclePeriod = 0;
+            totalCycles = 0;
+
+            int? _cycleLength = null;
+            RecurringProductCyclePeriod? _cyclePeriod = null;
+            int? _totalCycles = null;
+
+            foreach (var sci in shoppingCart)
+            {
+                var product = sci.Product;
+                if (product == null)
+                {
+                    throw new NopException($"Product (Id={sci.ProductId}) cannot be loaded");
+                }
+
+                if (!product.IsRecurring)
+                    continue;
+
+                var conflictError = _localizationService.GetResource("ShoppingCart.ConflictingShipmentSchedules");
+
+                //cycle length
+                if (_cycleLength.HasValue && _cycleLength.Value != product.RecurringCycleLength)
+                    return conflictError;
+                _cycleLength = product.RecurringCycleLength;
+
+                //cycle period
+                if (_cyclePeriod.HasValue && _cyclePeriod.Value != product.RecurringCyclePeriod)
+                    return conflictError;
+                _cyclePeriod = product.RecurringCyclePeriod;
+
+                //total cycles
+                if (_totalCycles.HasValue && _totalCycles.Value != product.RecurringTotalCycles)
+                    return conflictError;
+                _totalCycles = product.RecurringTotalCycles;
+            }
+
+            if (!_cycleLength.HasValue)
+                return string.Empty;
+
+            cycleLength = _cycleLength.Value;
+            cyclePeriod = _cyclePeriod.Value;
+            totalCycles = _totalCycles.Value;
+
+            return string.Empty;
         }
 
         #endregion

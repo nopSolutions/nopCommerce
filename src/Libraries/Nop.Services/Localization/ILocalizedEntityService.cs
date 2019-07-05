@@ -58,6 +58,15 @@ namespace Nop.Services.Localization
             string localeValue,
             int languageId) where T : BaseEntity, ILocalizedEntity;
 
+        /// <summary>
+        /// Save localized value
+        /// </summary>
+        /// <typeparam name="T">Type</typeparam>
+        /// <typeparam name="TPropType">Property type</typeparam>
+        /// <param name="entity">Entity</param>
+        /// <param name="keySelector">Key selector</param>
+        /// <param name="localeValue">Locale value</param>
+        /// <param name="languageId">Language ID</param>
         void SaveLocalizedValue<T, TPropType>(T entity,
            Expression<Func<T, TPropType>> keySelector,
            TPropType localeValue,

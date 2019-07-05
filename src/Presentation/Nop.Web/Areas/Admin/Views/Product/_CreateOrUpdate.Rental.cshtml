@@ -1,0 +1,50 @@
+﻿@model ProductModel
+@using Nop.Core.Domain.Catalog;
+@using Nop.Services
+<script>
+    $(document).ready(function() {
+        $("#@Html.IdFor(model => model.IsRental)").click(toggleRental);
+        toggleRental();
+    });
+
+    function toggleRental() {
+        if ($('#@Html.IdFor(model => model.IsRental)').is(':checked')) {
+            $('#pnlRentalPriceLength').show();
+            $('#pnlRentalPricePeriod').show();
+        } else {
+            $('#pnlRentalPriceLength').hide();
+            $('#pnlRentalPricePeriod').hide();
+        }
+    }
+</script>
+<div class="panel-body">
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-label asp-for="IsRental" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="IsRental" />
+            <span asp-validation-for="IsRental"></span>
+        </div>
+    </div>
+    <nop-nested-setting asp-for="IsRental">
+        <div class="form-group" id="pnlRentalPriceLength">
+            <div class="col-md-3">
+                <nop-label asp-for="RentalPriceLength" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="RentalPriceLength" />
+                <span asp-validation-for="RentalPriceLength"></span>
+            </div>
+        </div>
+        <div class="form-group" id="pnlRentalPricePeriod">
+            <div class="col-md-3">
+                <nop-label asp-for="RentalPricePeriodId" />
+            </div>
+            <div class="col-md-9">
+                <nop-select asp-for="RentalPricePeriodId" asp-items="@(((RentalPricePeriod)Model.RentalPricePeriodId).ToSelectList())" />
+                <span asp-validation-for="RentalPricePeriodId"></span>
+            </div>
+        </div>
+    </nop-nested-setting>
+</div>

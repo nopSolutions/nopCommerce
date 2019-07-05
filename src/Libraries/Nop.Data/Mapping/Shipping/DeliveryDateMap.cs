@@ -1,14 +1,30 @@
-﻿using Nop.Core.Domain.Shipping;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Nop.Core.Domain.Shipping;
 
 namespace Nop.Data.Mapping.Shipping
 {
-    public class DeliveryDateMap : NopEntityTypeConfiguration<DeliveryDate>
+    /// <summary>
+    /// Represents a delivery date mapping configuration
+    /// </summary>
+    public partial class DeliveryDateMap : NopEntityTypeConfiguration<DeliveryDate>
     {
-        public DeliveryDateMap()
+        #region Methods
+
+        /// <summary>
+        /// Configures the entity
+        /// </summary>
+        /// <param name="builder">The builder to be used to configure the entity</param>
+        public override void Configure(EntityTypeBuilder<DeliveryDate> builder)
         {
-            this.ToTable("DeliveryDate");
-            this.HasKey(dd => dd.Id);
-            this.Property(dd => dd.Name).IsRequired().HasMaxLength(400);
+            builder.ToTable(nameof(DeliveryDate));
+            builder.HasKey(date => date.Id);
+
+            builder.Property(date => date.Name).HasMaxLength(400).IsRequired();
+
+            base.Configure(builder);
         }
+
+        #endregion
     }
 }

@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.Blogs
 {
@@ -12,6 +12,7 @@ namespace Nop.Web.Models.Blogs
         public int Year { get; set; }
         public IList<BlogPostMonthModel> Months { get; set; }
     }
+
     public partial class BlogPostMonthModel : BaseNopModel
     {
         public int Month { get; set; }

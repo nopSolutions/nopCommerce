@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using FluentValidation;
-using FluentValidation.Results;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Services.Directory;
@@ -25,6 +24,7 @@ namespace Nop.Web.Validators.Customer
             if (customerSettings.UsernamesEnabled && customerSettings.AllowUsersToChangeUsernames)
             {
                 RuleFor(x => x.Username).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.Username.Required"));
+                RuleFor(x => x.Username).IsUsername(customerSettings).WithMessage(localizationService.GetResource("Account.Fields.Username.NotValid"));
             }
 
             //form fields
@@ -38,7 +38,7 @@ namespace Nop.Web.Validators.Customer
                 customerSettings.StateProvinceEnabled &&
                 customerSettings.StateProvinceRequired)
             {
-                Custom(x =>
+                RuleFor(x => x.StateProvinceId).Must((x, context) =>
                 {
                     //does selected country have states?
                     var hasStates = stateProvinceService.GetStateProvincesByCountryId(x.CountryId).Any();
@@ -46,31 +46,35 @@ namespace Nop.Web.Validators.Customer
                     {
                         //if yes, then ensure that a state is selected
                         if (x.StateProvinceId == 0)
-                        {
-                            return new ValidationFailure("StateProvinceId", localizationService.GetResource("Account.Fields.StateProvince.Required"));
-                        }
+                            return false;
                     }
-                    return null;
-                });
+
+                    return true;
+                }).WithMessage(localizationService.GetResource("Account.Fields.StateProvince.Required"));
             }
-            if (customerSettings.DateOfBirthEnabled &&customerSettings.DateOfBirthRequired)
+            if (customerSettings.DateOfBirthEnabled && customerSettings.DateOfBirthRequired)
             {
-                Custom(x =>
+                //entered?
+                RuleFor(x => x.DateOfBirthDay).Must((x, context) =>
                 {
                     var dateOfBirth = x.ParseDateOfBirth();
-                    //entered?
                     if (!dateOfBirth.HasValue)
-                    {
-                        return new ValidationFailure("DateOfBirthDay", localizationService.GetResource("Account.Fields.DateOfBirth.Required"));
-                    }
-                    //minimum age
-                    if (customerSettings.DateOfBirthMinimumAge.HasValue &&
-                        CommonHelper.GetDifferenceInYears(dateOfBirth.Value, DateTime.Today) < customerSettings.DateOfBirthMinimumAge.Value)
-                    {
-                        return new ValidationFailure("DateOfBirthDay", string.Format(localizationService.GetResource("Account.Fields.DateOfBirth.MinimumAge"), customerSettings.DateOfBirthMinimumAge.Value));
-                    }
-                    return null;
-                });
+                        return false;
+
+                    return true;
+                }).WithMessage(localizationService.GetResource("Account.Fields.DateOfBirth.Required"));
+
+                //minimum age
+                RuleFor(x => x.DateOfBirthDay).Must((x, context) =>
+                {
+                    var dateOfBirth = x.ParseDateOfBirth();
+                    if (dateOfBirth.HasValue && customerSettings.DateOfBirthMinimumAge.HasValue &&
+                        CommonHelper.GetDifferenceInYears(dateOfBirth.Value, DateTime.Today) <
+                        customerSettings.DateOfBirthMinimumAge.Value)
+                        return false;
+
+                    return true;
+                }).WithMessage(string.Format(localizationService.GetResource("Account.Fields.DateOfBirth.MinimumAge"), customerSettings.DateOfBirthMinimumAge));
             }
             if (customerSettings.CompanyRequired && customerSettings.CompanyEnabled)
             {
@@ -87,6 +91,10 @@ namespace Nop.Web.Validators.Customer
             if (customerSettings.ZipPostalCodeRequired && customerSettings.ZipPostalCodeEnabled)
             {
                 RuleFor(x => x.ZipPostalCode).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.ZipPostalCode.Required"));
+            }
+            if (customerSettings.CountyRequired && customerSettings.CountyEnabled)
+            {
+                RuleFor(x => x.County).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.County.Required"));
             }
             if (customerSettings.CityRequired && customerSettings.CityEnabled)
             {

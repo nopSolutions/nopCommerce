@@ -48,7 +48,7 @@ namespace Nop.Core.Domain.Messages
         public string CC { get; set; }
 
         /// <summary>
-        /// Gets or sets the Bcc
+        /// Gets or sets the BCC
         /// </summary>
         public string Bcc { get; set; }
 
@@ -107,21 +107,13 @@ namespace Nop.Core.Domain.Messages
         /// </summary>
         public virtual EmailAccount EmailAccount { get; set; }
 
-
         /// <summary>
         /// Gets or sets the priority
         /// </summary>
         public QueuedEmailPriority Priority
         {
-            get
-            {
-                return (QueuedEmailPriority)this.PriorityId;
-            }
-            set
-            {
-                this.PriorityId = (int)value;
-            }
+            get => (QueuedEmailPriority)PriorityId;
+            set => PriorityId = (int)value;
         }
-
     }
 }

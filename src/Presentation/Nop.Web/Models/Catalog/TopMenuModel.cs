@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.Catalog
 {
@@ -9,17 +9,17 @@ namespace Nop.Web.Models.Catalog
         public TopMenuModel()
         {
             Categories = new List<CategorySimpleModel>();
-            Topics = new List<TopMenuTopicModel>();
+            Topics = new List<TopicModel>();
         }
 
         public IList<CategorySimpleModel> Categories { get; set; }
-        public IList<TopMenuTopicModel> Topics { get; set; }
+        public IList<TopicModel> Topics { get; set; }
 
         public bool BlogEnabled { get; set; }
         public bool NewProductsEnabled { get; set; }
         public bool ForumEnabled { get; set; }
 
-        public bool DisplayHomePageMenuItem { get; set; }
+        public bool DisplayHomepageMenuItem { get; set; }
         public bool DisplayNewProductsMenuItem { get; set; }
         public bool DisplayProductSearchMenuItem { get; set; }
         public bool DisplayCustomerInfoMenuItem { get; set; }
@@ -27,13 +27,15 @@ namespace Nop.Web.Models.Catalog
         public bool DisplayForumsMenuItem { get; set; }
         public bool DisplayContactUsMenuItem { get; set; }
 
+        public bool UseAjaxMenu { get; set; }
+
         public bool HasOnlyCategories
         {
             get
             {
                 return Categories.Any()
                        && !Topics.Any()
-                       && !DisplayHomePageMenuItem
+                       && !DisplayHomepageMenuItem
                        && !(DisplayNewProductsMenuItem && NewProductsEnabled)
                        && !DisplayProductSearchMenuItem
                        && !DisplayCustomerInfoMenuItem
@@ -44,11 +46,18 @@ namespace Nop.Web.Models.Catalog
         }
 
         #region Nested classes
-
-        public class TopMenuTopicModel : BaseNopEntityModel
+        
+        public class TopicModel : BaseNopEntityModel
         {
             public string Name { get; set; }
             public string SeName { get; set; }
+        }
+
+        public class CategoryLineModel : BaseNopModel
+        {
+            public int Level { get; set; }
+            public bool ResponsiveMobileMenu { get; set; }
+            public CategorySimpleModel Category { get; set; }
         }
 
         #endregion

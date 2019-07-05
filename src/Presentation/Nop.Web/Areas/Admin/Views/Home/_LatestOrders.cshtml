@@ -1,0 +1,109 @@
+﻿@inject Nop.Services.Common.IGenericAttributeService genericAttributeService
+@inject IWorkContext workContext
+@{
+    const string panelId = "latest-orders-box";
+    const string hidePanelAttributeName = "Reports.HideLatestOrdersPanel";
+    var hidePanel = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hidePanelAttributeName);
+    var gridPageSize = 5;
+}
+
+<div class="box box-info @if(hidePanel){<text>collapsed-box</text>}" id="@panelId">
+    <div class="box-header with-border">
+        <h3 class="box-title">
+            <i class="fa fa-cart-plus"></i>
+            @T("Admin.Dashboard.LatestOrders")
+            <a asp-controller="Order" asp-action="List" class="btn btn-xs btn-info btn-flat margin-l-10">@T("Admin.Dashboard.LatestOrders.ViewAll")</a>
+        </h3>
+        <div class="box-tools pull-right">
+            <button class="btn btn-box-tool" data-widget="collapse">
+                @if (hidePanel)
+                {
+                    <text><i class="fa fa-plus"></i></text>
+                }
+                else
+                {
+                    <text><i class="fa fa-minus"></i></text>
+                }
+            </button>
+        </div>
+    </div>
+    <script>
+            $(document).ready(function () {
+                $('#@panelId').on('click', 'button[data-widget="collapse"]', function () {
+                    var collapsed = !$('#@panelId').hasClass('collapsed-box');
+                    saveUserPreferences('@(Url.Action("SavePreference", "Preferences"))', '@hidePanelAttributeName', collapsed);
+                });
+            });
+        </script>
+    <div class="box-body">
+        @await Html.PartialAsync("Table", new DataTablesModel
+        {
+            Name = "orders-grid",
+            UrlRead = new DataUrl("OrderList", "Order", null),
+            Length = gridPageSize,
+            Dom = "<'row'<'col-md-12't>>" +
+                  "<'row margin-t-5'" +
+                    "<'col-lg-10 col-xs-12'<'float-lg-left'p>>" +
+                    "<'col-lg-2 col-xs-12'<'float-lg-right text-center'i>>" +
+                  ">",
+            ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(OrderModel.CustomOrderNumber))
+                {
+                    Title = T("Admin.Orders.Fields.CustomOrderNumber").Text,
+                    Width = "80"
+                },
+                new ColumnProperty(nameof(OrderModel.OrderStatus))
+                {
+                    Title = T("Admin.Orders.Fields.OrderStatus").Text,
+                    Width = "100",
+                    Render = new RenderCustom("renderColumnOrderStatus")
+                },
+                new ColumnProperty(nameof(OrderModel.CustomerEmail))
+                {
+                    Title = T("Admin.Orders.Fields.Customer").Text,
+                    Width = "250",
+                    Render = new RenderCustom("renderColumnCustomerEmail")
+                },
+                new ColumnProperty(nameof(OrderModel.CreatedOn))
+                {
+                    Title = T("Admin.Orders.Fields.CreatedOn").Text,
+                    Width = "100",
+                    Render = new RenderDate()
+                },
+                new ColumnProperty(nameof(OrderModel.Id))
+                {
+                    Title = T("Admin.Common.View").Text,
+                    Width = "50",
+                    ClassName = NopColumnClassDefaults.Button,
+                    Render = new RenderButtonView(new DataUrl("~/Admin/Order/Edit/"))
+                }
+            }
+        })
+        <script>
+            function renderColumnCustomerEmail(data, type, row, meta) {
+                var textRenderer = $.fn.dataTable.render.text().display;
+                return textRenderer(row.CustomerFullName) + ' (' + textRenderer(row.CustomerEmail) + ')';
+            }
+
+            function renderColumnOrderStatus(data, type, row, meta) {
+                var color;
+                switch (row.OrderStatusId) {
+                    case 10:
+                        color = 'yellow';
+                        break;
+                    case 20:
+                        color = 'blue';
+                        break;
+                    case 30:
+                        color = 'green';
+                        break;
+                    case 40:
+                        color = 'red';
+                        break;
+                }
+                return '<span class="grid-report-item ' + color + '">' + data + '</span >';
+            }
+        </script>
+    </div>
+</div>

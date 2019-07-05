@@ -1,0 +1,60 @@
+@model DiscountModel
+
+@if (Model.Id > 0)
+{
+    <div class="panel-body">
+        @await Html.PartialAsync("Table", new DataTablesModel
+        {
+            Name = "manufacturers-grid",
+            UrlRead = new DataUrl("ManufacturerList", "Discount", new RouteValueDictionary { [nameof(Model.DiscountManufacturerSearchModel.DiscountId)] = Model.DiscountManufacturerSearchModel.DiscountId }),
+            UrlDelete = new DataUrl("ManufacturerDelete", "Discount", new RouteValueDictionary { [nameof(Model.DiscountManufacturerSearchModel.DiscountId)] = Model.DiscountManufacturerSearchModel.DiscountId }),
+            BindColumnNameActionDelete = nameof(DiscountManufacturerModel.ManufacturerId),
+            Length = Model.DiscountManufacturerSearchModel.PageSize,
+            LengthMenu = Model.DiscountManufacturerSearchModel.AvailablePageSizes,
+            ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(DiscountManufacturerModel.ManufacturerName))
+                {
+                    Title = T("Admin.Promotions.Discounts.AppliedToManufacturers.Manufacturer").Text
+                },
+                new ColumnProperty(nameof(DiscountManufacturerModel.ManufacturerId))
+                {
+                    Title = T("Admin.Common.View").Text,
+                    Width = "150",
+                    ClassName =  NopColumnClassDefaults.Button,
+                    Render = new RenderButtonView(new DataUrl("~/Admin/Manufacturer/Edit/"))
+                },
+                new ColumnProperty(nameof(DiscountManufacturerModel.ManufacturerId))
+                {
+                    Title = T("Admin.Common.Delete").Text,
+                    Width = "150",
+                    Render = new RenderButtonRemove(T("Admin.Common.Delete").Text),
+                    ClassName =  NopColumnClassDefaults.Button
+                }
+            }
+        })
+    </div>
+    <div class="panel-footer">
+        <button type="submit" id="btnAddNewManufacturer" onclick="javascript:OpenWindow('@(Url.Action("ManufacturerAddPopup", "Discount", new { discountId = Model.Id, btnId = "btnRefreshManufacturers", formId = "discount-form" }))', 800, 800, true); return false;" class="btn btn-primary">
+            @T("Admin.Promotions.Discounts.AppliedToManufacturers.AddNew")
+        </button>
+        <input type="submit" id="btnRefreshManufacturers" style="display: none" />
+        <script>
+            $(document).ready(function() {
+                $('#btnRefreshManufacturers').click(function() {
+                    //refresh grid
+                    updateTable('#manufacturers-grid');
+
+                    //return false to don't reload a page
+                    return false;
+                });
+            });
+        </script>
+    </div>
+}
+else
+{
+    <div class="panel-body">
+        @T("Admin.Promotions.Discounts.AppliedToManufacturers.SaveBeforeEdit")
+    </div>
+}

@@ -2,12 +2,15 @@ using Nop.Core.Configuration;
 
 namespace Nop.Core.Domain.Common
 {
-    public class DisplayDefaultMenuItemSettings: ISettings
+    /// <summary>
+    /// Display default menu item settings
+    /// </summary>
+    public class DisplayDefaultMenuItemSettings : ISettings
     {
         /// <summary>
         /// Gets or sets a value indicating whether to display "home page" menu item
         /// </summary>
-        public bool DisplayHomePageMenuItem { get; set; }
+        public bool DisplayHomepageMenuItem { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to display "new products" menu item

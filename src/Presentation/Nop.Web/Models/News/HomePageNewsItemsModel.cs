@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.News
 {
-    public partial class HomePageNewsItemsModel : BaseNopModel, ICloneable
+    public partial class HomepageNewsItemsModel : BaseNopModel, ICloneable
     {
-        public HomePageNewsItemsModel()
+        public HomepageNewsItemsModel()
         {
             NewsItems = new List<NewsItemModel>();
         }
@@ -17,7 +17,7 @@ namespace Nop.Web.Models.News
         public object Clone()
         {
             //we use a shallow copy (deep clone is not required here)
-            return this.MemberwiseClone();
+            return MemberwiseClone();
         }
     }
 }

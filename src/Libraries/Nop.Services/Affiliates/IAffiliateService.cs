@@ -17,9 +17,9 @@ namespace Nop.Services.Affiliates
         Affiliate GetAffiliateById(int affiliateId);
 
         /// <summary>
-        /// Gets an affiliate by friendly url name
+        /// Gets an affiliate by friendly URL name
         /// </summary>
-        /// <param name="friendlyUrlName">Friendly url name</param>
+        /// <param name="friendlyUrlName">Friendly URL name</param>
         /// <returns>Affiliate</returns>
         Affiliate GetAffiliateByFriendlyUrlName(string friendlyUrlName);
 
@@ -60,6 +60,27 @@ namespace Nop.Services.Affiliates
         /// </summary>
         /// <param name="affiliate">Affiliate</param>
         void UpdateAffiliate(Affiliate affiliate);
-        
+
+        /// <summary>
+        /// Get full name
+        /// </summary>
+        /// <param name="affiliate">Affiliate</param>
+        /// <returns>Affiliate full name</returns>
+        string GetAffiliateFullName(Affiliate affiliate);
+
+        /// <summary>
+        /// Generate affiliate URL
+        /// </summary>
+        /// <param name="affiliate">Affiliate</param>
+        /// <returns>Generated affiliate URL</returns>
+        string GenerateUrl(Affiliate affiliate);
+
+        /// <summary>
+        /// Validate friendly URL name
+        /// </summary>
+        /// <param name="affiliate">Affiliate</param>
+        /// <param name="friendlyUrlName">Friendly URL name</param>
+        /// <returns>Valid friendly name</returns>
+        string ValidateFriendlyUrlName(Affiliate affiliate, string friendlyUrlName);
     }
 }

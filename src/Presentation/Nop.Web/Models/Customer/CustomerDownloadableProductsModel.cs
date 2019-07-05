@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.Customer
 {
@@ -14,6 +14,7 @@ namespace Nop.Web.Models.Customer
         public IList<DownloadableProductsModel> Items { get; set; }
 
         #region Nested classes
+
         public partial class DownloadableProductsModel : BaseNopModel
         {
             public Guid OrderItemGuid { get; set; }
@@ -31,6 +32,7 @@ namespace Nop.Web.Models.Customer
 
             public DateTime CreatedOn { get; set; }
         }
+
         #endregion
     }
 

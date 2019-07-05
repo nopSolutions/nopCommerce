@@ -1,0 +1,81 @@
+@model OrderSettingsModel
+
+<div class="panel-body">
+    @if (Model.OrderIdent.HasValue)
+    {
+        <div class="form-group">
+            <div class="col-md-3">
+                <nop-label asp-for="OrderIdent" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="OrderIdent" />
+            </div>
+        </div>
+    }
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="CustomOrderNumberMask_OverrideForStore" asp-input="CustomOrderNumberMask" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="CustomOrderNumberMask" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="CustomOrderNumberMask" />
+            <span asp-validation-for="CustomOrderNumberMask"></span>
+            <ul class="common-list">
+                <li>
+                    @T("Admin.Configuration.Settings.Order.CustomOrderNumberMask.Description.YYYY")
+                </li>
+                <li>
+                    @T("Admin.Configuration.Settings.Order.CustomOrderNumberMask.Description.YY")
+                </li>
+                <li>
+                    @T("Admin.Configuration.Settings.Order.CustomOrderNumberMask.Description.MM")
+                </li>
+                <li>
+                    @T("Admin.Configuration.Settings.Order.CustomOrderNumberMask.Description.DD")
+                </li>
+                <li>
+                    @T("Admin.Configuration.Settings.Order.CustomOrderNumberMask.Description.ID")
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="IsReOrderAllowed_OverrideForStore" asp-input="IsReOrderAllowed" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="IsReOrderAllowed" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="IsReOrderAllowed" />
+            <span asp-validation-for="IsReOrderAllowed"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-label asp-for="CompleteOrderWhenDelivered" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="CompleteOrderWhenDelivered" />
+            <span asp-validation-for="CompleteOrderWhenDelivered"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ExportWithProducts_OverrideForStore" asp-input="ExportWithProducts" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ExportWithProducts" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ExportWithProducts" />
+            <span asp-validation-for="ExportWithProducts"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="AllowAdminsToBuyCallForPriceProducts_OverrideForStore" asp-input="AllowAdminsToBuyCallForPriceProducts" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="AllowAdminsToBuyCallForPriceProducts" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="AllowAdminsToBuyCallForPriceProducts" />
+            <span asp-validation-for="AllowAdminsToBuyCallForPriceProducts"></span>
+        </div>
+    </div>
+</div>

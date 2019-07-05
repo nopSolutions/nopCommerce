@@ -1,0 +1,44 @@
+@model MediaSettingsModel
+
+<div class="panel-body">
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ProductDetailsPictureSize_OverrideForStore" asp-input="ProductDetailsPictureSize" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ProductDetailsPictureSize" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ProductDetailsPictureSize" />
+            <span asp-validation-for="ProductDetailsPictureSize"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ProductThumbPictureSize_OverrideForStore" asp-input="ProductThumbPictureSize" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ProductThumbPictureSize" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ProductThumbPictureSize" />
+            <span asp-validation-for="ProductThumbPictureSize"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ProductThumbPictureSizeOnProductDetailsPage_OverrideForStore" asp-input="ProductThumbPictureSizeOnProductDetailsPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ProductThumbPictureSizeOnProductDetailsPage" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ProductThumbPictureSizeOnProductDetailsPage" />
+            <span asp-validation-for="ProductThumbPictureSizeOnProductDetailsPage"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="AssociatedProductPictureSize_OverrideForStore" asp-input="AssociatedProductPictureSize" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="AssociatedProductPictureSize" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="AssociatedProductPictureSize" />
+            <span asp-validation-for="AssociatedProductPictureSize"></span>
+        </div>
+    </div>
+</div>

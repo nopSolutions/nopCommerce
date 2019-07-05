@@ -3,6 +3,9 @@ using Nop.Core.Domain.Messages;
 
 namespace Nop.Services.Messages
 {
+    /// <summary>
+    /// Email account service
+    /// </summary>
     public partial interface IEmailAccountService
     {
         /// <summary>

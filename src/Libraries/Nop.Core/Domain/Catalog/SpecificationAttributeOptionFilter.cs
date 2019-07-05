@@ -1,5 +1,4 @@
-﻿
-namespace Nop.Core.Domain.Catalog
+﻿namespace Nop.Core.Domain.Catalog
 {
     /// <summary>
     /// Represents a specification attribute option filter
@@ -19,7 +18,7 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the specification attribute display order
         /// </summary>
-        public  int SpecificationAttributeDisplayOrder { get; set; }
+        public int SpecificationAttributeDisplayOrder { get; set; }
 
         /// <summary>
         /// Gets or sets the specification attribute option identifier

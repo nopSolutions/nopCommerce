@@ -51,7 +51,7 @@
     <Value>数据库</Value>
   </LocaleResource>
   <LocaleResource Name="DatabaseInformation">
-    <Value>数据库信心</Value>
+    <Value>数据库信息</Value>
   </LocaleResource>
   <LocaleResource Name="DatabaseName">
     <Value>数据库名称</Value>

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -22,27 +22,33 @@ namespace Nop.Web.Factories
     {
         #region Fields
 
-        private readonly IAddressAttributeService _addressAttributeService;
+        private readonly AddressSettings _addressSettings;
+        private readonly IAddressAttributeFormatter _addressAttributeFormatter;
         private readonly IAddressAttributeParser _addressAttributeParser;
+        private readonly IAddressAttributeService _addressAttributeService;
+        private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
         private readonly IStateProvinceService _stateProvinceService;
-        private readonly IAddressAttributeFormatter _addressAttributeFormatter;
 
         #endregion
 
-        #region Constructors
+        #region Ctor
 
-        public AddressModelFactory(IAddressAttributeService addressAttributeService,
+        public AddressModelFactory(AddressSettings addressSettings,
+            IAddressAttributeFormatter addressAttributeFormatter,
             IAddressAttributeParser addressAttributeParser,
+            IAddressAttributeService addressAttributeService,
+            IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
-            IStateProvinceService stateProvinceService,
-            IAddressAttributeFormatter addressAttributeFormatter)
+            IStateProvinceService stateProvinceService)
         {
-            this._addressAttributeService = addressAttributeService;
-            this._addressAttributeParser = addressAttributeParser;
-            this._localizationService = localizationService;
-            this._stateProvinceService = stateProvinceService;
-            this._addressAttributeFormatter = addressAttributeFormatter;
+            _addressSettings = addressSettings;
+            _addressAttributeFormatter = addressAttributeFormatter;
+            _addressAttributeParser = addressAttributeParser;
+            _addressAttributeService = addressAttributeService;
+            _genericAttributeService = genericAttributeService;
+            _localizationService = localizationService;
+            _stateProvinceService = stateProvinceService;
         }
 
         #endregion
@@ -64,7 +70,7 @@ namespace Nop.Web.Factories
                 var attributeModel = new AddressAttributeModel
                 {
                     Id = attribute.Id,
-                    Name = attribute.GetLocalized(x => x.Name),
+                    Name = _localizationService.GetLocalized(attribute, x => x.Name),
                     IsRequired = attribute.IsRequired,
                     AttributeControlType = attribute.AttributeControlType,
                 };
@@ -78,7 +84,7 @@ namespace Nop.Web.Factories
                         var attributeValueModel = new AddressAttributeValueModel
                         {
                             Id = attributeValue.Id,
-                            Name = attributeValue.GetLocalized(x => x.Name),
+                            Name = _localizationService.GetLocalized(attributeValue, x => x.Name),
                             IsPreSelected = attributeValue.IsPreSelected
                         };
                         attributeModel.Values.Add(attributeValueModel);
@@ -86,7 +92,7 @@ namespace Nop.Web.Factories
                 }
 
                 //set already selected attributes
-                var selectedAddressAttributes = !String.IsNullOrEmpty(overrideAttributesXml) ?
+                var selectedAddressAttributes = !string.IsNullOrEmpty(overrideAttributesXml) ?
                     overrideAttributesXml :
                     (address != null ? address.CustomAttributes : null);
                 switch (attribute.AttributeControlType)
@@ -95,7 +101,7 @@ namespace Nop.Web.Factories
                     case AttributeControlType.RadioList:
                     case AttributeControlType.Checkboxes:
                         {
-                            if (!String.IsNullOrEmpty(selectedAddressAttributes))
+                            if (!string.IsNullOrEmpty(selectedAddressAttributes))
                             {
                                 //clear default selection
                                 foreach (var item in attributeModel.Values)
@@ -119,7 +125,7 @@ namespace Nop.Web.Factories
                     case AttributeControlType.TextBox:
                     case AttributeControlType.MultilineTextbox:
                         {
-                            if (!String.IsNullOrEmpty(selectedAddressAttributes))
+                            if (!string.IsNullOrEmpty(selectedAddressAttributes))
                             {
                                 var enteredText = _addressAttributeParser.ParseValues(selectedAddressAttributes, attribute.Id);
                                 if (enteredText.Any())
@@ -139,6 +145,7 @@ namespace Nop.Web.Factories
                 model.CustomAddressAttributes.Add(attributeModel);
             }
         }
+
         #endregion
 
         #region Methods
@@ -163,10 +170,10 @@ namespace Nop.Web.Factories
             string overrideAttributesXml = "")
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             if (addressSettings == null)
-                throw new ArgumentNullException("addressSettings");
+                throw new ArgumentNullException(nameof(addressSettings));
 
             if (!excludeProperties && address != null)
             {
@@ -176,13 +183,10 @@ namespace Nop.Web.Factories
                 model.Email = address.Email;
                 model.Company = address.Company;
                 model.CountryId = address.CountryId;
-                model.CountryName = address.Country != null
-                    ? address.Country.GetLocalized(x => x.Name)
-                    : null;
+                model.CountryName = address.Country != null ? _localizationService.GetLocalized(address.Country, x => x.Name) : null;
                 model.StateProvinceId = address.StateProvinceId;
-                model.StateProvinceName = address.StateProvince != null
-                    ? address.StateProvince.GetLocalized(x => x.Name)
-                    : null;
+                model.StateProvinceName = address.StateProvince != null ? _localizationService.GetLocalized(address.StateProvince, x => x.Name) : null;
+                model.County = address.County;
                 model.City = address.City;
                 model.Address1 = address.Address1;
                 model.Address2 = address.Address2;
@@ -196,29 +200,40 @@ namespace Nop.Web.Factories
                 if (customer == null)
                     throw new Exception("Customer cannot be null when prepopulating an address");
                 model.Email = customer.Email;
-                model.FirstName = customer.GetAttribute<string>(SystemCustomerAttributeNames.FirstName);
-                model.LastName = customer.GetAttribute<string>(SystemCustomerAttributeNames.LastName);
-                model.Company = customer.GetAttribute<string>(SystemCustomerAttributeNames.Company);
-                model.Address1 = customer.GetAttribute<string>(SystemCustomerAttributeNames.StreetAddress);
-                model.Address2 = customer.GetAttribute<string>(SystemCustomerAttributeNames.StreetAddress2);
-                model.ZipPostalCode = customer.GetAttribute<string>(SystemCustomerAttributeNames.ZipPostalCode);
-                model.City = customer.GetAttribute<string>(SystemCustomerAttributeNames.City);
+                model.FirstName = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.FirstNameAttribute);
+                model.LastName = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.LastNameAttribute);
+                model.Company = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.CompanyAttribute);
+                model.Address1 = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.StreetAddressAttribute);
+                model.Address2 = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.StreetAddress2Attribute);
+                model.ZipPostalCode = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.ZipPostalCodeAttribute);
+                model.City = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.CityAttribute);
+                model.County = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.CountyAttribute);
                 //ignore country and state for prepopulation. it can cause some issues when posting pack with errors, etc
-                //model.CountryId = customer.GetAttribute<int>(SystemCustomerAttributeNames.CountryId);
-                //model.StateProvinceId = customer.GetAttribute<int>(SystemCustomerAttributeNames.StateProvinceId);
-                model.PhoneNumber = customer.GetAttribute<string>(SystemCustomerAttributeNames.Phone);
-                model.FaxNumber = customer.GetAttribute<string>(SystemCustomerAttributeNames.Fax);
+                //model.CountryId = _genericAttributeService.GetAttribute<int>(SystemCustomerAttributeNames.CountryId);
+                //model.StateProvinceId = _genericAttributeService.GetAttribute<int>(SystemCustomerAttributeNames.StateProvinceId);
+                model.PhoneNumber = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.PhoneAttribute);
+                model.FaxNumber = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.FaxAttribute);
             }
 
             //countries and states
             if (addressSettings.CountryEnabled && loadCountries != null)
             {
-                model.AvailableCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Address.SelectCountry"), Value = "0" });
-                foreach (var c in loadCountries())
+                var countries = loadCountries();
+
+                if (_addressSettings.PreselectCountryIfOnlyOne && countries.Count == 1)
+                {
+                    model.CountryId = countries[0].Id;
+                }
+                else
+                {
+                    model.AvailableCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Address.SelectCountry"), Value = "0" });
+                }
+
+                foreach (var c in countries)
                 {
                     model.AvailableCountries.Add(new SelectListItem
                     {
-                        Text = c.GetLocalized(x => x.Name),
+                        Text = _localizationService.GetLocalized(c, x => x.Name),
                         Value = c.Id.ToString(),
                         Selected = c.Id == model.CountryId
                     });
@@ -238,7 +253,7 @@ namespace Nop.Web.Factories
                         {
                             model.AvailableStates.Add(new SelectListItem
                             {
-                                Text = s.GetLocalized(x => x.Name),
+                                Text = _localizationService.GetLocalized(s, x => x.Name),
                                 Value = s.Id.ToString(),
                                 Selected = (s.Id == model.StateProvinceId)
                             });
@@ -246,7 +261,7 @@ namespace Nop.Web.Factories
                     }
                     else
                     {
-                        bool anyCountrySelected = model.AvailableCountries.Any(x => x.Selected);
+                        var anyCountrySelected = model.AvailableCountries.Any(x => x.Selected);
                         model.AvailableStates.Add(new SelectListItem
                         {
                             Text = _localizationService.GetResource(anyCountrySelected ? "Address.OtherNonUS" : "Address.SelectState"),
@@ -267,6 +282,8 @@ namespace Nop.Web.Factories
             model.ZipPostalCodeRequired = addressSettings.ZipPostalCodeRequired;
             model.CityEnabled = addressSettings.CityEnabled;
             model.CityRequired = addressSettings.CityRequired;
+            model.CountyEnabled = addressSettings.CountyEnabled;
+            model.CountyRequired = addressSettings.CountyRequired;
             model.CountryEnabled = addressSettings.CountryEnabled;
             model.StateProvinceEnabled = addressSettings.StateProvinceEnabled;
             model.PhoneEnabled = addressSettings.PhoneEnabled;

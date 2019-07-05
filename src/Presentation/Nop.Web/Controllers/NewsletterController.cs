@@ -1,61 +1,45 @@
 ﻿using System;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
-using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Messages;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
 using Nop.Web.Factories;
-using Nop.Web.Framework;
+using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Web.Controllers
 {
     public partial class NewsletterController : BasePublicController
     {
-        private readonly INewsletterModelFactory _newsletterModelFactory;
         private readonly ILocalizationService _localizationService;
-        private readonly IWorkContext _workContext;
+        private readonly INewsletterModelFactory _newsletterModelFactory;
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
-        private readonly IWorkflowMessageService _workflowMessageService;
         private readonly IStoreContext _storeContext;
+        private readonly IWorkContext _workContext;
+        private readonly IWorkflowMessageService _workflowMessageService;
 
-        private readonly CustomerSettings _customerSettings;
-
-        public NewsletterController(INewsletterModelFactory newsletterModelFactory,
-            ILocalizationService localizationService,
-            IWorkContext workContext,
+        public NewsletterController(ILocalizationService localizationService,
+            INewsletterModelFactory newsletterModelFactory,
             INewsLetterSubscriptionService newsLetterSubscriptionService,
-            IWorkflowMessageService workflowMessageService,
             IStoreContext storeContext,
-            CustomerSettings customerSettings)
+            IWorkContext workContext,
+            IWorkflowMessageService workflowMessageService)
         {
-            this._newsletterModelFactory = newsletterModelFactory;
-            this._localizationService = localizationService;
-            this._workContext = workContext;
-            this._newsLetterSubscriptionService = newsLetterSubscriptionService;
-            this._workflowMessageService = workflowMessageService;
-            this._storeContext = storeContext;
-            this._customerSettings = customerSettings;
-        }
-
-        [ChildActionOnly]
-        public virtual ActionResult NewsletterBox()
-        {
-            if (_customerSettings.HideNewsletterBlock)
-                return Content("");
-
-            var model = _newsletterModelFactory.PrepareNewsletterBoxModel();
-            return PartialView(model);
+            _localizationService = localizationService;
+            _newsletterModelFactory = newsletterModelFactory;
+            _newsLetterSubscriptionService = newsLetterSubscriptionService;
+            _storeContext = storeContext;
+            _workContext = workContext;
+            _workflowMessageService = workflowMessageService;
         }
 
         //available even when a store is closed
-        [StoreClosed(true)]
+        [CheckAccessClosedStore(true)]
         [HttpPost]
-        [ValidateInput(false)]
-        public virtual ActionResult SubscribeNewsletter(string email, bool subscribe)
+        public virtual IActionResult SubscribeNewsletter(string email, bool subscribe)
         {
             string result;
-            bool success = false;
+            var success = false;
 
             if (!CommonHelper.IsValidEmail(email))
             {
@@ -115,12 +99,12 @@ namespace Nop.Web.Controllers
         }
 
         //available even when a store is closed
-        [StoreClosed(true)]
-        public virtual ActionResult SubscriptionActivation(Guid token, bool active)
+        [CheckAccessClosedStore(true)]
+        public virtual IActionResult SubscriptionActivation(Guid token, bool active)
         {
             var subscription = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByGuid(token);
             if (subscription == null)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             if (active)
             {
