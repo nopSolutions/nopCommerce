@@ -35,6 +35,9 @@ set @resources='
   <LocaleResource Name="Admin.Orders.Fields.Tax.Hint">
     <Value>Total tax applied to this order. Manage your tax settings from Configuration &gt; Tax.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Alert.FailedValue">
+    <Value>Error while save attribute combinations. Attribute value not specified.</Value>
+  </LocaleResource>
 </Language>
 '
 
