@@ -23,8 +23,9 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
 
         public SendinBlueEmailSender(IDownloadService downloadService,
             INopFileProvider fileProvider,
+            ISmtpBuilder smtpBuilder,
             IStoreContext storeContext,
-            SendinBlueSettings sendinBlueSettings) : base(downloadService, fileProvider)
+            SendinBlueSettings sendinBlueSettings) : base(downloadService, fileProvider, smtpBuilder)
         {
             _storeContext = storeContext;
             _sendinBlueSettings = sendinBlueSettings;
