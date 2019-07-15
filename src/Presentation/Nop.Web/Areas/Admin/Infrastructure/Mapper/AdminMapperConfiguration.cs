@@ -608,6 +608,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.CustomerRole, options => options.Ignore());
             CreateMap<TierPriceModel, TierPrice>()
                 .ForMember(entity => entity.CustomerRoleId, options => options.Ignore())
+                .ForMember(entity => entity.CustomerRole, options => options.Ignore())
                 .ForMember(entity => entity.ProductId, options => options.Ignore())
                 .ForMember(entity => entity.Product, options => options.Ignore());
         }
