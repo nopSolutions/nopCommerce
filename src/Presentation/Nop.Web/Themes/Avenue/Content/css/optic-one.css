@@ -1,0 +1,27 @@
+body, body .header, body .header-lower {
+	background: #00B5B8;
+}
+
+body .header-upper {
+	border: none;
+}
+
+body .admin-header-links {
+	color: #fff;
+}
+
+@media all and (min-width: 1201px) {
+	body .header-menu ul li > a, body .header-menu ul li > span, body .header-links a {
+		color: #fff;
+	}
+
+	body .header-menu ul li .sublist a {
+		color: #666;
+	}
+
+	body .admin-header-links a:after {
+		width: 0;
+	}
+}
+
+

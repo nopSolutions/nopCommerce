@@ -1,0 +1,48 @@
+.header-logo .header-top__logo {
+	width: 340px;
+	max-width: 340px;
+}
+
+.header-top__logo.mobile {
+	display: none
+}
+
+
+.logo .eyes {
+	position: absolute;
+	left: 27px;
+	top: 71px;
+}
+
+
+.logo .eyes .eye {
+	position: relative;
+	display: inline-block;
+	-webkit-border-radius: 50%;
+	border-radius: 50%;
+	height: 35px;
+	width: 35px;
+}
+
+
+.logo .eyes .eye:after {
+	position: absolute;
+	top: 5px;
+	left: 20px;
+	width: 12px;
+	height: 12px;
+	background: #18073a;
+	-webkit-border-radius: 50%;
+	border-radius: 50%;
+	content: " "
+}
+
+.logo .eyes.animation .eye:after {
+	top: 0;
+	left: 18px
+}
+
+.logo .eyes.animation-mobile .eye:after {
+	top: 0;
+	left: 15px
+}
