@@ -3086,6 +3086,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             var warnings = new List<string>();
             var attributesXml = GetAttributesXmlForProductAttributeCombination(form, warnings, product.Id);
 
+            //check whether the attribute value is specified
+            if (string.IsNullOrEmpty(attributesXml))
+                warnings.Add(_localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Alert.FailedValue"));                
+
             warnings.AddRange(_shoppingCartService.GetShoppingCartItemAttributeWarnings(_workContext.CurrentCustomer,
                 ShoppingCartType.ShoppingCart, product, 1, attributesXml, true));
 
@@ -3228,6 +3232,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             //attributes
             var warnings = new List<string>();
             var attributesXml = GetAttributesXmlForProductAttributeCombination(form, warnings, product.Id);
+
+            //check whether the attribute value is specified
+            if (string.IsNullOrEmpty(attributesXml))
+                warnings.Add(_localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Alert.FailedValue"));
 
             warnings.AddRange(_shoppingCartService.GetShoppingCartItemAttributeWarnings(_workContext.CurrentCustomer,
                 ShoppingCartType.ShoppingCart, product, 1, attributesXml, true));
