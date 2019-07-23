@@ -1,0 +1,61 @@
+﻿.twitter-typeahead {
+    width: 100%;
+}
+
+.tt-input {
+    border: 1px solid #e5e5e5;
+    float:left;
+    height:17px;
+    outline:0;
+}
+
+.tt-menu {
+    background-color: white;
+    z-index: 1;
+    width: 100%;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+    font-weight: 300;
+}
+
+.tt-menu .empty-message{
+    padding: 5px 10px;
+}
+
+.tt-menu .tt-suggestion {
+    margin: 0;
+    padding: 10px;
+    cursor: pointer;
+    border-bottom: solid 1px #d4d8dd;
+}
+
+.tt-menu .tt-highlight {
+    color: #e73128;
+}
+
+.tt-menu .tt-suggestion:last-of-type {
+    border-bottom: none;
+}
+
+.tt-menu .tt-suggestion h5 {
+    margin: 0;
+    text-transform: uppercase;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.tt-menu .tt-suggestion p {
+    margin: 0;
+    font-size: 12px;
+}
+
+.tt-menu .tt-suggestion.tt-cursor {
+    background-color: #e2e5e8;
+}
+
+.tt-menu .tt-suggestion#user-selection:hover {
+    background-color: #e2e5e8;
+}
+
+.tt-menu .tt-empty {
+    text-align: center;
+}

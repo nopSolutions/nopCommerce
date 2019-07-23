@@ -1,0 +1,90 @@
+@model TaxProviderSearchModel
+
+@{
+    //page title
+    ViewBag.Title = T("Admin.Configuration.Tax.Providers").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Tax providers");
+}
+
+<nop-antiforgery-token />
+
+<form asp-controller="Tax" asp-action="Providers" method="post">
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.Configuration.Tax.Providers")
+        </h1>
+    </div>
+
+    <div class="content">
+        <div class="form-horizontal">
+            <div class="panel-group">
+                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.TaxProviderListButtons })
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <p>
+                            @T("Admin.Configuration.Tax.Providers.DownloadMorePlugins")
+                        </p>
+                        @await Html.PartialAsync("Table", new DataTablesModel
+                        {
+                            Name = "tax-providers-grid",
+                            UrlRead = new DataUrl("Providers", "Tax", null),
+                            Length = Model.PageSize,
+                            LengthMenu = Model.AvailablePageSizes,
+                            ColumnCollection = new List<ColumnProperty>
+                            {
+                                new ColumnProperty(nameof(TaxProviderModel.FriendlyName))
+                                {
+                                    Title = T("Admin.Configuration.Tax.Providers.Fields.FriendlyName").Text,
+                                    Width = "250"
+                                },
+                                new ColumnProperty(nameof(TaxProviderModel.SystemName))
+                                {
+                                    Title = T("Admin.Configuration.Tax.Providers.Fields.SystemName").Text,
+                                    Width = "250"
+                                },
+                                new ColumnProperty(nameof(TaxProviderModel.IsPrimaryTaxProvider))
+                                {
+                                    Title = T("Admin.Configuration.Tax.Providers.Fields.IsPrimaryTaxProvider").Text,
+                                    Width = "100",
+                                    ClassName =  NopColumnClassDefaults.CenterAll,
+                                    Render = new RenderBoolean()
+                                },
+                                new ColumnProperty(nameof(TaxProviderModel.SystemName))
+                                {
+                                    Title = T("Admin.Configuration.Tax.Providers.Fields.MarkAsPrimaryProvider").Text,
+                                    Width = "200",
+                                    ClassName =  NopColumnClassDefaults.Button,
+                                    Render = new RenderCustom("renderColumnSystemName")
+                                },
+                                new ColumnProperty(nameof(TaxProviderModel.SystemName))
+                                {
+                                    Title = T("Admin.Configuration.Tax.Providers.Configure").Text,
+                                    Width = "150",
+                                    ClassName =  NopColumnClassDefaults.Button,
+                                    Render = new RenderCustom("renderColumnConfigure")
+                                }
+                            }
+                        })
+
+                        <script>
+                            function renderColumnSystemName(data, type, row, meta) {
+                                return '<a href="@Url.Content("~/Admin/Tax/MarkAsPrimaryProvider/")?systemName=' + row.SystemName +'" class="btn bg-green">@T("Admin.Configuration.Tax.Providers.Fields.MarkAsPrimaryProvider")</a>';
+                            }
+
+                            function renderColumnConfigure(data, type, row, meta) {
+                                if (row.ConfigurationUrl && row.ConfigurationUrl.length > 0) {
+                                    return '<a class="btn btn-default" href="' + row.ConfigurationUrl + '"><i class="fa fa-cog"></i>@T("Admin.Configuration.Tax.Providers.Configure")</a>';
+                                } else {
+                                    return '';
+                                }
+                            }
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+

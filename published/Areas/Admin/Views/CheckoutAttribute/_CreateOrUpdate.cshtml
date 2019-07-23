@@ -1,0 +1,38 @@
+﻿@model CheckoutAttributeModel
+
+@inject Nop.Services.Common.IGenericAttributeService genericAttributeService
+@inject IWorkContext workContext
+@{
+
+    const string hideInfoBlockAttributeName = "CheckoutAttributePage.HideInfoBlock";
+    var hideInfoBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideInfoBlockAttributeName);
+
+    const string hideValuesBlockAttributeName = "CheckoutAttributePage.HideValuesBlock";
+    var hideValuesBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideValuesBlockAttributeName, defaultValue: true);
+
+    const string hideConditionBlockAttributeName = "CheckoutAttributePage.HideConditionBlock";
+    var hideConditionBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideConditionBlockAttributeName, defaultValue: true);
+}
+
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="row">
+            <div class="col-md-12 clearfix">
+                <div class="pull-left">
+                    @await Component.InvokeAsync("SettingMode", new { modeName = "checkoutattribute-advanced-mode" })
+                </div>
+            </div>
+        </div>
+
+        <nop-panels id="checkout-attributes-panels">
+            <nop-panel asp-name="checkout-attributes-info" asp-icon="fa fa-info" asp-title="@T("Admin.Catalog.Attributes.CheckoutAttributes.Info")" asp-hide-block-attribute-name="@hideInfoBlockAttributeName" asp-hide="@hideInfoBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-panel>
+            <nop-panel asp-name="checkout-attributes-values" asp-icon="fa fa-television" asp-title="@T("Admin.Catalog.Attributes.CheckoutAttributes.Values")" asp-hide-block-attribute-name="@hideValuesBlockAttributeName" asp-hide="@hideValuesBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.Values", Model)</nop-panel>
+            <nop-panel asp-name="checkout-attributes-conditions" asp-icon="fa fa-bookmark" asp-title="@T("Admin.Catalog.Attributes.CheckoutAttributes.Condition")" asp-hide-block-attribute-name="@hideConditionBlockAttributeName" asp-hide="@hideConditionBlock" asp-advanced="true">@await Html.PartialAsync("_CreateOrUpdate.Condition", Model)</nop-panel>
+            
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CheckoutAttributeDetailsBlock, additionalData = Model })
+        </nop-panels>
+    </div>
+</div>

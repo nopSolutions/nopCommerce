@@ -1,0 +1,88 @@
+﻿@inject Nop.Core.Domain.Common.AdminAreaSettings adminAreaSettings
+@using Nop.Plugin.Pickup.PickupInStore.Models
+@using Nop.Web.Framework.Models.DataTables
+@model StorePickupPointSearchModel
+@{
+    Layout = "_ConfigurePlugin";
+}
+
+<form asp-controller="PickupInStore" asp-action="Configure" method="post" id="pickup-instore-form">
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                @await Html.PartialAsync("Table", new DataTablesModel
+           {
+               Name = "pickup-points-grid",
+               UrlRead = new DataUrl("List", "PickupInStore", null),
+               UrlDelete = new DataUrl("Delete", "PickupInStore", null),
+               Length = Model.PageSize,
+               LengthMenu = Model.AvailablePageSizes,
+               ColumnCollection = new List<ColumnProperty>
+                {
+                    new ColumnProperty(nameof(StorePickupPointModel.Name))
+                    {
+                        Title = T("Plugins.Pickup.PickupInStore.Fields.Name").Text,
+                        Width = "200"
+                    },
+                    new ColumnProperty(nameof(StorePickupPointModel.OpeningHours))
+                    {
+                        Title = T("Plugins.Pickup.PickupInStore.Fields.OpeningHours").Text,
+                        Width = "200"
+                    },
+                    new ColumnProperty(nameof(StorePickupPointModel.PickupFee))
+                    {
+                        Title = T("Plugins.Pickup.PickupInStore.Fields.PickupFee").Text,
+                        Width = "100"
+                    },
+                    new ColumnProperty(nameof(StorePickupPointModel.DisplayOrder))
+                    {
+                        Title = T("Plugins.Pickup.PickupInStore.Fields.DisplayOrder").Text,
+                        Width = "100"
+                    },
+                    new ColumnProperty(nameof(StorePickupPointModel.StoreName))
+                    {
+                        Title = T("Plugins.Pickup.PickupInStore.Fields.Store").Text,
+                        Width = "100"
+                    },
+                    new ColumnProperty(nameof(StorePickupPointModel.Id))
+                    {
+                        Title = T("Admin.Common.Edit").Text,
+                        ClassName = NopColumnClassDefaults.Button,
+                        Width = "100",
+                        Render = new RenderCustom("renderColumnEdit")
+                    },
+                    new ColumnProperty(nameof(StorePickupPointModel.Id))
+                    {
+                        Title = T("Admin.Common.Delete").Text,
+                        ClassName = NopColumnClassDefaults.Button,
+                        Render = new RenderButtonRemove(T("Admin.Common.Delete").Text),
+                        Width = "100"
+                    }
+                }
+           })
+            </div>
+
+            <script>
+                function renderColumnEdit(data, type, row, meta) {
+                    return '<button onclick=\"javascript:OpenWindow(\'@Url.Content("~/Admin/PickupInStore/Edit/")' + data + '?btnId=btnRefresh&formId=pickup-instore-form\', 800, 800, true); return false;\" class="btn btn-default"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</button>';
+                }
+            </script>
+
+            <div class="panel-footer">
+                <input type="submit" id="btnAddNewOption" class="btn btn-primary" value="@T("Plugins.Pickup.PickupInStore.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("Create", "PickupInStore",  new { btnId = "btnRefresh", formId = "pickup-instore-form" }))', 800, 800, true); return false;"/>
+                <input type="submit" id="btnRefresh" class="btn btn-default" style="display: none" />
+            </div>
+            <script>
+                $(document).ready(function () {
+                    $('#btnRefresh').click(function () {
+                        //refresh grid
+                        updateTable('#pickup-points-grid');
+
+                        //return false to don't reload a page
+                        return false;
+                    });
+                });
+            </script>
+        </div>
+    </div>
+</form>

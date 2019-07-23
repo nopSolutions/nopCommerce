@@ -1,0 +1,46 @@
+﻿@model SitemapModel
+@{
+    Layout = "_ColumnsOne";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.Sitemap").Text);
+    //page class
+    Html.AppendPageCssClassParts("html-sitemap-page");
+}
+<div class="page sitemap-page">
+    <div class="page-title">
+        <h1>@T("Sitemap")</h1>
+    </div>
+    <div class="page-body">
+        <div class="description">
+            @T("Sitemap.Description")
+        </div>
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.SitemapBefore })
+        @foreach (var itemGroup in Model.Items.GroupBy(itemGroup => itemGroup.GroupTitle))
+        {
+            <div class="entity">
+                <div class="entity-title">
+                    <h2>@itemGroup.Key</h2>
+                </div>
+                <div class="entity-body">
+                    <ul>
+                        @foreach (var item in itemGroup.ToList())
+                        {
+                            <li><a href="@item.Url">@item.Name</a></li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        }
+        @{
+            var pager = Html.Pager(Model.PageModel).QueryParam("pagenumber");
+            if (!pager.IsEmpty())
+            {
+                <div class="pager">
+                    @pager
+                </div>
+            }
+        }
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.SitemapAfter })
+    </div>
+</div>

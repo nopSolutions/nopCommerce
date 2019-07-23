@@ -1,0 +1,47 @@
+﻿<script asp-location="Footer">
+    $(document).ready(function () {
+        $('#check-availability-button').before('<span id="username-availabilty"></span>');
+        $('#Username').on({
+            keydown: function () {
+                $('#username-availabilty').text('');
+            }
+        });
+        $('#check-availability-button').on('click', function () {
+            $('#username-availabilty').text('');
+            if ($("#Username").val().length > 0) {
+                $('#availability-check-progress').show();
+                $('#check-availability-button').prop('disabled', true);
+
+                var postData = {
+                    Username: $('#Username').val()
+                };
+                addAntiForgeryToken(postData);
+
+                $.ajax({
+                    cache: false,
+                    type: "POST",
+                    url: "@Url.RouteUrl("CheckUsernameAvailability")",
+                    data: postData,
+                    dataType: "json",
+                    success: function (data, textStatus, jqXHR) {
+                        $('#availability-check-progress').hide();
+                        $('#username-availabilty').removeAttr('class').attr('class', ((data.Available) ? 'username-available-status' : 'username-not-available-status'));
+                        $('#username-availabilty').text(data.Text);
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        $('#availability-check-progress').hide();
+                    },
+                    complete: function (jqXHR, textStatus) {
+                        $('#check-availability-button').prop('disabled', false);
+                    }
+                });
+            } else {
+                $('#username-availabilty').attr('class', 'username-not-available-status');
+                $('#username-availabilty').text('@T("Account.CheckUsernameAvailability.EnterUsername")');
+            }
+            return false;
+        });
+    });
+</script>
+<input type="button" id="check-availability-button" class="button-2 check-username-availability-button" value="@T("Account.CheckUsernameAvailability.Button")" />
+<span id="availability-check-progress" style="display: none;" class="please-wait">@T("Common.Wait...")</span>

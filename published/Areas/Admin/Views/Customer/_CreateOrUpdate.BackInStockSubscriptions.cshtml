@@ -1,0 +1,34 @@
+﻿@using Nop.Services.Stores
+@model CustomerModel
+@inject IStoreService storeService
+
+<div class="panel-body">
+    @await Html.PartialAsync("Table", new DataTablesModel
+    {
+        Name = "backinstock-subscriptions-grid",
+        UrlRead = new DataUrl("BackInStockSubscriptionList", "Customer", new RouteValueDictionary { [nameof(Model.CustomerBackInStockSubscriptionSearchModel.CustomerId)] = Model.CustomerBackInStockSubscriptionSearchModel.CustomerId }),
+        Length = Model.CustomerBackInStockSubscriptionSearchModel.PageSize,
+        LengthMenu = Model.CustomerBackInStockSubscriptionSearchModel.AvailablePageSizes,
+        ColumnCollection = new List<ColumnProperty>
+        {
+            new ColumnProperty(nameof(CustomerBackInStockSubscriptionModel.StoreName))
+            {
+                Title = T("Admin.Customers.Customers.BackInStockSubscriptions.Store").Text,
+                Width = "200",
+                Visible = storeService.GetAllStores().Count > 1
+            },
+            new ColumnProperty(nameof(CustomerBackInStockSubscriptionModel.ProductName))
+            {
+                Title = T("Admin.Customers.Customers.BackInStockSubscriptions.Product").Text,
+                Width = "300",
+                Render = new RenderLink(new DataUrl("~/Admin/Product/Edit/", nameof(CustomerBackInStockSubscriptionModel.ProductId)))
+            },
+            new ColumnProperty(nameof(CustomerBackInStockSubscriptionModel.CreatedOn))
+            {
+                Title = T("Admin.Customers.Customers.BackInStockSubscriptions.CreatedOn").Text,
+                Width = "200",
+                Render = new RenderDate()
+            }
+        }
+    })
+</div>

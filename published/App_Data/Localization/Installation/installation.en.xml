@@ -1,0 +1,143 @@
+﻿<Language Name="English" IsDefault="true" IsRightToLeft="false">
+  <LocaleResource Name="AdminEmail">
+    <Value>Admin user email</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminEmailRequired">
+    <Value>Enter admin email</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPassword">
+    <Value>Admin user password</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPasswordRequired">
+    <Value>Enter admin password</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureDirectoryPermissions">
+    <Value>The '{0}' account is not granted with Modify permission on folder '{1}'. Please configure these permissions.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureFilePermissions">
+    <Value>The '{0}' account is not granted with Modify permission on file '{1}'. Please configure these permissions.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPassword">
+    <Value>Confirm the password</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPasswordRequired">
+    <Value>Enter confirm password</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionString">
+    <Value>Connection string</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringRequired">
+    <Value>A SQL connection string is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringValues">
+    <Value>Enter SQL connection values</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringWrongFormat">
+    <Value>Wrong SQL connection string format</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateDatabaseIfDoesNotExist">
+    <Value>Create database if it doesn't exist</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateSampleData">
+    <Value>Create sample data</Value>
+  </LocaleResource>
+  <LocaleResource Name="CustomCollation">
+    <Value>Specify custom SQL Server collation</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseCreationError">
+    <Value>An error occurred while creating the database: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Database">
+    <Value>Database</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseInformation">
+    <Value>Database information</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseName">
+    <Value>Database name</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseNameRequired">
+    <Value>Database name is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseNotExists">
+    <Value>Database does not exist or you don't have permissions to connect to it</Value>
+  </LocaleResource>
+  <LocaleResource Name="DataProviderRequired">
+    <Value>Select data provider</Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation1">
+    <Value>If you need information on how to use nopCommerce, visit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation2">
+    <Value>the documentation section on nopCommerce.com</Value>
+  </LocaleResource>
+  <LocaleResource Name="Example">
+    <Value>Example</Value>
+  </LocaleResource>
+  <LocaleResource Name="Install">
+    <Value>Install</Value>
+  </LocaleResource>
+  <LocaleResource Name="Installing">
+    <Value>Installing nopCommerce...</Value>
+  </LocaleResource>
+  <LocaleResource Name="PasswordsDoNotMatch">
+    <Value>The passwords do not match</Value>
+  </LocaleResource>
+  <LocaleResource Name="RawConnectionString">
+    <Value>Enter raw connection string (advanced)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Recommended">
+    <Value>[Recommended]</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallation">
+    <Value>Restart installation</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallationTooltip">
+    <Value>Click to restart the installation process (clear all cached values)</Value>
+  </LocaleResource>
+  <LocaleResource Name="SetupFailed">
+    <Value>Setup failed: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlAuthentication">
+    <Value>Use SQL Server account</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlCompact">
+    <Value>Use built-in data storage (SQL Server Compact)</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerName">
+    <Value>SQL Server name</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerNameRequired">
+    <Value>SQL Server name is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerPassword">
+    <Value>SQL Password</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerPasswordRequired">
+    <Value>SQL Password is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerUsername">
+    <Value>SQL Username</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerUsernameRequired">
+    <Value>SQL Username is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlStandard">
+    <Value>Use SQL Server (or SQL Express) database</Value>
+  </LocaleResource>
+  <LocaleResource Name="StoreInformation">
+    <Value>Store information</Value>
+  </LocaleResource>
+  <LocaleResource Name="Title">
+    <Value>nopCommerce installation</Value>
+  </LocaleResource>
+  <LocaleResource Name="Tooltip1">
+    <Value>nopCommerce is the leading ASP.NET online shop e-commerce solution. This wizard will guide you through the process of configuring nopCommerce</Value>
+  </LocaleResource>
+  <LocaleResource Name="Tooltip2">
+    <Value>To complete this wizard, you must know some information regarding your database server ("connection string"). Please contact your ISP if necessary. If you're installing on a local machine or server, you might need information from your System Admin.</Value>
+  </LocaleResource>
+  <LocaleResource Name="WindowsAuthentication">
+    <Value>Use integrated Windows authentication</Value>
+  </LocaleResource>
+</Language>

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27130.2026
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29102.190
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{E4ACA93B-D3DE-4557-B069-F1DB42925A4B}"
 EndProject
@@ -60,6 +60,26 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nop.Plugin.Misc.SendinBlue", "Plugins\Nop.Plugin.Misc.SendinBlue\Nop.Plugin.Misc.SendinBlue.csproj", "{7B08DACB-8E11-416D-9DDF-B0EEF847A8ED}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nop.Plugin.Tax.Avalara", "Plugins\Nop.Plugin.Tax.Avalara\Nop.Plugin.Tax.Avalara.csproj", "{2426B75D-23D4-41EF-8924-47650C8A18C7}"
+EndProject
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "published", "..\published\", "{D60DE88D-00C1-40A0-8B66-A0B55BB1FAD2}"
+	ProjectSection(WebsiteProperties) = preProject
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv2.0"
+		Debug.AspNetCompiler.VirtualPath = "/localhost_3725"
+		Debug.AspNetCompiler.PhysicalPath = "..\published\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_3725\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/localhost_3725"
+		Release.AspNetCompiler.PhysicalPath = "..\published\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_3725\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		VWDPort = "3725"
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -339,6 +359,18 @@ Global
 		{2426B75D-23D4-41EF-8924-47650C8A18C7}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{2426B75D-23D4-41EF-8924-47650C8A18C7}.Release|x86.ActiveCfg = Release|Any CPU
 		{2426B75D-23D4-41EF-8924-47650C8A18C7}.Release|x86.Build.0 = Release|Any CPU
+		{D60DE88D-00C1-40A0-8B66-A0B55BB1FAD2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D60DE88D-00C1-40A0-8B66-A0B55BB1FAD2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D60DE88D-00C1-40A0-8B66-A0B55BB1FAD2}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{D60DE88D-00C1-40A0-8B66-A0B55BB1FAD2}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{D60DE88D-00C1-40A0-8B66-A0B55BB1FAD2}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D60DE88D-00C1-40A0-8B66-A0B55BB1FAD2}.Debug|x86.Build.0 = Debug|Any CPU
+		{D60DE88D-00C1-40A0-8B66-A0B55BB1FAD2}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{D60DE88D-00C1-40A0-8B66-A0B55BB1FAD2}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{D60DE88D-00C1-40A0-8B66-A0B55BB1FAD2}.Release|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{D60DE88D-00C1-40A0-8B66-A0B55BB1FAD2}.Release|Mixed Platforms.Build.0 = Debug|Any CPU
+		{D60DE88D-00C1-40A0-8B66-A0B55BB1FAD2}.Release|x86.ActiveCfg = Debug|Any CPU
+		{D60DE88D-00C1-40A0-8B66-A0B55BB1FAD2}.Release|x86.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

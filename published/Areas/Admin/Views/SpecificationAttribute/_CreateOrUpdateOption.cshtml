@@ -1,0 +1,114 @@
+@model SpecificationAttributeOptionModel
+
+@{
+    Html.AddScriptParts("~/lib/farbtastic/farbtastic.js");
+    Html.AddCssFileParts("~/lib/farbtastic/farbtastic.css");
+}
+
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+<input asp-for="SpecificationAttributeId" type="hidden" />
+
+@{
+    //pre-set some color (required for farbtastic)
+    if (string.IsNullOrEmpty(Model.ColorSquaresRgb))
+    {
+        Model.ColorSquaresRgb = "#FFFFFF";
+    }
+}
+
+@if (ViewBag.RefreshPage == true)
+{
+    <script>
+        try {window.opener.document.forms['@(Context.Request.Query["formId"])'].@(Context.Request.Query["btnId"]).click();}
+        catch (e){}
+        window.close();
+    </script>
+}
+
+<script>
+    $(document).ready(function() {
+        $("#@Html.IdFor(model => model.EnableColorSquaresRgb)").click(toggleEnableColorSquaresRgb);
+        toggleEnableColorSquaresRgb();
+    });
+
+    function toggleEnableColorSquaresRgb() {
+        if ($('#@Html.IdFor(model => model.EnableColorSquaresRgb)').is(':checked')) {
+            $('#pnlColorSquaresRgb').show();
+        } else {
+            $('#pnlColorSquaresRgb').hide();
+        }
+    }
+</script>
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.SpecificationAttributeOptionDetailsTop, additionalData = Model })
+            <div class="panel panel-default panel-popup">
+                <div class="panel-body">
+                    @(Html.LocalizedEditor<SpecificationAttributeOptionModel, SpecificationAttributeOptionLocalizedModel>("specificationattribute-localized",
+                    @<div>
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                <nop-label asp-for="@Model.Locales[item].Name" />
+                            </div>
+                            <div class="col-sm-9">
+                                <nop-editor asp-for="@Model.Locales[item].Name" />
+                                <span asp-validation-for="@Model.Locales[item].Name"></span>
+                            </div>
+                        </div>
+                        <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
+                    </div>
+    ,
+                    @<div>
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                <nop-label asp-for="Name" />
+                            </div>
+                            <div class="col-sm-9">
+                                <nop-editor asp-for="Name" asp-required="true" />
+                                <span asp-validation-for="Name"></span>
+                            </div>
+                        </div>
+                    </div>
+    ))
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            <nop-label asp-for="EnableColorSquaresRgb" />
+                        </div>
+                        <div class="col-sm-9">
+                            <nop-editor asp-for="EnableColorSquaresRgb" />
+                            <span asp-validation-for="EnableColorSquaresRgb"></span>
+                        </div>
+                    </div>
+                    <div class="form-group" id="pnlColorSquaresRgb">
+                        <div class="col-sm-3">
+                            <nop-label asp-for="ColorSquaresRgb" />
+                        </div>
+                        <div class="col-sm-9">
+                            <nop-editor asp-for="ColorSquaresRgb" />
+                            <div id="color-picker"></div>
+                            <script>
+                                $(document).ready(function(){
+                                    $('#color-picker').farbtastic('#@Html.IdFor(model => model.ColorSquaresRgb)');
+                                });
+                            </script>
+                            <span asp-validation-for="ColorSquaresRgb"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            <nop-label asp-for="DisplayOrder" />
+                        </div>
+                        <div class="col-sm-9">
+                            <nop-editor asp-for="DisplayOrder" />
+                            <span asp-validation-for="DisplayOrder"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.SpecificationAttributeOptionDetailsBottom, additionalData = Model })
+        </div>
+    </div>
+</div>

@@ -1,0 +1,239 @@
+﻿@model ShipmentModel
+
+@using System.Text
+
+@{
+    //page title
+    ViewBag.Title = string.Format(T("Admin.Orders.Shipments.AddNew.Title").Text, Model.CustomOrderNumber);
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Orders");
+
+    var itemsFromMultipleWarehouses = Model.Items
+        .Where(x => x.AllowToChooseWarehouse && x.AvailableWarehouses.Count > 0)
+        .ToList();
+}
+
+<form asp-controller="Order" asp-action="AddShipment" asp-route-orderId="@Model.OrderId" method="post">
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @string.Format(T("Admin.Orders.Shipments.AddNew.Title").Text, Model.CustomOrderNumber)
+            <small>
+                <i class="fa fa-arrow-circle-left"></i>
+                <a asp-action="Edit" asp-route-id="@Model.OrderId">@T("Admin.Orders.Shipments.BackToOrder")</a>
+            </small>
+        </h1>
+        <div class="pull-right">
+            <button type="submit" id="shipment-save" name="save" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
+            <button type="submit" id="shipment-save-continue" name="save-continue" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.SaveContinue")
+            </button>
+            <nop-action-confirmation asp-button-id="shipment-save" asp-additional-confirm="Admin.Orders.Shipments.Products.Warehouse.QuantityNotEnough" />
+            <nop-action-confirmation asp-button-id="shipment-save-continue" asp-additional-confirm="Admin.Orders.Shipments.Products.Warehouse.QuantityNotEnough"/>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.OrderShipmentAddButtons })
+        </div>
+    </div>
+    <div asp-validation-summary="All"></div>
+
+    <div class="content">
+        <div class="form-horizontal">
+            <div class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="TrackingNumber" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="TrackingNumber" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="AdminComment" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="AdminComment" />
+                            </div>
+                        </div>
+                    </div>
+                    <script>
+                        $(document).ready(function () {
+                            $("#shipment-save").bind("focus", function () {
+                                if (validateWarehouseAvailability("save")) {
+                                    $("#shipment-save-action-confirmation").remove();
+                                    $(this).attr("name", "save").attr("type", "submit");
+                                }
+                            }).bind("click", function () {
+                                return validateWarehouseAvailability("save");
+                            });;
+
+                            $("#shipment-save-continue").bind("focus", function () {
+                                if (validateWarehouseAvailability("continue")) {
+                                    $("#shipment-save-continue-action-confirmation").remove();
+                                    $(this).attr("name", "save-continue").attr("type", "submit");
+                                }
+                            }).bind("click", function () {
+                                return validateWarehouseAvailability("continue");
+                            });;
+                        });
+
+                        function validateWarehouseAvailability(action) {
+                            @{
+                                var sb = new StringBuilder();
+                                var count = itemsFromMultipleWarehouses.Count;
+                                if (count == 0)
+                                {
+                                    sb.Append("true");
+                                }
+                                else
+                                {
+                                    for (var i = 0; i <= count - 1; i++)
+                                    {
+                                        var item = itemsFromMultipleWarehouses[i];
+                                        sb.AppendFormat("validateAvailableQuantity('{0}')", item.OrderItemId);
+                                        if (i != count - 1)
+                                        {
+                                            sb.Append(" && ");
+                                        }
+                                    }
+                                }
+                            }
+                            var valid = @(Html.Raw(sb.ToString()));
+                            if (!valid) {
+                                if (action === "save") {
+                                    $('#shipment-save-action-confirmation').modal('toggle');
+                                }
+                                if (action === "continue") {
+                                    $('#shipment-save-continue-action-confirmation').modal('toggle');
+                                }
+                                return false;
+                            }
+                            return true;
+                        }
+
+                        function validateAvailableQuantity(orderItemId) {
+                            var enteredValue = parseInt($('#qtyToAdd' + orderItemId).val(), 10);
+                            if (enteredValue <= 0)
+                                return true;
+                            var reservedValue = parseInt($('#warehouse_' + orderItemId).find(':selected').data('reserved-qty'), 10);
+                            var plannedValue = parseInt($('#warehouse_' + orderItemId).find(':selected').data('planned-qty'), 10);
+                            var availableToAdd = reservedValue - plannedValue;
+                            return enteredValue <= availableToAdd;
+                        }
+                    </script>
+                </div>
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        @T("Admin.Orders.Shipments.Products")
+                    </div>
+                    <div class="panel-body">
+                        <table class="table table-hover table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        @T("Admin.Orders.Shipments.Products.ProductName")
+                                    </th>
+                                    <th>
+                                        @T("Admin.Orders.Shipments.Products.SKU")
+                                    </th>
+                                    <th>
+                                        @T("Admin.Orders.Shipments.Products.Warehouse")
+                                    </th>
+                                    <th>
+                                        @T("Admin.Orders.Shipments.Products.ItemWeight")
+                                    </th>
+                                    <th>
+                                        @T("Admin.Orders.Shipments.Products.ItemDimensions")
+                                    </th>
+                                    <th>
+                                        @T("Admin.Orders.Shipments.Products.QtyOrdered")
+                                    </th>
+                                    <th>
+                                        @T("Admin.Orders.Shipments.Products.QtyShipped")
+                                    </th>
+                                    <th>
+                                        @T("Admin.Orders.Shipments.Products.QtyToShip")
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.Items)
+                                {
+                                    <tr>
+                                        <td style="width: 25%;" class="text-left">
+                                            <em><a asp-controller="Product" asp-action="Edit" asp-route-id="@item.ProductId">@item.ProductName</a></em>
+                                            @if (!string.IsNullOrEmpty(item.AttributeInfo))
+                                            {
+                                                <p>
+                                                    @Html.Raw(item.AttributeInfo)
+                                                </p>
+                                            }
+                                            @if (item.ShipSeparately)
+                                            {
+                                                <p>
+                                                    <strong>@T("Admin.Orders.Shipments.Products.ShipSeparately.Warning")</strong>
+                                                    @T("Admin.Orders.Shipments.Products.ShipSeparately")
+                                                </p>
+                                            }
+                                        </td>
+                                        <td style="width: 10%;" class="text-center">
+                                            @item.Sku
+                                        </td>
+                                        <td style="width: 15%;" class="text-center">
+                                            @if (item.AllowToChooseWarehouse)
+                                            {
+                                                if (item.AvailableWarehouses.Count > 0)
+                                                {
+                                                    <select name="warehouse_@(item.OrderItemId)" id="warehouse_@(item.OrderItemId)" class="form-control">
+                                                        @foreach (var warehouse in item.AvailableWarehouses)
+                                                        {
+                                                            <option value="@warehouse.WarehouseId" data-stock-qty="@warehouse.StockQuantity" data-reserved-qty="@warehouse.ReservedQuantity" data-planned-qty="@warehouse.PlannedQuantity">
+                                                                @T("Admin.Orders.Shipments.Products.Warehouse.ChooseQty", warehouse.WarehouseName, warehouse.StockQuantity, warehouse.ReservedQuantity, warehouse.PlannedQuantity)
+                                                            </option>
+                                                        }
+                                                    </select>
+                                                }
+                                                else
+                                                {
+                                                    @T("Admin.Orders.Shipments.Products.Warehouse.NotAvailabe")
+                                                }
+                                            }
+                                            else
+                                            {
+                                                //display warehouses
+                                                foreach (var warehouse in item.AvailableWarehouses)
+                                                {
+                                                    <div>@warehouse.WarehouseName</div>
+                                                }
+                                            }
+                                        </td>
+                                        <td style="width: 10%;" class="text-center">
+                                            @item.ItemWeight
+                                        </td>
+                                        <td style="width: 10%;" class="text-center">
+                                            @item.ItemDimensions
+                                        </td>
+                                        <td style="width: 10%;" class="text-center">
+                                            @item.QuantityOrdered
+                                        </td>
+                                        <td style="width: 10%;" class="text-center">
+                                            @item.QuantityInAllShipments
+                                        </td>
+                                        <td style="width: 10%;" class="text-center">
+                                            <input name="qtyToAdd@(item.OrderItemId)" type="text" value="@item.QuantityToAdd" id="qtyToAdd@(item.OrderItemId)" class="form-control input-sm" />
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

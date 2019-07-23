@@ -1,0 +1,101 @@
+﻿@model CommonStatisticsModel
+@using Nop.Core
+@inject Nop.Services.Common.IGenericAttributeService genericAttributeService
+@inject IWorkContext workContext
+@{
+    const string panelId = "nopcommerce-common-statistics-box";
+    const string hidePanelAttributeName = "HideCommonStatisticsPanel";
+    var hidePanel = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hidePanelAttributeName);
+}
+
+<div class="box box-info @if(hidePanel){<text>collapsed-box</text>}" id="@panelId">
+    <div class="box-header with-border clearfix">
+        <div class="box-title">
+            <i class="fa ion-stats-bars"></i>
+            @T("Admin.Dashboard.CommonStatistics")
+        </div>
+        <div class="box-tools pull-right">
+            <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                @if (hidePanel)
+                {
+                    <text><i class="fa fa-plus"></i></text>
+                }
+                else
+                {
+                    <text><i class="fa fa-minus"></i></text>
+                }
+            </button>
+        </div>
+    </div>
+    <div class="box-body">
+        <div class="col-lg-3 col-xs-6">
+            <div class="small-box bg-aqua">
+                <div class="inner">
+                    <h3>@Model.NumberOfOrders</h3>
+                    <p>@T("Admin.Dashboard.NumberOfOrders")</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-bag"></i>
+                </div>
+                <a asp-controller="Order" asp-action="List" class="small-box-footer">
+                    @T("Admin.Dashboard.MoreInfo")
+                    <i class="fa fa-arrow-circle-right"></i>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3 col-xs-6">
+            <div class="small-box bg-yellow">
+                <div class="inner">
+                    <h3>@Model.NumberOfPendingReturnRequests</h3>
+                    <p>@T("Admin.Dashboard.NumberOfPendingReturnRequests")</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-refresh"></i>
+                </div>
+                <a asp-controller="ReturnRequest" asp-action="List" class="small-box-footer">
+                    @T("Admin.Dashboard.MoreInfo")
+                    <i class="fa fa-arrow-circle-right"></i>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3 col-xs-6">
+            <div class="small-box bg-green">
+                <div class="inner">
+                    <h3>@Model.NumberOfCustomers</h3>
+                    <p>@T("Admin.Dashboard.NumberOfCustomers")</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-person-add"></i>
+                </div>
+                <a asp-controller="Customer" asp-action="List" class="small-box-footer">
+                    @T("Admin.Dashboard.MoreInfo")
+                    <i class="fa fa-arrow-circle-right"></i>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3 col-xs-6">
+            <div class="small-box bg-red">
+                <div class="inner">
+                    <h3>@Model.NumberOfLowStockProducts</h3>
+                    <p>@T("Admin.Dashboard.NumberOfLowStockProducts")</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-pie-graph"></i>
+                </div>
+                <a asp-controller="Report" asp-action="LowStock" class="small-box-footer">
+                    @T("Admin.Dashboard.MoreInfo")
+                    <i class="fa fa-arrow-circle-right"></i>
+                </a>
+            </div>
+        </div>
+
+        <script>
+            $(document).ready(function () {
+                $('#@panelId').on('click', 'button[data-widget="collapse"]', function () {
+                    var collapsed = !$('#@panelId').hasClass('collapsed-box');
+                    saveUserPreferences('@(Url.Action("SavePreference", "Preferences"))', '@hidePanelAttributeName', collapsed);
+                });
+            });
+        </script>
+    </div>
+</div>

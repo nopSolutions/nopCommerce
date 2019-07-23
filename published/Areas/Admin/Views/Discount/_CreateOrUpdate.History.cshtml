@@ -1,0 +1,51 @@
+@model DiscountModel
+
+<div class="panel-body">
+    @await Html.PartialAsync("Table", new DataTablesModel
+    {
+        Name = "usagehistory-grid",
+        UrlRead = new DataUrl("UsageHistoryList", "Discount", new RouteValueDictionary { [nameof(Model.DiscountUsageHistorySearchModel.DiscountId)] = Model.DiscountUsageHistorySearchModel.DiscountId }),
+        UrlDelete = new DataUrl("UsageHistoryDelete", "Discount", new RouteValueDictionary { [nameof(Model.DiscountUsageHistorySearchModel.DiscountId)] = Model.DiscountUsageHistorySearchModel.DiscountId }),
+        Length = Model.DiscountUsageHistorySearchModel.PageSize,
+        LengthMenu = Model.DiscountUsageHistorySearchModel.AvailablePageSizes,
+        ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(DiscountUsageHistoryModel.CreatedOn))
+                {
+                    Title = T("Admin.Promotions.Discounts.History.CreatedOn").Text,
+                    Width = "200",
+                    Render = new RenderDate()
+                },
+                new ColumnProperty(nameof(DiscountUsageHistoryModel.CustomOrderNumber))
+                {
+                    Title = T("Admin.Promotions.Discounts.History.CustomOrderNumber").Text,
+                    ClassName =  NopColumnClassDefaults.Button,
+                    Width = "200",
+                    Render = new RenderCustom("renderColumnOrderInfo")
+                },
+                new ColumnProperty(nameof(DiscountUsageHistoryModel.OrderTotal))
+                {
+                    Title = T("Admin.Promotions.Discounts.History.OrderTotal").Text,
+                    Width = "200"
+                },
+                new ColumnProperty(nameof(DiscountUsageHistoryModel.Id))
+                {
+                    Title = T("Admin.Common.Delete").Text,
+                    Width = "100",
+                    Render = new RenderButtonRemove(T("Admin.Common.Delete").Text),
+                    ClassName = NopColumnClassDefaults.Button
+                }
+            }
+    })
+
+    <script>
+        function renderColumnOrderInfo(data, type, row, meta) {
+            if (row.OrderId > 0) {
+                var textRenderer = $.fn.dataTable.render.text().display;
+                return '<a class="btn btn-default" href="@Url.Content("~/Admin/Order/Edit/")' + row.OrderId + '"><i class="fa fa-eye"></i>' + textRenderer(row.CustomOrderNumber) + ' - @T("Admin.Common.View")</a>';
+            } else {
+                return 'order is deleted';
+            }
+        }
+    </script>
+</div>
