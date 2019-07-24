@@ -1,1 +1,0 @@
-﻿This folder contains tests for Nop.Web project (public store)
