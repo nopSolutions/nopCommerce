@@ -1,0 +1,11 @@
+﻿@model Nop.Plugin.Tax.Avalara.Models.EntityUseCode.EntityUseCodeModel
+
+<div class="form-group has-warning">
+    <div class="col-md-3">
+        <nop-label asp-for="AvalaraEntityUseCode" id="AvalaraEntityUseCode_label" />
+    </div>
+    <div class="col-md-9">
+        <nop-select asp-for="AvalaraEntityUseCode" asp-items="@Model.EntityUseCodes" />
+        <span asp-validation-for="AvalaraEntityUseCode"></span>
+    </div>
+</div>

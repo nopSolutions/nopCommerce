@@ -1,0 +1,41 @@
+@model DatesRangesSearchModel
+
+@{
+    //page title
+    ViewBag.Title = T("Admin.Configuration.Shipping.DatesAndRanges").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Dates and ranges");
+}
+
+@{
+    const string hideDatesBlockAttributeName = "DatesAndRangesPage.HideDatesBlock";
+    var hideDatesBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideDatesBlockAttributeName);
+
+    const string hideRangesBlockAttributeName = "DatesAndRangesPage.HideRangesBlock";
+    var hideRangesBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideRangesBlockAttributeName);
+}
+
+
+<nop-antiforgery-token />
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        @T("Admin.Configuration.Shipping.DatesAndRanges")
+    </h1>
+    <div class="pull-right">
+        &nbsp;
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.DatesAndRangesButtons })
+    </div>
+</div>
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <nop-panels id="datesandranges-panels">
+                <nop-panel asp-name="datesandranges-dates" asp-icon="fa fa-calendar" asp-title="@T("Admin.Configuration.Shipping.DeliveryDates")" asp-hide-block-attribute-name="@hideDatesBlockAttributeName" asp-hide="@hideDatesBlock" asp-advanced="false">@await Html.PartialAsync("_DatesAndRanges.Dates", Model)</nop-panel>
+                <nop-panel asp-name="datesandranges-ranges" asp-icon="fa fa-arrows-h" asp-title="@T("Admin.Configuration.Shipping.ProductAvailabilityRanges")" asp-hide-block-attribute-name="@hideRangesBlockAttributeName" asp-hide="@hideRangesBlock" asp-advanced="false">@await Html.PartialAsync("_DatesAndRanges.Ranges", Model)</nop-panel>
+
+                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.DatesAndRangesDetailsBlock, additionalData = Model })
+            </nop-panels>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,38 @@
+﻿@using Nop.Plugin.Tax.FixedOrByCountryStateZip.Models
+@using Nop.Web.Framework.Models.DataTables
+<div class="panel-group basic-setting">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            @await Html.PartialAsync("Table", new DataTablesModel
+            {
+                Name = "tax-categories-grid",
+                UrlRead = new DataUrl("FixedRatesList", "FixedOrByCountryStateZip", null),
+                UrlUpdate = new DataUrl("FixedRateUpdate", "FixedOrByCountryStateZip", null),
+                Length = Model.PageSize,
+                LengthMenu = Model.AvailablePageSizes,
+                ColumnCollection = new List<ColumnProperty>
+                {
+                    new ColumnProperty(nameof(FixedTaxRateModel.TaxCategoryName))
+                    {
+                        Title = T("Plugins.Tax.FixedOrByCountryStateZip.Fields.TaxCategoryName").Text,
+                        Width = "400"
+                    },
+                    new ColumnProperty(nameof(FixedTaxRateModel.Rate))
+                    {
+                        Title = T("Plugins.Tax.FixedOrByCountryStateZip.Fields.Rate").Text,
+                        Width = "200",
+                        Editable = true,
+                        EditType = EditType.Number
+                    },
+                    new ColumnProperty(nameof(FixedTaxRateModel.TaxCategoryId))
+                    {
+                        Title = T("Admin.Common.Edit").Text,
+                        Width = "200",
+                        ClassName =  NopColumnClassDefaults.Button,
+                        Render = new RenderButtonsInlineEdit()
+                    }
+                }
+            })
+        </div>
+    </div>
+</div>

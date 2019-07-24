@@ -1,0 +1,42 @@
+﻿@model ProfileIndexModel
+@{    
+    Layout = "_ColumnsOne";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.Profile").Text);
+    //page class
+    Html.AppendPageCssClassParts("html-profile-page");
+}
+<div class="page profile-page">
+    <div class="page-title">
+        <h1>@Model.ProfileTitle</h1>
+    </div>
+    <div class="page-body">
+        @{
+            var selectPostsTab = Model.ForumsEnabled && Model.PagingPosts ? ".tabs( 'option', 'active', 1 )" : "";
+        }
+        <script asp-location="Footer">
+            $(document).ready(function () {
+                $("#tabs").tabs()@Html.Raw(selectPostsTab);
+            });
+        </script>
+        <div class="tabs inbox-tabs" id="tabs">
+            <ul class="tabs-header">
+                <li><a href="#tabs-1">@T("Profile.PersonalInfo")</a></li>
+                @if (Model.ForumsEnabled)
+                {
+                    <li><a href="#tabs-2">@T("Profile.LatestPosts")</a></li>
+                }
+            </ul>
+            <div id="tabs-1" class="tab-content">
+                @await Component.InvokeAsync("ProfileInfo", new { customerProfileId = Model.CustomerProfileId })
+            </div>
+            @if (Model.ForumsEnabled)
+            {
+                <div id="tabs-2" class="tab-content">
+                    @await Component.InvokeAsync("ProfilePosts", new { customerProfileId = Model.CustomerProfileId, pageNumber = Model.PostsPage })
+                </div>
+            }
+        </div>
+    </div>
+</div>

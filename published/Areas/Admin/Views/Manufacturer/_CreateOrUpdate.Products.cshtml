@@ -1,0 +1,85 @@
+﻿@model ManufacturerModel
+
+@if (Model.Id > 0)
+{
+<div class="panel-body">
+    @await Html.PartialAsync("Table", new DataTablesModel
+    {
+        Name = "products-grid",
+        UrlRead = new DataUrl("ProductList", "Manufacturer", new RouteValueDictionary { [nameof(Model.ManufacturerProductSearchModel.ManufacturerId)] = Model.ManufacturerProductSearchModel.ManufacturerId }),
+        UrlDelete = new DataUrl("ProductDelete", "Manufacturer", null),
+        UrlUpdate = new DataUrl("ProductUpdate", "Manufacturer", null),
+        Length = Model.ManufacturerProductSearchModel.PageSize,
+        LengthMenu = Model.ManufacturerProductSearchModel.AvailablePageSizes,
+        ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(ManufacturerProductModel.ProductName))
+                {
+                    Title = T("Admin.Catalog.Manufacturers.Products.Fields.Product").Text
+                },
+                new ColumnProperty(nameof(ManufacturerProductModel.IsFeaturedProduct))
+                {
+                    Title = T("Admin.Catalog.Manufacturers.Products.Fields.IsFeaturedProduct").Text,
+                    Width = "150",
+                    ClassName = NopColumnClassDefaults.CenterAll,
+                    Render = new RenderBoolean(),
+                    Editable = true,
+                    EditType = EditType.Checkbox
+                },
+                new ColumnProperty(nameof(ManufacturerProductModel.DisplayOrder))
+                {
+                    Title = T("Admin.Catalog.Manufacturers.Products.Fields.DisplayOrder").Text,
+                    Width = "150",
+                    ClassName = NopColumnClassDefaults.CenterAll,
+                    Editable = true,
+                    EditType = EditType.Number
+                },
+                new ColumnProperty(nameof(ManufacturerProductModel.ProductId))
+                {
+                    Title = T("Admin.Common.View").Text,
+                    Width = "150",
+                    ClassName = NopColumnClassDefaults.Button,
+                    Render = new RenderButtonView(new DataUrl("~/Admin/Product/Edit/", nameof(ManufacturerProductModel.ProductId)))
+                },
+                new ColumnProperty(nameof(ManufacturerProductModel.Id))
+                {
+                    Title = T("Admin.Common.Edit").Text,
+                    Width = "200",
+                    ClassName =  NopColumnClassDefaults.Button,
+                    Render = new RenderButtonsInlineEdit()
+                },
+                new ColumnProperty(nameof(ManufacturerProductModel.Id))
+                {
+                    Title = T("Admin.Common.Delete").Text,
+                    Width = "100",
+                    Render = new RenderButtonRemove(T("Admin.Common.Delete").Text),
+                    ClassName = NopColumnClassDefaults.Button
+                }
+            }
+    })
+</div>
+
+    <div class="panel-footer">
+        <button type="submit" id="btnAddNewProduct" onclick="javascript:OpenWindow('@(Url.Action("ProductAddPopup", "Manufacturer", new { manufacturerId = Model.Id, btnId = "btnRefreshProducts", formId = "manufacturer-form" }))', 800, 800, true); return false;" class="btn btn-primary">
+            @T("Admin.Catalog.Manufacturers.Products.AddNew")
+        </button>
+        <input type="submit" id="btnRefreshProducts" style="display: none" />
+        <script>
+            $(document).ready(function () {
+                $('#btnRefreshProducts').click(function () {
+                    //refresh grid
+                    updateTable('#products-grid');
+
+                    //return false to don't reload a page
+                    return false;
+                });
+            });
+        </script>
+    </div>
+}
+else
+{
+    <div class="panel-body">
+        @T("Admin.Catalog.Manufacturers.Products.SaveBeforeEdit")
+    </div>
+}

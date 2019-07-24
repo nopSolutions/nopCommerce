@@ -1,0 +1,108 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <Copyright>Copyright © Nop Solutions, Ltd</Copyright>
+    <Company>Nop Solutions, Ltd</Company>
+    <Authors>Nop Solutions, Ltd</Authors>
+    <Version>4.2.0.0</Version>
+    <Description>Nop.Web is also an MVC web application project, a presentation layer for public store and admin area.</Description>
+    <PackageLicenseUrl>http://www.nopcommerce.com/licensev3.aspx</PackageLicenseUrl>
+    <PackageProjectUrl>http://www.nopcommerce.com/</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/nopSolutions/nopCommerce</RepositoryUrl>
+    <RepositoryType>Git</RepositoryType>
+    <!--Set this parameter to true to get the dlls copied from the NuGet cache to the output of your project-->
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Libraries\Nop.Core\Nop.Core.csproj" />
+    <ProjectReference Include="..\..\Libraries\Nop.Data\Nop.Data.csproj" />
+    <ProjectReference Include="..\..\Libraries\Nop.Services\Nop.Services.csproj" />
+    <ProjectReference Include="..\Nop.Web.Framework\Nop.Web.Framework.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- We copy the entire \App_Data directory. But we ignore JSON files and data protection keys  -->
+    <Content Include="App_Data\**" CopyToPublishDirectory="PreserveNewest" Exclude="App_Data\*.json" />
+    <Content Update="App_Data\*.json" CopyToPublishDirectory="Never" />
+    <Content Update="App_Data\DataProtectionKeys\*.xml" CopyToPublishDirectory="Never" />
+
+    <Compile Remove="Plugins\**" />
+    <EmbeddedResource Remove="Plugins\**" />
+    <None Remove="Plugins\**" />
+
+    <!-- We copy the entire \Plugins and \Themes directories.
+	    But we ignore cshtml and JSON files to avoid "Duplicate 'Content' items were included" error during publishing.
+	    We also can use "CheckForDuplicateItemsContinueOnError" as per https://github.com/dotnet/sdk/blob/master/src/Tasks/Microsoft.NET.Build.Tasks/build/Microsoft.NET.Sdk.DefaultItems.targets -->
+    <Content Include="Plugins\**" CopyToPublishDirectory="PreserveNewest" Exclude="Plugins\**\*.config;Plugins\**\*.cshtml;Plugins\**\*.json" />
+    <Content Include="Themes\**" CopyToPublishDirectory="PreserveNewest" Exclude="Themes\**\*.config;Themes\**\*.cshtml;Themes\**\*.json" />
+
+    <!-- We copy the \Logs directory -->
+    <Content Include="Logs\**" CopyToPublishDirectory="PreserveNewest" />
+
+    <None Update="Areas\Admin\sitemap.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Plugins\" />
+  </ItemGroup>
+
+  <!-- This target execute after "Build" target.
+    We use it to clean up folder with plugins from unnecessary and obsolete libraries. -->
+  <Target Name="NopTarget" AfterTargets="Build">
+    <ItemGroup>
+      <!-- Get plugin description files to get plugin paths -->
+      <PluginsDescription Include="$(MSBuildProjectDirectory)\Plugins\**\plugin.json;" />
+      <!-- Get paths for all plugins -->
+      <PluginsFolders Include="@(PluginsDescription->'%(relativedir)')" />
+
+      <!-- Get all the libraries from the shadow copy folder to remove them,
+        because depending on the settings, this may not happen when the application is starting,
+        but this can lead to unpredictable results during debugging of the project. -->
+      <ShadowCopiesLibraries Include="$(MSBuildProjectDirectory)\Plugins\bin\*.*" Exclude="$(MSBuildProjectDirectory)\Plugins\bin\placeholder.txt" />
+
+      <!-- Get paths for ClearPluginAssemblies project -->
+      <ClearPluginAssemblies Include="$(MSBuildProjectDirectory)\..\..\Build\ClearPluginAssemblies.proj" />
+
+    </ItemGroup>
+    <PropertyGroup>
+      <PluginsFolders>@(PluginsFolders)</PluginsFolders>
+    </PropertyGroup>
+    <!-- Delete libraries from the shadow copy folder -->
+    <Delete Files="@(ShadowCopiesLibraries)" />
+    <!-- When .NET Core builds a project, it copies all referenced libraries to the output folder.
+      For plugins it creates too many unnecessary files that just take up space.
+      At the moment you can't disable this behavior. That's why we have to manually delete all unnecessary libraries from plugin output directories. -->
+    <MSBuild Projects="@(ClearPluginAssemblies)" Properties="PluginPath=$(PluginsFolders)" Targets="NopClear" />
+  </Target>
+
+  <PropertyGroup>
+    <!--The common language runtime (CLR) supports two types of garbage collection:
+      workstation garbage collection, which is available on all systems, and server garbage collection,
+      which is available on multiprocessor systems.
+      
+      For single-processor computers, the default workstation garbage collection should be the fastest option.
+      Either workstation or server can be used for two-processor computers.
+      Server garbage collection should be the fastest option for more than two processors.
+      
+      More details about GC you can see here: https://docs.microsoft.com/en-us/dotnet/standard/garbage-collection/fundamentals-->
+    <ServerGarbageCollection>false</ServerGarbageCollection>
+    <!--In workstation or server garbage collection, you can enable concurrent garbage collection,
+      which enables threads to run concurrently with a dedicated thread that performs the garbage
+      collection for most of the duration of the collection.
+      
+      Concurrent garbage collection enables interactive applications to be more responsive by
+      minimizing pauses for a collection. Managed threads can continue to run most of the time while
+      the concurrent garbage collection thread is running. This results in shorter pauses while
+      a garbage collection is occurring.
+      
+      To improve performance when several processes are running, disable concurrent garbage collection.
+      
+      More details here: https://docs.microsoft.com/en-us/dotnet/standard/garbage-collection/fundamentals#concurrent-garbage-collection-->
+    <ConcurrentGarbageCollection>false</ConcurrentGarbageCollection>
+  </PropertyGroup>
+
+</Project>

@@ -1,0 +1,14 @@
+﻿@model ProductDetailsModel
+@if (!string.IsNullOrWhiteSpace(Model.StockAvailability) || Model.DisplayBackInStockSubscription)
+{
+    <div class="availability">
+        @if (!string.IsNullOrWhiteSpace(Model.StockAvailability))
+        {
+            <div class="stock">
+                <span class="label">@T("Products.Availability"):</span>
+                <span class="value" id="stock-availability-value-@Model.Id">@Model.StockAvailability</span>
+            </div>
+        }
+        @await Html.PartialAsync("_BackInStockSubscription", Model)
+    </div>
+}

@@ -1,0 +1,70 @@
+﻿@inject Nop.Services.Common.IGenericAttributeService genericAttributeService
+@inject IWorkContext workContext
+@{
+    const string panelId = "order-incomplete-report-box";
+    const string hidePanelAttributeName = "Reports.HideOrderIncompleteReportPanel";
+    var hidePanel = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hidePanelAttributeName);
+}
+
+<div class="box box-info @if(hidePanel){<text>collapsed-box</text>}" id="@panelId">
+    <div class="box-header with-border">
+        <h3 class="box-title">
+            <i class="fa fa-hourglass-start"></i>
+            @T("Admin.Dashboard.IncompleteOrders")
+        </h3>
+        <div class="box-tools pull-right">
+            <button class="btn btn-box-tool" data-widget="collapse">
+                @if (hidePanel)
+                {
+                    <text><i class="fa fa-plus"></i></text>
+                }
+                else
+                {
+                    <text><i class="fa fa-minus"></i></text>
+                }
+            </button>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            $('#@panelId').on('click', 'button[data-widget="collapse"]', function () {
+                var collapsed = !$('#@panelId').hasClass('collapsed-box');
+                saveUserPreferences('@(Url.Action("SavePreference", "Preferences"))', '@hidePanelAttributeName', collapsed);
+            });
+        });
+    </script>
+    <div class="box-body">
+        @await Html.PartialAsync("Table", new DataTablesModel
+        {
+            Name = "incomplete-order-report-grid",
+            UrlRead = new DataUrl("OrderIncompleteReportList", "Order", null),
+            Length = int.MaxValue,
+            Paging = false,
+            Info = false,
+            ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(OrderIncompleteReportModel.Item))
+                {
+                    Title = T("Admin.SalesReport.Incomplete.Item").Text
+                },
+                new ColumnProperty(nameof(OrderIncompleteReportModel.Total))
+                {
+                    Title = T("Admin.SalesReport.Incomplete.Total").Text,
+                    Width = "50"
+                },
+                new ColumnProperty(nameof(OrderIncompleteReportModel.Count))
+                {
+                    Title = T("Admin.SalesReport.Incomplete.Count").Text,
+                    Width = "100",
+                    ClassName =  NopColumnClassDefaults.Button,
+                    Render = new RenderCustom("renderColumnOrderIncompleteReportCount")
+                }
+            }
+        })
+        <script>
+            function renderColumnOrderIncompleteReportCount(data, type, row, meta) {
+                return '<a class="btn btn-default" href="' + row.ViewLink +'"><i class="fa fa-eye"></i>' + row.Count + ' - @T("Admin.SalesReport.Incomplete.View")</a>';
+            }
+        </script>
+    </div>
+</div>

@@ -1,0 +1,40 @@
+@model DatesRangesSearchModel
+
+<div class="panel-body">
+    <p>
+        <em>@T("Admin.Configuration.Shipping.DeliveryDates.Hint")</em>
+    </p>
+    @await Html.PartialAsync("Table", new DataTablesModel
+    {
+        Name = "deliverydate-grid",
+        UrlRead = new DataUrl("DeliveryDates", "Shipping", null),
+        Length = Model.DeliveryDateSearchModel.PageSize,
+        LengthMenu = Model.DeliveryDateSearchModel.AvailablePageSizes,
+        ColumnCollection = new List<ColumnProperty>
+        {
+            new ColumnProperty(nameof(DeliveryDateModel.Name))
+            {
+                Title = T("Admin.Configuration.Shipping.DeliveryDates.Fields.Name").Text
+            },
+            new ColumnProperty(nameof(DeliveryDateModel.DisplayOrder))
+            {
+                Title = T("Admin.Configuration.Shipping.DeliveryDates.Fields.DisplayOrder").Text,
+                Width = "150",
+                ClassName =  NopColumnClassDefaults.CenterAll
+            },
+            new ColumnProperty(nameof(DeliveryDateModel.Id))
+            {
+                Title = T("Admin.Common.Edit").Text,
+                Width = "100",
+                ClassName =  NopColumnClassDefaults.Button,
+                Render = new RenderButtonEdit(new DataUrl("EditDeliveryDate"))
+            }
+        }
+    })
+</div>
+<div class="panel-footer">
+    <a asp-action="CreateDeliveryDate" class="btn btn-primary">
+        <i class="fa fa-plus-square"></i>
+        @T("Admin.Common.AddNew")
+    </a>
+</div>

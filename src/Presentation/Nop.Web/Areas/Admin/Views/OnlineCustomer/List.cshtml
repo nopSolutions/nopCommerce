@@ -1,0 +1,67 @@
+﻿@model OnlineCustomerSearchModel
+
+@{
+    //page title
+    ViewBag.Title = T("Admin.Customers.OnlineCustomers").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Online customers");
+}
+
+<nop-antiforgery-token />
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        @T("Admin.Customers.OnlineCustomers")
+    </h1>
+    <div class="pull-right">
+        &nbsp;
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.OnlineCustomerListButtons })
+    </div>
+</div>
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    @await Html.PartialAsync("Table", new DataTablesModel
+                    {
+                        Name = "onlinecustomers-grid",
+                        UrlRead = new DataUrl("List", "OnlineCustomer", null),
+                        Length = Model.PageSize,
+                        LengthMenu = Model.AvailablePageSizes,
+                        ColumnCollection = new List<ColumnProperty>
+                        {
+                            new ColumnProperty(nameof(OnlineCustomerModel.CustomerInfo))
+                            {
+                                Title = T("Admin.Customers.OnlineCustomers.Fields.CustomerInfo").Text,
+                                Width = "100",
+                                Render = new RenderLink(new DataUrl("~/Admin/Customer/Edit", nameof(CustomerModel.Id)))
+                            },
+                            new ColumnProperty(nameof(OnlineCustomerModel.LastIpAddress))
+                            {
+                                Title = T("Admin.Customers.OnlineCustomers.Fields.IPAddress").Text,
+                                Width = "100"
+                            },
+                            new ColumnProperty(nameof(OnlineCustomerModel.Location))
+                            {
+                                Title = T("Admin.Customers.OnlineCustomers.Fields.Location").Text,
+                                Width = "100"
+                            },
+                            new ColumnProperty(nameof(OnlineCustomerModel.LastActivityDate))
+                            {
+                                Title = T("Admin.Customers.OnlineCustomers.Fields.LastActivityDate").Text,
+                                Width = "200",
+                                Render = new RenderDate()
+                            },
+                            new ColumnProperty(nameof(OnlineCustomerModel.LastVisitedPage))
+                            {
+                                Title = T("Admin.Customers.OnlineCustomers.Fields.LastVisitedPage").Text,
+                                Width = "100"
+                            }
+                        }
+                    })                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

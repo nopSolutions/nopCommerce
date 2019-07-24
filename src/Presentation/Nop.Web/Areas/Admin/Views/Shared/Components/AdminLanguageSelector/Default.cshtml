@@ -1,0 +1,20 @@
+﻿@model LanguageSelectorModel
+
+@inject Nop.Core.IWebHelper webHelper
+
+@if (Model.AvailableLanguages.Count > 1)
+{
+    <div style="padding: 7px 12px 0 12px;">
+        @{
+            var returnUrl = webHelper.GetRawUrl(Context.Request);
+            var languages = Model.AvailableLanguages.Select(lang => new SelectListItem
+            {
+                Text = lang.Name,
+                Value = Url.Action("SetLanguage", "Common", new {langid = lang.Id, area = AreaNames.Admin, returnUrl }, webHelper.CurrentRequestProtocol),
+                Selected = lang.Id.Equals(Model.CurrentLanguage.Id)
+            });
+
+            <nop-select asp-for-name="customerlanguage" asp-items="@languages" onchange="setLocation(this.value);" />
+        }
+    </div>
+}

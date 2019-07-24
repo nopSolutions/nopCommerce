@@ -1,0 +1,54 @@
+@model TaxSettingsModel
+
+<div class="panel-body">
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="PaymentMethodAdditionalFeeIsTaxable_OverrideForStore" asp-input="PaymentMethodAdditionalFeeIsTaxable" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="PaymentMethodAdditionalFeeIsTaxable" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="PaymentMethodAdditionalFeeIsTaxable" />
+            <span asp-validation-for="PaymentMethodAdditionalFeeIsTaxable"></span>
+        </div>
+    </div>
+    <nop-nested-setting asp-for="PaymentMethodAdditionalFeeIsTaxable">
+        <div class="form-group" id="pnlPaymentMethodAdditionalFeeIncludesTax">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="PaymentMethodAdditionalFeeIncludesTax_OverrideForStore" asp-input="PaymentMethodAdditionalFeeIncludesTax" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="PaymentMethodAdditionalFeeIncludesTax" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="PaymentMethodAdditionalFeeIncludesTax" />
+                <span asp-validation-for="PaymentMethodAdditionalFeeIncludesTax"></span>
+            </div>
+        </div>
+        <div class="form-group" id="pnlPaymentMethodAdditionalFeeTaxClass">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="PaymentMethodAdditionalFeeTaxClassId_OverrideForStore" asp-input="PaymentMethodAdditionalFeeTaxClassId" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="PaymentMethodAdditionalFeeTaxClassId" />
+            </div>
+            <div class="col-md-9">
+                <nop-select asp-for="PaymentMethodAdditionalFeeTaxClassId" asp-items="Model.TaxCategories" />
+                <span asp-validation-for="PaymentMethodAdditionalFeeTaxClassId"></span>
+            </div>
+        </div>
+    </nop-nested-setting>
+</div>
+<script>
+    $(document).ready(function () {
+        $("#@Html.IdFor(model => model.PaymentMethodAdditionalFeeIsTaxable)").click(togglePayment);
+
+        togglePayment();
+    });
+
+
+    function togglePayment() {
+        if ($('#@Html.IdFor(model => model.PaymentMethodAdditionalFeeIsTaxable)').is(':checked')) {
+            $('#pnlPaymentMethodAdditionalFeeIncludesTax').show();
+            $('#pnlPaymentMethodAdditionalFeeTaxClass').show();
+        } else {
+            $('#pnlPaymentMethodAdditionalFeeIncludesTax').hide();
+            $('#pnlPaymentMethodAdditionalFeeTaxClass').hide();
+        }
+    }
+</script>

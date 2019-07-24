@@ -1,0 +1,94 @@
+﻿@model CustomerBackInStockSubscriptionsModel
+@{    
+    Layout = "_ColumnsTwo";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.BackInStockSubscriptions").Text);
+    //page class
+    Html.AppendPageCssClassParts("html-account-page");
+    Html.AppendPageCssClassParts("html-back-in-stock-subscription-list-page");
+}
+@section left
+{
+    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.BackInStockSubscriptions })
+}
+<div class="page account-page back-in-stock-subscription-list-page">
+    <div class="page-title">
+        <h1>@T("Account.MyAccount") - @T("Account.BackInStockSubscriptions")</h1>
+    </div>
+    <div class="page-body">
+        @if (Model.Subscriptions.Count > 0)
+        {
+            <div class="description">
+                @T("Account.BackInStockSubscriptions.Description")
+            </div>
+            <script asp-location="Footer">
+                $(document).ready(function () {
+                    $('#selectall').on('click', function () {
+                        $('.subscription-list .rowcheckbox').prop('checked', $(this).is(':checked')).trigger('change');
+                    });
+
+                    $('.subscription-list .rowcheckbox').on('change', function (e) {
+                        var numChkBoxes = $('.subscription-list .rowcheckbox').length;
+                        var numChkBoxesChecked = $('.subscription-list .rowcheckbox:checked').length;
+                        $('#selectall').prop('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
+                    });
+                });
+            </script>
+            <form asp-route="CustomerBackInStockSubscriptions" method="post">
+                <div class="subscription-list">
+                    <div class="table-wrapper">
+                        <table class="data-table">
+                            <colgroup>
+                                <col width="1" />
+                                <col />
+                            </colgroup>
+                            <thead>
+                            <tr>
+                                <th class="select-boxes">
+                                    <input type="checkbox" id="selectall" />
+                                </th>
+                                <th class="product">
+                                    @T("Account.BackInStockSubscriptions.ProductColumn")
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @for (var i = 0; i < Model.Subscriptions.Count; i++)
+                            {
+                                var item = Model.Subscriptions[i];
+                                <tr @(i % 2 == 0 ? Html.Raw(" class=\"odd\"") : Html.Raw(" class=\"even\""))>
+                                    <td class="select-boxes">
+                                        <input type="checkbox" name="biss@(item.Id)" class="rowcheckbox" />
+                                    </td>
+                                    <td class="product">
+                                        @Html.RouteLink(item.ProductName, "Product", new { SeName = item.SeName })
+                                    </td>
+                                </tr>
+                            }
+                            </tbody>
+                        </table>
+                    </div>
+                    @{
+                        var pager = Html.Pager(Model.PagerModel);
+                    }
+                    @if (!string.IsNullOrEmpty(pager.ToHtmlString()))
+                    {
+                        <div class="pager">
+                            @pager
+                        </div>
+                    }
+                    <div class="buttons">
+                        <input type="submit" value="@T("Account.BackInStockSubscriptions.DeleteSelected")" class="button-1 delete-selected-biss-button" />
+                    </div>
+                </div>
+            </form>
+        }
+        else
+        {
+            <div class="no-data">
+                @T("Account.BackInStockSubscriptions.NoSubscriptions")
+            </div>
+        }
+    </div>
+</div>

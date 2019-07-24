@@ -1,0 +1,143 @@
+﻿<Language Name="Español" IsDefault="false" IsRightToLeft="false">
+  <LocaleResource Name="AdminEmail">
+    <Value>Correo electrónico del usuario admin</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminEmailRequired">
+    <Value>Introduce el email de administrador</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPassword">
+    <Value>Contraseña del usuario admin</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPasswordRequired">
+    <Value>Introduzca la contraseña de administrador</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureDirectoryPermissions">
+    <Value>El '{0}' cuenta no se concede permiso para modificar la carpeta '{1}'. Por favor, configurar estos permisos</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureFilePermissions">
+    <Value>El '{0}' cuenta no se concede permiso para modificar el archivo '{1}'. Por favor, configurar estos permisos</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPassword">
+    <Value>Confirme la contraseña</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPasswordRequired">
+    <Value>Introduzca confirmar la contraseña</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionString">
+    <Value>cadena de conexión</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringRequired">
+    <Value>Una cadena de conexión SQL se requiere</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringValues">
+    <Value>Introduzca los valores de conexión de SQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringWrongFormat">
+    <Value>Mala conexión de SQL cadena de formato</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateDatabaseIfDoesNotExist">
+    <Value>Crear base de datos si no existe</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateSampleData">
+    <Value>Crear datos de la muestra</Value>
+  </LocaleResource>
+  <LocaleResource Name="CustomCollation">
+    <Value>Especifique la intercalación de SQL Server personalizada</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseCreationError">
+    <Value>Se produjo un error al crear la base de datos: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Database">
+    <Value>Base de datos</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseInformation">
+    <Value>Base de datos de información</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseName">
+    <Value>Base de datos el nombre de</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseNameRequired">
+    <Value>Nombre de la base de datos se requiere</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseNotExists">
+    <Value>Base de datos no existe o no tiene permisos para conectarse a ella</Value>
+  </LocaleResource>
+  <LocaleResource Name="DataProviderRequired">
+    <Value>Seleccione el proveedor de datos</Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation1">
+    <Value>Si necesita información sobre cómo utilizar nopCommerce, visite</Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation2">
+    <Value>la sección de documentación de nopCommerce.com</Value>
+  </LocaleResource>
+  <LocaleResource Name="Example">
+    <Value>ejemplo</Value>
+  </LocaleResource>
+  <LocaleResource Name="Install">
+    <Value>instalar</Value>
+  </LocaleResource>
+  <LocaleResource Name="Installing">
+    <Value>Instalación nopCommerce ...</Value>
+  </LocaleResource>
+  <LocaleResource Name="PasswordsDoNotMatch">
+    <Value>Las contraseñas no coinciden</Value>
+  </LocaleResource>
+  <LocaleResource Name="RawConnectionString">
+    <Value>Ingrese la cadena de conexión en bruto (avanzado)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Recommended">
+    <Value>[Recomendado]</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallation">
+    <Value>reinicie la instalación</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallationTooltip">
+    <Value>Haga clic para reiniciar el proceso de instalación (borrar todos los valores almacenados en caché)</Value>
+  </LocaleResource>
+  <LocaleResource Name="SetupFailed">
+    <Value>Error de instalación: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlAuthentication">
+    <Value>Usar la cuenta de SQL Server</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlCompact">
+    <Value>El uso integrado en el almacenamiento de datos (SQL Server Compact)</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerName">
+    <Value>Nombre de SQL Server</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerNameRequired">
+    <Value>Nombre de SQL Server se requiere</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerPassword">
+    <Value>SQL Contraseña del</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerPasswordRequired">
+    <Value>SQL Contraseña del es necesario</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerUsername">
+    <Value>Nombre de usuario SQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerUsernameRequired">
+    <Value>Nombre de usuario SQL es necesario</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlStandard">
+    <Value>Utilice SQL Server (o SQL Express) de base de datos</Value>
+  </LocaleResource>
+  <LocaleResource Name="StoreInformation">
+    <Value>Almacenar la información</Value>
+  </LocaleResource>
+  <LocaleResource Name="Title">
+    <Value>nopCommerce de instalación</Value>
+  </LocaleResource>
+  <LocaleResource Name="Tooltip1">
+    <Value>nopCommerce es el principal ASP.NET tienda online solución de comercio electrónico. Este asistente le guiará a través del proceso de configuración de nopCommerce</Value>
+  </LocaleResource>
+  <LocaleResource Name="Tooltip2">
+    <Value>Para completar este asistente debe saber alguna información acerca de su servidor de base de datos ("cadena de conexión"). Por favor, póngase en contacto con su ISP si es necesario. Si va a instalar en un equipo local o en el servidor es posible que tenga información de su administrador del sistema</Value>
+  </LocaleResource>
+  <LocaleResource Name="WindowsAuthentication">
+    <Value>Utilice la autenticación integrada de Windows</Value>
+  </LocaleResource>
+</Language>

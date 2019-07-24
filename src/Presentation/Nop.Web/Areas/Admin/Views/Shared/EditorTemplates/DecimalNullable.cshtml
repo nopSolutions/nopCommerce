@@ -1,0 +1,25 @@
+@model Decimal?
+<input asp-for="@Model" asp-format="{0:F4}" />
+@{
+    var postfix = "";
+    if (ViewData.ContainsKey("postfix") && ViewData["postfix"] != null)
+    {
+        postfix = ViewData["postfix"].ToString();
+    }
+}
+<script>
+    $(document).ready(function() {
+        $("#@Html.IdForModel()").TouchSpin({
+            min: @Html.Raw(decimal.MinValue),
+            max: @Html.Raw(decimal.MaxValue),
+            decimals: 4, //always display 4 digits
+            forcestepdivisibility: "none",
+            verticalbuttons: true,
+            verticalupclass: "glyphicon glyphicon-chevron-up",
+            verticaldownclass: "glyphicon glyphicon-chevron-down",
+            buttondown_class: "btn",
+            buttonup_class: "btn",
+            postfix: "@postfix"
+        });
+    });
+</script>

@@ -1,0 +1,210 @@
+﻿@model int
+@inject IDownloadService downloadService
+
+@using Nop.Core;
+@using Nop.Services.Media
+@using Nop.Web.Framework.UI;
+
+@{
+    //register CSS and JS
+    Html.AddCssFileParts("~/lib/fineuploader/fine-uploader.min.css");
+    Html.AddScriptParts("~/lib/fineuploader/jquery.fine-uploader.min.js");
+
+    //other variables
+    var randomNumber = CommonHelper.GenerateRandomInteger();
+    var clientId = "download" + randomNumber;
+    var download = downloadService.GetDownloadById(Model);
+
+    var disableUrl = Convert.ToBoolean(ViewData["nop.DownloadEditor.DisableUrl"] ?? false);
+}
+
+<script>
+    $(document).ready(function () {
+        $('#cbUseDownloadURL@(randomNumber)').click(toggleDownloadRecordType@(randomNumber));
+
+        $('#saveDownloadUrl@(randomNumber)').click(function () {
+            var downloadUrl = $("#downloadurl@(randomNumber)").val();
+            $('#saveDownloadUrl@(randomNumber)').attr('disabled', true);
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: "@(Url.Action("SaveDownloadUrl", "Download", new { area = AreaNames.Admin }))",
+                data: {
+                    "downloadUrl": downloadUrl
+                },
+                success: function (data, textStatus, jqXHR) {
+                    if (data.success) {
+                        $('#pnlDownloadURLResult@(randomNumber)').fadeIn("slow").delay(1000).fadeOut("slow");
+                        $("#@(clientId + "value") input").val(data.downloadId);
+                    }
+                    else {
+                        $('#saveDownloadUrlFailed-info').text(data.message);
+                        $("#saveDownloadUrlFailed").click();
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    $("#saveDownloadUrlAlert").click();
+                },
+                complete: function (jqXHR, textStatus) {
+                    $('#saveDownloadUrl@(randomNumber)').attr('disabled', false);
+                }
+            });
+        });
+
+        toggleDownloadRecordType@(randomNumber)();
+    });
+
+    function toggleDownloadRecordType@(randomNumber)() {
+        if ($('#cbUseDownloadURL@(randomNumber)').is(':checked')) {
+            $('#pnlDownloadURL@(randomNumber)').show();
+            $('#pnlDownloadFile@(randomNumber)').hide();
+        } else {
+            $('#pnlDownloadURL@(randomNumber)').hide();
+            $('#pnlDownloadFile@(randomNumber)').show();
+        }
+    }
+
+</script>
+
+<div id="@(clientId + "value")">
+    <input type="hidden" asp-for="@Model" />
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        @if (!disableUrl)
+        {
+            <div class="form-group">
+                <div class="col-xs-4">
+                    <div class="label-wrapper">
+                        <label class="control-label">
+                            @T("Admin.Download.UseDownloadURL")
+                        </label>
+                    </div>
+                </div>
+                <div class="col-xs-8">
+                    <input type="checkbox" name="cbUseDownloadURL@(randomNumber)" id="cbUseDownloadURL@(randomNumber)"
+                           @if (download != null && download.UseDownloadUrl) { <text> checked="checked" </text> } />
+                </div>
+            </div>
+        }
+        <div id="pnlDownloadURL@(randomNumber)">
+            <div class="form-group">
+                <div class="col-xs-4">
+                    <div class="label-wrapper">
+                        <label class="control-label">
+                            @T("Admin.Download.DownloadURL")
+                        </label>
+                    </div>
+                </div>
+                <div class="col-xs-8">
+                    <input type="text" class="form-control" name="downloadurl@(randomNumber)" id="downloadurl@(randomNumber)"
+                           @if (download != null && !string.IsNullOrEmpty(download.DownloadUrl)) { <text> value="@(download.DownloadUrl)" </text> } />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-xs-8 col-xs-offset-4">
+                    <button type="button" id="saveDownloadUrl@(randomNumber)" class="btn btn-primary">@T("Admin.Download.SaveDownloadURL")</button>
+                    <div id="pnlDownloadURLResult@(randomNumber)" style="display: none;">@T("Admin.Download.DownloadURLSaved")</div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group" id="pnlDownloadFile@(randomNumber)">
+            <div class="col-xs-4">
+                <div class="label-wrapper">
+                    <label class="control-label">
+                        @T("Admin.Download.UploadFile")
+                    </label>
+                </div>
+            </div>
+            <div class="col-xs-8">
+                @*fine uploader container*@
+                <div id="@clientId">
+                    <noscript>
+                        <p>
+                            Please enable JavaScript to use file uploader.
+                        </p>
+                        <!-- or put a simple form for upload here -->
+                    </noscript>
+                </div>
+                @*fine uploader template (keep it synchronized to \Content\fineuploader\templates\default.html)*@
+                <script type="text/template" id="@(clientId)-qq-template">
+                    <div class="qq-uploader-selector qq-uploader">
+                        <div class="qq-upload-drop-area-selector qq-upload-drop-area" qq-hide-dropzone>
+                            <span>@T("Common.FileUploader.DropFiles")</span>
+                        </div>
+                        <div class="qq-upload-button-selector qq-upload-button">
+                            <div>@T("Common.FileUploader.Upload")</div>
+                        </div>
+                        <span class="qq-drop-processing-selector qq-drop-processing">
+                            <span>@T("Common.FileUploader.Processing")</span>
+                            <span class="qq-drop-processing-spinner-selector qq-drop-processing-spinner"></span>
+                        </span>
+                        <ul class="qq-upload-list-selector qq-upload-list">
+                            <li>
+                                <div class="qq-progress-bar-container-selector">
+                                    <div class="qq-progress-bar-selector qq-progress-bar"></div>
+                                </div>
+                                <span class="qq-upload-spinner-selector qq-upload-spinner"></span>
+                                <span class="qq-edit-filename-icon-selector qq-edit-filename-icon"></span>
+                                <span class="qq-upload-file-selector qq-upload-file"></span>
+                                <input class="qq-edit-filename-selector qq-edit-filename" tabindex="0" type="text">
+                                <span class="qq-upload-size-selector qq-upload-size"></span>
+                                <a class="qq-upload-cancel-selector qq-upload-cancel" href="#">@T("Common.FileUploader.Cancel")</a>
+                                <a class="qq-upload-retry-selector qq-upload-retry" href="#">@T("Common.FileUploader.Retry")</a>
+                                <a class="qq-upload-delete-selector qq-upload-delete" href="#">@T("Common.FileUploader.Delete")</a>
+                                <span class="qq-upload-status-text-selector qq-upload-status-text"></span>
+                            </li>
+                        </ul>
+                    </div>
+                </script>
+
+                <script>
+
+                    $(document).ready(function () {
+                        $("#@clientId").fineUploader({
+                            request: {
+                                endpoint: '@(Url.Action("AsyncUpload", "Download", new { area = AreaNames.Admin }))'
+                            },
+                            template: "@(clientId)-qq-template",
+                            multiple: false
+                        }).on("complete", function (event, id, name, responseJSON, xhr) {
+                            $("#@(clientId + "downloadurl")").html("<a class='btn btn-default margin-t-5' href='" + responseJSON.downloadUrl + "'><i class='fa fa-download'></i>@T("Admin.Download.DownloadUploadedFile")</a>");
+                            $("#@(clientId + "value") input").val(responseJSON.downloadId);
+                            $("#@(clientId + "remove")").show();
+                        });
+
+
+                        $("#@(clientId + "remove")").click(function (e) {
+                            $("#@(clientId + "downloadurl")").html("");
+                            $("#@(clientId + "value") input").val(0);
+                            $("#@(clientId) .qq-upload-list-selector").empty();
+                            $(this).hide();
+                        });
+                    });
+
+                </script>
+                <div style="clear: both;">
+                    <div id="@(clientId + "downloadurl")" class="pull-left margin-r-5">
+                        @if (download != null)
+                        {
+                            <a class='btn btn-default margin-t-5' href="@(Url.Action("DownloadFile", "Download", new { downloadGuid = download.DownloadGuid, area = AreaNames.Admin }))"><i class='fa fa-download'></i>@T("Admin.Download.DownloadUploadedFile")</a>
+                        }
+                    </div>
+                    <div class="pull-left">
+                        @if (download != null)
+                        {
+                            <span id="@(clientId + "remove")" class="btn btn-default margin-t-5"><i class="fa fa-trash"></i>@T("Admin.Download.RemoveDownload")</span>
+                        }
+                        else
+                        {
+                            <span id="@(clientId + "remove")" class="btn btn-default margin-t-5" style="display:none;"><i class="fa fa-trash"></i>@T("Admin.Download.RemoveDownload")</span>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<nop-alert asp-alert-id="saveDownloadUrlAlert" asp-alert-message="@T("Admin.Download.SaveDownloadURL.Alert.FailedSave")" />
+<nop-alert asp-alert-id="saveDownloadUrlFailed" />

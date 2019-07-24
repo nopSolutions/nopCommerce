@@ -1,0 +1,172 @@
+﻿@using Nop.Core
+@inject Nop.Services.Common.IGenericAttributeService genericAttributeService
+@inject IWorkContext workContext
+@{
+    Html.AppendScriptParts("~/lib/chartjs/Chart.min.js");
+
+    const string prefix = "customer-statistics";
+    const string hidePanelAttributeName = "Reports.HideCustomerStatisticsPanel";
+    var hidePanel = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hidePanelAttributeName);
+}
+<div class="box box-info @if (hidePanel){<text>collapsed-box</text>}" id="@(prefix)-box">
+    <div class="box-header with-border">
+        <h3 class="box-title">
+            <i class="fa fa-user"></i>
+            @T("Admin.Reports.Customers.CustomerStatistics")
+        </h3>
+        <div class="box-tools pull-right">
+            <button class="btn btn-xs btn-info btn-flat margin-r-5" @if (hidePanel) { <text> disabled="disabled" </text>  } data-chart-role="toggle-chart" data-chart-period="year">@T("Admin.Reports.Customers.CustomerStatistics.Year")</button>
+            <button class="btn btn-xs btn-info btn-flat margin-r-5" @if (hidePanel) { <text> disabled="disabled" </text>  } data-chart-role="toggle-chart" data-chart-period="month">@T("Admin.Reports.Customers.CustomerStatistics.Month")</button>
+            <button class="btn btn-xs btn-info btn-flat" @if (hidePanel) { <text> disabled="disabled" </text>  } data-chart-role="toggle-chart" data-chart-period="week">@T("Admin.Reports.Customers.CustomerStatistics.Week")</button>
+            <button class="btn btn-box-tool margin-l-10" data-widget="collapse">
+                @if (hidePanel)
+                {
+                    <text><i class="fa fa-plus"></i></text>
+                }
+                else
+                {
+                    <text><i class="fa fa-minus"></i></text>
+                }
+            </button>
+        </div>
+    </div>
+    <div class="box-body">
+        <div class="chart" style="height: 300px;">
+            <canvas id="@(prefix)-chart" height="300"></canvas>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        var csCurrentPeriod;
+
+        $('#@(prefix)-box').on('click', 'button[data-widget="collapse"]', function () {
+            var collapsed = !$('#@(prefix)-box').hasClass('collapsed-box');
+            saveUserPreferences('@(Url.Action("SavePreference", "Preferences"))', '@hidePanelAttributeName', collapsed);
+            if (!collapsed) {
+                $('#@(prefix)-box button[data-chart-role="toggle-chart"]').removeAttr('disabled');
+                if (!csCurrentPeriod) {
+                    $('#@(prefix)-box button[data-chart-role="toggle-chart"][data-chart-period="week"]').trigger('click');
+                }
+            } else {
+                $('#@(prefix)-box button[data-chart-role="toggle-chart"]').attr('disabled', 'disabled');
+            }
+        });
+
+        var csConfig = {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [
+                    {
+                        label: "@T("Admin.Reports.Customers.CustomerStatistics")",
+                        fillColor: "rgba(60,141,188,0.9)",
+                        strokeColor: "rgba(60,141,188,0.8)",
+                        pointColor: "#00a65a",
+                        pointStrokeColor: "rgba(0,166,90,1)",
+                        pointHighlightFill: "#fff",
+                        pointHighlightStroke: "rgba(0,166,90,1)",
+                        borderColor: 'rgba(0,166,90, 1)',
+                        backgroundColor: 'rgba(0,166,90,0.5)',
+                        pointBorderColor: 'rgba(0,166,90,0.7)',
+                        pointBackgroundColor: 'rgba(0,166,90,0.2)',
+                        pointBorderWidth: 1,
+                        data: []
+                    }
+                ]
+            },
+            options: {
+                legend: {
+                    display: false
+                },
+                scales: {
+                    xAxes: [{
+                        display: true,
+                        ticks: {
+                            userCallback: function (dataLabel, index) {
+                                if (window.customerStatistics && window.customerStatistics.config.data.labels.length > 12) {
+                                    return index % 5 === 0 ? dataLabel : '';
+                                }
+                                return dataLabel;
+                            }
+                        }
+                    }],
+                    yAxes: [{
+                        display: true,
+                        ticks: {
+                            userCallback: function (dataLabel, index) {
+                                return (dataLabel ^ 0) === dataLabel ? dataLabel : '';
+                            },
+                            min: 0
+                        }
+                    }]
+                },
+                showScale: true,
+                scaleShowGridLines: false,
+                scaleGridLineColor: "rgba(0,0,0,.05)",
+                scaleGridLineWidth: 1,
+                scaleShowHorizontalLines: true,
+                scaleShowVerticalLines: true,
+                bezierCurve: true,
+                pointDot: false,
+                pointDotRadius: 4,
+                pointDotStrokeWidth: 1,
+                pointHitDetectionRadius: 20,
+                datasetStroke: true,
+                datasetFill: true,
+                maintainAspectRatio: false,
+                responsive: true
+            }
+        };
+
+        function changeCsPeriod(period) {
+            var csLabels = [];
+            var csData = [];
+
+            $.ajax({
+                cache: false,
+                type: "GET",
+                url: "@Url.Action("LoadCustomerStatistics", "Customer")",
+                data: {
+                    period: period
+                },
+                success: function (data, textStatus, jqXHR) {
+                    for (var i = 0; i < data.length; i++) {
+                        csLabels.push(data[i].date);
+                        csData.push(data[i].value);
+                    }
+
+                    if (!window.customerStatistics) {
+                        csConfig.data.labels = csLabels;
+                        csConfig.data.datasets[0].data = csData;
+                        csConfig.data.scales =
+                        window.customerStatistics = new Chart(document.getElementById("@prefix-chart").getContext("2d"), csConfig);
+                    } else {
+                        window.customerStatistics.config.data.labels = csLabels;
+                        window.customerStatistics.config.data.datasets[0].data = csData;
+                        window.customerStatistics.update();
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    $("#loadCustomerStatisticsAlert").click();
+                }
+            });
+        }
+
+        $('#@(prefix)-box button[data-chart-role="toggle-chart"]').on('click', function () {
+            var period = $(this).attr('data-chart-period');
+            csCurrentPeriod = period;
+            changeCsPeriod(period);
+            $('#@(prefix)-box button[data-chart-role="toggle-chart"]').removeClass('bg-light-blue');
+            $(this).addClass('bg-light-blue');
+        });
+
+        @if (!hidePanel)
+        {
+            <text>
+                $('#@(prefix)-box button[data-chart-role="toggle-chart"][data-chart-period="week"]').trigger('click');
+            </text>
+        }
+    });
+</script>

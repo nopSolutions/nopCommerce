@@ -1,0 +1,143 @@
+﻿<Language Name="Ελληνικά" IsDefault="false" IsRightToLeft="false">
+  <LocaleResource Name="AdminEmail">
+    <Value>Το e-mail του διαχειριστή</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminEmailRequired">
+    <Value>Πληκτρολογήστε το e-mail του διαχειριστή</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPassword">
+    <Value>Κωδικός πρόσβασης του διαχειριστή</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPasswordRequired">
+    <Value>Εισάγετε τον κωδικό πρόσβασης του διαχειριστή</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureDirectoryPermissions">
+    <Value>Ο λογαριασμός «{0}» δεν έχει δικαιώματα τροποποίησης στον φάκελο «{1}»". Παρακαλούμε να ρυθμίσετε αυτά τα δικαιώματα.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureFilePermissions">
+    <Value>Ο λογαριασμός «{0}» δεν έχει δικαιώματα τροποποίησης στο αρχείο «{1}». Παρακαλούμε να ρυθμίσετε αυτά τα δικαιώματα.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPassword">
+    <Value>Επιβεβαίωση κωδικού πρόσβασης</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPasswordRequired">
+    <Value>Εισάγετε επιβεβαίωση κωδικού πρόσβασης</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionString">
+    <Value>Συμβολοσειρά σύνδεσης</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringRequired">
+    <Value>Η συμβολοσειρά σύνδεσης SQL απαιτείται</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringValues">
+    <Value>Εισάγετε τα στοιχεία SQL σύνδεσης</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringWrongFormat">
+    <Value>Λάθος μορφή συμβολοσειράς SQL σύνδεσης</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateDatabaseIfDoesNotExist">
+    <Value>Δημιουργία βάσης δεδομένων, αν δεν υπάρχει</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateSampleData">
+    <Value>Δημιουργία δείγματος δεδομένων</Value>
+  </LocaleResource>
+  <LocaleResource Name="CustomCollation">
+    <Value>Specify custom SQL Server collation</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseCreationError">
+    <Value>Παρουσιάστηκε σφάλμα κατά τη δημιουργία βάσης δεδομένων: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Database">
+    <Value>Βάσης δεδομένων</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseInformation">
+    <Value>Πληροφορίες βάσης δεδομένων</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseName">
+    <Value>Όνομα βάσης δεδομένων</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseNameRequired">
+    <Value>Το όνομα βάσης δεδομένων απαιτείται</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseNotExists">
+    <Value>Η βάση δεδομένων δεν υπάρχει ή δεν έχετε αρκετά δικαιώματα για να συνδεθείτε</Value>
+  </LocaleResource>
+  <LocaleResource Name="DataProviderRequired">
+    <Value>Επιλέξτε τα πάροχο δεδομένων</Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation1">
+    <Value>Αν χρειάζεστε πληροφορίες για το πώς να χρησιμοποιήσετε τη nopCommerce, επισκεφθείτε</Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation2">
+    <Value>το τμήμα τεκμηρίωσης στο nopCommerce.com</Value>
+  </LocaleResource>
+  <LocaleResource Name="Example">
+    <Value>Παράδειγμα</Value>
+  </LocaleResource>
+  <LocaleResource Name="Install">
+    <Value>Εγκατάσταση</Value>
+  </LocaleResource>
+  <LocaleResource Name="Installing">
+    <Value>Εγκατάσταση nopCommerce ...</Value>
+  </LocaleResource>
+  <LocaleResource Name="PasswordsDoNotMatch">
+    <Value>Οι κωδικοί πρόσβασης δεν ταιριάζουν</Value>
+  </LocaleResource>
+  <LocaleResource Name="RawConnectionString">
+    <Value>Εισάγετε συμβολοσειρά σύνδεσης (για προχωρημένους)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Recommended">
+    <Value>[Προτείνεται]</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallation">
+    <Value>Επανεκκίνηση εγκατάστασης</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallationTooltip">
+    <Value>Κάντε κλικ για επανεκκίνηση της διαδικασίας εγκατάστασης (διαγράφονται όλες οι προσωρινά αποθηκευμένες παράμετροι)</Value>
+  </LocaleResource>
+  <LocaleResource Name="SetupFailed">
+    <Value>Το πρόγραμμα εγκατάστασης απέτυχε: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlAuthentication">
+    <Value>Χρησιμοποιήστε SQL λογαριασμό</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlCompact">
+    <Value>Χρησιμοποιήστε την ενσωματωμένη αποθήκευση δεδομένων (SQL Server Compact Edition)</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerName">
+    <Value>Όνομα του SQL διακομιστή</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerNameRequired">
+    <Value>Το όνομα του SQL διακομιστή απαιτείται</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerPassword">
+    <Value>SQL κωδικός</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerPasswordRequired">
+    <Value>Ο SQL κωδικός απαιτείται</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerUsername">
+    <Value>SQL όνομα χρήστη</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerUsernameRequired">
+    <Value>Το SQL όνομα χρήστη απαιτείται</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlStandard">
+    <Value>Χρήση του SQL Server (ή SQL Express) ως βάση δεδομένων</Value>
+  </LocaleResource>
+  <LocaleResource Name="StoreInformation">
+    <Value>Πληροφορίες καταστηματός</Value>
+  </LocaleResource>
+  <LocaleResource Name="Title">
+    <Value>nopCommerce εγκατάσταση</Value>
+  </LocaleResource>
+  <LocaleResource Name="Tooltip1">
+    <Value>Η nopCommerce είναι η κορυφαία ASP.NET λύση για online κατάστημα ηλεκτρονικού εμπορίου. Αυτός ο οδηγός θα σας καθοδηγήσει στη διαδικασία εγκατάστασης της nopCommerce</Value>
+  </LocaleResource>
+  <LocaleResource Name="Tooltip2">
+    <Value>Για την ολοκλήρωση αυτού του οδηγού θα πρέπει να γνωρίζουμε κάποιες πληροφορίες σχετικά με server της βάσης δεδομένων σας ("συμβολοσειρά σύνδεσης"). Παρακαλούμε επικοινωνήστε με τον ISP σας, εάν είναι απαραίτητο. Εάν θέλετε να εγκαταστήσετε σε έναν τοπικό υπολογιστή ή διακομιστή μπορεί να χρειαστείτε πληροφορίες από διαχειριστή του συστήματός σας.</Value>
+  </LocaleResource>
+  <LocaleResource Name="WindowsAuthentication">
+    <Value>Χρησιμοποιήστε το ενσωματωμένο έλεγχο ταυτότητας των Windows</Value>
+  </LocaleResource>
+</Language>

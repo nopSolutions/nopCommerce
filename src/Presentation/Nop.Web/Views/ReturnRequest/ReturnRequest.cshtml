@@ -1,0 +1,191 @@
+﻿@model SubmitReturnRequestModel
+@{
+    Layout = "_ColumnsOne";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.ReturnItems").Text);
+    //page class
+    Html.AppendPageCssClassParts("html-return-request-page");
+}
+<div class="page return-request-page">
+    <div class="page-title">
+        <h1>@Html.Raw(string.Format(T("ReturnRequests.Title").Text, Url.RouteUrl("OrderDetails", new { orderId = Model.OrderId }), Model.CustomOrderNumber))</h1>
+    </div>
+    <div class="page-body">
+        @if (!string.IsNullOrEmpty(Model.Result))
+        {
+            <div class="result">
+                @Model.Result
+            </div>
+        }
+        else
+        {
+            <form asp-route="ReturnRequest" method="post">
+                <div class="section">
+                    <div class="title">
+                        <strong>@T("ReturnRequests.SelectProduct(s)")</strong>
+                    </div>
+                    <div class="table-wrapper">
+                        <table class="data-table">
+                            <colgroup>
+                                <col />
+                                <col width="1" />
+                                <col width="1" />
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th class="product">
+                                        @T("ReturnRequests.Products.Name")
+                                    </th>
+                                    <th class="unit-price">
+                                        @T("ReturnRequests.Products.Price")
+                                    </th>
+                                    <th class="quantity">
+                                        @T("ReturnRequests.Products.Quantity")
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.Items)
+                                {
+                                    <tr>
+                                        <td class="product">
+                                            <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })">@item.ProductName</a>
+                                            @if (!string.IsNullOrEmpty(item.AttributeInfo))
+                                            {
+                                                <div class="attributes">
+                                                    @Html.Raw(item.AttributeInfo)
+                                                </div>
+                                            }
+                                        </td>
+                                        <td class="unit-price">
+                                            @item.UnitPrice
+                                        </td>
+                                        <td class="quantity">
+                                            <select name="quantity@(item.Id)">
+                                                @for (var i = 0; i <= item.Quantity; i++)
+                                                {
+                                                    <option value="@(i)">@(i)</option>
+                                                }
+                                            </select>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="fieldset">
+                    <div class="title">
+                        <strong>@T("ReturnRequests.WhyReturning")</strong>
+                    </div>
+                    <div class="form-fields">
+                        <div class="inputs">
+                            @{
+                                var reasonsSelectList = Model.AvailableReturnReasons.Select(x => new SelectListItem
+                                {
+                                    Text = x.Name,
+                                    Value = x.Id.ToString()
+                                }).ToList();
+                            }
+                            <label asp-for="ReturnRequestReasonId" asp-postfix=":"></label>
+                            <select asp-for="ReturnRequestReasonId" asp-items="@reasonsSelectList" class="return-reasons"></select>
+                        </div>
+                        <div class="inputs">
+                            @{
+                                var actionsSelectList = Model.AvailableReturnActions.Select(x => new SelectListItem
+                                {
+                                    Text = x.Name,
+                                    Value = x.Id.ToString()
+                                }).ToList();
+                            }
+                            <label asp-for="ReturnRequestActionId" asp-postfix=":"></label>
+                            <select asp-for="ReturnRequestActionId" asp-items="@actionsSelectList" class="return-actions"></select>
+                        </div>
+                        @if (Model.AllowFiles)
+                        {
+                            //register CSS and JS
+                            Html.AddCssFileParts("~/lib/fineuploader/fine-uploader.min.css");
+                            Html.AddScriptParts(ResourceLocation.Footer, "~/lib/fineuploader/jquery.fine-uploader.min.js");
+                            var allowedFileExtensionsList = new List<string>();
+                            //allowedFileExtensionsList.Add("jpg");
+                            //allowedFileExtensionsList.Add("jpeg");
+                            //allowedFileExtensionsList.Add("jpeg");
+                            //ex. ['jpg', 'jpeg', 'jpeg', 'gif'] or []
+                            var allowedFileExtensions = string.Join(", ", allowedFileExtensionsList.Select(x => "'" + x.Trim() + "'").ToList());
+                            var controlId = Html.IdFor(model => model.UploadedFileGuid);
+                            <div class="inputs return-request-file">
+                                <label asp-for="UploadedFileGuid" asp-postfix=":"></label>
+                                <input id="@(controlId)" name="@(controlId)" type="hidden"/>
+
+                                @*fine uploader container*@
+                                <div id="@(controlId)uploader" class="uploadedfileinput"></div>
+                                @*fine uploader template (keep it synchronized to \Content\fineuploader\templates\default.html)*@
+                                <script type="text/template" asp-location="Footer" id="@(controlId)-qq-template">
+                                    <div class="qq-uploader-selector qq-uploader">
+                                        <div class="qq-upload-drop-area-selector qq-upload-drop-area" qq-hide-dropzone>
+                                            <span>@T("Common.FileUploader.DropFiles")</span>
+                                        </div>
+                                        <div class="qq-upload-button-selector qq-upload-button">
+                                            <div>@T("Common.FileUploader.Upload")</div>
+                                        </div>
+                                        <span class="qq-drop-processing-selector qq-drop-processing">
+                                            <span>@T("Common.FileUploader.Processing")</span>
+                                            <span class="qq-drop-processing-spinner-selector qq-drop-processing-spinner"></span>
+                                        </span>
+                                        <ul class="qq-upload-list-selector qq-upload-list">
+                                            <li>
+                                                <div class="qq-progress-bar-container-selector">
+                                                    <div class="qq-progress-bar-selector qq-progress-bar"></div>
+                                                </div>
+                                                <span class="qq-upload-spinner-selector qq-upload-spinner"></span>
+                                                <span class="qq-edit-filename-icon-selector qq-edit-filename-icon"></span>
+                                                <span class="qq-upload-file-selector qq-upload-file"></span>
+                                                <input class="qq-edit-filename-selector qq-edit-filename" tabindex="0" type="text">
+                                                <span class="qq-upload-size-selector qq-upload-size"></span>
+                                                <a class="qq-upload-cancel-selector qq-upload-cancel" href="#">@T("Common.FileUploader.Cancel")</a>
+                                                <a class="qq-upload-retry-selector qq-upload-retry" href="#">@T("Common.FileUploader.Retry")</a>
+                                                <a class="qq-upload-delete-selector qq-upload-delete" href="#">@T("Common.FileUploader.Delete")</a>
+                                                <span class="qq-upload-status-text-selector qq-upload-status-text"></span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </script>
+                                <script asp-location="Footer">
+                                    $(document).ready(function() {
+                                        $("#@(controlId)uploader").fineUploader({
+                                            request: {
+                                                endpoint: '@(Url.RouteUrl("UploadFileReturnRequest"))'
+                                            },
+                                            template: "@(controlId)-qq-template",
+                                            multiple: false,
+                                            validation: {
+                                                allowedExtensions: [@Html.Raw(allowedFileExtensions)]
+                                            }
+                                        }).on("complete",
+                                            function(event, id, name, responseJSON, xhr) {
+                                                $("#@(controlId)").val(responseJSON.downloadGuid);
+
+                                                if (responseJSON.message) {
+                                                    alert(responseJSON.message);
+                                                }
+                                            });
+                                    });
+                                </script>
+                            </div>
+                        }
+                        <div class="inputs">
+                            <label asp-for="Comments" asp-postfix=":"></label>
+                            <textarea asp-for="Comments" class="comment"></textarea>
+                            <span asp-validation-for="Comments"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="buttons">
+                    <input type="submit" name="submit-return-request" class="button-1 submit-return-request-button" value="@T("ReturnRequests.Submit")" />
+                </div>
+            </form>
+        }
+    </div>
+</div>

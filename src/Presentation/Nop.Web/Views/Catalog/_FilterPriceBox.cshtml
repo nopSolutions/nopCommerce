@@ -1,0 +1,56 @@
+﻿@model CatalogPagingFilteringModel.PriceRangeFilterModel
+@{
+    var selectedItem = Model.Items.FirstOrDefault(x => x.Selected);
+}
+
+@functions{
+
+    public string FormatPriceRangeText(CatalogPagingFilteringModel.PriceRangeFilterItem filterItem)
+    {
+        var rangeText = "";
+        if (string.IsNullOrWhiteSpace(filterItem.From))
+        {
+            rangeText = string.Format(T("Filtering.PriceRangeFilter.Under").Text, $"<span class=\"PriceRange\">{filterItem.To}</span>");
+        }
+        else if (string.IsNullOrWhiteSpace(filterItem.To))
+        {
+            rangeText = string.Format(T("Filtering.PriceRangeFilter.Over").Text, $"<span class=\"PriceRange\">{filterItem.From}</span>");
+        }
+        else
+        {
+            rangeText = $"<span class=\"PriceRange\">{filterItem.From}</span> - <span class=\"PriceRange\">{filterItem.To}</span>";
+        }
+        return rangeText;
+    }
+}
+@if (Model.Enabled)
+{
+    <div class="product-filter price-range-filter">
+        <div class="filter-title">
+            <strong>@T("Filtering.PriceRangeFilter")</strong>
+        </div>
+        <div class="filter-content">
+            @if (selectedItem == null)
+            {
+                <div class="available-items">
+                    <ul class="group price-range-group">
+                        @foreach (var item in Model.Items)
+                        {
+                            <li><a href="@item.FilterUrl">@Html.Raw(FormatPriceRangeText(item))</a></li>
+                        }
+                    </ul>
+                </div>
+            }
+            else
+            {
+                <div class="filtered-items">
+                    <span class="item">@Html.Raw(FormatPriceRangeText(selectedItem))</span>
+                </div>
+                <div class="remove-filter">
+                    <a href="@Model.RemoveFilterUrl">@T("Filtering.PriceRangeFilter.Remove")</a>
+                </div>
+            }
+        </div>
+
+    </div>
+}

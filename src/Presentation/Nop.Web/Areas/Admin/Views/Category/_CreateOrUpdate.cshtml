@@ -1,0 +1,43 @@
+﻿@model CategoryModel
+
+@{
+    const string hideInfoBlockAttributeName = "CategoryPage.HideInfoBlock";
+    var hideInfoBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideInfoBlockAttributeName);
+
+    const string hideDisplayBlockAttributeName = "CategoryPage.HideDisplayBlock";
+    var hideDisplayBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideDisplayBlockAttributeName, defaultValue: true);
+
+    const string hideMappingsBlockAttributeName = "CategoryPage.HideMappingsBlock";
+    var hideMappingsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideMappingsBlockAttributeName, defaultValue: true);
+
+    const string hideSeoBlockAttributeName = "CategoryPage.HideSEOBlock";
+    var hideSeoBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSeoBlockAttributeName, defaultValue: true);
+
+    const string hideProductsBlockAttributeName = "CategoryPage.HideProductsBlock";
+    var hideProductsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideProductsBlockAttributeName, defaultValue: true);
+}
+
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="row">
+            <div class="col-md-12 clearfix">
+                <div class="pull-left">
+                    @await Component.InvokeAsync("SettingMode", new { modeName = "category-advanced-mode" })
+                </div>
+            </div>
+        </div>
+
+        <nop-panels id="category-panels">
+            <nop-panel asp-name="category-info" asp-icon="fa fa-info" asp-title="@T("Admin.Catalog.Categories.Info")" asp-hide-block-attribute-name="@hideInfoBlockAttributeName" asp-hide="@hideInfoBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-panel>
+            <nop-panel asp-name="category-display" asp-icon="fa fa-television" asp-title="@T("Admin.Catalog.Categories.Display")" asp-hide-block-attribute-name="@hideDisplayBlockAttributeName" asp-hide="@hideDisplayBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.Display", Model)</nop-panel>
+            <nop-panel asp-name="category-mappings" asp-icon="fa fa-bookmark" asp-title="@T("Admin.Catalog.Categories.Mappings")" asp-hide-block-attribute-name="@hideMappingsBlockAttributeName" asp-hide="@hideMappingsBlock" asp-advanced="true">@await Html.PartialAsync("_CreateOrUpdate.Mappings", Model)</nop-panel>
+            <nop-panel asp-name="category-seo" asp-icon="fa fa-search-plus" asp-title="@T("Admin.Common.SEO")" asp-hide-block-attribute-name="@hideSeoBlockAttributeName" asp-hide="@hideSeoBlock" asp-advanced="true">@await Html.PartialAsync("_CreateOrUpdate.Seo", Model)</nop-panel>
+            <nop-panel asp-name="category-products" asp-icon="fa fa-th-list" asp-title="@T("Admin.Catalog.Categories.Products")" asp-hide-block-attribute-name="@hideProductsBlockAttributeName" asp-hide="@hideProductsBlock" asp-advanced="true">@await Html.PartialAsync("_CreateOrUpdate.Products", Model)</nop-panel>
+            
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CategoryDetailsBlock, additionalData = Model })
+        </nop-panels>
+    </div>
+</div>

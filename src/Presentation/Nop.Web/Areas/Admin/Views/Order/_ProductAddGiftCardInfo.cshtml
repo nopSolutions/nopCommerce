@@ -1,0 +1,96 @@
+﻿@model AddProductToOrderModel.GiftCardModel
+
+@if (Model.IsGiftCard)
+{
+    //Actually just a copy of \Presentation\Nop.Web\Views\Catalog\_GiftCardInfo.cshtml
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="form-group">
+                <div class="col-md-3">
+                    <div class="label-wrapper">
+                        <label class="control-label">@T("Admin.GiftCards.Fields.RecipientName")</label>
+                        <div class="ico-help" title="@T("Admin.GiftCards.Fields.RecipientName.Hint")">
+                            <i class="fa fa-question-circle"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="input-group input-group-required">
+                        <nop-editor asp-for="RecipientName" />
+                        <div class="input-group-btn">
+                            <nop-required />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @if (Model.GiftCardType == Nop.Core.Domain.Catalog.GiftCardType.Virtual)
+            {
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <div class="label-wrapper">
+                            <label class="control-label">@T("Admin.GiftCards.Fields.RecipientEmail")</label>
+                            <div class="ico-help" title="@T("Admin.GiftCards.Fields.RecipientEmail.Hint")">
+                                <i class="fa fa-question-circle"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="input-group input-group-required">
+                            <nop-editor asp-for="RecipientEmail" />
+                            <div class="input-group-btn">
+                                <nop-required />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+            <div class="form-group">
+                <div class="col-md-3">
+                    <div class="label-wrapper">
+                        <label class="control-label">@T("Admin.GiftCards.Fields.SenderName")</label>
+                        <div class="ico-help" title="@T("Admin.GiftCards.Fields.SenderName.Hint")">
+                            <i class="fa fa-question-circle"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="input-group input-group-required">
+                        <nop-editor asp-for="SenderName" />
+                        <div class="input-group-btn">
+                            <nop-required />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @if (Model.GiftCardType == Nop.Core.Domain.Catalog.GiftCardType.Virtual)
+            {
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <div class="label-wrapper">
+                            <label class="control-label">@T("Admin.GiftCards.Fields.SenderEmail")</label>
+                            <div class="ico-help" title="@T("Admin.GiftCards.Fields.SenderEmail.Hint")">
+                                <i class="fa fa-question-circle"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="input-group input-group-required">
+                            <nop-editor asp-for="SenderEmail" />
+                            <div class="input-group-btn">
+                                <nop-required />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-label asp-for="Message" />
+                </div>
+                <div class="col-md-6">
+                    <nop-textarea asp-for="Message" />
+                </div>
+            </div>
+        </div>
+    </div>
+}

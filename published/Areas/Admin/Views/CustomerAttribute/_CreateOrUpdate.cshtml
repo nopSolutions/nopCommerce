@@ -1,0 +1,23 @@
+﻿@model CustomerAttributeModel
+
+@{
+    const string hideInfoBlockAttributeName = "CustomerAttributePage.HideCommonBlock";
+    var hideInfoBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideInfoBlockAttributeName);
+
+    const string hideValuesBlockAttributeName = "CustomerAttributePage.HideValuesBlock";
+    var hideValuesBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideValuesBlockAttributeName);
+}
+
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+
+<div class="content">
+    <div class="form-horizontal">
+        <nop-panels id="customerattribute-panels">
+            <nop-panel asp-name="customerattribute-info" asp-icon="fa fa-info" asp-title="@T("Admin.Customers.CustomerAttributes.Info")" asp-hide-block-attribute-name="@hideInfoBlockAttributeName" asp-hide="@hideInfoBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-panel>
+            <nop-panel asp-name="customerattribute-values" asp-icon="fa fa-check-square-o" asp-title="@T("Admin.Customers.CustomerAttributes.Values")" asp-hide-block-attribute-name="@hideValuesBlockAttributeName" asp-hide="@hideValuesBlock" asp-advanced="true">@await Html.PartialAsync("_CreateOrUpdate.Values", Model)</nop-panel>
+            
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerAttributeDetailsBlock, additionalData = Model })
+        </nop-panels>
+    </div>
+</div>

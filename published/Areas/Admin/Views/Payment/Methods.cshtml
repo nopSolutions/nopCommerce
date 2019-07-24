@@ -1,0 +1,136 @@
+@model PaymentMethodsModel
+
+@{
+    //page title
+    ViewBag.Title = T("Admin.Configuration.Payment.Methods").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Payment methods");
+}
+
+<nop-antiforgery-token />
+
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        @T("Admin.Configuration.Payment.Methods")
+    </h1>
+</div>
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.PaymentMethodListTop, additionalData = Model })
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <p>
+                        @T("Admin.Configuration.Payment.Methods.DownloadMorePlugins")
+                    </p>
+
+                    @await Html.PartialAsync("Table", new DataTablesModel
+                    {
+                        Name = "paymentmethods-grid",
+                        UrlRead = new DataUrl("Methods", "Payment", null),
+                        UrlUpdate = new DataUrl("MethodUpdate", "Payment", null),
+                        Length = Model.PaymentsMethod.PageSize,
+                        LengthMenu = Model.PaymentsMethod.AvailablePageSizes,
+                        ColumnCollection = new List<ColumnProperty>
+                            {
+                                new ColumnProperty(nameof(PaymentMethodModel.FriendlyName))
+                                {
+                                    Title = T("Admin.Configuration.Payment.Methods.Fields.FriendlyName").Text,
+                                    Width = "250",
+                                    Editable = true,
+                                    EditType = EditType.String
+                                },
+                                new ColumnProperty(nameof(PaymentMethodModel.SystemName))
+                                {
+                                    Title = T("Admin.Configuration.Payment.Methods.Fields.SystemName").Text,
+                                    Width = "200"
+                                },
+                                new ColumnProperty(nameof(PaymentMethodModel.LogoUrl))
+                                {
+                                    Title = T("Admin.Configuration.Payment.Methods.Fields.Logo").Text,
+                                    Width = "100",
+                                    Render = new RenderPicture()
+                                },
+                                new ColumnProperty(nameof(PaymentMethodModel.SupportCapture))
+                                {
+                                    Title = T("Admin.Configuration.Payment.Methods.Fields.SupportCapture").Text,
+                                    Width = "100",
+                                    ClassName = NopColumnClassDefaults.CenterAll,
+                                    Render = new RenderBoolean()
+                                },
+                                new ColumnProperty(nameof(PaymentMethodModel.SupportRefund))
+                                {
+                                    Title = T("Admin.Configuration.Payment.Methods.Fields.SupportRefund").Text,
+                                    Width = "100",
+                                    ClassName = NopColumnClassDefaults.CenterAll,
+                                    Render = new RenderBoolean()
+                                },
+                                new ColumnProperty(nameof(PaymentMethodModel.SupportPartiallyRefund))
+                                {
+                                    Title = T("Admin.Configuration.Payment.Methods.Fields.SupportPartiallyRefund").Text,
+                                    Width = "100",
+                                    ClassName = NopColumnClassDefaults.CenterAll,
+                                    Render = new RenderBoolean()
+                                },
+                                new ColumnProperty(nameof(PaymentMethodModel.SupportVoid))
+                                {
+                                    Title = T("Admin.Configuration.Payment.Methods.Fields.SupportVoid").Text,
+                                    Width = "100",
+                                    ClassName = NopColumnClassDefaults.CenterAll,
+                                    Render = new RenderBoolean()
+                                },
+                                new ColumnProperty(nameof(PaymentMethodModel.RecurringPaymentType))
+                                {
+                                    Title = T("Admin.Configuration.Payment.Methods.Fields.RecurringPaymentType").Text,
+                                    Width = "200"
+                                },
+                                new ColumnProperty(nameof(PaymentMethodModel.DisplayOrder))
+                                {
+                                    Title = T("Admin.Configuration.Payment.Methods.Fields.DisplayOrder").Text,
+                                    Width = "100",
+                                    ClassName = NopColumnClassDefaults.CenterAll,
+                                    Editable = true,
+                                    EditType = EditType.Number
+                                },
+                                new ColumnProperty(nameof(PaymentMethodModel.IsActive))
+                                {
+                                    Title = T("Admin.Configuration.Payment.Methods.Fields.IsActive").Text,
+                                    Width = "100",
+                                    ClassName = NopColumnClassDefaults.CenterAll,
+                                    Render = new RenderBoolean(),
+                                    Editable = true,
+                                    EditType = EditType.Checkbox
+                                },
+                                new ColumnProperty(nameof(PaymentMethodModel.SystemName))
+                                {
+                                    Title = T("Admin.Configuration.Payment.Methods.Configure").Text,
+                                    Width = "150",
+                                    ClassName =  NopColumnClassDefaults.Button,
+                                    Render = new RenderCustom("renderColumnConfigure")
+                                },
+                                new ColumnProperty(nameof(PaymentMethodModel.SystemName))
+                                {
+                                    Title = T("Admin.Common.Edit").Text,
+                                    Width = "200",
+                                    ClassName =  NopColumnClassDefaults.Button,
+                                    Render = new RenderButtonsInlineEdit()
+                                }
+                            }
+                    })
+
+                    <script>
+                        function renderColumnConfigure(data, type, row, meta) {
+                            if (row.ConfigurationUrl && row.ConfigurationUrl.length > 0) {
+                                return '<a class="btn btn-default" href="' + row.ConfigurationUrl + '"><i class="fa fa-cog"></i>@T("Admin.Configuration.Payment.Methods.Configure")</a>';
+                            } else {
+                                return '';
+                            }
+                        }
+                    </script>
+                </div>
+            </div>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.PaymentMethodListBottom, additionalData = Model })
+        </div>
+    </div>
+</div>

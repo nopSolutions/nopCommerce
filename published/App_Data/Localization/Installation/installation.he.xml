@@ -1,0 +1,143 @@
+﻿<Language Name="עברית" IsDefault="false" IsRightToLeft="true">
+  <LocaleResource Name="AdminEmail">
+    <Value>אימיל מנהל החנות</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminEmailRequired">
+    <Value>הזן אימייל מנהל החנות</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPassword">
+    <Value>סיסמת  מנהל החנות</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPasswordRequired">
+    <Value>הזן סיסמת אימייל החנות</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureDirectoryPermissions">
+    <Value>למשתמש '{0}' אין הרשאות כתיבה על התיקיה '{1}'. נא להגדיר הרשאות אלה.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureFilePermissions">
+    <Value>למשתמש '{0}' אין הרשאות כתיבה על הקובץ '{1}'. נא להגדיר הרשאות אלה.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPassword">
+    <Value>נא לאשר את הסיסמה</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPasswordRequired">
+    <Value>אימות סיסמה</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionString">
+    <Value>מחרוזת חיבור</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringRequired">
+    <Value>הזן את מחרוזת החיבור למסד הנתונים</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringValues">
+    <Value>הזן את הפרמטרים של חיבור למסד הנתונים</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringWrongFormat">
+    <Value>פורמט לא חוקי של מחרוזת חיבור למסד נתונים</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateDatabaseIfDoesNotExist">
+    <Value>צור בסיס נתונים אם לא קיים</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateSampleData">
+    <Value>צור נתונים לדוגמה (מוצרים, קטגוריות, וכו')</Value>
+  </LocaleResource>
+  <LocaleResource Name="CustomCollation">
+    <Value>בחירת SQL Server collation</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseCreationError">
+    <Value>שגיאה בעת יצירת מסד נתונים: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Database">
+    <Value>מסד הנתונים</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseInformation">
+    <Value>מידע אודות מסד הנתונים</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseName">
+    <Value>שם מסד הנתונים</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseNameRequired">
+    <Value>נא להזין שם מסד הנתונים</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseNotExists">
+    <Value>מסד הנתונים אינו קיים או שאין לך הרשאת התחברות אליו</Value>
+  </LocaleResource>
+  <LocaleResource Name="DataProviderRequired">
+    <Value>בחר ספק נתונים</Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation1">
+    <Value>לקבלת מידע אודות שימוש והתאמה אישית של מערכת נופקומרס, כנסו ל</Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation2">
+    <Value>מדור "מסמכים" באתר nopCommerce.com או באתר נופקומרס בעברית nopCommerce.co.il </Value>
+  </LocaleResource>
+  <LocaleResource Name="Example">
+    <Value>דוגמה</Value>
+  </LocaleResource>
+  <LocaleResource Name="Install">
+    <Value>להתקין</Value>
+  </LocaleResource>
+  <LocaleResource Name="Installing">
+    <Value>מתקין את נופקומרס...</Value>
+  </LocaleResource>
+  <LocaleResource Name="PasswordsDoNotMatch">
+    <Value>הסיסמאות לא תואמות</Value>
+  </LocaleResource>
+  <LocaleResource Name="RawConnectionString">
+    <Value>הזינו את מחרוזת ההתחברות (Row)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Recommended">
+    <Value>[מומלץ]</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallation">
+    <Value>להפעיל מחדש את תהליך ההתקנה</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallationTooltip">
+    <Value>לחצו כאן כדי להתחיל את תהליך ההתקנה מחדש (מנקה את כל הערכים בזיכרון המטמון)</Value>
+  </LocaleResource>
+  <LocaleResource Name="SetupFailed">
+    <Value>שגיאת התקנה: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlAuthentication">
+    <Value>אימות מול שרת  SQL </Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlCompact">
+    <Value>SQL Server Compact</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerName">
+    <Value>שם או כתובת הרשת של שרת הSQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerNameRequired">
+    <Value>הזינו שם או כתובת הרשת של שרת הSQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerPassword">
+    <Value>סיסמה עבור חשבון שרת הSQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerPasswordRequired">
+    <Value>הזינו סיסמה עבור חשבון שרת הSQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerUsername">
+    <Value>שם משתמש בחשבון שרת הSQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerUsernameRequired">
+    <Value>הזינו שם משתמש בחשבון שרת הSQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlStandard">
+    <Value>SQL Server או SQL Express</Value>
+  </LocaleResource>
+  <LocaleResource Name="StoreInformation">
+    <Value>פרטי החנות</Value>
+  </LocaleResource>
+  <LocaleResource Name="Title">
+    <Value>התקנת nopCommerce</Value>
+  </LocaleResource>
+  <LocaleResource Name="Tooltip1">
+    <Value> NopCommerce  הנו הפתרון המוביל ב  ASP.NETעבור חנות מקוונת. בדף זה ניתן להתקין את מערכת ה NopCommerce</Value>
+  </LocaleResource>
+  <LocaleResource Name="Tooltip2">
+    <Value>על מנת להתקין בהצלחה את מערכת ה nopCommerce , עלייך לדעת את מחרוזת החיבור למסד הנתונים. אם אין לך את המידע הזה, באפשרותך  לקבל את המידע מספק האירוח שלך. אם הנך מתקין את nopCommerce על מחשב האישי שלך, באפשרותך לקבל את זה ממנהל המערכת שלך.</Value>
+  </LocaleResource>
+  <LocaleResource Name="WindowsAuthentication">
+    <Value>אימות  Windows</Value>
+  </LocaleResource>
+</Language>

@@ -1,0 +1,56 @@
+﻿@model WishlistEmailAFriendModel
+@{
+    Layout = "_ColumnsOne";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.WishlistEmailAFriend").Text);
+    //page class
+    Html.AppendPageCssClassParts("html-email-a-friend-page");
+}
+<div class="page email-a-friend-page">
+    <div class="page-title">
+        <h1>@T("Wishlist.EmailAFriend.Title")</h1>
+    </div>
+    <div class="page-body">
+        @if (Model.SuccessfullySent)
+        {
+            <div class="result">
+                @Model.Result
+            </div>
+        }
+        else
+        {
+            <form asp-route="EmailWishlist" method="post">
+                <div asp-validation-summary="ModelOnly" class="message-error"></div>
+                <div class="fieldset">
+                    <div class="form-fields">
+                        <div class="inputs">
+                            <label asp-for="FriendEmail" asp-postfix=":"></label>
+                            <input asp-for="FriendEmail" class="friend-email" placeholder="@T("Wishlist.EmailAFriend.FriendEmail.Hint")"/>
+                            <span asp-validation-for="FriendEmail"></span>
+                        </div>
+                        <div class="inputs">
+                            <label asp-for="YourEmailAddress" asp-postfix=":"></label>
+                            <input asp-for="YourEmailAddress" class="your-email" placeholder="@T("Wishlist.EmailAFriend.YourEmailAddress.Hint")"/>
+                            <span asp-validation-for="YourEmailAddress"></span>
+                        </div>
+                        <div class="inputs">
+                            <label asp-for="PersonalMessage" asp-postfix=":"></label>
+                            <input asp-for="PersonalMessage" class="personal-message" placeholder="@T("Wishlist.EmailAFriend.PersonalMessage.Hint")"/>
+                            <span asp-validation-for="PersonalMessage"></span>
+                        </div>
+                        @if (Model.DisplayCaptcha)
+                        {
+                            <div class="captcha-box">
+                                <nop-captcha />
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div class="buttons">
+                    <input type="submit" name="send-email" class="button-1 send-email-a-friend-button" value="@T("Wishlist.EmailAFriend.Button")" />
+                </div>
+            </form>
+        }
+    </div>
+</div>

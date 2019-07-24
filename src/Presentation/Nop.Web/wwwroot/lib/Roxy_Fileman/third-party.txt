@@ -1,0 +1,3 @@
+JQuery UI - http://jqueryui.com
+JQuery - http://JQuery.com
+jquery-dateFormat - https://github.com/phstc/jquery-dateFormat

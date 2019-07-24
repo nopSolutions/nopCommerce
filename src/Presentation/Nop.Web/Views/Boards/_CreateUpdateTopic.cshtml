@@ -1,0 +1,64 @@
+﻿@model EditForumTopicModel
+@using Nop.Core.Domain.Forums;
+@{
+    //page class
+    Html.AppendPageCssClassParts("html-forum-edit-page");
+}
+
+@await Component.InvokeAsync("ForumBreadcrumb", new { forumId = Model.ForumId, forumTopicId = Model.Id })
+<div class="page forum-edit-page">
+    <div class="page-title">
+        @if (Model.IsEdit)
+        {
+            <h1>@T("Forum.EditTopic")</h1>
+        }
+        else
+        {
+            <h1>@T("Forum.NewTopic")</h1>
+        }
+    </div>
+    <div class="page-body">
+        <div asp-validation-summary="ModelOnly" class="message-error"></div>
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="ForumId" />
+        <div class="fieldset">
+            <div class="form-fields">
+                <div class="inputs">
+                    <label>@T("Forum.ForumName"):</label>
+                    <strong>@Model.ForumName</strong>
+                </div>
+                <div class="inputs">
+                    <label>@T("Forum.TopicTitle"):</label>
+                    <input asp-for="Subject" class="forum-topic-title-text" />
+                    <span asp-validation-for="Subject"></span>
+                </div>
+                <div class="inputs">
+                    @if (Model.ForumEditor == EditorType.BBCodeEditor)
+                    {
+                        <nop-bb-code-editor asp-for="Text" />
+                    }
+                    <textarea asp-for="Text" class="forum-post-text"></textarea>
+                    <span asp-validation-for="Text"></span>
+                </div>
+                @if (Model.IsCustomerAllowedToSetTopicPriority)
+                {
+                    <div class="inputs">
+                        <label>@T("Forum.Priority"):</label>
+                        <select asp-for="TopicTypeId" asp-items="@(new SelectList(Model.TopicPriorities, "Value", "Text", Model.TopicTypeId))"></select>
+                    </div>
+                }
+                @if (Model.IsCustomerAllowedToSubscribe)
+                {
+                    <div class="inputs reversed">
+                        <input asp-for="Subscribed" />
+                        <label asp-for="Subscribed">@T("Forum.NotifyWhenSomeonePostsInThisTopic")</label>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="buttons">
+            <input type="submit" value="@T("Forum.Submit")" class="button-1 submit-topic-button" />
+            <input type="button" class="button-2 cancel-topic-button" value="@T("Forum.Cancel")" onclick="setLocation('@Url.RouteUrl("ForumSlug", new { id = Model.ForumId, slug = Model.ForumSeName })')" />
+        </div>
+    </div>
+</div>

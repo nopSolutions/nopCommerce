@@ -1,0 +1,69 @@
+﻿@model Nop.Plugin.Shipping.FixedByWeightByTotal.Models.ConfigurationModel
+@{
+    Layout = "_ConfigurePlugin";
+}
+
+<div class="row">
+    <div class="col-md-3">
+        <div class="onoffswitch">
+            <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="advanced-settings-mode" checked="@Model.ShippingByWeightByTotalEnabled">
+            <label class="onoffswitch-label" for="advanced-settings-mode">
+                <span class="onoffswitch-inner"
+                          data-locale-basic="@T("Plugins.Shipping.FixedByWeightByTotal.Fixed")"
+                          data-locale-advanced="@T("Plugins.Shipping.FixedByWeightByTotal.ShippingByWeight")"></span>
+                <span class="onoffswitch-switch"></span>
+            </label>
+        </div>
+    </div>
+    <div class="col-md-9">
+        <div class="pull-right">
+            <a asp-controller="Shipping" asp-action="Methods" class="btn bg-blue">
+                <i class="fa fa-truck"></i>
+                @T("Admin.Configuration.Shipping.Methods.Manage")
+            </a>
+            <a asp-controller="Shipping" asp-action="Restrictions" class="btn bg-blue">
+                <i class="fa fa-globe"></i>
+                @T("Admin.Configuration.Shipping.Restrictions")
+            </a>
+        </div>
+    </div>
+</div>
+
+<script>
+    function checkAdvancedSettingsMode(advanced) {
+        if (advanced) {
+            $("body").addClass("advanced-settings-mode");
+            $("body").removeClass("basic-settings-mode");
+        } else {
+            $("body").removeClass("advanced-settings-mode");
+            $("body").addClass("basic-settings-mode");
+        }
+    }
+
+    checkAdvancedSettingsMode($("#advanced-settings-mode").is(':checked'));
+    $(document)
+        .ready(function() {
+            $("#advanced-settings-mode")
+                .click(function() {
+                    checkAdvancedSettingsMode($(this).is(':checked'));
+                    $.ajax({
+                        cache: false,
+                        url: "@Url.Action("SaveMode", "FixedByWeightByTotal")",
+                        type: "POST",
+                        data: {
+                            value: $(this).is(':checked')
+                        },
+                        dataType: "json",
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            $("#saveModeAlert").click();
+                        }
+                    });
+                    ensureDataTablesRendered();
+                });
+        });
+</script>
+
+<nop-alert asp-alert-id="saveModeAlert" asp-alert-message="@T("Admin.Common.Alert.Save.Error")" />
+
+@await Html.PartialAsync("~/Plugins/Shipping.FixedByWeightByTotal/Views/_FixedRate.cshtml")
+@await Html.PartialAsync("~/Plugins/Shipping.FixedByWeightByTotal/Views/_ByWeightByTotal.cshtml", Model)

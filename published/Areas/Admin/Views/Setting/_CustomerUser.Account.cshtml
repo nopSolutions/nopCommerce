@@ -1,0 +1,149 @@
+﻿@using Nop.Core.Domain.Customers
+@using Nop.Services
+@model CustomerUserSettingsModel
+
+<div class="panel-body">
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-label asp-for="CustomerSettings.UsernamesEnabled" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="CustomerSettings.UsernamesEnabled" />
+            <span asp-validation-for="CustomerSettings.UsernamesEnabled"></span>
+        </div>
+    </div>
+    <nop-nested-setting asp-for="CustomerSettings.UsernamesEnabled">
+        <div class="form-group advanced-setting" id="pnlAllowUsersToChangeUsernames">
+            <div class="col-md-3">
+                <nop-label asp-for="CustomerSettings.AllowUsersToChangeUsernames" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="CustomerSettings.AllowUsersToChangeUsernames" />
+                <span asp-validation-for="CustomerSettings.AllowUsersToChangeUsernames"></span>
+            </div>
+        </div>
+        <div class="form-group advanced-setting" id="pnlCheckUsernameAvailability">
+            <div class="col-md-3">
+                <nop-label asp-for="CustomerSettings.CheckUsernameAvailabilityEnabled" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="CustomerSettings.CheckUsernameAvailabilityEnabled" />
+                <span asp-validation-for="CustomerSettings.CheckUsernameAvailabilityEnabled"></span>
+            </div>
+        </div>
+        <div id="pnlUsernameValidationEnabled">
+            <div class="form-group advanced-setting">
+                <div class="col-md-3">
+                    <nop-label asp-for="CustomerSettings.UsernameValidationEnabled" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="CustomerSettings.UsernameValidationEnabled" />
+                    <span asp-validation-for="CustomerSettings.UsernameValidationEnabled"></span>
+                </div>
+            </div>
+            <nop-nested-setting asp-for="CustomerSettings.UsernameValidationEnabled">
+                <div class="form-group advanced-setting" id="pnlUsernameValidationRule">
+                    <div class="col-md-3">
+                        <nop-label asp-for="CustomerSettings.UsernameValidationRule" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="CustomerSettings.UsernameValidationRule" />
+                        <span asp-validation-for="CustomerSettings.UsernameValidationRule"></span>
+                    </div>
+                </div>
+                <div class="form-group advanced-setting" id="pnlUsernameValidationUseRegex">
+                    <div class="col-md-3">
+                        <nop-label asp-for="CustomerSettings.UsernameValidationUseRegex" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="CustomerSettings.UsernameValidationUseRegex" />
+                        <span asp-validation-for="CustomerSettings.UsernameValidationUseRegex"></span>
+                    </div>
+                </div>
+            </nop-nested-setting>
+        </div>
+    </nop-nested-setting>
+    <div class="form-group advanced-setting">
+        <div class="col-md-3">
+            <nop-label asp-for="CustomerSettings.CustomerNameFormat" />
+        </div>
+        <div class="col-md-9">
+            <nop-select asp-for="CustomerSettings.CustomerNameFormat" asp-items="@(((CustomerNameFormat)Model.CustomerSettings.CustomerNameFormat).ToSelectList())" />
+            <span asp-validation-for="CustomerSettings.CustomerNameFormat"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-label asp-for="CustomerSettings.AllowCustomersToUploadAvatars" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="CustomerSettings.AllowCustomersToUploadAvatars" />
+            <span asp-validation-for="CustomerSettings.AllowCustomersToUploadAvatars"></span>
+        </div>
+    </div>
+    <nop-nested-setting asp-for="CustomerSettings.AllowCustomersToUploadAvatars">
+        <div class="form-group" id="pnlDefaultAvatarEnabled">
+            <div class="col-md-3">
+                <nop-label asp-for="CustomerSettings.DefaultAvatarEnabled" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="CustomerSettings.DefaultAvatarEnabled" />
+                <span asp-validation-for="CustomerSettings.DefaultAvatarEnabled"></span>
+            </div>
+        </div>
+    </nop-nested-setting>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-label asp-for="CustomerSettings.HideDownloadableProductsTab" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="CustomerSettings.HideDownloadableProductsTab" />
+            <span asp-validation-for="CustomerSettings.HideDownloadableProductsTab"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-label asp-for="CustomerSettings.HideBackInStockSubscriptionsTab" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="CustomerSettings.HideBackInStockSubscriptionsTab" />
+            <span asp-validation-for="CustomerSettings.HideBackInStockSubscriptionsTab"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-label asp-for="CustomerSettings.HideNewsletterBlock" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="CustomerSettings.HideNewsletterBlock" />
+            <span asp-validation-for="CustomerSettings.HideNewsletterBlock"></span>
+        </div>
+    </div>
+    <div class="form-group" id="pnlNewsletterBlockAllowToUnsubscribe">
+        <div class="col-md-3">
+            <nop-label asp-for="CustomerSettings.NewsletterBlockAllowToUnsubscribe" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="CustomerSettings.NewsletterBlockAllowToUnsubscribe" />
+            <span asp-validation-for="CustomerSettings.NewsletterBlockAllowToUnsubscribe"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-label asp-for="CustomerSettings.StoreLastVisitedPage" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="CustomerSettings.StoreLastVisitedPage" />
+            <span asp-validation-for="CustomerSettings.StoreLastVisitedPage"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-label asp-for="CustomerSettings.StoreIpAddresses" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="CustomerSettings.StoreIpAddresses" />
+            <span asp-validation-for="CustomerSettings.StoreIpAddresses"></span>
+        </div>
+    </div>
+</div>

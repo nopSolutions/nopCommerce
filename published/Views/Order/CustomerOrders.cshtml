@@ -1,0 +1,164 @@
+﻿@model CustomerOrderListModel
+@{
+    Layout = "_ColumnsTwo";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.Account").Text);
+    //page class
+    Html.AppendPageCssClassParts("html-account-page");
+    Html.AppendPageCssClassParts("html-order-list-page");
+}
+@section left
+{
+    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.Orders })
+}
+<div class="page account-page order-list-page">
+    <div class="page-title">
+        <h1>@T("Account.MyAccount") - @T("Account.CustomerOrders")</h1>
+    </div>
+    <div class="page-body">
+        @if (Model.RecurringOrders.Count > 0)
+        {
+            <div class="section recurring-payments">
+                <div class="title">
+                    <strong>@T("Account.CustomerOrders.RecurringOrders")</strong>
+                </div>
+                <form asp-route="CustomerOrders" method="post">
+                    @{
+                        var canRetryRecurringOrders = Model.RecurringOrders.Any(recurring => recurring.CanRetryLastPayment);
+                    }
+                    <div class="table-wrapper">
+                        <table class="data-table">
+                            <colgroup>
+                                <col />
+                                <col />
+                                <col />
+                                <col />
+                                <col />
+                                <col />
+                                @if (canRetryRecurringOrders)
+                                {
+                                    <col /> }
+                                <col />
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th class="start-date">
+                                        @T("Account.CustomerOrders.RecurringOrders.StartDate")
+                                    </th>
+                                    <th class="cycle-info">
+                                        @T("Account.CustomerOrders.RecurringOrders.CycleInfo")
+                                    </th>
+                                    <th class="next-payment">
+                                        @T("Account.CustomerOrders.RecurringOrders.NextPayment")
+                                    </th>
+                                    <th class="total-cycles">
+                                        @T("Account.CustomerOrders.RecurringOrders.TotalCycles")
+                                    </th>
+                                    <th class="cycles-remaining">
+                                        @T("Account.CustomerOrders.RecurringOrders.CyclesRemaining")
+                                    </th>
+                                    <th class="initial-order">
+                                        @T("Account.CustomerOrders.RecurringOrders.InitialOrder")
+                                    </th>
+                                    @if (canRetryRecurringOrders)
+                                    {
+                                        <th class="retry">
+                                            @T("Account.CustomerOrders.RecurringOrders.RetryLastPayment")
+                                        </th>
+                                    }
+                                    <th class="cancel">
+                                        @T("Account.CustomerOrders.RecurringOrders.Cancel")
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.RecurringOrders)
+                                {
+                                    <tr>
+                                        <td class="start-date">
+                                            @item.StartDate
+                                        </td>
+                                        <td class="cycle-info">
+                                            @item.CycleInfo
+                                        </td>
+                                        <td class="next-payment">
+                                            @item.NextPayment
+                                        </td>
+                                        <td class="total-cycles">
+                                            @item.TotalCycles
+                                        </td>
+                                        <td class="cycles-remaining">
+                                            @item.CyclesRemaining
+                                        </td>
+                                        <td class="initial-order">
+                                            <a href="@Url.RouteUrl("OrderDetails", new { orderId = item.InitialOrderId })">@string.Format(T("Account.CustomerOrders.RecurringOrders.ViewInitialOrder").Text, item.InitialOrderNumber)</a>
+                                        </td>
+                                        @if (canRetryRecurringOrders)
+                                        {
+                                            <td class="retry">
+                                                @if (item.CanRetryLastPayment)
+                                                {
+                                                    <input type="submit" name="retryLastPayment_@(item.Id)" value="@T("Account.CustomerOrders.RecurringOrders.RetryLastPayment")" class="button-2 retry-recurring-order-button" />
+                                                }
+                                            </td>
+                                        }
+                                        <td class="cancel">
+                                            @if (item.CanCancel)
+                                            {
+                                                <input type="submit" name="cancelRecurringPayment@(item.Id)" value="@T("Account.CustomerOrders.RecurringOrders.Cancel")" class="button-2 cancel-recurring-order-button" />
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </form>
+            </div>
+                        if (Model.RecurringPaymentErrors.Any())
+                        {
+                            <div class="message-error">
+                                <ul>
+                                    @foreach (var error in Model.RecurringPaymentErrors)
+                                    {
+                                        <li>@error</li>
+                                    }
+                                </ul>
+                            </div>
+                            }
+                        }
+
+        @if (Model.Orders.Count > 0)
+        {
+            <div class="order-list">
+                @foreach (var order in Model.Orders)
+                {
+                    <div class="section order-item">
+                        <div class="title">
+                            <strong>@T("Account.CustomerOrders.OrderNumber"): @order.CustomOrderNumber</strong>
+                        </div>
+                        <ul class="info">
+                            <li>@T("Account.CustomerOrders.OrderStatus"): <span class="order-status @order.OrderStatusEnum.ToString().ToLowerInvariant()">@order.OrderStatus</span></li>
+                            <li>@T("Account.CustomerOrders.OrderDate"): <span class="order-date">@order.CreatedOn.ToString()</span></li>
+                            <li>@T("Account.CustomerOrders.OrderTotal"): <span class="order-total">@order.OrderTotal</span></li>
+                        </ul>
+                        <div class="buttons">
+                            @if (order.IsReturnRequestAllowed)
+                            {
+                                <input type="button" value="@T("Account.CustomerOrders.ReturnItems")" class="button-2 return-items-button" onclick="setLocation('@Url.RouteUrl("ReturnRequest", new { orderId = order.Id })')" />
+                            }
+                            <input type="button" value="@T("Account.CustomerOrders.OrderDetails")" class="button-2 order-details-button" onclick="setLocation('@Url.RouteUrl("OrderDetails", new { orderId = order.Id })')" />
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="no-data">
+                @T("Account.CustomerOrders.NoOrders")
+            </div>
+        }
+    </div>
+</div>

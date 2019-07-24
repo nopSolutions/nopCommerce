@@ -1,0 +1,143 @@
+﻿<Language Name="اردو" IsDefault="false" IsRightToLeft="true">
+  <LocaleResource Name="AdminEmail">
+    <Value>ایڈمن یوزر کا ای میل</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminEmailRequired">
+    <Value>ایڈمن یوزر کا ای میل ضروری ہے</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPassword">
+    <Value>ایڈمن یوزر کا پاس ورڈ</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPasswordRequired">
+    <Value>ایڈمن یوزر کا پاس ورڈ سے ضروری ہے</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureDirectoryPermissions">
+    <Value>The '{0}' account is not granted with Modify permission on folder '{1}'. Please configure these permissions.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureFilePermissions">
+    <Value>The '{0}' account is not granted with Modify permission on file '{1}'. Please configure these permissions.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPassword">
+    <Value>پاس ورڈ دوبارہ لکھ کر دیں</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPasswordRequired">
+    <Value>پاس ورڈ دوبارہ لکھنا ضروری ہے</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionString">
+    <Value>کنکشن سٹرنگ</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringRequired">
+    <Value> ایس کیو ایل کنکشن سٹرنگ ضروری ہے </Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringValues">
+    <Value> ایس کیو ایل کنکشن سٹرنگ درج کریں </Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringWrongFormat">
+    <Value>غلط ایس کیو ایل کنکشن سٹرنگ فارمیٹ</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateDatabaseIfDoesNotExist">
+    <Value>ڈیٹا بیس بنائیں اگر وہ موجود نہیں ہے</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateSampleData">
+    <Value>نمونہ ڈیٹا بنائیں</Value>
+  </LocaleResource>
+  <LocaleResource Name="CustomCollation">
+    <Value>اپنی مرضی کی ایس کیو ایل سرور کولیشن بتائیں</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseCreationError">
+    <Value>ڈیٹا بیس بنانے وقت ایک خرابی آگئی: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Database">
+    <Value>ڈیٹا بیس</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseInformation">
+    <Value>ڈیٹا بیس کی معلومات</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseName">
+    <Value>ڈیٹا بیس کا نام </Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseNameRequired">
+    <Value>ڈیٹا بیس کا نام ضروری ہے</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseNotExists">
+    <Value>ڈیٹا بیس موجود نہیں رہا ہے. یا آپ کو اس سے رابطہ قائم کرنے کی اجازت نہیں ہے</Value>
+  </LocaleResource>
+  <LocaleResource Name="DataProviderRequired">
+    <Value>data provider کا انتخاب کریں </Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation1">
+    <Value> اگر آپ کو نوپ کامرس کی ویب سائٹ کے استعمال کے لئے کسی بھی معلومات کی ضرورت ہے, تو پھر یہاں </Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation2">
+    <Value> دستاویزات سیکشن میں جائیں</Value>
+  </LocaleResource>
+  <LocaleResource Name="Example">
+    <Value>مثال کے طور پر</Value>
+  </LocaleResource>
+  <LocaleResource Name="Install">
+    <Value>انسٹالیشن </Value>
+  </LocaleResource>
+  <LocaleResource Name="Installing">
+    <Value> نوپ کامرس انسٹالیشن کر رہا ہے... </Value>
+  </LocaleResource>
+  <LocaleResource Name="PasswordsDoNotMatch">
+    <Value>دونوں پاس ورڈ کی ایک دوسرے سے مطابقت نہیں ہے</Value>
+  </LocaleResource>
+  <LocaleResource Name="RawConnectionString">
+    <Value>raw کنکشن سٹرنگ درج کریں (مشکل) </Value>
+  </LocaleResource>
+  <LocaleResource Name="Recommended">
+    <Value>[بہتر طریقہ]</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallation">
+    <Value>انسٹالیشن دوبارہ شروع کریں</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallationTooltip">
+    <Value>انسٹالیشن دوبارہ شروع کرنے کے لئے یہاں کلک کریں (تمام عارضی فیلڈز کو خالی کریں) </Value>
+  </LocaleResource>
+  <LocaleResource Name="SetupFailed">
+    <Value>سیٹ اپ ناکام رہا: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlAuthentication">
+    <Value>ایس کیو ایل سرور اکاؤنٹ کا استعمال کریں </Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlCompact">
+    <Value>اندرونی ڈیٹا اسٹوریج کا استعمال کریں (ایس کیو ایل سرور کومپیکٹ)</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerName">
+    <Value> ایس کیو ایل سرور کا نام </Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerNameRequired">
+    <Value> ایس کیو ایل سرور کا نام ضروری ہے </Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerPassword">
+    <Value> ایس کیو ایل پاس ورڈ </Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerPasswordRequired">
+    <Value> ایس کیو ایل پاس ورڈ ضروری ہے </Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerUsername">
+    <Value> ایس کیو ایل یوزر کا نام </Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerUsernameRequired">
+    <Value> ایس کیو ایل یوزر کا نام ضروری ہے </Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlStandard">
+    <Value>ایس کیو ایل سرور کے ڈیٹا بیس (یا ایس کیو ایل ایکسپریس) کو استعمال کریں</Value>
+  </LocaleResource>
+  <LocaleResource Name="StoreInformation">
+    <Value>سٹور کی معلومات</Value>
+  </LocaleResource>
+  <LocaleResource Name="Title">
+    <Value> نوپ کامرس کی انسٹالیشن </Value>
+  </LocaleResource>
+  <LocaleResource Name="Tooltip1">
+    <Value> نوپ کامرس ایک معروف اے ایس پی.نیٹ آن لائن ای کامرس  سٹور ہے. یہ وزرڈ آپ کی نوپ کامرس کی ترتیب کے عمل میں رہنمائی کرے گا</Value>
+  </LocaleResource>
+  <LocaleResource Name="Tooltip2">
+    <Value>اس وزرڈ کو مکمل کرنے کے لئے آپ کو کچھ معلومات آپ کے ڈیٹا بیس سرور کے بارے میں پتہ ہونا چاہئے ("کنکشن سٹرنگ"). براہ مہربانی اگر ضروری ہو تو اپنے آئی ایس پی سے رابطہ کریں. اگر آپ ایک مقامی مشین یا سرور پر انسٹال کر رہے ہیں تو آپ کو اپنے سسٹم ایڈمنسٹریٹر سے معلومات کی ضرورت ہو سکتی ہے.</Value>
+  </LocaleResource>
+  <LocaleResource Name="WindowsAuthentication">
+    <Value> integrated Windows authentication کا استعمال کریں </Value>
+  </LocaleResource>
+</Language>

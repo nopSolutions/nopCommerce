@@ -1,0 +1,56 @@
+﻿@model EditForumPostModel
+@using Nop.Core.Domain.Forums;
+@{
+    //page class
+    Html.AppendPageCssClassParts("html-forum-edit-page");
+}
+
+@await Component.InvokeAsync("ForumBreadcrumb", new { forumTopicId = Model.ForumTopicId })
+<div class="page forum-edit-page">
+    <div class="page-title">
+        @if (Model.IsEdit)
+        {
+            <h1>@T("Forum.EditPost")</h1>
+        }
+        else
+        {
+            <h1>@T("Forum.NewPost")</h1>
+        }
+    </div>
+    <div class="page-body">
+        <div asp-validation-summary="ModelOnly" class="message-error"></div>
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="ForumTopicId" />
+        <div class="fieldset">
+            <div class="form-fields">
+                <div class="inputs">
+                    <label>@T("Forum.ForumName"):</label>
+                    <strong class="forum-subject">@Model.ForumName</strong>
+                </div>
+                <div class="inputs">
+                    <label>@T("Forum.TopicTitle"):</label>
+                    <strong class="topic-subject">@Model.ForumTopicSubject</strong>
+                </div>
+                <div class="inputs">
+                    @if (Model.ForumEditor == EditorType.BBCodeEditor)
+                    {
+                        <nop-bb-code-editor asp-for="Text"/>
+                    }
+                    <textarea asp-for="Text" class="forum-post-text"></textarea>
+                    <span asp-validation-for="Text"></span>
+                </div>
+                @if (Model.IsCustomerAllowedToSubscribe)
+                {
+                    <div class="inputs reversed">
+                        <input asp-for="Subscribed" />
+                        <label asp-for="Subscribed">@T("Forum.NotifyWhenSomeonePostsInThisTopic")</label>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="buttons">
+            <input type="submit" value="@T("Forum.Submit")" class="button-1 submit-post-button" />
+            <input type="button" class="button-2 cancel-post-button" value="@T("Forum.Cancel")" onclick="setLocation('@Url.RouteUrl("TopicSlug", new {id = Model.ForumTopicId, slug = Model.ForumTopicSeName})')" />
+        </div>
+    </div>
+</div>

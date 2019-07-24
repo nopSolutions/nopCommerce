@@ -1,0 +1,87 @@
+﻿@model MaintenanceModel
+<div class="panel-body">
+    <p>
+        @T("Admin.System.Maintenance.BackupDatabase.Description")
+    </p>
+    @await Html.PartialAsync("Table", new DataTablesModel
+    {
+        Name = "backup-list",
+        UrlRead = new DataUrl("BackupFiles", "Common", null),
+        Length = Model.BackupFileSearchModel.PageSize,
+        LengthMenu = Model.BackupFileSearchModel.AvailablePageSizes,
+        ColumnCollection = new List<ColumnProperty>
+        {
+            new ColumnProperty(nameof(BackupFileModel.Name))
+            {
+                Title = T("Admin.System.Maintenance.BackupDatabase.FileName").Text
+            },
+            new ColumnProperty(nameof(BackupFileModel.Length))
+            {
+                Title = T("Admin.System.Maintenance.BackupDatabase.FileSize").Text
+            },
+            new ColumnProperty(nameof(BackupFileModel.Link))
+            {
+                Title = T("Admin.System.Maintenance.BackupDatabase.Download").Text,
+                Render = new RenderCustom("renderDownload"),
+                Width = "150",
+                ClassName = NopColumnClassDefaults.Button
+            },
+            new ColumnProperty(nameof(BackupFileModel.Name))
+            {
+                Title = T("Admin.System.Maintenance.BackupDatabase.Restore").Text,
+                Render = new RenderCustom("renderRestore"),
+                Width = "150",
+                ClassName = NopColumnClassDefaults.Button
+            },
+            new ColumnProperty(nameof(BackupFileModel.Name))
+            {
+                Title = T("Admin.System.Maintenance.BackupDatabase.Delete").Text,
+                Render = new RenderCustom("renderDelete"),
+                Width = "150",
+                ClassName = NopColumnClassDefaults.Button
+            }
+        }
+    })
+</div>
+<div class="panel-footer">
+    <button type="submit" id="backup-database" name="backup-database" class="btn btn-primary">
+        @T("Admin.System.Maintenance.BackupDatabase.BackupNow")
+    </button>
+    <script>
+        function submitBackupAction(fileName, action) {
+            $("#backup-data").children().remove();
+            $("#backup-data").append('<input type="hidden" name="backupFileName" value="' + fileName + '"/>');
+            $("#backup-data").append('<input type="hidden" name="action" value="' + action + '"/>');
+            showProgress();
+        };
+
+        function showProgress() {
+            $("html, body").animate({ scrollTop: 0 }, 400);
+            showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Admin.System.Maintenance.BackupDatabase.Progress").Text))');
+        };
+
+        $(document).ready(function () {
+            $("#backup-database").on("click", function () {
+                showProgress();
+            });
+        });
+    </script>
+</div>
+
+<div id="backup-data" style="display: none"></div>
+
+<script>
+    function renderDownload(data, type, row, meta) {
+        var link = row.Link;
+        
+        return '<a class="btn btn-default" href="' + link + '">@T("Admin.System.Maintenance.BackupDatabase.Download")</a>';
+    }
+    function renderRestore(data, type, row, meta) {
+        return '<button type="submit" class="btn btn-default" onclick="submitBackupAction(\'' + row.Name +'\',\'restore-backup\')"><i class="fa fa-database"></i>@T("Admin.System.Maintenance.BackupDatabase.Restore")</button>';
+    }
+    function renderDelete(data, type, row, meta) {
+        var link = row.Link;
+
+        return '<button type="submit" class="btn btn-default" onclick="submitBackupAction(\'' + row.Name + '\',\'delete-backup\')"><i class="fa fa-trash"></i>@T("Admin.System.Maintenance.BackupDatabase.Delete")</button>';
+    }
+</script>

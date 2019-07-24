@@ -1,0 +1,73 @@
+@model CheckoutAttributeSearchModel
+
+@{
+    //page title
+    ViewBag.Title = T("Admin.Catalog.Attributes.CheckoutAttributes").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Checkout attributes");
+}
+
+<nop-antiforgery-token/>
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        @T("Admin.Catalog.Attributes.CheckoutAttributes")
+    </h1>
+    <div class="pull-right">
+        <a asp-action="Create" class="btn bg-blue">
+            <i class="fa fa-plus-square"></i>
+            @T("Admin.Common.AddNew")
+        </a>
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CheckoutAttributeListButtons })
+    </div>
+</div>
+
+<div class="content">
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <p>
+                    @T("Admin.Catalog.Attributes.CheckoutAttributes.Description")
+                </p>
+                @await Html.PartialAsync("Table", new DataTablesModel
+                {
+                    Name = "checkoutattributes-grid",
+                    UrlRead = new DataUrl("List", "CheckoutAttribute", null),
+                    Length = Model.PageSize,
+                    LengthMenu = Model.AvailablePageSizes,
+                    ColumnCollection = new List<ColumnProperty>
+                    {
+                        new ColumnProperty(nameof(CheckoutAttributeModel.Name))
+                        {
+                            Title = T("Admin.Catalog.Attributes.CheckoutAttributes.Fields.Name").Text
+                        },
+                        new ColumnProperty(nameof(CheckoutAttributeModel.AttributeControlTypeName))
+                        {
+                            Title = T("Admin.Catalog.Attributes.CheckoutAttributes.Fields.AttributeControlType").Text,
+                            Width = "200"
+                        },
+                        new ColumnProperty(nameof(CheckoutAttributeModel.IsRequired))
+                        {
+                            Title = T("Admin.Catalog.Attributes.CheckoutAttributes.Fields.IsRequired").Text,
+                            Width = "100",
+                            ClassName = NopColumnClassDefaults.CenterAll,
+                            Render = new RenderBoolean()
+                        },
+                        new ColumnProperty(nameof(CheckoutAttributeModel.DisplayOrder))
+                        {
+                            Title = T("Admin.Catalog.Attributes.CheckoutAttributes.Fields.DisplayOrder").Text,
+                            Width = "100",
+                            ClassName = NopColumnClassDefaults.CenterAll
+                        },
+                        new ColumnProperty(nameof(CheckoutAttributeModel.Id))
+                        {
+                            Title = T("Admin.Common.Edit").Text,
+                            Width = "100",
+                            ClassName = NopColumnClassDefaults.Button,
+                            Render = new RenderButtonEdit(new DataUrl("Edit"))
+                        }
+                    }
+                })
+            </div>
+        </div>
+    </div>
+</div>
