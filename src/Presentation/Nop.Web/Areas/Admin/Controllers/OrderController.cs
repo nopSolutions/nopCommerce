@@ -2281,13 +2281,24 @@ namespace Nop.Web.Areas.Admin.Controllers
                     WarehouseId = warehouseId
                 };
                 shipment.ShipmentItems.Add(shipmentItem);
+
+                var quantityWithReserved = _productService.GetTotalStockQuantity(orderItem.Product, true, warehouseId);
+                var quantityTotal = _productService.GetTotalStockQuantity(orderItem.Product, false, warehouseId);
+
+                //currently reserved in current stock
+                var quantityReserved = quantityTotal - quantityWithReserved;
+
+                //If the quantity of the reserve product in the warehouse does not coincide with the total quantity of goods in the basket, 
+                //it is necessary to redistribute the reserve to the warehouse
+                if (!(quantityReserved == qtyToAdd && quantityReserved == maxQtyToAdd))
+                    _productService.BalanceInventory(orderItem.Product, warehouseId, qtyToAdd);                
             }
 
             //if we have at least one item in the shipment, then save it
             if (shipment != null && shipment.ShipmentItems.Any())
             {
                 shipment.TotalWeight = totalWeight;
-                _shipmentService.InsertShipment(shipment);
+                _shipmentService.InsertShipment(shipment);                
 
                 //add a note
                 order.OrderNotes.Add(new OrderNote
